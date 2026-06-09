@@ -376,11 +376,15 @@ const RAW = {
     ["communication", "תקשורת", "תִּקְשֹׁרֶת"],
     ["argument", "טיעון", "טִעוּן"],
     ["discussion", "דיון", "דִּיּוּן"],
+    ["took place / was held", "התקיים", "הִתְקַיֵּם"],
     ["decision", "החלטה", "הַחְלָטָה"],
     ["mistake", "טעות", "טָעוּת"],
     ["advantage", "יתרון", "יִתְרוֹן"],
     ["disadvantage", "חיסרון", "חִסָּרוֹן"],
     ["compromise", "פשרה", "פְּשָׁרָה"],
+    ["bottom-up / from the bottom up", "מלמטה למעלה", "מִלְּמַטָּה לְמַעְלָה"],
+    ["top-down / from the top down", "מלמעלה למטה", "מִלְּמַעְלָה לְמַטָּה"],
+    ["existence / fulfillment", "קיום", "קִיּוּם"],
     ["expectation", "ציפייה", "צִפִּיָּה"],
     ["confidence (self-confidence)", "ביטחון עצמי", "בִּטָּחוֹן עַצְמִי"],
     ["patience", "סבלנות", "סַבְלָנוּת"],
@@ -1325,6 +1329,7 @@ const RAW = {
     ["physical law", "חוק פיזיקלי", "חוֹק פיזיקלי"],
     ["chemical reaction", "תגובה כימית", "תגובה כימית"],
     ["environmental impact", "השפעה סביבתית", "השפעה סביבתית"],
+    ["sustainability", "קיימות", "קַיָּמוּת"],
     ["climate mitigation", "מיתון אקלים", "מיתון אקלים"],
     ["evidence-based", "מבוסס ראיות", "מבוסס ראיות"],
   ],
@@ -1336,6 +1341,7 @@ const RAW = {
     ["free will", "רצון חופשי", "רצון חופשי"],
     ["determinism", "דטרמיניזם", "דטרמיניזם"],
     ["existential question", "שאלה קיומית", "שאלה קיומית"],
+    ["existential", "קיומי", "קִיּוּמִי"],
     ["consciousness studies", "חקר התודעה", "חקר התודעה"],
     ["identity formation", "גיבוש זהות", "גיבוש זֶהוּת"],
     ["political philosophy", "פילוסופיה פוליטית", "פילוסופיה פוליטית"],
@@ -1348,6 +1354,7 @@ const RAW = {
   ],
   culture_identity_expanded: [
     ["cultural reference", "רפרנס תרבותי", "רפרנס תרבותי"],
+    ["ceremony", "טקס", "טֶקֶס"],
     ["holiday ritual", "טקס חג", "טקס חג"],
     ["Saturday night", "מוצאי שבת", "מוֹצָאֵי שַׁבָּת", {
       translationQuizDistractors: {
@@ -1569,6 +1576,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260402a",
+  __build: "20260609a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

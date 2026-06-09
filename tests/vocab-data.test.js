@@ -76,3 +76,24 @@ test("מוצאי שבת keeps its Saturday-night translation and custom Shabbat 
     hebrew: ["ליל שבת", "שבת בבוקר", "שבת בלילה"],
   });
 });
+
+test("requested existential and event vocabulary is available for translation", () => {
+  const vocabulary = loadVocabulary();
+  const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
+
+  assert.equal(entriesByHebrew.get("טקס")?.en, "ceremony");
+  assert.equal(entriesByHebrew.get("התקיים")?.en, "took place / was held");
+  assert.equal(entriesByHebrew.get("מלמטה למעלה")?.en, "bottom-up / from the bottom up");
+  assert.equal(entriesByHebrew.get("מלמעלה למטה")?.en, "top-down / from the top down");
+  assert.equal(entriesByHebrew.get("קיום")?.en, "existence / fulfillment");
+  assert.equal(entriesByHebrew.get("קיומי")?.en, "existential");
+  assert.equal(entriesByHebrew.get("קיימות")?.en, "sustainability");
+});
+
+test("commitment uses the correct spelling and never adds the misspelled variant", () => {
+  const vocabulary = loadVocabulary();
+  const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
+
+  assert.equal(entriesByHebrew.get("מחויבות")?.en, "commitment");
+  assert.equal(entriesByHebrew.has("מחוביות"), false);
+});

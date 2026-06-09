@@ -1751,6 +1751,162 @@ function buildStarterVerbEntries() {
       tags: ["piel", "seed"],
       personal_priority: 71,
     }),
+    createVerbEntry({
+      id: "advanced-verb-lenateach",
+      availability: getStarterVerbAvailability("advanced-verb-lenateach"),
+      lemma: "לנתח",
+      lemma_niqqud: "לְנַתֵּחַ",
+      root: ["נ", "ת", "ח"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to analyze", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מנתח", "מְנַתֵּחַ"),
+          markedForm("מנתחת", "מְנַתַּחַת"),
+          markedForm("מנתחים", "מְנַתְּחִים"),
+          markedForm("מנתחות", "מְנַתְּחוֹת")
+        ),
+        makePast(
+          markedForm("ניתחתי", "נִתַּחְתִּי"),
+          markedForm("ניתחת", "נִתַּחְתָּ"),
+          markedForm("ניתחת", "נִתַּחְתְּ"),
+          markedForm("ניתח", "נִתֵּחַ"),
+          markedForm("ניתחה", "נִתְּחָה"),
+          markedForm("ניתחנו", "נִתַּחְנוּ"),
+          markedForm("ניתחתם", "נִתַּחְתֶּם"),
+          markedForm("ניתחתן", "נִתַּחְתֶּן"),
+          markedForm("ניתחו", "נִתְּחוּ")
+        ),
+        makeFuture(
+          markedForm("אנתח", "אֲנַתֵּחַ"),
+          markedForm("תנתח", "תְּנַתֵּחַ"),
+          markedForm("תנתחי", "תְּנַתְּחִי"),
+          markedForm("ינתח", "יְנַתֵּחַ"),
+          markedForm("תנתח", "תְּנַתֵּחַ"),
+          markedForm("ננתח", "נְנַתֵּחַ"),
+          markedForm("תנתחו", "תְּנַתְּחוּ"),
+          markedForm("ינתחו", "יְנַתְּחוּ")
+        ),
+        makeImperative(
+          markedForm("נתח", "נַתֵּחַ"),
+          markedForm("נתחי", "נַתְּחִי"),
+          markedForm("נתחו", "נַתְּחוּ"),
+          markedForm("נתחנה", "נַתֵּחְנָה")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el of נ-ת-ח. Stored forms cover analytical and medical senses of 'to analyze/dissect'.",
+      difficulty_level: 3,
+      tags: ["piel", "seed", "analytical"],
+      personal_priority: 78,
+      category: "scientific_analytical",
+    }),
+    createVerbEntry({
+      id: "advanced-verb-ladun",
+      availability: getStarterVerbAvailability("advanced-verb-ladun"),
+      lemma: "לדון",
+      lemma_niqqud: "לָדוּן",
+      root: ["ד", "י", "נ"],
+      binyan: "paal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to discuss", "ב־", false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("דן", "דָּן"),
+          markedForm("דנה", "דָּנָה"),
+          markedForm("דנים", "דָּנִים"),
+          markedForm("דנות", "דָּנוֹת")
+        ),
+        makePast(
+          markedForm("דנתי", "דַּנְתִּי"),
+          markedForm("דנת", "דַּנְתָּ"),
+          markedForm("דנת", "דַּנְתְּ"),
+          markedForm("דן", "דָּן"),
+          markedForm("דנה", "דָּנָה"),
+          markedForm("דנו", "דַּנּוּ"),
+          markedForm("דנתם", "דַּנְתֶּם"),
+          markedForm("דנתן", "דַּנְתֶּן"),
+          markedForm("דנו", "דָּנוּ")
+        ),
+        makeFuture(
+          markedForm("אדון", "אָדוּן"),
+          markedForm("תדון", "תָּדוּן"),
+          markedForm("תדוני", "תָּדוּנִי"),
+          markedForm("ידון", "יָדוּן"),
+          markedForm("תדון", "תָּדוּן"),
+          markedForm("נדון", "נָדוּן"),
+          markedForm("תדונו", "תָּדוּנוּ"),
+          markedForm("ידונו", "יָדוּנוּ")
+        ),
+        makeImperative(
+          markedForm("דון", "דּוּן"),
+          markedForm("דוני", "דּוּנִי"),
+          markedForm("דונו", "דּוּנוּ"),
+          markedForm("דונה", "דּוּנָה")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pa'al hollow verb used with ב־ for 'to discuss a subject'.",
+      difficulty_level: 3,
+      tags: ["paal", "seed", "discussion"],
+      personal_priority: 77,
+      category: "core_advanced",
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitkayem",
+      availability: getStarterVerbAvailability("advanced-verb-lehitkayem"),
+      lemma: "להתקיים",
+      lemma_niqqud: "לְהִתְקַיֵּם",
+      root: ["ק", "ו", "מ"],
+      binyan: "hitpael",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to take place", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתקיים", "מִתְקַיֵּם"),
+          markedForm("מתקיימת", "מִתְקַיֶּמֶת"),
+          markedForm("מתקיימים", "מִתְקַיְּמִים"),
+          markedForm("מתקיימות", "מִתְקַיְּמוֹת")
+        ),
+        makePast(
+          markedForm("התקיימתי", "הִתְקַיַּמְתִּי"),
+          markedForm("התקיימת", "הִתְקַיַּמְתָּ"),
+          markedForm("התקיימת", "הִתְקַיַּמְתְּ"),
+          markedForm("התקיים", "הִתְקַיֵּם"),
+          markedForm("התקיימה", "הִתְקַיְּמָה"),
+          markedForm("התקיימנו", "הִתְקַיַּמְנוּ"),
+          markedForm("התקיימתם", "הִתְקַיַּמְתֶּם"),
+          markedForm("התקיימתן", "הִתְקַיַּמְתֶּן"),
+          markedForm("התקיימו", "הִתְקַיְּמוּ")
+        ),
+        makeFuture(
+          markedForm("אתקיים", "אֶתְקַיֵּם"),
+          markedForm("תתקיים", "תִּתְקַיֵּם"),
+          markedForm("תתקיימי", "תִּתְקַיְּמִי"),
+          markedForm("יתקיים", "יִתְקַיֵּם"),
+          markedForm("תתקיים", "תִּתְקַיֵּם"),
+          markedForm("נתקיים", "נִתְקַיֵּם"),
+          markedForm("תתקיימו", "תִּתְקַיְּמוּ"),
+          markedForm("יתקיימו", "יִתְקַיְּמוּ")
+        ),
+        makeImperative(
+          markedForm("התקיים", "הִתְקַיֵּם"),
+          markedForm("התקיימי", "הִתְקַיְּמִי"),
+          markedForm("התקיימו", "הִתְקַיְּמוּ"),
+          markedForm("התקיימנה", "הִתְקַיֵּמְנָה")
+        )
+      ),
+      review_status: "approved",
+      notes: "Hitpa'el event verb: 'to take place' or 'to be held', especially for meetings, ceremonies, and events.",
+      difficulty_level: 4,
+      tags: ["hitpael", "seed", "events"],
+      personal_priority: 76,
+      category: "core_advanced",
+    }),
   ];
 }
 

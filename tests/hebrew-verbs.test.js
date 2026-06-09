@@ -462,6 +462,57 @@ test("starter plan verb keeps quadriliteral metadata and formal future plural fo
   );
 });
 
+test("requested advanced verbs appear in conjugation with curated forms", () => {
+  const seedEntries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+
+  const analyze = deck.find((entry) => entry.id === "advanced-verb-lenateach--sense-1");
+  assert.ok(analyze);
+  assert.equal(analyze.formSource, "authoritative");
+  assert.equal(analyze.word.he, "לנתח");
+  assert.equal(analyze.word.en, "to analyze");
+  assert.equal(
+    analyze.forms.find((form) => form.id === "present_masculine_singular")?.englishText,
+    "he analyzes"
+  );
+  assert.equal(
+    analyze.forms.find((form) => form.id === "future_first_person_singular")?.valuePlain,
+    "אנתח"
+  );
+
+  const discuss = deck.find((entry) => entry.id === "advanced-verb-ladun--sense-1");
+  assert.ok(discuss);
+  assert.equal(discuss.formSource, "authoritative");
+  assert.equal(discuss.word.he, "לדון ב־");
+  assert.equal(discuss.word.en, "to discuss (ב־)");
+  assert.equal(
+    discuss.forms.find((form) => form.id === "past_third_person_masculine_singular")?.valuePlain,
+    "דן"
+  );
+  assert.equal(
+    discuss.forms.find((form) => form.id === "future_first_person_singular")?.englishText,
+    "I will discuss"
+  );
+
+  const takePlaceSeed = seedEntries.find((entry) => entry.id === "advanced-verb-lehitkayem");
+  const takePlace = deck.find((entry) => entry.id === "advanced-verb-lehitkayem--sense-1");
+  assert.ok(takePlaceSeed);
+  assert.ok(takePlace);
+  assert.equal(takePlace.formSource, "authoritative");
+  assert.equal(takePlace.word.he, "להתקיים");
+  assert.equal(takePlace.word.en, "to take place");
+  assert.doesNotMatch(takePlace.word.en, /\bexist\b/i);
+  assert.match(takePlaceSeed.notes, /be held/i);
+  assert.equal(
+    takePlace.forms.find((form) => form.id === "past_third_person_masculine_singular")?.valuePlain,
+    "התקיים"
+  );
+  assert.equal(
+    takePlace.forms.find((form) => form.id === "future_third_person_masculine_singular")?.valuePlain,
+    "יתקיים"
+  );
+});
+
 test("starter run verb appears in conjugation with the expected English labels", () => {
   const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
   const item = deck.find((entry) => entry.id === "starter-verb-larutz--sense-1");
