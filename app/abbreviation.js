@@ -157,7 +157,7 @@ abbreviation.renderAbbreviationIdleState = abbreviation.renderAbbreviationIdleSt
   runtime.el.promptText.classList.add("english-prompt");
   runtime.el.promptText.textContent = translate("prompt.abbreviationStart");
   runtime.el.choiceContainer.innerHTML = "";
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.renderNiqqudToggle?.();
   app.ui?.renderPromptSpeechButton?.();
 };
@@ -188,7 +188,7 @@ abbreviation.startAbbreviation = abbreviation.startAbbreviation || function star
   runtime.state.lastPlayedMode = "abbreviation";
   h.setGamePickerVisibility?.(false);
   runtime.el.choiceContainer.innerHTML = "";
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.clearFeedback?.();
 
   if (!runtime.abbreviationDeck?.length) {
@@ -298,7 +298,7 @@ abbreviation.renderAbbreviationQuestion = abbreviation.renderAbbreviationQuestio
   h.setPromptCardVisibility?.(true);
   runtime.el.choiceContainer.classList.remove("summary-grid");
   h.renderSessionHeader?.();
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
 
   if (!question) return;
 

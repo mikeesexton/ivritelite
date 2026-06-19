@@ -98,9 +98,10 @@ verbMatch.startVerbMatch = verbMatch.startVerbMatch || function startVerbMatch()
   runtime.state.mode = "verbMatch";
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "verbMatch";
+  runtime.state.match.layoutMode = "classic";
   h.setGamePickerVisibility?.(false);
   runtime.el.choiceContainer.innerHTML = "";
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
 
   if (!runtime.verbFormDeck?.length) {
     runtime.state.match.active = false;
@@ -170,6 +171,7 @@ verbMatch.resetVerbMatchState = verbMatch.resetVerbMatchState || function resetV
   runtime.state.match.remainingPairs = [];
   runtime.state.match.leftCards = [];
   runtime.state.match.rightCards = [];
+  runtime.state.match.layoutMode = "classic";
   runtime.state.match.selectedLeftId = null;
   runtime.state.match.selectedRightId = null;
   runtime.state.match.mismatchedCardIds = [];
@@ -318,7 +320,9 @@ verbMatch.selectVerbRoundPairs = verbMatch.selectVerbRoundPairs || function sele
 verbMatch.refillVerbMatchColumns = verbMatch.refillVerbMatchColumns || function refillVerbMatchColumns() {
   const runtime = getRuntime();
   const shuffle = app.utils?.shuffle;
-  const visibleRows = getHelpers().getVisibleVerbMatchRows?.() || runtime.constants.MATCH_VISIBLE_ROWS;
+
+  const visibleRowsBase = getHelpers().getVisibleVerbMatchRows?.() || runtime.constants.MATCH_VISIBLE_ROWS;
+  const visibleRows = visibleRowsBase;
 
   while (runtime.state.match.leftCards.length < visibleRows && runtime.state.match.remainingPairs.length) {
     const pair = runtime.state.match.remainingPairs.shift();
@@ -358,7 +362,7 @@ verbMatch.renderVerbMatchIdleState = verbMatch.renderVerbMatchIdleState || funct
   runtime.el.promptText.classList.add("english-prompt");
   runtime.el.promptText.textContent = translate("prompt.verbMatchStart");
   runtime.el.choiceContainer.innerHTML = "";
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.renderNiqqudToggle?.();
   app.ui?.renderPromptSpeechButton?.();
 };
@@ -402,6 +406,7 @@ verbMatch.renderVerbMatchPrompt = verbMatch.renderVerbMatchPrompt || function re
 verbMatch.renderVerbMatchCards = verbMatch.renderVerbMatchCards || function renderVerbMatchCards() {
   const runtime = getRuntime();
   runtime.el.choiceContainer.innerHTML = "";
+  runtime.el.choiceContainer.classList.remove("match-bubble-grid");
   runtime.el.choiceContainer.classList.add("match-grid");
   const leftSelected = runtime.state.match.selectedLeftId;
   const rightSelected = runtime.state.match.selectedRightId;

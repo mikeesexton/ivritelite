@@ -1053,7 +1053,7 @@ sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function star
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "sentenceBank";
   runtime.el.choiceContainer.innerHTML = "";
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.clearFeedback?.();
 
   if (!runtime.sentenceBankDeck?.length) {

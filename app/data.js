@@ -108,6 +108,7 @@ data.calculateGameModeStats = data.calculateGameModeStats || function calculateG
     sentenceBank: { attempts: 0, correct: 0, wrong: 0 },
     conjugation: { attempts: 0, correct: 0, wrong: 0 },
     abbreviation: { attempts: 0, correct: 0, wrong: 0 },
+    binyanBoard: { attempts: 0, correct: 0, wrong: 0 },
   };
 
   Object.entries(runtime.state.progress).forEach(([wordId, rec]) => {
@@ -139,6 +140,13 @@ data.calculateGameModeStats = data.calculateGameModeStats || function calculateG
   modeStats.conjugation.attempts += Math.max(0, advConjStored.attempts);
   modeStats.conjugation.correct += Math.max(0, Math.min(advConjStored.attempts, advConjStored.correct));
   modeStats.conjugation.wrong = Math.max(0, modeStats.conjugation.attempts - modeStats.conjugation.correct);
+
+  const binyanStored = runtime.storageApi.loadJson(runtime.constants.STORAGE_KEYS.binyanBoardStats, { attempts: 0, correct: 0 });
+  const binyanAttempts = Math.max(0, Number(binyanStored.attempts || 0));
+  const binyanCorrect = Math.max(0, Math.min(binyanAttempts, Number(binyanStored.correct || 0)));
+  modeStats.binyanBoard.attempts += binyanAttempts;
+  modeStats.binyanBoard.correct += binyanCorrect;
+  modeStats.binyanBoard.wrong = Math.max(0, modeStats.binyanBoard.attempts - modeStats.binyanBoard.correct);
 
   return modeStats;
 };

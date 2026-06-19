@@ -240,6 +240,7 @@ persistence.persistSessionState = persistence.persistSessionState || function pe
       remainingPairs: runtime.state.match.remainingPairs,
       leftCards: runtime.state.match.leftCards,
       rightCards: runtime.state.match.rightCards,
+      layoutMode: runtime.state.match.layoutMode,
       selectedLeftId: runtime.state.match.selectedLeftId,
       selectedRightId: runtime.state.match.selectedRightId,
       mismatchedCardIds: runtime.state.match.mismatchedCardIds,

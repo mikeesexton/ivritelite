@@ -345,15 +345,15 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
 ];
 
-test("sentence bank data exposes 61 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 70 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 61);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 61);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 61);
+  assert.equal(entries.length, 70);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 70);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 70);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -392,6 +392,23 @@ test("sentence bank data avoids exact-synonym distractors for curated formal ent
   assert.equal(byId.get("formal_08").english_distractors.includes("however"), false);
   assert.equal(byId.get("formal_08").hebrew_distractors.includes("לכן"), true);
   assert.equal(byId.get("formal_08").english_distractors.includes("therefore"), true);
+});
+
+test("sentence bank includes the requested קיים, קיום, קיומי, קיימות, טקס, and התקיים drills", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+
+  assert.equal(byId.get("formal_11")?.hebrew, "הטקס התקיים באולם המרכזי אחרי השקיעה.");
+  assert.deepEqual(Array.from(byId.get("formal_11")?.english_tokens || []), ["The ceremony", "was held", "in the main hall", "after sunset"]);
+  assert.equal(byId.get("formal_12")?.hebrew, "הדיון התקיים בזום ולא במשרד.");
+  assert.deepEqual(Array.from(byId.get("formal_12")?.english_tokens || []), ["The discussion", "took place", "on Zoom", "not", "in the office"]);
+
+  assert.equal(byId.get("formal_13")?.hebrew, "קיים פתרון פשוט יותר לבעיה הזאת.");
+  assert.equal(byId.get("formal_14")?.hebrew, "קיימים כמה סיכונים שצריך לקחת בחשבון.");
+  assert.equal(byId.get("formal_15")?.hebrew, "ההסכם עדיין קיים למרות השינויים.");
+  assert.equal(byId.get("formal_16")?.hebrew, "הפתרון הזה בר קיימא גם בטווח הארוך.");
+  assert.equal(byId.get("formal_17")?.hebrew, "קיום חיים מחוץ לכדור הארץ עדיין לא הוכח.");
+  assert.equal(byId.get("formal_18")?.hebrew, "בשבילו זו לא בעיה טכנית, אלא משבר קיומי.");
+  assert.equal(byId.get("formal_19")?.hebrew, "קיימות היא לא רק סיסמה אלא דרך עבודה.");
 });
 
 test("sentence bank data compacts low-value English glue into selectable phrase chips", () => {

@@ -2644,6 +2644,342 @@ const SENTENCE_BANK = [
       "always"
     ],
     "notes": "להבחין (to distinguish) is formal. סיבה (cause) and תוצאה (effect) are key academic vocabulary. שגויות (incorrect) is more formal than לא נכונות."
+  },
+  {
+    "id": "formal_11",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "הטקס התקיים באולם המרכזי אחרי השקיעה.",
+    "english": "The ceremony was held in the main hall after sunset.",
+    "hebrew_tokens": [
+      "הטקס",
+      "התקיים",
+      "באולם",
+      "המרכזי",
+      "אחרי",
+      "השקיעה"
+    ],
+    "english_tokens": [
+      "The ceremony",
+      "was held",
+      "in the main hall",
+      "after sunset"
+    ],
+    "hebrew_distractors": [
+      "הדיון",
+      "בוטל",
+      "בחדר",
+      "הקטן",
+      "לפני"
+    ],
+    "english_distractors": [
+      "The meeting",
+      "was cancelled",
+      "in a small room",
+      "before noon"
+    ],
+    "notes": "התקיים means 'took place' or 'was held' for events; here the ceremony was held in a specific place."
+  },
+  {
+    "id": "formal_12",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "הדיון התקיים בזום ולא במשרד.",
+    "english": "The discussion took place on Zoom, not in the office.",
+    "hebrew_tokens": [
+      "הדיון",
+      "התקיים",
+      "בזום",
+      "ולא",
+      "במשרד"
+    ],
+    "english_tokens": [
+      "The discussion",
+      "took place",
+      "on Zoom",
+      "not",
+      "in the office"
+    ],
+    "hebrew_distractors": [
+      "הטקס",
+      "נדחה",
+      "בטלפון",
+      "וגם",
+      "באולם"
+    ],
+    "english_distractors": [
+      "The ceremony",
+      "was postponed",
+      "by phone",
+      "also",
+      "in the hall"
+    ],
+    "notes": "לדון gives דיון as the noun 'discussion'; התקיים keeps the event meaning 'took place'."
+  },
+  {
+    "id": "formal_13",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "קיים פתרון פשוט יותר לבעיה הזאת.",
+    "english": "There is a simpler solution to this problem.",
+    "hebrew_tokens": [
+      "קיים",
+      "פתרון",
+      "פשוט",
+      "יותר",
+      "לבעיה",
+      "הזאת"
+    ],
+    "english_tokens": [
+      "There is",
+      "a simpler solution",
+      "to this problem"
+    ],
+    "hebrew_distractors": [
+      "קיימת",
+      "סיכון",
+      "מורכב",
+      "פחות",
+      "לשאלה"
+    ],
+    "english_distractors": [
+      "There are",
+      "a harder problem",
+      "to that question",
+      "less simple"
+    ],
+    "notes": "קיים can mean 'there exists' or 'there is' when it agrees with a masculine noun like פתרון."
+  },
+  {
+    "id": "formal_14",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "קיימים כמה סיכונים שצריך לקחת בחשבון.",
+    "english": "There are several risks that need to be taken into account.",
+    "hebrew_tokens": [
+      "קיימים",
+      "כמה",
+      "סיכונים",
+      "שצריך",
+      "לקחת",
+      "בחשבון"
+    ],
+    "english_tokens": [
+      "There are",
+      "several risks",
+      "that need to be",
+      "taken into account"
+    ],
+    "hebrew_distractors": [
+      "קיים",
+      "הרבה",
+      "יתרונות",
+      "שאפשר",
+      "להתעלם"
+    ],
+    "english_distractors": [
+      "There is",
+      "many advantages",
+      "that can be",
+      "ignored"
+    ],
+    "notes": "קיימים is the masculine plural 'there are'; לקחת בחשבון means 'to take into account'."
+  },
+  {
+    "id": "formal_15",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "ההסכם עדיין קיים למרות השינויים.",
+    "english": "The agreement still exists despite the changes.",
+    "hebrew_tokens": [
+      "ההסכם",
+      "עדיין",
+      "קיים",
+      "למרות",
+      "השינויים"
+    ],
+    "english_tokens": [
+      "The agreement",
+      "still exists",
+      "despite",
+      "the changes"
+    ],
+    "hebrew_distractors": [
+      "המסמך",
+      "כבר",
+      "בוטל",
+      "בגלל",
+      "הבעיות"
+    ],
+    "english_distractors": [
+      "The document",
+      "was already cancelled",
+      "because of",
+      "the problems"
+    ],
+    "notes": "קיים can also mean 'still exists' or 'remains in force', especially for agreements and arrangements."
+  },
+  {
+    "id": "formal_16",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "הפתרון הזה בר קיימא גם בטווח הארוך.",
+    "english": "This solution is sustainable even in the long term.",
+    "hebrew_tokens": [
+      "הפתרון",
+      "הזה",
+      "בר קיימא",
+      "גם",
+      "בטווח",
+      "הארוך"
+    ],
+    "english_tokens": [
+      "This solution",
+      "is sustainable",
+      "even",
+      "in the long term"
+    ],
+    "hebrew_distractors": [
+      "הרעיון",
+      "ההוא",
+      "לא יציב",
+      "רק",
+      "בטווח קצר"
+    ],
+    "english_distractors": [
+      "That idea",
+      "is temporary",
+      "only",
+      "in the short term"
+    ],
+    "notes": "בר קיימא means 'sustainable' or literally 'able to exist'; it differs from קיים as 'exists'."
+  },
+  {
+    "id": "formal_17",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "קיום חיים מחוץ לכדור הארץ עדיין לא הוכח.",
+    "english": "The existence of life outside Earth has not yet been proven.",
+    "hebrew_tokens": [
+      "קיום",
+      "חיים",
+      "מחוץ",
+      "לכדור",
+      "הארץ",
+      "עדיין",
+      "לא",
+      "הוכח"
+    ],
+    "english_tokens": [
+      "The existence",
+      "of life",
+      "outside Earth",
+      "has not yet been proven"
+    ],
+    "hebrew_distractors": [
+      "סיום",
+      "מחקר",
+      "בתוך",
+      "המעבדה",
+      "כבר",
+      "אושר"
+    ],
+    "english_distractors": [
+      "The end",
+      "of research",
+      "inside the lab",
+      "has already been approved"
+    ],
+    "notes": "קיום is the noun 'existence' here, not the verb לקיים."
+  },
+  {
+    "id": "formal_18",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "בשבילו זו לא בעיה טכנית, אלא משבר קיומי.",
+    "english": "For him, this is not a technical problem, but an existential crisis.",
+    "hebrew_tokens": [
+      "בשבילו",
+      "זו",
+      "לא",
+      "בעיה",
+      "טכנית",
+      "אלא",
+      "משבר",
+      "קיומי"
+    ],
+    "english_tokens": [
+      "For him",
+      "this is not",
+      "a technical problem",
+      "but",
+      "an existential crisis"
+    ],
+    "hebrew_distractors": [
+      "בשבילה",
+      "זה",
+      "שאלה",
+      "מעשית",
+      "וגם",
+      "דיון"
+    ],
+    "english_distractors": [
+      "For her",
+      "this is",
+      "a practical question",
+      "and also",
+      "a discussion"
+    ],
+    "notes": "קיומי means 'existential', often for something that touches identity, survival, or basic meaning."
+  },
+  {
+    "id": "formal_19",
+    "category": "formal",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "קיימות היא לא רק סיסמה אלא דרך עבודה.",
+    "english": "Sustainability is not just a slogan but a way of working.",
+    "hebrew_tokens": [
+      "קיימות",
+      "היא",
+      "לא",
+      "רק",
+      "סיסמה",
+      "אלא",
+      "דרך",
+      "עבודה"
+    ],
+    "english_tokens": [
+      "Sustainability",
+      "is not just",
+      "a slogan",
+      "but",
+      "a way of working"
+    ],
+    "hebrew_distractors": [
+      "יעילות",
+      "זה",
+      "בעיקר",
+      "כותרת",
+      "וגם",
+      "שיטת"
+    ],
+    "english_distractors": [
+      "Efficiency",
+      "is mostly",
+      "a headline",
+      "and also",
+      "a method"
+    ],
+    "notes": "קיימות is the noun 'sustainability'; it is not being used here as a verb form."
   }
 ];
 
@@ -2661,6 +2997,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260402a",
+  __build: "20260609a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

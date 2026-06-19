@@ -81,6 +81,7 @@ session.hasActiveLearnSession = session.hasActiveLearnSession || function hasAct
       runtime.state?.abbreviation?.introActive ||
       runtime.state?.advConj?.active ||
       runtime.state?.advConj?.introActive ||
+      runtime.state?.binyanBoard?.active ||
       runtime.state?.match?.active ||
       runtime.state?.match?.verbIntroActive
   );
@@ -89,7 +90,8 @@ session.hasActiveLearnSession = session.hasActiveLearnSession || function hasAct
 session.isModeSessionActive = session.isModeSessionActive || function isModeSessionActive(mode) {
   const runtime = getRuntime();
   if (mode === "verbMatch") {
-    return Boolean(runtime.state?.match?.active || runtime.state?.match?.verbIntroActive);
+    const matchActive = Boolean(runtime.state?.match?.active || runtime.state?.match?.verbIntroActive);
+    return matchActive && (runtime.state?.match?.layoutMode || "classic") === "classic";
   }
   if (mode === "abbreviation") {
     return Boolean(runtime.state?.abbreviation?.active || runtime.state?.abbreviation?.introActive);
@@ -99,6 +101,9 @@ session.isModeSessionActive = session.isModeSessionActive || function isModeSess
   }
   if (mode === "advConj") {
     return Boolean(runtime.state?.advConj?.active || runtime.state?.advConj?.introActive);
+  }
+  if (mode === "binyanBoard") {
+    return Boolean(runtime.state?.binyanBoard?.active);
   }
   return Boolean(
     runtime.state?.lesson?.active ||
@@ -123,6 +128,11 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
   const runtime = getRuntime();
   const h = getHelpers();
   if (!snapshot || typeof snapshot !== "object") return;
+
+  if (snapshot.mode === "verbBubble" || snapshot.match?.layoutMode === "bubble" || snapshot.summary?.game === "verbBubble") {
+    app.persistence?.clearPersistedSession?.();
+    return;
+  }
 
   runtime.state.mode = typeof snapshot.mode === "string" ? snapshot.mode : runtime.state.mode;
   runtime.state.route = typeof snapshot.route === "string" ? snapshot.route : runtime.state.route;
@@ -234,6 +244,7 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       remainingPairs: Array.isArray(snapshot.match.remainingPairs) ? snapshot.match.remainingPairs : [],
       leftCards: Array.isArray(snapshot.match.leftCards) ? snapshot.match.leftCards : [],
       rightCards: Array.isArray(snapshot.match.rightCards) ? snapshot.match.rightCards : [],
+      layoutMode: "classic",
       selectedLeftId: snapshot.match.selectedLeftId || null,
       selectedRightId: snapshot.match.selectedRightId || null,
       mismatchedCardIds: Array.isArray(snapshot.match.mismatchedCardIds) ? snapshot.match.mismatchedCardIds : [],
@@ -256,6 +267,10 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       sessionMistakeIds: Array.isArray(snapshot.match.sessionMistakeIds) ? snapshot.match.sessionMistakeIds : [],
       timerId: null,
     });
+  }
+
+  if (runtime.state.mode === "binyanBoard" && !runtime.state.binyanBoard?.active) {
+    runtime.state.mode = "home";
   }
 
   runtime.state.route = session.resolveInitialRoute(runtime.state.route);
@@ -400,6 +415,7 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   h.resetVerbMatchState?.();
   h.resetAbbreviationState?.();
   session.resetAdvConjState();
+  app.binyanBoard?.resetBinyanBoardState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
   runtime.state.sentenceBank.active = false;
@@ -444,6 +460,9 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.abbreviation.currentQuestion = null;
   runtime.state.advConj.active = false;
   runtime.state.advConj.currentQuestion = null;
+  app.binyanBoard?.stopBinyanBoardTimer?.();
+  runtime.state.binyanBoard.active = false;
+  runtime.state.binyanBoard.currentQuestion = null;
   runtime.state.mode = "summary";
   runtime.state.summary.active = true;
   runtime.state.summary.game = String(config.game || "");

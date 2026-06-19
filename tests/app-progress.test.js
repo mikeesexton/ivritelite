@@ -488,6 +488,7 @@ globalThis.__appTestExports = {
 
   vm.createContext(context);
   [
+    path.join(__dirname, "..", "verb-game-data.js"),
     path.join(__dirname, "..", "app", "constants.js"),
     path.join(__dirname, "..", "app", "storage.js"),
     path.join(__dirname, "..", "app", "utils.js"),
@@ -507,6 +508,7 @@ globalThis.__appTestExports = {
     path.join(__dirname, "..", "app", "abbreviation.js"),
     path.join(__dirname, "..", "app", "adv-conj.js"),
     path.join(__dirname, "..", "app", "verb-match.js"),
+    path.join(__dirname, "..", "app", "binyan-board.js"),
     path.join(__dirname, "..", "app", "controller.js"),
   ].forEach((scriptPath) => runScriptInContext(scriptPath, context));
   runScriptInContext(sourcePath, context, instrumented);
@@ -946,6 +948,60 @@ test("sentence builder renders english answer lines left-to-right, keeps punctua
   assert.equal(modeStats.sentenceBank.wrong, 0);
 });
 
+test("binyanim answers update simple game mode analytics", () => {
+  const harness = loadAppHarness([]);
+  const { app, document, state } = harness;
+  const board = state.binyanBoard;
+
+  app.runtime.helpers.playAnswerFeedbackSound = () => {};
+  app.runtime.helpers.renderSessionHeader = () => {};
+  app.runtime.helpers.renderDomainPerformance = () => {};
+  app.runtime.helpers.renderMostMissed = () => {};
+  app.binyanBoard.renderBinyanBoardFeedback = () => {};
+  app.binyanBoard.markBinyanBoardChoiceResults = () => {};
+
+  board.currentQuestion = {
+    formId: "test:paal",
+    formVocalized: "פָּתַח",
+    gloss: "opened",
+    options: [
+      { id: "correct", text: "opened", isCorrect: true },
+      { id: "wrong", text: "closed", isCorrect: false },
+    ],
+    selectedOptionId: "correct",
+    locked: false,
+  };
+  app.binyanBoard.applyBinyanBoardAnswer();
+
+  board.currentQuestion = {
+    formId: "test:nifal",
+    formVocalized: "נִפְתַּח",
+    gloss: "was opened",
+    options: [
+      { id: "correct", text: "was opened", isCorrect: true },
+      { id: "wrong", text: "developed", isCorrect: false },
+    ],
+    selectedOptionId: "wrong",
+    locked: false,
+  };
+  app.binyanBoard.applyBinyanBoardAnswer();
+
+  const storageKey = app.runtime.constants.STORAGE_KEYS.binyanBoardStats;
+  assert.deepEqual(JSON.parse(harness.localStorage.getItem(storageKey)), { attempts: 2, correct: 1 });
+
+  const modeStats = app.data.calculateGameModeStats();
+  assert.equal(modeStats.binyanBoard.attempts, 2);
+  assert.equal(modeStats.binyanBoard.correct, 1);
+  assert.equal(modeStats.binyanBoard.wrong, 1);
+
+  app.ui.renderGameModePerformance();
+  const homeCards = document.querySelector("#homeModePerformance").children;
+  const binyanCard = homeCards.find((card) => card.children[1]?.children[0]?.textContent === "Binyanim");
+  assert.ok(binyanCard);
+  assert.equal(binyanCard.children[0]?.children[0]?.textContent, "🌳");
+  assert.equal(binyanCard.children[1].children[1].textContent, "✅ 1  ❌ 1");
+});
+
 test("sentence builder rewrites formal notes into short learner-facing tips", () => {
   const sentenceBank = [
     {
@@ -1033,6 +1089,14 @@ test("sentence builder base layout trims prompt, board, and feedback spacing wit
   assert.match(styles, /\.sentence-token-bank\s*\{[^}]*gap:\s*0\.44rem 0\.34rem;/s);
   assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*font-size:\s*0\.8rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.64rem 0\.8rem 0\.68rem;/s);
+});
+
+test("binyanim function hint fits long revealed labels", () => {
+  const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(styles, /\.prompt-function-hint\s*\{[^}]*box-sizing:\s*border-box;/s);
+  assert.match(styles, /\.prompt-card\.mode-binyan-board \.prompt-function-hint\s*\{[^}]*max-width:\s*min\(38%,\s*12\.8rem\);[^}]*padding-inline:\s*0\.78rem;[^}]*text-overflow:\s*clip;/s);
+  assert.match(styles, /\.prompt-card\.mode-binyan-board \.prompt-function-hint\.is-revealed\s*\{[^}]*font-size:\s*0\.72rem;/s);
 });
 
 test("sentence builder mobile breakpoint uses smaller sentence tokens and a tighter footer stack", () => {
