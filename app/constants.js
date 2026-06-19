@@ -15,6 +15,7 @@ constants.STORAGE_KEYS = constants.STORAGE_KEYS || Object.freeze({
   session: "ivriquest-session-v1",
   welcomeSeen: "ivriquest-welcome-seen-v1",
   advConjStats: "advConjStats",
+  binyanBoardStats: "ivriquest-binyan-board-stats-v1",
 });
 
 constants.LEITNER_INTERVALS = constants.LEITNER_INTERVALS || Object.freeze([

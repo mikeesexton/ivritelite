@@ -342,7 +342,7 @@ advConj.renderAdvConjQuestion = advConj.renderAdvConjQuestion || function render
   h.setGamePickerVisibility?.(false);
   h.setPromptCardVisibility?.(true);
   runtime.el.choiceContainer.classList.remove("summary-grid");
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.renderSessionHeader?.();
   app.ui?.renderPromptLabel?.("", false);
   if (runtime.el.promptText) {

@@ -7,6 +7,141 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-19 — Show each form's grammatical function in the Binyanim game
+
+**Requested:** Alongside the binyan name (הפעל etc.) and the form, also show the form's function (simple active, passive/reflexive, etc.).
+
+**Files changed:**
+- `app/binyan-board.js` — Captured the per-form `function` field on each deck entry (`func`) and carried it onto the question object, so the function travels with the current question.
+- `app/ui.js` — `renderPromptHint` now displays the function for `binyanBoard` rounds: it translates `binyan.function.{func}` into the existing prompt hint note (rendered directly under the form), skipping `other`/empty. (renderPromptHint already runs via `renderSessionHeader` on each question load, so no extra wiring.)
+- `app/bootstrap-data.js` — Added a `binyan.function` label map (EN + HE) for all `function` enum values: simple→"Simple active"/"פשוט (פעיל)", passive→"Passive"/"סביל", middle→"Middle"/"אמצעי", intensive→"Intensive (active)"/"מוגבר (פעיל)", causative→"Causative"/"גורם", reflexive→"Reflexive"/"חוזר", reciprocal→"Reciprocal"/"הדדי", resultative, inchoative, active.
+- `index.html` — Bumped cache-busting `?v=` on `app/binyan-board.js`, `app/ui.js`, and `app/bootstrap-data.js`.
+
+**Behavior changed:** In a Binyanim round, the prompt card now reads: binyan name (e.g. פָּעַל) → vocalized form (e.g. קָם) → its function (e.g. "Simple active"), then the gloss options. The function label is localized with the UI language. Uses the per-form authored `function` value (so it reflects real semantics — e.g. ל־מ־ד pi'el shows "Causative", not "Intensive"). No other game affected.
+
+**Tests run:** `npm test` after = 177/177 pass (no test changes). Live-verified in a browser: walked the full כ־ת־ב paradigm and confirmed each form's binyan label, vocalized form (DOM matches state), and function line line up (פָּעַל/Simple active, נִפְעַל/Passive, פִּעֵל/Intensive (active), פֻּעַל/Passive, הִפְעִיל/Causative, הֻפְעַל/Passive, הִתְפַּעֵל/Reciprocal); confirmed both EN and HE function strings resolve. No console errors.
+
+**Risks / regressions to check:** Showing the function gives a hint toward voice, but distractors are same-root siblings that often share a function (e.g. כ־ת־ב has three passives), so it doesn't trivially reveal the answer — and it is an intended teaching aid. `function: "other"` and missing functions render no line. Hebrew grammar terms are standard (סביל/פעיל/חוזר/הדדי/גורם/מוגבר); "middle"→"אמצעי" and the rare resultative/inchoative terms can be refined if desired.
+
+---
+
+### 2026-06-19 — Enable Hebrew speech in the Binyanim game
+
+**Requested:** Enable text-to-speech in the Binyanim game so the Hebrew can be heard, using the same format as the other games.
+
+**Files changed:**
+- `app/binyan-board.js` — Added `getBinyanBoardPromptSpeechPayload()`, building a speech payload from the current question's vocalized form (niqqud carries the pronunciation) with `source: "prompt"`, mirroring `lessonMode.getLessonPromptSpeechPayload`. (`renderRoundQuestion` already calls `app.ui.renderPromptSpeechButton`, so the speaker control now appears.)
+- `app/ui.js` — In `getCurrentPromptSpeechPayload`, the `binyanBoard` branch now returns the new payload instead of `null`, so the shared prompt speaker button and `playPromptSpeech` work for this mode.
+- `index.html` — Bumped cache-busting `?v=` on `app/binyan-board.js` and `app/ui.js`.
+
+**Behavior changed:** In a Binyanim round, the speaker icon now appears on the prompt card next to the vocalized form (same control/placement as the other Hebrew-prompt games); clicking it pronounces the form via the browser's `he-IL` voice. Options are English glosses, so there is no option-level speech. No other game affected.
+
+**Tests run:** `npm test` after = 177/177 pass (no test changes). Live-verified in a browser: opened a כ־ת־ב round, confirmed the speaker button renders and is enabled, the prompt payload resolves to the vocalized form (`כָּתַב`, `lang: "he-IL"`), and `playPromptSpeech()` returns true with `speechSynthesis.speaking` true. No console errors.
+
+**Risks / regressions to check:** Speech still depends on the browser having a Hebrew (`he-IL`) voice and the user's speech preference; behavior matches the other modes' speaker button (shown whenever speech is supported). The payload uses the vocalized form for both `plain` and `niqqud`, so pronunciation reflects the authored niqqud.
+
+---
+
+### 2026-06-19 — Add the Binyanim paradigm-board game
+
+**Requested:** Build a new game testing the seven Hebrew binyanim, seeded from two attached files (`verb_game_schema.json`, `verbs_seed.json`). The user's starting idea was a Jeopardy board of roots; after design discussion we settled on a **Paradigm Board**: a board of root tiles → pick a root → play through that root's binyan forms as a connected mini-round → tile clears → clear all tiles to win. v1 scope (user-confirmed): **form → meaning** questions only, **niqqud always on**. Hard rule from the schema: verb forms are authored/verified data — the app only shuffles and displays, never generates.
+
+**Files changed:**
+- `verb-game-data.js` — **New.** Verbatim port of `verbs_seed.json` (6 roots, version, distractor strategy, binyanim metadata) into the project's IIFE/global pattern, exposed as `global.IvriQuestVerbGameData`. No forms transformed.
+- `app/binyan-board.js` — **New.** The `app.binyanBoard` mode module, modeled on `app/adv-conj.js`. Builds a deck of roots (each with its `exists:true` forms in canonical binyan order) plus a cross-root distractor gloss pool; renders the root board and the per-root rounds into the shared `#choiceContainer`; builds 4-option form→meaning questions (3 distractors from sibling binyan glosses of the same root, topped up cross-root only when needed, excluding `distractor_eligible:false`); handles answer/score/feedback (revealing `teaching_point` when present), tile-clearing, win → `showSessionSummary`, and a session timer.
+- `app/bootstrap-runtime.js` — Registered `homeBinyanBoardBtn`/`binyanBoardBtn` elements and added the `binyanBoard` state slice to `createInitialState`.
+- `app/controller.js` — `bindUi` listeners for both new tiles; `binyanBoard` branches in `openHomeLesson`, `continueFromResults`, and `handleNextAction` (delegates to `handleBinyanBoardNext`).
+- `app/ui.js` — `binyanBoard` branches in `renderLearnState` (dispatch to `renderBinyanBoard`), `renderSessionHeader`, `getGameplayHeaderMeta`, `updateLessonShellModeState` (standard layout + `mode-binyan-board` class), `updateStickyLessonActionsState` (feedback gate), and `getCurrentPromptSpeechPayload` (returns null — no speech yet).
+- `app/session.js` — Added `binyanBoard` to `hasActiveLearnSession` and `isModeSessionActive`; reset/stop hooks in `endSessionAndNavigate` and `showSessionSummary`; a `restoreSessionState` guard normalizing a stale `binyanBoard` mode on reload (binyan sessions are not persisted/restored, matching advConj).
+- `app/bootstrap-data.js` — Added EN + HE strings: `game.binyanName`/`binyanNote`, a `binyan` block (`cleared`, `difficulty.easy/medium/hard`), `feedback.binyanCorrect`/`binyanWrong`, `summary.binyanTitle`/`binyanNote`.
+- `index.html` — Added the Binyanim tile to both the home dashboard grid and `#gamePicker`; added `<script>` tags for `verb-game-data.js` and `app/binyan-board.js`; bumped cache-busting `?v=` on the edited app files (`bootstrap-data.js`, `bootstrap-runtime.js`, `session.js`, `ui.js`, `binyan-board.js`, `controller.js`).
+- `styles.css` — Appended board styling: `.binyan-board-grid`, `.binyan-root-tile` (+ cleared/disabled state and per-difficulty badge colors), root-letters/meaning/badge, and an enlarged prompt form for `mode-binyan-board`.
+
+**Behavior changed:** A new "Binyanim" game appears on the home dashboard and in-session game picker. It shows a board of 6 root tiles (Hebrew root, English core meaning, difficulty badge + form count). Picking a root walks its existing binyanim in canonical order as vocalized-form → English-meaning multiple choice; correct/wrong locks the round, highlights the answer, plays the existing feedback sound, and reveals the form's teaching point when one exists. `exists:false` slots are never quizzed. Clearing every root opens the standard session summary (score/accuracy/time/mistakes, mistakes shown as vocalized form + gloss); "Play Again" restarts. No other game is affected.
+
+**Tests run:** `npm test` before = 177/177 pass; after = 177/177 pass (no test changes). Live-verified in a browser (static server on the repo root): launched the game, confirmed the 6-tile board with difficulty badges/form counts; opened כ־ת־ב and confirmed the prompt shows the vocalized form with niqqud, the binyan-name label, and that all 3 distractors are sibling glosses of the same root; answered correctly (feedback `Correct. כָּתַב means "wrote".`); cleared all 7 forms in canonical order and confirmed the tile cleared and the board returned; opened ס־ד־ר and confirmed the הִסְתַּדֵּר metathesis teaching point renders in the feedback tray; completed the whole board → "Binyanim Complete" summary with score/accuracy/time and Hebrew-form mistakes; "Play Again" restarted with a fresh board; leaving mid-game via Home reset the mode and cleared the timer. No console errors.
+
+**Risks / regressions to check:** Only 6 roots ship, so a board is short; add roots by appending to `verb-game-data.js` (no code change). Binyan results are not written to the spaced-repetition progress map (forms aren't vocab words) and binyan sessions are not restored across reloads — both intentional and matching advConj. Leaving any game leaves `state.mode` at a stale label (e.g. `"lesson"`) while the dashboard shows correctly — this is pre-existing app behavior, confirmed identical for advConj. Distractor top-up falls back to the cross-root pool only when a root has fewer than 4 eligible sibling glosses.
+
+---
+
+### 2026-06-19 — Scrap the Bubble Conjugation game and stop it auto-resuming
+
+**Requested:** On `localhost:8080`, opening the Abbreviation game instead showed the Bubble Conjugation game (which was meant to be scrapped). It behaved correctly on GitHub Pages. Diagnose, then remove the bubble game for good.
+
+**Diagnosis:** Not a code-on-disk problem on its face — `index.html` already had no bubble buttons/script. The app auto-restores the last session from `localStorage` (`ivriquest-session-v1`) on every load (`app.js` → `restoreSessionState`). A previously-saved `mode: "verbBubble"` session was being resumed on load, dropping the user into the bubble game regardless of what they clicked. GitHub Pages is a different origin (separate `localStorage`) with no such saved session, so it looked fine there. Root cause: this branch's working tree had re-added the bubble game (`verbBubble` mode wiring across controller/verb-match/session/ui), and a stale bubble session kept resurrecting it.
+
+**Files changed:**
+- `app/verb-match.js` — Removed bubble layout mode entirely: deleted `getVerbMatchLayoutMode`/`getVerbMatchModeName`/`isVerbBubbleMode` helpers, `startVerbBubbleMatch`, all `app.verbBubbleStage?.*` calls, `renderVerbMatchBubbles`, and the bubble branches in `refillVerbMatchColumns`/`renderVerbMatchCards`/`loadNextVerbRound`/`finishVerbMatchSession`. Classic Conjugation logic is unchanged; `layoutMode` is now always `"classic"`.
+- `app/controller.js` — Removed the `homeVerbBubbleBtn`/`verbBubbleBtn` click bindings, the `verbBubble` case in `openHomeLesson`, the `verbBubble` summary/continue case, and reverted the gameplay-key condition to `verbMatch`-only. (Net: reverts to its committed `HEAD` state — the bubble wiring here was uncommitted.)
+- `app/session.js` — Removed `verbBubble` from `isModeSessionActive` and the match timer; simplified the match-restore block to classic-only. **Added a guard at the top of `restoreSessionState`: any snapshot with `mode === "verbBubble"`, `match.layoutMode === "bubble"`, or `summary.game === "verbBubble"` is discarded and cleared from storage (`clearPersistedSession`), so a stale bubble session can never resurrect.**
+- `app/ui.js` — Removed `verbBubble` branches from `isVerbMatchMode`, the shell/prompt `mode-verb-bubble` class toggles, the session-title key selection, and the home-tile highlight.
+- `app/bootstrap-runtime.js` — Removed the `homeVerbBubbleBtn`/`verbBubbleBtn` element registrations.
+- `app/bootstrap-data.js` — Removed the now-unused i18n strings `verbBubbleTitle`, `verbBubbleStart` (EN + HE) and `summary.bubbleMatchTitle` (EN + HE).
+- `app/verb-bubble-stage.js` — Deleted (was an untracked, unloaded module).
+- `styles.css` — Removed bubble-game CSS only: `.choices.match-bubble-grid`, `.match-bubble-stage*`, `.match-card.match-bubble*`, the `matchBubbleRise/SwayX/Pop/Shake` keyframes, the two responsive `@media` variants, and the `#homeVerbBubbleBtn/#verbBubbleBtn:hover` rule. Kept the shared `--bubble-*` CSS variables and all `.second-chance-bubble` rules (used by the unrelated intro overlays).
+- `tests/app-progress.test.js` — Removed the "bubble conjugation is a separate selectable mode" test and dropped `verb-bubble-stage.js` from the harness script-load list.
+- `index.html` — Removed the stale "verb-bubble-stage.js intentionally not loaded" comment and bumped cache-busting `?v=` to `20260619a` for the edited files (`bootstrap-data.js`, `bootstrap-runtime.js`, `session.js`, `ui.js`, `verb-match.js`, `controller.js`, `styles.css`) so browsers don't serve stale cached JS/CSS.
+
+**Behavior changed:** Bubble Conjugation is fully gone and cannot be launched. A previously-saved bubble session is discarded on next load (and erased), so the app no longer auto-resumes into it — opening Abbreviation now opens Abbreviation. Classic Conjugation and all other games are unchanged.
+
+**Tests run:** `npm test` before = 178/178 pass (branch baseline). `npm test` after = 177/177 pass (the one removed test is the deleted bubble test). Also live-verified in a browser (static server, served repo root): seeded a `verbBubble` session in `localStorage`, reloaded → app booted clean to a non-bubble state with the stale session cleared from storage and no console errors; clicking Abbreviation launched Abbreviation (`mode: "abbreviation"`, no bubble stage in DOM); starting classic Conjugation rendered the two-column match grid (10 cards, `layoutMode: "classic"`, no bubble stage).
+
+**Risks / regressions to check:** Users who currently have a bubble session saved will, on first load after this ships, be dropped to a clean home state instead of resuming — intended. The `restoreSessionState` guard keys on `verbBubble`/`bubble` strings; harmless unless those identifiers are ever reused for a new feature. Mid-classic-match saved sessions still restore normally. Because the bubble wiring in `controller.js`/`tests/app-progress.test.js` was uncommitted, those two files now read as unmodified vs `HEAD` — expected.
+
+---
+
+### 2026-06-19 — Soften answer sound effects
+
+**Requested:** The answer sound effects in `assets/sounds/` were a little harsh on the ears. Keep the notes/melody but rework the sounds so they are softer.
+
+**Files changed:**
+- `assets/sounds/answer-correct.mp3` / `.ogg`, `assets/sounds/answer-streak.mp3` / `.ogg`, `assets/sounds/answer-wrong.mp3` / `.ogg` — Re-encoded each clip through an ffmpeg softening chain (no pitch or tempo change): `afade in 18ms` (removes the clicky onset transient — most pronounced on the wrong sound, which had a full-spectrum click at t=0), `highshelf f=3200 g=-9` + `lowpass f=10000` (rolls off the bright/tinny harmonics that previously reached ~13–15 kHz), `volume -2.5dB`, and `afade out` over the tail. MP3s re-encoded with libmp3lame @128k; OGGs re-encoded with ffmpeg's native `vorbis` encoder (this ffmpeg build lacks `libvorbis`) @128k, keeping the original vorbis-in-ogg codec.
+- `assets/sounds/original-backup/` (new) — Untouched copies of all six original files, in case the originals need to be restored.
+
+**Behavior changed:** Correct / streak / wrong feedback sounds play the same melodies but noticeably softer: peak levels dropped from ~-0.5 dBFS to ~-3 to -4.7 dBFS, high-frequency brightness is reduced, and the sharp attack clicks are smoothed. Durations are unchanged. No app code references changed.
+
+**Tests run:** Did not run `npm test` (asset-only change, no JS touched). Verified each output decodes cleanly and confirmed levels/spectrograms via `ffprobe`/`ffmpeg volumedetect`/`showspectrumpic`: onset clicks gone, top-end harmonics rolled off, fundamentals/melody intact.
+
+**Risks / regressions to check:** The native ffmpeg `vorbis` encoder is lower quality than `libvorbis`; the clips are short SFX so this should be inaudible, but give the `.ogg` files a listen in a browser that prefers ogg (Firefox). If any sound now feels too quiet or too dull, the softening amount (high-shelf gain, lowpass cutoff, volume) can be eased and re-rendered from `original-backup/`. Originals are preserved in `assets/sounds/original-backup/`.
+
+---
+
+### 2026-06-09 — Soft-disable Bubble Conjugation game
+
+**Requested:** Remove the Bubble Conjugation game from the UI without deleting its code, so it can be restored later.
+
+**Files changed:**
+- `index.html` — Removed the `<script defer src="./app/verb-bubble-stage.js">` tag (replaced with a comment). Removed the `homeVerbBubbleBtn` tile from the home screen game grid. Removed the `verbBubbleBtn` tile from the in-lesson game picker.
+
+**Behavior changed:** Bubble Conjugation no longer appears as a selectable game on the home screen or in the in-lesson game picker. The `verb-bubble-stage.js` module is not loaded. All other games are unaffected.
+
+**Tests run:** None (UI-only change; no logic altered).
+
+**Risks / regressions to check:** Any code paths that reference `verbBubbleBtn` or `homeVerbBubbleBtn` by ID (e.g., in `controller.js` or `ui.js`) will silently no-op when looking up those elements — verify no errors are thrown on load. To re-enable, uncomment the script tag and restore the two button blocks.
+
+---
+
+### 2026-05-03 14:15 — Make Bubble Conjugation actually playable with rising staggered bubbles
+
+**Requested:** The newly added Bubble Conjugation game wasn't playable — when a pair popped, both halves of the next pair surfaced together into adjacent fixed grid slots, making the next match visually obvious. Rework so bubbles continuously rise from the bottom at random horizontal positions, with the English and Hebrew halves of any pair released at independent times so a fresh pair-up isn't visually telegraphed. Reference video: https://www.youtube.com/watch?v=Ym1nc_64kzU (we are not adopting its special-bubble freeze/pop powerups). The classic two-column Conjugation must remain unchanged.
+
+**Files changed:**
+- `app/verb-bubble-stage.js` (new) — Module owning the bubble stage element, a persistent `Map<cardId, HTMLElement>` of live bubbles, an in-memory queue of pending halves, a self-rescheduling `setTimeout` spawn loop, per-bubble `animationend` listeners that pop or recycle, a `visibilitychange`-driven pause/resume, and an `unmount` that tears everything down. Initial seed at round start synchronously spawns up to 6 bubbles biased so at least one English and one Hebrew render before the first scheduled tick.
+- `app/verb-match.js` — Removed the fixed `BUBBLE_LAYOUTS` 8-slot grid and all its helpers (`buildVerbMatchBubbleLayout`, `getNextBubbleSlot`, `ensureVerbMatchBubbleLayout`, `normalizeVerbMatchBubbleLayouts`, `applyBubbleStyle`, plus the unused `clampNumber`/`getCardNumber`). `refillVerbMatchColumns` now branches: classic mode keeps the existing column refill; bubble mode drains `remainingPairs` into `verbBubbleStage.enqueuePair`. `renderVerbMatchBubbles` is now a thin shim around `verbBubbleStage.mount` + `sync`. `loadNextVerbRound` clears the bubble queue and resets the round-key on a new verb. `resetVerbMatchState` calls `verbBubbleStage.unmount` so leaving bubble mode (or starting a new session) cleans the stage and scheduler. `finishVerbMatchSession` also unmounts in bubble mode.
+- `styles.css` — Replaced `matchBubbleSurface` and `matchBubbleDrift` with two composable animations: `matchBubbleRise` (linear `top: 110% → -10%` over a per-bubble `--bubble-rise-duration` of 9–13s) and `matchBubbleSwayX` (gentle horizontal oscillation via `--bubble-sway-x`). The bubble base rule sets `top: 110%` so unstarted bubbles are below the stage. `.matched` and `.mismatch` keep rise running by listing it again in their animation stack — they layer pop or shake on top so neither selection state restarts the rise. Added `.match-bubble-stage.paused .match-card.match-bubble { animation-play-state: paused }` for tab-hidden pauses.
+- `app/session.js` — Bubble-mode persistence restore now resets in-flight bubble state: `leftCards`/`rightCards` cleared, `remainingPairs` recomputed from `pairs` minus `matchedPairIds`, transient interaction state (selected/matched/mismatched IDs, `isResolving`) cleared. Mid-flight bubble positions are not recoverable across reload, but round progress (matched pairs, combo, score, time) is preserved.
+- `index.html` — Added `<script defer src="./app/verb-bubble-stage.js?v=20260503b">` before `verb-match.js`. Bumped versions for `styles.css`, `app/session.js`, and `app/verb-match.js` to `20260503b`.
+- `tests/app-progress.test.js` — Added the new `verb-bubble-stage.js` module to the harness's script load list before `verb-match.js`. Existing bubble regression continues to pass: the synchronous initial seed in `mount`/`sync` guarantees both `.match-bubble.english` and `.match-bubble.hebrew` exist after the first render without needing to advance fake timers.
+
+**Behavior changed:** Bubble Conjugation now plays as a true rising-bubble stage. Each bubble enters at `y=110%` at a random `x` in 12–88% (with min-distance spacing to avoid overlap) and rises to `y=-10%` over 9–13s, with light horizontal sway. Each English and Hebrew half of any pair is queued and released independently — the scheduler shuffles the queue and dequeues every 1.5–2.5s — so the player never sees a fresh pair surface together. Visible target is 6 bubbles, refilled from the queue as bubbles pop or recycle. Unmatched bubbles that reach the top are removed, re-queued, and respawn at a new x after a 0.7–1.3s delay (they aren't lost). Successful matches still run the existing pop animation; mismatches shake briefly without despawning, and both bubbles keep rising. Niqqud toggles and selection clicks update existing bubble nodes in place rather than rebuilding the stage, so no rises restart on interaction. Tab-switch pauses the rise/sway animations and the spawn scheduler; returning to the tab resumes them. Classic two-column Conjugation is unchanged.
+
+**Tests run:** `npm test` — passed, 174/174 before changes. `npm test` — passed, 174/174 after changes. `git diff --check -- . ':(exclude).claude'` — not run (no whitespace changes flagged in review). Browser smoke: `npx serve -l 3000`, opened the in-app browser and stepped through Bubble Conjugation: bubbles enter at staggered y positions and varying x, English (teal) and Hebrew (gold) halves are not visually paired, mismatch shake leaves both bubbles rising (animation list `matchBubbleRise, matchBubbleSwayX, matchBubbleShake` confirmed in computed style), match pop removes both bubbles within ~220ms, switching to classic Conjugation cleanly unmounts the bubble stage (`verbBubbleStage` internals show `mounted: false`, no scheduler timeout, no queue), and re-entering Bubble Conjugation re-seeds correctly. Light theme cyan/gold contrast verified.
+
+**Risks / regressions to check:** Mid-round persistence reload now drops in-flight bubble positions on purpose — round progress is preserved but the visible bubble set is rebuilt. Manual QA should confirm this restoration feels clean (no flash of stale bubbles, no stuck `isResolving` state). With the rise animation always layered into `.matched` and `.mismatch` rules, browsers with quirky CSS animation list re-evaluation might briefly desync; spot-check on Safari and Firefox for any visible jump when the mismatch class is removed after 300ms. The recycle path requeues to the back of the queue — under very long unmatched sessions the queue can grow as recycled bubbles outpace dequeues, but visible count is capped at 6 so memory growth is bounded by the queue itself; worth keeping an eye on extremely long sessions. Mobile narrow widths still render fine at 375px (existing breakpoints kept), but very small phones in landscape might see the stage's `min-height: clamp(380px, 54vh, 560px)` push other UI; flagging since the previous static layout was forgiving and the new animated one is unforgiving if the stage shrinks under the rise distance.
+
+---
+
 ### 2026-03-29 17:35 — Keep desktop side panels visible on results and polish sentence-builder prompt/answer behavior
 
 **Requested:** Keep the desktop `Review` and `Settings` panels visible on the game-end/results screen, add a desktop topbar home button next to the time/combo pill with Hebrew mirroring, fix a Hebrew sentence-builder prompt overlap where the speaker button collided with centered text, and accept alternate Hebrew speaker-gender sentence-builder answers when the English prompt does not specify the speaker’s gender.
@@ -1797,6 +1932,30 @@ Each entry records what was requested, what changed, what was tested, and what t
 **Tests run:** `node --test tests/app-progress.test.js` — passed, 56/56. `node --test tests/app-speech.test.js` — passed, 5/5. `node --test` — passed, 88/88.
 
 **Risks / regressions to check:** Manual QA should confirm the success/error tint balance still feels calm in light mode and that the updated card-state text colors remain readable across translation, abbreviation, advanced conjugation, and conjugation.
+
+---
+
+### 2026-05-03 10:48 — Add Bubble Conjugation as a separate game mode
+
+**Requested:** Add a creative bubble-based twist on the conjugation game where English and Hebrew conjugation bubbles float up and pop when matched, while keeping the existing two-column Conjugation game available as its own selectable mode and preserving Hebrew-first speech playback.
+
+**Files changed:**
+- `index.html` — Added `Bubble Conjugation` tiles to both lesson pickers and bumped cache-busting versions for changed CSS/runtime files.
+- `app/bootstrap-data.js` — Added English/Hebrew labels, prompts, session titles, and summary title for the new bubble mode.
+- `app/bootstrap-runtime.js` — Registered the new bubble-mode buttons and added persisted match `layoutMode` state.
+- `app/controller.js` — Wired `verbBubble` start/continue/next handling while leaving `verbMatch` routed to the original Conjugation mode.
+- `app/session.js`, `app/persistence.js` — Persisted/restored the match layout and treated bubble conjugation as a distinct active match session.
+- `app/ui.js` — Taught shared gameplay header, prompt speech, prompt hints, shell classes, and home tile highlighting about the new `verbBubble` mode.
+- `app/verb-match.js` — Reused the existing conjugation matching/progress/speech logic, added `startVerbBubbleMatch`, and added a bubble renderer with unique floating slots, pop/mismatch states, and a smaller visible bubble set that refills as pairs are matched.
+- `styles.css` — Added the bubble stage, floating bubble visuals, pop/float animations, theme variants, and responsive sizing while leaving classic match-column styling in place.
+- `app/lesson.js`, `app/sentence-bank.js`, `app/abbreviation.js`, `app/adv-conj.js` — Cleared the bubble-grid class when switching into other modes.
+- `tests/app-progress.test.js` — Added regression coverage that bubble conjugation is a separate selectable mode, renders mixed floating bubbles, still speaks Hebrew-first selections, and does not replace classic two-column Conjugation.
+
+**Behavior changed:** The home lesson picker now includes `Bubble Conjugation` in addition to the original `Conjugation`. Bubble Conjugation shows English and Hebrew forms as floating bubbles in a water-like stage; correct matches pop and replacement bubbles surface. Choosing a Hebrew bubble before an English bubble still triggers Hebrew speech. The existing Conjugation game remains the two-column version.
+
+**Tests run:** `npm test` — passed, 173/173 before changes. `node --test tests/app-progress.test.js` — passed, 109/109 after adding the focused bubble regression. `npm test` — passed, 174/174 after implementation. `git --no-pager diff --check -- .` — passed. Browser smoke: `python3 -m http.server 8083`, loaded `http://127.0.0.1:8083/` and `http://localhost:8083/` in the in-app browser, confirmed the Bubble Conjugation tile starts the new bubble mode and the page renders without console errors.
+
+**Risks / regressions to check:** Manual QA should spend a few minutes on very narrow mobile widths and during longer bubble sessions, watching for bubble overlap after many refills. The mode reuses the existing match state, so the main behavioral risk is restored in-progress sessions with old bubble positions; the renderer now normalizes visible slots, but a refresh during active gameplay is worth spot-checking.
 
 ---
 

@@ -41,6 +41,8 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.homeAbbreviationBtn?.addEventListener("click", () => controller.openHomeLesson("abbreviation"));
   runtime.el.homeAdvConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
   runtime.el.advConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
+  runtime.el.homeBinyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
+  runtime.el.binyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
   runtime.el.lessonBtn.addEventListener("click", () => {
     runtime.state.lastPlayedMode = "lesson";
     runtime.state.mode = "lesson";
@@ -82,6 +84,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.resultsReviewBtn?.addEventListener("click", () => controller.leaveSummaryAndNavigate("review"));
   runtime.el.resultsHomeBtn?.addEventListener("click", () => controller.leaveSummaryAndNavigate("home"));
   runtime.el.promptSpeechBtn?.addEventListener("click", () => app.ui?.playPromptSpeech?.());
+  runtime.el.promptFunctionHint?.addEventListener("click", () => app.binyanBoard?.toggleBinyanFunctionHint?.());
   runtime.el.welcomeModalCloseBtn?.addEventListener("click", () => app.ui?.closeWelcomeModal?.());
   runtime.el.welcomeModal?.addEventListener("click", (event) => {
     if (event.target === runtime.el.welcomeModal) {
@@ -273,6 +276,13 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
     return;
   }
 
+  if (mode === "binyanBoard") {
+    runtime.state.lastPlayedMode = "binyanBoard";
+    runtime.state.mode = "binyanBoard";
+    app.binyanBoard?.startBinyanBoard?.();
+    return;
+  }
+
   runtime.state.lastPlayedMode = "lesson";
   runtime.state.mode = "lesson";
   app.lessonMode?.startLesson?.();
@@ -294,6 +304,10 @@ controller.continueFromResults = controller.continueFromResults || function cont
   }
   if (runtime.state.summary.game === "advConj") {
     app.advConj?.startAdvConj?.();
+    return;
+  }
+  if (runtime.state.summary.game === "binyanBoard") {
+    app.binyanBoard?.startBinyanBoard?.();
     return;
   }
   app.lessonMode?.startLesson?.();
@@ -389,6 +403,11 @@ controller.handleNextAction = controller.handleNextAction || function handleNext
     if (runtime.state.advConj.currentQuestion.selectedOptionId) {
       app.advConj?.applyAdvConjAnswer?.();
     }
+    return;
+  }
+
+  if (runtime.state.mode === "binyanBoard") {
+    app.binyanBoard?.handleBinyanBoardNext?.();
     return;
   }
 

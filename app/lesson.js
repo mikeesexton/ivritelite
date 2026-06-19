@@ -160,7 +160,7 @@ lessonMode.startLesson = lessonMode.startLesson || function startLesson() {
   runtime.state.lesson.domainCounts = {};
   runtime.state.currentQuestion = null;
   runtime.el.choiceContainer.innerHTML = "";
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.clearFeedback?.();
   lessonMode.playLessonStartIntro();
   h.renderAll?.();
@@ -294,7 +294,7 @@ lessonMode.renderQuestion = lessonMode.renderQuestion || function renderQuestion
   h.setPromptCardVisibility?.(true);
   runtime.el.choiceContainer.classList.remove("summary-grid");
   h.renderSessionHeader?.();
-  runtime.el.choiceContainer.classList.remove("match-grid");
+  runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
 
   if (!question) return;
 

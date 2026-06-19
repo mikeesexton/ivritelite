@@ -992,8 +992,8 @@ body[data-theme="light"] .progress-strip {
 .prompt-speech-btn {
   position: absolute;
   top: 0.82rem;
+  left: auto;
   right: 0.82rem;
-  inset-inline-end: 0.82rem;
   width: 2.28rem;
   min-width: 2.28rem;
   min-height: 2.28rem;
@@ -1030,6 +1030,85 @@ body[data-theme="light"] .prompt-speech-btn:focus-visible {
   width: 18px;
   height: 18px;
   display: block;
+}
+
+.prompt-function-hint {
+  position: absolute;
+  top: 0.82rem;
+  left: 0.82rem;
+  right: auto;
+  box-sizing: border-box;
+  max-width: min(48%, 10.8rem);
+  min-height: 2.28rem;
+  padding: 0.18rem 0.64rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-soft);
+  background: rgba(28, 42, 79, 0.56);
+  border-color: rgba(171, 191, 220, 0.18);
+  font-family: "Chivo", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prompt-function-hint:hover,
+.prompt-function-hint:focus-visible,
+.prompt-function-hint.is-revealed {
+  color: var(--ink);
+  border-color: rgba(244, 196, 48, 0.46);
+  background: rgba(34, 49, 91, 0.9);
+}
+
+.prompt-function-hint.is-revealed {
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+body[data-theme="light"] .prompt-function-hint {
+  color: #56708a;
+  background: rgba(226, 235, 248, 0.86);
+  border-color: rgba(0, 56, 184, 0.14);
+}
+
+body[data-theme="light"] .prompt-function-hint:hover,
+body[data-theme="light"] .prompt-function-hint:focus-visible,
+body[data-theme="light"] .prompt-function-hint.is-revealed {
+  color: #1f3551;
+  border-color: rgba(0, 56, 184, 0.28);
+  background: rgba(214, 226, 244, 0.96);
+}
+
+body[data-ui-lang="he"] .prompt-function-hint {
+  letter-spacing: 0;
+}
+
+.prompt-card.mode-binyan-board .prompt-speech-btn {
+  top: 1rem;
+  left: auto;
+  right: 1rem;
+}
+
+.prompt-card.mode-binyan-board .prompt-function-hint {
+  top: 1rem;
+  left: 1rem;
+  right: auto;
+  max-width: min(38%, 12.8rem);
+  min-width: 3.9rem;
+  padding-inline: 0.78rem;
+  text-overflow: clip;
+}
+
+.prompt-card.mode-binyan-board .prompt-function-hint.is-revealed {
+  font-size: 0.72rem;
 }
 
 .prompt-text {
@@ -2646,8 +2725,8 @@ body[data-ui-lang="he"] .mastered-row input {
 
   .prompt-speech-btn {
     top: 0.68rem;
+    left: auto;
     right: 0.68rem;
-    inset-inline-end: 0.68rem;
     width: 2.18rem;
     min-width: 2.18rem;
     min-height: 2.18rem;
@@ -2656,6 +2735,20 @@ body[data-ui-lang="he"] .mastered-row input {
   .prompt-speech-btn svg {
     width: 17px;
     height: 17px;
+  }
+
+  .prompt-function-hint {
+    top: 0.68rem;
+    left: 0.68rem;
+    right: auto;
+    min-height: 2.18rem;
+    max-width: min(46%, 9.6rem);
+    padding-inline: 0.54rem;
+    font-size: 0.68rem;
+  }
+
+  .prompt-function-hint.is-revealed {
+    font-size: 0.73rem;
   }
 
   .prompt-text {
@@ -2926,11 +3019,25 @@ body[data-ui-lang="he"] .mastered-row input {
 
   .prompt-speech-btn {
     top: 0.64rem;
+    left: auto;
     right: 0.64rem;
-    inset-inline-end: 0.64rem;
     width: 2.1rem;
     min-width: 2.1rem;
     min-height: 2.1rem;
+  }
+
+  .prompt-function-hint {
+    top: 0.64rem;
+    left: 0.64rem;
+    right: auto;
+    min-height: 2.1rem;
+    max-width: min(44%, 8.8rem);
+    padding-inline: 0.46rem;
+    font-size: 0.64rem;
+  }
+
+  .prompt-function-hint.is-revealed {
+    font-size: 0.68rem;
   }
 
   .prompt-text {
@@ -3309,4 +3416,88 @@ body[data-ui-lang="he"] .mastered-row input {
   .match-card.hebrew {
     font-size: 0.94rem;
   }
+}
+
+/* Binyanim paradigm board */
+.choices.binyan-board-grid {
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 0.6rem;
+}
+
+.binyan-root-tile {
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  text-align: center;
+  padding: 1rem 0.86rem;
+}
+
+.binyan-root-tile:hover {
+  border-color: rgba(244, 196, 48, 0.5);
+}
+
+body[data-theme="light"] .binyan-root-tile:hover {
+  border-color: rgba(0, 56, 184, 0.4);
+}
+
+.binyan-root-letters {
+  font-family: "Assistant", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.binyan-root-meaning {
+  color: var(--ink-soft);
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: block;
+  font-size: 0.92rem;
+  line-height: 1.35;
+  margin-inline: auto;
+  max-width: min(100%, 32ch);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.binyan-root-badge {
+  font-family: "Chivo", sans-serif;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  border: 1px solid var(--tile-border);
+  border-radius: 999px;
+  padding: 0.14rem 0.56rem;
+}
+
+.binyan-root-tile[data-difficulty="easy"] .binyan-root-badge {
+  border-color: rgba(56, 178, 116, 0.55);
+}
+
+.binyan-root-tile[data-difficulty="medium"] .binyan-root-badge {
+  border-color: rgba(244, 196, 48, 0.55);
+}
+
+.binyan-root-tile[data-difficulty="hard"] .binyan-root-badge {
+  border-color: rgba(230, 57, 70, 0.55);
+}
+
+.binyan-root-tile.is-cleared {
+  opacity: 0.55;
+}
+
+.binyan-root-tile.is-cleared .binyan-root-badge {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: inherit;
+}
+
+.lesson-shell.mode-binyan-board .prompt-text.hebrew {
+  font-family: "Assistant", sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
 }
