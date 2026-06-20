@@ -235,23 +235,3 @@ test("דוא״ל is available as a playable shorthand for דואר אלקטרו�
   assert.equal(byId.get("abbr-209")?.english, "email");
   assert.equal(deckIds.has("abbr-209"), true);
 });
-
-test("contact-info abbreviations prefer each other as distractors", () => {
-  const context = loadAbbreviationContext();
-  const rows = context.IvriQuestAbbreviations.getAbbreviations();
-  const deck = context.IvriQuestApp.abbreviation.prepareAbbreviationDeck(rows);
-  const byId = new Map(deck.map((entry) => [entry.id, entry]));
-  const emailEntry = byId.get("abbr-209");
-
-  assert.ok(emailEntry, "abbr-209 should be present in the playable deck");
-
-  const options = context.IvriQuestApp.abbreviation.buildAbbreviationOptions(deck, emailEntry, "he2en");
-  const optionIds = options.map((option) => option.id);
-
-  assert.equal(options.length, 4);
-  assert.deepEqual(new Set(optionIds).size, 4);
-  assert.deepEqual(
-    new Set(optionIds),
-    new Set(["abbr-209", "abbr-093", "abbr-095", "abbr-096"])
-  );
-});

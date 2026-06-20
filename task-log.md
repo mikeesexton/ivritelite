@@ -7,6 +7,199 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-19 — Homepage redesign: minimal icon-grid game launcher
+
+**Requested:** The home screen felt crowded (six tall, full-width game tiles stacked in one column, each with an icon + title + description line). Redesign it — drop the always-visible descriptions, move to a grid, and optimize/beautify for desktop, tablet, and mobile. After showing three mockups, the user chose the **"Icon grid (minimal)"** direction: centered cards with an enlarged icon on top, game name beneath, quiet card with an accent border on hover/focus; responsive 2-col phone / 3-col tablet+desktop; no visible descriptions.
+
+**Approach / judgment calls:**
+- Restyled **both** tile sets that share `.game-tile` — the landing `#homeDashboard .home-lesson-grid` (6 `home-game-tile`s) and the in-session `#gamePicker.game-picker` — so they stay visually identical.
+- Converted `.game-tile` from a 2-column (icon-left) grid to a centered flex column (icon over title). Enlarged the icons; since they are fixed-size PNGs, updated **both** `.game-tile-icon` and `.game-tile-icon img` width/height at every breakpoint.
+- **Kept** the `.game-tile-note` description elements in the DOM but made them screen-reader-only (visually-hidden pattern) rather than deleting them — preserves the accessible name ("Title — Description"), keeps i18n filling them harmlessly, and avoids touching the `game.*Note` keys still consumed by `bootstrap-data.js`/`binyan-board.js`. Removed the now-dead visible `.game-tile-note` overrides in the tablet/mobile blocks.
+- Added grid-column rules on both containers at each breakpoint (base/mobile 2-col, tablet/desktop 3-col); `.game-picker` previously had only a single-column base rule. Equalized `.home-game-tile` height with the base (dropped the shorter override at base/tablet/mobile). Retuned the short-viewport (`max-height:760px`) `.game-tile` min-height and icon size for half-width cards. Overrode the RTL `body[data-ui-lang="he"] .game-tile { text-align:right }` to `center`. Added a `.game-tile:focus-visible` ring (no global button focus ring existed).
+- No JS changes: preserved every id, the `.game-tile`/`.home-game-tile`/`.game-picker`/`.home-lesson-grid` classes, the `.home-game-tile.is-current` highlight hook, the per-game hover-accent id rules, and all `data-i18n` keys.
+
+**Files changed:**
+- `styles.css` — `.game-tile` restructured to centered flex card; `.game-tile-icon`(+img) enlarged (base 54px, desktop 60px, tablet 56px, mobile 50px, short-vp 44px); `.game-tile-title` cleaned up; `.game-tile-note` → visually-hidden; `.home-lesson-grid` + `.game-picker` given responsive columns (2/3/3 across mobile/tablet/desktop) in the base, `min-width:1024px`, `768–1023px`, and `max-width:767px` blocks; short-viewport and RTL tweaks; removed dead `.game-tile-note` and `.home-game-tile` min-height overrides.
+- `index.html` — markup unchanged structurally (descriptions kept for SR); bumped `styles.css?v=20260620b` → `?v=20260620c`.
+
+**Behavior changed:** The home game launcher is now a tidy icon grid — 2 columns on phones (whole launcher fits with no scroll), 3 on tablet/desktop — with centered icon-over-name cards and no visible descriptions. The in-session game picker matches. Descriptions remain available to screen readers. All other screens unchanged.
+
+**Tests run:** `npm test` before = 168/168 pass; after = 168/168 pass (no test references the home tiles; none changed). Live-verified via preview server at 1280×800 / 768×1024 / 375×812 in dark+light themes and EN+HE: 3/3/2 columns respectively, uniform centered cards, no horizontal scroll, in-session picker matches, RTL grid mirrors correctly, `is-current` highlight intact, `.game-tile-note` clipped to 1×1 but text present for SR, no console errors.
+
+**Risks / regressions to check:** (1) Descriptions are no longer visible — new users rely on the (self-explanatory) names + icons; the text is still in the SR tree. (2) Grid assumes equal-width 1fr columns; very long localized titles wrap to 2 lines (handled, cards are equal-height). (3) The desktop "hub" layout still flanks the lessons card with Review/Settings columns — unchanged here; the 3-col game grid fits within the center column.
+
+---
+
+### 2026-06-20 — Rename games in IvritElite
+
+**Requested:** Rename three game titles across English and Hebrew:
+- "Sentence Builder" → "Sentences"
+- "Advanced Conjugation" → "Conjugation+"
+- Abbreviation game Hebrew title: "קיצורים" → "ר״ת"
+
+**Files changed:**
+- `index.html` — Bumped `bootstrap-data.js` cache-busting query from `?v=20260620a` to `?v=20260620b` so the renamed strings actually load instead of a stale cached copy.
+- `app/bootstrap-data.js` — Updated `bootstrapData.I18N`:
+  - **English (en)**: `sentenceBankTitle`, `sentenceBankSecondChanceTitle`, `sentenceBankStart`, `sentenceBankName` changed from "Sentence Builder" variants to "Sentences"; `advConjName` changed from "Advanced Conjugation" to "Conjugation+"; summary titles updated accordingly.
+  - **Hebrew (he)**: `sentenceBankTitle`, `sentenceBankSecondChanceTitle`, `sentenceBankStart`, `sentenceBankName` changed from "בונה משפטים" to "משפטים"; `abbreviationTitle`, `abbreviationStart`, `abbreviationRestart`, `abbreviationName` changed to "ר״ת"; `advConjName` changed to "נטיות+"; summary titles updated accordingly.
+
+**Behavior changed:** Game tiles now display the new names on the home screen and throughout the app in both English and Hebrew. "Sentence Builder" is now "Sentences," "Advanced Conjugation" is now "Conjugation+," and the Hebrew abbreviation game shows "ר״ת" instead of "קיצורים."
+
+**Tests run:** Manual verification via preview server — reloaded page and confirmed all game names updated correctly on the home screen in both English and Hebrew.
+
+**Risks / regressions to check:** None identified. Game logic and functionality remain unchanged; only display names were updated.
+
+---
+
+### 2026-06-20 — Fix desktop-hub column widths on home screen
+
+**Requested:** At wide widths the home "hub" (Review | Choose Your Lesson | Settings, shown side-by-side at ≥1024px via `body[data-desktop-hub-layout="true"]`) had badly balanced columns — Review (a collapsed card) took a full `1fr`, while the Home column holding the 3-wide game grid got an equal `1fr` that was too narrow, so the game tiles overflowed and were visually covered by the Settings column. Asked to re-examine the column widths and make them sensible.
+
+**Files changed:**
+- `styles.css` — In the `@media (min-width: 1024px)` block:
+  - `body[data-desktop-hub-layout="true"] .page-stack` (and the `[data-ui-lang="he"]` variant) grid changed from `minmax(0,1fr) minmax(0,1fr) minmax(290px,0.74fr)` (and the HE mirror) to a symmetric `minmax(240px, 0.62fr) minmax(0, 2fr) minmax(240px, 0.62fr)` — the center Home column is now dominant (`2fr`) and the Review/Settings side rails are narrower and equal. Symmetric so EN and HE behave identically (page-view `order` already places Home in the center column for both).
+  - `.home-lesson-grid, .game-picker` changed from `repeat(3, 1fr)` to `repeat(3, minmax(0, 1fr))` so tiles can shrink within their column and never overflow regardless of column width.
+- `index.html` — Bumped `styles.css` cache query `?v=20260620c` → `?v=20260620d`.
+
+**Behavior changed:** On screens ≥1024px the home hub now shows a wide centered lesson grid flanked by narrower Review and Settings rails; the game tiles are fully visible (previously clipped/overlapped). Verified in the preview at 1900px wide in both EN and HE (RTL), with Settings collapsed and expanded — no clipping in any combination. Narrower layouts (<1024px) are unaffected.
+
+**Tests run:** Visual verification via preview server at 1900×1000 (EN + HE, Settings collapsed + expanded). No `npm test` impact — CSS-only change plus a version-string bump.
+
+**Risks / regressions to check:** (1) At exactly 1024–~1100px the two 240px-min rails leave the center tighter; the `minmax(0,1fr)` tiles shrink to fit rather than overflow, so it stays functional but is the tightest case to spot-check. (2) The `#resultsView` center-column behavior in hub mode was not changed and should still render in the center column.
+
+---
+
+### 2026-06-20 — Tidy up stale game-name references
+
+**Requested:** Update the hardcoded HTML fallback text still showing old game names, and sweep the codebase for anything else worth tidying related to the rename.
+
+**Files changed:**
+- `index.html` — Updated `data-i18n` fallback text (the literal shown before the i18n script runs, and exposed to screen readers) in both the home lesson grid and the in-session game picker: `game.sentenceBankName` "Sentence Builder" → "Sentences"; `game.advConjName` "Advanced Conjugation" → "Conjugation+". Also corrected two fallbacks that were already stale vs `bootstrap-data.js` (predating the rename): `game.translationNote` "Fast multiple-choice translation rounds." → "Match Hebrew words to their English meanings." and `game.abbreviationNote` "Guess English meanings from Hebrew abbreviations." → "Match Hebrew abbreviations to their English meanings." Updated the sentence-bank intro dialog `aria-label` "Sentence Builder intro" → "Sentences intro". Bumped `bootstrap-data.js` cache query `?v=20260620b` → `?v=20260620c`.
+- `app/bootstrap-data.js` — Hebrew `prompt.abbreviationStart` quoted the old button label `"התחל קיצורים"`; changed to `"התחל ר״ת"` to match the renamed button (`session.abbreviationStart` he = "התחל ר״ת"). Left descriptive body text like `noAbbreviationTitle` ("אין קיצורים טעונים") as-is — there קיצורים is the common noun "abbreviations," not the game title, and ר״ת would read awkwardly.
+- `tests/app-progress.test.js` — Updated the two `grid-template-columns` assertions in "desktop layout uses three live columns…" to the rebalanced hub values (`minmax(240px, 0.62fr) minmax(0, 2fr) minmax(240px, 0.62fr)` for both EN and the symmetric HE rule), since that test pins the exact column definition I changed in the previous entry.
+
+**Behavior changed:** No visible runtime change in the rendered app for the HTML fallback edits — the i18n script already overwrote those strings at load, so the names/notes looked correct before; this just makes the raw source consistent. The Hebrew abbreviation start prompt now quotes the actual button label. The test change keeps the suite aligned with the new hub column widths.
+
+**Tests run:** `npm test` = 168/168 pass (1 failure before the test-assertion update: the pinned old grid value; green after). Verified the home tiles in the preview via accessibility snapshot — names and notes all consistent (Sentences, Conjugation+, corrected Translation/Abbreviation notes).
+
+**Risks / regressions to check:** None functional. Anyone hard-reading the suite should note the hub column test now expects the rebalanced values.
+
+---
+
+### 2026-06-20 — Fix clipped Category Analytics labels in narrow hub rail
+
+**Requested:** After the hub columns were rebalanced (Review/Settings rails narrowed to `minmax(240px, 0.62fr)`), the Review column's "Category Analytics" domain labels were clipped — e.g. "Colloquial & Street" rendered as "Colloqui & Stree", "Professional" as "Profess". Resolve the display issue.
+
+**Cause:** `.domain-grid`/`.mode-grid` are 2-column (`repeat(2, minmax(0, 1fr))`). In the now-240px-wide Review rail, each domain card's text cell collapsed to ~28px, so the English domain titles overflowed and were clipped. (Confirmed via live measurement: rail clamped to its 240px min; with 2 columns the title cell was far too narrow.)
+
+**Files changed:**
+- `styles.css` — In the `@media (min-width: 1024px)` block, added `body[data-desktop-hub-layout="true"] .review-analytics-card .domain-grid, …​ .mode-grid { grid-template-columns: 1fr; }` so the analytics cards stack single-column in the narrow hub rail, giving each card the full rail width (~204px) for its ring + label. Only applies in the desktop hub; the standalone `#reviewView` page at <1024px keeps its 2-column grid.
+- `index.html` — Bumped `styles.css` cache query `?v=20260620d` → `?v=20260620e`.
+
+**Behavior changed:** On screens ≥1024px the Review rail's Category Analytics (and mode-performance) cards now stack one per row with fully visible labels instead of two cramped, clipped columns. Verified in the preview at 1900px with the Review panel expanded — live measurement shows no horizontal clipping (`scrollWidth == clientWidth`) for all four domain titles. Hebrew unaffected (the HE `#reviewView` rules only set `direction`, not column count). Narrow/mobile review page unchanged.
+
+**Tests run:** `npm test` = 168/168 pass. CSS-only change plus a version-string bump.
+
+**Risks / regressions to check:** The single-column analytics makes the Review rail taller; it's a scrollable side rail so that's expected. Spot-check the standalone Review page on mobile (<1024px) still shows the 2-column analytics grid.
+
+---
+
+### 2026-06-20 — Unify all devices on single-page + bottom-nav (remove desktop hub)
+
+**Requested:** The desktop three-column "hub" (Review | Home | Settings side-by-side) felt amateurish. Make every device use the same single-page layout with the Home/Review/Settings bar at the bottom.
+
+**Approach:** Removed the desktop hub concept entirely. Every viewport now shows one route at a time (home/review/settings/results), switched by the bottom nav — the model mobile already used.
+
+**Files changed:**
+- `app/ui.js` — `renderRouteVisibility` no longer branches on viewport width / hub. It now activates exactly one page-view per `state.route` (results when summary active, else home/review/settings) at all widths, and always sets `data-desktop-hub-layout="false"`. (The attribute is kept so the dependent helpers `renderResultsActionsVisibility` and `controller.syncDesktopHubPanels` keep behaving in the non-hub/unified mode without further rewrites.)
+- `styles.css` —
+  - Rewrote the `@media (min-width: 1024px)` block: deleted every `[data-desktop-hub-layout="true"]` rule (3-column page-stack grid, view `order`s, hub review-grid/analytics/card-padding/collapse overrides). Removed `.mobile-bottom-nav { display: none }` so the bottom nav shows on desktop too, and centered it on wide screens (`left: 50%; transform: translateX(-50%); width: min(560px, calc(100% - 2rem))`). Narrowed `.app-shell` to `max-width: 1000px` with bottom padding to clear the now-visible nav. Set `.review-grid` to a single column (it holds one card now), and capped `.settings-card` (560px) and `.review-panel-card` (760px) centered for a focused, app-like look. Home keeps the 3-wide game grid.
+  - Neutralized the collapsible header caret/affordance (`.collapsible-toggle::after { content: none }`, `cursor: default`) since collapsing was a hub-only feature and the toggle is now a no-op on the full Review/Settings pages — avoids a dead control.
+- `index.html` — Bumped `styles.css` `?v=20260620e` → `?v=20260620f` and `app/ui.js` `?v=20260620b` → `?v=20260620c`.
+- `tests/app-progress.test.js` — Rewrote the hub-pinning tests for the unified model: "all viewports share the single-page layout with the bottom nav" (bottom nav present + centered, no hub CSS), dropped the hub `collapsible-content display:none` assertion, and replaced the three JS behavior tests with width-parameterized versions ("every width shows exactly one route at a time", "results show the review performance button at every width", "review and settings cards stay expanded at every width").
+
+**Behavior changed:** Desktop no longer shows the three-column hub. All devices now present a single page per route with a Home/Review/Settings bottom bar (full-width on mobile, centered on desktop). Desktop home is a centered 3-wide lesson grid; Review and Settings are centered cards reached via the bottom nav. The Review/Settings collapse carets are gone (the panels are always shown). Mobile is visually unchanged.
+
+**Tests run:** `npm test` = 168/168 pass. Verified live in the preview at 1280px (home/review/settings) and 375px (home): single-page navigation via the bottom nav works, content is centered, no clipping, names correct.
+
+**Risks / regressions to check:** (1) During active gameplay on desktop the topbar still shows its `shellHomeBtn` (gated `>=1024`) in addition to the bottom nav Home — redundant but harmless; revisit if it looks off. (2) `controller.syncDesktopHubPanels`/`toggleDesktopHubPanel` are now vestigial (always operate in the expanded/disabled branch) — left in place to keep the change conservative. (3) Confirm the results screen still shows the Review-performance button and centered metrics at desktop width.
+
+---
+
+### 2026-06-19 — Match-card centering, in-prompt tip, and new Hebrew font scheme
+
+**Requested:** (1) Move the "select the Hebrew first to hear it aloud" tip inside the prompt box, keeping it polished and compact; (2) show that tip in all three matching games (Translation, Conjugation, Abbreviation); (3) fix centering issues in the abbreviation game; (4) apply a new font scheme — Frank Ruhl Libre for the IvritElite brand title only, Heebo for game card titles, Assistant for everything else — and check legibility across desktop/tablet/mobile.
+
+**Approach / judgment calls:**
+- *Centering:* Root cause was that the matching board rendered two independent column stacks (`.match-col > .match-stack`). When a left/English card wrapped to two lines, its short Hebrew counterpart stayed top-aligned in a taller row, so the row looked vertically off-center. Replaced the two-stack DOM with a single 2-column CSS grid where cards are appended interleaved (left, right, left, right …); grid auto-rows + `align-items: stretch` give every pair a shared row height, and the existing `.choice-btn { place-items: center }` re-centers each card's text. Applied the identical change to both renderers (`match-engine.js` for Translation/Abbreviation and `verb-match.js` for Conjugation) since they share the CSS and the same bug.
+- *Tip:* Moved `#promptHint` from a sibling below `.prompt-card` to the last child inside it, restyled as `.prompt-hint-note` (small, muted, with a top divider) so it reads as a compact footnote within the box. Extended `ui.renderPromptHint` to also fire for word-match modes (using `state.wordMatch.active` instead of `state.match.active`, which only applies to conjugation), and added an `app.ui.renderPromptHint()` call to `matchEngine.renderPrompt` so the tip persists across re-renders as pairs are cleared.
+- *Fonts:* Interpreted "game card titles" as the home game-picker tile titles (`.game-tile-title`). The in-game prompt heading ("Match the pairs") is the *prompt box*, not a game card, so per "Assistant for everything else" it became Assistant. Swapped the Google Fonts link from Alegreya/Chivo to Frank Ruhl Libre/Heebo/Assistant, repointed every `Alegreya`/`Chivo` declaration to Assistant, then set the two specific overrides. Frank Ruhl Libre and Heebo are native Hebrew typefaces, which also improves Hebrew rendering over the old Alegreya serif.
+
+**Files changed:**
+- `app/match-engine.js` — `renderCards` rebuilt: single `.match-columns` grid with interleaved left/right buttons (removed the `.match-col`/`.match-stack` wrappers); `renderPrompt` now calls `app.ui.renderPromptHint()`.
+- `app/verb-match.js` — `renderVerbMatchCards` rebuilt the same way (interleaved grid, no column wrappers).
+- `app/ui.js` — `renderPromptHint` now shows the tip for verb-match **and** word-match modes, picking the correct active flag per mode.
+- `index.html` — Moved `#promptHint` inside `.prompt-card` (now `class="prompt-hint-note"`); swapped the Google Fonts `<link>` to `Assistant`/`Frank Ruhl Libre`/`Heebo`; bumped `styles.css?v=20260620b`.
+- `styles.css` — Renamed/restyled `.prompt-support-note` → `.prompt-hint-note` (divider + muted footnote) and its media-query sizes; `.match-columns` now `align-items: stretch`; removed the orphaned `.match-col`/`.match-stack` rules (base + two media queries); `.shell-brand-title h1` → Frank Ruhl Libre 900; `.game-tile-title` → Heebo 700; all remaining `Alegreya`/`Chivo` → Assistant.
+- `tests/app-progress.test.js` — Updated the "conjugation keeps English on the left and Hebrew on the right" test to read the flattened grid (`columns.children[0]`/`[1]` are now the cards themselves, not column wrappers).
+
+**Behavior changed:** The tip now appears as a compact footnote inside the prompt box in all three matching games (when speech is enabled/supported). Match cards in every matching game now share row heights, so short Hebrew cards sit vertically centered opposite tall wrapped English cards. The brand title renders in Frank Ruhl Libre, home tile titles in Heebo, and all other text in Assistant. Verified legible on desktop (1280), tablet, and mobile (375), in both dark and light themes and both EN/HE UI.
+
+**Tests run:** `npm test` before = 168/168 pass; after = 168/168 pass (1 test updated for the new DOM, no tests added/removed). Live-verified via the preview server: all three fonts load and apply (`Frank Ruhl Libre 900`, `Heebo 700`, `Assistant 700` loaded); abbreviation/translation/conjugation boards render with equal-height rows and centered cards; the tip shows inside the prompt box; no console errors.
+
+**Risks / regressions to check:** (1) The card grid now assumes equal left/right counts (always true for paired data); if counts ever differ, the trailing grid cell would shift — acceptable for current gameplay. (2) Frank Ruhl Libre/Heebo are loaded from Google Fonts; an offline/CDN-blocked client falls back to the serif/sans defaults (brand → serif, tiles → sans) — no layout break, just substitute glyphs. (3) "Game card titles" was interpreted as the home tiles; if the user meant the in-game prompt heading too, that one is still Assistant and would need a one-line override.
+
+---
+
+### 2026-06-19 — Delete the unreachable multiple-choice Translation & Abbreviation code
+
+**Requested:** Remove the now-unreachable multiple-choice (MC) Translation and Abbreviation gameplay (left in place by the earlier matching-layout conversion) and its MC-specific tests. The matching games (`lessonMatch`/`abbrMatch`) are the only live entry points.
+
+**Approach / judgment calls:** Confirmed via grep that the MC paths are unreachable: `lesson` is only the app's idle/default mode (`lesson.active` is only ever set by `startLesson`→`nextQuestion`, both reachable solely through dead controller fallthroughs), and `abbreviation` mode is only reachable through the same dead branches. Every external call site to the removed functions already uses optional chaining (`?.`), so removal is a safe no-op for those sites. Per the task's "remove the whole MC lesson path" guidance (since `startLesson` is not wired to any live tile), the entire MC active-session flow was removed for both games — including the dead `start*`/`*Intro` scaffolding — to avoid leaving functions that call deleted functions. Kept genuinely-live helpers used by surviving code.
+
+**Files changed:**
+- `app/lesson.js` — Reduced to the two still-referenced helpers: `getLessonPromptSpeechPayload` (used by `ui.js`) and `cloneLessonQuestionSnapshot` (used by `session.js`/`persistence.js`). Removed `startLesson`, `playLessonStartIntro`, `beginLessonFromIntro`, `playSecondChanceIntro`, `beginSecondChanceFromIntro`, `nextQuestion`, `renderQuestion`, `renderChoices`, `applyAnswer`, `markChoiceResults`, `addMissedWord`, `buildQuestion`, `buildReviewQuestion`, `buildOptions`, `pickQuestionMode`, `rememberOptionHistory`, `tryStartReviewPhase`, `getLessonSelectionSpeechPayload`, and the private lesson-option helpers.
+- `app/abbreviation.js` — Removed the 10 MC functions (`buildAbbreviationQuestion`, `buildAbbreviationOptions`, `renderAbbreviationChoices`, `selectAbbreviationOption`, `applyAbbreviationAnswer`, `markAbbreviationChoiceResults`, `nextAbbreviationQuestion`, `renderAbbreviationQuestion`, `getAbbreviationDirectionLabel`, `getAbbreviationRoundTarget`) plus the now-dead intro chain (`startAbbreviation`, `playAbbreviationIntro`, `beginAbbreviationFromIntro`) and orphaned private/speech helpers (`getAbbreviationOptionLabelKey`, `getAbbreviationSelectionSpeechPayload`). **Kept** the data functions still used by the matching game (`prepareAbbreviationDeck`, `pickBestAbbreviationEntry`, `getDueAbbreviationEntries`, `getExpansionText`) and the broadly-live `resetAbbreviationState`, `renderAbbreviationIdleState`, `cloneAbbreviationQuestionSnapshot`, `getAbbreviationPromptSpeechPayload`.
+- `app/controller.js` — Removed `handleAbbreviationShortcutKey` (the 1–4/Enter MC shortcuts) and its `handleGlobalKeyDown` call site, the now-unused `isPlainShortcutEvent` helper, and the MC branches in `handleNextAction` for `lesson` and `abbreviation`. (Left the optional-chained `startLesson`/`startAbbreviation` calls in the dead `openHomeLesson`/`continueFromResults` fallthroughs — harmless no-ops, out of the stated scope.)
+- `app.js` — Removed the dead `const` aliases, their entries in the startup validation block, and their entries in the `appRuntime.helpers` registry. Kept `cloneLessonQuestionSnapshot`, `cloneAbbreviationQuestionSnapshot`, `prepareAbbreviationDeck`, `renderAbbreviationIdleState`, `resetAbbreviationState`, `pickBestAbbreviationEntry`, `getDueAbbreviationEntries`.
+- `tests/controller-abbreviation-shortcuts.test.js` — Deleted (covered the removed keyboard shortcuts).
+- `tests/app-progress.test.js` — Updated the harness `__appTestExports` block to drop the removed const references (otherwise it throws `ReferenceError` at load and breaks every test). Removed 20 MC-specific tests (translation distractor/shape/dedupe, abbreviation option-label/expansion-feedback, second-chance, translation submit/selection/feedback-sound/speech). Rewrote 9 cross-cutting tests onto surviving modes (advanced-conjugation submit/selection/sound-fallback/disabled-sound, verb-match start-flow/session-pinning/leave-confirmation, and a data-pool sanitize check) so the behaviors stay covered without the MC path.
+- `tests/abbreviation-data.test.js` — Removed the `contact-info abbreviations prefer each other as distractors` test (exercised the removed `buildAbbreviationOptions`); the underlying distractor data is no longer used by gameplay.
+
+**Behavior changed:** None observable. The MC Translation/Abbreviation games were already unreachable; this only deletes their code and tests. Both matching games and all other modes are unchanged.
+
+**Tests run:** `npm test` before = 192/192 pass; after = 168/168 pass (24 tests removed: 20 in `app-progress.test.js`, 1 in `abbreviation-data.test.js`, 3 in the deleted shortcuts file; 9 rewrites net zero). `node --check` passes on all edited source files. Live-verified via the preview server: app reloads with no console errors; both `lessonMatch` and `abbrMatch` launch and go active; `app.lessonMode` now exposes only the two kept helpers.
+
+**Risks / regressions to check:** (1) Users with old persisted `localStorage` (`mode: "lesson"` + a saved `currentQuestion`, or `mode: "abbreviation"`) will resume into the idle state via `renderIdleLessonState`/`renderAbbreviationIdleState` rather than a live MC question — acceptable since MC no longer exists, but worth a sanity check on a real stale session. (2) `abbreviationQuizDistractorIds` data in the deck is now vestigial (no consumer) — candidate for a future data cleanup. (3) Several still-present session/data helpers tied to the old lesson mode (`finishLesson`, `buildLessonMistakeSummary`, `updateLessonProgress`, `pickLeastSeenLessonDomainId`, `finishAbbreviation`, `buildAbbreviationMistakeSummary`) are now dead but were left untouched as out-of-scope (they live in `session.js`/`data.js`); a future pass could remove them.
+
+---
+
+### 2026-06-19 — Convert Translation & Abbreviation to the matching layout
+
+**Requested:** Make the Translation and Abbreviation games use the conjugation game's matching layout (Hebrew on one side, English on the other, click to match), drilling ~20 items per session since the format is faster. Replace the multiple-choice versions for the user, handle long answer strings gracefully, and clean up where sensible.
+
+**Approach decided with the user:** Add the matching games as new modes (`lessonMatch`, `abbrMatch`) wired to the existing Translation/Abbreviation home tiles + in-session picker buttons, so the multiple-choice (MC) games become unreachable in the UI. The old MC code and its ~40+ tests are left intact and green for now ("retire now, delete later") — chosen because the MC games are deeply wired into `app.js` boot (alias lists, a startup validation block, the `helpers` registry) and heavily covered by `tests/app-progress.test.js`; a full deletion is a separate, riskier pass. Abbreviation cards match acronym ↔ English meaning; verbose English glosses are shortened for display; very long entries are filtered out and remaining long text wraps.
+
+**Files changed:**
+- `app/match-engine.js` (new) — Generic two-column matching engine (`app.matchEngine`) extracted from the verb-match mechanics, parameterized by a config (`ctx`, `getPairs`, `onSuccess`/`onMismatch`/`onAllMatched`, `getCardSpeechPayload`, `rightIsHebrew`, `promptText`). Handles refill, render, select, success/mismatch resolution, combo/streak, and the 180/300ms feedback timeouts. Adds a `match-card-long` class when text exceeds `MATCH_LONG_LEN`.
+- `app/word-match.js` (new) — `app.wordMatch`: drives both new modes via the engine. Builds ~20 pairs (`WORD_MATCH_SESSION_SIZE`) from the existing pools (`data.getSelectedPool` + `data.pickBestWord` for translation; `runtime.abbreviationDeck` + `abbreviation.pickBestAbbreviationEntry` for abbreviations), filtering entries longer than `MATCH_MAX_LEN`. Records Leitner progress via `data.updateProgress` (modes `translationQuiz`/`abbreviationQuiz`), tracks mismatched ids for the summary, `shortGloss()` trims verbose English, and `finishWordMatch()` shows the session summary.
+- `app/bootstrap-runtime.js` — Added a `wordMatch` state slice (board + session counters). Not persisted (transient).
+- `app/constants.js` — `WORD_MATCH_SESSION_SIZE` (20), `MATCH_MAX_LEN` (40), `MATCH_LONG_LEN` (16).
+- `app/session.js` — `startWordMatchTimer`/`stopWordMatchTimer`; included `wordMatch` in `hasActiveLearnSession`, `isModeSessionActive`, `endSessionAndNavigate` (reset + stop timer), and `showSessionSummary` teardown; restore guard drops un-resumable match modes to home.
+- `app/controller.js` — Repointed the Translation/Abbreviation home tiles and picker buttons to `lessonMatch`/`abbrMatch`; added `openHomeLesson` and `continueFromResults` branches; `handleNextAction` is a no-op for these modes (matches resolve on click, no Next button).
+- `app/ui.js` — Added `isWordMatchMode`; `renderLearnState` and `renderSessionHeader` branches for the new modes (progress = matched/total, Next hidden); `verb-match` shell layout applied; home-tile highlight maps `lessonMatch`→Translation and `abbrMatch`→Abbreviation.
+- `app/bootstrap-data.js` — Added `summary.wordMatchNote` (EN+HE); updated the Translation/Abbreviation tile descriptions (EN+HE) to describe matching.
+- `styles.css` — `.match-card` now grows vertically and wraps (`white-space: normal`, `overflow-wrap: anywhere`); `.match-card-long` reduces font for long strings.
+- `index.html` — Registered the two new scripts (after `verb-match.js`) and bumped cache-busting `?v=` on all edited files + `styles.css`.
+
+**Behavior changed:** The Translation and Abbreviation tiles now open a matching board — English on the left, Hebrew (words / acronyms) on the right, shuffled, 5 visible rows that refill as pairs are cleared — for a 20-item session ending in a results summary. The old 4-option multiple-choice versions (and the abbreviation 1–4/Enter keyboard shortcuts) are no longer reachable from the UI but remain in the codebase. Conjugation game unchanged.
+
+**Tests run:** `npm test` before = 192/192 pass; after = 192/192 pass (no test changes; MC code left intact so its suite stays green). Live-verified via the preview server: app boots with no console errors; both tiles launch their matching game; full Translation and Abbreviation sessions play to "…Complete" summaries (20/20, note "Matched: 20 | Best combo: 20 | Time: 4s"); a deliberate mismatch increments the mismatch count, records the mistake id, and resets the streak; long English glosses wrap without breaking the 2-column grid; conjugation game still renders/plays; leave-session resets `wordMatch`; "Play Again" restarts the matching game.
+
+**Risks / regressions to check:** (1) Dead code — the MC translation/abbreviation gameplay and its ~40+ tests still exist; a follow-up should delete them plus their `app.js` aliases/validation/helpers wiring (flagged as a background task). (2) Mid-session reload is not resumable for the new modes (board is transient) — it drops to home by design. (3) On a mismatch the left card's word is marked wrong in Leitner (mirrors the conjugation game); a mistapped-then-matched item nets one wrong + one correct. (4) `MATCH_MAX_LEN`/`MATCH_LONG_LEN` thresholds were tuned against current data; adding much longer entries may need retuning.
+
+---
+
 ### 2026-06-19 — Show each form's grammatical function in the Binyanim game
 
 **Requested:** Alongside the binyan name (הפעל etc.) and the form, also show the form's function (simple active, passive/reflexive, etc.).

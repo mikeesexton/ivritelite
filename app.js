@@ -249,23 +249,7 @@ const setWordMastered = dataModule.setWordMastered;
 const updateConjugationProgress = dataModule.updateConjugationProgress;
 const recordConjugationRound = dataModule.recordConjugationRound;
 
-const startLesson = lessonModule.startLesson;
-const playLessonStartIntro = lessonModule.playLessonStartIntro;
-const beginLessonFromIntro = lessonModule.beginLessonFromIntro;
-const playSecondChanceIntro = lessonModule.playSecondChanceIntro;
-const beginSecondChanceFromIntro = lessonModule.beginSecondChanceFromIntro;
-const nextQuestion = lessonModule.nextQuestion;
-const renderQuestion = lessonModule.renderQuestion;
-const renderChoices = lessonModule.renderChoices;
-const applyAnswer = lessonModule.applyAnswer;
-const markChoiceResults = lessonModule.markChoiceResults;
 const cloneLessonQuestionSnapshot = lessonModule.cloneLessonQuestionSnapshot;
-const buildQuestion = lessonModule.buildQuestion;
-const buildReviewQuestion = lessonModule.buildReviewQuestion;
-const buildOptions = lessonModule.buildOptions;
-const pickQuestionMode = lessonModule.pickQuestionMode;
-const rememberOptionHistory = lessonModule.rememberOptionHistory;
-const tryStartReviewPhase = lessonModule.tryStartReviewPhase;
 
 const prepareSentenceBankDeck = sentenceBankModule.prepareSentenceBankDeck;
 const getSentenceBankPromptSpeechPayload = sentenceBankModule.getSentenceBankPromptSpeechPayload;
@@ -290,21 +274,10 @@ const clearSentenceBankAnswer = sentenceBankModule.clearAnswer;
 const toggleSentenceBankHint = sentenceBankModule.toggleHint;
 const applySentenceBankAnswer = sentenceBankModule.applySentenceBankAnswer;
 
-const getAbbreviationRoundTarget = abbreviationModule.getAbbreviationRoundTarget;
 const cloneAbbreviationQuestionSnapshot = abbreviationModule.cloneAbbreviationQuestionSnapshot;
 const prepareAbbreviationDeck = abbreviationModule.prepareAbbreviationDeck;
 const renderAbbreviationIdleState = abbreviationModule.renderAbbreviationIdleState;
-const startAbbreviation = abbreviationModule.startAbbreviation;
 const resetAbbreviationState = abbreviationModule.resetAbbreviationState;
-const playAbbreviationIntro = abbreviationModule.playAbbreviationIntro;
-const beginAbbreviationFromIntro = abbreviationModule.beginAbbreviationFromIntro;
-const nextAbbreviationQuestion = abbreviationModule.nextAbbreviationQuestion;
-const renderAbbreviationQuestion = abbreviationModule.renderAbbreviationQuestion;
-const renderAbbreviationChoices = abbreviationModule.renderAbbreviationChoices;
-const applyAbbreviationAnswer = abbreviationModule.applyAbbreviationAnswer;
-const markAbbreviationChoiceResults = abbreviationModule.markAbbreviationChoiceResults;
-const buildAbbreviationQuestion = abbreviationModule.buildAbbreviationQuestion;
-const buildAbbreviationOptions = abbreviationModule.buildAbbreviationOptions;
 const pickBestAbbreviationEntry = abbreviationModule.pickBestAbbreviationEntry;
 const getDueAbbreviationEntries = abbreviationModule.getDueAbbreviationEntries;
 
@@ -535,23 +508,7 @@ if (
   !setWordMastered ||
   !updateConjugationProgress ||
   !recordConjugationRound ||
-  !startLesson ||
-  !playLessonStartIntro ||
-  !beginLessonFromIntro ||
-  !playSecondChanceIntro ||
-  !beginSecondChanceFromIntro ||
-  !nextQuestion ||
-  !renderQuestion ||
-  !renderChoices ||
-  !applyAnswer ||
-  !markChoiceResults ||
   !cloneLessonQuestionSnapshot ||
-  !buildQuestion ||
-  !buildReviewQuestion ||
-  !buildOptions ||
-  !pickQuestionMode ||
-  !rememberOptionHistory ||
-  !tryStartReviewPhase ||
   !prepareSentenceBankDeck ||
   !getSentenceBankPromptSpeechPayload ||
   !cloneSentenceBankQuestionSnapshot ||
@@ -574,21 +531,10 @@ if (
   !clearSentenceBankAnswer ||
   !toggleSentenceBankHint ||
   !applySentenceBankAnswer ||
-  !getAbbreviationRoundTarget ||
   !cloneAbbreviationQuestionSnapshot ||
   !prepareAbbreviationDeck ||
   !renderAbbreviationIdleState ||
-  !startAbbreviation ||
   !resetAbbreviationState ||
-  !playAbbreviationIntro ||
-  !beginAbbreviationFromIntro ||
-  !nextAbbreviationQuestion ||
-  !renderAbbreviationQuestion ||
-  !renderAbbreviationChoices ||
-  !applyAbbreviationAnswer ||
-  !markAbbreviationChoiceResults ||
-  !buildAbbreviationQuestion ||
-  !buildAbbreviationOptions ||
   !pickBestAbbreviationEntry ||
   !getDueAbbreviationEntries ||
   !buildAdvConjHebrewAnswer ||
@@ -747,7 +693,6 @@ appRuntime.helpers = {
   finishAdvConj,
   finishLesson,
   finishSentenceBank,
-  getAbbreviationRoundTarget,
   getDueWords,
   getLanguageToggleLabel,
   getHebrewText,
@@ -759,26 +704,18 @@ appRuntime.helpers = {
   isWordAvailableForMode,
   loadAdvConjQuestion,
   loadNextVerbRound,
-  markAbbreviationChoiceResults,
   markAdvConjChoiceResults,
-  markChoiceResults,
   navigateTo,
-  nextAbbreviationQuestion,
-  nextQuestion,
   nextSentenceBankQuestion,
-  playAbbreviationIntro,
   playAdvConjIntro,
   playAnswerFeedbackSound,
-  playLessonStartIntro,
   playSentenceBankIntro,
-  playSecondChanceIntro,
   playVerbMatchIntro,
   pickLeastSeenLessonDomainId,
   questionNeedsSelection,
   renderAdvConjChoices,
   renderAdvConjQuestion,
   renderAll,
-  renderChoices,
   renderDomainPerformance,
   renderMasteredModal,
   renderMostMissed,
@@ -786,7 +723,6 @@ appRuntime.helpers = {
   renderPoolMeta,
   renderPromptText,
   renderPromptHint,
-  renderQuestion,
   renderSentenceBankQuestion,
   renderSpeechToggle,
   renderSessionHeader,
