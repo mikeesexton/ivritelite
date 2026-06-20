@@ -34,7 +34,7 @@ const SENTENCE_BANK = [
       "עליך"
     ],
     "english_distractors": [
-      "What's new",
+      "What's the plan",
       "about him",
       "I just saw",
       "since last night",
@@ -105,16 +105,11 @@ const SENTENCE_BANK = [
       "שקרה"
     ],
     "english_tokens": [
-      "That",
-      "was",
-      "totally",
-      "crazy",
+      "That was",
+      "totally crazy",
       "yesterday",
-      "I",
-      "couldn't",
-      "believe",
-      "what",
-      "happened"
+      "I couldn't believe",
+      "what happened"
     ],
     "hebrew_distractors": [
       "קצת",
@@ -124,11 +119,11 @@ const SENTENCE_BANK = [
       "איפה"
     ],
     "english_distractors": [
-      "today",
-      "normal",
-      "slightly",
-      "saw",
-      "where"
+      "It was",
+      "completely normal",
+      "this morning",
+      "I totally saw",
+      "what changed"
     ],
     "notes": "מטורף literally means 'insane' but is used casually like 'crazy/wild' in English."
   },
@@ -190,13 +185,9 @@ const SENTENCE_BANK = [
       "ברצינות"
     ],
     "english_tokens": [
-      "He's",
-      "just",
-      "talking",
-      "nonsense",
-      "don't",
-      "take",
-      "him",
+      "He's just",
+      "talking nonsense",
+      "don't take him",
       "seriously"
     ],
     "hebrew_distractors": [
@@ -207,10 +198,9 @@ const SENTENCE_BANK = [
       "תשמע"
     ],
     "english_distractors": [
-      "she",
-      "truth",
-      "her",
-      "listen",
+      "She's just",
+      "telling the truth",
+      "don't listen to her",
       "always"
     ],
     "notes": "Third person gender swap (הוא/היא, מדבר/מדברת, אותו/אותה) is a good distractor set here."
@@ -233,18 +223,11 @@ const SENTENCE_BANK = [
       "גלידה"
     ],
     "english_tokens": [
-      "I",
-      "feel",
-      "like",
-      "something",
-      "sweet",
-      "maybe",
-      "we",
-      "should",
-      "go",
-      "get",
-      "ice",
-      "cream"
+      "I feel like",
+      "something sweet",
+      "maybe we should",
+      "go get",
+      "ice cream"
     ],
     "hebrew_distractors": [
       "מלוח",
@@ -254,11 +237,11 @@ const SENTENCE_BANK = [
       "רוצה"
     ],
     "english_distractors": [
-      "salty",
-      "eat",
-      "definitely",
-      "chocolate",
-      "want"
+      "I want",
+      "something salty",
+      "definitely we should",
+      "stay and eat",
+      "chocolate cake"
     ],
     "notes": "בא לי is a uniquely Israeli expression — literally 'comes to me' but means 'I feel like / I'm craving.'"
   },
@@ -323,16 +306,10 @@ const SENTENCE_BANK = [
       "אחר"
     ],
     "english_tokens": [
-      "I'm",
-      "not",
-      "into",
-      "that",
-      "idea",
-      "let's",
-      "think",
-      "of",
-      "something",
-      "else"
+      "I'm not into",
+      "that idea",
+      "let's think of",
+      "something else"
     ],
     "hebrew_distractors": [
       "מתאים",
@@ -342,11 +319,10 @@ const SENTENCE_BANK = [
       "רוצה"
     ],
     "english_distractors": [
-      "plan",
-      "do",
-      "good",
-      "want",
-      "same"
+      "I really like",
+      "that plan",
+      "let's do",
+      "the same thing"
     ],
     "notes": "זורם לי literally 'flows for me' — slang for 'I'm into it / it vibes with me.'"
   },
@@ -370,16 +346,10 @@ const SENTENCE_BANK = [
       "יותר"
     ],
     "english_tokens": [
-      "She",
-      "did",
-      "something",
-      "shady",
-      "to",
-      "me",
-      "I",
-      "don't",
-      "trust",
-      "her",
+      "She did",
+      "something shady",
+      "to me",
+      "I don't trust her",
       "anymore"
     ],
     "hebrew_distractors": [
@@ -407,11 +377,11 @@ const SENTENCE_BANK = [
       }
     ],
     "english_distractors": [
-      "he",
-      "him",
-      "nice",
-      "always",
-      "still"
+      "He did",
+      "something nice",
+      "for me",
+      "I still trust him",
+      "always"
     ],
     "notes": "קטע מסריח literally 'a stinky bit/segment' — heavy slang meaning 'a shady/messed up move.' Third-person gender distractors work well here."
   },
@@ -430,13 +400,9 @@ const SENTENCE_BANK = [
       "מאוחר"
     ],
     "english_tokens": [
-      "Come",
-      "on",
-      "let's",
-      "go",
-      "it's",
-      "getting",
-      "late"
+      "Come on",
+      "let's go",
+      "it's getting late"
     ],
     "hebrew_distractors": [
       "נלך",
@@ -446,11 +412,9 @@ const SENTENCE_BANK = [
       "לאן"
     ],
     "english_distractors": [
-      "early",
-      "now",
-      "where",
-      "stay",
-      "walk"
+      "Hang on",
+      "let's stay",
+      "it's still early"
     ],
     "notes": "יאללה is borrowed from Arabic — one of the most common Israeli slang words, meaning 'come on/let's go.'"
   },
@@ -473,16 +437,9 @@ const SENTENCE_BANK = [
       "אותם"
     ],
     "english_tokens": [
-      "Where",
-      "did",
-      "I",
-      "put",
-      "my",
-      "keys",
-      "I",
-      "can't",
-      "find",
-      "them"
+      "Where did I put",
+      "my keys",
+      "I can't find them"
     ],
     "hebrew_distractors": [
       "מתי",
@@ -492,11 +449,9 @@ const SENTENCE_BANK = [
       "רואה"
     ],
     "english_distractors": [
-      "when",
-      "wallet",
-      "your",
-      "see",
-      "it"
+      "When did I lose",
+      "my wallet",
+      "I can see them"
     ],
     "notes": "אותם vs אותן tests masculine vs feminine pronoun for 'them' — מפתחות is masculine plural."
   },
@@ -517,14 +472,9 @@ const SENTENCE_BANK = [
       "מאוד"
     ],
     "english_tokens": [
-      "Can",
-      "you",
-      "open",
-      "the",
-      "window",
-      "It's",
-      "very",
-      "hot",
+      "Can you open",
+      "the window",
+      "It's very hot",
       "here"
     ],
     "hebrew_distractors": [
@@ -535,10 +485,9 @@ const SENTENCE_BANK = [
       "בחוץ"
     ],
     "english_distractors": [
-      "close",
-      "door",
-      "cold",
-      "there",
+      "Can you close",
+      "the door",
+      "It's very cold",
       "outside"
     ],
     "notes": "Semantic opposites make strong distractors: לפתוח/לסגור (open/close), חם/קר (hot/cold)."
@@ -562,18 +511,10 @@ const SENTENCE_BANK = [
     ],
     "english_tokens": [
       "Wow",
-      "I",
-      "had",
-      "no",
-      "idea",
-      "it",
-      "was",
-      "like",
-      "that",
-      "Thanks",
-      "for",
-      "telling",
-      "me"
+      "I had no idea",
+      "it was like that",
+      "Thanks for",
+      "telling me"
     ],
     "hebrew_distractors": [
       "באמת",
@@ -583,11 +524,11 @@ const SENTENCE_BANK = [
       "ששמעת"
     ],
     "english_distractors": [
-      "really",
-      "thought",
-      "differently",
-      "sorry",
-      "hearing"
+      "Really",
+      "I always thought",
+      "it was different",
+      "Sorry for",
+      "hearing it"
     ],
     "notes": "וואלה (walla) is borrowed from Arabic — expresses surprise, like 'wow/really?!'"
   },
@@ -608,12 +549,9 @@ const SENTENCE_BANK = [
       "בכלל"
     ],
     "english_tokens": [
-      "He's",
-      "totally",
-      "fine",
+      "He's totally fine",
       "bro",
-      "don't",
-      "exaggerate"
+      "don't exaggerate"
     ],
     "hebrew_distractors": [
       "היא",
@@ -623,11 +561,9 @@ const SENTENCE_BANK = [
       "קצת"
     ],
     "english_distractors": [
-      "she",
-      "worry",
+      "She's a bit worried",
       "friend",
-      "little",
-      "never"
+      "don't worry"
     ],
     "notes": "אחי literally 'my brother' — used like 'bro/dude' in casual speech. Third-person הוא/היא distractor applies."
   },
@@ -692,17 +628,11 @@ const SENTENCE_BANK = [
     ],
     "english_tokens": [
       "Well",
-      "are",
-      "you",
+      "are you",
       "coming",
-      "with",
-      "us",
-      "or",
-      "not",
-      "Make",
-      "up",
-      "your",
-      "mind",
+      "with us",
+      "or not",
+      "Make up your mind",
       "already"
     ],
     "hebrew_distractors": [
@@ -713,10 +643,10 @@ const SENTENCE_BANK = [
       "עכשיו"
     ],
     "english_distractors": [
-      "going",
-      "them",
-      "maybe",
-      "say",
+      "are they",
+      "without us",
+      "going home",
+      "Take your time",
       "right now"
     ],
     "notes": "נו is borrowed from Yiddish — an impatient 'well?/so?/come on!' Very common in spoken Hebrew. תחליט כבר adds impatience: 'decide already.'"
@@ -739,14 +669,9 @@ const SENTENCE_BANK = [
     ],
     "english_tokens": [
       "Well",
-      "What's",
-      "going",
-      "on",
-      "are",
-      "you",
-      "ok",
-      "Answer",
-      "me"
+      "What's going on",
+      "are you ok",
+      "Answer me"
     ],
     "hebrew_distractors": [
       "איפה",
@@ -756,11 +681,10 @@ const SENTENCE_BANK = [
       "כן"
     ],
     "english_distractors": [
-      "where",
-      "good",
-      "tell",
-      "hello",
-      "yes"
+      "Hello",
+      "Where are you",
+      "are you sure",
+      "Tell me"
     ],
     "notes": "Typical WhatsApp urgency — short, punchy, with נו for impatience and imperative ענה."
   },
@@ -780,12 +704,8 @@ const SENTENCE_BANK = [
     ],
     "english_tokens": [
       "Cool",
-      "tomorrow",
-      "at",
-      "8",
-      "don't",
-      "be",
-      "late"
+      "tomorrow at 8",
+      "don't be late"
     ],
     "hebrew_distractors": [
       "בסדר",
@@ -795,11 +715,9 @@ const SENTENCE_BANK = [
       "מוקדם"
     ],
     "english_distractors": [
-      "ok",
-      "today",
-      "9",
-      "come",
-      "early"
+      "Okay",
+      "today at 9",
+      "come early"
     ],
     "notes": "סבבה is slang from Arabic — means 'cool/alright/no problem.'"
   },
@@ -822,14 +740,10 @@ const SENTENCE_BANK = [
     ],
     "english_tokens": [
       "Wow",
-      "I",
-      "saw",
-      "it",
+      "I saw it",
       "Cool",
-      "Send",
-      "me",
-      "the",
-      "details"
+      "Send me",
+      "the details"
     ],
     "hebrew_distractors": [
       "שמעתי",
@@ -839,11 +753,11 @@ const SENTENCE_BANK = [
       "בבקשה"
     ],
     "english_distractors": [
-      "heard",
-      "nice",
-      "show",
-      "info",
-      "please"
+      "Really",
+      "I heard it",
+      "Nice",
+      "Show me",
+      "the info"
     ],
     "notes": "מגניב literally 'cooling' — slang for 'cool/awesome.'"
   },
@@ -904,17 +818,10 @@ const SENTENCE_BANK = [
       "בבית"
     ],
     "english_tokens": [
-      "I",
-      "need",
-      "to",
-      "buy",
-      "milk",
-      "and",
-      "bread",
-      "there's",
-      "nothing",
-      "at",
-      "home"
+      "I need to buy",
+      "milk and bread",
+      "there's nothing",
+      "at home"
     ],
     "hebrew_distractors": [
       "למכור",
@@ -924,11 +831,10 @@ const SENTENCE_BANK = [
       "רוצה"
     ],
     "english_distractors": [
-      "sell",
-      "eggs",
-      "everything",
-      "store",
-      "want"
+      "I need to sell",
+      "eggs and cheese",
+      "there's everything",
+      "at the store"
     ],
     "notes": "Basic shopping vocabulary. ולחם combines the conjunction ו (and) with לחם (bread) — common Hebrew pattern."
   },
@@ -951,16 +857,9 @@ const SENTENCE_BANK = [
       "ארוחת ערב"
     ],
     "english_tokens": [
-      "What",
-      "time",
-      "are",
-      "you",
-      "coming",
-      "home",
-      "I",
-      "want",
-      "to",
-      "plan",
+      "What time",
+      "are you coming home",
+      "I want to plan",
       "dinner"
     ],
     "hebrew_distractors": [
@@ -971,11 +870,10 @@ const SENTENCE_BANK = [
       "ארוחת בוקר"
     ],
     "english_distractors": [
-      "leaving",
-      "work",
-      "need",
-      "lunch",
-      "breakfast"
+      "What day",
+      "are you leaving work",
+      "I need to make",
+      "lunch"
     ],
     "notes": "ארוחת ערב (evening meal) contrasts cleanly with ארוחת צהריים (lunch) and ארוחת בוקר (breakfast)."
   },
@@ -996,16 +894,9 @@ const SENTENCE_BANK = [
       "להיכבות"
     ],
     "english_tokens": [
-      "I",
-      "forgot",
-      "to",
-      "charge",
-      "my",
-      "phone",
-      "it's",
-      "about",
-      "to",
-      "die"
+      "I forgot to charge",
+      "my phone",
+      "it's about to die"
     ],
     "hebrew_distractors": [
       "זכרתי",
@@ -1015,11 +906,9 @@ const SENTENCE_BANK = [
       "נדלק"
     ],
     "english_distractors": [
-      "remembered",
-      "turn off",
-      "computer",
-      "already",
-      "turned on"
+      "I remembered to turn off",
+      "my computer",
+      "it already died"
     ],
     "notes": "עומד להיכבות literally 'stands to be extinguished' — about to turn off/die. להטעין (to charge) vs לכבות (to turn off) is a good pair."
   },
@@ -1119,17 +1008,10 @@ const SENTENCE_BANK = [
       "לדרך"
     ],
     "english_tokens": [
-      "I'm",
-      "running",
-      "a",
-      "few",
-      "minutes",
-      "late",
-      "I'm",
-      "already",
-      "on",
-      "my",
-      "way"
+      "I'm running",
+      "a few minutes late",
+      "I'm already",
+      "on my way"
     ],
     "hebrew_distractors": [
       "שעות",
@@ -1139,11 +1021,10 @@ const SENTENCE_BANK = [
       "חוזר"
     ],
     "english_distractors": [
-      "hours",
-      "arriving",
-      "still",
-      "early",
-      "returning"
+      "I'm arriving",
+      "a few hours early",
+      "I'm still",
+      "at home"
     ],
     "notes": "כבר יוצא לדרך adds urgency — the speaker is already on the way. יוצא לדרך literally 'going out to the road' — means 'heading out/on my way.'"
   },
@@ -1165,15 +1046,9 @@ const SENTENCE_BANK = [
       "שוכח"
     ],
     "english_tokens": [
-      "Remind",
-      "me",
-      "to",
-      "send",
-      "the",
-      "email",
-      "I",
-      "always",
-      "forget"
+      "Remind me to send",
+      "the email",
+      "I always forget"
     ],
     "hebrew_distractors": [
       "תגיד",
@@ -1183,11 +1058,9 @@ const SENTENCE_BANK = [
       "זוכר"
     ],
     "english_distractors": [
-      "tell",
-      "read",
-      "message",
-      "sometimes",
-      "remember"
+      "Tell me to read",
+      "the message",
+      "I sometimes remember"
     ],
     "notes": "תזכיר (remind) vs זוכר (remember) — common confusion for learners."
   },
@@ -1292,19 +1165,10 @@ const SENTENCE_BANK = [
       "לבשל"
     ],
     "english_tokens": [
-      "What",
-      "do",
-      "you",
-      "want",
-      "to",
-      "eat",
+      "What do you want to eat",
       "tonight",
-      "I",
-      "don't",
-      "know",
-      "what",
-      "to",
-      "cook"
+      "I don't know",
+      "what to cook"
     ],
     "hebrew_distractors": [
       "לשתות",
@@ -1314,11 +1178,10 @@ const SENTENCE_BANK = [
       "אוהב"
     ],
     "english_distractors": [
-      "drink",
-      "morning",
-      "can",
-      "order",
-      "like"
+      "What do you want to drink",
+      "this morning",
+      "I'm not sure",
+      "what to order"
     ],
     "notes": "לאכול (to eat) vs לבשל (to cook) vs להזמין (to order) — food-related verb distractors."
   },
@@ -1340,16 +1203,10 @@ const SENTENCE_BANK = [
       "דקות"
     ],
     "english_tokens": [
-      "We",
-      "ordered",
+      "We ordered",
       "pizza",
-      "it",
-      "should",
-      "arrive",
-      "in",
-      "about",
-      "twenty",
-      "minutes"
+      "it should arrive",
+      "in about twenty minutes"
     ],
     "hebrew_distractors": [
       "בישלנו",
@@ -1359,11 +1216,10 @@ const SENTENCE_BANK = [
       "עשר"
     ],
     "english_distractors": [
-      "cooked",
+      "We cooked",
       "sushi",
-      "leave",
-      "ten",
-      "hours"
+      "it should leave",
+      "in about ten minutes"
     ],
     "notes": "אמורה (feminine, agreeing with פיצה) vs אמור (masculine) — third-person gender agreement."
   },
@@ -1422,16 +1278,10 @@ const SENTENCE_BANK = [
       "רחוק"
     ],
     "english_tokens": [
-      "There's",
-      "no",
-      "parking",
+      "There's no parking",
       "here",
-      "let's",
-      "look",
-      "a",
-      "bit",
-      "further",
-      "away"
+      "let's look",
+      "a bit further away"
     ],
     "hebrew_distractors": [
       "יש",
@@ -1441,11 +1291,10 @@ const SENTENCE_BANK = [
       "קרוב"
     ],
     "english_distractors": [
-      "there's",
-      "space",
+      "There's plenty of space",
       "there",
-      "walk",
-      "closer"
+      "let's walk",
+      "a bit closer"
     ],
     "notes": "אין (there isn't) vs יש (there is) — fundamental pair. קרוב/רחוק (close/far) also tested."
   },
@@ -1692,13 +1541,8 @@ const SENTENCE_BANK = [
       "הודעה"
     ],
     "english_tokens": [
-      "If",
-      "I",
-      "don't",
-      "answer",
-      "leave",
-      "a",
-      "message"
+      "If I don't answer",
+      "leave a message"
     ],
     "hebrew_distractors": [
       "כש",
@@ -1708,11 +1552,9 @@ const SENTENCE_BANK = [
       "תמיד"
     ],
     "english_distractors": [
-      "when",
-      "call",
-      "letter",
-      "send",
-      "always"
+      "When I call back",
+      "send a letter",
+      "right away"
     ],
     "notes": "אם (if) vs כש (when) — conditional vs temporal conjunction."
   },
@@ -2047,16 +1889,10 @@ const SENTENCE_BANK = [
       "זה"
     ],
     "english_tokens": [
-      "This",
-      "requires",
-      "approval",
-      "from",
-      "management",
-      "we",
-      "can't",
-      "proceed",
-      "without",
-      "it"
+      "This requires",
+      "approval from management",
+      "we can't proceed",
+      "without it"
     ],
     "hebrew_distractors": [
       "צריך",
@@ -2066,11 +1902,10 @@ const SENTENCE_BANK = [
       "עם"
     ],
     "english_distractors": [
-      "needs",
-      "agreement",
-      "team",
-      "possible",
-      "with"
+      "This needs",
+      "agreement from the team",
+      "we can continue",
+      "with it"
     ],
     "notes": "דורש (requires/demands) is more formal than צריך (needs). מההנהלה (from management) vs מהצוות (from the team)."
   },
@@ -2133,16 +1968,10 @@ const SENTENCE_BANK = [
       "תיקונים"
     ],
     "english_tokens": [
-      "We'll",
-      "send",
-      "an",
-      "updated",
-      "version",
-      "later",
-      "today",
-      "after",
-      "making",
-      "revisions"
+      "We'll send",
+      "an updated version",
+      "later today",
+      "after making revisions"
     ],
     "hebrew_distractors": [
       "נקבל",
@@ -2152,11 +1981,10 @@ const SENTENCE_BANK = [
       "שינויים"
     ],
     "english_distractors": [
-      "receive",
-      "old",
-      "tomorrow",
-      "before",
-      "changes"
+      "We'll receive",
+      "the old version",
+      "tomorrow morning",
+      "before the changes"
     ],
     "notes": "מעודכנת (updated, fem.) agrees with גרסה (version, fem.). נשלח here means 'we'll send' (future first person plural)."
   },
@@ -2179,17 +2007,10 @@ const SENTENCE_BANK = [
       "כולם"
     ],
     "english_tokens": [
-      "It's",
-      "important",
-      "to",
-      "meet",
-      "the",
-      "deadlines",
+      "It's important",
+      "to meet the deadlines",
       "otherwise",
-      "it",
-      "will",
-      "delay",
-      "everyone"
+      "it will delay everyone"
     ],
     "hebrew_distractors": [
       "קשה",
@@ -2199,11 +2020,10 @@ const SENTENCE_BANK = [
       "יעזור"
     ],
     "english_distractors": [
-      "difficult",
-      "keep",
-      "budget",
+      "It's difficult",
+      "to keep the budget",
       "maybe",
-      "help"
+      "it will help everyone"
     ],
     "notes": "לעמוד בלוחות זמנים (to meet deadlines) is a common professional phrase. לעמוד literally means 'to stand.'"
   },
@@ -2226,16 +2046,10 @@ const SENTENCE_BANK = [
       "החלטה"
     ],
     "english_tokens": [
-      "One",
-      "must",
-      "consider",
-      "the",
-      "long-term",
-      "implications",
-      "before",
-      "making",
-      "a",
-      "decision"
+      "One must consider",
+      "the long-term implications",
+      "before making",
+      "a decision"
     ],
     "hebrew_distractors": [
       "לחשוב",
@@ -2245,11 +2059,10 @@ const SENTENCE_BANK = [
       "התוצאות"
     ],
     "english_distractors": [
-      "short-term",
-      "after",
-      "results",
-      "without",
-      "opinion"
+      "One should ignore",
+      "the short-term results",
+      "after making",
+      "an opinion"
     ],
     "notes": "יש לשקול is formal register — colloquial would be צריך לחשוב על. Good test of register awareness."
   },
@@ -2271,15 +2084,10 @@ const SENTENCE_BANK = [
       "הקטנות"
     ],
     "english_tokens": [
-      "The",
-      "data",
-      "indicate",
-      "a",
-      "clear",
-      "trend",
+      "The data indicate",
+      "a clear trend",
       "despite",
-      "minor",
-      "fluctuations"
+      "minor fluctuations"
     ],
     "hebrew_distractors": [
       "מראים",
@@ -2289,11 +2097,10 @@ const SENTENCE_BANK = [
       "התוצאות"
     ],
     "english_distractors": [
-      "show",
-      "change",
-      "major",
-      "because",
-      "results"
+      "The data show",
+      "a major change",
+      "because of",
+      "the final results"
     ],
     "notes": "מצביעים (indicate/point to) is more formal than מראים (show). למרות (despite) vs בגלל (because of) — causal logic distractor."
   },
@@ -2532,15 +2339,9 @@ const SENTENCE_BANK = [
       "מלא"
     ],
     "english_tokens": [
-      "The",
-      "findings",
-      "support",
-      "the",
-      "initial",
-      "hypothesis",
-      "but",
-      "not",
-      "completely"
+      "The findings support",
+      "the initial hypothesis",
+      "but not completely"
     ],
     "hebrew_distractors": [
       "התוצאות",
@@ -2550,11 +2351,10 @@ const SENTENCE_BANK = [
       "חלקי"
     ],
     "english_distractors": [
-      "results",
-      "contradict",
-      "final",
-      "partially",
-      "therefore"
+      "The results contradict",
+      "the final hypothesis",
+      "therefore",
+      "but only partially"
     ],
     "notes": "אך (but/however) is formal; colloquial uses אבל. תומכים (support) vs סותרים (contradict)."
   },
@@ -2616,18 +2416,10 @@ const SENTENCE_BANK = [
       "שגויות"
     ],
     "english_tokens": [
-      "One",
-      "must",
-      "distinguish",
-      "between",
-      "cause",
-      "and",
-      "effect",
+      "One must distinguish",
+      "between cause and effect",
       "otherwise",
-      "we'll",
-      "reach",
-      "incorrect",
-      "conclusions"
+      "we'll reach incorrect conclusions"
     ],
     "hebrew_distractors": [
       "להפריד",
@@ -2637,11 +2429,10 @@ const SENTENCE_BANK = [
       "נבין"
     ],
     "english_distractors": [
-      "separate",
-      "assumption",
-      "correct",
-      "understand",
-      "always"
+      "One should separate",
+      "the assumption and result",
+      "always",
+      "we'll reach correct conclusions"
     ],
     "notes": "להבחין (to distinguish) is formal. סיבה (cause) and תוצאה (effect) are key academic vocabulary. שגויות (incorrect) is more formal than לא נכונות."
   },

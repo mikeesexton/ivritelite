@@ -139,11 +139,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
     },
     binyan: {
       cleared: "Cleared",
-      difficulty: {
-        easy: "Easy",
-        medium: "Medium",
-        hard: "Hard",
-      },
+      formCount: "{count} forms",
       function: {
         simple: "Simple active",
         passive: "Passive",
@@ -479,11 +475,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
     },
     binyan: {
       cleared: "הושלם",
-      difficulty: {
-        easy: "קל",
-        medium: "בינוני",
-        hard: "קשה",
-      },
+      formCount: "{count} צורות",
       function: {
         simple: "פשוט (פעיל)",
         passive: "סביל",

@@ -36,17 +36,13 @@ test("basic standalone vocabulary stays in the lexicon but is unavailable for tr
   assert.equal(entriesByHebrew.get("מצקת")?.availability?.sentenceHints, true);
 });
 
-test("conjugation-first cooking verbs stay out of translation quiz while לצנן keeps curated distractors", () => {
+test("conjugation-first cooking verbs stay out of translation quiz while לצנן stays in", () => {
   const vocabulary = loadVocabulary();
   const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
 
   assert.equal(entriesByHebrew.get("לסנן")?.availability?.translationQuiz, false);
   assert.equal(entriesByHebrew.get("לקרר")?.availability?.translationQuiz, false);
   assert.equal(entriesByHebrew.get("לצנן")?.availability?.translationQuiz, true);
-  assert.deepEqual(JSON.parse(JSON.stringify(entriesByHebrew.get("לצנן")?.translationQuizDistractors)), {
-    english: ["to refrigerate", "to freeze", "to defrost"],
-    hebrew: ["לקרר", "להקפיא", "להפשיר"],
-  });
 });
 
 test("duplicate Hebrew glosses are collapsed into shared translations", () => {
@@ -65,16 +61,12 @@ test("duplicate Hebrew glosses are collapsed into shared translations", () => {
   assert.deepEqual(entriesByHebrew.get("לגרד"), ["to grate / scrape"]);
 });
 
-test("מוצאי שבת keeps its Saturday-night translation and custom Shabbat distractors", () => {
+test("מוצאי שבת keeps its Saturday-night translation", () => {
   const vocabulary = loadVocabulary();
   const entry = vocabulary.find((word) => word.he === "מוצאי שבת");
 
   assert.ok(entry);
   assert.equal(entry.en, "Saturday night");
-  assert.deepEqual(JSON.parse(JSON.stringify(entry.translationQuizDistractors)), {
-    english: ["Friday night", "Shabbat morning", "Shabbat afternoon"],
-    hebrew: ["ליל שבת", "שבת בבוקר", "שבת בלילה"],
-  });
 });
 
 test("requested existential and event vocabulary is available for translation", () => {

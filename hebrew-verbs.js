@@ -1907,6 +1907,108 @@ function buildStarterVerbEntries() {
       personal_priority: 76,
       category: "core_advanced",
     }),
+    createVerbEntry({
+      id: "advanced-verb-learach",
+      availability: getStarterVerbAvailability("advanced-verb-learach"),
+      lemma: "לארח",
+      lemma_niqqud: "לְאָרֵחַ",
+      root: ["א", "ר", "ח"],
+      binyan: "piel",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to host", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מארח", "מְאָרֵחַ"),
+          markedForm("מארחת", "מְאָרַחַת"),
+          markedForm("מארחים", "מְאָרְחִים"),
+          markedForm("מארחות", "מְאָרְחוֹת")
+        ),
+        makePast(
+          markedForm("אירחתי", "אֵרַחְתִּי"),
+          markedForm("אירחת", "אֵרַחְתָּ"),
+          markedForm("אירחת", "אֵרַחְתְּ"),
+          markedForm("אירח", "אֵרַח"),
+          markedForm("אירחה", "אֵרְחָה"),
+          markedForm("אירחנו", "אֵרַחְנוּ"),
+          markedForm("אירחתם", "אֵרַחְתֶּם"),
+          markedForm("אירחתן", "אֵרַחְתֶּן"),
+          markedForm("אירחו", "אֵרְחוּ")
+        ),
+        makeFuture(
+          markedForm("אארח", "אֲאָרֵחַ"),
+          markedForm("תארח", "תְּאָרֵחַ"),
+          markedForm("תארחי", "תְּאָרְחִי"),
+          markedForm("יארח", "יְאָרֵחַ"),
+          markedForm("תארח", "תְּאָרֵחַ"),
+          markedForm("נארח", "נְאָרֵחַ"),
+          markedForm("תארחו", "תְּאָרְחוּ"),
+          markedForm("יארחו", "יְאָרְחוּ")
+        ),
+        makeImperative(
+          markedForm("ארח", "אָרֵחַ"),
+          markedForm("ארחי", "אָרְחִי"),
+          markedForm("ארחו", "אָרְחוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el verb with guttural middle radical (ר) and final guttural (ח): 'to host' guests.",
+      difficulty_level: 3,
+      tags: ["piel", "seed", "hosting"],
+      personal_priority: 74,
+      category: "core_advanced",
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehishtamesh",
+      availability: getStarterVerbAvailability("advanced-verb-lehishtamesh"),
+      lemma: "להשתמש",
+      lemma_niqqud: "לְהִשְׁתַּמֵּשׁ",
+      root: ["ש", "מ", "ש"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to use", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("משתמש", "מִשְׁתַּמֵּשׁ"),
+          markedForm("משתמשת", "מִשְׁתַּמֶּשֶׁת"),
+          markedForm("משתמשים", "מִשְׁתַּמְּשִׁים"),
+          markedForm("משתמשות", "מִשְׁתַּמְּשׁוֹת")
+        ),
+        makePast(
+          markedForm("השתמשתי", "הִשְׁתַּמַּשְׁתִּי"),
+          markedForm("השתמשת", "הִשְׁתַּמַּשְׁתָּ"),
+          markedForm("השתמשת", "הִשְׁתַּמַּשְׁתְּ"),
+          markedForm("השתמש", "הִשְׁתַּמֵּשׁ"),
+          markedForm("השתמשה", "הִשְׁתַּמְּשָׁה"),
+          markedForm("השתמשנו", "הִשְׁתַּמַּשְׁנוּ"),
+          markedForm("השתמשתם", "הִשְׁתַּמַּשְׁתֶּם"),
+          markedForm("השתמשתן", "הִשְׁתַּמַּשְׁתֶּן"),
+          markedForm("השתמשו", "הִשְׁתַּמְּשׁוּ")
+        ),
+        makeFuture(
+          markedForm("אשתמש", "אֶשְׁתַּמֵּשׁ"),
+          markedForm("תשתמש", "תִּשְׁתַּמֵּשׁ"),
+          markedForm("תשתמשי", "תִּשְׁתַּמְּשִׁי"),
+          markedForm("ישתמש", "יִשְׁתַּמֵּשׁ"),
+          markedForm("תשתמש", "תִּשְׁתַּמֵּשׁ"),
+          markedForm("נשתמש", "נִשְׁתַּמֵּשׁ"),
+          markedForm("תשתמשו", "תִּשְׁתַּמְּשׁוּ"),
+          markedForm("ישתמשו", "יִשְׁתַּמְּשׁוּ")
+        ),
+        makeImperative(
+          markedForm("השתמש", "הִשְׁתַּמֵּשׁ"),
+          markedForm("השתמשי", "הִשְׁתַּמְּשִׁי"),
+          markedForm("השתמשו", "הִשְׁתַּמְּשׁוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Hitpa'el verb 'to use'; takes ב־ (להשתמש ב־ — to use something).",
+      difficulty_level: 2,
+      tags: ["hitpael", "seed", "everyday"],
+      personal_priority: 82,
+      category: "core_advanced",
+    }),
   ];
 }
 

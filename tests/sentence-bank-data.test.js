@@ -501,7 +501,7 @@ test("sentence bank data rewrites colloquial_19 as a fully aligned punctuated Wh
   assert.equal(entry.hebrew, "וואלה, ראיתי את זה. מגניב. שלח לי את הפרטים.");
   assert.equal(entry.english, "Wow, I saw it. Cool. Send me the details.");
   assert.deepEqual(Array.from(entry.hebrew_tokens), ["וואלה", "ראיתי", "את", "זה", "מגניב", "שלח", "לי", "הפרטים"]);
-  assert.deepEqual(Array.from(entry.english_tokens), ["Wow", "I", "saw", "it", "Cool", "Send", "me", "the", "details"]);
+  assert.deepEqual(Array.from(entry.english_tokens), ["Wow", "I saw it", "Cool", "Send me", "the details"]);
   assert.deepEqual(getStaticEnglishWordChunks(entry), []);
 });
 

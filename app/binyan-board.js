@@ -5,11 +5,7 @@ const app = global.IvriQuestApp = global.IvriQuestApp || {};
 const binyanBoard = app.binyanBoard = app.binyanBoard || {};
 
 const BINYAN_ORDER = ["paal", "nifal", "piel", "pual", "hifil", "hufal", "hitpael"];
-const BINYAN_ROUND_DIFFICULTY_TARGETS = Object.freeze({
-  easy: 2,
-  medium: 2,
-  hard: 2,
-});
+const BINYAN_ROUND_ROOT_COUNT = 6;
 const TEACHING_POINT_KEYS = {
   "No metathesis — ל is not a sibilant, so the ת of hitpael stays put.": "binyan.teaching.noMetathesis",
   "Metathesis: ת and ס swap (התסדר → הסתדר) because the first radical is a sibilant.": "binyan.teaching.sibilantMetathesis",
@@ -55,12 +51,7 @@ function getTranslatedText(key, vars = {}) {
 }
 
 function selectBinyanRoundRoots(roots) {
-  const selected = [];
-  Object.entries(BINYAN_ROUND_DIFFICULTY_TARGETS).forEach(([difficulty, count]) => {
-    const candidates = roots.filter((root) => root.difficulty === difficulty);
-    selected.push(...shuffle(candidates).slice(0, count));
-  });
-  return selected;
+  return shuffle(roots.slice()).slice(0, BINYAN_ROUND_ROOT_COUNT);
 }
 
 function getBinyanGlossMeaningParts(gloss) {
@@ -554,7 +545,6 @@ binyanBoard.renderBoardTiles = binyanBoard.renderBoardTiles || function renderBo
     tile.className = "game-tile binyan-root-tile";
     tile.classList.toggle("is-cleared", root.cleared);
     tile.disabled = root.cleared;
-    if (root.difficulty) tile.dataset.difficulty = root.difficulty;
 
     const rootText = global.document.createElement("span");
     rootText.className = "binyan-root-letters hebrew";
@@ -572,7 +562,7 @@ binyanBoard.renderBoardTiles = binyanBoard.renderBoardTiles || function renderBo
     badge.className = "binyan-root-badge";
     badge.textContent = root.cleared
       ? translate("binyan.cleared")
-      : `${translate(`binyan.difficulty.${root.difficulty}`)} · ${root.forms.length}`;
+      : translate("binyan.formCount", { count: root.forms.length });
     tile.appendChild(badge);
 
     tile.addEventListener("click", () => binyanBoard.openRoot(root.id));

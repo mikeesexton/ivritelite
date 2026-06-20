@@ -295,7 +295,6 @@ ui.renderGameplayPill = ui.renderGameplayPill || function renderGameplayPill() {
 
 ui.renderShellChrome = ui.renderShellChrome || function renderShellChrome() {
   const runtime = getRuntime();
-  const routeKey = `nav.${runtime.state.route}`;
   const { gameplayActive } = ui.getGameplayHeaderMeta();
   const viewportWidth = Math.max(0, Number(runtime.global?.innerWidth || 0));
   const showShellHomeButton = viewportWidth >= 1024 && (gameplayActive || (runtime.state.route === "results" && runtime.state.summary.active));
@@ -314,21 +313,6 @@ ui.renderShellChrome = ui.renderShellChrome || function renderShellChrome() {
     runtime.el.shellHomeBtn.classList.toggle("hidden", !showShellHomeButton);
     runtime.el.shellHomeBtn.setAttribute("aria-hidden", showShellHomeButton ? "false" : "true");
   }
-  if (runtime.el?.shellRouteChip) {
-    runtime.el.shellRouteChip.textContent = translate(routeKey);
-  }
-  if (runtime.el?.shellRouteSummary) {
-    if (runtime.state.summary.active && runtime.state.route === "results") {
-      runtime.el.shellRouteSummary.textContent = translate("summary.thumbsText");
-    } else if (runtime.state.route === "home") {
-      runtime.el.shellRouteSummary.textContent = app.session?.hasActiveLearnSession?.()
-        ? translate("dashboard.active")
-        : translate("dashboard.ready");
-    } else {
-      runtime.el.shellRouteSummary.textContent = translate(routeKey);
-    }
-  }
-
   (runtime.el?.routeButtons || []).forEach((button) => {
     const buttonRoute = button.dataset.route || "home";
     button.classList.toggle("active", buttonRoute === runtime.state.route);
@@ -1068,6 +1052,10 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
 
   const mistakesWrap = global.document.createElement("div");
   mistakesWrap.className = "results-mistakes";
+  const gridSummaryGames = new Set(["lesson", "lessonMatch", "abbreviation", "abbrMatch"]);
+  if (gridSummaryGames.has(runtime.state.summary.game)) {
+    mistakesWrap.classList.add("results-mistakes--grid");
+  }
   const heading = global.document.createElement("h3");
   heading.className = "results-section-title";
   heading.textContent = translate("results.mistakes");

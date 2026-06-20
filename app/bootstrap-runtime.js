@@ -20,8 +20,6 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     reviewView: document.querySelector("#reviewView"),
     settingsView: document.querySelector("#settingsView"),
     resultsView: document.querySelector("#resultsView"),
-    shellRouteSummary: document.querySelector("#shellRouteSummary"),
-    shellRouteChip: document.querySelector("#shellRouteChip"),
     homeLessonBtn: document.querySelector("#homeLessonBtn"),
     homeSentenceBankBtn: document.querySelector("#homeSentenceBankBtn"),
     homeVerbMatchBtn: document.querySelector("#homeVerbMatchBtn"),

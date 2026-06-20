@@ -286,7 +286,7 @@ test("binyan teaching points are localized when present", () => {
   }
 });
 
-test("binyan board sessions select exactly two roots per difficulty", () => {
+test("binyan board sessions serve six roots drawn from the full root pool", () => {
   const app = loadBinyanApp("en");
   app.utils = {
     shuffle(items) {
@@ -296,19 +296,12 @@ test("binyan board sessions select exactly two roots per difficulty", () => {
 
   const deck = app.binyanBoard.buildBinyanBoardDeck();
   assert.equal(deck.roots.length, 6);
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(deck.roots.map((root) => root.difficulty))),
-    ["easy", "easy", "medium", "medium", "hard", "hard"]
-  );
-  assert.deepEqual(
-    JSON.parse(JSON.stringify(deck.roots.reduce((counts, root) => {
-      counts[root.difficulty] = (counts[root.difficulty] || 0) + 1;
-      return counts;
-    }, {}))),
-    { easy: 2, medium: 2, hard: 2 }
-  );
 
+  const allRootIds = new Set(verbGameData.ROOTS.map((root) => root.id));
   const selectedRootIds = new Set(deck.roots.map((root) => root.id));
+  assert.equal(selectedRootIds.size, 6);
+  deck.roots.forEach((root) => assert.ok(allRootIds.has(root.id)));
+
   const selectedGlosses = new Set(
     verbGameData.ROOTS
       .filter((root) => selectedRootIds.has(root.id))

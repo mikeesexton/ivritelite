@@ -2170,3 +2170,95 @@ Each entry records what was requested, what changed, what was tested, and what t
 **Risks / regressions to check:** The main thing to watch is desktop density near the `1024px` breakpoint, where the three-column hub has much less horizontal slack than before; if anything feels cramped there, the safest next adjustment is widening the breakpoint or slightly loosening the center/side column ratio rather than reintroducing hidden navigation. The other semantic change is intentional but important: on desktop, `review` and `settings` are no longer standalone destinations during normal use, so results is now the main full-screen route takeover.
 
 ---
+
+### 2026-06-20 13:26 — Vocab cleanup (compound truncations), two new verbs, food/pharmacy categories, ייעוד
+
+**Requested:**
+1. Translation game tests the compound "immigration office" instead of just "immigration" — switch it to plain "immigration"; and אחסון ("storage") is only tested inside compounds, never alone. Flag other compounds worth truncating.
+2. Add the verbs **לארח** (to host) and **להשתמש** (to use) to the conjugation game.
+3. Add basic food / nutrition / grocery / restaurant / pharmacy vocabulary, including specific user-named words (clarified in-session: קיק = castor oil שמן קיק; "סדין" was a typo for **סידן** = calcium; שלוק = a gulp + לגימה = a sip).
+4. Add **ייעוד** to the translation game and suggest other gaps.
+
+**Files changed:**
+- `vocab-data.js`:
+  - `bureaucracy`: replaced `["immigration office", "רשות ההגירה", …]` with `["immigration", "הגירה", "הַגִּירָה"]`; added standalone `["procedure / process", "הליך", "הֲלִיךְ"]` (kept "legal proceeding" הליך משפטי).
+  - `home_everyday_life`: added standalone `["storage", "אחסון", "אִחְסוּן"]` (kept storage container/compartment compounds).
+  - `work_business`: added standalone `["appointed time / due date", "מועד", "מוֹעֵד"]` (next to "deadline" מועד אחרון) and `["capital", "הון", "הוֹן"]` (next to "equity" הון עצמי — both live in work_business). Per user, did NOT add a standalone ביטוח (kept "health insurance" compound only).
+  - `abstract_philosophy`: added `["vocation / purpose", "ייעוד", "יִיעוּד"]`.
+  - Added two new `CATEGORY_META` entries + two new `RAW` arrays (both `defaultSelected: true`), appended at the end so existing categories' `categoryIndex`/utility scores are unchanged: **`groceries_food`** "Groceries & Food" (80 entries: produce, proteins incl. סרדין, dairy, bakery/grains, pantry/condiments, beverages, grocery/restaurant navigation incl. לגימה "a sip" + שלוק "a gulp/swig") and **`pharmacy_personal_care`** "Pharmacy & Personal Care" (35 entries: OTC meds, supplements incl. סידן calcium + שמן קיק castor oil, personal-care/toiletries). Skipped 3 words already present elsewhere (receipt, thermometer, bandage).
+- `hebrew-verbs.js`: appended two curated verb entries inside `buildStarterVerbEntries()` after `advanced-verb-lehitkayem`:
+  - `advanced-verb-learach` — לארח, binyan piel (guttural middle radical ר + final guttural ח), full curated present/past/future/imperative.
+  - `advanced-verb-lehishtamesh` — להשתמש, binyan hitpael (sibilant metathesis הִשְׁתַּ-), full curated forms; note that it takes ב־.
+
+**Behavior changed:** Translation game now surfaces standalone הגירה / אחסון / הון / מועד / הליך / ייעוד plus ~115 new food & pharmacy words (auto-included since the pool is all translation-available, non-mastered vocab sorted by utility — there is no per-category picker UI). "immigration office" no longer appears. Conjugation game now includes לארח and להשתמש.
+
+**Tests run:** `npm test` — 168/168 before, 168/168 after. Node data checks: `getBaseVocabulary()` → 1180 words, 0 duplicate ids, all new entries present with correct categories; `getSeedVerbEntries()` → 33 verbs, both new verbs validate via `normalizeAndValidateFormSet`/`resolveLearnerFacingForms`, `buildVerbConjugationDeck` → 36 cards, 0 errors. Browser smoke (npx serve :3000): both files load with no console errors; Translation round rendered with a new entry live ("sunscreen / קרם הגנה"); Conjugation game rendered verb forms correctly.
+
+**Risks / regressions to check:** (1) Niqqud accuracy on the ~115 new vocab entries and the two verbs' full paradigms (gutturals in לארח; hitpa'el in להשתמש) — worth a native-speaker spot-check. (2) A few glosses were disambiguated to avoid collisions ("appointed time / due date" for מועד vs existing "appointment"=תור; "pepper (bell)", "iron (mineral)", "hair conditioner", "body lotion"). (3) The two new categories sort lowest by utility (appended last), so their words appear less frequently than older high-utility entries — expected, not a bug.
+
+**Suggested gaps not yet added (awaiting user):** other abstract/standalone words such as היתכנות (feasibility), כדאיות (viability), נחישות (determination), התמדה (perseverance), משילות (governance), היערכות (readiness), זמינות (availability).
+
+---
+
+### 2026-06-20 14:07 — Translit cleanup, sentence-bank chunking pass, results 2-col grid, binyan difficulty removal
+
+**Requested:**
+1. Stop testing "determinism" and "dividend" in the translation game; find other translations that are actually transliterations and remove them.
+2. Quality/consistency pass over the Sentences game's English word-block joinings — some blocks over-combine, many don't combine at all when they should (e.g. תחליט split into "Make"/"up"/"your"/"mind"; "are you"/"with us" should be joined).
+3. Stop using "What's new" as a distractor for מה נסגר ("What's going on") in colloquial_01 — unfair near-synonym.
+4. Render end-of-game error lists as a 2-column grid on all devices for the abbreviation and translation games.
+5. Binyan board: remove the easy/medium/hard ratings entirely and serve roots randomly; lay roots out as an even 2×3 / 3×2 grid by device.
+
+**Files changed:**
+- `vocab-data.js` — Removed 4 pure transliteration entries: `dividend` (דיבידנד, finance), `determinism` (דטרמיניזם), `epistemology` (אפיסטמולוגיה), `metaphysics` (מטאפיזיקה) (all philosophy_intellectual_expanded). Kept genuinely native words (morality/מוסר) and established loanwords (ethics/אתיקה, algorithm/אלגוריתם, strategy/אסטרטגיה, etc.). Vocab count 1180 → 1176.
+- `sentence-bank-data.js` — Rechunked the English token banks of 30 over-fragmented entries into natural phrase chips and gave them phrase-sized distractors (e.g. colloquial_16 → "Well" / "are you" / "coming" / "with us" / "or not" / "Make up your mind" / "already"). Replaced colloquial_01's "What's new" distractor with "What's the plan" (parallel shape, clearly-distinct meaning). Hebrew tokens/distractors left untouched per the request (English only). All 70 entries still pass the token-alignment frame check.
+- `app/ui.js` — `renderSummaryState()`: add a `results-mistakes--grid` modifier class when `summary.game` ∈ {lesson, lessonMatch, abbreviation, abbrMatch} so only translation + abbreviation get the 2-column treatment (sentence-bank/conjugation/binyan keep single-column because their rows hold long content).
+- `styles.css` — Added `.results-mistakes--grid { grid-template-columns: 1fr 1fr }` with the section title + empty-note spanning both columns. Binyan board grid changed from `repeat(auto-fit, minmax(148px,1fr))` to an even `repeat(2,1fr)` base with a `@media (min-width:768px) { repeat(3,1fr) }` (mobile 2×3, tablet/desktop 3×2). Removed the three `[data-difficulty=...]` badge border-color rules.
+- `app/binyan-board.js` — Removed `BINYAN_ROUND_DIFFICULTY_TARGETS` and the per-difficulty bucketed selection; `selectBinyanRoundRoots()` now returns 6 randomly shuffled roots from the full pool (new `BINYAN_ROUND_ROOT_COUNT = 6`). Dropped `tile.dataset.difficulty`; the root badge now shows a localized form count ("N forms" / "N צורות") instead of "{difficulty} · {count}".
+- `app/bootstrap-data.js` — Added `binyan.formCount` i18n key (en: "{count} forms", he: "{count} צורות"). Left the now-unused `binyan.difficulty.*` keys in place (harmless).
+- `tests/sentence-bank-data.test.js` — Updated the colloquial_19 token assertion to the new chunking (["Wow","I saw it","Cool","Send me","the details"]; alignment check unchanged).
+- `tests/verb-game-data.test.js` — Rewrote "select exactly two roots per difficulty" → "serve six roots drawn from the full root pool" (asserts 6 unique roots from ROOTS + the existing distractor-pool checks); the `assert.ok(root.difficulty)` data check is untouched since the difficulty field still exists in the data.
+
+**Behavior changed:** Translation game no longer surfaces the 4 transliteration words. Sentences game shows natural multi-word chips for 30 sentences that were previously word-by-word (verified live: colloquial_18 now shows "tomorrow at 8" / "don't be late" chips). מה נסגר no longer offers the near-synonym "What's new" as a tempting wrong answer. Abbreviation + translation results now show mistakes in a 2-column grid on every viewport; other games unchanged. Binyan board serves 6 random roots in an even grid (2 cols ≤767px, 3 cols ≥768px) with no difficulty labels or colors — badge shows only the form count.
+
+**Tests run:** `npm test` — 168/168 before and after (after updating the two affected assertions). Node data checks: all 70 sentence entries align (in-order full coverage), 0 distractor/target overlaps; 4 transliterations confirmed removed (1176 words). Browser smoke (npx serve :3000): no console errors; binyan board renders 6 roots with "N FORMS" badges, 2 cols @544px / 3 cols @1024px, no data-difficulty attrs; results `--grid` container computes 2 columns with full-width heading while plain `.results-mistakes` stays single-column; Sentences game renders multi-word phrase chips.
+
+**Risks / regressions to check:** (1) The 30 rechunkings and their new distractors are judgment calls — worth a native/fluent spot-check for naturalness; alignment and tests are green but phrasing quality is subjective. (2) Longest abbreviation mistake note (תנצב״ה ≈ 73 chars incl. Hebrew expansion + English) wraps to ~3–4 lines in a narrow 2-column cell on small phones — it wraps cleanly, no horizontal overflow, but is dense. (3) Borderline transliterations were intentionally kept and await user decision (see below).
+
+**Awaiting user decision — borderline transliteration candidates not removed:** methodology (מתודולוגיה), narrative (נרטיב), prompt (פרומפט), token (טוקן), benchmark (בנצ'מרק), slang (סלנג). These are transliterations but are arguably standard modern Hebrew usage; left in pending the user's call.
+
+---
+
+### 2026-06-20 — Exclude בירה (beer) from translation quiz
+
+**Requested:** Remove בירה from the translation game. Keep it in backend vocabulary but don't quiz it.
+
+**Files changed:**
+- `vocab-data.js` — Added `["בירה", { translationQuiz: false }]` to `LEXICON_AVAILABILITY_OVERRIDES`. Word remains in the lexicon and is available for sentence hints; only excluded from the translation quiz pool.
+
+**Behavior changed:** The word "beer" / בירה no longer appears as a quiz prompt or distractor in the translation game.
+
+**Tests run:** `npm test` — 168/168 pass.
+
+**Risks / regressions to check:** None expected; the override mechanism is well-tested and used by a dozen other words.
+
+---
+
+### 2026-06-20 — Safe low-risk cleanup pass (dead CSS, orphaned data, stale docs)
+
+**Requested:** Audit the IvritElite codebase for cleanup opportunities and action the agreed "safe, low-risk batch" — changes with no behavioral impact. (The audit also surfaced a dead MC-lesson helper cluster and the vestigial `abbreviationQuizDistractorIds` data field; both were explicitly deferred and NOT touched this session. Also confirmed three false-positive "dead code" findings that are actually live and were left alone: `app/storage.js` (it's `runtime.storageApi`), `updateLessonProgress` (the shared progress bar used by every mode), and `.DS_Store` (already untracked).)
+
+**Files changed:**
+- `styles.css` — removed unused selectors: `.shell-summary`, `.shell-status`, `.shell-chip`, the `.stats-grid`/`.stat-tile`/`.stat-label`/`.stat-value` block, and `.prompt-support-note` (mobile media query). Removed `.dashboard-header-card` from its comma group (kept `.home-lessons-card`) and `.review-queue-item`/`.review-queue-title`/`.review-queue-note` from their comma groups (kept the `.compact-row` and `.results-mistake-*` siblings). All confirmed to have zero references in `index.html`/`app.js`/`app/`.
+- `vocab-data.js` — removed the orphaned `translationQuizDistractors` field construction in `getBaseVocabulary()` (built for every word but only ever read by tests, never by the app).
+- `tests/vocab-data.test.js` — removed the two `translationQuizDistractors` assertions and trimmed the two affected test titles accordingly (the availability/translation assertions in those tests remain).
+- `app/bootstrap-runtime.js` — removed the `shellRouteSummary`/`shellRouteChip` `querySelector` entries from the `el` map (the `#shellRouteSummary`/`#shellRouteChip` elements don't exist in `index.html`).
+- `app/ui.js` — removed the two dead `if (runtime.el?.shellRouteChip/shellRouteSummary)` blocks in `renderShellChrome` and the now-unused `routeKey` local.
+- `app/bootstrap-data.js` — removed the unused `binyan.difficulty.{easy,medium,hard}` i18n keys from both the EN and HE locale blocks (no `translate()` call references them; binyan-board uses `cleared`/`formCount`/`functionHint.*`/`teaching.*`).
+- `CLAUDE.md`, `AGENTS.md` — updated the "Project structure" section to reflect the modular `app/` layout and the full set of data files (was still describing a monolithic `app.js`).
+
+**Behavior changed:** None — dead code / data / doc cleanup only.
+
+**Tests run:** `npm test` before = 168/168 pass; after = 168/168 pass (only the two trimmed vocab assertions changed). Live-verified via preview server: app boots with no console errors/warnings, home dashboard renders all 6 game tiles, leave-game confirmation works, and the Binyanim board renders correctly (root cards with "N FORMS" labels confirm `binyan.formCount` still resolves; no difficulty label appears anywhere, confirming those keys were dead). Bottom nav and card styling intact.
+
+**Risks / regressions to check:** Low. Edits to `styles.css`, `vocab-data.js`, `app/ui.js`, and `app/bootstrap-data.js` landed on top of pre-existing uncommitted working-tree changes in those files — keep that in mind when reviewing the combined diff. Main residual risk is a CSS selector or i18n key referenced via a dynamically-built string, but each removal was grep-confirmed unreferenced and smoke-tested in the browser.
