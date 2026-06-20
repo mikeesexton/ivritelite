@@ -16,10 +16,6 @@ function getSession() {
   return app.session || {};
 }
 
-function isPlainShortcutEvent(event) {
-  return !(event.altKey || event.ctrlKey || event.metaKey);
-}
-
 function getDesktopHubPanels(runtime) {
   return [
     { card: runtime.el?.reviewPanelCard, toggle: runtime.el?.reviewPanelToggle },
@@ -35,18 +31,18 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.routeButtons.forEach((button) => {
     button.addEventListener("click", () => controller.handleRouteButtonPress(button.dataset.route || "home"));
   });
-  runtime.el.homeLessonBtn?.addEventListener("click", () => controller.openHomeLesson("lesson"));
+  runtime.el.homeLessonBtn?.addEventListener("click", () => controller.openHomeLesson("lessonMatch"));
   runtime.el.homeSentenceBankBtn?.addEventListener("click", () => controller.openHomeLesson("sentenceBank"));
   runtime.el.homeVerbMatchBtn?.addEventListener("click", () => controller.openHomeLesson("verbMatch"));
-  runtime.el.homeAbbreviationBtn?.addEventListener("click", () => controller.openHomeLesson("abbreviation"));
+  runtime.el.homeAbbreviationBtn?.addEventListener("click", () => controller.openHomeLesson("abbrMatch"));
   runtime.el.homeAdvConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
   runtime.el.advConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
   runtime.el.homeBinyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
   runtime.el.binyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
   runtime.el.lessonBtn.addEventListener("click", () => {
-    runtime.state.lastPlayedMode = "lesson";
-    runtime.state.mode = "lesson";
-    app.lessonMode?.startLesson?.();
+    runtime.state.lastPlayedMode = "lessonMatch";
+    runtime.state.mode = "lessonMatch";
+    app.wordMatch?.startLessonMatch?.();
   });
   runtime.el.sentenceBankBtn?.addEventListener("click", () => {
     runtime.state.lastPlayedMode = "sentenceBank";
@@ -59,9 +55,9 @@ controller.bindUi = controller.bindUi || function bindUi() {
     app.verbMatch?.startVerbMatch?.();
   });
   runtime.el.abbreviationBtn?.addEventListener("click", () => {
-    runtime.state.lastPlayedMode = "abbreviation";
-    runtime.state.mode = "abbreviation";
-    app.abbreviation?.startAbbreviation?.();
+    runtime.state.lastPlayedMode = "abbrMatch";
+    runtime.state.mode = "abbrMatch";
+    app.wordMatch?.startAbbrMatch?.();
   });
   runtime.el.nextBtn.addEventListener("click", () => controller.handleNextAction());
   runtime.el.masterVerbBtn?.addEventListener("click", () => app.verbMatch?.moveEligibleVerbToMastered?.());
@@ -159,36 +155,6 @@ controller.handleGlobalKeyDown = controller.handleGlobalKeyDown || function hand
     }
     return;
   }
-
-  if (!isPlainShortcutEvent(event)) return;
-  controller.handleAbbreviationShortcutKey?.(event);
-};
-
-controller.handleAbbreviationShortcutKey = controller.handleAbbreviationShortcutKey || function handleAbbreviationShortcutKey(event) {
-  const runtime = getRuntime();
-  const question = runtime.state.abbreviation?.currentQuestion;
-
-  if (runtime.state.mode !== "abbreviation") return false;
-  if (app.ui?.isUiLocked?.()) return false;
-  if (!runtime.state.abbreviation?.active || !question) return false;
-
-  if (/^[1-4]$/.test(event.key)) {
-    const option = question.options[Number(event.key) - 1];
-    if (!option) return false;
-    event.preventDefault?.();
-    return Boolean(app.abbreviation?.selectAbbreviationOption?.(option.id, question));
-  }
-
-  if (event.key === "Enter") {
-    const canAdvance = question.locked;
-    const canSubmit = !question.locked && Boolean(question.selectedOptionId);
-    if (!canAdvance && !canSubmit) return false;
-    event.preventDefault?.();
-    controller.handleNextAction?.();
-    return true;
-  }
-
-  return false;
 };
 
 controller.toggleDesktopHubPanel = controller.toggleDesktopHubPanel || function toggleDesktopHubPanel(card, toggle) {
@@ -262,6 +228,20 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
     return;
   }
 
+  if (mode === "lessonMatch") {
+    runtime.state.lastPlayedMode = "lessonMatch";
+    runtime.state.mode = "lessonMatch";
+    app.wordMatch?.startLessonMatch?.();
+    return;
+  }
+
+  if (mode === "abbrMatch") {
+    runtime.state.lastPlayedMode = "abbrMatch";
+    runtime.state.mode = "abbrMatch";
+    app.wordMatch?.startAbbrMatch?.();
+    return;
+  }
+
   if (mode === "sentenceBank") {
     runtime.state.lastPlayedMode = "sentenceBank";
     runtime.state.mode = "sentenceBank";
@@ -300,6 +280,14 @@ controller.continueFromResults = controller.continueFromResults || function cont
   }
   if (runtime.state.summary.game === "abbreviation") {
     app.abbreviation?.startAbbreviation?.();
+    return;
+  }
+  if (runtime.state.summary.game === "lessonMatch") {
+    app.wordMatch?.startLessonMatch?.();
+    return;
+  }
+  if (runtime.state.summary.game === "abbrMatch") {
+    app.wordMatch?.startAbbrMatch?.();
     return;
   }
   if (runtime.state.summary.game === "advConj") {
@@ -361,20 +349,7 @@ controller.handleNextAction = controller.handleNextAction || function handleNext
     return;
   }
 
-  if (runtime.state.mode === "abbreviation") {
-    if (!runtime.state.abbreviation.active || !runtime.state.abbreviation.currentQuestion) {
-      return;
-    }
-    if (runtime.state.abbreviation.currentQuestion.locked) {
-      app.abbreviation?.nextAbbreviationQuestion?.();
-      return;
-    }
-    if (runtime.state.abbreviation.currentQuestion.selectedOptionId) {
-      app.abbreviation?.applyAbbreviationAnswer?.(
-        runtime.state.abbreviation.currentQuestion.selectedOptionId === runtime.state.abbreviation.currentQuestion.entry.id,
-        runtime.state.abbreviation.currentQuestion.selectedOptionId
-      );
-    }
+  if (runtime.state.mode === "lessonMatch" || runtime.state.mode === "abbrMatch") {
     return;
   }
 
@@ -409,22 +384,6 @@ controller.handleNextAction = controller.handleNextAction || function handleNext
   if (runtime.state.mode === "binyanBoard") {
     app.binyanBoard?.handleBinyanBoardNext?.();
     return;
-  }
-
-  if (!runtime.state.lesson.active || !runtime.state.currentQuestion) {
-    return;
-  }
-
-  if (runtime.state.currentQuestion.locked) {
-    app.lessonMode?.nextQuestion?.();
-    return;
-  }
-
-  if (runtime.state.currentQuestion.selectedOptionId) {
-    app.lessonMode?.applyAnswer?.(
-      runtime.state.currentQuestion.selectedOptionId === runtime.state.currentQuestion.word.id,
-      runtime.state.currentQuestion.selectedOptionId
-    );
   }
 };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -28,6 +28,10 @@ function isVerbMatchMode(mode = getRuntime().state?.mode) {
   return mode === "verbMatch";
 }
 
+function isWordMatchMode(mode = getRuntime().state?.mode) {
+  return mode === "lessonMatch" || mode === "abbrMatch";
+}
+
 const PROMPT_SPEAKER_ICON = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M5 9v6h4l5 4V5L9 9H5Z" fill="currentColor"></path><path d="M16.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path><path d="M18.75 6.25a8 8 0 0 1 0 11.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>';
 
 ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
@@ -174,15 +178,12 @@ ui.renderResultsActionsVisibility = ui.renderResultsActionsVisibility || functio
 
 ui.renderRouteVisibility = ui.renderRouteVisibility || function renderRouteVisibility() {
   const runtime = getRuntime();
-  const viewportWidth = Math.max(0, Number(runtime.global?.innerWidth || 0));
-  const desktopHubLayout = viewportWidth >= 1024;
   const showResults = runtime.state.route === "results" && runtime.state.summary.active;
-  const showDesktopHub = desktopHubLayout;
-  const showHome = (showDesktopHub && !showResults) || (!showDesktopHub && runtime.state.route === "home");
-  const showReview = showDesktopHub || runtime.state.route === "review";
-  const showSettings = showDesktopHub || runtime.state.route === "settings";
+  const showHome = !showResults && runtime.state.route === "home";
+  const showReview = runtime.state.route === "review";
+  const showSettings = runtime.state.route === "settings";
 
-  runtime.global.document.body?.setAttribute("data-desktop-hub-layout", showDesktopHub ? "true" : "false");
+  runtime.global.document.body?.setAttribute("data-desktop-hub-layout", "false");
 
   runtime.el?.homeView?.classList.toggle("active", showHome);
   runtime.el?.resultsView?.classList.toggle("active", showResults);
@@ -431,7 +432,7 @@ ui.updateLessonShellModeState = ui.updateLessonShellModeState || function update
   const lessonTitleRow = runtime.el?.lessonTitleRow;
   if (!shell || !promptCard) return;
 
-  const layoutMode = isVerbMatchMode()
+  const layoutMode = (isVerbMatchMode() || isWordMatchMode())
     ? "verb-match"
     : (runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "binyanBoard")
       ? "standard"
@@ -511,8 +512,11 @@ ui.renderPromptHint = ui.renderPromptHint || function renderPromptHint() {
   if (runtime.state.mode !== "binyanBoard" || !runtime.state.binyanBoard.currentQuestion) {
     ui.hidePromptFunctionHint();
   }
-  const speechHint = isVerbMatchMode()
-    && runtime.state.match.active
+  const isMatchActive = isVerbMatchMode()
+    ? Boolean(runtime.state.match.active)
+    : Boolean(runtime.state.wordMatch?.active);
+  const speechHint = (isVerbMatchMode() || isWordMatchMode())
+    && isMatchActive
     && (app.speech?.isEnabled?.() || false)
     && (app.speech?.isSupported?.() || false);
   let hintText = speechHint ? translate("speech.tipSelectHebrewFirst") : "";
@@ -627,6 +631,16 @@ ui.renderLearnState = ui.renderLearnState || function renderLearnState() {
     return;
   }
 
+  if (isWordMatchMode()) {
+    if (runtime.state.wordMatch.active) {
+      app.wordMatch?.renderActiveRound?.();
+    } else {
+      app.wordMatch?.renderIdleState?.();
+    }
+    ui.renderPromptHint();
+    return;
+  }
+
   if (runtime.state.mode === "abbreviation") {
     if (runtime.state.abbreviation.active && runtime.state.abbreviation.currentQuestion) {
       app.abbreviation?.renderAbbreviationQuestion?.();
@@ -735,6 +749,23 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
       runtime.el.masterVerbBtn.textContent = translate("mastered.moveCurrent");
       runtime.el.masterVerbBtn.classList.toggle("hidden", !showMasterAction);
     }
+    finalizeHeaderRender();
+    return;
+  }
+
+  if (isWordMatchMode()) {
+    const wm = runtime.state.wordMatch;
+    const isAbbr = runtime.state.mode === "abbrMatch";
+    const startKey = isAbbr ? "session.abbreviationStart" : "session.start";
+    const activeKey = isAbbr ? "session.abbreviationTitle" : "session.mixedTitle";
+    runtime.el.modeTitle.textContent = wm.active
+      ? translate(activeKey, { rounds: wm.totalPairs })
+      : translate(startKey);
+    ui.updateLessonProgress(
+      wm.totalPairs ? Math.round((wm.matchedCount / wm.totalPairs) * 100) : 0
+    );
+    runtime.el.nextBtn.disabled = true;
+    runtime.el.nextBtn.classList.add("hidden");
     finalizeHeaderRender();
     return;
   }
@@ -1206,10 +1237,10 @@ ui.renderHomeLessonButtons = ui.renderHomeLessonButtons || function renderHomeLe
   const highlightedMode = app.session?.hasActiveLearnSession?.()
     ? runtime.state.mode
     : runtime.state.lastPlayedMode || "lesson";
-  ui.setHomeLessonState(runtime.el?.homeLessonBtn, highlightedMode === "lesson");
+  ui.setHomeLessonState(runtime.el?.homeLessonBtn, highlightedMode === "lesson" || highlightedMode === "lessonMatch");
   ui.setHomeLessonState(runtime.el?.homeSentenceBankBtn, highlightedMode === "sentenceBank");
   ui.setHomeLessonState(runtime.el?.homeVerbMatchBtn, highlightedMode === "verbMatch");
-  ui.setHomeLessonState(runtime.el?.homeAbbreviationBtn, highlightedMode === "abbreviation");
+  ui.setHomeLessonState(runtime.el?.homeAbbreviationBtn, highlightedMode === "abbreviation" || highlightedMode === "abbrMatch");
   ui.setHomeLessonState(runtime.el?.homeAdvConjBtn, highlightedMode === "advConj");
 };
 

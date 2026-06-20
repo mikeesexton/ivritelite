@@ -417,54 +417,47 @@ verbMatch.renderVerbMatchCards = verbMatch.renderVerbMatchCards || function rend
   wrap.className = "match-columns";
   wrap.setAttribute("dir", "ltr");
 
-  const leftCol = global.document.createElement("section");
-  leftCol.className = "match-col";
-  const leftStack = global.document.createElement("div");
-  leftStack.className = "match-stack";
-
-  runtime.state.match.leftCards.forEach((card, idx) => {
-    const btn = global.document.createElement("button");
-    btn.type = "button";
-    btn.className = "choice-btn match-card";
-    btn.textContent = card.englishText;
-    btn.classList.toggle("selected", leftSelected === card.id);
-    btn.classList.toggle("matched", matchedSet.has(card.id));
-    btn.classList.toggle("mismatch", mismatchSet.has(card.id));
-    btn.classList.toggle("incoming", Boolean(card.incoming));
-    if (card.incoming) {
-      btn.style.animationDelay = `${idx * 40}ms`;
+  const leftCards = runtime.state.match.leftCards;
+  const rightCards = runtime.state.match.rightCards;
+  const rows = Math.max(leftCards.length, rightCards.length);
+  for (let idx = 0; idx < rows; idx += 1) {
+    const leftCard = leftCards[idx];
+    if (leftCard) {
+      const btn = global.document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice-btn match-card";
+      btn.textContent = leftCard.englishText;
+      btn.classList.toggle("selected", leftSelected === leftCard.id);
+      btn.classList.toggle("matched", matchedSet.has(leftCard.id));
+      btn.classList.toggle("mismatch", mismatchSet.has(leftCard.id));
+      btn.classList.toggle("incoming", Boolean(leftCard.incoming));
+      if (leftCard.incoming) {
+        btn.style.animationDelay = `${idx * 40}ms`;
+      }
+      btn.addEventListener("click", () => verbMatch.handleVerbMatchLeft(leftCard.id));
+      wrap.append(btn);
+      leftCard.incoming = false;
     }
-    btn.addEventListener("click", () => verbMatch.handleVerbMatchLeft(card.id));
-    leftStack.append(btn);
-    card.incoming = false;
-  });
 
-  leftCol.append(leftStack);
-
-  const rightCol = global.document.createElement("section");
-  rightCol.className = "match-col";
-  const rightStack = global.document.createElement("div");
-  rightStack.className = "match-stack";
-
-  runtime.state.match.rightCards.forEach((card, idx) => {
-    const btn = global.document.createElement("button");
-    btn.type = "button";
-    btn.className = "choice-btn match-card hebrew";
-    btn.textContent = runtime.state.showNiqqudInline ? card.hebrewNiqqud : card.hebrewPlain;
-    btn.classList.toggle("selected", rightSelected === card.id);
-    btn.classList.toggle("matched", matchedSet.has(card.id));
-    btn.classList.toggle("mismatch", mismatchSet.has(card.id));
-    btn.classList.toggle("incoming", Boolean(card.incoming));
-    if (card.incoming) {
-      btn.style.animationDelay = `${idx * 40 + 30}ms`;
+    const rightCard = rightCards[idx];
+    if (rightCard) {
+      const btn = global.document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice-btn match-card hebrew";
+      btn.textContent = runtime.state.showNiqqudInline ? rightCard.hebrewNiqqud : rightCard.hebrewPlain;
+      btn.classList.toggle("selected", rightSelected === rightCard.id);
+      btn.classList.toggle("matched", matchedSet.has(rightCard.id));
+      btn.classList.toggle("mismatch", mismatchSet.has(rightCard.id));
+      btn.classList.toggle("incoming", Boolean(rightCard.incoming));
+      if (rightCard.incoming) {
+        btn.style.animationDelay = `${idx * 40 + 30}ms`;
+      }
+      btn.addEventListener("click", () => verbMatch.handleVerbMatchRight(rightCard.id));
+      wrap.append(btn);
+      rightCard.incoming = false;
     }
-    btn.addEventListener("click", () => verbMatch.handleVerbMatchRight(card.id));
-    rightStack.append(btn);
-    card.incoming = false;
-  });
+  }
 
-  rightCol.append(rightStack);
-  wrap.append(leftCol, rightCol);
   runtime.el.choiceContainer.append(wrap);
 };
 

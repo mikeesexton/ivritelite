@@ -162,12 +162,12 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-family: "Alegreya", serif;
+  font-family: "Assistant", sans-serif;
 }
 
 .eyebrow {
   margin: 0;
-  font-family: "Chivo", sans-serif;
+  font-family: "Assistant", sans-serif;
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -307,6 +307,9 @@ h3 {
 }
 
 .shell-brand-title h1 {
+  font-family: "Frank Ruhl Libre", serif;
+  font-weight: 900;
+  letter-spacing: 0.01em;
   line-height: 1;
   text-shadow: 0 0 18px rgba(244, 196, 48, 0.3);
 }
@@ -353,7 +356,7 @@ body[data-theme="light"] .shell-logo {
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 8px 18px rgba(4, 8, 20, 0.18);
   color: #f4f7fb;
-  font-family: "Chivo", sans-serif;
+  font-family: "Assistant", sans-serif;
   font-size: 0.98rem;
   font-weight: 700;
   line-height: 1;
@@ -575,12 +578,13 @@ body[data-gameplay-active="true"] .home-primary {
   position: relative;
   width: 100%;
   min-height: 0;
-  padding: 0.12rem 2rem;
+  padding: 0.12rem 0.5rem;
   border: none;
   background: transparent;
   box-shadow: none;
   color: var(--brand);
   text-align: center;
+  cursor: default;
 }
 
 .collapsible-toggle:hover,
@@ -591,20 +595,7 @@ body[data-gameplay-active="true"] .home-primary {
 }
 
 .collapsible-toggle::after {
-  content: "▾";
-  position: absolute;
-  inset-inline-end: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: "Assistant", sans-serif;
-  font-size: 1rem;
-  line-height: 1;
-  color: rgba(244, 247, 251, 0.72);
-  transition: transform 120ms ease, color 120ms ease;
-}
-
-.collapsible-toggle[aria-expanded="false"]::after {
-  content: "▸";
+  content: none;
 }
 
 .collapsible-toggle span {
@@ -630,6 +621,10 @@ body[data-gameplay-active="true"] .home-primary {
 .home-option-list {
   display: grid;
   gap: 0.65rem;
+}
+
+.home-lesson-grid {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .home-lesson-stage {
@@ -973,11 +968,14 @@ body[data-theme="light"] .progress-strip {
   text-transform: uppercase;
 }
 
-.prompt-support-note {
-  margin: -0.04rem 0 0;
-  font-size: 0.84rem;
+.prompt-hint-note {
+  margin: 0;
+  padding-top: 0.1rem;
+  font-size: 0.75rem;
   line-height: 1.4;
   text-align: center;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--line);
 }
 
 .prompt-content-row {
@@ -1048,7 +1046,7 @@ body[data-theme="light"] .prompt-speech-btn:focus-visible {
   color: var(--ink-soft);
   background: rgba(28, 42, 79, 0.56);
   border-color: rgba(171, 191, 220, 0.18);
-  font-family: "Chivo", sans-serif;
+  font-family: "Assistant", sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -1151,8 +1149,8 @@ body[data-theme="light"] .lesson-shell.mode-verb-match .prompt-card {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
-.lesson-shell.mode-verb-match .prompt-support-note {
-  font-size: 0.78rem;
+.lesson-shell.mode-verb-match .prompt-hint-note {
+  font-size: 0.75rem;
 }
 
 .lesson-shell.mode-verb-match .prompt-content-row {
@@ -1219,6 +1217,7 @@ body[data-theme="light"] .lesson-shell.mode-sentence-bank .prompt-card {
 
 .game-picker {
   display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.68rem;
 }
 
@@ -1228,25 +1227,27 @@ body[data-theme="light"] .lesson-shell.mode-sentence-bank .prompt-card {
 }
 
 .game-tile {
-  min-height: 124px;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.46rem 0.76rem;
-  align-items: start;
-  align-content: start;
-  text-align: left;
-  padding: 0.92rem;
+  position: relative;
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  text-align: center;
+  padding: 1rem 0.85rem;
   border-radius: 18px;
   border: 1px solid var(--tile-border);
   background: var(--tile-bg);
 }
 
-.game-tile.home-game-tile {
-  min-height: 110px;
-}
-
 .game-tile:hover {
   border-color: rgba(244, 196, 48, 0.45);
+}
+
+.game-tile:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
 }
 
 body[data-theme="light"] .game-tile:hover {
@@ -1254,11 +1255,11 @@ body[data-theme="light"] .game-tile:hover {
 }
 
 .game-tile-icon {
-  width: 42px;
-  height: 42px;
+  width: 54px;
+  height: 54px;
   display: grid;
   place-items: center;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   background: transparent;
   border: none;
@@ -1266,8 +1267,8 @@ body[data-theme="light"] .game-tile:hover {
 }
 
 .game-tile-icon img {
-  width: 42px;
-  height: 42px;
+  width: 54px;
+  height: 54px;
   display: block;
 }
 
@@ -1293,17 +1294,23 @@ body[data-theme="light"] .game-tile:hover {
 }
 
 .game-tile-title {
-  font-family: "Alegreya", serif;
+  font-family: "Heebo", sans-serif;
   font-size: 1.2rem;
-  font-weight: 800;
-  align-self: center;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  line-height: 1.2;
 }
 
 .game-tile-note {
-  grid-column: 1 / -1;
-  color: var(--ink-soft);
-  font-size: 0.92rem;
-  line-height: 1.45;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .option-button {
@@ -1324,7 +1331,7 @@ body[data-theme="light"] .game-tile:hover {
 }
 
 .option-button-value {
-  font-family: "Alegreya", serif;
+  font-family: "Assistant", sans-serif;
   font-size: 1.14rem;
   font-weight: 800;
 }
@@ -1623,31 +1630,34 @@ body[data-theme="light"] .sentence-slot.wrong {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.54rem;
-  align-items: start;
+  align-items: stretch;
   direction: ltr;
-}
-
-.match-col {
-  display: grid;
-  min-width: 0;
-  gap: 0.34rem;
-}
-
-.match-stack {
-  display: grid;
-  gap: 0.38rem;
 }
 
 .match-card {
   min-height: 72px;
+  height: auto;
   padding: 0.72rem 0.58rem;
   text-align: center;
   font-size: clamp(0.98rem, 2.7vw, 1.06rem);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  line-height: 1.25;
 }
 
 .match-card.hebrew {
   direction: rtl;
   font-size: clamp(1.06rem, 2.9vw, 1.14rem);
+}
+
+.match-card.match-card-long {
+  font-size: clamp(0.82rem, 2.3vw, 0.96rem);
+  line-height: 1.2;
+}
+
+.match-card.hebrew.match-card-long {
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
 }
 
 .match-card.incoming {
@@ -1826,7 +1836,7 @@ body[data-theme="light"] .feedback-tray.error .feedback-detail {
 .results-praise {
   margin: 0;
   max-width: 12ch;
-  font-family: "Alegreya", serif;
+  font-family: "Assistant", sans-serif;
   font-size: clamp(2.1rem, 4vw, 3.1rem);
   font-weight: 800;
   line-height: 0.95;
@@ -1947,7 +1957,7 @@ body[data-theme="light"] .feedback-tray.error .feedback-detail {
 .review-section-title {
   margin: 0;
   color: var(--brand);
-  font-family: "Alegreya", serif;
+  font-family: "Assistant", sans-serif;
   font-size: 1.08rem;
   line-height: 1.1;
   text-align: center;
@@ -2243,7 +2253,7 @@ body[data-ui-locked="true"] .app-shell {
   border: 2px solid var(--bubble-border);
   background: var(--bubble-bg);
   color: var(--bubble-ink);
-  font-family: "Alegreya", serif;
+  font-family: "Assistant", sans-serif;
   font-size: clamp(1.35rem, 3.5vw, 2rem);
   font-weight: 800;
   line-height: 1.1;
@@ -2386,10 +2396,13 @@ body[data-ui-lang="he"] .prompt-label {
   text-align: center;
 }
 
-body[data-ui-lang="he"] .game-tile,
 body[data-ui-lang="he"] .nav-link,
 body[data-ui-lang="he"] .option-button {
   text-align: right;
+}
+
+body[data-ui-lang="he"] .game-tile {
+  text-align: center;
 }
 
 body[data-ui-lang="he"] #reviewView .section-head {
@@ -2436,15 +2449,12 @@ body[data-ui-lang="he"] .mastered-row input {
 
 @media (min-width: 1024px) {
   .app-shell {
-    padding: 1rem 1rem 1rem;
+    max-width: 1000px;
+    padding: 1rem 1rem calc(6rem + env(safe-area-inset-bottom));
   }
 
   .shell-body {
     display: block;
-  }
-
-  .mobile-bottom-nav {
-    display: none;
   }
 
   .page-stack {
@@ -2453,48 +2463,15 @@ body[data-ui-lang="he"] .mastered-row input {
     align-items: start;
   }
 
-  body[data-desktop-hub-layout="true"] .page-stack {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(290px, 0.74fr);
-  }
-
-  body[data-ui-lang="he"][data-desktop-hub-layout="true"] .page-stack {
-    grid-template-columns: minmax(290px, 0.74fr) minmax(0, 1fr) minmax(0, 1fr);
-  }
-
-  body[data-desktop-hub-layout="true"] #reviewView {
-    order: 1;
-  }
-
-  body[data-desktop-hub-layout="true"] #homeView {
-    order: 2;
-  }
-
-  body[data-desktop-hub-layout="true"] #resultsView {
-    order: 2;
-  }
-
-  body[data-desktop-hub-layout="true"] #settingsView {
-    order: 3;
-  }
-
-  body[data-ui-lang="he"][data-desktop-hub-layout="true"] #reviewView {
-    order: 3;
-  }
-
-  body[data-ui-lang="he"][data-desktop-hub-layout="true"] #settingsView {
-    order: 1;
-  }
-
   .page-view.active {
     min-width: 0;
   }
 
-  body[data-desktop-hub-layout="true"] #resultsView.active {
-    grid-column: auto;
-  }
-
-  body[data-desktop-hub-layout="false"] #resultsView.active {
-    grid-column: 1 / -1;
+  .mobile-bottom-nav {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(560px, calc(100% - 2rem));
   }
 
   .home-grid {
@@ -2508,12 +2485,7 @@ body[data-ui-lang="he"] .mastered-row input {
   }
 
   .review-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  body[data-desktop-hub-layout="true"] .review-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
   .cta-row {
@@ -2553,35 +2525,34 @@ body[data-ui-lang="he"] .mastered-row input {
     align-items: start;
   }
 
+  .home-lesson-grid,
+  .game-picker {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .game-tile {
+    min-height: 150px;
+    gap: 0.62rem;
+  }
+
+  .game-tile-icon,
+  .game-tile-icon img {
+    width: 60px;
+    height: 60px;
+  }
+
   .home-utility-rail {
     display: none;
   }
 
-  body[data-desktop-hub-layout="true"] .page-card {
-    padding: 1rem;
+  .settings-card {
+    max-width: 560px;
+    margin-inline: auto;
   }
 
-  body[data-desktop-hub-layout="true"] .collapsible-card[data-collapsed="true"] {
-    gap: 0.18rem;
-  }
-
-  body[data-desktop-hub-layout="true"] .collapsible-card[data-collapsed="true"] .collapsible-content {
-    display: none;
-  }
-
-  body[data-desktop-hub-layout="true"] .settings-card {
-    gap: 0.78rem;
-  }
-
-  body[data-desktop-hub-layout="true"] .settings-list {
-    gap: 0.58rem;
-  }
-
-  body[data-desktop-hub-layout="true"] .home-lessons-card,
-  body[data-desktop-hub-layout="true"] .home-lesson-stage,
-  body[data-desktop-hub-layout="true"] #resultsView .page-card,
-  body[data-desktop-hub-layout="true"] #reviewView .page-card {
-    width: 100%;
+  .review-panel-card {
+    max-width: 760px;
+    margin-inline: auto;
   }
 
   .results-metrics {
@@ -2641,33 +2612,26 @@ body[data-ui-lang="he"] .mastered-row input {
     gap: 0.8rem;
   }
 
-  .home-lesson-grid {
+  .home-lesson-grid,
+  .game-picker {
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.58rem;
   }
 
   .game-tile {
-    min-height: 104px;
-    padding: 0.8rem;
-    gap: 0.38rem 0.66rem;
+    min-height: 138px;
+    padding: 0.9rem 0.7rem;
+    gap: 0.5rem;
   }
 
-  .game-tile.home-game-tile {
-    min-height: 100px;
-  }
-
-  .game-tile-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1.16rem;
+  .game-tile-icon,
+  .game-tile-icon img {
+    width: 56px;
+    height: 56px;
   }
 
   .game-tile-title {
     font-size: 1.12rem;
-  }
-
-  .game-tile-note {
-    font-size: 0.88rem;
-    line-height: 1.36;
   }
 
   .option-button-label {
@@ -2719,8 +2683,8 @@ body[data-ui-lang="he"] .mastered-row input {
     font-size: 0.78rem;
   }
 
-  .prompt-support-note {
-    font-size: 0.78rem;
+  .prompt-hint-note {
+    font-size: 0.72rem;
   }
 
   .prompt-speech-btn {
@@ -2777,14 +2741,6 @@ body[data-ui-lang="he"] .mastered-row input {
 
   .match-columns {
     gap: 0.34rem;
-  }
-
-  .match-col {
-    gap: 0.24rem;
-  }
-
-  .match-stack {
-    gap: 0.24rem;
   }
 
   .match-card {
@@ -2931,33 +2887,26 @@ body[data-ui-lang="he"] .mastered-row input {
     gap: 0.78rem;
   }
 
-  .home-lesson-grid {
+  .home-lesson-grid,
+  .game-picker {
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.54rem;
   }
 
   .game-tile {
-    min-height: 100px;
-    padding: 0.76rem;
-    gap: 0.36rem 0.64rem;
+    min-height: 122px;
+    padding: 0.85rem 0.6rem;
+    gap: 0.46rem;
   }
 
-  .game-tile.home-game-tile {
-    min-height: 96px;
-  }
-
-  .game-tile-icon {
-    width: 39px;
-    height: 39px;
-    font-size: 1.14rem;
+  .game-tile-icon,
+  .game-tile-icon img {
+    width: 50px;
+    height: 50px;
   }
 
   .game-tile-title {
-    font-size: 1.08rem;
-  }
-
-  .game-tile-note {
-    font-size: 0.84rem;
-    line-height: 1.34;
+    font-size: 1.05rem;
   }
 
   .option-button-label {
@@ -3139,14 +3088,6 @@ body[data-ui-lang="he"] .mastered-row input {
     gap: 0.28rem;
   }
 
-  .match-col {
-    gap: 0.2rem;
-  }
-
-  .match-stack {
-    gap: 0.2rem;
-  }
-
   .match-card {
     min-height: 50px;
     padding: 0.5rem 0.38rem;
@@ -3302,7 +3243,14 @@ body[data-ui-lang="he"] .mastered-row input {
 
 @media (max-width: 767px) and (max-height: 760px) {
   .game-tile {
-    min-height: 94px;
+    min-height: 108px;
+    gap: 0.34rem;
+  }
+
+  .game-tile-icon,
+  .game-tile-icon img {
+    width: 44px;
+    height: 44px;
   }
 
   .lesson-shell {
@@ -3464,7 +3412,7 @@ body[data-theme="light"] .binyan-root-tile:hover {
 }
 
 .binyan-root-badge {
-  font-family: "Chivo", sans-serif;
+  font-family: "Assistant", sans-serif;
   font-size: 0.74rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;

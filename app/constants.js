@@ -37,6 +37,9 @@ constants.STREAK_SOUND_INTERVAL = constants.STREAK_SOUND_INTERVAL || 4;
 constants.VERB_MATCH_ROUNDS = constants.VERB_MATCH_ROUNDS || 1;
 constants.MATCH_MAX_PAIRS = constants.MATCH_MAX_PAIRS || 12;
 constants.MATCH_VISIBLE_ROWS = constants.MATCH_VISIBLE_ROWS || 5;
+constants.WORD_MATCH_SESSION_SIZE = constants.WORD_MATCH_SESSION_SIZE || 20;
+constants.MATCH_MAX_LEN = constants.MATCH_MAX_LEN || 40;
+constants.MATCH_LONG_LEN = constants.MATCH_LONG_LEN || 16;
 constants.CONJUGATION_MASTER_STREAK = constants.CONJUGATION_MASTER_STREAK || 10;
 
 constants.ADV_CONJ_SUBJECTS = constants.ADV_CONJ_SUBJECTS || [

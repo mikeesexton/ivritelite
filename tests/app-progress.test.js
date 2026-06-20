@@ -235,8 +235,6 @@ globalThis.__appTestExports = {
   ADV_CONJ_SUBJECTS,
   ADV_CONJ_OBJECTS,
   app: globalThis.IvriQuestApp,
-  applyAnswer,
-  applyAbbreviationAnswer,
   applyAdvConjAnswer,
   applySentenceBankAnswer,
   applyVerbMatchMismatch,
@@ -245,8 +243,6 @@ globalThis.__appTestExports = {
   buildAdvConjDeck,
   buildAdvConjEnglishSentence,
   getAdvConjSubjectsForTense,
-  beginAbbreviationFromIntro,
-  beginLessonFromIntro,
   beginVerbMatchFromIntro,
   confirmLeaveSession,
   closeLeaveSessionConfirm,
@@ -260,15 +256,11 @@ globalThis.__appTestExports = {
   localStorage,
   loadNextVerbRound,
   navigateTo,
-  nextAbbreviationQuestion,
-  nextQuestion,
   nextSentenceBankQuestion,
-  renderChoices,
   requestLeaveSession,
   requestGoHome,
   resumeActiveTimers,
   restoreSessionState,
-  startAbbreviation,
   startAdvConj,
   startSentenceBank,
   startVerbMatch,
@@ -712,49 +704,6 @@ test.afterEach(() => {
   activeHarnesses.clear();
 });
 
-test("correct second-chance answers do not add misses or reshuffle most-missed rankings", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 80, source: "test" },
-  ];
-  const { applyAnswer, getMostMissedRanked, getProgressRecord, updateProgress, state } = loadAppHarness(vocabulary);
-
-  updateProgress("alpha", false);
-  updateProgress("beta", false);
-
-  assert.deepEqual(
-    getMostMissedRanked().map((item) => `${item.wordId}:${item.missed}`),
-    ["alpha:1", "beta:1"]
-  );
-
-  state.lesson.active = true;
-  state.lesson.inReview = true;
-  state.lesson.wrongAnswers = 0;
-  state.lesson.sessionMistakeIds = [];
-  state.currentQuestion = {
-    locked: false,
-    isReview: true,
-    word: vocabulary[1],
-    options: [
-      { id: "beta", word: vocabulary[1] },
-      { id: "alpha", word: vocabulary[0] },
-    ],
-    selectedOptionId: "beta",
-  };
-
-  applyAnswer(true, "beta");
-
-  assert.equal(getProgressRecord("beta").attempts, 2);
-  assert.equal(getProgressRecord("beta").correct, 1);
-  assert.equal(getProgressRecord("beta").misses, 1);
-  assert.equal(state.lesson.wrongAnswers, 0);
-  assert.deepEqual(state.lesson.sessionMistakeIds, []);
-  assert.deepEqual(
-    getMostMissedRanked().map((item) => `${item.wordId}:${item.missed}`),
-    ["alpha:1", "beta:1"]
-  );
-});
-
 test("welcome modal appears once and survey links stay available", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
@@ -862,37 +811,6 @@ test("translation selection weights previously missed words until their five-ans
   const alphaRecoveredWeight = weighted.find((item) => item.word.id === "alpha")?.weight || 0;
   const betaRecoveredWeight = weighted.find((item) => item.word.id === "beta")?.weight || 0;
   assert.equal(alphaRecoveredWeight, betaRecoveredWeight);
-});
-
-test("show nikud preference persists when advancing translation and abbreviation questions", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-    { id: "gamma", category: "core_advanced", en: "gamma", he: "גמא", heNiqqud: "גַּמָּא", utility: 78, source: "test" },
-    { id: "delta", category: "core_advanced", en: "delta", he: "דלתא", heNiqqud: "דֶּלְתָּא", utility: 77, source: "test" },
-  ];
-  const abbreviations = [
-    { id: "abbr-1", abbr: "וכו׳", expansionHe: "וכולי", english: "etc.", bucket: "Daily Life & Home" },
-    { id: "abbr-2", abbr: "לדוג׳", expansionHe: "לדוגמה", english: "for example", bucket: "Daily Life & Home" },
-    { id: "abbr-3", abbr: "בע״ה", expansionHe: "בעזרת השם", english: "with God's help", bucket: "People, Health & Culture" },
-    { id: "abbr-4", abbr: "עי׳", expansionHe: "עיין", english: "see / refer to", bucket: "Ideas, Science & Tech" },
-  ];
-  const { nextAbbreviationQuestion, nextQuestion, state } = loadAppHarness(vocabulary, abbreviations);
-
-  state.mode = "lesson";
-  state.lesson.active = true;
-  state.showNiqqudInline = true;
-  nextQuestion();
-  assert.equal(state.showNiqqudInline, true);
-  assert.ok(state.currentQuestion);
-
-  state.mode = "abbreviation";
-  state.abbreviation.active = true;
-  state.abbreviation.currentRound = 0;
-  state.showNiqqudInline = true;
-  nextAbbreviationQuestion();
-  assert.equal(state.showNiqqudInline, true);
-  assert.ok(state.abbreviation.currentQuestion);
 });
 
 test("sentence builder renders english answer lines left-to-right, keeps punctuation visible, and shows post-answer game tips", () => {
@@ -1142,19 +1060,19 @@ test("gameplay header styling uses a warm progress bar and a top-right status pi
   assert.match(styles, /\.progress-strip\[data-streak-tier="4"\] \.progress-fill,\s*\.progress-fill\[data-streak-tier="4"\]\s*\{[^}]*brightness\(1\.21\)[^}]*0 0 42px rgba\(248,\s*211,\s*93,\s*0\.3\);/s);
 });
 
-test("desktop layout uses three live columns and drops the old sidebar", () => {
+test("all viewports share the single-page layout with the bottom nav", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
   assert.doesNotMatch(markup, /class="desktop-nav\b/);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] \.page-stack\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\) minmax\(0,\s*1fr\) minmax\(290px,\s*0\.74fr\);/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-ui-lang="he"\]\[data-desktop-hub-layout="true"\] \.page-stack\s*\{[^}]*grid-template-columns:\s*minmax\(290px,\s*0\.74fr\) minmax\(0,\s*1fr\) minmax\(0,\s*1fr\);/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] #reviewView\s*\{[^}]*order:\s*1;/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] #homeView\s*\{[^}]*order:\s*2;/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] #resultsView\s*\{[^}]*order:\s*2;/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] #settingsView\s*\{[^}]*order:\s*3;/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] \.review-grid\s*\{[^}]*grid-template-columns:\s*1fr;/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] #resultsView\.active\s*\{[^}]*grid-column:\s*auto;/s);
+  // The bottom nav carries home/review/settings on every device.
+  assert.match(markup, /id="mobileBottomNav"[\s\S]*data-route="home"[\s\S]*data-route="review"[\s\S]*data-route="settings"/s);
+  // The old desktop "hub" layout is gone entirely.
+  assert.doesNotMatch(styles, /data-desktop-hub-layout="true"/);
+  // The bottom nav is never hidden (it was previously display:none at >=1024).
+  assert.doesNotMatch(styles, /\.mobile-bottom-nav\s*\{[^}]*display:\s*none/s);
+  // On wide screens the bottom nav is centered rather than stretched edge-to-edge.
+  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.mobile-bottom-nav\s*\{[^}]*left:\s*50%;[^}]*transform:\s*translateX\(-50%\);/s);
 });
 
 test("desktop review and settings cards use centered collapsible headers", () => {
@@ -1169,7 +1087,6 @@ test("desktop review and settings cards use centered collapsible headers", () =>
   assert.match(markup, /class="review-section-title"[^>]*data-i18n="review.analyticsEyebrow"/s);
   assert.match(styles, /\.collapsible-toggle\s*\{[^}]*width:\s*100%;[^}]*text-align:\s*center;/s);
   assert.match(styles, /\.review-section-title\s*\{[^}]*text-align:\s*center;/s);
-  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?body\[data-desktop-hub-layout="true"\] \.collapsible-card\[data-collapsed="true"\] \.collapsible-content\s*\{[^}]*display:\s*none;/s);
 });
 
 test("Hebrew progress bars fill from right to left", () => {
@@ -2160,34 +2077,6 @@ test("sentence builder drops stale restored questions when the live sentence ent
   assert.equal(restoredHarness.state.sentenceBank.currentQuestion, null);
 });
 
-test("lesson restores still recover persisted current questions after sentence restore validation", () => {
-  const lessonVocabulary = [
-    { id: "lesson-1", category: "core", en: "hello", he: "שלום", heNiqqud: "שָׁלוֹם", utility: 90, source: "test" },
-    { id: "lesson-2", category: "core", en: "goodbye", he: "להתראות", heNiqqud: "לְהִתְרָאוֹת", utility: 80, source: "test" },
-    { id: "lesson-3", category: "core", en: "thanks", he: "תודה", heNiqqud: "תּוֹדָה", utility: 70, source: "test" },
-    { id: "lesson-4", category: "core", en: "please", he: "בבקשה", heNiqqud: "בְּבַקָּשָׁה", utility: 60, source: "test" },
-  ];
-  const firstHarness = loadAppHarness(lessonVocabulary, [], []);
-  firstHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "lesson-1") || pool[0] || null;
-  firstHarness.state.mode = "lesson";
-  firstHarness.state.lastPlayedMode = "lesson";
-  firstHarness.state.lesson.active = true;
-  firstHarness.nextQuestion();
-  firstHarness.app.persistence.persistSessionState();
-
-  assert.ok(firstHarness.state.currentQuestion);
-
-  const restoredHarness = loadAppHarness(lessonVocabulary, [], [], {
-    localStorageData: firstHarness.localStorage.__dump(),
-  });
-
-  assert.equal(restoredHarness.state.mode, "lesson");
-  assert.equal(restoredHarness.state.route, "home");
-  assert.equal(restoredHarness.state.lesson.active, true);
-  assert.ok(restoredHarness.state.currentQuestion);
-  assert.equal(restoredHarness.state.currentQuestion.prompt, firstHarness.state.currentQuestion.prompt);
-});
-
 test("sentence builder hides the translate label while keeping the prompt text and Hebrew speech button", () => {
   const sentenceBank = [
     {
@@ -2296,188 +2185,6 @@ test("sentence builder falls back to the generic game tip when the miss is not a
   assert.doesNotMatch(getFeedbackText(document), /Correct word:/);
 });
 
-test("abbreviation expansions use niqqud only on the full expansion text", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-  ];
-  const abbreviations = [
-    {
-      id: "abbr-1",
-      abbr: "לדוג׳",
-      expansionHe: "לדוגמה",
-      expansionHeNiqqud: "לְדוּגְמָה",
-      english: "for example",
-      bucket: "Daily Life & Home",
-    },
-  ];
-
-  const niqqudOnHarness = loadAppHarness(vocabulary, abbreviations);
-  niqqudOnHarness.state.showNiqqudInline = true;
-  niqqudOnHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  niqqudOnHarness.applyAbbreviationAnswer(true, "abbr-1");
-  assert.match(
-    getFeedbackText(niqqudOnHarness.document),
-    /The full Hebrew is לְדוּגְמָה\./
-  );
-  niqqudOnHarness.state.abbreviation.sessionMistakeIds = ["abbr-1"];
-  assert.equal(
-    niqqudOnHarness.buildAbbreviationMistakeSummary()[0].secondary,
-    "for example | לְדוּגְמָה"
-  );
-
-  const niqqudOffHarness = loadAppHarness(vocabulary, abbreviations);
-  niqqudOffHarness.state.showNiqqudInline = false;
-  niqqudOffHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  niqqudOffHarness.applyAbbreviationAnswer(true, "abbr-1");
-  const plainFeedback = getFeedbackText(niqqudOffHarness.document);
-  assert.match(plainFeedback, /The full Hebrew is לדוגמה\./);
-  assert.doesNotMatch(plainFeedback, /לְדוּגְמָה/);
-  niqqudOffHarness.state.abbreviation.sessionMistakeIds = ["abbr-1"];
-  assert.equal(
-    niqqudOffHarness.buildAbbreviationMistakeSummary()[0].secondary,
-    "for example | לדוגמה"
-  );
-});
-
-test("phase 2 abbreviation entries keep acronym tokens plain while toggling the expansion text", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-  ];
-  const abbreviations = [
-    {
-      id: "abbr-1",
-      abbr: "ק״מ",
-      expansionHe: "קילומטר",
-      expansionHeNiqqud: "קִילוֹמֶטֶר",
-      expansionHeNiqqudSource: "https://hebrew-academy.org.il/%D7%9E%D7%99%D7%9C%D7%95%D7%9F-%D7%94%D7%90%D7%A7%D7%93%D7%9E%D7%99%D7%94/",
-      english: "kilometer",
-      bucket: "Ideas, Science & Tech",
-    },
-  ];
-
-  const niqqudOnHarness = loadAppHarness(vocabulary, abbreviations);
-  niqqudOnHarness.state.showNiqqudInline = true;
-  niqqudOnHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  niqqudOnHarness.applyAbbreviationAnswer(true, "abbr-1");
-  assert.match(
-    getFeedbackText(niqqudOnHarness.document),
-    /The full Hebrew is קִילוֹמֶטֶר\./
-  );
-
-  const niqqudOffHarness = loadAppHarness(vocabulary, abbreviations);
-  niqqudOffHarness.state.showNiqqudInline = false;
-  niqqudOffHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  niqqudOffHarness.applyAbbreviationAnswer(true, "abbr-1");
-  const plainFeedback = getFeedbackText(niqqudOffHarness.document);
-  assert.match(plainFeedback, /The full Hebrew is קילומטר\./);
-  assert.doesNotMatch(plainFeedback, /קִילוֹמֶטֶר/);
-});
-
-test("phase 3 abbreviation entries keep institution/legal acronyms plain while toggling the expansion text", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-  ];
-  const abbreviations = [
-    {
-      id: "abbr-1",
-      abbr: "עו״ד",
-      expansionHe: "עורך דין",
-      expansionHeNiqqud: "עוֹרֵךְ דִּין",
-      expansionHeNiqqudSource: "https://terms.hebrew-academy.org.il/munnah/115993_1/%D7%A2%D7%95%D6%B9%D7%A8%D6%B5%D7%9A%D6%B0%20%D7%93%D6%BC%D6%B4%D7%99%D7%9F",
-      english: "attorney",
-      bucket: "Civics, Law & Work",
-    },
-  ];
-
-  const niqqudOnHarness = loadAppHarness(vocabulary, abbreviations);
-  niqqudOnHarness.state.showNiqqudInline = true;
-  niqqudOnHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  niqqudOnHarness.applyAbbreviationAnswer(true, "abbr-1");
-  assert.match(
-    getFeedbackText(niqqudOnHarness.document),
-    /The full Hebrew is עוֹרֵךְ דִּין\./
-  );
-
-  const niqqudOffHarness = loadAppHarness(vocabulary, abbreviations);
-  niqqudOffHarness.state.showNiqqudInline = false;
-  niqqudOffHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  niqqudOffHarness.applyAbbreviationAnswer(true, "abbr-1");
-  const plainFeedback = getFeedbackText(niqqudOffHarness.document);
-  assert.match(plainFeedback, /The full Hebrew is עורך דין\./);
-  assert.doesNotMatch(plainFeedback, /עוֹרֵךְ דִּין/);
-});
-
-test("abbreviation feedback always includes the full Hebrew expansion in both directions", () => {
-  const abbreviations = [
-    {
-      id: "abbr-1",
-      abbr: "ע״מ",
-      expansionHe: "עוסק מורשה",
-      expansionHeNiqqud: "עוֹסֵק מוּרְשֶׁה",
-      english: "licensed/VAT-registered business",
-      bucket: "Civics, Law & Work",
-    },
-  ];
-
-  const heToEnHarness = loadAppHarness([], abbreviations);
-  heToEnHarness.state.abbreviation.currentQuestion = {
-    direction: "he2en",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  heToEnHarness.applyAbbreviationAnswer(true, "abbr-1");
-  assert.match(getFeedbackText(heToEnHarness.document), /The full Hebrew is עוסק מורשה\./);
-
-  const enToHeHarness = loadAppHarness([], abbreviations);
-  enToHeHarness.state.abbreviation.currentQuestion = {
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", entry: abbreviations[0] }],
-    selectedOptionId: "abbr-1",
-    locked: false,
-  };
-  enToHeHarness.applyAbbreviationAnswer(true, "abbr-1");
-  assert.match(getFeedbackText(enToHeHarness.document), /The full Hebrew is עוסק מורשה\./);
-});
-
 test("advanced conjugation feedback adds colloquial meaning only for marked idioms", () => {
   const idioms = [
     {
@@ -2516,20 +2223,18 @@ test("advanced conjugation feedback adds colloquial meaning only for marked idio
   assert.doesNotMatch(getFeedbackText(harness.document), /Colloquial meaning:/);
 });
 
-test("Hebrew is stripped from English-facing text across translation, abbreviation, and advanced conjugation", () => {
+test("Hebrew is stripped from English-facing text across data pools and advanced conjugation", () => {
   const vocabulary = [
     { id: "alpha", category: "cooking_verbs", en: "to toss / pan-toss (חלוט)", he: "להקפיץ", heNiqqud: "לְהַקְפִּיץ", utility: 90, source: "test" },
     { id: "beta", category: "cooking_verbs", en: "to saute", he: "להקפיץ-2", heNiqqud: "לְהַקְפִּיץ-2", utility: 80, source: "test" },
-    { id: "gamma", category: "cooking_verbs", en: "to ferment", he: "לתסוס", heNiqqud: "לְתַסֵּס", utility: 70, source: "test" },
-    { id: "delta", category: "cooking_verbs", en: "to line a pan", he: "לרפד תבנית", heNiqqud: "לְרַפֵּד תַּבְנִית", utility: 60, source: "test" },
+    { id: "gamma", category: "cooking_verbs", en: "to ferment", he: "לתסוס", heNiqqud: "לְתַסֵּס", utility: 70, source: "test" },
+    { id: "delta", category: "cooking_verbs", en: "to line a pan", he: "לרפד תבנית", heNiqqud: "לְרַפֵּד תַּבְנִית", utility: 60, source: "test" },
   ];
   const abbreviations = [
     { id: "abbr-1", abbr: "וכו׳", expansionHe: "וכולי", english: "etc. / and so on (חלוט)", bucket: "Daily Life & Home" },
     { id: "abbr-2", abbr: "לדוג׳", expansionHe: "לדוגמה", english: "for example (לחלוט)", bucket: "Daily Life & Home" },
-    { id: "abbr-3", abbr: "ז״א", expansionHe: "זאת אומרת", english: "that is (להקפיץ)", bucket: "Daily Life & Home" },
-    { id: "abbr-4", abbr: "אח״כ", expansionHe: "אחר כך", english: "afterwards (לחלוט)", bucket: "Daily Life & Home" },
   ];
-  const { ADV_CONJ_OBJECTS, applyAnswer, buildAdvConjEnglishSentence, document, getSelectedPool, nextAbbreviationQuestion, renderChoices, state } = loadAppHarness(vocabulary, abbreviations);
+  const { ADV_CONJ_OBJECTS, app, buildAdvConjEnglishSentence, getSelectedPool } = loadAppHarness(vocabulary, abbreviations);
 
   const sanitizedWords = getSelectedPool();
   const contaminatedWord = sanitizedWords.find((word) => word.id === "alpha");
@@ -2537,34 +2242,10 @@ test("Hebrew is stripped from English-facing text across translation, abbreviati
   assert.equal(/[\u0590-\u05FF]/.test(contaminatedWord.en), false);
   assert.equal(contaminatedWord.en, "to toss / pan-toss");
 
-  const lessonQuestion = {
-    word: contaminatedWord,
-    options: sanitizedWords.slice(0, 4).map((word) => ({ id: word.id, word })),
-    optionsAreHebrew: false,
-    locked: false,
-    selectedOptionId: null,
-  };
-  renderChoices(lessonQuestion);
-  document.querySelector("#choiceContainer").querySelectorAll(".choice-btn").forEach((button) => {
-    assert.equal(/[\u0590-\u05FF]/.test(button.textContent), false);
-  });
-
-  state.currentQuestion = {
-    ...lessonQuestion,
-    isReview: false,
-    selectedOptionId: "beta",
-  };
-  applyAnswer(false, "beta");
-  assert.equal(getFeedbackText(document).includes("חלוט"), false);
-
-  state.mode = "abbreviation";
-  state.abbreviation.active = true;
-  state.abbreviation.currentRound = 0;
-  nextAbbreviationQuestion();
-  assert.ok(state.abbreviation.currentQuestion);
-  assert.equal(/[\u0590-\u05FF]/.test(state.abbreviation.currentQuestion.entry.english), false);
-  state.abbreviation.currentQuestion.options.forEach((option) => {
-    assert.equal(/[\u0590-\u05FF]/.test(option.entry.english), false);
+  const deck = app.abbreviation.prepareAbbreviationDeck(abbreviations);
+  assert.ok(deck.length);
+  deck.forEach((entry) => {
+    assert.equal(/[\u0590-\u05FF]/.test(entry.english), false);
   });
 
   const advConjEnglish = buildAdvConjEnglishSentence(
@@ -2577,198 +2258,6 @@ test("Hebrew is stripped from English-facing text across translation, abbreviati
     "present"
   );
   assert.equal(/[\u0590-\u05FF]/.test(advConjEnglish), false);
-});
-
-test("translation answer banks dedupe identical visible labels in both directions", () => {
-  const englishDuplicateVocab = [
-    { id: "alpha", category: "cooking_verbs", en: "whatever (חלוט)", he: "לא משנה א", heNiqqud: "לֹא מְשַׁנֶּה א", utility: 90, source: "test" },
-    { id: "beta", category: "cooking_verbs", en: "whatever", he: "לא משנה ב", heNiqqud: "לֹא מְשַׁנֶּה ב", utility: 80, source: "test" },
-    { id: "gamma", category: "cooking_verbs", en: "sort of", he: "בערך", heNiqqud: "בְּעֵרֶךְ", utility: 70, source: "test" },
-    { id: "delta", category: "cooking_verbs", en: "hilarious (slang)", he: "קורע", heNiqqud: "קוֹרֵעַ", utility: 60, source: "test" },
-    { id: "epsilon", category: "cooking_verbs", en: "never mind", he: "עזוב", heNiqqud: "עֲזוֹב", utility: 50, source: "test" },
-  ];
-  const reverseHarness = loadAppHarness(englishDuplicateVocab, [], [], {
-    mathRandom: () => 0.9,
-  });
-
-  reverseHarness.state.mode = "lesson";
-  reverseHarness.state.lesson.active = true;
-  reverseHarness.nextQuestion();
-  assert.ok(reverseHarness.state.currentQuestion);
-  const englishLabels = reverseHarness.state.currentQuestion.options.map((option) => option.word.en);
-  assert.equal(new Set(englishLabels).size, englishLabels.length);
-
-  const hebrewDuplicateVocab = [
-    { id: "alpha", category: "cooking_verbs", en: "whatever one", he: "לא משנה", heNiqqud: "לֹא מְשַׁנֶּה", utility: 90, source: "test" },
-    { id: "beta", category: "cooking_verbs", en: "whatever two", he: "לא משנה", heNiqqud: "לֹא מְשַׁנֶּה", utility: 80, source: "test" },
-    { id: "gamma", category: "cooking_verbs", en: "sort of", he: "בערך", heNiqqud: "בְּעֵרֶךְ", utility: 70, source: "test" },
-    { id: "delta", category: "cooking_verbs", en: "hilarious (slang)", he: "קורע", heNiqqud: "קוֹרֵעַ", utility: 60, source: "test" },
-    { id: "epsilon", category: "cooking_verbs", en: "never mind", he: "עזוב", heNiqqud: "עֲזוֹב", utility: 50, source: "test" },
-  ];
-  const forwardHarness = loadAppHarness(hebrewDuplicateVocab, [], [], {
-    mathRandom: () => 0.1,
-  });
-
-  forwardHarness.state.mode = "lesson";
-  forwardHarness.state.lesson.active = true;
-  forwardHarness.nextQuestion();
-  assert.ok(forwardHarness.state.currentQuestion);
-  const hebrewLabels = forwardHarness.state.currentQuestion.options.map((option) => option.word.he);
-  assert.equal(new Set(hebrewLabels).size, hebrewLabels.length);
-});
-
-test("translation can use custom Shabbat-themed distractors for מוצאי שבת in both directions", () => {
-  const vocabulary = [
-    {
-      id: "motzash",
-      category: "culture_identity_expanded",
-      en: "Saturday night",
-      he: "מוצאי שבת",
-      heNiqqud: "מוֹצָאֵי שַׁבָּת",
-      utility: 90,
-      source: "test",
-      translationQuizDistractors: {
-        english: ["Friday night", "Shabbat morning", "Shabbat afternoon"],
-        hebrew: ["ליל שבת", "שבת בבוקר", "שבת בלילה"],
-      },
-    },
-    { id: "culture-2", category: "culture_identity_expanded", en: "holiday ritual", he: "טקס חג", heNiqqud: "טקס חג", utility: 70, source: "test" },
-    { id: "culture-3", category: "culture_identity_expanded", en: "religious practice", he: "פרקטיקה דתית", heNiqqud: "פרקטיקה דתית", utility: 65, source: "test" },
-    { id: "culture-4", category: "culture_identity_expanded", en: "synagogue community", he: "קהילת בית כנסת", heNiqqud: "קהילת בֵּית כנסת", utility: 60, source: "test" },
-  ];
-
-  const reverseHarness = loadAppHarness(vocabulary, [], [], {
-    mathRandom: () => 0.9,
-  });
-  reverseHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "motzash") || pool[0] || null;
-  reverseHarness.state.mode = "lesson";
-  reverseHarness.state.lesson.active = true;
-  reverseHarness.nextQuestion();
-
-  assert.equal(reverseHarness.state.currentQuestion.prompt, "מוצאי שבת");
-  assert.deepEqual(
-    new Set(reverseHarness.state.currentQuestion.options.map((option) => option.word.en)),
-    new Set(["Saturday night", "Friday night", "Shabbat morning", "Shabbat afternoon"])
-  );
-
-  const forwardHarness = loadAppHarness(vocabulary, [], [], {
-    mathRandom: () => 0.1,
-  });
-  forwardHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "motzash") || pool[0] || null;
-  forwardHarness.state.mode = "lesson";
-  forwardHarness.state.lesson.active = true;
-  forwardHarness.nextQuestion();
-
-  assert.equal(forwardHarness.state.currentQuestion.prompt, "Saturday night");
-  const hebrewLabels = forwardHarness.state.currentQuestion.options.map((option) => option.word.he);
-  assert.ok(hebrewLabels.includes("שבת בלילה"));
-  assert.ok(hebrewLabels.includes("מוצאי שבת"));
-});
-
-test("translation shape-matches infinitive distractors in both directions", () => {
-  const vocabulary = [
-    { id: "target", category: "cooking_verbs", en: "to drift", he: "לשוטט", heNiqqud: "לְשׁוֹטֵט", utility: 90, source: "test" },
-    { id: "verb-1", category: "cooking_verbs", en: "to sprint", he: "לרוץ", heNiqqud: "לָרוּץ", utility: 80, source: "test" },
-    { id: "verb-2", category: "cooking_verbs", en: "to pause", he: "לעצור", heNiqqud: "לַעֲצוֹר", utility: 78, source: "test" },
-    { id: "verb-3", category: "cooking_verbs", en: "to stir", he: "לערבב", heNiqqud: "לְעַרְבֵּב", utility: 76, source: "test" },
-    { id: "noun-1", category: "cooking_verbs", en: "deadline", he: "מועד אחרון", heNiqqud: "מוֹעֵד אַחֲרוֹן", utility: 74, source: "test" },
-    { id: "noun-2", category: "cooking_verbs", en: "maintenance", he: "תחזוקה", heNiqqud: "תַּחְזוּקָה", utility: 72, source: "test" },
-  ];
-
-  const forwardHarness = loadAppHarness(vocabulary, [], [], {
-    mathRandom: () => 0.1,
-  });
-  forwardHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "target") || pool[0] || null;
-  forwardHarness.state.mode = "lesson";
-  forwardHarness.state.lesson.active = true;
-  forwardHarness.nextQuestion();
-
-  assert.equal(forwardHarness.state.currentQuestion.prompt, "to drift");
-  assert.ok(
-    forwardHarness.state.currentQuestion.options.every((option) => option.word.he.startsWith("ל"))
-  );
-
-  const reverseHarness = loadAppHarness(vocabulary, [], [], {
-    mathRandom: () => 0.9,
-  });
-  reverseHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "target") || pool[0] || null;
-  reverseHarness.state.mode = "lesson";
-  reverseHarness.state.lesson.active = true;
-  reverseHarness.nextQuestion();
-
-  assert.equal(reverseHarness.state.currentQuestion.prompt, "לשוטט");
-  assert.ok(
-    reverseHarness.state.currentQuestion.options.every((option) => option.word.en.toLowerCase().startsWith("to "))
-  );
-});
-
-test("translation can use custom cooling-themed distractors for לצנן in both directions", () => {
-  const vocabulary = [
-    {
-      id: "chill",
-      category: "cooking_verbs",
-      en: "to chill",
-      he: "לצנן",
-      heNiqqud: "לְצַנֵּן",
-      utility: 90,
-      source: "test",
-      translationQuizDistractors: {
-        english: ["to refrigerate", "to freeze", "to defrost"],
-        hebrew: ["לקרר", "להקפיא", "להפשיר"],
-      },
-    },
-    { id: "cooking-2", category: "cooking_verbs", en: "deadline", he: "מועד אחרון", heNiqqud: "מוֹעֵד אַחֲרוֹן", utility: 70, source: "test" },
-    { id: "cooking-3", category: "cooking_verbs", en: "maintenance", he: "תחזוקה", heNiqqud: "תַּחְזוּקָה", utility: 65, source: "test" },
-    { id: "cooking-4", category: "cooking_verbs", en: "customer complaint", he: "תלונת לקוח", heNiqqud: "תְּלוּנַת לָקוֹחַ", utility: 60, source: "test" },
-  ];
-
-  const reverseHarness = loadAppHarness(vocabulary, [], [], {
-    mathRandom: () => 0.9,
-  });
-  reverseHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "chill") || pool[0] || null;
-  reverseHarness.state.mode = "lesson";
-  reverseHarness.state.lesson.active = true;
-  reverseHarness.nextQuestion();
-
-  assert.equal(reverseHarness.state.currentQuestion.prompt, "לצנן");
-  assert.deepEqual(
-    new Set(reverseHarness.state.currentQuestion.options.map((option) => option.word.en)),
-    new Set(["to chill", "to refrigerate", "to freeze", "to defrost"])
-  );
-
-  const forwardHarness = loadAppHarness(vocabulary, [], [], {
-    mathRandom: () => 0.1,
-  });
-  forwardHarness.app.data.pickBestWord = (pool) => pool.find((word) => word.id === "chill") || pool[0] || null;
-  forwardHarness.state.mode = "lesson";
-  forwardHarness.state.lesson.active = true;
-  forwardHarness.nextQuestion();
-
-  assert.equal(forwardHarness.state.currentQuestion.prompt, "to chill");
-  assert.deepEqual(
-    new Set(forwardHarness.state.currentQuestion.options.map((option) => option.word.he)),
-    new Set(["לצנן", "לקרר", "להקפיא", "להפשיר"])
-  );
-});
-
-test("abbreviation answer banks dedupe identical visible English labels", () => {
-  const abbreviations = [
-    { id: "abbr-1", abbr: "וכו׳", expansionHe: "וכולי", english: "whatever (חלוט)", bucket: "Daily Life & Home" },
-    { id: "abbr-2", abbr: "וגו׳", expansionHe: "וגומר", english: "whatever", bucket: "Daily Life & Home" },
-    { id: "abbr-3", abbr: "לדוג׳", expansionHe: "לדוגמה", english: "for example", bucket: "Daily Life & Home" },
-    { id: "abbr-4", abbr: "אח״כ", expansionHe: "אחר כך", english: "afterwards", bucket: "Daily Life & Home" },
-    { id: "abbr-5", abbr: "ז״א", expansionHe: "זאת אומרת", english: "that is", bucket: "Daily Life & Home" },
-  ];
-  const harness = loadAppHarness([], abbreviations, [], {
-    mathRandom: () => 0.1,
-  });
-
-  harness.state.mode = "abbreviation";
-  harness.state.abbreviation.active = true;
-  harness.nextAbbreviationQuestion();
-  assert.ok(harness.state.abbreviation.currentQuestion);
-  const labels = harness.state.abbreviation.currentQuestion.options.map((option) => option.label);
-  assert.equal(new Set(labels).size, labels.length);
 });
 
 test("verb match rounds dedupe identical visible English cards", () => {
@@ -2945,57 +2434,6 @@ test("speech toggles disable cleanly when Hebrew speech is unavailable", () => {
   assert.equal(state.speech.enabled, false);
   toggleSpeechPreference();
   assert.equal(state.speech.enabled, false);
-});
-
-test("prompt speech button appears for Hebrew prompts and reads them aloud on demand", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-
-  const hebrewHarness = loadAppHarness(vocabulary);
-  hebrewHarness.state.currentQuestion = {
-    locked: false,
-    word: vocabulary[0],
-    prompt: vocabulary[0].he,
-    promptIsHebrew: true,
-    promptUsesWordSurface: true,
-    optionsAreHebrew: false,
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: null,
-  };
-
-  hebrewHarness.app.lessonMode.renderQuestion();
-  const promptButton = hebrewHarness.document.querySelector("#promptSpeechBtn");
-  assert.equal(promptButton.classList.contains("hidden"), false);
-  assert.equal(promptButton.textContent.trim(), "");
-  assert.equal(promptButton.getAttribute("aria-label"), "Play Hebrew prompt");
-  assert.equal(hebrewHarness.document.querySelector("#promptLabel").classList.contains("hidden"), true);
-  assert.equal(hebrewHarness.document.querySelector("#homeLessonStage").classList.contains("mode-standard"), true);
-  promptButton.click();
-  assert.deepEqual(hebrewHarness.speechSpeakLog.map((entry) => entry.text), ["אַלְפָא"]);
-
-  const englishHarness = loadAppHarness(vocabulary);
-  englishHarness.state.currentQuestion = {
-    locked: false,
-    word: vocabulary[0],
-    prompt: vocabulary[0].en,
-    promptIsHebrew: false,
-    promptUsesWordSurface: false,
-    optionsAreHebrew: true,
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: null,
-  };
-
-  englishHarness.app.lessonMode.renderQuestion();
-  assert.equal(englishHarness.document.querySelector("#promptSpeechBtn").classList.contains("hidden"), true);
-  assert.deepEqual(englishHarness.speechSpeakLog, []);
 });
 
 test("verb match prompt speech button reads the current Hebrew prompt", () => {
@@ -3178,79 +2616,62 @@ test("second-chance rounds reset the progress bar and track review progress spec
   assert.match(harness.document.querySelector("#lessonProgressBar").getAttribute("aria-label"), /Second chance: 2\/5/);
 });
 
-test("desktop widths keep review and settings visible even on results", () => {
-  const harness = loadAppHarness([], [], [], { innerWidth: 1280 });
+test("every width shows exactly one route at a time", () => {
+  [1280, 400].forEach((innerWidth) => {
+    const harness = loadAppHarness([], [], [], { innerWidth });
 
-  harness.state.route = "review";
-  harness.state.summary.active = false;
-  harness.app.ui.renderRouteVisibility();
+    harness.state.route = "review";
+    harness.state.summary.active = false;
+    harness.app.ui.renderRouteVisibility();
 
-  assert.equal(harness.document.body.getAttribute("data-desktop-hub-layout"), "true");
-  assert.equal(harness.document.querySelector("#homeView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#reviewView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#settingsView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#resultsView").classList.contains("active"), false);
+    assert.equal(harness.document.body.getAttribute("data-desktop-hub-layout"), "false");
+    assert.equal(harness.document.querySelector("#reviewView").classList.contains("active"), true);
+    assert.equal(harness.document.querySelector("#homeView").classList.contains("active"), false);
+    assert.equal(harness.document.querySelector("#settingsView").classList.contains("active"), false);
+    assert.equal(harness.document.querySelector("#resultsView").classList.contains("active"), false);
 
-  harness.state.route = "results";
-  harness.state.summary.active = true;
-  harness.app.ui.renderRouteVisibility();
+    harness.state.route = "results";
+    harness.state.summary.active = true;
+    harness.app.ui.renderRouteVisibility();
 
-  assert.equal(harness.document.body.getAttribute("data-desktop-hub-layout"), "true");
-  assert.equal(harness.document.querySelector("#homeView").classList.contains("active"), false);
-  assert.equal(harness.document.querySelector("#reviewView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#settingsView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#resultsView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#resultsReviewBtn").hidden, true);
+    assert.equal(harness.document.querySelector("#resultsView").classList.contains("active"), true);
+    assert.equal(harness.document.querySelector("#reviewView").classList.contains("active"), false);
+    assert.equal(harness.document.querySelector("#settingsView").classList.contains("active"), false);
+    assert.equal(harness.document.querySelector("#homeView").classList.contains("active"), false);
+  });
 });
 
-test("results keep the review performance button on mobile only", () => {
-  const harness = loadAppHarness([], [], [], { innerWidth: 400 });
+test("results show the review performance button at every width", () => {
+  [1280, 400].forEach((innerWidth) => {
+    const harness = loadAppHarness([], [], [], { innerWidth });
 
-  harness.state.route = "results";
-  harness.state.summary.active = true;
-  harness.app.ui.renderRouteVisibility();
+    harness.state.route = "results";
+    harness.state.summary.active = true;
+    harness.app.ui.renderRouteVisibility();
 
-  assert.equal(harness.document.body.getAttribute("data-desktop-hub-layout"), "false");
-  assert.equal(harness.document.querySelector("#resultsView").classList.contains("active"), true);
-  assert.equal(harness.document.querySelector("#resultsReviewBtn").hidden, false);
+    assert.equal(harness.document.querySelector("#resultsView").classList.contains("active"), true);
+    assert.equal(harness.document.querySelector("#resultsReviewBtn").hidden, false);
+  });
 });
 
-test("desktop hub cards collapse on desktop but stay expanded on mobile", () => {
-  const desktopHarness = loadAppHarness([], [], [], { innerWidth: 1280 });
-  const desktopReviewCard = desktopHarness.document.querySelector("#reviewPanelCard");
-  const desktopReviewToggle = desktopHarness.document.querySelector("#reviewPanelToggle");
-  const desktopSettingsCard = desktopHarness.document.querySelector("#settingsCard");
-  const desktopSettingsToggle = desktopHarness.document.querySelector("#settingsToggle");
+test("review and settings cards stay expanded at every width", () => {
+  [1280, 400].forEach((innerWidth) => {
+    const harness = loadAppHarness([], [], [], { innerWidth });
+    const reviewCard = harness.document.querySelector("#reviewPanelCard");
+    const reviewToggle = harness.document.querySelector("#reviewPanelToggle");
+    const settingsCard = harness.document.querySelector("#settingsCard");
+    const settingsToggle = harness.document.querySelector("#settingsToggle");
 
-  assert.equal(desktopHarness.document.body.getAttribute("data-desktop-hub-layout"), "true");
-  assert.equal(desktopReviewCard.getAttribute("data-collapsed"), "true");
-  assert.equal(desktopReviewToggle.getAttribute("aria-expanded"), "false");
-  assert.equal(desktopSettingsCard.getAttribute("data-collapsed"), "true");
-  assert.equal(desktopSettingsToggle.getAttribute("aria-expanded"), "false");
+    assert.equal(harness.document.body.getAttribute("data-desktop-hub-layout"), "false");
+    assert.equal(reviewCard.getAttribute("data-collapsed"), "false");
+    assert.equal(settingsCard.getAttribute("data-collapsed"), "false");
 
-  desktopReviewToggle.click();
-  assert.equal(desktopReviewCard.getAttribute("data-collapsed"), "false");
-  assert.equal(desktopReviewToggle.getAttribute("aria-expanded"), "true");
-
-  desktopSettingsToggle.click();
-  assert.equal(desktopSettingsCard.getAttribute("data-collapsed"), "false");
-  assert.equal(desktopSettingsToggle.getAttribute("aria-expanded"), "true");
-
-  const mobileHarness = loadAppHarness([], [], [], { innerWidth: 400 });
-  const mobileReviewCard = mobileHarness.document.querySelector("#reviewPanelCard");
-  const mobileReviewToggle = mobileHarness.document.querySelector("#reviewPanelToggle");
-  const mobileSettingsCard = mobileHarness.document.querySelector("#settingsCard");
-  const mobileSettingsToggle = mobileHarness.document.querySelector("#settingsToggle");
-
-  assert.equal(mobileHarness.document.body.getAttribute("data-desktop-hub-layout"), "false");
-  assert.equal(mobileReviewCard.getAttribute("data-collapsed"), "false");
-  assert.equal(mobileSettingsCard.getAttribute("data-collapsed"), "false");
-  mobileReviewToggle.click();
-  mobileSettingsToggle.click();
-  assert.equal(mobileReviewCard.getAttribute("data-collapsed"), "false");
-  assert.equal(mobileReviewToggle.getAttribute("aria-expanded"), "true");
-  assert.equal(mobileSettingsCard.getAttribute("data-collapsed"), "false");
-  assert.equal(mobileSettingsToggle.getAttribute("aria-expanded"), "true");
+    // Collapsing is no longer a feature; the headers are static and clicking is a no-op.
+    reviewToggle.click();
+    settingsToggle.click();
+    assert.equal(reviewCard.getAttribute("data-collapsed"), "false");
+    assert.equal(settingsCard.getAttribute("data-collapsed"), "false");
+  });
 });
 
 test("all game summaries now use only score accuracy and time metrics", () => {
@@ -3309,47 +2730,6 @@ test("lesson footer keeps action buttons above the feedback tray in the markup",
   );
 });
 
-test("translation feedback uses the tray without moving the action row or echoing the wrong answer", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const harness = loadAppHarness(vocabulary);
-
-  harness.state.mode = "lesson";
-  harness.state.lesson.active = true;
-  harness.state.currentQuestion = {
-    locked: false,
-    isReview: false,
-    promptIsHebrew: false,
-    optionsAreHebrew: true,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: "beta",
-  };
-
-  harness.app.ui.renderSessionHeader();
-  const nextBtn = harness.document.querySelector("#nextBtn");
-  assert.equal(nextBtn.classList.contains("hidden"), false);
-  assert.equal(nextBtn.textContent, "Submit");
-
-  harness.applyAnswer(false, "beta");
-
-  assert.equal(nextBtn.classList.contains("hidden"), false);
-  assert.equal(nextBtn.textContent, "Next");
-  assert.equal(harness.document.querySelector("#lessonFooter").classList.contains("hidden"), false);
-  assert.equal(harness.document.querySelector("#feedbackTray").classList.contains("hidden"), false);
-  assert.match(
-    harness.document.querySelector("#feedbackSentence").textContent,
-    /Not quite\. The Hebrew answer is אלפא\./
-  );
-  assert.equal(harness.document.querySelector("#feedbackDetail").textContent, "");
-  assert.equal(getFeedbackText(harness.document).includes("בטא"), false);
-});
-
 test("conjugation never shows the feedback tray during mismatch, match success, or verb completion", async () => {
   const vocabulary = [
     { id: "verb-word", category: "core_advanced", en: "to go", he: "ללכת", heNiqqud: "לָלֶכֶת", utility: 80, source: "test" },
@@ -3400,185 +2780,9 @@ test("conjugation never shows the feedback tray during mismatch, match success, 
   assert.equal(successHarness.document.querySelector("#nextBtn").classList.contains("hidden"), false);
 });
 
-test("translation submit plays the correct answer sound", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const { applyAnswer, audioPlayLog, state } = loadAppHarness(vocabulary, [], [], {
-    localStorageData: {
-      "ivriquest-sound-v1": JSON.stringify({ enabled: true }),
-      "ivriquest-welcome-seen-v1": "1",
-    },
-  });
-
-  state.lesson.active = true;
-  state.currentQuestion = {
-    locked: false,
-    isReview: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: "alpha",
-  };
-
-  applyAnswer(true, "alpha");
-
-  assertAudioPlayLog(audioPlayLog, [/^\.\/assets\/sounds\/answer-correct\.ogg\?v=[0-9a-z]+$/]);
-});
-
-test("translation submit plays the wrong answer sound", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const { applyAnswer, audioPlayLog, state } = loadAppHarness(vocabulary, [], [], {
-    localStorageData: {
-      "ivriquest-sound-v1": JSON.stringify({ enabled: true }),
-      "ivriquest-welcome-seen-v1": "1",
-    },
-  });
-
-  state.lesson.active = true;
-  state.currentQuestion = {
-    locked: false,
-    isReview: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: "beta",
-  };
-
-  applyAnswer(false, "beta");
-
-  assertAudioPlayLog(audioPlayLog, [/^\.\/assets\/sounds\/answer-wrong\.ogg\?v=[0-9a-z]+$/]);
-});
-
-test("selecting a translation choice without submitting stays silent", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const { audioPlayLog, document, renderChoices, state } = loadAppHarness(vocabulary, [], [], {
-    localStorageData: {
-      "ivriquest-sound-v1": JSON.stringify({ enabled: true }),
-      "ivriquest-welcome-seen-v1": "1",
-    },
-  });
-
-  state.currentQuestion = {
-    locked: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: null,
-    optionsAreHebrew: false,
-  };
-
-  renderChoices(state.currentQuestion);
-  const buttons = document.querySelector("#choiceContainer").querySelectorAll("button");
-  buttons[0].click();
-
-  assert.equal(state.currentQuestion.selectedOptionId, "alpha");
-  assert.deepEqual(audioPlayLog, []);
-});
-
-test("translation selection speaks Hebrew answers only and prefers niqqud for speech", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const hebrewHarness = loadAppHarness(vocabulary);
-  hebrewHarness.toggleSpeechPreference();
-
-  hebrewHarness.state.currentQuestion = {
-    locked: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: null,
-    optionsAreHebrew: true,
-  };
-
-  hebrewHarness.renderChoices(hebrewHarness.state.currentQuestion);
-  let buttons = hebrewHarness.document.querySelector("#choiceContainer").querySelectorAll("button");
-  buttons[0].click();
-
-  assert.equal(hebrewHarness.state.currentQuestion.selectedOptionId, "alpha");
-  assert.deepEqual(hebrewHarness.speechSpeakLog.map((entry) => entry.text), ["אַלְפָא"]);
-
-  const englishHarness = loadAppHarness(vocabulary);
-  englishHarness.toggleSpeechPreference();
-  englishHarness.state.currentQuestion = {
-    locked: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: null,
-    optionsAreHebrew: false,
-  };
-
-  englishHarness.renderChoices(englishHarness.state.currentQuestion);
-  buttons = englishHarness.document.querySelector("#choiceContainer").querySelectorAll("button");
-  buttons[0].click();
-  assert.deepEqual(englishHarness.speechSpeakLog, []);
-});
-
-test("locked translation choices do not trigger speech", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const harness = loadAppHarness(vocabulary);
+test("advanced conjugation selections speak Hebrew answers before submit", () => {
+  const harness = loadAppHarness([], [], []);
   harness.toggleSpeechPreference();
-
-  harness.state.currentQuestion = {
-    locked: true,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: null,
-    optionsAreHebrew: true,
-  };
-
-  harness.renderChoices(harness.state.currentQuestion);
-  const buttons = harness.document.querySelector("#choiceContainer").querySelectorAll("button");
-  buttons[0].click();
-
-  assert.deepEqual(harness.speechSpeakLog, []);
-});
-
-test("abbreviation and advanced conjugation selections speak Hebrew answers before submit", () => {
-  const abbreviations = [
-    { id: "abbr-1", abbr: "ע״מ", expansionHe: "עוסק מורשה", english: "licensed business", bucket: "Daily Life & Home" },
-  ];
-  const harness = loadAppHarness([], abbreviations, []);
-  harness.toggleSpeechPreference();
-
-  harness.state.mode = "abbreviation";
-  harness.state.abbreviation.active = true;
-  harness.state.abbreviation.currentQuestion = {
-    locked: false,
-    direction: "en2he",
-    entry: abbreviations[0],
-    options: [{ id: "abbr-1", label: "ע״מ", entry: abbreviations[0] }],
-    selectedOptionId: null,
-  };
-  harness.app.abbreviation.renderAbbreviationChoices(harness.state.abbreviation.currentQuestion);
-  let buttons = harness.document.querySelector("#choiceContainer").querySelectorAll("button");
-  buttons[0].click();
 
   harness.state.mode = "advConj";
   harness.state.advConj.active = true;
@@ -3592,10 +2796,10 @@ test("abbreviation and advanced conjugation selections speak Hebrew answers befo
     selectedOptionId: null,
   };
   harness.app.advConj.renderAdvConjChoices(harness.state.advConj.currentQuestion);
-  buttons = harness.document.querySelector("#choiceContainer").querySelectorAll("button");
+  const buttons = harness.document.querySelector("#choiceContainer").querySelectorAll("button");
   buttons[0].click();
 
-  assert.deepEqual(harness.speechSpeakLog.map((entry) => entry.text), ["ע״מ", "פתח לך את העיניים"]);
+  assert.deepEqual(harness.speechSpeakLog.map((entry) => entry.text), ["פתח לך את העיניים"]);
 });
 
 test("verb match speaks only when the Hebrew card is selected first and shows the tip", async () => {
@@ -3640,16 +2844,10 @@ test("verb match speaks only when the Hebrew card is selected first and shows th
   assert.deepEqual(leftFirstHarness.speechSpeakLog, []);
 });
 
-test("abbreviation and advanced conjugation submits play feedback sounds", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-  ];
-  const abbreviations = [
-    { id: "abbr-1", abbr: "וכו׳", expansionHe: "וכולי", english: "etc.", bucket: "Daily Life & Home" },
-  ];
-  const { applyAbbreviationAnswer, applyAdvConjAnswer, audioPlayLog, state } = loadAppHarness(
-    vocabulary,
-    abbreviations,
+test("advanced conjugation submits play feedback sounds", () => {
+  const { applyAdvConjAnswer, audioPlayLog, state } = loadAppHarness(
+    [],
+    [],
     [],
     {
       idioms: [
@@ -3662,15 +2860,17 @@ test("abbreviation and advanced conjugation submits play feedback sounds", () =>
     }
   );
 
-  state.abbreviation.currentQuestion = {
+  state.advConj.currentQuestion = {
     locked: false,
-    entry: abbreviations[0],
+    idiomId: "idiom-1",
+    correctAnswer: "ניסוח נכון",
     options: [
-      { id: "abbr-1", entry: abbreviations[0] },
+      { id: "wrong", text: "ניסוח שגוי", isCorrect: false },
+      { id: "right", text: "ניסוח נכון", isCorrect: true },
     ],
-    selectedOptionId: "abbr-1",
+    selectedOptionId: "right",
   };
-  applyAbbreviationAnswer(true, "abbr-1");
+  applyAdvConjAnswer();
 
   state.advConj.currentQuestion = {
     locked: false,
@@ -3691,11 +2891,10 @@ test("abbreviation and advanced conjugation submits play feedback sounds", () =>
 });
 
 test("audio playback falls back to mp3 when ogg support is unavailable", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const { applyAnswer, audioPlayLog, state } = loadAppHarness(vocabulary, [], [], {
+  const { applyAdvConjAnswer, audioPlayLog, state } = loadAppHarness([], [], [], {
+    idioms: [
+      { id: "idiom-1", english: "to be honest", showMeaning: false },
+    ],
     audioSupport: {
       'audio/ogg; codecs="vorbis"': "",
       "audio/mpeg": "probably",
@@ -3706,19 +2905,14 @@ test("audio playback falls back to mp3 when ogg support is unavailable", () => {
     },
   });
 
-  state.lesson.active = true;
-  state.currentQuestion = {
+  state.advConj.currentQuestion = {
     locked: false,
-    isReview: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: "alpha",
+    idiomId: "idiom-1",
+    correctAnswer: "ניסוח נכון",
+    options: [{ id: "right", text: "ניסוח נכון", isCorrect: true }],
+    selectedOptionId: "right",
   };
-
-  applyAnswer(true, "alpha");
+  applyAdvConjAnswer();
 
   assertAudioPlayLog(audioPlayLog, [/^\.\/assets\/sounds\/answer-correct\.mp3\?v=[0-9a-z]+$/]);
 });
@@ -3760,43 +2954,11 @@ test("saved enabled sound preference primes all feedback cues at startup", () =>
   ]);
 });
 
-test("every fourth correct answer plays the streak sound", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const { applyAnswer, audioPlayLog, state } = loadAppHarness(vocabulary, [], [], {
-    localStorageData: {
-      "ivriquest-sound-v1": JSON.stringify({ enabled: true }),
-      "ivriquest-welcome-seen-v1": "1",
-    },
-  });
-
-  state.sessionStreak = 3;
-  state.lesson.active = true;
-  state.currentQuestion = {
-    locked: false,
-    isReview: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: "alpha",
-  };
-
-  applyAnswer(true, "alpha");
-
-  assert.equal(state.sessionStreak, 4);
-  assertAudioPlayLog(audioPlayLog, [/^\.\/assets\/sounds\/answer-streak\.ogg\?v=[0-9a-z]+$/]);
-});
-
 test("disabled sounds suppress feedback playback", () => {
-  const vocabulary = [
-    { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const { applyAnswer, audioPlayLog, state } = loadAppHarness(vocabulary, [], [], {
+  const { applyAdvConjAnswer, audioPlayLog, state } = loadAppHarness([], [], [], {
+    idioms: [
+      { id: "idiom-1", english: "to be honest", showMeaning: false },
+    ],
     localStorageData: {
       "ivriquest-sound-v1": JSON.stringify({ enabled: false }),
       "ivriquest-welcome-seen-v1": "1",
@@ -3805,19 +2967,14 @@ test("disabled sounds suppress feedback playback", () => {
 
   assert.equal(state.audio.enabled, false);
 
-  state.lesson.active = true;
-  state.currentQuestion = {
+  state.advConj.currentQuestion = {
     locked: false,
-    isReview: false,
-    word: vocabulary[0],
-    options: [
-      { id: "alpha", word: vocabulary[0] },
-      { id: "beta", word: vocabulary[1] },
-    ],
-    selectedOptionId: "alpha",
+    idiomId: "idiom-1",
+    correctAnswer: "ניסוח נכון",
+    options: [{ id: "right", text: "ניסוח נכון", isCorrect: true }],
+    selectedOptionId: "right",
   };
-
-  applyAnswer(true, "alpha");
+  applyAdvConjAnswer();
 
   assert.deepEqual(audioPlayLog, []);
 });
@@ -4065,14 +3222,10 @@ test("advanced conjugation intro auto-advance is canceled when leaving home", as
   assert.equal(state.advConj.currentQuestion, null);
 });
 
-test("abbreviation and conjugation start flows enter intro state and home clears them", () => {
+test("verb match start flow enters intro state and home clears it", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-  ];
-  const abbreviations = [
-    { id: "abbr-1", abbr: "וכו׳", expansionHe: "וכולי", english: "etc.", bucket: "Daily Life & Home" },
-    { id: "abbr-2", abbr: "לדוג׳", expansionHe: "לדוגמה", english: "for example", bucket: "Daily Life & Home" },
+    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
   ];
   const verbDeck = [
     {
@@ -4084,18 +3237,7 @@ test("abbreviation and conjugation start flows enter intro state and home clears
       ],
     },
   ];
-  const { goHome, startAbbreviation, startVerbMatch, state } = loadAppHarness(vocabulary, abbreviations, verbDeck);
-
-  startAbbreviation();
-  assert.equal(state.abbreviation.introActive, true);
-  assert.equal(state.route, "home");
-
-  goHome();
-  assert.equal(state.abbreviation.introActive, false);
-  assert.equal(state.route, "home");
-  assert.equal(state.abbreviation.active, false);
-  assert.equal(state.lesson.active, false);
-  assert.equal(state.match.active, false);
+  const { goHome, startVerbMatch, state } = loadAppHarness(vocabulary, [], verbDeck);
 
   startVerbMatch();
   assert.equal(state.match.verbIntroActive, true);
@@ -4165,8 +3307,8 @@ test("conjugation keeps English on the left and Hebrew on the right in Hebrew UI
 
   const columns = harness.document.querySelector("#choiceContainer").querySelector(".match-columns");
   assert.equal(columns.getAttribute("dir"), "ltr");
-  assert.equal(columns.children[0].querySelector(".match-card").classList.contains("hebrew"), false);
-  assert.equal(columns.children[1].querySelector(".match-card").classList.contains("hebrew"), true);
+  assert.equal(columns.children[0].classList.contains("hebrew"), false);
+  assert.equal(columns.children[1].classList.contains("hebrew"), true);
   harness.goHome();
 });
 
@@ -4200,15 +3342,9 @@ test("conjugation sessions are capped to a small verb set so results are reachab
 test("active learn sessions stay pinned to home and restored intros auto-advance into gameplay", async () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-    { id: "gamma", category: "core_advanced", en: "gamma", he: "גמא", heNiqqud: "גַּמָּא", utility: 78, source: "test" },
-    { id: "delta", category: "core_advanced", en: "delta", he: "דלתא", heNiqqud: "דֶּלְתָּא", utility: 77, source: "test" },
-  ];
-  const abbreviations = [
-    { id: "abbr-1", abbr: "וכו׳", expansionHe: "וכולי", english: "etc.", bucket: "Daily Life & Home" },
-    { id: "abbr-2", abbr: "לדוג׳", expansionHe: "לדוגמה", english: "for example", bucket: "Daily Life & Home" },
-    { id: "abbr-3", abbr: "בע״ה", expansionHe: "בעזרת השם", english: "with God's help", bucket: "People, Health & Culture" },
-    { id: "abbr-4", abbr: "עי׳", expansionHe: "עיין", english: "see / refer to", bucket: "Ideas, Science & Tech" },
+    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
+    { id: "gamma", category: "core_advanced", en: "gamma", he: "גמא", heNiqqud: "גַּמָּא", utility: 78, source: "test" },
+    { id: "delta", category: "core_advanced", en: "delta", he: "דלתא", heNiqqud: "דֶּלְתָּא", utility: 77, source: "test" },
   ];
   const verbDeck = [
     {
@@ -4221,7 +3357,7 @@ test("active learn sessions stay pinned to home and restored intros auto-advance
     },
   ];
 
-  const activeSessionHarness = loadAppHarness(vocabulary, abbreviations, verbDeck);
+  const activeSessionHarness = loadAppHarness(vocabulary, [], verbDeck);
   activeSessionHarness.startVerbMatch();
   await waitForTimers();
   assert.equal(activeSessionHarness.state.route, "home");
@@ -4233,53 +3369,7 @@ test("active learn sessions stay pinned to home and restored intros auto-advance
   activeSessionHarness.goHome();
   assert.equal(activeSessionHarness.document.body.getAttribute("data-learn-session"), "false");
 
-  const lessonHarness = loadAppHarness(vocabulary, abbreviations, verbDeck);
-  lessonHarness.restoreSessionState({
-    mode: "lesson",
-    route: "review",
-    lesson: {
-      active: true,
-      lessonStartIntroActive: true,
-      currentRound: 0,
-      secondChanceCurrent: 0,
-      secondChanceTotal: 0,
-      askedWordIds: [],
-      domainCounts: {},
-      missedWordIds: [],
-      reviewQueue: [],
-      optionHistory: {},
-      wrongAnswers: 0,
-      sessionMistakeIds: [],
-    },
-  });
-  lessonHarness.resumeActiveTimers();
-  assert.equal(lessonHarness.state.route, "home");
-  await waitForTimers();
-  assert.equal(lessonHarness.state.lesson.lessonStartIntroActive, false);
-  assert.ok(lessonHarness.state.currentQuestion);
-  lessonHarness.goHome();
-
-  const abbreviationHarness = loadAppHarness(vocabulary, abbreviations, verbDeck);
-  abbreviationHarness.restoreSessionState({
-    mode: "abbreviation",
-    route: "settings",
-    abbreviation: {
-      active: true,
-      introActive: true,
-      currentRound: 0,
-      askedEntryIds: [],
-      wrongAnswers: 0,
-      sessionMistakeIds: [],
-    },
-  });
-  abbreviationHarness.resumeActiveTimers();
-  assert.equal(abbreviationHarness.state.route, "home");
-  await waitForTimers();
-  assert.equal(abbreviationHarness.state.abbreviation.introActive, false);
-  assert.ok(abbreviationHarness.state.abbreviation.currentQuestion);
-  abbreviationHarness.goHome();
-
-  const verbHarness = loadAppHarness(vocabulary, abbreviations, verbDeck);
+  const verbHarness = loadAppHarness(vocabulary, [], verbDeck);
   verbHarness.restoreSessionState({
     mode: "verbMatch",
     route: "review",
@@ -4314,53 +3404,47 @@ test("active learn sessions stay pinned to home and restored intros auto-advance
 test("home button opens a leave confirmation before dropping session progress", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
-    { id: "gamma", category: "core_advanced", en: "gamma", he: "גמא", heNiqqud: "גַּמָּא", utility: 78, source: "test" },
-    { id: "delta", category: "core_advanced", en: "delta", he: "דלתא", heNiqqud: "דֶּלְתָּא", utility: 77, source: "test" },
+    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
   ];
-  const { closeLeaveSessionConfirm, nextQuestion, requestGoHome, confirmLeaveSession, state } = loadAppHarness(vocabulary);
+  const { closeLeaveSessionConfirm, requestGoHome, confirmLeaveSession, state } = loadAppHarness(vocabulary);
 
-  state.mode = "lesson";
+  state.mode = "verbMatch";
   state.route = "home";
-  state.lesson.active = true;
-  nextQuestion();
-  assert.ok(state.currentQuestion);
+  state.match.active = true;
 
   requestGoHome();
   assert.equal(state.leaveConfirmOpen, true);
-  assert.equal(state.lesson.active, true);
+  assert.equal(state.match.active, true);
 
   closeLeaveSessionConfirm();
   assert.equal(state.leaveConfirmOpen, false);
-  assert.equal(state.lesson.active, true);
+  assert.equal(state.match.active, true);
 
   requestGoHome();
   confirmLeaveSession();
   assert.equal(state.leaveConfirmOpen, false);
-  assert.equal(state.lesson.active, false);
+  assert.equal(state.match.active, false);
   assert.equal(state.route, "home");
-  assert.equal(state.currentQuestion, null);
 });
 
 test("leaving an active game for review keeps the warning and lands on review after confirmation", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
-    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
+    { id: "beta", category: "core_advanced", en: "beta", he: "בטא", heNiqqud: "בֵּטָא", utility: 79, source: "test" },
   ];
-  const { confirmLeaveSession, nextQuestion, requestLeaveSession, state } = loadAppHarness(vocabulary);
+  const { confirmLeaveSession, requestLeaveSession, state } = loadAppHarness(vocabulary);
 
-  state.mode = "lesson";
+  state.mode = "verbMatch";
   state.route = "home";
-  state.lesson.active = true;
-  nextQuestion();
+  state.match.active = true;
 
   requestLeaveSession("review");
   assert.equal(state.leaveConfirmOpen, true);
-  assert.equal(state.lesson.active, true);
+  assert.equal(state.match.active, true);
 
   confirmLeaveSession();
   assert.equal(state.leaveConfirmOpen, false);
-  assert.equal(state.lesson.active, false);
+  assert.equal(state.match.active, false);
   assert.equal(state.route, "review");
 });
 

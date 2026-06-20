@@ -83,7 +83,9 @@ session.hasActiveLearnSession = session.hasActiveLearnSession || function hasAct
       runtime.state?.advConj?.introActive ||
       runtime.state?.binyanBoard?.active ||
       runtime.state?.match?.active ||
-      runtime.state?.match?.verbIntroActive
+      runtime.state?.match?.verbIntroActive ||
+      runtime.state?.wordMatch?.active ||
+      runtime.state?.wordMatch?.introActive
   );
 };
 
@@ -95,6 +97,12 @@ session.isModeSessionActive = session.isModeSessionActive || function isModeSess
   }
   if (mode === "abbreviation") {
     return Boolean(runtime.state?.abbreviation?.active || runtime.state?.abbreviation?.introActive);
+  }
+  if (mode === "lessonMatch" || mode === "abbrMatch") {
+    return Boolean(
+      (runtime.state?.wordMatch?.active || runtime.state?.wordMatch?.introActive) &&
+      runtime.state?.wordMatch?.game === mode
+    );
   }
   if (mode === "sentenceBank") {
     return Boolean(runtime.state?.sentenceBank?.active || runtime.state?.sentenceBank?.introActive);
@@ -273,6 +281,10 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
     runtime.state.mode = "home";
   }
 
+  if ((runtime.state.mode === "lessonMatch" || runtime.state.mode === "abbrMatch") && !runtime.state.wordMatch?.active) {
+    runtime.state.mode = "home";
+  }
+
   runtime.state.route = session.resolveInitialRoute(runtime.state.route);
 };
 
@@ -402,6 +414,7 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.stopLessonTimer();
   session.stopSentenceBankTimer();
   session.stopAbbreviationTimer();
+  session.stopWordMatchTimer();
   session.closeLeaveSessionConfirm();
   h.closeMasteredModal?.();
   session.clearLessonStartIntro();
@@ -414,6 +427,7 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   h.resetSentenceBankState?.();
   h.resetVerbMatchState?.();
   h.resetAbbreviationState?.();
+  app.wordMatch?.resetWordMatchState?.();
   session.resetAdvConjState();
   app.binyanBoard?.resetBinyanBoardState?.();
   runtime.state.lesson.active = false;
@@ -442,6 +456,7 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   session.stopLessonTimer();
   session.stopSentenceBankTimer();
   session.stopAbbreviationTimer();
+  session.stopWordMatchTimer();
   session.closeLeaveSessionConfirm();
   session.clearLessonStartIntro();
   session.clearSecondChanceIntro();
@@ -456,6 +471,7 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.sentenceBank.inReview = false;
   runtime.state.sentenceBank.currentQuestion = null;
   runtime.state.match.active = false;
+  runtime.state.wordMatch.active = false;
   runtime.state.abbreviation.active = false;
   runtime.state.abbreviation.currentQuestion = null;
   runtime.state.advConj.active = false;
@@ -710,6 +726,26 @@ session.stopVerbMatchTimer = session.stopVerbMatchTimer || function stopVerbMatc
   if (!runtime.state.match.timerId) return;
   runtime.global.clearInterval(runtime.state.match.timerId);
   runtime.state.match.timerId = null;
+};
+
+session.startWordMatchTimer = session.startWordMatchTimer || function startWordMatchTimer() {
+  const runtime = getRuntime();
+  const h = getHelpers();
+  session.stopWordMatchTimer();
+  runtime.state.wordMatch.timerId = runtime.global.setInterval(() => {
+    if (!runtime.state.wordMatch.active) return;
+    runtime.state.wordMatch.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.wordMatch.startMs) / 1000));
+    if (runtime.state.mode === "lessonMatch" || runtime.state.mode === "abbrMatch") {
+      h.renderSessionHeader?.();
+    }
+  }, 1000);
+};
+
+session.stopWordMatchTimer = session.stopWordMatchTimer || function stopWordMatchTimer() {
+  const runtime = getRuntime();
+  if (!runtime.state.wordMatch.timerId) return;
+  runtime.global.clearInterval(runtime.state.wordMatch.timerId);
+  runtime.state.wordMatch.timerId = null;
 };
 
 session.startSentenceBankTimer = session.startSentenceBankTimer || function startSentenceBankTimer() {
