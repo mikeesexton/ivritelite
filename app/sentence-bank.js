@@ -1046,7 +1046,11 @@ sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function star
   session.clearSentenceBankIntro?.();
   session.clearVerbMatchIntro?.();
   session.clearAbbreviationIntro?.();
+  session.clearWordMatchIntro?.();
   session.clearAdvConjIntro?.();
+  session.clearBinyanBoardIntro?.();
+  app.wordMatch?.resetWordMatchState?.();
+  app.binyanBoard?.resetBinyanBoardState?.();
   h.resetSessionScore?.();
   sentenceBank.resetSentenceBankState();
   runtime.state.mode = "sentenceBank";

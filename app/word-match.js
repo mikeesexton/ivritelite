@@ -154,6 +154,8 @@ function resetCompetingSessions() {
   s.clearVerbMatchIntro?.();
   s.clearAbbreviationIntro?.();
   s.clearSentenceBankIntro?.();
+  s.clearWordMatchIntro?.();
+  s.clearBinyanBoardIntro?.();
   s.clearSummaryState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
@@ -190,17 +192,51 @@ function startGame(game) {
 
   const ctx = runtime.state.wordMatch;
   ctx.active = true;
+  ctx.introActive = false;
   ctx.game = game;
   ctx.sessionMistakeIds = [];
-  ctx.startMs = Date.now();
+  ctx.startMs = 0;
   ctx.elapsedSeconds = 0;
 
   const config = wordMatch.buildConfig(game);
   config.pairs = pairs;
   app.matchEngine?.setup?.(config);
-  getSession().startWordMatchTimer?.();
+  wordMatch.playWordMatchIntro();
   h.renderAll?.();
 }
+
+wordMatch.playWordMatchIntro = wordMatch.playWordMatchIntro || function playWordMatchIntro() {
+  const runtime = getRuntime();
+  const session = getSession();
+  const h = getHelpers();
+  const overlay = runtime.state.wordMatch.game === "abbrMatch"
+    ? runtime.el.abbreviationIntro
+    : runtime.el.lessonStartIntro;
+  if (!overlay) {
+    wordMatch.beginWordMatchFromIntro();
+    return;
+  }
+
+  session.clearWordMatchIntro?.();
+  runtime.state.wordMatch.introActive = true;
+  h.showBlockingOverlay?.(overlay);
+  session.scheduleIntroAutoAdvance?.(() => wordMatch.beginWordMatchFromIntro());
+};
+
+wordMatch.beginWordMatchFromIntro = wordMatch.beginWordMatchFromIntro || function beginWordMatchFromIntro() {
+  const runtime = getRuntime();
+  const session = getSession();
+  if (!runtime.state.wordMatch.active) return;
+  if (runtime.state.wordMatch.introActive) {
+    session.clearWordMatchIntro?.();
+  }
+  if (!runtime.state.wordMatch.startMs) {
+    runtime.state.wordMatch.startMs = Date.now();
+    runtime.state.wordMatch.elapsedSeconds = 0;
+    session.startWordMatchTimer?.();
+  }
+  getHelpers().renderAll?.();
+};
 
 wordMatch.startLessonMatch = wordMatch.startLessonMatch || function startLessonMatch() {
   startGame("lessonMatch");

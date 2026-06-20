@@ -88,7 +88,11 @@ verbMatch.startVerbMatch = verbMatch.startVerbMatch || function startVerbMatch()
   s.clearSecondChanceIntro?.();
   s.clearVerbMatchIntro?.();
   s.clearAbbreviationIntro?.();
+  s.clearWordMatchIntro?.();
+  s.clearBinyanBoardIntro?.();
   s.clearSummaryState?.();
+  app.wordMatch?.resetWordMatchState?.();
+  app.binyanBoard?.resetBinyanBoardState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
   runtime.state.currentQuestion = null;

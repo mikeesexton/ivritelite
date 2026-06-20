@@ -101,6 +101,7 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     advConjIntro: document.querySelector("#advConjIntro"),
     homeBinyanBoardBtn: document.querySelector("#homeBinyanBoardBtn"),
     binyanBoardBtn: document.querySelector("#binyanBoardBtn"),
+    binyanBoardIntro: document.querySelector("#binyanBoardIntro"),
     welcomeModal: document.querySelector("#welcomeModal"),
     welcomeModalCloseBtn: document.querySelector("#welcomeModalCloseBtn"),
     welcomeSurveyLink: document.querySelector("#welcomeSurveyLink"),
@@ -218,6 +219,7 @@ bootstrapRuntime.createInitialState = bootstrapRuntime.createInitialState || fun
     },
     binyanBoard: {
       active: false,
+      introActive: false,
       deck: [],
       distractorPool: [],
       totalRoots: 0,

@@ -292,7 +292,17 @@ binyanBoard.startBinyanBoard = binyanBoard.startBinyanBoard || function startBin
   s.stopLessonTimer?.();
   s.stopSentenceBankTimer?.();
   s.stopAbbreviationTimer?.();
+  s.stopWordMatchTimer?.();
+  s.clearLessonStartIntro?.();
+  s.clearSecondChanceIntro?.();
+  s.clearSentenceBankIntro?.();
+  s.clearVerbMatchIntro?.();
+  s.clearAbbreviationIntro?.();
+  s.clearWordMatchIntro?.();
+  s.clearAdvConjIntro?.();
+  s.clearBinyanBoardIntro?.();
   s.resetAdvConjState?.();
+  app.wordMatch?.resetWordMatchState?.();
   h.resetVerbMatchState?.();
   h.resetAbbreviationState?.();
   h.resetSentenceBankState?.();
@@ -312,12 +322,43 @@ binyanBoard.startBinyanBoard = binyanBoard.startBinyanBoard || function startBin
   board.totalRoots = deck.roots.length;
   board.clearedCount = 0;
   board.active = true;
+  board.introActive = false;
   board.activeRootId = "";
   board.currentQuestion = null;
-  board.startMs = Date.now();
+  board.startMs = 0;
 
-  binyanBoard.startBinyanBoardTimer();
+  binyanBoard.playBinyanBoardIntro();
   h.renderAll?.();
+};
+
+binyanBoard.playBinyanBoardIntro = binyanBoard.playBinyanBoardIntro || function playBinyanBoardIntro() {
+  const runtime = getRuntime();
+  const session = getSession();
+  const h = getHelpers();
+  if (!runtime.el.binyanBoardIntro) {
+    binyanBoard.beginBinyanBoardFromIntro();
+    return;
+  }
+
+  session.clearBinyanBoardIntro?.();
+  runtime.state.binyanBoard.introActive = true;
+  h.showBlockingOverlay?.(runtime.el.binyanBoardIntro);
+  session.scheduleIntroAutoAdvance?.(() => binyanBoard.beginBinyanBoardFromIntro());
+};
+
+binyanBoard.beginBinyanBoardFromIntro = binyanBoard.beginBinyanBoardFromIntro || function beginBinyanBoardFromIntro() {
+  const runtime = getRuntime();
+  const session = getSession();
+  if (!runtime.state.binyanBoard.active) return;
+  if (runtime.state.binyanBoard.introActive) {
+    session.clearBinyanBoardIntro?.();
+  }
+  if (!runtime.state.binyanBoard.startMs) {
+    runtime.state.binyanBoard.startMs = Date.now();
+    runtime.state.binyanBoard.elapsedSeconds = 0;
+    binyanBoard.startBinyanBoardTimer();
+  }
+  getHelpers().renderAll?.();
 };
 
 binyanBoard.startBinyanBoardTimer = binyanBoard.startBinyanBoardTimer || function startBinyanBoardTimer() {
@@ -345,6 +386,7 @@ binyanBoard.resetBinyanBoardState = binyanBoard.resetBinyanBoardState || functio
   binyanBoard.stopBinyanBoardTimer();
   runtime.state.binyanBoard = {
     active: false,
+    introActive: false,
     deck: [],
     distractorPool: [],
     totalRoots: 0,

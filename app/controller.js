@@ -97,7 +97,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   global.addEventListener("keydown", controller.handleGlobalKeyDown);
   global.addEventListener("resize", controller.handleViewportResize);
 
-  [runtime.el.lessonStartIntro, runtime.el.secondChanceIntro, runtime.el.sentenceBankIntro, runtime.el.verbMatchIntro, runtime.el.abbreviationIntro].forEach((overlay) => {
+  [runtime.el.lessonStartIntro, runtime.el.secondChanceIntro, runtime.el.sentenceBankIntro, runtime.el.verbMatchIntro, runtime.el.abbreviationIntro, runtime.el.advConjIntro, runtime.el.binyanBoardIntro].forEach((overlay) => {
     overlay?.addEventListener("pointerdown", controller.stopIntroOverlayInteraction);
     overlay?.addEventListener("click", controller.stopIntroOverlayInteraction);
   });

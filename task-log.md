@@ -2262,3 +2262,75 @@ Each entry records what was requested, what changed, what was tested, and what t
 **Tests run:** `npm test` before = 168/168 pass; after = 168/168 pass (only the two trimmed vocab assertions changed). Live-verified via preview server: app boots with no console errors/warnings, home dashboard renders all 6 game tiles, leave-game confirmation works, and the Binyanim board renders correctly (root cards with "N FORMS" labels confirm `binyan.formCount` still resolves; no difficulty label appears anywhere, confirming those keys were dead). Bottom nav and card styling intact.
 
 **Risks / regressions to check:** Low. Edits to `styles.css`, `vocab-data.js`, `app/ui.js`, and `app/bootstrap-data.js` landed on top of pre-existing uncommitted working-tree changes in those files — keep that in mind when reviewing the combined diff. Main residual risk is a CSS selector or i18n key referenced via a dynamically-built string, but each removal was grep-confirmed unreferenced and smoke-tested in the browser.
+
+---
+
+### 2026-06-20 14:52 — Homepage lesson emoji icons
+
+**Requested:** Execute the Claude spec in `/Users/mikesexton/Downloads/CLAUDE-CODE-SPEC.md`: replace only the homepage lesson-grid PNG icons with the specified emoji system, leave the in-lesson game picker and asset files alone, add the emoji CSS override, and bump the stylesheet cache-bust query.
+
+**Files changed:**
+- `index.html` — Replaced the six `#homeDashboard .home-lesson-grid` icon `<img>` spans with emoji spans: Translation 🔁, Sentences 🧩, Conjugation 🏃, Abbreviation ✂️, Conjugation+ 🚀, Binyanim 🌳. Left the `.game-tile-title` and `.game-tile-note` content unchanged. Left the in-lesson `#gamePicker` image icons unchanged. Bumped `styles.css?v=20260620f` to `?v=20260620g`.
+- `styles.css` — Added `.game-tile-emoji` with auto dimensions, 42px font size, line-height 1, transparent background, and no border. Placed the rule after the existing responsive `.game-tile-icon` sizing so the emoji dimensions are not overridden by later media queries.
+
+**Behavior changed:** The homepage lesson launcher now shows the requested emoji icons instead of PNG lesson icons. The in-lesson game picker continues to use the existing PNG assets.
+
+**Tests run:** `npm test` — 168/168 pass.
+
+**Risks / regressions to check:** Low. This is a narrow HTML/CSS change. Main visual risk is emoji rendering differences across operating systems/browsers, especially the ✂️ variation selector.
+
+---
+
+### 2026-06-20 15:00 — Center homepage and sentence-game text
+
+**Requested:** Try centering UI text that felt visually better centered, specifically the homepage "Choose Your Lesson" heading and maybe the sentence-game sentences and word counts.
+
+**Files changed:**
+- `styles.css` — Centered `.home-lessons-card .section-head`; changed sentence-builder answer lines from left/right text alignment to centered text while keeping their LTR/RTL direction; centered `.sentence-answer-meta` word count text.
+- `index.html` — Bumped `styles.css` cache query from `?v=20260620g` to `?v=20260620h`.
+- `tests/app-progress.test.js` — Updated the existing sentence-builder CSS assertion to expect centered answer rows and word count text, and added coverage for the centered homepage lesson heading.
+
+**Behavior changed:** The homepage lesson heading is centered above the lesson grid. In the Sentences game, the fill-in sentence row and "Words: N/N" count are now centered instead of being edge-aligned.
+
+**Tests run:** `npm test` — 168/168 pass.
+
+**Risks / regressions to check:** Low. The sentence answer row still preserves `dir="ltr"` / `dir="rtl"`, but centered wrapping may feel less structured for very long sentence prompts on narrow phones; spot-check a few long Sentences rounds.
+
+---
+
+### 2026-06-20 15:12 — Center lesson heading and unify game-start yalla popup
+
+**Requested:** The homepage "Choose Your Lesson" heading still was not visibly centered in the browser. Also standardize the popup speech bubble when beginning games so every game uses the same "yalla" / "יאללה" message.
+
+**Files changed:**
+- `styles.css` — Strengthened the home lesson heading centering with centered `justify-content` plus a full-width, centered `.home-lessons-card .section-head h2`, so it wins over the desktop `.section-head` row rule.
+- `index.html` — Bumped `styles.css` to `?v=20260620i`; changed Sentences, Conjugation, and Abbreviation intro bubble text to `יאללה!`; added a new `#binyanBoardIntro` overlay; bumped cache keys for the edited JS modules.
+- `app/word-match.js` — Added a start intro flow for the homepage Translation and Abbreviation match games, delaying the timer start until the intro clears.
+- `app/binyan-board.js` — Added a start intro flow for Binyanim and delayed its timer start until the intro clears.
+- `app/session.js`, `app/ui.js`, `app/bootstrap-runtime.js`, `app/controller.js` — Registered/cleared/locked the new intro states and overlay so leave/home/navigation behavior stays consistent.
+- `app/sentence-bank.js`, `app/verb-match.js`, `app/adv-conj.js` — Added cleanup for the new Word Match and Binyanim intro states when starting other games.
+- `tests/app-progress.test.js` — Loaded the Word Match modules in the harness, strengthened heading-centering assertions, and added coverage that start intro bubbles use `יאללה!` and that Translation/Abbreviation/Binyanim intro states auto-advance.
+
+**Behavior changed:** The homepage lesson heading should now render centered after reload. All six homepage games now show the same `יאללה!` start bubble before gameplay; Binyanim and the Word Match-based Translation/Abbreviation modes now have the same start-popup behavior as the other modes.
+
+**Tests run:** `npm test` — 169/169 pass. `git diff --check` — pass. Served `http://localhost:8080/index.html` was checked with `curl` and is returning the new CSS/JS cache keys.
+
+**Risks / regressions to check:** Low-to-moderate. The intro state plumbing touches multiple game start/reset paths; tests cover auto-advance and cleanup, but still spot-check quickly in the browser by starting each of the six games from the homepage. If the old left-aligned heading persists, hard-refresh once to clear the previously cached `styles.css` request.
+
+---
+
+### 2026-06-20 15:41 — Center leave warning and compact home/game layouts
+
+**Requested:** Center the leave-game warning text, and safely center the homepage / compact game boxes vertically when there is spare screen space.
+
+**Files changed:**
+- `styles.css` — Turned the app shell/body/page stack into a height-aware grid, scoped vertical auto-centering to `#homeView.active`, preserved start alignment for other routes, and added a Hebrew UI override so the leave confirmation dialog remains centered instead of inheriting the broad RTL right alignment.
+- `index.html` — Bumped the stylesheet cache query from `?v=20260620i` to `?v=20260620j`.
+- `tests/app-progress.test.js` — Added CSS assertions for the safe home-route centering rules and centered Hebrew leave dialog override.
+- `task-log.md` — Added this implementation entry.
+
+**Behavior changed:** The homepage and compact active-game screens can sit vertically centered when the viewport has extra room, while taller screens remain usable without hard-coded offsets. The leave-game confirmation title/body stay centered in Hebrew UI.
+
+**Tests run:** Baseline before changes: `npm test` — 169/169 pass. After changes: `npm test` — 170/170 pass. `git diff --check` — pass. Chrome/Playwright smoke against `http://localhost:8080/index.html` — pass: homepage and desktop Sentence view center delta 0, mobile Sentence view stays inside the shell body, and the Hebrew leave dialog computes `text-align: center` with `direction: rtl`.
+
+**Risks / regressions to check:** Low. The layout change is CSS-only and scoped to the home route, but spot-check a cramped Sentence game and a taller game to confirm the auto-centering collapses cleanly when there is no spare vertical space.

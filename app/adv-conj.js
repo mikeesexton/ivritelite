@@ -286,9 +286,14 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   s.stopVerbMatchTimer?.();
   s.stopLessonTimer?.();
   s.stopAbbreviationTimer?.();
+  s.stopWordMatchTimer?.();
   h.resetAbbreviationState?.();
   s.clearAbbreviationIntro?.();
+  s.clearWordMatchIntro?.();
+  s.clearBinyanBoardIntro?.();
   s.clearSummaryState?.();
+  app.wordMatch?.resetWordMatchState?.();
+  app.binyanBoard?.resetBinyanBoardState?.();
   s.resetAdvConjState?.();
   h.resetSessionScore?.();
   runtime.state.mode = "advConj";

@@ -82,6 +82,7 @@ session.hasActiveLearnSession = session.hasActiveLearnSession || function hasAct
       runtime.state?.advConj?.active ||
       runtime.state?.advConj?.introActive ||
       runtime.state?.binyanBoard?.active ||
+      runtime.state?.binyanBoard?.introActive ||
       runtime.state?.match?.active ||
       runtime.state?.match?.verbIntroActive ||
       runtime.state?.wordMatch?.active ||
@@ -111,7 +112,7 @@ session.isModeSessionActive = session.isModeSessionActive || function isModeSess
     return Boolean(runtime.state?.advConj?.active || runtime.state?.advConj?.introActive);
   }
   if (mode === "binyanBoard") {
-    return Boolean(runtime.state?.binyanBoard?.active);
+    return Boolean(runtime.state?.binyanBoard?.active || runtime.state?.binyanBoard?.introActive);
   }
   return Boolean(
     runtime.state?.lesson?.active ||
@@ -281,7 +282,7 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
     runtime.state.mode = "home";
   }
 
-  if ((runtime.state.mode === "lessonMatch" || runtime.state.mode === "abbrMatch") && !runtime.state.wordMatch?.active) {
+  if ((runtime.state.mode === "lessonMatch" || runtime.state.mode === "abbrMatch") && !runtime.state.wordMatch?.active && !runtime.state.wordMatch?.introActive) {
     runtime.state.mode = "home";
   }
 
@@ -307,6 +308,10 @@ session.restorePendingOverlays = session.restorePendingOverlays || function rest
     h.playAbbreviationIntro?.();
   } else if (runtime.state?.match?.verbIntroActive) {
     h.playVerbMatchIntro?.();
+  } else if (runtime.state?.wordMatch?.introActive) {
+    app.wordMatch?.playWordMatchIntro?.();
+  } else if (runtime.state?.binyanBoard?.introActive) {
+    app.binyanBoard?.playBinyanBoardIntro?.();
   }
 };
 
@@ -331,6 +336,14 @@ session.resumeActiveTimers = session.resumeActiveTimers || function resumeActive
   if (runtime.state?.match?.active && runtime.state.match.startMs && !runtime.state.match.verbIntroActive) {
     runtime.state.match.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.match.startMs) / 1000));
     session.startVerbMatchTimer();
+  }
+  if (runtime.state?.wordMatch?.active && runtime.state.wordMatch.startMs && !runtime.state.wordMatch.introActive) {
+    runtime.state.wordMatch.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.wordMatch.startMs) / 1000));
+    session.startWordMatchTimer();
+  }
+  if (runtime.state?.binyanBoard?.active && runtime.state.binyanBoard.startMs && !runtime.state.binyanBoard.introActive) {
+    runtime.state.binyanBoard.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.binyanBoard.startMs) / 1000));
+    app.binyanBoard?.startBinyanBoardTimer?.();
   }
 
   h.updateUiLockState?.();
@@ -422,7 +435,9 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.clearSentenceBankIntro?.();
   session.clearVerbMatchIntro();
   session.clearAbbreviationIntro();
+  session.clearWordMatchIntro?.();
   session.clearAdvConjIntro();
+  session.clearBinyanBoardIntro?.();
   h.resetSessionCounters?.();
   h.resetSentenceBankState?.();
   h.resetVerbMatchState?.();
@@ -463,7 +478,9 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   session.clearSentenceBankIntro?.();
   session.clearVerbMatchIntro();
   session.clearAbbreviationIntro();
+  session.clearWordMatchIntro?.();
   session.clearAdvConjIntro();
+  session.clearBinyanBoardIntro?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
   runtime.state.currentQuestion = null;
@@ -607,6 +624,16 @@ session.clearAbbreviationIntro = session.clearAbbreviationIntro || function clea
   getHelpers().hideBlockingOverlay?.(runtime.el.abbreviationIntro);
 };
 
+session.clearWordMatchIntro = session.clearWordMatchIntro || function clearWordMatchIntro() {
+  const runtime = getRuntime();
+  const overlay = runtime.state.wordMatch.game === "abbrMatch"
+    ? runtime.el.abbreviationIntro
+    : runtime.el.lessonStartIntro;
+  runtime.state.wordMatch.introActive = false;
+  session.clearIntroAutoAdvance();
+  getHelpers().hideBlockingOverlay?.(overlay);
+};
+
 session.startAbbreviationTimer = session.startAbbreviationTimer || function startAbbreviationTimer() {
   const runtime = getRuntime();
   const h = getHelpers();
@@ -654,6 +681,13 @@ session.clearAdvConjIntro = session.clearAdvConjIntro || function clearAdvConjIn
     runtime.el.advConjIntro.setAttribute("aria-hidden", "true");
   }
   runtime.state.advConj.introActive = false;
+};
+
+session.clearBinyanBoardIntro = session.clearBinyanBoardIntro || function clearBinyanBoardIntro() {
+  const runtime = getRuntime();
+  runtime.state.binyanBoard.introActive = false;
+  session.clearIntroAutoAdvance();
+  getHelpers().hideBlockingOverlay?.(runtime.el.binyanBoardIntro);
 };
 
 session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {

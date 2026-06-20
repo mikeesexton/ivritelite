@@ -42,7 +42,10 @@ ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
       runtime.state?.lesson?.secondChanceIntroActive ||
       runtime.state?.sentenceBank?.introActive ||
       runtime.state?.abbreviation?.introActive ||
+      runtime.state?.advConj?.introActive ||
+      runtime.state?.binyanBoard?.introActive ||
       runtime.state?.match?.verbIntroActive ||
+      runtime.state?.wordMatch?.introActive ||
       runtime.state?.leaveConfirmOpen ||
       runtime.state?.masteredModalOpen
   );

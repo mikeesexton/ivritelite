@@ -500,6 +500,8 @@ globalThis.__appTestExports = {
     path.join(__dirname, "..", "app", "abbreviation.js"),
     path.join(__dirname, "..", "app", "adv-conj.js"),
     path.join(__dirname, "..", "app", "verb-match.js"),
+    path.join(__dirname, "..", "app", "match-engine.js"),
+    path.join(__dirname, "..", "app", "word-match.js"),
     path.join(__dirname, "..", "app", "binyan-board.js"),
     path.join(__dirname, "..", "app", "controller.js"),
   ].forEach((scriptPath) => runScriptInContext(scriptPath, context));
@@ -953,16 +955,70 @@ test("sentence builder rewrites formal notes into short learner-facing tips", ()
   );
 });
 
-test("sentence builder prompt styles keep the prompt centered while answer rows stay language-aligned", () => {
+test("sentence builder prompt styles keep the prompt, answer rows, and count centered", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
+  assert.match(styles, /\.home-lessons-card \.section-head\s*\{[^}]*align-items:\s*center;[^}]*justify-content:\s*center;[^}]*text-align:\s*center;/s);
+  assert.match(styles, /\.home-lessons-card \.section-head h2\s*\{[^}]*width:\s*100%;[^}]*text-align:\s*center;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*justify-content:\s*center;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*text-align:\s*center;/s);
   assert.match(styles, /\.prompt-text\.english-prompt\s*\{[^}]*direction:\s*ltr;[^}]*unicode-bidi:\s*isolate;/s);
   assert.match(styles, /\.prompt-text\.hebrew\s*\{[^}]*font-family:\s*"Assistant",\s*sans-serif;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.sentence-answer-line\.english\s*\{[^}]*text-align:\s*left;/s);
-  assert.match(styles, /\.sentence-answer-line\.hebrew\s*\{[^}]*text-align:\s*right;/s);
+  assert.match(styles, /\.sentence-answer-line\.english\s*\{[^}]*text-align:\s*center;/s);
+  assert.match(styles, /\.sentence-answer-line\.hebrew\s*\{[^}]*text-align:\s*center;/s);
+  assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*text-align:\s*center;/s);
+});
+
+test("game start intro bubbles use the same yalla message", async () => {
+  const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  ["lessonStartIntro", "sentenceBankIntro", "verbMatchIntro", "abbreviationIntro", "advConjIntro", "binyanBoardIntro"].forEach((id) => {
+    assert.match(
+      markup,
+      new RegExp(`id="${id}"[\\s\\S]*?<p class="second-chance-bubble"[^>]*>יאללה!<\\/p>`)
+    );
+  });
+
+  const vocabulary = Array.from({ length: 8 }, (_, index) => ({
+    id: `word-${index + 1}`,
+    category: "core_advanced",
+    en: `word ${index + 1}`,
+    he: `מילה${index + 1}`,
+    heNiqqud: `מִילָה${index + 1}`,
+    utility: 80 - index,
+    source: "test",
+  }));
+  const abbreviations = Array.from({ length: 8 }, (_, index) => ({
+    id: `abbr-${index + 1}`,
+    abbr: `א${index + 1}׳`,
+    expansionHe: `ארוך ${index + 1}`,
+    english: `abbreviation ${index + 1}`,
+  }));
+  const harness = loadAppHarness(vocabulary, abbreviations);
+
+  harness.app.wordMatch.startLessonMatch();
+  assert.equal(harness.state.wordMatch.introActive, true);
+  assert.equal(harness.document.querySelector("#lessonStartIntro").classList.contains("active"), true);
+  await waitForTimers();
+  assert.equal(harness.state.wordMatch.introActive, false);
+  assert.ok(harness.state.wordMatch.startMs > 0);
+  harness.goHome();
+
+  harness.app.wordMatch.startAbbrMatch();
+  assert.equal(harness.state.wordMatch.introActive, true);
+  assert.equal(harness.document.querySelector("#abbreviationIntro").classList.contains("active"), true);
+  await waitForTimers();
+  assert.equal(harness.state.wordMatch.introActive, false);
+  assert.ok(harness.state.wordMatch.startMs > 0);
+  harness.goHome();
+
+  harness.app.binyanBoard.startBinyanBoard();
+  assert.equal(harness.state.binyanBoard.introActive, true);
+  assert.equal(harness.document.querySelector("#binyanBoardIntro").classList.contains("active"), true);
+  await waitForTimers();
+  assert.equal(harness.state.binyanBoard.introActive, false);
+  assert.ok(harness.state.binyanBoard.startMs > 0);
+  harness.goHome();
 });
 
 test("sentence builder gives English prompts explicit LTR prompt styling in Hebrew UI", () => {
@@ -1073,6 +1129,17 @@ test("all viewports share the single-page layout with the bottom nav", () => {
   assert.doesNotMatch(styles, /\.mobile-bottom-nav\s*\{[^}]*display:\s*none/s);
   // On wide screens the bottom nav is centered rather than stretched edge-to-edge.
   assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.mobile-bottom-nav\s*\{[^}]*left:\s*50%;[^}]*transform:\s*translateX\(-50%\);/s);
+});
+
+test("home route uses safe vertical centering and leave warning text stays centered", () => {
+  const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(styles, /\.app-shell\s*\{[^}]*min-height:\s*100dvh;[^}]*grid-template-rows:\s*auto minmax\(0,\s*1fr\);/s);
+  assert.match(styles, /\.shell-body\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*0;/s);
+  assert.match(styles, /\.page-stack\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*100%;[^}]*grid-template-rows:\s*minmax\(0,\s*1fr\);[^}]*align-items:\s*start;/s);
+  assert.match(styles, /#homeView\.active\s*\{[^}]*margin-block:\s*auto;/s);
+  assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.shell-body\s*\{[^}]*display:\s*grid;/s);
+  assert.match(styles, /body\[data-ui-lang="he"\] \.session-leave-dialog\s*\{[^}]*text-align:\s*center;/s);
 });
 
 test("desktop review and settings cards use centered collapsible headers", () => {
