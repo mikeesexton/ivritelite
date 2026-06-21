@@ -1075,6 +1075,24 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
         ui.createCompactRow({
           title: item.primary || item.title || "",
           note: item.secondary || item.note || "",
+          variant: "wrong",
+        })
+      );
+    });
+  }
+
+  const corrects = runtime.state.summary.corrects || [];
+  if (corrects.length) {
+    const correctHeading = global.document.createElement("h3");
+    correctHeading.className = "results-section-title";
+    correctHeading.textContent = translate("results.correctAnswers");
+    mistakesWrap.append(correctHeading);
+    corrects.forEach((item) => {
+      mistakesWrap.append(
+        ui.createCompactRow({
+          title: item.primary || item.title || "",
+          note: item.secondary || item.note || "",
+          variant: "correct",
         })
       );
     });
@@ -1172,9 +1190,14 @@ ui.renderSettingsState = ui.renderSettingsState || function renderSettingsState(
   ui.renderPromptSpeechButton();
 };
 
-ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, note }) {
+ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, note, variant }) {
   const row = global.document.createElement("article");
   row.className = "compact-row";
+  if (variant === "correct") {
+    row.classList.add("compact-row--correct");
+  } else if (variant === "wrong") {
+    row.classList.add("compact-row--wrong");
+  }
 
   const titleNode = global.document.createElement("p");
   titleNode.className = "compact-row-title";

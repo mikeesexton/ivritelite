@@ -688,6 +688,16 @@ body[data-gameplay-active="true"] .home-primary {
   font-size: 0.84rem;
 }
 
+.compact-row--wrong {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+}
+
+.compact-row--correct {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
 .domain-grid,
 .mode-grid {
   display: grid;
@@ -2549,6 +2559,10 @@ body[data-ui-lang="he"] .mastered-row input {
   .results-actions[data-review-button-hidden="true"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .results-mistakes--grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -2558,6 +2572,7 @@ body[data-ui-lang="he"] .mastered-row input {
 
   .app-shell {
     min-height: 100dvh;
+    max-width: 920px;
     padding: 0.72rem 0.72rem calc(5.25rem + env(safe-area-inset-bottom));
     gap: 0.6rem;
   }
@@ -2593,6 +2608,16 @@ body[data-ui-lang="he"] .mastered-row input {
   .page-card {
     padding: 1rem;
     gap: 0.8rem;
+  }
+
+  .settings-card {
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .review-panel-card {
+    max-width: 760px;
+    margin-inline: auto;
   }
 
   .home-lesson-grid,
@@ -2660,6 +2685,9 @@ body[data-ui-lang="he"] .mastered-row input {
     padding: 0.82rem 0.86rem 0.88rem;
     border-radius: 18px;
     gap: 0.28rem;
+    width: 100%;
+    max-width: 680px;
+    margin-inline: auto;
   }
 
   .prompt-label {
@@ -2699,12 +2727,15 @@ body[data-ui-lang="he"] .mastered-row input {
   }
 
   .prompt-text {
-    font-size: clamp(1.16rem, 3.8vw, 1.42rem);
+    font-size: clamp(1.24rem, 3.9vw, 1.54rem);
     line-height: 1.14;
   }
 
   .choices {
     gap: 0.5rem;
+    width: 100%;
+    max-width: 680px;
+    margin-inline: auto;
   }
 
   .choices.match-grid {
@@ -2715,11 +2746,11 @@ body[data-ui-lang="he"] .mastered-row input {
     min-height: 56px;
     padding: 0.72rem 0.82rem;
     border-radius: 16px;
-    font-size: 1rem;
+    font-size: 1.08rem;
   }
 
   .choice-btn.hebrew {
-    font-size: 1.08rem;
+    font-size: 1.16rem;
   }
 
   .match-columns {
@@ -2727,14 +2758,14 @@ body[data-ui-lang="he"] .mastered-row input {
   }
 
   .match-card {
-    min-height: 52px;
-    padding: 0.54rem 0.4rem;
+    min-height: 54px;
+    padding: 0.58rem 0.42rem;
     border-radius: 15px;
-    font-size: clamp(0.9rem, 2.9vw, 1rem);
+    font-size: clamp(1rem, 3vw, 1.12rem);
   }
 
   .match-card.hebrew {
-    font-size: clamp(1rem, 3vw, 1.08rem);
+    font-size: clamp(1.08rem, 3.1vw, 1.2rem);
   }
 
   .lesson-footer {
@@ -2811,7 +2842,31 @@ body[data-ui-lang="he"] .mastered-row input {
   }
 
   .results-metric {
-    padding: 0.72rem 0.54rem;
+    padding: 0.78rem 0.6rem;
+  }
+
+  .results-metric-label {
+    font-size: 0.86rem;
+  }
+
+  .results-metric-value {
+    font-size: 1.24rem;
+  }
+
+  .results-section-title {
+    font-size: 1.18rem;
+  }
+
+  .compact-row {
+    padding: 0.86rem 0.96rem;
+  }
+
+  .compact-row-title {
+    font-size: 1.06rem;
+  }
+
+  .compact-row-note {
+    font-size: 0.9rem;
   }
 }
 

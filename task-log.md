@@ -2334,3 +2334,50 @@ Each entry records what was requested, what changed, what was tested, and what t
 **Tests run:** Baseline before changes: `npm test` — 169/169 pass. After changes: `npm test` — 170/170 pass. `git diff --check` — pass. Chrome/Playwright smoke against `http://localhost:8080/index.html` — pass: homepage and desktop Sentence view center delta 0, mobile Sentence view stays inside the shell body, and the Hebrew leave dialog computes `text-align: center` with `direction: rtl`.
 
 **Risks / regressions to check:** Low. The layout change is CSS-only and scoped to the home route, but spot-check a cramped Sentence game and a taller game to confirm the auto-centering collapses cleanly when there is no spare vertical space.
+
+---
+
+### 2026-06-21 — Show correct answers (green) alongside mistakes (red) on game results
+
+**Requested:** On the final/results screen of the translation game (`lessonMatch`) and the abbreviation game (`abbrMatch`), display both right and wrong answers, colored green and red, with the red (wrong) section on top for easier review. Fumbled-but-eventually-correct pairs should count as **wrong**.
+
+**Approach / judgment calls:**
+- Both active games run through `word-match.js` → `match-engine.js`, so the change lives there + the shared summary renderer. The legacy multiple-choice `"abbreviation"` mode is dead code (no `startAbbreviation`), so it was left untouched.
+- In `finishWordMatch`, the correct list = `ctx.matchedPairIds` (all pairs, since the game ends only when everything is matched) minus `ctx.sessionMistakeIds`. This naturally makes a fumbled-then-matched pair appear only in the red list. Reused the existing `buildMistakes(game, ids)` helper to build both lists (identical row shape `{primary, secondary}`).
+- Rendered both sections inside the existing `.results-mistakes` (grid) container: red "Session Mistakes" heading + rows first, then green "Correct Answers" heading + rows. The green section renders **only when `corrects.length > 0`**, so non-match games (lesson, sentenceBank, verbMatch, advConj, binyanBoard) that pass no `corrects` are unaffected.
+- Colored rows via new `compact-row--wrong` / `compact-row--correct` modifier classes using the existing `--error-bg`/`--success-bg` tokens; `createCompactRow` gained an optional `variant` param.
+
+**Files changed:**
+- `app/word-match.js` — `finishWordMatch` builds `correctIds` (matched minus mistakes) and a `corrects` list, passes `corrects` to `showSessionSummary`.
+- `app/session.js` — `showSessionSummary` stores `summary.corrects`; `clearSummaryState` resets it.
+- `app/bootstrap-runtime.js` — added `corrects: []` to initial `state.summary`.
+- `app/ui.js` — `renderSummaryState` renders the green "Correct Answers" section below the red mistakes section (gated on `corrects.length`); `createCompactRow` accepts `variant` and adds the wrong/correct modifier class; mistakes rows now pass `variant: "wrong"`.
+- `app/bootstrap-data.js` — added `results.correctAnswers` ("Correct Answers" / "תשובות נכונות").
+- `styles.css` — added `.compact-row--wrong` and `.compact-row--correct` color rules.
+
+**Behavior changed:** After finishing the translation or abbreviation match game, the results screen now lists every matched pair — wrong attempts (red) on top under "Session Mistakes", clean answers (green) below under "Correct Answers". Other games' results screens are unchanged.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass (no test covers the results DOM). Live-verified via preview server (dark theme, EN): abbrMatch summary shows 2 red rows then 4 green rows in correct order with correct colors; a lesson-style summary with no `corrects` shows only the mistakes section (no empty green heading), confirming non-match games are unaffected.
+
+**Risks / regressions to check:** (1) Relies on `ctx.matchedPairIds` containing the full set at finish — true because `onAllMatched` fires only when `matchedCount >= totalPairs`. (2) `corrects` is not persisted in the session snapshot, but the summary screen is shown immediately on finish and not restored, so this is moot. (3) The green section is gated purely on `corrects.length`; if a future game starts passing `corrects`, it will render the section too (intended).
+
+---
+
+### 2026-06-21 — Tablet polish + 3-column results lists
+
+**Requested:** On the game results screen, allow up to **three columns** for the correct/incorrect answer lists on wide enough screens. Separately, the **tablet** (iPad) experience looked "stretchy" — improve legibility/visual balance there, not just for this game but app-wide, using a mix of constrained content width (margins) and larger fonts.
+
+**Approach / judgment calls (CSS-only; user chose "targeted high-impact" + "cap width + larger fonts"):**
+- **3-column results (desktop only):** added `.results-mistakes--grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }` inside the existing `@media (min-width: 1024px)` block. The summary renderer already appends every row into the grid container (`app/ui.js renderSummaryState`), so this is pure CSS — no JS change. Tablet and mobile keep 2 columns. Existing section-title `grid-column: 1 / -1` correctly spans all 3 columns.
+- **Tablet content width cap (centered margins):** in the `@media (min-width: 768px) and (max-width: 1023px)` block — capped `.app-shell` to `max-width: 920px` (app-wide centered margins on wider tablets; harmless at ≤768px) and capped the game column (`.prompt-card` and `.choices`) to `max-width: 680px` + `margin-inline: auto`. **Key gotcha:** these are grid items, so `margin-inline: auto` alone collapses them to content width — had to add `width: 100%` so they stretch up to the cap then center. Capped both prompt-card and choices to the same 680px so the prompt header and answer board stay aligned. Also gave `.settings-card` (600px) and `.review-panel-card` (760px) tablet max-widths, mirroring the rules they already had only at desktop.
+- **Tablet font bumps (legibility):** nudged up the conservative tablet sizes — `.prompt-text`, `.choice-btn`/`.choice-btn.hebrew`, `.match-card`/`.match-card.hebrew` (and a slightly taller `.match-card` min-height/padding), plus results-screen text (`.results-section-title`, `.results-metric-label`/`-value`, `.compact-row` title/note). Increases kept small (~5–10%) to avoid wrapping.
+
+**Files changed:**
+- `styles.css` — one rule added to the `min-width:1024px` block (3-col results); several additions/edits inside the `768–1023px` tablet block (app-shell/prompt-card/choices/settings-card/review-panel-card max-widths; font-size bumps for prompt, choice/match cards, and results text).
+- `index.html` — bumped cache-buster `styles.css?v=20260620j` → `?v=20260621a`.
+
+**Behavior changed:** On screens ≥1024px the results-screen correct/incorrect answer lists now render in **3 columns** (was 2). On tablets (768–1023px), gameplay content is centered in a comfortable column with side margins instead of stretching edge-to-edge, the game board and its prompt header are width-aligned, settings/review cards are capped, and key text is a notch larger. Mobile (≤767px) and desktop content widths are otherwise unchanged.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass (no test covers layout/CSS). Live-verified via preview server: desktop 1280×800 results render 3 columns (`grid-template-columns` = 3 tracks, 8 sample correct rows, section titles span full width, no overflow); tablet 768×1024 and 1000×800 — app-shell centers at 920, game board + prompt both 680px and left-aligned at the same offset (44px @768, 160px @1000), no horizontal overflow (`body.scrollWidth` == viewport); results screen at 768 reads well at 2 columns with bumped fonts; Hebrew/RTL keeps the board centered and mirrors topbar/nav correctly; no console errors. Settings-card computed `max-width:600px` confirmed.
+
+**Risks / regressions to check:** (1) The 680px game-column cap applies to all game modes on tablet (verb match, sentence bank, binyan board, conjugation) — spot-checked translation match; other modes share `.prompt-card`/`.choices` so should behave the same but worth a glance. (2) Larger tablet fonts could wrap unusually long bilingual answer rows or long Hebrew prompts — verified no wrapping on sampled content at 768 and 1000px. (3) The app-shell 920 cap also narrows the topbar and bottom nav on wide tablets (intended; they stay aligned with content). (4) `width: 100%` on the grid-item caps is required — removing it would collapse those elements to content width.
