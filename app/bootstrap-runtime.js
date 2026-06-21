@@ -156,6 +156,7 @@ bootstrapRuntime.createInitialState = bootstrapRuntime.createInitialState || fun
       incorrectCount: 0,
       elapsedSeconds: 0,
       mistakes: [],
+      corrects: [],
     },
     lesson: {
       active: false,

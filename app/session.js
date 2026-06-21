@@ -381,6 +381,7 @@ session.clearSummaryState = session.clearSummaryState || function clearSummarySt
   runtime.state.summary.incorrectCount = 0;
   runtime.state.summary.elapsedSeconds = 0;
   runtime.state.summary.mistakes = [];
+  runtime.state.summary.corrects = [];
 };
 
 session.openLeaveSessionConfirm = session.openLeaveSessionConfirm || function openLeaveSessionConfirm(targetRoute = "home") {
@@ -509,6 +510,7 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.summary.incorrectCount = Math.max(0, Number(config.incorrectCount || 0));
   runtime.state.summary.elapsedSeconds = Math.max(0, Number(config.elapsedSeconds || 0));
   runtime.state.summary.mistakes = Array.isArray(config.mistakes) ? config.mistakes : [];
+  runtime.state.summary.corrects = Array.isArray(config.corrects) ? config.corrects : [];
   runtime.state.route = "results";
   h.clearFeedback?.();
   h.renderAll?.();

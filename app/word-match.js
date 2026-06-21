@@ -305,7 +305,11 @@ wordMatch.finishWordMatch = wordMatch.finishWordMatch || function finishWordMatc
   const bestCombo = ctx.bestCombo;
   const mismatchCount = ctx.mismatchCount;
   const elapsed = ctx.elapsedSeconds;
-  const mistakes = buildMistakes(game, ctx.sessionMistakeIds.slice());
+  const mistakeIds = ctx.sessionMistakeIds.slice();
+  const mistakeSet = new Set(mistakeIds);
+  const correctIds = (ctx.matchedPairIds || []).filter((id) => !mistakeSet.has(id));
+  const mistakes = buildMistakes(game, mistakeIds);
+  const corrects = buildMistakes(game, correctIds);
 
   getSession().stopWordMatchTimer?.();
   ctx.active = false;
@@ -322,6 +326,7 @@ wordMatch.finishWordMatch = wordMatch.finishWordMatch || function finishWordMatc
     incorrectCount: mismatchCount,
     elapsedSeconds: elapsed,
     mistakes,
+    corrects,
   });
 };
 })(typeof window !== "undefined" ? window : globalThis);
