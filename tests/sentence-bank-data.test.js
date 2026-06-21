@@ -340,8 +340,8 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
   {
     id: "formal_09",
-    requiredTokens: ["This is", "a complex", "multi-dimensional phenomenon", "that is difficult", "to define simply"],
-    forbiddenTokens: ["This", "is", "a", "complex", "multi-dimensional", "phenomenon", "that", "difficult", "to", "define", "simply"],
+    requiredTokens: ["This is", "a complex", "multi-dimensional", "phenomenon", "that is difficult", "to define", "simply"],
+    forbiddenTokens: ["This", "is", "a", "complex", "that", "difficult", "to", "define"],
   },
 ];
 
@@ -432,6 +432,32 @@ test("sentence bank data compacts low-value English glue into selectable phrase 
   assert.deepEqual(englishTokens("professional_06"), ["We're", "working on it", "right now", "we'll", "update", "when there are", "results"]);
   assert.deepEqual(englishTokens("formal_03"), ["It", "can", "be", "inferred", "from this", "that", "the", "model", "is", "not", "stable", "under", "certain", "conditions"]);
   assert.deepEqual(englishTokens("formal_04"), ["The central question", "is", "how", "to implement", "this", "in practice", "not", "just", "in theory"]);
+});
+
+test("sentence bank data loosens overly broad English chips in reported rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const englishTokens = (id) => Array.from(byId.get(id).english_tokens);
+
+  assert.deepEqual(englishTokens("colloquial_05"), ["He's", "just", "talking", "nonsense", "don't", "take", "him", "seriously"]);
+  assert.deepEqual(englishTokens("everyday_03"), ["I forgot", "to charge", "my phone", "it's", "about to", "die"]);
+  assert.deepEqual(englishTokens("professional_10"), ["It's important", "to meet", "the deadlines", "otherwise", "it", "will delay", "everyone"]);
+  assert.deepEqual(englishTokens("formal_09"), ["This is", "a complex", "multi-dimensional", "phenomenon", "that is difficult", "to define", "simply"]);
+  assert.deepEqual(englishTokens("formal_13"), ["There is", "a", "simpler", "solution", "to", "this", "problem"]);
+  assert.deepEqual(englishTokens("formal_14"), ["There are", "several", "risks", "that need to be", "taken", "into account"]);
+});
+
+test("sentence bank data loosens approved recommendation English chips", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const englishTokens = (id) => Array.from(byId.get(id).english_tokens);
+
+  assert.deepEqual(englishTokens("everyday_10"), ["What", "do you", "want", "to eat", "tonight", "I", "don't", "know", "what", "to cook"]);
+  assert.deepEqual(englishTokens("formal_17"), ["The existence", "of life", "outside", "Earth", "has", "not", "yet", "been proven"]);
+  assert.deepEqual(englishTokens("formal_10"), ["One must", "distinguish", "between", "cause", "and", "effect", "otherwise", "we'll reach", "incorrect", "conclusions"]);
+  assert.deepEqual(englishTokens("everyday_07"), ["Remind", "me", "to send", "the email", "I", "always", "forget"]);
+  assert.deepEqual(englishTokens("everyday_11"), ["We ordered", "pizza", "it", "should", "arrive", "in about", "twenty", "minutes"]);
+  assert.deepEqual(englishTokens("professional_09"), ["We'll send", "an", "updated", "version", "later", "today", "after", "making", "revisions"]);
+  assert.deepEqual(englishTokens("colloquial_13"), ["Wow", "I", "had no idea", "it was", "like that", "Thanks", "for telling", "me"]);
+  assert.deepEqual(englishTokens("professional_05"), ["I", "recommend", "checking", "the data", "again", "there may be", "an error"]);
 });
 
 test("sentence bank data keeps newly audited english entries chunked into natural phrase chips", () => {

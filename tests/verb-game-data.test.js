@@ -190,6 +190,18 @@ test("binyan root data keeps duplicate plain forms distinguishable", () => {
   }
 });
 
+test("צלם binyan glosses keep active, passive, and posing meanings distinct", () => {
+  const root = verbGameData.ROOTS.find((entry) => entry.id === "ts-l-m");
+  assert.ok(root);
+
+  assert.equal(root.core_meaning, "photography / posing");
+  assert.match(root.notes, /צילם = shot\/filmed someone/);
+  assert.equal(root.forms.piel.gloss, "took photos, filmed someone");
+  assert.equal(root.forms.pual.gloss, "was filmed or photographed");
+  assert.equal(root.forms.hitpael.gloss, "posed for a photo, took a selfie");
+  assert.doesNotMatch(root.forms.hitpael.gloss, /\bwas photographed\b/);
+});
+
 test("binyan gloss normalization catches reordered equivalent meanings", () => {
   const binyanBoard = loadBinyanBoard("en");
 
