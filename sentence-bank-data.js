@@ -2937,6 +2937,146 @@ const SENTENCE_BANK = [
       "a method"
     ],
     "notes": "קיימות is the noun 'sustainability'; it is not being used here as a verb form."
+  },
+  {
+    "id": "colloquial_21",
+    "emoji": "🛒",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "כמה זה? נו, תן לי מחיר טוב ואני לוקח שניים.",
+    "english": "How much is this? Come on, give me a good price and I'll take two.",
+    "hebrew_tokens": ["כמה", "זה", "נו", "תן", "לי", "מחיר", "טוב", "ואני", "לוקח", "שניים"],
+    "english_tokens": ["How much", "is this", "Come on", "give", "me", "a good", "price", "and", "I'll take", "two"],
+    "hebrew_distractors": ["יקר", "זול", "מוכר", "אחד", "עכשיו"],
+    "english_distractors": ["That's too expensive", "the cheapest one", "I'll sell", "just one", "right now"],
+    "notes": "נו is an all-purpose nudge — 'come on / well.' Haggling at the שוק (market) is expected, not rude."
+  },
+  {
+    "id": "colloquial_22",
+    "emoji": "🧆",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "חצי מנה בפיתה, עם הכול ובלי חריף בבקשה.",
+    "english": "Half a portion in a pita, with everything and without spicy please.",
+    "hebrew_tokens": ["חצי", "מנה", "בפיתה", "עם", "הכול", "ובלי", "חריף", "בבקשה"],
+    "english_tokens": ["Half", "a portion", "in a pita", "with", "everything", "and without", "spicy", "please"],
+    "hebrew_distractors": ["שלמה", "בלאפה", "חסה", "מתוק", "פלאפל"],
+    "english_distractors": ["A full portion", "in a laffa", "with salad", "extra sauce", "no salt"],
+    "notes": "עם הכול ('with everything') is the standard way to order toppings; חריף = spicy/hot sauce."
+  },
+  {
+    "id": "colloquial_23",
+    "emoji": "🤤",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "האוכל שם היה חבל על הזמן, חייבים לחזור.",
+    "english": "The food there was amazing, we have to go back.",
+    "hebrew_tokens": ["האוכל", "שם", "היה", "חבל", "על", "הזמן", "חייבים", "לחזור"],
+    "english_tokens": ["The food", "there", "was", "amazing", "we", "have to", "go back"],
+    "hebrew_distractors": ["גרוע", "פעם", "אסור", "להישאר", "יקר"],
+    "english_distractors": ["was terrible", "we shouldn't", "stay home", "next time", "too pricey"],
+    "notes": "חבל על הזמן literally means 'a waste of time,' but in slang it's high praise — 'amazing / out of this world.' Tone decides the meaning."
+  },
+  {
+    "id": "colloquial_24",
+    "emoji": "😖",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "השירות במסעדה הזאת היה ממש על הפנים.",
+    "english": "The service at this restaurant was really terrible.",
+    "hebrew_tokens": ["השירות", "במסעדה", "הזאת", "היה", "ממש", "על", "הפנים"],
+    "english_tokens": ["The service", "at", "this restaurant", "was", "really", "terrible"],
+    "hebrew_distractors": ["האוכל", "מצוין", "קצת", "מהיר", "נחמד"],
+    "english_distractors": ["The food", "was excellent", "a little", "quite fast", "very friendly"],
+    "notes": "על הפנים (literally 'on the face') is slang for 'awful / lousy' — used for service, weather, or how you feel."
+  },
+  {
+    "id": "colloquial_25",
+    "emoji": "🍦",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "שוב נפגשנו במקרה? פעם שלישית גלידה!",
+    "english": "We met by chance again? Third time you owe me ice cream!",
+    "hebrew_tokens": ["שוב", "נפגשנו", "במקרה", "פעם", "שלישית", "גלידה"],
+    "english_tokens": ["We met", "by chance", "again", "Third time", "you owe me", "ice cream"],
+    "hebrew_distractors": ["אולי", "בכוונה", "ראשונה", "קפה", "שוקולד"],
+    "english_distractors": ["on purpose", "the first time", "coffee's on you", "by mistake", "tomorrow"],
+    "notes": "פעם שלישית גלידה ('third time, ice cream') is a playful saying — keep bumping into someone and the third time 'earns' a treat. Israel's 'we have to stop meeting like this.'"
+  },
+  {
+    "id": "colloquial_26",
+    "emoji": "🎫",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "לקחתי מספר ואני כבר מחכה שעה בתור.",
+    "english": "I took a number and I've already been waiting an hour in line.",
+    "hebrew_tokens": ["לקחתי", "מספר", "ואני", "כבר", "מחכה", "שעה", "בתור"],
+    "english_tokens": ["I took", "a number", "and I've", "already", "been waiting", "an hour", "in line"],
+    "hebrew_distractors": ["שכחתי", "טופס", "הלכתי", "דקה", "בבית"],
+    "english_distractors": ["I forgot", "a form", "for a minute", "I left", "at the desk"],
+    "notes": "Standing בתור (in line) and taking a מספר (number) is a rite of passage at any Israeli office or clinic. כבר here adds the 'already' impatience."
+  },
+  {
+    "id": "colloquial_27",
+    "emoji": "🏖️",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "בוא נלך לים לפני שיהיה חם מדי.",
+    "english": "Let's go to the beach before it gets too hot.",
+    "hebrew_tokens": ["בוא", "נלך", "לים", "לפני", "שיהיה", "חם", "מדי"],
+    "english_tokens": ["Let's", "go", "to the beach", "before", "it gets", "too", "hot"],
+    "hebrew_distractors": ["נישאר", "לפארק", "אחרי", "קר", "עכשיו"],
+    "english_distractors": ["Let's stay", "to the park", "after", "too cold", "later"],
+    "notes": "ים (literally 'sea') is how Israelis say 'the beach.' בוא נ... ('come, let's...') is the everyday way to suggest doing something."
+  },
+  {
+    "id": "colloquial_28",
+    "emoji": "🚐",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "נהג, אפשר לרדת בתחנה הבאה? תודה.",
+    "english": "Driver, can I get off at the next stop? Thanks.",
+    "hebrew_tokens": ["נהג", "אפשר", "לרדת", "בתחנה", "הבאה", "תודה"],
+    "english_tokens": ["Driver", "can I", "get off", "at the", "next", "stop", "Thanks"],
+    "hebrew_distractors": ["מונית", "לעלות", "הקודמת", "עכשיו", "כסף"],
+    "english_distractors": ["Taxi", "get on", "the previous stop", "right here", "the fare"],
+    "notes": "On a מונית שירות (shared taxi) you call out to the נהג (driver) to be let off; לרדת ('to go down') is how you say to get off a bus or taxi."
+  },
+  {
+    "id": "colloquial_29",
+    "emoji": "😱",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "אין מצב! לא מאמין שהוא באמת אמר את זה.",
+    "english": "No way! I can't believe he really said that.",
+    "hebrew_tokens": ["אין", "מצב", "לא", "מאמין", "שהוא", "באמת", "אמר", "את", "זה"],
+    "english_tokens": ["No", "way", "I can't", "believe", "he", "really", "said", "that"],
+    "hebrew_distractors": ["יש", "ברור", "שמעתי", "אולי", "שתק"],
+    "english_distractors": ["Of course", "I heard that", "maybe", "he asked", "stayed quiet"],
+    "notes": "אין מצב (literally 'there's no situation') means 'no way! / impossible!' — disbelief or flat refusal, depending on tone."
+  },
+  {
+    "id": "colloquial_30",
+    "emoji": "🥹",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "כפרה עליך, לא יודעת מה הייתי עושה בלעדיך.",
+    "english": "You're a lifesaver, I don't know what I'd do without you.",
+    "hebrew_tokens": ["כפרה", "עליך", "לא", "יודעת", "מה", "הייתי", "עושה", "בלעדיך"],
+    "english_tokens": ["You're a lifesaver", "I don't", "know", "what", "I'd", "do", "without you"],
+    "hebrew_distractors": ["איתך", "כן", "חושבת", "איפה", "בלעדיו"],
+    "english_distractors": ["Thank you", "I do", "when", "I can", "with you"],
+    "notes": "כפרה עליך (Mizrahi origin, literally 'atonement upon you') is a deeply affectionate expression of love and gratitude — much warmer than a plain 'sweetheart,' closer to 'you're a lifesaver / I adore you.' On its own, כפרה can be used as a tender 'sweetheart.'"
   }
 ];
 
@@ -2954,6 +3094,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260609a",
+  __build: "20260621a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
