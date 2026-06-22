@@ -7,6 +7,27 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-21 — Sentences game: "Street-Smart Israel" batch (10 new colloquial sentences)
+
+**Requested:** Suggest and add a surprise new batch of sentences to the sentence translation game. User chose the "Street-smart Israel" flavor at 10 sentences (via clarifying question), then gave two rounds of feedback during planning.
+
+**Approach / judgment calls:**
+- Added `colloquial_21`–`colloquial_30`: real cultural moments (shuk haggling 🛒, falafel order 🧆, bureaucracy line 🎫, beach 🏖️, sherut taxi 🚐) and slang idioms (חבל על הזמן, על הפנים, פעם שלישית גלידה, אין מצב, כפרה עליך). Filed under the existing `colloquial` category (UI label "Colloquial & Street") — no new category wiring needed.
+- **User feedback incorporated:** (1) Reworked כפרה עליך away from a flat "sweetheart" — now the full affectionate opener of a heartfelt line, translated "You're a lifesaver," with a note explaining the literal "atonement upon you" origin. (2) Did a pass over all `english_tokens` to break up over-aggressive multi-word blobs so each chip maps roughly to one Hebrew word (e.g. "and I'll take"→"and"+"I'll take", "can I get off"→"can I"+"get off").
+- Pre-checked every entry against the test guardrails: terminal punctuation both sides; English fully segmented into chips (no lexical text left outside tokens); single-word Hebrew chips (avoids the multiword-distractor rule); no standalone mid-sentence "it"; `נו`/`ממש` nuance cues surfaced in the English ("Come on"/"really"); 5 distractors per side. Difficulty spread 1–3.
+
+**Files changed:**
+- `sentence-bank-data.js` — appended 10 entries to `SENTENCE_BANK` (now 80); bumped `__build` → `"20260621a"`.
+- `tests/sentence-bank-data.test.js` — updated the hard-coded count assertion (and test title) from 70 → 80.
+
+**Behavior changed:** 10 new colloquial sentences are now playable in the Sentences translation game (both directions, with emoji prompts). No other game affected.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass. Live-verified via preview after reload: `__build` 20260621a, 80 total entries, all 10 new ids present with sensible token counts; no console errors.
+
+**Risks / regressions to check:** (1) Idiom entries intentionally compress 2–3 Hebrew words into one English chip (חבל על הזמן→"amazing", על הפנים→"terrible", כפרה עליך→"You're a lifesaver") and colloquial_25 adds an English-only "you owe me" expansion — by design for idioms, but worth a play-through to confirm the chip mapping feels fair. (2) Verb gender is fixed feminine in colloquial_30 (יודעת) — matches its distractors; not flagged as gender-ambiguous like colloquial_09.
+
+---
+
 ### 2026-06-21 — Sentences game: per-sentence emoji in the prompt card
 
 **Requested:** Roll out emojis for the Sentences game (the deferred follow-up to the Binyanim emoji work).
