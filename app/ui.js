@@ -161,7 +161,12 @@ ui.setGamePickerVisibility = ui.setGamePickerVisibility || function setGamePicke
 };
 
 ui.setPromptCardVisibility = ui.setPromptCardVisibility || function setPromptCardVisibility(visible) {
-  getRuntime().el?.promptCard?.classList.toggle("hidden", !visible);
+  const runtime = getRuntime();
+  runtime.el?.promptCard?.classList.toggle("hidden", !visible);
+  if (runtime.el?.promptRootEmoji) {
+    runtime.el.promptRootEmoji.textContent = "";
+    runtime.el.promptRootEmoji.classList.add("hidden");
+  }
 };
 
 ui.renderResultsActionsVisibility = ui.renderResultsActionsVisibility || function renderResultsActionsVisibility() {
@@ -1321,49 +1326,32 @@ ui.renderMostMissed = ui.renderMostMissed || function renderMostMissed() {
   runtime.el.mostMissedList.innerHTML = "";
   runtime.el.mostMissedEmpty.classList.toggle("hidden", ranked.length > 0);
 
-  runtime.el.mostMissedList.style.display = "flex";
-  runtime.el.mostMissedList.style.gap = "1.25rem";
-  runtime.el.mostMissedList.style.alignItems = "flex-start";
+  const ol = global.document.createElement("ol");
+  ol.className = "missed-col";
 
-  const half = Math.ceil(ranked.length / 2);
-  const cols = [ranked.slice(0, half), ranked.slice(half)];
+  ranked.forEach((entry) => {
+    const word = wordsById.get(entry.wordId);
+    if (!word) return;
 
-  runtime.el.mostMissedList.style.direction = "ltr";
+    const item = global.document.createElement("li");
+    const line = global.document.createElement("p");
+    line.className = "missed-word";
+    line.setAttribute("dir", "rtl");
+    line.setAttribute("lang", "he");
+    line.textContent = h.getHebrewText?.(word, true) || "";
+    line.title = word.en;
+    item.title = word.en;
 
-  cols.forEach((col, colIdx) => {
-    const ol = global.document.createElement("ol");
-    ol.className = "missed-col";
-    ol.start = colIdx * half + 1;
-    ol.style.flex = "1";
-    ol.style.margin = "0";
-    ol.style.paddingLeft = "1.25rem";
-    ol.style.paddingRight = "0";
+    const meta = global.document.createElement("p");
+    meta.className = "missed-meta";
+    meta.setAttribute("dir", "ltr");
+    meta.textContent = String(entry.missed);
 
-    col.forEach((entry) => {
-      const word = wordsById.get(entry.wordId);
-      if (!word) return;
-
-      const item = global.document.createElement("li");
-      item.style.textAlign = "center";
-      const line = global.document.createElement("p");
-      line.className = "missed-word";
-      line.setAttribute("dir", "rtl");
-      line.setAttribute("lang", "he");
-      line.textContent = h.getHebrewText?.(word, true) || "";
-      line.title = word.en;
-      item.title = word.en;
-
-      const meta = global.document.createElement("p");
-      meta.className = "missed-meta";
-      meta.setAttribute("dir", "ltr");
-      meta.textContent = String(entry.missed);
-
-      item.append(line, meta);
-      ol.append(item);
-    });
-
-    runtime.el.mostMissedList.append(ol);
+    item.append(line, meta);
+    ol.append(item);
   });
+
+  runtime.el.mostMissedList.append(ol);
 };
 
 ui.closeMasteredModal = ui.closeMasteredModal || function closeMasteredModal() {

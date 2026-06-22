@@ -938,6 +938,36 @@ body[data-theme="light"] .progress-strip {
   text-align: center;
 }
 
+.prompt-label-row {
+  display: contents;
+}
+
+.prompt-root-emoji {
+  font-size: 1.6rem;
+  line-height: 1;
+  display: block;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.prompt-card.mode-binyan-board .prompt-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+}
+
+.prompt-card.mode-binyan-board .prompt-root-emoji {
+  margin-inline: 0;
+}
+
+.prompt-card.mode-binyan-board .prompt-label {
+  font-size: 1.3rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+}
+
 .prompt-label {
   margin: 0;
   font-size: 0.82rem;
@@ -1999,9 +2029,15 @@ body[data-theme="light"] .feedback-tray.error .feedback-detail {
 }
 
 .missed-col {
+  margin: 0;
+  padding-left: 1.25rem;
+  column-count: 2;
+  column-gap: 1.5rem;
 }
 
 .missed-col li {
+  text-align: center;
+  break-inside: avoid;
   border-bottom: 1px solid rgba(166, 186, 214, 0.16);
   padding-bottom: 0.46rem;
 }
@@ -2464,12 +2500,15 @@ body[data-ui-lang="he"] .mastered-row input {
     left: 50%;
     right: auto;
     transform: translateX(-50%);
-    width: min(560px, calc(100% - 2rem));
+    width: min(640px, calc(100% - 2rem));
   }
 
   .home-grid {
     grid-template-columns: 1fr;
     align-items: start;
+    max-width: 640px;
+    margin-inline: auto;
+    width: 100%;
   }
 
   .section-head {
@@ -2544,8 +2583,29 @@ body[data-ui-lang="he"] .mastered-row input {
   }
 
   .review-panel-card {
-    max-width: 760px;
+    max-width: 100%;
     margin-inline: auto;
+  }
+
+  .review-panel-content {
+    grid-template-columns: minmax(220px, 280px) 1fr;
+    gap: 1.6rem;
+    align-items: start;
+  }
+
+  .review-panel-content .missed-col {
+    column-count: 1;
+    padding-left: 1.5rem;
+  }
+
+  .review-analytics-card {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .review-analytics-card .domain-grid,
+  .review-analytics-card .mode-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .results-metrics {
@@ -2618,6 +2678,12 @@ body[data-ui-lang="he"] .mastered-row input {
   .review-panel-card {
     max-width: 760px;
     margin-inline: auto;
+  }
+
+  .home-grid {
+    max-width: 640px;
+    margin-inline: auto;
+    width: 100%;
   }
 
   .home-lesson-grid,
@@ -3438,6 +3504,11 @@ body[data-ui-lang="he"] .mastered-row input {
 
 body[data-theme="light"] .binyan-root-tile:hover {
   border-color: rgba(0, 56, 184, 0.4);
+}
+
+.binyan-root-emoji {
+  font-size: 2rem;
+  line-height: 1;
 }
 
 .binyan-root-letters {

@@ -28,6 +28,7 @@ const ROOTS = [
     difficulty: "easy",
     difficulty_reason: "Strong root; all seven slots fillable and semantically transparent. The showcase root.",
     core_meaning: "writing",
+    emoji: "📝",
     forms: {
       paal:    { exists: true, actual_binyan: "paal",    form_vocalized: "כָּתַב",     form_plain: "כתב",    translit: "katav",    gloss: "wrote",                              function: "simple",    voice: "active",  valence: "transitive" },
       nifal:   { exists: true, actual_binyan: "nifal",   form_vocalized: "נִכְתַּב",   form_plain: "נכתב",   translit: "nikhtav",  gloss: "was written",                        function: "passive",   voice: "passive", valence: "intransitive" },
@@ -47,6 +48,7 @@ const ROOTS = [
     difficulty: "easy",
     difficulty_reason: "Strong root, transparent, but with two empty slots (no hif'il/huf'al) — good for teaching that the system has gaps.",
     core_meaning: "learning / teaching",
+    emoji: "📚",
     forms: {
       paal:    { exists: true,  actual_binyan: "paal",    form_vocalized: "לָמַד",      form_plain: "למד",   translit: "lamad",    gloss: "learned, studied",        function: "simple",    voice: "active",  valence: "transitive" },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִלְמַד",    form_plain: "נלמד",  translit: "nilmad",   gloss: "was learned/studied",     function: "passive",   voice: "passive", valence: "intransitive", register: "less common", distractor_eligible: false },
@@ -66,6 +68,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "Clean active/passive/causative/reflexive contrast. Pairs with s-d-r as the NO-metathesis control: first radical ל does not trigger the hitpael swap.",
     core_meaning: "wearing / clothing",
+    emoji: "👕",
     notes: "Deliberate contrast partner to ס־ד־ר and צ־ל־ם: הִתְלַבֵּשׁ shows the plain hitpael with NO metathesis because ל is not a sibilant.",
     forms: {
       paal:    { exists: true,  actual_binyan: "paal",    form_vocalized: "לָבַשׁ",     form_plain: "לבש",   translit: "lavash",   gloss: "wore, put on",            function: "simple",    voice: "active",  valence: "transitive" },
@@ -86,6 +89,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "Strong consonants, but the qal base is effectively absent (carried by pi'el) and the hitpael shows sibilant metathesis.",
     core_meaning: "arranging / order",
+    emoji: "🗂️",
     notes: "Classic hitpael metathesis: first radical ס is a sibilant, so הִתְסַדֵּר → הִסְתַּדֵּר (the ת jumps behind the ס).",
     forms: {
       paal:    { exists: false },
@@ -106,6 +110,7 @@ const ROOTS = [
     difficulty: "hard",
     difficulty_reason: "Only pi'el branch is productive, AND the hitpael shows the emphatic variant of metathesis (ת → ט after צ) — the trickiest spelling rule in the system.",
     core_meaning: "photography / posing",
+    emoji: "📷",
     notes: "Emphatic metathesis: first radical צ both swaps with ת AND hardens it to ט: הִתְצַלֵּם → הִצְטַלֵּם. Keep the meanings distinct: צילם = shot/filmed someone, צולם = was filmed, הצטלם = posed for the camera.",
     forms: {
       paal:    { exists: false },
@@ -125,6 +130,7 @@ const ROOTS = [
     gizra_label: "ע\"ו (חלולים)",
     difficulty: "hard",
     core_meaning: "rising / standing / establishing",
+    emoji: "⬆️",
     difficulty_reason: "Hollow root: the middle ו vanishes in most forms and the pi'el/pu'al/hitpael slots are realized as polel/polal/hitpolel, not the standard templates. Semantically opaque across binyanim.",
     notes: "Two roots wearing a trenchcoat. ק־ו־ם supplies קָם / הֵקִים / הִתְקוֹמֵם. The look-alikes קִיֵּם 'upheld, held (an event)' and הִתְקַיֵּם 'took place, existed' belong to the historically entangled sibling root ק־י־ם and are NOT listed here.",
     forms: {
@@ -146,6 +152,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "Everyday root with a clear pa'al/nif'al contrast plus a semantically shifted hif'il branch.",
     core_meaning: "closing / handing over",
+    emoji: "🔒",
     forms: {
       paal:    { exists: true,  actual_binyan: "paal",    form_vocalized: "סָגַר",     form_plain: "סגר",   translit: "sagar",    gloss: "closed, shut",                  function: "simple",    voice: "active",  valence: "transitive" },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִסְגַּר",  form_plain: "נסגר",  translit: "nisgar",   gloss: "was closed, closed on its own", function: "middle",    voice: "middle",  valence: "intransitive" },
@@ -165,6 +172,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "A familiar final-guttural root with a useful contrast between opening and developing.",
     core_meaning: "opening / developing",
+    emoji: "🔓",
     forms: {
       paal:    { exists: true,  actual_binyan: "paal",    form_vocalized: "פָּתַח",     form_plain: "פתח",   translit: "patach",    gloss: "opened something", function: "simple",    voice: "active",  valence: "transitive" },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִפְתַּח",   form_plain: "נפתח",  translit: "niftach",   gloss: "became open, was opened", function: "middle", voice: "middle", valence: "intransitive" },
@@ -184,6 +192,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "Strong root with a transparent grow/raise/enlarge chain.",
     core_meaning: "growing / raising / enlarging",
+    emoji: "🌱",
     forms: {
       paal:    { exists: true,  actual_binyan: "paal",  form_vocalized: "גָּדַל",     form_plain: "גדל",   translit: "gadal",   gloss: "grew, grew up",        function: "simple",    voice: "active",  valence: "intransitive" },
       nifal:   { exists: false },
@@ -203,6 +212,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "Common root with a useful keep/preserve/remain-preserved contrast.",
     core_meaning: "keeping / preserving",
+    emoji: "🛡️",
     forms: {
       paal:    { exists: true,  actual_binyan: "paal",    form_vocalized: "שָׁמַר",      form_plain: "שמר",   translit: "shamar",   gloss: "guarded, kept",        function: "simple",    voice: "active",  valence: "transitive" },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִשְׁמַר",    form_plain: "נשמר",  translit: "nishmar",  gloss: "was kept, stayed safe", function: "middle",   voice: "middle",  valence: "intransitive" },
@@ -222,6 +232,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "High-value root where nif'al is the ordinary intransitive 'enter' form and hif'il is 'bring in'.",
     core_meaning: "entering / gathering",
+    emoji: "🚪",
     forms: {
       paal:    { exists: false },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִכְנַס",    form_plain: "נכנס",  translit: "nikhnas",  gloss: "entered, went in",        function: "middle",    voice: "middle",  valence: "intransitive" },
@@ -241,6 +252,7 @@ const ROOTS = [
     difficulty: "hard",
     difficulty_reason: "Semantically rich root: payment, completion, and 'worthwhile' meanings separate across branches.",
     core_meaning: "paying / completing",
+    emoji: "💰",
     forms: {
       paal:    { exists: false },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִשְׁלַם",    form_plain: "נשלם",  translit: "nishlam", gloss: "came to an end, was finished", function: "passive", voice: "passive", valence: "intransitive", register: "formal", distractor_eligible: false },
@@ -260,6 +272,7 @@ const ROOTS = [
     difficulty: "hard",
     difficulty_reason: "Emotion and perception split across nif'al, pi'el, hif'il, and hitpa'el.",
     core_meaning: "feeling / exciting",
+    emoji: "💗",
     forms: {
       paal:    { exists: false },
       nifal:   { exists: true,  actual_binyan: "nifal",   form_vocalized: "נִרְגַּשׁ",   form_plain: "נרגש",  translit: "nirgash",  gloss: "was moved, was excited", function: "middle",    voice: "middle",  valence: "intransitive" },
@@ -279,6 +292,7 @@ const ROOTS = [
     difficulty: "medium",
     difficulty_reason: "Compact cooking/ripening root with four common, high-confidence forms.",
     core_meaning: "cooking / ripening",
+    emoji: "🍳",
     forms: {
       paal:    { exists: false },
       nifal:   { exists: false },

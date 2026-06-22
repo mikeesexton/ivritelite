@@ -7,6 +7,158 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-21 — Sentences game: per-sentence emoji in the prompt card
+
+**Requested:** Roll out emojis for the Sentences game (the deferred follow-up to the Binyanim emoji work).
+
+**Approach / judgment calls:**
+- Picked a meaningful emoji for each of the **70** sentences, keyed by id, based on the English text (e.g. colloquial_06 ice-cream → 🍦, everyday_11 pizza → 🍕, professional_03 requirements → 📋, formal_01 implications → ⚖️). Abstract formal sentences use conceptual glyphs (💭, ♻️, 🌌). The full set was reviewed/approved in the plan.
+- **No spoiler risk** (unlike Binyanim): the Sentences game always shows the full prompt sentence; the player only re-orders a word bank, so the emoji is pure decoration in both directions and in review.
+- **Reused the existing prompt-card emoji slot** (`#promptRootEmoji`) rather than renaming it — Sentences mode shows no prompt label, so the `.prompt-label-row` (which is `display: contents` outside Binyanim) lets the emoji render as a centered glyph above the sentence with no new markup or CSS. Cross-mode safety is already handled: `ui.setPromptCardVisibility(true)` clears the slot on every render, and Sentences sets it right after (same clear-then-set pattern as Binyanim).
+- Bulk data edit done via a one-shot Node script (scratchpad) that inserts `"emoji"` after each unique `"id"` line — far more reliable than 70 manual edits; verified the file still parses and has exactly 70 emoji fields.
+
+**Files changed:**
+- `sentence-bank-data.js` — added an `emoji` field to all 70 `SENTENCE_BANK` entries.
+- `app/sentence-bank.js` — `prepareSentenceBankDeck()` normalizes `emoji: String(entry?.emoji || "").trim()`; `buildQuestionFromPair()` carries `emoji: sentence.emoji || ""` onto the question; `renderSentenceBankQuestion()` sets/shows `#promptRootEmoji` (verbatim Binyanim pattern) right after `setPromptCardVisibility`/`renderPromptLabel`.
+- `index.html` — bumped cache-busters for `sentence-bank-data.js` and `app/sentence-bank.js` (→20260621a).
+
+**Behavior changed:** Each Sentences question now shows its emoji centered above the prompt sentence, in both translation directions and in review. No other game's prompt is affected.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass (plus a Node `require` parse check on the edited data file). Live-verified via preview: emoji renders centered above the prompt (📋 professional_03, ⚖️ formal_01) in dark + light; confirmed it does NOT leak when switching to the Translation match game (slot cleared); no console errors; no horizontal scroll; emoji centered.
+
+**Risks / regressions to check:** (1) A few emoji repeat across the 70 (⏰, ⏳, etc.) — acceptable for decoration. (2) A few use VS16 presentation selectors (🪟, 🗓️, 🅿️, ⚖️, ⚠️, ♻️, 🖊️) — render fine in tested browsers; spot-check older Android. (3) Emoji is decorative (`aria-hidden` on the shared span); sentence text remains the accessible content.
+
+---
+
+### 2026-06-21 — Review page: category cards back to 2 columns (2×2) on desktop
+
+**Requested:** The 3-column category grids from the desktop dashboard looked unbalanced (4 domains and 4 modes wrapped as 3 + 1, leaving an orphan card with empty cells). Display the categories in 2×2 grids.
+
+**Files changed:**
+- `styles.css` — in the `@media (min-width: 1024px)` block, `.review-analytics-card .domain-grid` / `.mode-grid` changed from `repeat(3, …)` back to `repeat(2, minmax(0, 1fr))`, so the 4 domain cards and 4 mode cards each form a clean 2×2 block (no orphan).
+- `index.html` — bumped `styles.css?v=20260621f` → `?v=20260621g`.
+
+**Behavior changed:** On desktop the Review category cards are now 2-up (2×2) instead of 3-up. Tablet/mobile were already 2-up and are unchanged.
+
+**Tests run:** `npm test` = 173/173 pass. Live-verified at 1280px (with seeded data): domains and modes each render as 2×2, no orphan cards, balanced against the Most Missed ranking rail; no console errors.
+
+**Risks / regressions to check:** If a category group ever has an odd number of cards, the last one will sit alone in its row (inherent to a 2-col grid) — acceptable and matches the rest of the app's 2-col category layout.
+
+---
+
+### 2026-06-21 — Review page: desktop two-column dashboard
+
+**Requested:** The Review (סקירה) page used vertical/horizontal space poorly on desktop — everything was stacked in a single 760px-wide centered column inside the 1000px shell, leaving ~half the width empty and a long vertical scroll. Redesign for better space use.
+
+**Approach / judgment calls:**
+- On desktop (≥1024px) turned `.review-panel-content` into a two-column dashboard: a compact **Most Missed** ranking rail (`minmax(220px, 280px)`) beside a wider **Category Analytics** area (`1fr`), and widened the panel card from `max-width: 760px` to `100%` (fills the shell) so the page reads as a dashboard, not a phone column.
+- Bumped the analytics card grids (`.domain-grid` / `.mode-grid`) from 2 to **3 columns** on desktop, and dropped the analytics section's `border-top`/`padding-top` (the divider only made sense when the two sections were stacked).
+- **Most Missed list refactor:** it was rendered as two hardcoded `<ol>` columns with inline flex styles (JS-driven), which couldn't reflow into the narrow desktop rail. Refactored `ui.renderMostMissed` to emit a single `<ol class="missed-col">` and moved column control to CSS: `.missed-col { column-count: 2 }` by default (preserves the existing 2-column look on mobile/tablet, with correct continuous 1..n numbering via CSS multicol), overridden to `column-count: 1` in the desktop rail so it reads as a clean vertical ranking. Moved the formerly-inline `text-align`/margins/padding into `.missed-col` / `.missed-col li` and added `break-inside: avoid`.
+- Tablet (768–1023px) and mobile are unchanged — the dashboard grid only applies at ≥1024px.
+
+**Files changed:**
+- `app/ui.js` — `renderMostMissed` now builds one `<ol>` (removed the two-column split and all inline styling).
+- `styles.css` — `.missed-col` gains column/list styling; new desktop rules: `.review-panel-card` max-width 100%, `.review-panel-content` two-column grid, `.review-panel-content .missed-col` single column, analytics border removed, `.domain-grid`/`.mode-grid` 3 columns.
+- `index.html` — bumped `styles.css` (→20260621f) and `app/ui.js` (→20260621b) cache-busters.
+
+**Behavior changed:** On desktop the Review page is now a side-by-side dashboard (Most Missed ranking + 3-column Category Analytics) filling the shell width with far less vertical scroll. Tablet/mobile layouts are visually identical to before.
+
+**Tests run:** `npm test` = 173/173 pass. Live-verified via preview at 1280px (seeded sample miss data to populate the ranking + analytics rings), 768px, and 375px: desktop two-column dashboard balanced and full-width; tablet/mobile keep the stacked 2-column layout with correct 1..n numbering; empty state ("no misses") renders in the rail; no console errors.
+
+**Risks / regressions to check:** (1) Relies on CSS multicolumn for the missed list — numbering and `break-inside: avoid` behave in tested browsers; spot-check older engines. (2) In RTL the Most Missed rail sits on the right and Analytics on the left (natural for Hebrew); in LTR it mirrors — both intentional. (3) Widening the panel to full shell width is specific to this dense page; the home/games narrowing is unaffected.
+
+---
+
+### 2026-06-21 — Binyanim: inline emoji + binyan name on guessing prompt, larger name
+
+**Requested:** During Binyanim gameplay (the answer-guessing screen), show the root emoji *inline* with the binyan name identifier (e.g. הֻפְעַל) instead of stacked above it, and increase the font size of that name.
+
+**Approach / judgment calls:**
+- Wrapped the existing `#promptRootEmoji` span and `#promptLabel` (the binyan name) in a new `.prompt-label-row` div. The row defaults to `display: contents` — so for every non-binyan mode the two elements behave exactly as before (separate grid children of `.prompt-card`, emoji hidden), avoiding any empty-row gap. Only `.prompt-card.mode-binyan-board .prompt-label-row` flips to `display: flex` (centered, `gap: 0.45rem`), putting the emoji and binyan name on one line.
+- Bumped the binyan name font via `.prompt-card.mode-binyan-board .prompt-label` (0.82rem → 1.3rem, dropped the uppercase/letter-spacing that only made sense for Latin labels, color → `--ink`). Scoped to binyan so the shared `.prompt-label` (also used for a sentence-bank error title) is untouched.
+
+**Files changed:**
+- `index.html` — wrapped `#promptRootEmoji` + `#promptLabel` in `<div class="prompt-label-row">`; bumped `styles.css?v=20260621d` → `?v=20260621e`.
+- `styles.css` — added `.prompt-label-row { display: contents }`, the `mode-binyan-board` flex override, and the larger binyan-name rule.
+
+**Behavior changed:** On the Binyanim guessing screen the root emoji now sits on the same line as the (now larger) binyan name, with the conjugated form below. No change to the selection cards or to any other game's prompt.
+
+**Tests run:** `npm test` = 173/173 pass. Live-verified via preview: emoji + name inline and vertically centered (measured same center-Y), name font 20.8px; confirmed unchanged Translation prompt (row collapses via `display:contents`, no gap, no leaked emoji); dark + light, mobile + desktop; no console errors.
+
+**Risks / regressions to check:** Relies on `display: contents` (well-supported in modern browsers; the app already uses modern CSS). If a future layout needs the wrapper to be a real box outside binyan, revisit.
+
+---
+
+### 2026-06-21 — Binyanim: per-root emoji on selection cards and guessing prompt
+
+**Requested:** Pick a meaningful emoji for each binyanim root and show it (1) on the root-selection card and (2) "as neatly as you can" in the prompt box while guessing the forms. Also assess (but do not build this round) whether per-sentence emoji is tractable for the Sentences game.
+
+**Approach / judgment calls:**
+- The root emoji reflects each root's *core meaning* — the theme shared by all of its binyanim — so it is a thematic cue, not a spoiler: answer options and most distractors are glosses pulled from sibling forms of the same root, which all share that theme. Confirmed visually (e.g. ש־ל־ם 💰 with options "was paid / came to an end / paid off / completed").
+- Picked 14 distinct emoji; 🔒/🔓 deliberately pair the close/open roots; none collide with the home-screen game-tile emoji.
+- **Prompt-box placement:** added a dedicated, isolated `#promptRootEmoji` span inside `.prompt-card` (above the binyan-name label) rather than mixing the emoji into the RTL Hebrew label/form text. It renders as a small (1.6rem), centered glyph; the Hebrew form stays the focal point.
+- **Leak prevention (key fix):** other games (e.g. Translation match) don't route through `ui.renderPromptText`, so an initial attempt to clear the emoji there leaked the binyan emoji into the match game's prompt header. Reworked to clear `#promptRootEmoji` inside `ui.setPromptCardVisibility()` — the single chokepoint every mode calls when showing/hiding the prompt card (verified: all 7 modes call it). Binyan re-sets the emoji immediately after its own `setPromptCardVisibility(true)` call, so only binyan rounds show it.
+
+**Files changed:**
+- `verb-game-data.js` — added an `emoji` field to each of the 14 `ROOTS` entries (next to `core_meaning`).
+- `app/binyan-board.js` — carry `emoji` through deck normalization (`emoji: root.emoji || ""`) and onto the question object (`buildBinyanBoardQuestion`); append a `.binyan-root-emoji` span to each selection tile in `renderBoardTiles()`; set/show `#promptRootEmoji` in `renderRoundQuestion()`.
+- `index.html` — added `<span id="promptRootEmoji" class="prompt-root-emoji hidden" aria-hidden="true">` in `.prompt-card`; bumped cache-busters for `styles.css` (→20260621d), `verb-game-data.js`, `bootstrap-runtime.js`, `ui.js`, `binyan-board.js` (→20260621a).
+- `app/bootstrap-runtime.js` — registered `promptRootEmoji` in the runtime element map.
+- `app/ui.js` — `setPromptCardVisibility()` now clears/hides `#promptRootEmoji` (the universal reset point).
+- `styles.css` — `.binyan-root-emoji { font-size: 2rem }` and `.prompt-root-emoji { font-size: 1.6rem; centered }`.
+
+**Behavior changed:** Each Binyanim selection card now shows a thematic emoji above the root letters; after picking a root, that emoji appears centered above the form in the guessing prompt. No emoji appears in any other game's prompt box. Sentences game unchanged.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass. Live-verified via preview server: selection-card emoji (correct mapping, all 14) and guessing-prompt emoji confirmed on desktop/tablet/mobile, dark + light themes; confirmed the emoji does NOT leak into the Translation match prompt; no console errors; no horizontal scroll on mobile.
+
+**Sentences game — feasibility (assessed, deferred per request):** Tractable. 70 sentences in `sentence-bank-data.js` (flat objects), ~85% concrete/depictable. Prompt renders via `ui.renderPromptText()` → `runtime.el.promptText`. Recommended future approach: add an optional `emoji` field per sentence, carry it onto the question, and reuse the same prompt-card emoji slot (rename `#promptRootEmoji` → generic `#promptEmoji`). Effort is mostly the ~70 manual emoji picks, not code. Not implemented this round.
+
+**Risks / regressions to check:** (1) The emoji-clear lives in `setPromptCardVisibility` — if a future game shows the prompt card without calling it, a stale binyan emoji could persist; all current modes call it. (2) `⬆️`, `🗂️`, `🛡️`, `🔓`, `🔒` are presentation-emoji with VS16 selectors — render fine in tested browsers but check older Android. (3) Emoji are decorative (`aria-hidden`); root meaning remains available to screen readers via the existing meaning text.
+
+---
+
+### 2026-06-21 — Narrow homepage width on tablet
+
+**Requested:** After narrowing game width on tablet in the prior session, do a similar pass on the homepage so it feels more optimized/balanced and less stretchy.
+
+**Approach / judgment calls:**
+- The homepage lesson launcher (`.home-grid` / `#homeDashboard`) had no width cap, so on tablet it stretched to the full shell width (~745px at 768px viewport), giving each of the six game tiles ~231px and an over-wide feel.
+- Added a single rule in the existing `768–1023px` media query capping `.home-grid` at `max-width: 640px` and centering it (`margin-inline: auto`), mirroring how the games narrowed their content (prompt-card 680px, settings card 600px). Tiles now land at ~190px — squarer and more balanced.
+- No HTML structure or JS changes; CSS-only. Cap sits within the existing 920px shell cap so it stays centered through the whole tablet range (verified at 768px and 1010px).
+
+**Files changed:**
+- `styles.css` — added `.home-grid { max-width: 640px; margin-inline: auto; width: 100%; }` inside the `@media (min-width: 768px) and (max-width: 1023px)` block.
+- `index.html` — bumped `styles.css?v=20260621a` → `?v=20260621b` for cache-busting.
+
+**Behavior changed:** On tablet (768–1023px), the "Choose Your Lesson" card no longer stretches edge-to-edge; it is capped at 640px and centered, with tighter, more balanced game tiles. Phone and desktop layouts unchanged.
+
+**Tests run:** `npm test` = 173/173 pass. Live-verified via preview server at 768×1024 and 1010×1024 (HE/RTL): card centered, six tiles in 3 columns, no horizontal scroll, bottom nav unaffected.
+
+**Risks / regressions to check:** Cap only applies in the tablet breakpoint; desktop (≥1024px) and phone (≤767px) are untouched. The lesson stage that replaces the dashboard during gameplay is a sibling (`.home-lesson-stage`), not inside `.home-grid`, so it is unaffected by this cap.
+
+---
+
+### 2026-06-21 — Desktop: enlarge bottom nav, shrink lesson card to match tablet
+
+**Requested:** On desktop the bottom nav bar was much smaller than on tablet, while the "Choose Your Lesson" card felt bulky/over-wide. Make the desktop bottom bar bigger and shrink the lesson card so both feel visually consistent with the tablet layout.
+
+**Approach / judgment calls:**
+- On desktop (`≥1024px`) `.home-grid` had no width cap, so the lesson card filled the full 1000px shell (~960px), giving wide tiles; the bottom nav was only `min(560px, …)`. The two read as mismatched widths.
+- Capped `.home-grid` at `max-width: 640px` centered (matching the tablet cap from the prior entry) and widened `.mobile-bottom-nav` from `560px` to `640px`. Both now measure exactly 640px and share the same centered left edge (verified: grid and nav both `left:320, width:640` at a 1280px viewport), so the card and bottom bar line up.
+- CSS-only; no HTML structure or JS changes.
+
+**Files changed:**
+- `styles.css` — in the `@media (min-width: 1024px)` block: `.mobile-bottom-nav` width `min(560px…)` → `min(640px…)`; `.home-grid` gained `max-width: 640px; margin-inline: auto; width: 100%`.
+- `index.html` — bumped `styles.css?v=20260621b` → `?v=20260621c`.
+
+**Behavior changed:** On desktop the lesson launcher is now capped at 640px (tighter, tablet-consistent tiles) and the bottom nav is 640px wide; the two align vertically. Tablet and phone layouts unchanged.
+
+**Tests run:** `npm test` = 173/173 pass (CSS-only; no test touches these). Live-verified via preview server at 1280×820 (HE/RTL): card and bottom nav both 640px, centered and aligned, six tiles in 3 columns, no console errors.
+
+**Risks / regressions to check:** The 640px nav cap still uses `min(…, calc(100% - 2rem))`, so it shrinks gracefully on narrower desktop windows. Topbar/shell remain at the 1000px cap by design (only the dashboard card and bottom nav were narrowed).
+
+---
+
 ### 2026-06-19 — Homepage redesign: minimal icon-grid game launcher
 
 **Requested:** The home screen felt crowded (six tall, full-width game tiles stacked in one column, each with an icon + title + description line). Redesign it — drop the always-visible descriptions, move to a grid, and optimize/beautify for desktop, tablet, and mobile. After showing three mockups, the user chose the **"Icon grid (minimal)"** direction: centered cards with an enlarged icon on top, game name beneath, quiet card with an accent border on hover/focus; responsive 2-col phone / 3-col tablet+desktop; no visible descriptions.
