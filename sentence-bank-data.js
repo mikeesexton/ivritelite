@@ -4,6 +4,7 @@
 const SENTENCE_BANK = [
   {
     "id": "colloquial_01",
+    "emoji": "📵",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -44,6 +45,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_02",
+    "emoji": "😮‍💨",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -88,6 +90,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_03",
+    "emoji": "🤯",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -129,6 +132,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_04",
+    "emoji": "🏃",
     "category": "colloquial",
     "style": null,
     "difficulty": 1,
@@ -169,6 +173,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_05",
+    "emoji": "🙄",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -214,6 +219,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_06",
+    "emoji": "🍦",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -254,6 +260,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_07",
+    "emoji": "🤨",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -295,6 +302,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_08",
+    "emoji": "🙅",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -335,6 +343,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_09",
+    "emoji": "😒",
     "category": "colloquial",
     "style": null,
     "difficulty": 3,
@@ -394,6 +403,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_10",
+    "emoji": "⏰",
     "category": "colloquial",
     "style": null,
     "difficulty": 1,
@@ -427,6 +437,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_11",
+    "emoji": "🔑",
     "category": "colloquial",
     "style": null,
     "difficulty": 1,
@@ -464,6 +475,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_12",
+    "emoji": "🪟",
     "category": "colloquial",
     "style": null,
     "difficulty": 1,
@@ -501,6 +513,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_13",
+    "emoji": "😮",
     "category": "colloquial",
     "style": null,
     "difficulty": 1,
@@ -547,6 +560,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_14",
+    "emoji": "👌",
     "category": "colloquial",
     "style": null,
     "difficulty": 1,
@@ -582,6 +596,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_15",
+    "emoji": "🎉",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -624,6 +639,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_16",
+    "emoji": "🤷",
     "category": "colloquial",
     "style": null,
     "difficulty": 2,
@@ -666,6 +682,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_17",
+    "emoji": "😟",
     "category": "colloquial",
     "style": "whatsapp",
     "difficulty": 1,
@@ -703,6 +720,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_18",
+    "emoji": "🗓️",
     "category": "colloquial",
     "style": "whatsapp",
     "difficulty": 1,
@@ -736,6 +754,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_19",
+    "emoji": "📩",
     "category": "colloquial",
     "style": "whatsapp",
     "difficulty": 1,
@@ -776,6 +795,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "colloquial_20",
+    "emoji": "✋",
     "category": "colloquial",
     "style": "whatsapp",
     "difficulty": 1,
@@ -815,6 +835,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_01",
+    "emoji": "🛒",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -853,6 +874,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_02",
+    "emoji": "🍽️",
     "category": "everyday",
     "style": null,
     "difficulty": 2,
@@ -892,6 +914,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_03",
+    "emoji": "🪫",
     "category": "everyday",
     "style": null,
     "difficulty": 2,
@@ -933,6 +956,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_04",
+    "emoji": "🖊️",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -976,6 +1000,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_05",
+    "emoji": "🚉",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1012,6 +1037,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_06",
+    "emoji": "⏱️",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1049,6 +1075,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_07",
+    "emoji": "📧",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1093,6 +1120,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_08",
+    "emoji": "🗺️",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1139,6 +1167,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_09",
+    "emoji": "🧾",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1174,6 +1203,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_10",
+    "emoji": "🍲",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1226,6 +1256,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_11",
+    "emoji": "🍕",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1272,6 +1303,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_12",
+    "emoji": "🚌",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1309,6 +1341,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_13",
+    "emoji": "🅿️",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1347,6 +1380,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_14",
+    "emoji": "🚕",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1383,6 +1417,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_15",
+    "emoji": "🧺",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1423,6 +1458,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_16",
+    "emoji": "📺",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1459,6 +1495,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_17",
+    "emoji": "🧼",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1495,6 +1532,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_18",
+    "emoji": "⏳",
     "category": "everyday",
     "style": null,
     "difficulty": 2,
@@ -1537,6 +1575,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_19",
+    "emoji": "🔉",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1574,6 +1613,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_20",
+    "emoji": "💬",
     "category": "everyday",
     "style": null,
     "difficulty": 1,
@@ -1607,6 +1647,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "everyday_21",
+    "emoji": "📱",
     "category": "everyday",
     "style": null,
     "difficulty": 2,
@@ -1668,6 +1709,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_01",
+    "emoji": "📄",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1709,6 +1751,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_02",
+    "emoji": "📅",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1752,6 +1795,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_03",
+    "emoji": "📋",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1792,6 +1836,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_04",
+    "emoji": "📊",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1835,6 +1880,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_05",
+    "emoji": "🔍",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1879,6 +1925,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_06",
+    "emoji": "⚙️",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1921,6 +1968,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_07",
+    "emoji": "✅",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -1960,6 +2008,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_08",
+    "emoji": "❓",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -2001,6 +2050,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_09",
+    "emoji": "📤",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -2049,6 +2099,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "professional_10",
+    "emoji": "📆",
     "category": "professional",
     "style": null,
     "difficulty": 2,
@@ -2094,6 +2145,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_01",
+    "emoji": "⚖️",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2133,6 +2185,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_02",
+    "emoji": "📈",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2171,6 +2224,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_03",
+    "emoji": "🧮",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2221,6 +2275,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_04",
+    "emoji": "🛠️",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2267,6 +2322,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_05",
+    "emoji": "🔀",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2307,6 +2363,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_06",
+    "emoji": "💭",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2349,6 +2406,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_07",
+    "emoji": "🔎",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2388,6 +2446,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_08",
+    "emoji": "🧪",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2425,6 +2484,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_09",
+    "emoji": "🌀",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2466,6 +2526,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_10",
+    "emoji": "🔗",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2516,6 +2577,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_11",
+    "emoji": "🌇",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2552,6 +2614,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_12",
+    "emoji": "💻",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2589,6 +2652,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_13",
+    "emoji": "💡",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2632,6 +2696,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_14",
+    "emoji": "⚠️",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2671,6 +2736,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_15",
+    "emoji": "🤝",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2706,6 +2772,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_16",
+    "emoji": "♻️",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2742,6 +2809,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_17",
+    "emoji": "👽",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2788,6 +2856,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_18",
+    "emoji": "🌌",
     "category": "formal",
     "style": null,
     "difficulty": 3,
@@ -2829,6 +2898,7 @@ const SENTENCE_BANK = [
   },
   {
     "id": "formal_19",
+    "emoji": "🌍",
     "category": "formal",
     "style": null,
     "difficulty": 3,

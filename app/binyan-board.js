@@ -218,6 +218,7 @@ binyanBoard.buildBinyanBoardDeck = binyanBoard.buildBinyanBoardDeck || function 
       id: root.id,
       root: root.root,
       coreMeaning: root.core_meaning || "",
+      emoji: root.emoji || "",
       difficulty: root.difficulty || "",
       forms,
       cleared: false,
@@ -267,6 +268,7 @@ binyanBoard.buildBinyanBoardQuestion = binyanBoard.buildBinyanBoardQuestion || f
 
   return {
     rootId: rootEntry.id,
+    emoji: rootEntry.emoji || "",
     formId: form.formId,
     slot: form.slot,
     binyanNameHe: form.binyanNameHe,
@@ -588,6 +590,14 @@ binyanBoard.renderBoardTiles = binyanBoard.renderBoardTiles || function renderBo
     tile.classList.toggle("is-cleared", root.cleared);
     tile.disabled = root.cleared;
 
+    if (root.emoji) {
+      const emoji = global.document.createElement("span");
+      emoji.className = "binyan-root-emoji";
+      emoji.setAttribute("aria-hidden", "true");
+      emoji.textContent = root.emoji;
+      tile.appendChild(emoji);
+    }
+
     const rootText = global.document.createElement("span");
     rootText.className = "binyan-root-letters hebrew";
     rootText.dir = "rtl";
@@ -619,6 +629,10 @@ binyanBoard.renderRoundQuestion = binyanBoard.renderRoundQuestion || function re
   h.setPromptCardVisibility?.(true);
   runtime.el.choiceContainer.classList.remove("binyan-board-grid");
 
+  if (runtime.el.promptRootEmoji) {
+    runtime.el.promptRootEmoji.textContent = question.emoji || "";
+    runtime.el.promptRootEmoji.classList.toggle("hidden", !question.emoji);
+  }
   app.ui?.renderPromptLabel?.(question.binyanNameHe, true);
   if (runtime.el.promptText) {
     runtime.el.promptText.textContent = question.formVocalized;

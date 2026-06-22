@@ -51,6 +51,7 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     lessonTitleRow: document.querySelector("#lessonTitleRow"),
     modeTitle: document.querySelector("#modeTitle"),
     promptCard: document.querySelector(".prompt-card"),
+    promptRootEmoji: document.querySelector("#promptRootEmoji"),
     promptLabel: document.querySelector("#promptLabel"),
     promptHint: document.querySelector("#promptHint"),
     promptFunctionHint: document.querySelector("#promptFunctionHint"),

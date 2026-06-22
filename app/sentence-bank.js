@@ -776,6 +776,7 @@ function buildQuestionFromPair(pair, options = {}) {
 
   return {
     sentence: { ...sentence },
+    emoji: sentence.emoji || "",
     direction,
     questionKey: buildSentenceProgressKey(sentence.id, direction),
     promptLabel: translate(
@@ -918,6 +919,7 @@ sentenceBank.prepareSentenceBankDeck = sentenceBank.prepareSentenceBankDeck || f
       category: String(entry?.category || "general").trim() || "general",
       style: entry?.style == null ? "" : String(entry.style).trim(),
       difficulty: clampDifficulty(entry?.difficulty),
+      emoji: String(entry?.emoji || "").trim(),
       english,
       hebrew,
       englishTokens,
@@ -1207,6 +1209,10 @@ sentenceBank.renderSentenceBankQuestion = sentenceBank.renderSentenceBankQuestio
   if (!question) return;
 
   app.ui?.renderPromptLabel?.("", false);
+  if (runtime.el?.promptRootEmoji) {
+    runtime.el.promptRootEmoji.textContent = question.emoji || "";
+    runtime.el.promptRootEmoji.classList.toggle("hidden", !question.emoji);
+  }
   h.renderPromptText?.(question);
   sentenceBank.renderSentenceBankBoard(question);
   h.renderPromptHint?.();
