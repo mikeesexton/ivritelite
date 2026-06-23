@@ -59,15 +59,34 @@ data.buildAbbreviationMistakeSummary = data.buildAbbreviationMistakeSummary || f
 };
 
 data.buildVerbMatchMistakeSummary = data.buildVerbMatchMistakeSummary || function buildVerbMatchMistakeSummary() {
+  const runtime = getRuntime();
   const helpers = getHelpers();
   const lookup = new Map(data.getAllVocabulary().map((word) => [word.id, word]));
-  return getRuntime().state.match.sessionMistakeIds
-    .map((wordId) => lookup.get(wordId))
-    .filter(Boolean)
-    .map((word) => ({
-      primary: helpers.getHebrewText?.(word, true) || "",
-      secondary: word.en,
-    }));
+  const maxForms = runtime.constants?.VERB_MATCH_MISTAKE_MAX_FORMS || 6;
+  const groups = new Map();
+
+  (runtime.state.match.sessionMistakeForms || []).forEach((form) => {
+    const primary = form.valueNiqqud || form.valuePlain || "";
+    if (!primary) return;
+    const wordId = form.wordId || "";
+    if (!groups.has(wordId)) {
+      const word = lookup.get(wordId);
+      groups.set(wordId, {
+        primary: (word && helpers.getHebrewText?.(word, true)) || "",
+        secondary: word?.en || "",
+        forms: [],
+        overflow: 0,
+      });
+    }
+    const group = groups.get(wordId);
+    if (group.forms.length < maxForms) {
+      group.forms.push({ primary, secondary: form.englishText || "" });
+    } else {
+      group.overflow += 1;
+    }
+  });
+
+  return Array.from(groups.values()).filter((group) => group.forms.length);
 };
 
 data.calculateDomainStats = data.calculateDomainStats || function calculateDomainStats() {

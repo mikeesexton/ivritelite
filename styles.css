@@ -698,6 +698,67 @@ body[data-gameplay-active="true"] .home-primary {
   border-color: var(--success-border);
 }
 
+.verb-mistake-group {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.78rem 0.88rem;
+  border-radius: 14px;
+  border: 1px solid var(--error-border);
+  background: var(--error-bg);
+}
+
+.verb-mistake-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.verb-mistake-verb {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.verb-mistake-gloss {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.84rem;
+  text-align: right;
+}
+
+.verb-mistake-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.4rem;
+}
+
+.verb-mistake-form {
+  display: grid;
+  gap: 0.05rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 10px;
+  background: var(--surface-bg);
+  border: 1px solid var(--line);
+}
+
+.verb-mistake-form-he {
+  margin: 0;
+  font-weight: 600;
+}
+
+.verb-mistake-form-en {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.verb-mistake-more {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
 .domain-grid,
 .mode-grid {
   display: grid;

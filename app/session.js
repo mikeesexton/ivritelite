@@ -274,6 +274,7 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       eligibleMasterWordId: String(snapshot.match.eligibleMasterWordId || ""),
       mismatchCount: Math.max(0, Number(snapshot.match.mismatchCount || 0)),
       sessionMistakeIds: Array.isArray(snapshot.match.sessionMistakeIds) ? snapshot.match.sessionMistakeIds : [],
+      sessionMistakeForms: Array.isArray(snapshot.match.sessionMistakeForms) ? snapshot.match.sessionMistakeForms : [],
       timerId: null,
     });
   }

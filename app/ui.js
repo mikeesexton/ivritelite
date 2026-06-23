@@ -1076,6 +1076,10 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
     mistakesWrap.append(empty);
   } else {
     runtime.state.summary.mistakes.forEach((item) => {
+      if (Array.isArray(item.forms)) {
+        mistakesWrap.append(ui.createVerbMistakeGroup(item));
+        return;
+      }
       mistakesWrap.append(
         ui.createCompactRow({
           title: item.primary || item.title || "",
@@ -1214,6 +1218,53 @@ ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, 
 
   row.append(titleNode, noteNode);
   return row;
+};
+
+ui.createVerbMistakeGroup = ui.createVerbMistakeGroup || function createVerbMistakeGroup(group) {
+  const card = global.document.createElement("article");
+  card.className = "verb-mistake-group compact-row--wrong";
+
+  const head = global.document.createElement("div");
+  head.className = "verb-mistake-head";
+
+  const verb = global.document.createElement("p");
+  verb.className = "verb-mistake-verb hebrew";
+  verb.textContent = group.primary || "";
+
+  const gloss = global.document.createElement("p");
+  gloss.className = "verb-mistake-gloss";
+  gloss.textContent = group.secondary || "";
+
+  head.append(verb, gloss);
+  card.append(head);
+
+  const forms = global.document.createElement("div");
+  forms.className = "verb-mistake-forms";
+  (group.forms || []).forEach((form) => {
+    const cell = global.document.createElement("div");
+    cell.className = "verb-mistake-form";
+
+    const he = global.document.createElement("p");
+    he.className = "verb-mistake-form-he hebrew";
+    he.textContent = form.primary || "";
+
+    const en = global.document.createElement("p");
+    en.className = "verb-mistake-form-en";
+    en.textContent = form.secondary || "";
+
+    cell.append(he, en);
+    forms.append(cell);
+  });
+  card.append(forms);
+
+  if (group.overflow > 0) {
+    const more = global.document.createElement("p");
+    more.className = "verb-mistake-more";
+    more.textContent = translate("results.moreForms", { count: group.overflow });
+    card.append(more);
+  }
+
+  return card;
 };
 
 ui.createResultsMetric = ui.createResultsMetric || function createResultsMetric(label, value) {

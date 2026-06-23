@@ -304,6 +304,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       roomToImprove: "There's room to improve",
       amazing: "Amazing!",
       noMistakes: "No mistakes in this session.",
+      moreForms: "+{count} more",
     },
     match: {
       prompt: "Match the pairs",
@@ -641,6 +642,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       roomToImprove: "יש מקום לשיפור",
       amazing: "זה מדהים!",
       noMistakes: "לא היו טעויות בסשן הזה.",
+      moreForms: "עוד {count}+",
     },
     match: {
       prompt: "התאם בין הזוגות",

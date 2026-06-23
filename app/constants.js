@@ -41,6 +41,7 @@ constants.WORD_MATCH_SESSION_SIZE = constants.WORD_MATCH_SESSION_SIZE || 20;
 constants.MATCH_MAX_LEN = constants.MATCH_MAX_LEN || 40;
 constants.MATCH_LONG_LEN = constants.MATCH_LONG_LEN || 16;
 constants.CONJUGATION_MASTER_STREAK = constants.CONJUGATION_MASTER_STREAK || 10;
+constants.VERB_MATCH_MISTAKE_MAX_FORMS = constants.VERB_MATCH_MISTAKE_MAX_FORMS || 6;
 
 constants.ADV_CONJ_SUBJECTS = constants.ADV_CONJ_SUBJECTS || [
   { form: "msg", pronoun: "הוא", en: "he" },

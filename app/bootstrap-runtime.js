@@ -269,6 +269,7 @@ bootstrapRuntime.createInitialState = bootstrapRuntime.createInitialState || fun
       eligibleMasterWordId: "",
       mismatchCount: 0,
       sessionMistakeIds: [],
+      sessionMistakeForms: [],
     },
     wordMatch: {
       active: false,

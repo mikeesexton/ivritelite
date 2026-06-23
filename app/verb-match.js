@@ -196,6 +196,7 @@ verbMatch.resetVerbMatchState = verbMatch.resetVerbMatchState || function resetV
   runtime.state.match.eligibleMasterWordId = "";
   runtime.state.match.mismatchCount = 0;
   runtime.state.match.sessionMistakeIds = [];
+  runtime.state.match.sessionMistakeForms = [];
 };
 
 verbMatch.finishVerbMatchSession = verbMatch.finishVerbMatchSession || function finishVerbMatchSession() {
@@ -559,6 +560,22 @@ verbMatch.applyVerbMatchSuccess = verbMatch.applyVerbMatchSuccess || function ap
   }, 180);
 };
 
+verbMatch.recordVerbMatchMistakeForm = verbMatch.recordVerbMatchMistakeForm || function recordVerbMatchMistakeForm(pairId) {
+  const runtime = getRuntime();
+  const wordId = runtime.state.match.currentVerb?.word?.id || "";
+  const pair = runtime.state.match.pairs.find((item) => item.id === pairId);
+  if (!pair) return;
+  const key = `${wordId}::${pair.id}`;
+  if (runtime.state.match.sessionMistakeForms.some((item) => item.key === key)) return;
+  runtime.state.match.sessionMistakeForms.push({
+    key,
+    wordId,
+    valuePlain: pair.valuePlain || "",
+    valueNiqqud: pair.valueNiqqud || pair.valuePlain || "",
+    englishText: pair.englishText || "",
+  });
+};
+
 verbMatch.applyVerbMatchMismatch = verbMatch.applyVerbMatchMismatch || function applyVerbMatchMismatch(leftCard, rightCard) {
   const runtime = getRuntime();
   const h = getHelpers();
@@ -573,6 +590,8 @@ verbMatch.applyVerbMatchMismatch = verbMatch.applyVerbMatchMismatch || function 
   if (currentWordId && !runtime.state.match.sessionMistakeIds.includes(currentWordId)) {
     runtime.state.match.sessionMistakeIds.push(currentWordId);
   }
+  verbMatch.recordVerbMatchMistakeForm(leftCard.pairId);
+  verbMatch.recordVerbMatchMistakeForm(rightCard.pairId);
   runtime.state.match.mismatchedCardIds = [leftCard.id, rightCard.id];
   runtime.state.match.selectedLeftId = null;
   runtime.state.match.selectedRightId = null;
