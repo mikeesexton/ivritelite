@@ -3542,6 +3542,10 @@ test("conjugation summary opens on the results route and home exits without a le
   state.match.elapsedSeconds = 21;
   state.match.mismatchCount = 3;
   state.match.sessionMistakeIds = ["verb-go"];
+  state.match.sessionMistakeForms = [
+    { key: "verb-go::present_masculine_singular", wordId: "verb-go", valuePlain: "הולך", valueNiqqud: "הוֹלֵךְ", englishText: "he goes" },
+    { key: "verb-go::present_feminine_singular", wordId: "verb-go", valuePlain: "הולכת", valueNiqqud: "הוֹלֶכֶת", englishText: "she goes" },
+  ];
 
   loadNextVerbRound();
 
@@ -3555,9 +3559,22 @@ test("conjugation summary opens on the results route and home exits without a le
   assert.equal(document.querySelector("#resultsSummary").children[0].children.length, 1);
   assert.equal(document.querySelector("#resultsSummary").children[0].children[0].children[0].children.length, 1);
   assert.deepEqual(
-    state.summary.mistakes.map((item) => ({ primary: item.primary, secondary: item.secondary })),
-    [{ primary: "לָלֶכֶת", secondary: "to go" }]
+    JSON.parse(JSON.stringify(state.summary.mistakes)),
+    [
+      {
+        primary: "לָלֶכֶת",
+        secondary: "to go",
+        forms: [
+          { primary: "הוֹלֵךְ", secondary: "he goes" },
+          { primary: "הוֹלֶכֶת", secondary: "she goes" },
+        ],
+        overflow: 0,
+      },
+    ]
   );
+  const verbForms = document.querySelector("#resultsSummary").querySelectorAll(".verb-mistake-forms");
+  assert.equal(verbForms.length, 1);
+  assert.equal(verbForms[0].children.length, 2);
 
   requestGoHome();
   assert.equal(state.leaveConfirmOpen, false);

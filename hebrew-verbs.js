@@ -234,6 +234,8 @@ const TRANSLATION_HIDDEN_STARTER_VERB_IDS = new Set([
   "starter-verb-lishtot",
   "starter-verb-lichtov",
   "starter-verb-letachnen",
+  "advanced-verb-lehochiach",
+  "advanced-verb-letaken",
 ]);
 
 function normalizeAvailability(availability) {
@@ -949,8 +951,8 @@ function buildStarterVerbEntries() {
           markedForm("רכש", "רָכַשׁ"),
           markedForm("רכשה", "רָכְשָׁה"),
           markedForm("רכשנו", "רָכַשְׁנוּ"),
-          markedForm("רכשתם", "רָכַשְׁתֶּם"),
-          markedForm("רכשתן", "רָכַשְׁתֶּן"),
+          markedForm("רכשתם", "רְכַשְׁתֶּם"),
+          markedForm("רכשתן", "רְכַשְׁתֶּן"),
           markedForm("רכשו", "רָכְשׁוּ")
         ),
         makeFuture(
@@ -1153,12 +1155,12 @@ function buildStarterVerbEntries() {
         makeFuture(
           markedForm("אקח", "אֶקַּח"),
           markedForm("תיקח", "תִּקַּח"),
-          markedForm("תיקחי", "תִּקְחִי"),
+          markedForm("תיקחי", "תִּקְּחִי"),
           markedForm("ייקח", "יִקַּח"),
           markedForm("תיקח", "תִּקַּח"),
           markedForm("ניקח", "נִקַּח"),
-          markedForm("תיקחו", "תִּקְחוּ"),
-          markedForm("ייקחו", "יִקְחוּ")
+          markedForm("תיקחו", "תִּקְּחוּ"),
+          markedForm("ייקחו", "יִקְּחוּ")
         ),
         makeImperative(
           markedForm("קח", "קַח"),
@@ -1497,8 +1499,8 @@ function buildStarterVerbEntries() {
           {plain: "מעך", niqqud: "מָעַךְ"},
           {plain: "מעכה", niqqud: "מָעֲכָה"},
           {plain: "מעכנו", niqqud: "מָעַכְנוּ"},
-          {plain: "מעכתם", niqqud: "מָעַכְתֶּם"},
-          {plain: "מעכתן", niqqud: "מָעַכְתֶּן"},
+          {plain: "מעכתם", niqqud: "מְעַכְתֶּם"},
+          {plain: "מעכתן", niqqud: "מְעַכְתֶּן"},
           {plain: "מעכו", niqqud: "מָעֲכוּ"}
         ),
         makeFuture(
@@ -1548,8 +1550,8 @@ function buildStarterVerbEntries() {
           {plain: "מחץ", niqqud: "מָחַץ"},
           {plain: "מחצה", niqqud: "מָחֲצָה"},
           {plain: "מחצנו", niqqud: "מָחַצְנוּ"},
-          {plain: "מחצתם", niqqud: "מָחַצְתֶּם"},
-          {plain: "מחצתן", niqqud: "מָחַצְתֶּן"},
+          {plain: "מחצתם", niqqud: "מְחַצְתֶּם"},
+          {plain: "מחצתן", niqqud: "מְחַצְתֶּן"},
           {plain: "מחצו", niqqud: "מָחֲצוּ"}
         ),
         makeFuture(
@@ -1671,7 +1673,7 @@ function buildStarterVerbEntries() {
           markedForm("ציננת", "צִנַּנְתְּ"),
           markedForm("צינן", "צִנֵּן"),
           markedForm("ציננה", "צִנְּנָה"),
-          markedForm("ציננו", "צִנַּנְנוּ"),
+          markedForm("ציננו", "צִנַּנּוּ"),
           markedForm("ציננתם", "צִנַּנְתֶּם"),
           markedForm("ציננתן", "צִנַּנְתֶּן"),
           markedForm("ציננו", "צִנְּנוּ")
@@ -1721,7 +1723,7 @@ function buildStarterVerbEntries() {
           markedForm("תכננת", "תִּכְנַנְתְּ"),
           markedForm("תכנן", "תִּכְנֵן"),
           markedForm("תכננה", "תִּכְנְנָה"),
-          markedForm("תכננו", "תִּכְנַנְנוּ"),
+          markedForm("תכננו", "תִּכְנַנּוּ"),
           markedForm("תכננתם", "תִּכְנַנְתֶּם"),
           markedForm("תכננתן", "תִּכְנַנְתֶּן"),
           markedForm("תכננו", "תִּכְנְנוּ")
@@ -1928,7 +1930,7 @@ function buildStarterVerbEntries() {
           markedForm("אירחתי", "אֵרַחְתִּי"),
           markedForm("אירחת", "אֵרַחְתָּ"),
           markedForm("אירחת", "אֵרַחְתְּ"),
-          markedForm("אירח", "אֵרַח"),
+          markedForm("אירח", "אֵרֵחַ"),
           markedForm("אירחה", "אֵרְחָה"),
           markedForm("אירחנו", "אֵרַחְנוּ"),
           markedForm("אירחתם", "אֵרַחְתֶּם"),
@@ -2007,6 +2009,108 @@ function buildStarterVerbEntries() {
       difficulty_level: 2,
       tags: ["hitpael", "seed", "everyday"],
       personal_priority: 82,
+      category: "core_advanced",
+    }),
+    createVerbEntry({
+      id: "advanced-verb-letaken",
+      availability: getStarterVerbAvailability("advanced-verb-letaken"),
+      lemma: "לתקן",
+      lemma_niqqud: "לְתַקֵּן",
+      root: ["ת", "ק", "נ"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to fix", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתקן", "מְתַקֵּן"),
+          markedForm("מתקנת", "מְתַקֶּנֶת"),
+          markedForm("מתקנים", "מְתַקְּנִים"),
+          markedForm("מתקנות", "מְתַקְּנוֹת")
+        ),
+        makePast(
+          markedForm("תיקנתי", "תִּקַּנְתִּי"),
+          markedForm("תיקנת", "תִּקַּנְתָּ"),
+          markedForm("תיקנת", "תִּקַּנְתְּ"),
+          markedForm("תיקן", "תִּקֵּן"),
+          markedForm("תיקנה", "תִּקְּנָה"),
+          markedForm("תיקנו", "תִּקַּנּוּ"),
+          markedForm("תיקנתם", "תִּקַּנְתֶּם"),
+          markedForm("תיקנתן", "תִּקַּנְתֶּן"),
+          markedForm("תיקנו", "תִּקְּנוּ")
+        ),
+        makeFuture(
+          markedForm("אתקן", "אֲתַקֵּן"),
+          markedForm("תתקן", "תְּתַקֵּן"),
+          markedForm("תתקני", "תְּתַקְּנִי"),
+          markedForm("יתקן", "יְתַקֵּן"),
+          markedForm("תתקן", "תְּתַקֵּן"),
+          markedForm("נתקן", "נְתַקֵּן"),
+          markedForm("תתקנו", "תְּתַקְּנוּ"),
+          markedForm("יתקנו", "יְתַקְּנוּ")
+        ),
+        makeImperative(
+          markedForm("תקן", "תַּקֵּן"),
+          markedForm("תקני", "תַּקְּנִי"),
+          markedForm("תקנו", "תַּקְּנוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el of ת-ק-נ — to fix, repair, or correct. Stored authoritative forms.",
+      difficulty_level: 2,
+      tags: ["piel", "seed", "everyday"],
+      personal_priority: 70,
+      category: "core_advanced",
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehochiach",
+      availability: getStarterVerbAvailability("advanced-verb-lehochiach"),
+      lemma: "להוכיח",
+      lemma_niqqud: "לְהוֹכִיחַ",
+      root: ["י", "כ", "ח"],
+      binyan: "hifil",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to prove", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מוכיח", "מוֹכִיחַ"),
+          markedForm("מוכיחה", "מוֹכִיחָה"),
+          markedForm("מוכיחים", "מוֹכִיחִים"),
+          markedForm("מוכיחות", "מוֹכִיחוֹת")
+        ),
+        makePast(
+          markedForm("הוכחתי", "הוֹכַחְתִּי"),
+          markedForm("הוכחת", "הוֹכַחְתָּ"),
+          markedForm("הוכחת", "הוֹכַחְתְּ"),
+          markedForm("הוכיח", "הוֹכִיחַ"),
+          markedForm("הוכיחה", "הוֹכִיחָה"),
+          markedForm("הוכחנו", "הוֹכַחְנוּ"),
+          markedForm("הוכחתם", "הוֹכַחְתֶּם"),
+          markedForm("הוכחתן", "הוֹכַחְתֶּן"),
+          markedForm("הוכיחו", "הוֹכִיחוּ")
+        ),
+        makeFuture(
+          markedForm("אוכיח", "אוֹכִיחַ"),
+          markedForm("תוכיח", "תּוֹכִיחַ"),
+          markedForm("תוכיחי", "תּוֹכִיחִי"),
+          markedForm("יוכיח", "יוֹכִיחַ"),
+          markedForm("תוכיח", "תּוֹכִיחַ"),
+          markedForm("נוכיח", "נוֹכִיחַ"),
+          markedForm("תוכיחו", "תּוֹכִיחוּ"),
+          markedForm("יוכיחו", "יוֹכִיחוּ")
+        ),
+        makeImperative(
+          markedForm("הוכח", "הוֹכֵחַ"),
+          markedForm("הוכיחי", "הוֹכִיחִי"),
+          markedForm("הוכיחו", "הוֹכִיחוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Hif'il of י-כ-ח — to prove or demonstrate. Stored authoritative forms.",
+      difficulty_level: 3,
+      tags: ["hifil", "seed"],
+      personal_priority: 68,
       category: "core_advanced",
     }),
   ];

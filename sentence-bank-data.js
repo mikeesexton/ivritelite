@@ -3077,6 +3077,76 @@ const SENTENCE_BANK = [
     "hebrew_distractors": ["איתך", "כן", "חושבת", "איפה", "בלעדיו"],
     "english_distractors": ["Thank you", "I do", "when", "I can", "with you"],
     "notes": "כפרה עליך (Mizrahi origin, literally 'atonement upon you') is a deeply affectionate expression of love and gratitude — much warmer than a plain 'sweetheart,' closer to 'you're a lifesaver / I adore you.' On its own, כפרה can be used as a tender 'sweetheart.'"
+  },
+  {
+    "id": "everyday_22",
+    "emoji": "😴",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "אני לא מסוגל לקום מוקדם בבוקר.",
+    "english": "I can't get up early in the morning.",
+    "hebrew_tokens": ["אני", "לא", "מסוגל", "לקום", "מוקדם", "בבוקר"],
+    "english_tokens": ["I", "can't", "get up", "early", "in the morning"],
+    "hebrew_distractors": ["רוצה", "אוהב", "לישון", "מאוחר", "בלילה"],
+    "english_distractors": ["I want", "love to", "sleep", "late", "at night"],
+    "notes": "מסוגל means 'capable of / able to' and is followed by an infinitive; 'לא מסוגל' is a very common way to say 'I just can't (bring myself to).'"
+  },
+  {
+    "id": "everyday_23",
+    "emoji": "💪",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "היא מסוגלת לעבוד שתים עשרה שעות ברצף.",
+    "english": "She is able to work twelve hours straight.",
+    "hebrew_tokens": ["היא", "מסוגלת", "לעבוד", "שתים", "עשרה", "שעות", "ברצף"],
+    "english_tokens": ["She", "is able to", "work", "twelve", "hours", "straight"],
+    "hebrew_distractors": ["רוצה", "צריכה", "לנוח", "שלוש", "לבד"],
+    "english_distractors": ["wants to", "needs to", "rest", "three", "alone"],
+    "notes": "מסוגלת is the feminine singular of מסוגל; ברצף means 'in a row / straight / continuously.'"
+  },
+  {
+    "id": "colloquial_31",
+    "emoji": "🤨",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "אתה באמת מסוגל לעשות את זה לבד?",
+    "english": "Are you really capable of doing this alone?",
+    "hebrew_tokens": ["אתה", "באמת", "מסוגל", "לעשות", "את", "זה", "לבד"],
+    "english_tokens": ["Are you", "really", "capable of", "doing", "this", "alone"],
+    "hebrew_distractors": ["היא", "אולי", "לסיים", "אותו", "יחד"],
+    "english_distractors": ["Is she", "maybe", "finishing", "it", "together"],
+    "notes": "מסוגל ל־ + infinitive = 'capable of doing'; here it carries a slightly challenging, 'you sure?' tone."
+  },
+  {
+    "id": "colloquial_32",
+    "emoji": "😶",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "אני פשוט לא מסוגל להאמין שזה קרה.",
+    "english": "I just can't believe that this happened.",
+    "hebrew_tokens": ["אני", "פשוט", "לא", "מסוגל", "להאמין", "שזה", "קרה"],
+    "english_tokens": ["I", "just", "can't", "believe", "that", "this", "happened"],
+    "hebrew_distractors": ["מוכן", "עדיין", "לזכור", "שהוא", "נגמר"],
+    "english_distractors": ["willing", "still", "remember", "that he", "ended"],
+    "notes": "'לא מסוגל להאמין' is the everyday 'I can't believe it' — מסוגל adds a sense of being emotionally unable, stronger than a plain לא יכול."
+  },
+  {
+    "id": "professional_11",
+    "emoji": "🎯",
+    "category": "professional",
+    "style": null,
+    "difficulty": 3,
+    "hebrew": "אנחנו מסוגלים לעמוד ביעדים שהוצבו.",
+    "english": "We are able to meet the targets that were set.",
+    "hebrew_tokens": ["אנחנו", "מסוגלים", "לעמוד", "ביעדים", "שהוצבו"],
+    "english_tokens": ["We", "are able to", "meet", "the targets", "that were set"],
+    "hebrew_distractors": ["מתכוונים", "לסיים", "במשימות", "שבוטלו", "מחר"],
+    "english_distractors": ["intend to", "finish", "the tasks", "that were canceled", "tomorrow"],
+    "notes": "מסוגלים is the masculine plural; לעמוד ב־ means 'to meet / live up to' a target, deadline, or standard."
   }
 ];
 
@@ -3094,6 +3164,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260621a",
+  __build: "20260622a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

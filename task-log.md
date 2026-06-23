@@ -7,6 +7,118 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-22 — Conjugation niqqud audit against Pealim (fixed 7 forms across 6 verbs)
+
+**Requested:** Verify the hand-authored לתקן conjugation, and as many other conjugations as possible, against authoritative sources.
+
+**Approach:** Dumped all 35 deck verbs' forms (`node` + `buildVerbConjugationDeck`), then compared each against Pealim.com (the standard niqqud reference) via WebSearch/WebFetch. Deep-checked 16 verbs: לתקן, להוכיח (the two I authored), plus לשחרר, לכבות, לנתח, להתקיים, לצנן, למחוץ, לארח, לדון, לרכוש, למעוך, לתכנן, לקחת, לתת, להגיד. Also ran a cross-verb sweep of the 2mpl/2fpl past vowel to catch systematic reduction errors.
+
+**Errors found & fixed (all niqqud-only; plain spellings already correct):**
+- `להוכיח` imperative m.sg: הוֹכַח → **הוֹכֵחַ** (hif'il imperative takes tsere, not patach).
+- `למחוץ` past 2mpl/2fpl: מָחַצְתֶּם/מָחַצְתֶּן → **מְחַצְתֶּם/מְחַצְתֶּן** (R1 reduces to sheva).
+- `למעוך` past 2mpl/2fpl: מָעַכְתֶּם/מָעַכְתֶּן → **מְעַכְתֶּם/מְעַכְתֶּן** (same reduction).
+- `לרכוש` past 2mpl/2fpl: רָכַשְׁתֶּם/רָכַשְׁתֶּן → **רְכַשְׁתֶּם/רְכַשְׁתֶּן** (same; normative written form).
+- `לארח` past 3ms: אֵרַח → **אֵרֵחַ** (pi'el 3ms tsere + furtive patach was missing).
+- `לצנן` past 1pl: צִנַּנְנוּ → **צִנַּנּוּ** (geminate nun merges; the form even had an extra nun glyph vs its own plain spelling).
+- `לתכנן` past 1pl: תִּכְנַנְנוּ → **תִּכְנַנּוּ** (same geminate merge).
+- `לקחת` future 2fs/2pl/3pl: תִּקְחִי/תִּקְחוּ/יִקְחוּ → **תִּקְּחִי/תִּקְּחוּ/יִקְּחוּ** (assimilation dagesh in ק was dropped, though present in אֶקַּח/תִּקַּח).
+
+**Verified correct (no change):** לתקן (100% match), לשחרר, לנתח, להתקיים, לדון, and the future/imperative of להגיד; the cross-verb 2mpl/2fpl sweep showed all the common paal verbs (לשמור, לסגור, לכתוב, לפתוח, ללמוד, etc.) already reduce correctly.
+
+**Left as-is, flagged (judgment calls, not changed):**
+- `לתת` past 2mpl/2fpl: Pealim shows qamatz נָתַתֶּם; data has reduced נְתַתֶּם. Both are attested for irregular נתן — not changed.
+- `לכבות` past 2fs: כִּבִּיתְ vs Pealim כִּבִּית (trailing sheva on final ת) — minor/debatable, possibly WebFetch normalization, not changed.
+- `להגיד` present/past use suppletive אומר/אמר (from לומר) rather than the technical מַגִּיד/הִגִּיד — intentional for modern usage, correct.
+
+**Files changed:** `hebrew-verbs.js` (10 form corrections across 6 verbs); `index.html` (hebrew-verbs.js cache-buster → 20260622b).
+
+**Tests run:** `npm test` 173/173 before and after; plus a `node` assertion confirming each corrected form resolves in the deck.
+
+**Risks / regressions to check:** Niqqud verified against a single source (Pealim) read through WebFetch's summarizer — the substantive fixes are grammatically derivable and high-confidence, but the two flagged items (לתת qamatz/sheva, לכבות final sheva) deserve a native-speaker eye if precision matters.
+
+---
+
+### 2026-06-22 — Content: add לתקן + להוכיח to conjugation, add מסוגל sentences, remove מים from translation
+
+**Requested:** (1) Add verbs להוכיח and לתקן to the conjugation game. (2) Add some sentence-game sentences using מסוגל. (3) Remove מים from translation. (4) Add רשע and טופס to translation (originally written "רשע וטופס" — clarified as two separate words).
+
+**Approach / judgment calls:**
+- **Verbs:** added both as curated starter-verb entries in `hebrew-verbs.js` with full authoritative niqqud forms (present 4 / past 9 / future 8 / imperative 3 = 24 learner-facing forms each). לתקן = pi'el ת-ק-נ (mirrors the existing לתכנן entry); להוכיח = hif'il פ"י י-כ-ח (initial-yod, guttural ח with patach furtive). Both `review_status: approved`, `conjugation_mode: curated` so the generator is never invoked. IDs `advanced-verb-letaken` / `advanced-verb-lehochiach`.
+- **Conjugation-only:** added both IDs to `TRANSLATION_HIDDEN_STARTER_VERB_IDS` so they appear in the conjugation deck but NOT in the translation quiz (matches how the core starter verbs are handled; user asked for conjugation only).
+- **Sentences:** added 5 entries using מסוגל across its inflections and difficulties — everyday_22 (מסוגל, d1), everyday_23 (מסוגלת, d2), colloquial_31 (מסוגל, d2), colloquial_32 (מסוגל, d3), professional_11 (מסוגלים, d3). Each follows the existing guardrails: terminal punctuation, fully-segmented English chips, single-word Hebrew distractors, 5 distractors per side, emoji, and a teaching note.
+- **מים:** removed the standalone `["water", "מים", "מַיִם"]` row from the `groceries_food` block in `vocab-data.js`. Water compounds (נזקי מים, לחץ מים, דוד מים, חשבון מים, מסיר כתמים) are untouched. Note: removing the row shifts the auto-generated `groceries_food-NNN-*` ids for rows after it, so saved progress on those grocery items resets.
+- **רשע / טופס:** טופס ("form", טוֹפֶס) already existed in the `bureaucracy` category — no change. Added רשע ("wicked / villain", רָשָׁע) to the END of the `core_advanced` array so no existing item ids shift. Available in the translation quiz by default.
+
+**Files changed:**
+- `hebrew-verbs.js` — two new curated verb entries before the starter-array close; two new IDs in `TRANSLATION_HIDDEN_STARTER_VERB_IDS`.
+- `vocab-data.js` — removed the standalone מים row; appended רשע to `core_advanced` (טופס already present in `bureaucracy`).
+- `sentence-bank-data.js` — appended 5 מסוגל sentences (now 85); bumped `__build` → `20260622a`.
+- `tests/sentence-bank-data.test.js` — count assertion 80 → 85.
+- `index.html` — bumped cache-busters → `20260622a` for `vocab-data.js`, `sentence-bank-data.js`, `hebrew-verbs.js`.
+
+**Behavior changed:** Conjugation game now includes לתקן (to fix) and להוכיח (to prove), 24 forms each, conjugation-only. Sentence game has 5 new מסוגל sentences (85 total). מים no longer appears as a standalone translation word.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass. Node + live-preview verification: both verbs present in the runtime deck (24 forms, `translationQuiz=false`); standalone מים absent from the lexicon while compounds remain; 85 sentences with all 5 מסוגל entries well-formed; played a להוכיח conjugation round in the browser (forms rendered correctly, no console errors).
+
+**Risks / regressions to check:** (1) Niqqud on the curated forms was authored by hand — worth a native-speaker spot-check (esp. להוכיח hif'il vocalization and the תיקן past-tense dagesh forms). (2) Grocery-item ids shifted after removing מים → progress on those items resets (cosmetic). (3) רשע is filed under `core_advanced` (general) — move it if a more specific category is preferred.
+
+---
+
+### 2026-06-22 — Conjugation game: group mistakes by verb, cap forms, columnar endgame layout
+
+**Requested:** Follow-up to the per-form review list. (1) Group the session mistakes by verb and cap at a max count. (2) The endgame display wasted full rows on each mistake — show the info compactly as columns.
+
+**Approach / judgment calls:**
+- The conjugation game runs `VERB_MATCH_ROUNDS = 1` (one verb per session, up to ~19 forms), so grouping by verb normally yields a single group; the implementation is written generically and handles multiple verbs defensively.
+- Added `wordId` to each recorded `sessionMistakeForms` entry. `buildVerbMatchMistakeSummary` now groups forms by `wordId` into `{ primary (verb niqqud), secondary (verb English), forms: [{primary, secondary}], overflow }`. Verb header text is resolved via the vocab lookup + `getHebrewText(word, true)` (same convention the old infinitive code used).
+- **Cap:** new constant `VERB_MATCH_MISTAKE_MAX_FORMS = 6` caps forms shown *per verb*; excess increments `overflow`, surfaced as a "+N more" / "עוד N+" line rather than silently dropped.
+- **Columnar layout:** new `ui.createVerbMistakeGroup` renders a verb-headed card with the forms in a CSS auto-fill grid (`.verb-mistake-forms`, `minmax(8.5rem, 1fr)`) — 4 columns on tablet, reflows to 2 on mobile. `renderResults` branches to it when a mistake item has a `forms` array; all other games keep the existing `createCompactRow` path untouched.
+
+**Files changed:**
+- `app/constants.js` — added `VERB_MATCH_MISTAKE_MAX_FORMS = 6`.
+- `app/verb-match.js` — `recordVerbMatchMistakeForm` now stores `wordId`.
+- `app/data.js` — `buildVerbMatchMistakeSummary` groups by verb, caps per-verb forms, tracks overflow.
+- `app/ui.js` — new `createVerbMistakeGroup` helper; `renderResults` mistakes loop renders grouped cards when `item.forms` is present.
+- `app/bootstrap-data.js` — added `results.moreForms` string (en: "+{count} more", he: "עוד {count}+").
+- `styles.css` — added `.verb-mistake-group` / `-head` / `-verb` / `-gloss` / `-forms` (auto-fill grid) / `-form` / `-form-he` / `-form-en` / `-more` styles.
+- `tests/app-progress.test.js` — updated the conjugation-summary test to seed `wordId`, assert the grouped shape (verb header + forms + overflow), and check the rendered `.verb-mistake-forms` column count (used `JSON.parse(JSON.stringify(...))` to dodge cross-realm prototype mismatch; queried via the registered `#resultsSummary` element since the harness's `document.querySelector` is a selector→element registry, not a tree query).
+- `index.html` — bumped cache-busters → `20260622a` for `constants.js`, `bootstrap-data.js`, `ui.js` (in addition to the per-form change's `bootstrap-runtime.js`, `persistence.js`, `session.js`, `data.js`, `verb-match.js`).
+
+**Behavior changed:** The conjugation results page now shows one card per verb — verb headword + English at top, the specific confused forms below in a compact multi-column grid (max 6 per verb, "+N more" when exceeded). Replaces the previous flat full-width per-form rows. No other game's summary affected.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass. Live-verified via preview (reloaded with bumped cache-busters): drove a finished verbMatch session with 8 seeded confused forms for לִהְיוֹת / to be; results rendered the verb header, a 4-col grid of 6 forms, and "עוד 2+"; confirmed 2-col reflow at 375px; no console errors.
+
+**Risks / regressions to check:** (1) Verb header depends on the verb id resolving in `getAllVocabulary()` — if a conjugation-only verb is missing from that pool the header strings fall back to empty (forms still render). (2) The grid `minmax(8.5rem, 1fr)` was tuned for the current niqqud form lengths; unusually long forms could force a single column on the narrowest phones. (3) `results.moreForms` is a new i18n key — both en/he provided.
+
+---
+
+### 2026-06-22 — Conjugation game: per-form mistake review list
+
+**Requested:** In the conjugation (verb match) game, the results page listed only the infinitive verb under "טעויות מהסשן" (e.g. לִרְאוֹת / to see), which is useless feedback since the game tests multiple conjugations of one verb. Asked whether it's practicable to show the specific forms gotten wrong instead. Chose the per-form review list.
+
+**Approach / judgment calls:**
+- The game is a match grid; a "mistake" is a mismatch between an English form and a Hebrew form. At mismatch time both cards' `pairId`s are available, and the round's `pairs` array maps each pairId to the full form (`englishText`, `valuePlain`, `valueNiqqud`), so I capture exactly which forms were confused.
+- Recorded each confused form (both sides of the mismatch) into a new session array `match.sessionMistakeForms`, deduped by a `wordId::formId` composite key (form ids like `present_masculine_singular` repeat across verbs, so the verb id is part of the key).
+- `buildVerbMatchMistakeSummary` now maps those forms to `{primary, secondary}` cards. Kept the prior summary convention of always showing niqqud (the old code forced niqqud via `getHebrewText(word, true)`), so primary = `valueNiqqud` (falls back to plain), secondary = English meaning. No summary-rendering/UI changes needed — same card shape.
+- Left the existing `sessionMistakeIds` (verb-level) untouched since other code/persistence references it; only the summary builder switched to the form-level data.
+
+**Files changed:**
+- `app/verb-match.js` — added `recordVerbMatchMistakeForm(pairId)` helper; call it for both cards in `applyVerbMatchMismatch`; clear `sessionMistakeForms` in `resetVerbMatchState`.
+- `app/data.js` — `buildVerbMatchMistakeSummary` now builds from `match.sessionMistakeForms` (per-form) instead of looking up the parent verb headword.
+- `app/bootstrap-runtime.js` — added `sessionMistakeForms: []` to the default `match` state.
+- `app/persistence.js` — persist `sessionMistakeForms` in the match snapshot.
+- `app/session.js` — restore `sessionMistakeForms` from snapshot (array guard).
+- `tests/app-progress.test.js` — updated the conjugation-summary test to seed `sessionMistakeForms` and assert the per-form list instead of the infinitive.
+- `index.html` — bumped cache-busters → `20260622a` for `bootstrap-runtime.js`, `persistence.js`, `session.js`, `data.js`, `verb-match.js`.
+
+**Behavior changed:** The conjugation game results page now lists the specific conjugated forms the player confused (e.g. הוֹלֵךְ / he goes, הָלַכְתִּי / I went), deduped, instead of the verb infinitive. No other game affected.
+
+**Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass. Live-verified via preview: drove a finished verbMatch session with seeded form mistakes; results page rendered the two forms with niqqud + English under "טעויות מהסשן"; no console errors.
+
+**Risks / regressions to check:** (1) `sessionMistakeForms` is new state — confirm a mid-session save/restore (snapshot) round-trips it (guarded as array, defaults to `[]`). (2) Dedup is per verb+form; the same form confused in two different verbs will correctly show twice.
+
+---
+
 ### 2026-06-21 — Sentences game: "Street-Smart Israel" batch (10 new colloquial sentences)
 
 **Requested:** Suggest and add a surprise new batch of sentences to the sentence translation game. User chose the "Street-smart Israel" flavor at 10 sentences (via clarifying question), then gave two rounds of feedback during planning.

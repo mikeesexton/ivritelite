@@ -261,6 +261,7 @@ persistence.persistSessionState = persistence.persistSessionState || function pe
       eligibleMasterWordId: runtime.state.match.eligibleMasterWordId,
       mismatchCount: runtime.state.match.mismatchCount,
       sessionMistakeIds: runtime.state.match.sessionMistakeIds,
+      sessionMistakeForms: runtime.state.match.sessionMistakeForms,
     },
   });
 };
