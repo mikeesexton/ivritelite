@@ -1134,8 +1134,13 @@ test("all viewports share the single-page layout with the bottom nav", () => {
 test("home route uses safe vertical centering and leave warning text stays centered", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
-  assert.match(styles, /\.app-shell\s*\{[^}]*min-height:\s*100dvh;[^}]*grid-template-rows:\s*auto minmax\(0,\s*1fr\);/s);
-  assert.match(styles, /\.shell-body\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*0;/s);
+  // The document is locked at the small viewport height (svh is stable while
+  // iOS toolbars show/hide, unlike dvh) and the shell body is the scroll
+  // container, so the fixed bottom nav cannot drift during momentum scrolling
+  // and centered content is never pushed below the fold on long pages.
+  assert.match(styles, /body\s*\{[^}]*height:\s*100svh;[^}]*overflow:\s*hidden;/s);
+  assert.match(styles, /\.app-shell\s*\{[^}]*height:\s*100%;[^}]*grid-template-rows:\s*auto minmax\(0,\s*1fr\);/s);
+  assert.match(styles, /\.shell-body\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*0;[^}]*overflow-y:\s*auto;/s);
   assert.match(styles, /\.page-stack\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*100%;[^}]*grid-template-rows:\s*minmax\(0,\s*1fr\);[^}]*align-items:\s*start;/s);
   assert.match(styles, /#homeView\.active\s*\{[^}]*margin-block:\s*auto;/s);
   assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.shell-body\s*\{[^}]*display:\s*grid;/s);

@@ -7,6 +7,84 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-26 — Stabilize viewport height with svh (fix content pushed below the fold on iPad)
+
+**Requested:** Another iPad screen recording: after finishing the translation game, the home content sat shoved to the bottom of the screen with a large empty band above it and a scrollbar — you had to scroll up to reach it. Same family as the original "vertical space gets added, scroll to get to the content" report.
+
+**Diagnosis:** Extracted frames (`ffmpeg`) from a 1640×2360 capture = iPad Air, CSS viewport 820×1180 (so the `768–1023px` breakpoint, 3-column lesson grid). The full-height container was sized in `dvh` (dynamic viewport height), which changes value live as iOS Safari's toolbar shows/hides. The home view is vertically centered (`#homeView.active { margin-block: auto }`) inside that container. When layout is computed while `dvh` is large (toolbar collapsed) and the toolbar then expands, the centered content's top margin pushes it below the visible fold; the inner-scroll `.shell-body` (from the prior fix) then holds that scrolled-down position. Could not reproduce in the headless preview because it has no dynamic toolbar — all viewport units resolve equally there.
+
+**Fix:** Switched the locked container height from `dvh` to `svh` (small viewport height — the stable value with the toolbar visible). `svh` never exceeds the smallest visible viewport, so centered content is always on-screen without scrolling regardless of toolbar state; when the toolbar hides and there's more room, the layout simply doesn't grow (no reflow/jump). Keeps the intended vertical centering. Changed all four occurrences: base `body { height: 100dvh → 100svh }` (the `100vh` fallback line is kept above it) and the `min-height: 100dvh → 100svh` in the `max-width:767px`, `768–1023px` media queries (body + app-shell).
+
+**Files changed:** `styles.css` (`dvh` → `svh` in 4 places); `index.html` (styles.css cache-buster → 20260626a); `tests/app-progress.test.js` (updated the locked-document assertion from `height: 100dvh` to `height: 100svh` with an explanatory comment).
+
+**Behavior changed:** On iOS, home/short views no longer get pushed below the fold when the toolbar animates; content stays reachable without scrolling. When the toolbar is hidden there may be extra background space below the app (stable, no jump). Desktop and the headless preview are visually unchanged.
+
+**Tests run:** `npm test` 173/173 pass. Preview (820×1010): body height resolves, document + shell-body not scrollable, home centered, no horizontal overflow, no boot error.
+
+**Risks / regressions to check:** Needs a physical-iPad retest — the `dvh`-vs-`svh` difference only manifests with a real dynamic toolbar. With `svh`, when the iOS toolbar is hidden the app occupies the smaller area and leaves background space below before the fixed bottom nav; confirm that looks acceptable. `svh` is well-supported in modern mobile Safari (2026); the `100vh` fallback covers anything older.
+
+---
+
+### 2026-06-25 — Fix bottom-nav drift during scroll (document-locked, inner scroll container)
+
+**Requested:** After the overscroll fix, a real-iPad screen recording showed the fixed bottom nav (Home/Review/Settings) floating into the middle of the content during a momentum scroll on the Results page, then snapping back to the bottom when scrolling stopped.
+
+**Diagnosis:** Classic iOS Safari behavior — it does not continuously reposition `position: fixed` elements while a momentum scroll is in flight; they ride along with the page and snap back only when the fling settles. Because the whole document scrolled and `#mobileBottomNav` is `position: fixed`, it got caught mid-screen. Only appeared on scrollable pages (Results/Review); Home and gameplay fit on screen. Pre-existing and independent of the gameplay overscroll fix. Confirmed by extracting frames from the user's recording (`ffmpeg`).
+
+**Fix (CSS-only; the user chose the proper fix over leaving the cosmetic glitch):** Changed the scroll model so the document is locked and an inner region scrolls, leaving the fixed nav nothing to ride along with:
+- `html`: added `height: 100%`.
+- `body`: `min-height: 100vh/100dvh` → `height: 100vh; height: 100dvh;` and `overflow-x: hidden` → `overflow: hidden` (document no longer scrolls).
+- `.app-shell`: `min-height: 100dvh` → `height: 100%` (fills the now-fixed-height body; grid rows unchanged).
+- `.shell-body`: added `overflow-y: auto; -webkit-overflow-scrolling: touch;` (this is now the scroll container).
+
+Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoView/scrollTop — none), so no script fallout.
+
+**Files changed:** `styles.css` (four rules above); `index.html` (styles.css cache-buster → 20260625c); `tests/app-progress.test.js` (the "safe vertical centering" test hard-coded the old `.app-shell { min-height: 100dvh }` document-scroll model — updated to assert the new locked-document/inner-scroll model: `body` height+overflow:hidden, `.app-shell` height:100%, `.shell-body` overflow-y:auto; home-centering assertions for page-stack/#homeView kept).
+
+**Behavior changed:** On scrollable pages the bottom nav now stays pinned during scroll instead of drifting. Home stays vertically centered; gameplay unchanged; gameplay overscroll fix still active. The scroll container is now `.shell-body` rather than the window (also affects desktop, where the scrollbar moves to the inner region).
+
+**Tests run:** `npm test` 173/173 pass. Verified in preview (mobile + tablet): document/body `scrollHeight - clientHeight = 0` (locked), `.shell-body` is the scroller (injected-overflow probe scrolled to 500px while the nav stayed pinned 10px off the viewport bottom), home centered, no horizontal overflow, gameplay renders correctly with nav pinned.
+
+**Risks / regressions to check:** The iOS drift itself can only be confirmed on a physical iPad — needs a real-device retest. Watch for: any view whose content is taller than `.shell-body` now scrolls inside that region (intended); the rare boot-error banner (a direct body child) could be clipped by `body { overflow: hidden }` in an error state; desktop scrollbar now lives on `.shell-body`.
+
+---
+
+### 2026-06-25 — Suppress iOS rubber-band overscroll during gameplay
+
+**Requested:** On a real iPad, the view "scrolls when it shouldn't," especially during gameplay. (Same session also covered an iPadOS Control Center tip for enabling Screen Recording — no code involved.)
+
+**Diagnosis:** Reproduced gameplay in the headless tablet (768×1024) and phone (375×812) presets — content fits with `scrollHeight - clientHeight = 0` even with the full 10-tile match grid, so it is not genuine content overflow. Both `html` and `body` had `overscroll-behavior: auto`, leaving iOS Safari's elastic "rubber-band" overscroll enabled: any touch-drag during gameplay bounces/drifts the whole view though nothing needs to scroll. The headless engine has no elastic overscroll, so this only shows on a physical device.
+
+**Fix:** Added `overscroll-behavior: none` scoped to gameplay via `html:has(body[data-gameplay-active="true"]), body[data-gameplay-active="true"]`. Scoped to gameplay (not global) so pull-to-refresh still works on the home/menu screens. Targets both the root and body so the document scroller honors it regardless of which element Safari reads from.
+
+**Files changed:** `styles.css` (new gameplay-scoped `overscroll-behavior: none` rule); `index.html` (styles.css cache-buster → 20260625b).
+
+**Behavior changed:** During gameplay on touch devices, the page no longer rubber-band bounces at the scroll edges. Menu/home screens are unchanged (pull-to-refresh preserved). Desktop and the headless preview are visually unaffected.
+
+**Tests run:** `npm test` 173/173 pass. Verified in preview that toggling `data-gameplay-active` flips computed `overscroll-behavior-y` from `auto`→`none` on both `html` and `body`, and stays `auto` without the attribute; no boot error.
+
+**Risks / regressions to check:** `:has()` and `overscroll-behavior` are well-supported in modern mobile Safari (2026), but the elastic-bounce symptom itself can only be confirmed on a physical iPad — needs a real-device check. If the unwanted scroll persists, the next suspect is the dynamic address bar momentarily creating real overflow against the `100dvh` shell; the deeper fix there would be sizing the gameplay layout to the small viewport (`svh`) so it never overflows regardless of address-bar state.
+
+---
+
+### 2026-06-25 — Fix mobile/tablet phantom scroll on load (vh/dvh viewport mismatch)
+
+**Requested:** Debug a scrolling issue on smartphone and tablet — on load, extra vertical space gets added and you must scroll down to reach the main content box; pull-to-refresh fixes it.
+
+**Root cause:** `body` used `min-height: 100vh` while `.app-shell` used `min-height: 100dvh`. On mobile, `vh` is the *large* viewport (address bar collapsed) and `dvh` is the *dynamic* (currently visible) height. With the address bar showing on first paint, the body became taller than the visible viewport, creating phantom scroll space. Because the home content is vertically centered inside the `100dvh` shell (`#homeView.active { margin-block: auto }`), the two disagreeing heights pushed the centered content out of view. Pull-to-refresh collapses the address bar, making `vh === dvh`, which is why refreshing resolved it.
+
+**Fix:** Added `min-height: 100dvh` to `body` (kept the `100vh` line above it as a fallback for browsers without `dvh`), so body and app-shell now size to the same dynamic viewport.
+
+**Files changed:** `styles.css` (body min-height: added `100dvh` with `100vh` fallback); `index.html` (styles.css cache-buster → 20260625a so the CSS fix reaches users past cached stylesheets).
+
+**Behavior changed:** On mobile/tablet, the home view no longer starts pushed below a band of empty scroll space on first load. Desktop and the headless preview are unaffected (all viewport units resolve equally there).
+
+**Tests run:** `npm test` 173/173 pass (before and after). Verified in tablet-preset preview: `body` min-height resolves, `scrollHeight - clientHeight = 0`, no boot error.
+
+**Risks / regressions to check:** The headless preview can't reproduce a real mobile address bar (all viewport units resolve to the same value there), so the visible fix should be confirmed on an actual phone/tablet. `dvh` is well-supported in modern mobile browsers; the retained `100vh` line keeps the prior behavior as a fallback on anything that lacks `dvh`.
+
+---
+
 ### 2026-06-22 — Conjugation niqqud audit against Pealim (fixed 7 forms across 6 verbs)
 
 **Requested:** Verify the hand-authored לתקן conjugation, and as many other conjugations as possible, against authoritative sources.
