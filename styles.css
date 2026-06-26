@@ -115,15 +115,17 @@ body[data-theme="light"] .domain-ring {
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100svh;
   font-family: "Assistant", sans-serif;
   color: var(--ink);
   background: var(--body-bg);
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 button {
@@ -261,7 +263,7 @@ h3 {
   position: relative;
   z-index: 1;
   max-width: 1240px;
-  min-height: 100dvh;
+  height: 100%;
   margin: 0 auto;
   padding: 0.8rem 0.8rem calc(5.8rem + env(safe-area-inset-bottom));
   display: grid;
@@ -439,6 +441,8 @@ body[data-theme="light"] .collapsible-toggle::after {
   display: grid;
   min-width: 0;
   min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav-link {
@@ -510,6 +514,11 @@ body[data-theme="light"] .nav-link.active .nav-link-icon {
 
 body[data-gameplay-active="true"] .home-primary {
   gap: 0;
+}
+
+html:has(body[data-gameplay-active="true"]),
+body[data-gameplay-active="true"] {
+  overscroll-behavior: none;
 }
 
 .page-view {
@@ -2688,11 +2697,11 @@ body[data-ui-lang="he"] .mastered-row input {
 
 @media (min-width: 768px) and (max-width: 1023px) {
   body {
-    min-height: 100dvh;
+    min-height: 100svh;
   }
 
   .app-shell {
-    min-height: 100dvh;
+    min-height: 100svh;
     max-width: 920px;
     padding: 0.72rem 0.72rem calc(5.25rem + env(safe-area-inset-bottom));
     gap: 0.6rem;
@@ -3005,11 +3014,11 @@ body[data-ui-lang="he"] .mastered-row input {
 
 @media (max-width: 767px) {
   body {
-    min-height: 100dvh;
+    min-height: 100svh;
   }
 
   .app-shell {
-    min-height: 100dvh;
+    min-height: 100svh;
     padding: 0.62rem 0.62rem calc(5.2rem + env(safe-area-inset-bottom));
     gap: 0.54rem;
   }
