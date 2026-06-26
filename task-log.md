@@ -7,6 +7,22 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-26 — Bump GitHub Pages deploy actions off deprecated Node 20
+
+**Requested:** Address the deploy workflow warning that its actions target Node 20 (being deprecated; GitHub was force-running them on Node 24).
+
+**Change:** Updated `.github/workflows/deploy-pages.yml` to the current major versions (confirmed via the GitHub releases API): `actions/checkout@v4 → v7`, `actions/configure-pages@v5 → v6`, `actions/upload-pages-artifact@v3 → v5`, `actions/deploy-pages@v4 → v5`.
+
+**Files changed:** `.github/workflows/deploy-pages.yml` (four `uses:` version bumps).
+
+**Behavior changed:** None for the app. CI only — the Pages deploy now runs on Node 24-native actions, clearing the deprecation warning.
+
+**Tests run:** `npm test` 173/173 pass (unaffected by the CI change). Real verification is the deploy workflow itself succeeding on merge to main.
+
+**Risks / regressions to check:** These are major-version bumps, so behavior could differ — verified by watching the post-merge Pages deploy complete successfully. The site URL (https://mikeesexton.github.io/ulpango/) and build steps are unchanged.
+
+---
+
 ### 2026-06-26 — Stabilize viewport height with svh (fix content pushed below the fold on iPad)
 
 **Requested:** Another iPad screen recording: after finishing the translation game, the home content sat shoved to the bottom of the screen with a large empty band above it and a scrollbar — you had to scroll up to reach it. Same family as the original "vertical space gets added, scroll to get to the content" report.
