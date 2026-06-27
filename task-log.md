@@ -7,6 +7,88 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-27 — Sentences game: distractor tile cap, gender-agreement alternates, dead-distractor cleanup
+
+**Requested:** Three improvements to the sentences game: (1) accepted-answer alternates so valid alternative answers aren't marked wrong, (2) grammar-trap distractors "as a system," (3) a tile cap so long sentences don't produce an overcrowded tile board (#6 from the suggestion list).
+
+**Change:**
+- **Tile cap (code):** `app/sentence-bank.js` — new `capSentenceBankDistractors()` (with `getAlternateRequiredDistractors()` helper) limits the distractors shown per round to `clamp(SENTENCE_BANK_MAX_TILES(12) − targetLen, min 3, available)`, shuffling first for variety. Crucially it force-keeps any distractor that an accepted alternate needs (so gender alternates stay buildable even when capped). Target tiles are never capped. Net effect: a 10-word sentence now shows 3 distractors (13 tiles) instead of 5 (15); short sentences are unaffected.
+- **Gender-agreement system (content + #1 alternates):** For sentences where Hebrew speaker/addressee gender is free but English is neutral, added the feminine form(s) both as a grammar-trap `hebrew_distractor` AND as a buildable `hebrew_alternates` entry (same token count, differing tokens present as distractors — the colloquial_09 precedent). 1st-person speaker: `colloquial_04` (בא→באה), `colloquial_11` (מוצא→מוצאת), `everyday_01` (צריך→צריכה), `everyday_04` (יכול→יכולה, צריך→צריכה), `everyday_10` (יודע→יודעת). 2nd-person addressee: `everyday_02` (אתה→את, חוזר→חוזרת), `colloquial_16` (אתה→את, בא→באה, תחליט→תחליטי). Object-pronoun gender trap: `formal_05` (+אותו vs target אותה).
+- **Dead-distractor cleanup (content, #2 quality):** Fixed 5 pre-existing entries whose distractors duplicated a target token (or each other) and were therefore silently dropped by the runtime `sanitizeDistractors` filter — shrinking the decoy pool. Replaced with live decoys, favoring grammar traps: `colloquial_05` (don't→saying), `professional_07` (אפשר→אישורים, number trap), `professional_09` (version→copy, the→those), `professional_10` (it→that, everyone→us), `formal_13` (a→an, problem→issue, to→for).
+
+**Files changed:** `app/sentence-bank.js` (tile-cap logic); `sentence-bank-data.js` (gender distractors + hebrew_alternates on 8 entries, dead-distractor replacement on 5 entries); `tests/app-progress.test.js` (new test: long-sentence distractor cap caps to 3 and preserves the alternate-required tile).
+
+**Behavior changed:** Long sentences show fewer distractor tiles (less crowded). Female (or female-addressed) learners building the grammatically-correct gendered Hebrew now get marked correct instead of wrong on 7 sentences. Five entries that effectively had a reduced decoy pool now present their full set.
+
+**Tests run:** `npm test` 174/174 pass (was 173; +1 new cap test). Plus a full-bank node validation script confirming every alternate is the right length, buildable from target∪distractors, and reconstructable from its text, and that no distractor duplicates a target or repeats — CLEAN across all 85 entries.
+
+**Risks / regressions to check:** Gender alternates only apply in the en→he direction (Hebrew answer). The feminine forms were author-verified but worth a native-speaker glance, especially the 2nd-person imperative flips (תחליטי). Tile cap uses `Math.random` via the shared shuffle; the count is deterministic but which distractors appear varies per round.
+
+---
+
+### 2026-06-27 — Sentences game: Hebrew word-order accepted-answer alternates
+
+**Requested:** Follow-up to the gender alternates — add word-order alternates (the other class of accepted-answer alternate) so a learner who builds a valid alternative Hebrew word order isn't marked wrong.
+
+**Change:** Added 7 `hebrew_alternates` that are exact permutations of the target tokens (same tiles, reordered — always buildable, no new distractors). All are natural, idiomatic reorderings, mostly fronting a time/adverbial clause:
+- `colloquial_01` — front כל היום ("כל היום לא שמעתי ממך")
+- `colloquial_03` — front אתמול
+- `colloquial_27` — front the לפני-clause ("לפני שיהיה חם מדי, בוא נלך לים")
+- `everyday_18` — חצי שעה / בתור swap ("הייתי חצי שעה בתור")
+- `formal_01` — front לפני קבלת החלטה
+- `formal_02` — front למרות התנודות הקטנות
+- `formal_07` — front לפני בחירה
+
+English (he→en) alternates were intentionally skipped: English word order is too rigid for same-token reorderings to read naturally, so any would risk accepting awkward English.
+
+**Files changed:** `sentence-bank-data.js` (added `hebrew_alternates` to the 7 entries above; one — colloquial_27 — uses the inline-array style matching its surrounding entry). No code or test changes needed — these ride the existing alternate-matching path.
+
+**Behavior changed:** In the en→he direction, those 7 sentences now accept the alternate word order as correct (and the feedback shows the learner's order back to them). 16 entries now have Hebrew alternates total (2 original + 7 gender from the prior task + 7 word-order, minus overlap = 16).
+
+**Tests run:** `npm test` 174/174 pass. Full-bank validation script: every alternate is correct length, buildable, reconstructable from its text, AND the 7 new ones are confirmed exact permutations of their target token multiset — CLEAN across all 85 entries.
+
+**Risks / regressions to check:** Word-order acceptability is a linguistic judgment — these were chosen conservatively (high-confidence natural orders) but a native-speaker spot-check wouldn't hurt. Each alternate is matched exactly (±2 adjacent modifier-swap tolerance), so adding them only widens what's accepted; it can't make a correct answer fail.
+
+**Requested:** In the sentences game, several English answer options chunk multiple words together. Each English block should correspond to roughly one Hebrew word. Revise the three sentences shown in screenshots, surface other over-chunked candidates, then (after the user reviewed) re-split the six worst offenders and, finally, the moderate batch too — minus everyday_16 (left as-is: "the TV remote" → `השלט של הטלוויזיה` doesn't split cleanly in English word order).
+
+**Change:** Re-split the `english_tokens` (and refreshed `english_distractors`) so each chip maps to ~one Hebrew word.
+
+Screenshot trio:
+- `colloquial_01` ("What's going on with you?...") — 5 → 8 chips.
+- `everyday_04` ("Do you have a pen...") — 5 → 7 chips (split `I can use`, `I need to write`).
+- `colloquial_19` ("Wow, I saw it. Cool...") — 5 → 7 chips (split `I saw it`, `Send me`).
+
+Six worst offenders (user-approved second pass):
+- `colloquial_08` ("I'm not into that idea...") — 4 → 7 chips.
+- `colloquial_11` ("Where did I put my keys?...") — 3 → 6 chips.
+- `colloquial_14` ("He's totally fine, bro...") — 3 → 6 chips.
+- `everyday_19` ("Turn it down a bit...") — 3 → 6 chips.
+- `everyday_20` ("If I don't answer...") — 2 → 5 chips.
+- `formal_08` ("The findings support...") — 3 → 7 chips.
+
+Moderate batch (third pass):
+- `everyday_02` ("What time are you coming home?...") — 4 → 9 chips (user flagged that `coming home` = `חוזר`/`הביתה` must be two blocks).
+- `everyday_01` ("I need to buy milk and bread...") — 4 → 8 chips.
+- `everyday_13` ("There's no parking here...") — 4 → 8 chips.
+- `everyday_05` ("We're meeting near the station...") — 3 → 6 chips.
+- `colloquial_09` ("She did something shady...") — 5 → 10 chips.
+- `professional_07` ("This requires approval from management...") — 4 → 8 chips.
+- `formal_01` ("One must consider the long-term implications...") — 4 → 7 chips.
+- `formal_02` ("The data indicate a clear trend...") — 4 → 7 chips.
+- `formal_07` ("The different options should be examined...") — 4 → 7 chips.
+
+Distractors rewritten to single-block shape matching the finer chips; entries with multiword target chips retain a multiword distractor (phrase-distractor guard). `formal_08` keeps its required `therefore` distractor (and avoids `however`). Standalone `it` chips that were split out (`everyday_19`, `professional_07`) are each licensed by a Hebrew `את`/`זה` cue.
+
+**Files changed:** `sentence-bank-data.js` (english_tokens + english_distractors for all 18 entries above); `tests/sentence-bank-data.test.js` (updated the locked-in token assertions: `CHUNKING_AUDIT_ENTRIES` for everyday_04, colloquial_01, everyday_19, everyday_05, formal_07, plus the exact colloquial_19 snapshot — these previously enforced the now-reversed compacted grouping).
+
+**Behavior changed:** Those eighteen he→en sentence rounds now present more, smaller English chips, each aligning to about one Hebrew word.
+
+**Tests run:** `npm test` 173/173 pass (before, mid, and after). Plus an ad-hoc node script confirming every english_token is still a sequential `indexOf` substring of its sentence and no distractor duplicates a target token.
+
+**Risks / regressions to check:** `everyday_16` deliberately left compacted (see above). Some entries now produce many chips (colloquial_09 = 10 targets + 5 distractors = 15 tiles; everyday_02 = 9 + 6 = 15) — worth eyeballing on a phone/tablet to confirm the tile board doesn't overflow awkwardly. The remaining compacted entries are still guarded by `PHRASE_COMPACTED_ENTRY_IDS` / `CHUNKING_AUDIT_ENTRIES`; re-splitting any later requires updating those guards too.
+
+---
+
 ### 2026-06-26 — Bump GitHub Pages deploy actions off deprecated Node 20
 
 **Requested:** Address the deploy workflow warning that its actions target Node 20 (being deprecated; GitHub was force-running them on Node 24).

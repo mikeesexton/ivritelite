@@ -300,13 +300,13 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
   {
     id: "everyday_04",
-    requiredTokens: ["Do you have", "a pen", "I can use", "I need to write"],
-    forbiddenTokens: ["Do", "you", "have", "a", "pen", "I", "can", "use", "need", "to", "write"],
+    requiredTokens: ["Do you have", "a pen", "I can", "use", "I need", "to write", "something"],
+    forbiddenTokens: ["I can use", "I need to write", "Do", "you", "have"],
   },
   {
     id: "everyday_05",
-    requiredTokens: ["We're meeting", "near the station", "don't be late"],
-    forbiddenTokens: ["We're", "meeting", "near", "the", "station", "don't", "be", "late"],
+    requiredTokens: ["We're", "meeting", "near", "the station", "don't", "be late"],
+    forbiddenTokens: ["We're meeting", "near the station", "don't be late"],
   },
   {
     id: "everyday_14",
@@ -315,13 +315,13 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
   {
     id: "everyday_19",
-    requiredTokens: ["Turn it down", "a bit", "I'm on the phone"],
-    forbiddenTokens: ["Turn", "it", "down", "a", "bit", "I'm", "on", "the", "phone"],
+    requiredTokens: ["Turn", "it", "down", "a bit", "I'm", "on the phone"],
+    forbiddenTokens: ["Turn it down", "I'm on the phone"],
   },
   {
     id: "colloquial_01",
-    requiredTokens: ["What's going on", "with you", "I haven't heard", "from you", "all day"],
-    forbiddenTokens: ["What's", "going", "on", "with", "you", "heard", "from", "all", "day"],
+    requiredTokens: ["What's", "going on", "with you", "I haven't", "heard", "from you", "all", "day"],
+    forbiddenTokens: ["What's going on", "I haven't heard", "all day"],
   },
   {
     id: "professional_03",
@@ -335,8 +335,8 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
   {
     id: "formal_07",
-    requiredTokens: ["The different options", "should be examined", "in depth", "before choosing"],
-    forbiddenTokens: ["The", "different", "options", "should", "be", "examined", "in", "depth", "before", "choosing"],
+    requiredTokens: ["The different", "options", "should be", "examined", "in depth", "before", "choosing"],
+    forbiddenTokens: ["The different options", "should be examined", "before choosing"],
   },
   {
     id: "formal_09",
@@ -527,7 +527,7 @@ test("sentence bank data rewrites colloquial_19 as a fully aligned punctuated Wh
   assert.equal(entry.hebrew, "וואלה, ראיתי את זה. מגניב. שלח לי את הפרטים.");
   assert.equal(entry.english, "Wow, I saw it. Cool. Send me the details.");
   assert.deepEqual(Array.from(entry.hebrew_tokens), ["וואלה", "ראיתי", "את", "זה", "מגניב", "שלח", "לי", "הפרטים"]);
-  assert.deepEqual(Array.from(entry.english_tokens), ["Wow", "I saw it", "Cool", "Send me", "the details"]);
+  assert.deepEqual(Array.from(entry.english_tokens), ["Wow", "I saw", "it", "Cool", "Send", "me", "the details"]);
   assert.deepEqual(getStaticEnglishWordChunks(entry), []);
 });
 

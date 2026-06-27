@@ -756,6 +756,41 @@ function getDuePairs(pairs, now = Date.now()) {
   });
 }
 
+const SENTENCE_BANK_MAX_TILES = 12;
+const SENTENCE_BANK_MIN_DISTRACTORS = 3;
+
+function getAlternateRequiredDistractors(sentence, direction, targetTokens) {
+  const alternates = direction === "en2he" ? sentence?.hebrewAlternates : sentence?.englishAlternates;
+  if (!Array.isArray(alternates) || !alternates.length) return new Set();
+  const targetSet = new Set(targetTokens);
+  const required = new Set();
+  alternates.forEach((variant) => {
+    sanitizeTokenList(variant?.tokens).forEach((token) => {
+      if (!targetSet.has(token)) required.add(token);
+    });
+  });
+  return required;
+}
+
+function capSentenceBankDistractors(targetTokens, distractorTokens, sentence, direction, doShuffle) {
+  const available = distractorTokens.length;
+  if (!available) return distractorTokens;
+  const cap = Math.max(
+    SENTENCE_BANK_MIN_DISTRACTORS,
+    Math.min(available, SENTENCE_BANK_MAX_TILES - targetTokens.length)
+  );
+  const shuffled = doShuffle(distractorTokens);
+  if (cap >= available) return shuffled;
+
+  const required = getAlternateRequiredDistractors(sentence, direction, targetTokens);
+  const kept = shuffled.filter((token) => required.has(token));
+  for (const token of shuffled) {
+    if (kept.length >= cap) break;
+    if (!required.has(token)) kept.push(token);
+  }
+  return kept;
+}
+
 function buildQuestionFromPair(pair, options = {}) {
   const shuffle = app.utils?.shuffle;
   const doShuffle = typeof shuffle === "function" ? shuffle : (items) => [...items];
@@ -766,9 +801,13 @@ function buildQuestionFromPair(pair, options = {}) {
   const targetTokens = direction === "en2he"
     ? [...sentence.hebrewTokens]
     : [...sentence.englishTokens];
-  const distractorTokens = direction === "en2he"
-    ? [...sentence.hebrewDistractors]
-    : [...sentence.englishDistractors];
+  const distractorTokens = capSentenceBankDistractors(
+    targetTokens,
+    direction === "en2he" ? [...sentence.hebrewDistractors] : [...sentence.englishDistractors],
+    sentence,
+    direction,
+    doShuffle
+  );
   const bankTokens = doShuffle([
     ...targetTokens.map((text, index) => ({ id: `answer-${index}`, text, isCorrect: true })),
     ...distractorTokens.map((text, index) => ({ id: `distractor-${index}`, text, isCorrect: false })),

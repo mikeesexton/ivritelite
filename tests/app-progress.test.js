@@ -1967,6 +1967,43 @@ test("sentence builder accepts an alternate Hebrew speaker-gender form when the 
   assert.ok(getSentenceSlots(document).every((slot) => slot.classList.contains("correct") && !slot.classList.contains("wrong")));
 });
 
+test("sentence builder caps distractor tiles on long sentences but keeps alternate-required tiles", () => {
+  const sentenceBank = [
+    {
+      id: "sb-tile-cap",
+      category: "colloquial",
+      difficulty: 3,
+      english: "She did something shady to me, I don't trust her anymore.",
+      hebrew: "היא עשתה לי קטע מסריח, אני לא סומך עליה יותר.",
+      hebrew_alternates: [
+        {
+          text: "היא עשתה לי קטע מסריח, אני לא סומכת עליה יותר.",
+          tokens: ["היא", "עשתה", "לי", "קטע", "מסריח", "אני", "לא", "סומכת", "עליה", "יותר"],
+        },
+      ],
+      english_tokens: ["She", "did", "something", "shady", "to", "me", "I", "don't", "trust", "her", "anymore"],
+      hebrew_tokens: ["היא", "עשתה", "לי", "קטע", "מסריח", "אני", "לא", "סומך", "עליה", "יותר"],
+      english_distractors: ["he", "him", "nice"],
+      hebrew_distractors: ["הוא", "עשה", "סומכת", "עליו", "טוב", "רע"],
+      notes: "",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  const tiles = Array.from(state.sentenceBank.currentQuestion.bankTokens);
+  // 10 target tokens + capped distractors (12 - 10 floored at 3) = 3 distractors = 13 tiles.
+  assert.equal(tiles.length, 13);
+  assert.equal(tiles.filter((token) => token.isCorrect === false).length, 3);
+  // The gender-alternate's distinct token must survive the cap so the alternate stays buildable.
+  assert.ok(tiles.some((token) => token.text === "סומכת"));
+});
+
 test("sentence builder keeps מוצאי שבת split and accepts both כאילו orders", () => {
   const sentenceBank = [
     {
