@@ -345,15 +345,15 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
 ];
 
-test("sentence bank data exposes 85 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 115 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 85);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 85);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 85);
+  assert.equal(entries.length, 115);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 115);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 115);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
