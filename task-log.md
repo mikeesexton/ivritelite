@@ -7,6 +7,40 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-27 — Home page: stop clipping emoji mode icons (rocket/scissors corners)
+
+**Requested:** The emoji icons on the home "Choose Your Lesson" tiles looked cropped into rounded shapes — visible at the edges of the Conjugation+ rocket 🚀 and Abbreviation scissors ✂️.
+
+**Change:** Home-page mode tiles render the emoji in a `<span class="game-tile-icon game-tile-emoji">`. The base `.game-tile-icon` rule sets `border-radius: 16px; overflow: hidden` (intended for image icons that fill the 54px box and want rounded corners). The `.game-tile-emoji` variant shrinks the box to the glyph but did not undo the clipping, so the rounded corners shaved off the parts of diagonal emoji (rocket fins, scissor blades) that reach into the corners. Added `border-radius: 0; overflow: visible` to `.game-tile-emoji` in `styles.css` so text emoji are never clipped. Image-only `.game-tile-icon` tiles are unaffected.
+
+**Files changed:** `styles.css` (`.game-tile-emoji`: +`border-radius: 0`, +`overflow: visible`).
+
+**Behavior changed:** Home-page emoji icons render fully without corner cropping. No layout/size change.
+
+**Tests run:** `npm test` 174/174 pass (CSS-only change, not covered by tests). Verified in browser preview: rocket/scissors tiles compute `overflow: visible` + `border-radius: 0` and render uncropped (screenshot).
+
+**Risks / regressions to check:** Negligible — scoped to the emoji-tile variant. Image icons still get rounded-corner clipping as before.
+
+---
+
+### 2026-06-27 — Sentences game: balance categories by adding 30 sentences to underrepresented categories
+
+**Requested:** Add sentences to the sentences game so the four categories are more evenly represented. English tokens must be grouped finely (each ≈ one Hebrew word, e.g. "popping over" = קופץ, "to the supermarket" = לסופר), Hebrew compounds kept as single tokens (e.g. חד-משמעיות), and each sentence given a representative emoji.
+
+**Change:**
+- Bank was lopsided: colloquial 32, everyday 23, formal 19, professional 11. Added 30 new entries — professional +14 (`professional_12`–`25`, difficulty 2), formal +9 (`formal_20`–`28`, difficulty 3), everyday +7 (`everyday_24`–`30`, difficulty 1–2) — bringing the bank to **115** entries (colloquial 32, everyday 30, formal 28, professional 25).
+- Each entry has emoji, fine-grained `english_tokens` aligned ~1:1 to Hebrew words, `hebrew_tokens`, 5 `hebrew_distractors`, 5 `english_distractors`, and `notes`. Hyphenated compound חד-משמעיות kept as one token (`formal_26`); רופא שיניים kept as one Hebrew chip with a shape-matched multiword distractor (`everyday_30`).
+
+**Files changed:** `sentence-bank-data.js` (appended 30 entries); `tests/sentence-bank-data.test.js` (entry-count assertions 85 → 115).
+
+**Behavior changed:** Sentences game now draws from 115 sentences with a far flatter category distribution; professional/formal/everyday rounds appear closer in frequency to colloquial.
+
+**Tests run:** `npm test` 174/174 pass. Pre-validated all 30 entries with a scratch script replicating the suite's guardrails (English-token tiling = full coverage, terminal punctuation, standalone-"it" referent rule, multiword-distractor shape, no underscores, non-empty arrays/notes) — 0 problems. Browser smoke check via preview: bank loads as 115 entries with no console errors.
+
+**Risks / regressions to check:** New Hebrew sentences and distractors are author-written and worth a native-speaker glance for naturalness (esp. formal register and the distractor decoys). Token alignment was optimized for tiling correctness; a few English chunks span two words where Hebrew has no 1:1 counterpart (object marker את, idioms like שנויה במחלוקת).
+
+---
+
 ### 2026-06-27 — Sentences game: distractor tile cap, gender-agreement alternates, dead-distractor cleanup
 
 **Requested:** Three improvements to the sentences game: (1) accepted-answer alternates so valid alternative answers aren't marked wrong, (2) grammar-trap distractors "as a system," (3) a tile cap so long sentences don't produce an overcrowded tile board (#6 from the suggestion list).
