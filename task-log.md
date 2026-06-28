@@ -7,6 +7,31 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-27 — Conjugation game: add 20 common verbs (irregular focus)
+
+**Requested:** Add new verbs to the conjugation game, targeting common verbs with a focus on irregulars — a curated list where the conjugations can be produced reliably, then implement all 20 in one pass. User approved the proposed 20-verb list and the default difficulty/priority scheme.
+
+**Change:** Appended 20 fully-curated `createVerbEntry` records to the `STARTER_VERBS` array in `hebrew-verbs.js` (ids prefixed `common-verb-*`), each with complete present/past/future/imperative form sets (plain + niqqud via `markedForm`). `conjugation_mode: "curated"`, `review_status: "approved"`, so stored forms are authoritative (no generation). All available in translation quiz + sentence hints. Verbs added:
+- ל"ה: לעשות (do/make), לרצות (want), לקנות (buy), לענות (answer), לחיות (live)
+- ל"א: לקרוא (read/call), למצוא (find)
+- guttural/other paal: לשאול (ask), לשמוע (hear), לחזור (return), לאהוב (love)
+- פ"י / doubly-weak / פ"נ: לדעת (know), לצאת (go out), לישון (sleep), ליפול (fall)
+- hollow paal: לקום (get up), לשיר (sing)
+- hifil: להבין (understand), להביא (bring)
+- piel: לדבר (speak)
+
+`difficulty_level` 2–4 by complexity; `personal_priority` 55–67 (below existing seeds); `category` defaults to `core_advanced`.
+
+**Files changed:** `hebrew-verbs.js` (added 20 verb entries before the `STARTER_VERBS` array close).
+
+**Behavior changed:** Conjugation game (and translation quiz / sentence hints) now include 20 additional common verbs, heavily weighted toward irregular roots that were previously underrepresented (almost all prior irregulars were paal; this adds ל"ה, ל"א, hifil-hollow, and piel coverage).
+
+**Tests run:** `npm test` 174/174 pass (before and after). Also loaded `hebrew-verbs.js` under Node to confirm all 20 entries parse and each carries 4 complete tense sets. Browser preview skipped: data-only change consumed via the same curated-verb path as existing working game verbs, and port 3000 was held by another session's dev server.
+
+**Risks / regressions to check:** Hand-authored niqqud is worth a native-speaker proofread — particularly rarely-used imperative forms (e.g. לישון יְשַׁן, ליפול נְפֹל) and the pe-guttural future vocalization of לחזור (תַּחֲזֹר vs. תַּחְזְרִי). The special cholam future of לאהוב (אֹהַב/תֹּאהַב) means its 1s future plain spelling "אוהב" collides with the present masculine — intentional and correct, but visually identical in the game.
+
+---
+
 ### 2026-06-27 — Home page: stop clipping emoji mode icons (rocket/scissors corners)
 
 **Requested:** The emoji icons on the home "Choose Your Lesson" tiles looked cropped into rounded shapes — visible at the edges of the Conjugation+ rocket 🚀 and Abbreviation scissors ✂️.
