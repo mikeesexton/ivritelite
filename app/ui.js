@@ -1112,7 +1112,8 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
   }
   const heading = global.document.createElement("h3");
   heading.className = "results-section-title";
-  heading.textContent = translate("results.mistakes");
+  const hasClinicNotes = runtime.state.summary.mistakes.some((item) => ui.getMistakeClinicText(item));
+  heading.textContent = translate(hasClinicNotes ? "results.mistakeClinic" : "results.mistakes");
   mistakesWrap.append(heading);
 
   if (!runtime.state.summary.mistakes.length) {
@@ -1130,6 +1131,7 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
         ui.createCompactRow({
           title: item.primary || item.title || "",
           note: item.secondary || item.note || "",
+          clinic: ui.getMistakeClinicText(item),
           variant: "wrong",
         })
       );
@@ -1245,7 +1247,7 @@ ui.renderSettingsState = ui.renderSettingsState || function renderSettingsState(
   ui.renderPromptSpeechButton();
 };
 
-ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, note, variant }) {
+ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, note, clinic, variant }) {
   const row = global.document.createElement("article");
   row.className = "compact-row";
   if (variant === "correct") {
@@ -1263,7 +1265,22 @@ ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, 
   noteNode.textContent = note;
 
   row.append(titleNode, noteNode);
+  if (clinic) {
+    const clinicNode = global.document.createElement("p");
+    clinicNode.className = "compact-row-clinic";
+    clinicNode.textContent = clinic;
+    row.append(clinicNode);
+  }
   return row;
+};
+
+ui.getMistakeClinicText = ui.getMistakeClinicText || function getMistakeClinicText(item) {
+  if (!item || typeof item !== "object") return "";
+  if (item.clinicKey) {
+    return translate(item.clinicKey, item.clinicVars || {});
+  }
+  const rawClinic = String(item.clinic || "").trim();
+  return rawClinic ? translate("results.clinic", { note: rawClinic }) : "";
 };
 
 ui.createVerbMistakeGroup = ui.createVerbMistakeGroup || function createVerbMistakeGroup(group) {
@@ -1283,6 +1300,14 @@ ui.createVerbMistakeGroup = ui.createVerbMistakeGroup || function createVerbMist
 
   head.append(verb, gloss);
   card.append(head);
+
+  const clinicText = ui.getMistakeClinicText(group);
+  if (clinicText) {
+    const clinic = global.document.createElement("p");
+    clinic.className = "compact-row-clinic";
+    clinic.textContent = clinicText;
+    card.append(clinic);
+  }
 
   const forms = global.document.createElement("div");
   forms.className = "verb-mistake-forms";

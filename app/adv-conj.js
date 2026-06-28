@@ -202,6 +202,8 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
           const otherObjs = runtime.constants.ADV_CONJ_OBJECTS.filter((entry) => entry.key !== obj.key);
           const otherSubjs = subjects.filter((subject) => subject.en !== subj.en);
           const correctText = direction === "en2he" ? hebrewAnswer : englishSentence;
+          const subjectLabel = getAdvConjSubjectEnglishLabel(idiom, subj, tense);
+          const objectLabel = sanitizeEnglishText(obj.en);
 
           function buildDistractor(subject, object) {
             if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[object.key]) return null;
@@ -260,6 +262,10 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
             idiomId: idiom.id,
             tense,
             direction,
+            subjectForm: subj.form,
+            subjectLabel,
+            objectKey: obj.key,
+            objectLabel,
             promptText: direction === "en2he" ? englishSentence : hebrewAnswer,
             promptIsHebrew: direction === "he2en",
             correctAnswer: correctText,
@@ -420,6 +426,30 @@ advConj.applyAdvConjAnswer = advConj.applyAdvConjAnswer || function applyAdvConj
     if (!runtime.state.advConj.sessionMistakeIds.includes(question.idiomId)) {
       runtime.state.advConj.sessionMistakeIds.push(question.idiomId);
     }
+    const mistakeKey = [
+      question.idiomId,
+      question.tense,
+      question.subjectForm || question.subjectLabel,
+      question.objectKey || question.objectLabel,
+      question.direction,
+    ].join("::");
+    if (!Array.isArray(runtime.state.advConj.sessionMistakes)) {
+      runtime.state.advConj.sessionMistakes = [];
+    }
+    if (!runtime.state.advConj.sessionMistakes.some((item) => item.key === mistakeKey)) {
+      const meaning = getAdvConjMeaningDetail(question);
+      runtime.state.advConj.sessionMistakes.push({
+        key: mistakeKey,
+        primary: question.correctAnswer,
+        secondary: meaning || question.promptText,
+        clinicKey: "results.advConjClinic",
+        clinicVars: {
+          subject: question.subjectLabel || "",
+          tense: question.tense || "",
+          object: question.objectLabel || "",
+        },
+      });
+    }
   }
 
   h.setFeedback?.(
@@ -453,6 +483,9 @@ advConj.updateAdvConjStats = advConj.updateAdvConjStats || function updateAdvCon
 
 advConj.buildAdvConjMistakeSummary = advConj.buildAdvConjMistakeSummary || function buildAdvConjMistakeSummary() {
   const runtime = getRuntime();
+  if (Array.isArray(runtime.state.advConj.sessionMistakes) && runtime.state.advConj.sessionMistakes.length) {
+    return runtime.state.advConj.sessionMistakes.slice();
+  }
   return runtime.state.advConj.sessionMistakeIds
     .map((id) => {
       const idiom = getIdioms().find((entry) => entry.id === id);

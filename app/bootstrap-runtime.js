@@ -221,6 +221,7 @@ bootstrapRuntime.createInitialState = bootstrapRuntime.createInitialState || fun
       currentQuestion: null,
       wrongAnswers: 0,
       sessionMistakeIds: [],
+      sessionMistakes: [],
     },
     prepositions: {
       active: false,

@@ -669,6 +669,16 @@ function rewriteSentenceNoteForGame(note) {
   return sentences.length ? sentences.slice(0, 2).join(" ") : "Watch the wording closely here.";
 }
 
+function buildSentenceClinicNote(note) {
+  const cleanNote = String(note || "")
+    .replace(/\s+/g, " ")
+    .replace(/\u2014/g, " - ")
+    .trim();
+  if (!cleanNote) return "";
+  if (/^(watch|remember|try|pick|use|go with|don't)\b/i.test(cleanNote)) return cleanNote;
+  return rewriteSentenceNoteForGame(cleanNote);
+}
+
 function buildSentenceFeedbackDetail(question, isCorrect) {
   const details = [];
   if (!isCorrect) {
@@ -1010,9 +1020,12 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
       const sentence = lookup.get(sentenceId);
       if (!sentence) return null;
       const toHebrew = direction === "en2he";
+      const clinicNote = buildSentenceClinicNote(sentence.notes);
       return {
         primary: toHebrew ? sentence.hebrew : sentence.english,
         secondary: `${translate(toHebrew ? "prompt.toHebrew" : "prompt.toEnglish")}: ${toHebrew ? sentence.english : sentence.hebrew}`,
+        clinicKey: clinicNote ? "results.sentenceClinic" : "",
+        clinicVars: clinicNote ? { note: clinicNote } : {},
       };
     })
     .filter(Boolean);

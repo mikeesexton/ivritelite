@@ -2115,7 +2115,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-laasot",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לעשות",
       lemma_niqqud: "לַעֲשׂוֹת",
       root: ["ע", "שׂ", "ה"],
@@ -2165,7 +2165,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lirtzot",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לרצות",
       lemma_niqqud: "לִרְצוֹת",
       root: ["ר", "צ", "ה"],
@@ -2215,7 +2215,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-liknot",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לקנות",
       lemma_niqqud: "לִקְנוֹת",
       root: ["ק", "נ", "ה"],
@@ -2265,7 +2265,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-laanot",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לענות",
       lemma_niqqud: "לַעֲנוֹת",
       root: ["ע", "נ", "ה"],
@@ -2315,7 +2315,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lichyot",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לחיות",
       lemma_niqqud: "לִחְיוֹת",
       root: ["ח", "י", "ה"],
@@ -2365,7 +2365,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-likro",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לקרוא",
       lemma_niqqud: "לִקְרוֹא",
       root: ["ק", "ר", "א"],
@@ -2415,7 +2415,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-limtzo",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "למצוא",
       lemma_niqqud: "לִמְצוֹא",
       root: ["מ", "צ", "א"],
@@ -2465,7 +2465,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lishol",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לשאול",
       lemma_niqqud: "לִשְׁאוֹל",
       root: ["ש", "א", "ל"],
@@ -2515,7 +2515,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-ladaat",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לדעת",
       lemma_niqqud: "לָדַעַת",
       root: ["י", "ד", "ע"],
@@ -2615,7 +2615,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lishon",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לישון",
       lemma_niqqud: "לִישׁוֹן",
       root: ["י", "ש", "נ"],
@@ -2765,7 +2765,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lashir",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לשיר",
       lemma_niqqud: "לָשִׁיר",
       root: ["ש", "י", "ר"],
@@ -2815,7 +2815,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lehavin",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "להבין",
       lemma_niqqud: "לְהָבִין",
       root: ["ב", "י", "נ"],
@@ -2865,7 +2865,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lehavi",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "להביא",
       lemma_niqqud: "לְהָבִיא",
       root: ["ב", "ו", "א"],
@@ -2915,7 +2915,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-ledaber",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לדבר",
       lemma_niqqud: "לְדַבֵּר",
       root: ["ד", "ב", "ר"],
@@ -2965,7 +2965,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-leehov",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לאהוב",
       lemma_niqqud: "לֶאֱהֹב",
       root: ["א", "ה", "ב"],

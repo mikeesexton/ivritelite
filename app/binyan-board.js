@@ -97,6 +97,15 @@ binyanBoard.getBinyanFunctionHintText = binyanBoard.getBinyanFunctionHintText ||
   return getTranslatedText(`binyan.functionHint.${slot}`);
 };
 
+function getBinyanFunctionClinicText(form) {
+  const func = String(form?.func || "").trim();
+  if (func) {
+    const clinicText = getTranslatedText(`binyan.functionClinic.${func}`);
+    if (clinicText) return clinicText;
+  }
+  return getTranslatedText(`binyan.functionHint.${form?.slot || ""}`) || func;
+}
+
 binyanBoard.renderBinyanFunctionHint = binyanBoard.renderBinyanFunctionHint || function renderBinyanFunctionHint(question) {
   const runtime = getRuntime();
   const button = runtime.el?.promptFunctionHint;
@@ -546,7 +555,24 @@ binyanBoard.buildBinyanBoardMistakeSummary = binyanBoard.buildBinyanBoardMistake
     .map((id) => {
       const form = byId.get(id);
       if (!form) return null;
-      return { primary: form.formVocalized, secondary: form.gloss };
+      const functionText = getBinyanFunctionClinicText(form);
+      const teachingKey = TEACHING_POINT_KEYS[form.teachingPoint || ""];
+      const teachingText = teachingKey ? getTranslatedText(teachingKey) : "";
+      const clinicParts = [];
+      if (form.binyanNameHe && functionText) {
+        clinicParts.push(translate("results.binyanClinic", {
+          binyan: form.binyanNameHe,
+          function: functionText,
+        }));
+      }
+      if (teachingText) {
+        clinicParts.push(teachingText);
+      }
+      return {
+        primary: form.formVocalized,
+        secondary: form.gloss,
+        clinic: clinicParts.join(" "),
+      };
     })
     .filter(Boolean);
 };

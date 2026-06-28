@@ -140,9 +140,14 @@ prepositions.buildPrepositionsDeck = prepositions.buildPrepositionsDeck || funct
       if (!built) continue;
       const answerPlain = `${trigger.he} ${built.correctForm.plain}`;
       const answerNiqqud = `${trigger.he} ${built.correctForm.niqqud}`;
+      const prepBase = getInflections()[trigger.prep]?.base || trigger.prep;
       deck.push({
         triggerId: trigger.id,
         triggerHe: trigger.he,
+        prepKey: trigger.prep,
+        prepBase,
+        objectKey: object.key,
+        objectLabel: prepositions.getObjectLabel(object.key),
         promptText: prepositions.buildPromptText(trigger),
         promptIsHebrew: true,
         englishHint: prepositions.buildEnglishHint(trigger, object.key),
@@ -300,6 +305,13 @@ prepositions.applyPrepositionsAnswer = prepositions.applyPrepositionsAnswer || f
     runtime.state.prepositions.sessionMistakes.push({
       primary: question.answerNiqqud,
       secondary: question.englishHint,
+      clinicKey: "results.prepositionClinic",
+      clinicVars: {
+        trigger: question.triggerHe,
+        prep: question.prepBase,
+        object: question.objectLabel,
+        answer: question.answerNiqqud,
+      },
     });
   }
 

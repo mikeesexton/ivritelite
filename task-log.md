@@ -7,6 +7,89 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-28 — Clean up feedback and mistake-clinic copy
+
+**Requested:** Clean up the awkward end-of-game Binyanim feedback from the screenshot and review the other games' tips/feedback for similar improvements.
+
+**Change:**
+- `app/bootstrap-data.js` — replaced the repeated/raw "Clinic:" wrapper with direct note text, rewrote Binyanim clinic copy to "Pattern..." phrasing, removed "Factitive" from learner-facing Binyanim hints, shortened Sentence Builder tips from "Game tip" to "Tip", and tightened Prepositions/Conjugation+ feedback and result-clinic copy.
+- `app/binyan-board.js` — Binyanim mistake summaries now prefer the actual missed form's function for result feedback, falling back to the slot hint only when needed.
+- `app/sentence-bank.js` — Sentence Builder result-clinic notes now reuse the learner-facing note rewrite while preserving notes that already read like advice.
+- `tests/app-progress.test.js`, `tests/verb-game-data.test.js` — updated copy expectations and added coverage for the cleaner Binyanim clinic output.
+
+**Files changed:** `app/bootstrap-data.js`, `app/binyan-board.js`, `app/sentence-bank.js`, `tests/app-progress.test.js`, `tests/verb-game-data.test.js`, `task-log.md`.
+
+**Behavior changed:** Binyanim result rows now read like `Pattern: פִּעֵל carries a causative meaning here.` instead of `Clinic: פִּעֵל usually signals Factitive Active.` Prepositions and Conjugation+ clinic lines are shorter, Sentence Builder tips are less clunky, and authored Sentence Builder notes are less likely to leak developer-ish wording into the end summary.
+
+**Tests run:** `npm test` 184/184 pass. `git diff --check` clean.
+
+**Risks / regressions to check:** The Binyanim function labels are friendlier but still grammatical shorthand. If later user testing shows the labels are still too technical, the next pass should add one-sentence examples per binyan rather than only renaming the category.
+
+---
+
+### 2026-06-28 — Hide recommended simple common verbs from Translation
+
+**Requested:** Remove all previously recommended too-simple common verbs from the Translation game.
+
+**Change:**
+- `hebrew-verbs.js` — changed these common-verb entries to `{ translationQuiz: false, sentenceHints: true }`: `common-verb-laanot` (to answer), `common-verb-laasot` (to do/make), `common-verb-ladaat` (to know), `common-verb-lashir` (to sing), `common-verb-ledaber` (to speak/talk), `common-verb-lehavi` (to bring), `common-verb-lehavin` (to understand), `common-verb-lichyot` (to live), `common-verb-liknot` (to buy), `common-verb-likro` (to read/call), `common-verb-limtzo` (to find), `common-verb-lirtzot` (to want), `common-verb-lishol` (to ask), and `common-verb-lishon` (to sleep). `common-verb-leehov` was already hidden in the prior pass and remains hidden.
+- `tests/hebrew-verbs.test.js` — expanded the per-mode availability regression to cover the whole hidden common-verb set and all generated sense entries.
+- `index.html` — bumped the `hebrew-verbs.js` cache query string to `20260628g`.
+
+**Files changed:** `hebrew-verbs.js`, `tests/hebrew-verbs.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Translation no longer draws those basic/common infinitives, but they remain available for Conjugation and sentence hints.
+
+**Tests run:** `npm test` 184/184 pass. Data check: 15 hidden common-verb base IDs checked, `visibleCount: 0` among generated Translation-eligible seed entries.
+
+**Risks / regressions to check:** Translation pool size drops by more than the number of base verbs because multi-sense entries generate multiple seed vocabulary entries. This is intentional but worth remembering if pool-size expectations change.
+
+---
+
+### 2026-06-28 — Hide "to love / to like" from Translation
+
+**Requested:** Remove "to love" from the Translation game and recommend other too-simple vocabulary to consider removing.
+
+**Change:**
+- `hebrew-verbs.js` — changed `common-verb-leehov` (`לאהוב`, senses "to love" / "to like") availability to `{ translationQuiz: false, sentenceHints: true }`, keeping it available for Conjugation and sentence-hint contexts while excluding it from Translation.
+- `tests/hebrew-verbs.test.js` — extended the per-mode availability test to assert both `common-verb-leehov` sense entries stay hidden from Translation and available for sentence hints.
+- `index.html` — bumped the `hebrew-verbs.js` cache query string.
+
+**Files changed:** `hebrew-verbs.js`, `tests/hebrew-verbs.test.js`, `index.html`.
+
+**Behavior changed:** The Translation game no longer draws `לאהוב` for "to love" or "to like"; the verb remains in the conjugation data.
+
+**Tests run:** `npm test` 184/184 pass.
+
+**Recommendations:** Strong next prune candidates from the still-translation-enabled common verbs: `לשיר` (to sing), `לישון` (to sleep), `לקנות` (to buy), `לקרוא` (to read/call), `לשאול` (to ask), `לענות` (to answer), `להביא` (to bring), `למצוא` (to find). Possible second wave: `לחיות` (to live), `לרצות` (to want), `לדעת` (to know), `להבין` (to understand), `לעשות` (to do/make), `לדבר` (to speak/talk).
+
+**Risks / regressions to check:** None expected; this uses the existing availability gate. If the app is already open, the bumped script URL takes effect on reload.
+
+---
+
+### 2026-06-28 — Results mistake clinic: richer teaching notes where data supports it
+
+**Requested:** Turn the existing session-mistake summaries into a more useful mistake clinic wherever practicable, without inventing weak explanations for modes that do not have enough structured data.
+
+**Change:**
+- `app/ui.js`, `styles.css`, `app/bootstrap-data.js` — result summaries now switch the section heading from "Session Mistakes" to "Mistake Clinic" when any missed item includes a clinic note; compact rows and verb-form groups can render an extra teaching line. Added EN/HE i18n for clinic labels and explanation templates.
+- `app/sentence-bank.js` — sentence-builder mistake summaries now carry each sentence's authored `notes` as a clinic focus line.
+- `app/prepositions.js` — generated questions now retain trigger/preposition/object metadata; missed answers explain which preposition the trigger governs and which object inflection was required.
+- `app/adv-conj.js`, `app/bootstrap-runtime.js`, `app/session.js` — Conjugation+ now stores exact missed-question snapshots with subject, tense, and object context, falling back to the prior idiom-level summary when needed.
+- `app/binyan-board.js` — Binyanim mistake summaries now reuse localized function hints and teaching-point explanations.
+- `index.html` — bumped cache query strings for the touched browser assets.
+- `tests/app-progress.test.js` — added focused regression coverage for clinic rendering plus Sentence Builder, Prepositions, Conjugation+, and Binyanim clinic data.
+
+**Files changed:** `app/ui.js`, `styles.css`, `app/bootstrap-data.js`, `app/sentence-bank.js`, `app/prepositions.js`, `app/adv-conj.js`, `app/bootstrap-runtime.js`, `app/session.js`, `app/binyan-board.js`, `index.html`, `tests/app-progress.test.js`.
+
+**Behavior changed:** Results now become a "Mistake Clinic" for modes with reliable teaching context: Sentence Builder shows authored notes, Prepositions explains governed preposition + inflected object, Conjugation+ calls out subject/tense/object axes, and Binyanim shows function/teaching-point notes. Plain answer lists remain simple where no trustworthy rule context exists.
+
+**Tests run:** `npm test` 184/184 pass. Browser smoke check on `http://localhost:8081`: completed a Prepositions session with misses; results showed "Mistake Clinic" and a rule line like "מחכה governs ל; here it is inflected for you (pl.), so use מחכה לָכֶם." No boot error.
+
+**Risks / regressions to check:** Some clinic text still mixes English object labels inside Hebrew UI for Prepositions/Conjugation+ because those object labels are currently English-only data. A future pass could add localized object labels if the Hebrew UI needs fully Hebrew explanations.
+
+---
+
 ### 2026-06-28 — Progress tracker: track Prepositions + match home-tile emojis
 
 **Requested:** (1) The Game Mode Performance tracker (home + review pages) should track the Prepositions game. (2) The tracker's mode emojis should match the homepage game-tile emojis.

@@ -836,6 +836,30 @@ test("starter verb seed entries carry per-mode availability metadata", () => {
   assert.equal(entriesById.get("starter-verb-lirkhosh--sense-1")?.availability?.sentenceHints, true);
   assert.equal(entriesById.get("starter-verb-letachnen--sense-1")?.availability?.translationQuiz, false);
   assert.equal(entriesById.get("starter-verb-letachnen--sense-1")?.availability?.sentenceHints, true);
+  [
+    "common-verb-laanot",
+    "common-verb-laasot",
+    "common-verb-ladaat",
+    "common-verb-lashir",
+    "common-verb-ledaber",
+    "common-verb-leehov",
+    "common-verb-lehavi",
+    "common-verb-lehavin",
+    "common-verb-lichyot",
+    "common-verb-liknot",
+    "common-verb-likro",
+    "common-verb-limtzo",
+    "common-verb-lirtzot",
+    "common-verb-lishol",
+    "common-verb-lishon",
+  ].forEach((baseId) => {
+    const matchingEntries = entries.filter((entry) => entry.id.startsWith(`${baseId}--sense-`));
+    assert.ok(matchingEntries.length > 0, `${baseId} should expose seed vocabulary entries`);
+    matchingEntries.forEach((entry) => {
+      assert.equal(entry.availability?.translationQuiz, false, `${entry.id} should stay out of translation quiz`);
+      assert.equal(entry.availability?.sentenceHints, true, `${entry.id} should stay available for sentence hints`);
+    });
+  });
 });
 
 test("generated-safe verbs may use the limited generator", () => {

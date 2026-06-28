@@ -856,7 +856,7 @@ test("sentence builder renders english answer lines left-to-right, keeps punctua
   assert.equal(
     getFeedbackText(document),
     "Correct. The English sentence is He's just talking nonsense, don't take him seriously. "
-      + "Game tip: Watch the gender match here."
+      + "Tip: Watch the gender match here."
   );
   assert.equal(state.sentenceProgress["sb-1::he2en"].attempts, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"].correct, 1);
@@ -1017,7 +1017,7 @@ test("sentence builder rewrites formal notes into short learner-facing tips", ()
   assert.equal(
     getFeedbackText(document),
     "Correct. The English sentence is The central question is how to implement this in practice, not just in theory. "
-      + "Game tip: This one uses a more formal tone. Pick the more polished wording."
+      + "Tip: This one uses a more formal tone. Pick the more polished wording."
   );
 });
 
@@ -2356,7 +2356,7 @@ test("sentence builder falls back to the generic game tip when the miss is not a
   placeSentenceTokenByTap(document, "you", 2);
   document.querySelector("#nextBtn").click();
 
-  assert.match(getFeedbackText(document), /Game tip: This one is casual Hebrew\./);
+  assert.match(getFeedbackText(document), /Tip: This one is casual Hebrew\./);
   assert.doesNotMatch(getFeedbackText(document), /Correct word:/);
 });
 
@@ -2385,7 +2385,7 @@ test("advanced conjugation feedback adds colloquial meaning only for marked idio
     selectedOptionId: "right",
   };
   harness.applyAdvConjAnswer();
-  assert.match(getFeedbackText(harness.document), /Colloquial meaning: "to drive someone up the wall"\./);
+  assert.match(getFeedbackText(harness.document), /Everyday meaning: to drive someone up the wall\./);
 
   harness.state.advConj.currentQuestion = {
     locked: false,
@@ -2395,7 +2395,7 @@ test("advanced conjugation feedback adds colloquial meaning only for marked idio
     selectedOptionId: "right",
   };
   harness.applyAdvConjAnswer();
-  assert.doesNotMatch(getFeedbackText(harness.document), /Colloquial meaning:/);
+  assert.doesNotMatch(getFeedbackText(harness.document), /Everyday meaning:/);
 });
 
 test("Hebrew is stripped from English-facing text across data pools and advanced conjugation", () => {
@@ -2864,6 +2864,155 @@ test("all game summaries now use only score accuracy and time metrics", () => {
     assert.equal(metrics.length, 3);
     assert.deepEqual(Array.from(metrics, (metric) => metric.label), expectedLabels);
   });
+});
+
+test("results promote structured mistake notes into a mistake clinic", () => {
+  const harness = loadAppHarness([]);
+  const { app, document, state } = harness;
+  state.route = "results";
+  Object.assign(state.summary, {
+    active: true,
+    game: "prepositions",
+    titleKey: "summary.prepositionsTitle",
+    correctCount: 8,
+    incorrectCount: 2,
+    elapsedSeconds: 33,
+    mistakes: [
+      {
+        primary: "מתגעגע אֲלֵיהֶם",
+        secondary: "to miss them",
+        clinicKey: "results.prepositionClinic",
+        clinicVars: {
+          trigger: "מתגעגע",
+          prep: "אל",
+          object: "them",
+          answer: "מתגעגע אֲלֵיהֶם",
+        },
+      },
+    ],
+  });
+
+  app.ui.renderSummaryState();
+  const resultsSummary = document.querySelector("#resultsSummary");
+  const mistakesWrap = resultsSummary.children[2];
+  assert.equal(mistakesWrap.children[0].textContent, "Mistake Clinic");
+  const clinicRows = mistakesWrap.querySelectorAll(".compact-row-clinic");
+  assert.equal(clinicRows.length, 1);
+  assert.equal(
+    clinicRows[0].textContent,
+    "Pattern: מתגעגע takes אל; with them, use מתגעגע אֲלֵיהֶם."
+  );
+});
+
+test("sentence builder mistake summaries carry authored clinic notes", () => {
+  const sentenceBank = [
+    {
+      id: "clinic-sentence",
+      category: "everyday",
+      difficulty: 2,
+      english: "I need to write a note.",
+      hebrew: "אני צריך לכתוב פתק.",
+      english_tokens: ["I", "need to", "write", "a note"],
+      hebrew_tokens: ["אני", "צריך", "לכתוב", "פתק"],
+      english_distractors: ["you", "can", "read", "a sign"],
+      hebrew_distractors: ["אתה", "יכול", "לקרוא", "שלט"],
+      notes: "Watch the צריך + infinitive pattern.",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  harness.state.sentenceBank.sessionMistakeKeys = ["clinic-sentence::en2he"];
+
+  const mistakes = harness.app.sentenceBank.buildSentenceBankMistakeSummary();
+  assert.equal(mistakes.length, 1);
+  assert.equal(mistakes[0].clinicKey, "results.sentenceClinic");
+  assert.deepEqual(JSON.parse(JSON.stringify(mistakes[0].clinicVars)), {
+    note: "Watch the צריך + infinitive pattern.",
+  });
+});
+
+test("preposition misses explain the governed preposition and object inflection", () => {
+  const harness = loadAppHarness([], [], [], {
+    localStorageData: { "ivriquest-welcome-seen-v1": "1" },
+  });
+  const question = harness.app.prepositions.buildPrepositionsDeck()
+    .find((candidate) => candidate.triggerId === "prep-miss" && candidate.objectKey === "3mp");
+  assert.ok(question);
+  question.selectedOptionId = question.options.find((option) => !option.isCorrect)?.id || "";
+  harness.state.prepositions.active = true;
+  harness.state.prepositions.currentQuestion = question;
+
+  harness.app.prepositions.applyPrepositionsAnswer();
+
+  const mistakes = harness.app.prepositions.buildPrepositionsMistakeSummary();
+  assert.equal(mistakes.length, 1);
+  assert.equal(mistakes[0].clinicKey, "results.prepositionClinic");
+  assert.deepEqual(JSON.parse(JSON.stringify(mistakes[0].clinicVars)), {
+    trigger: "מתגעגע",
+    prep: "אל",
+    object: "them",
+    answer: "מתגעגע אֲלֵיהֶם",
+  });
+});
+
+test("advanced conjugation misses remember subject tense and object clinic context", () => {
+  const idioms = [
+    {
+      id: "idiom-open-eyes",
+      english: "to open your eyes",
+      english_meaning: "to pay attention",
+      showMeaning: true,
+      object_type: "l_dative",
+      fixed_object: "את העיניים",
+      literal_sg: "{s} opens {p} eyes",
+      literal_pl: "{s} open {p} eyes",
+      literal_past: "{s} opened {p} eyes",
+      literal_future: "{s} will open {p} eyes",
+      present_tense: { msg: "פותח", fsg: "פותחת", mpl: "פותחים", fpl: "פותחות" },
+      past_tense: { msg: "פתח", fsg: "פתחה", mpl: "פתחו", fpl: "פתחו" },
+      future_tense: { msg: "יפתח", fsg: "תפתח", mpl: "תפתחו", fpl: "תפתחו" },
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { idioms, mathRandom: () => 0 });
+  const question = harness.app.advConj.buildAdvConjDeck()[0];
+  assert.ok(question);
+  question.selectedOptionId = question.options.find((option) => !option.isCorrect)?.id || "";
+  harness.state.advConj.currentQuestion = question;
+
+  harness.app.advConj.applyAdvConjAnswer();
+
+  const mistakes = harness.app.advConj.buildAdvConjMistakeSummary();
+  assert.equal(mistakes.length, 1);
+  assert.equal(mistakes[0].clinicKey, "results.advConjClinic");
+  assert.deepEqual(JSON.parse(JSON.stringify(mistakes[0].clinicVars)), {
+    subject: question.subjectLabel,
+    tense: question.tense,
+    object: question.objectLabel,
+  });
+});
+
+test("binyanim mistake summaries reuse function hints and teaching points as clinic notes", () => {
+  const harness = loadAppHarness([]);
+  harness.state.binyanBoard.deck = [
+    {
+      forms: [
+        {
+          formId: "l-b-sh:hitpael",
+          slot: "hitpael",
+          binyanNameHe: "הִתְפַּעֵל",
+          formVocalized: "הִתְלַבֵּשׁ",
+          gloss: "got dressed",
+          func: "reflexive",
+          teachingPoint: "No metathesis — ל is not a sibilant, so the ת of hitpael stays put.",
+        },
+      ],
+    },
+  ];
+  harness.state.binyanBoard.sessionMistakeIds = ["l-b-sh:hitpael"];
+
+  const mistakes = harness.app.binyanBoard.buildBinyanBoardMistakeSummary();
+  assert.equal(mistakes.length, 1);
+  assert.match(mistakes[0].clinic, /Pattern: הִתְפַּעֵל carries a reflexive meaning here\./);
+  assert.match(mistakes[0].clinic, /No spelling change here/);
 });
 
 test("starting advanced conjugation resets the game score but preserves the shared combo", () => {

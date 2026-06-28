@@ -328,10 +328,10 @@ test("binyan board sessions serve six roots drawn from the full root pool", () =
 test("binyan function hints use slot-level labels without transliterations", () => {
   const binyanBoard = loadBinyanBoard("en");
   const expectedHintsBySlot = {
-    paal: "Simple Active",
-    nifal: "Simple Passive",
-    piel: "Factitive Active",
-    pual: "Factitive Passive",
+    paal: "Basic Active",
+    nifal: "Passive/Middle",
+    piel: "Intensive/Causative Active",
+    pual: "Passive Intensive/Causative",
     hifil: "Causative Active",
     hufal: "Causative Passive",
     hitpael: "Reflexive/Reciprocal",
@@ -348,7 +348,7 @@ test("binyan function hints use slot-level labels without transliterations", () 
 test("binyan function hints do not compose fallback labels from functions", () => {
   const binyanBoard = loadBinyanBoard("en");
   assert.equal(binyanBoard.getBinyanFunctionHintText({ slot: "unknown", func: "resultative" }), "");
-  assert.equal(binyanBoard.getBinyanFunctionHintText({ slot: "piel", func: "resultative" }), "Factitive Active");
+  assert.equal(binyanBoard.getBinyanFunctionHintText({ slot: "piel", func: "resultative" }), "Intensive/Causative Active");
 });
 
 test("binyan function hint button renders hidden and revealed states", () => {
@@ -373,7 +373,7 @@ test("binyan function hint button renders hidden and revealed states", () => {
   question.functionHintRevealed = true;
   app.binyanBoard.renderBinyanFunctionHint(question);
 
-  assert.equal(button.textContent, "Simple Passive");
+  assert.equal(button.textContent, "Passive/Middle");
   assert.equal(button.classList.contains("is-revealed"), true);
   assert.equal(button.getAttribute("aria-expanded"), "true");
   assert.equal(cardStateUpdates, 2);
@@ -395,7 +395,7 @@ test("binyan feedback uses plain localized teaching notes", () => {
   assert.deepEqual(JSON.parse(JSON.stringify(feedbackPayloads.at(-1))), {
     tone: "success",
     sentence: "Correct: קוֹמֵם means raised up, incited, or stirred up.",
-    detail: "This hollow root uses a special factitive active pattern here.",
+    detail: "This hollow root uses a special intensive/causative pattern here.",
   });
 
   app.runtime.state.language = "he";

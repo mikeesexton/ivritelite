@@ -683,6 +683,7 @@ session.resetAdvConjState = session.resetAdvConjState || function resetAdvConjSt
     currentQuestion: null,
     wrongAnswers: 0,
     sessionMistakeIds: [],
+    sessionMistakes: [],
   };
 };
 

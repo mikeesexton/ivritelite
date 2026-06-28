@@ -704,6 +704,15 @@ body[data-gameplay-active="true"] {
   font-size: 0.84rem;
 }
 
+.compact-row-clinic {
+  margin: 0.28rem 0 0;
+  padding-top: 0.42rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink);
+  font-size: 0.82rem;
+  line-height: 1.34;
+}
+
 .compact-row--wrong {
   background: var(--error-bg);
   border-color: var(--error-border);
