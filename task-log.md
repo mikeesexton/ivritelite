@@ -7,6 +7,101 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-28 — Progress tracker: track Prepositions + match home-tile emojis
+
+**Requested:** (1) The Game Mode Performance tracker (home + review pages) should track the Prepositions game. (2) The tracker's mode emojis should match the homepage game-tile emojis.
+
+**Change:**
+- `app/data.js` — `calculateGameModeStats` now includes a `prepositions` bucket and aggregates `STORAGE_KEYS.prepositionsStats` (mirrors the advConj/binyan aggregation).
+- `app/ui.js` — `renderGameModePerformance`: added a Prepositions card (🔗, `game.prepositionsName`), corrected the existing emojis to match the homepage tiles (conjugation 🔗→🏃, abbreviation ⏩→✂️), and added `sentenceBank`/`prepositions` to the fallback stats object. Now all five cards use the same emoji as their homepage tile: Sentences 🧩, Conjugation 🏃, Abbreviation ✂️, Prepositions 🔗, Binyanim 🌳.
+- `tests/app-progress.test.js` — added `preposition-data.js` + `app/prepositions.js` to the harness script list and a new test asserting two answers (1 correct, 1 wrong) persist to `prepositionsStats`, aggregate into `modeStats.prepositions`, and render a "Prepositions" card with 🔗 and "✅ 1  ❌ 1".
+- `index.html` — bumped `?v=` to `20260628d` on `app/data.js` and `app/ui.js`.
+
+**Files changed:** `app/data.js`, `app/ui.js`, `tests/app-progress.test.js`, `index.html`.
+
+**Behavior changed:** The Prepositions game's correct/incorrect counts now appear as their own card (with accuracy ring) in the Game Mode Performance tracker on both the home and review screens. The conjugation and abbreviation cards now show the same emoji as their homepage tiles (previously 🔗 and ⏩, which no longer matched).
+
+**Tests run:** `npm test` 179/179 pass (added 1). Verified in browser preview: simulated 1 correct + 1 wrong prepositions answer; the review tracker shows a מילות יחס card with 🔗 and ✅ 1 ❌ 1 (half green/red ring), and the other cards read 🧩/🏃/✂️/🌳 matching the home tiles. `prepositionsStats` persisted `{attempts:2,correct:1}`. No console errors.
+
+**Risks / regressions to check:** The "Conjugation" tracker card still aggregates both Conjugation (verbMatch) and Conjugation+ (advConj) progress under one card titled "Conjugation" with the 🏃 emoji — by design, not 1:1 with the 7 home tiles (there is no separate Conjugation+ or Translation card). If a separate Conjugation+ card is ever wanted, advConj would need its own bucket split out of `conjugation`.
+
+---
+
+### 2026-06-28 — Prepositions mode: legible עם spelling + speech no longer reveals answer
+
+**Requested:** (1) "with them" rendered as אִתָּם (normative defective niqqud) is hard to read — spell it איתם (with the yod). (2) The prompt sound button spoke the trigger *and* the preposition, giving away the answer.
+
+**Change:**
+- `preposition-data.js` — switched the whole `im` (עם) paradigm's `niqqud` forms to plene vocalized spelling with the yod (אִיתִּי, אִיתְּךָ, אִיתָּם, …) so every comitative form stays legible on the answer buttons. `plain` forms were already plene; unchanged.
+- `app/prepositions.js` — added `triggerHe` to each deck question and changed `getPrepositionsPromptSpeechPayload` to speak only `triggerHe` (e.g. "מסכים"), never the answer string. Previously it read `answerPlain`/`answerNiqqud`, which included the correct preposition.
+- `index.html` — bumped `?v=` to `20260628c` on `preposition-data.js` and `app/prepositions.js`.
+
+**Files changed:** `preposition-data.js` (im niqqud forms), `app/prepositions.js` (triggerHe + prompt speech payload), `index.html` (cache versions).
+
+**Behavior changed:** עם answer options now display with the yod (e.g. אִיתָּם), and the prompt speaker reads only the trigger word, so it no longer reveals the governed preposition.
+
+**Tests run:** `npm test` 178/178 pass. Verified in browser preview: all 8 `im` forms contain the yod (3mp = אִיתָּם); rendered a live "מסכים ____ / to agree with them" question showing אִיתָּם as an option; speech payload for that question = `{text:"מסכים"}` with the preposition absent. No console errors.
+
+**Risks / regressions to check:** Plene-with-niqqud (ktiv male menukad) for עם is a deliberate legibility choice over strict normative defective spelling — worth a glance from a native speaker, but consistent across the paradigm. The מ paradigm's 1pl (מֵאִתָּנוּ) still uses defective את internally; left as-is since it wasn't flagged and reads fine.
+
+---
+
+### 2026-06-28 — Prepositions mode: cache-bust fix + center home tiles
+
+**Requested:** On the user's server (localhost:8080) the new Prepositions tile showed the raw key `game.prepositionsName` and clicking it did nothing; also: center the home-screen game tiles.
+
+**Cause:** The prior task edited existing JS files (controller.js, bootstrap-data.js, etc.) but did not bump their `?v=` cache-busting query strings in `index.html`, so browsers served stale cached copies — old `bootstrap-data.js` lacked the `prepositionsName` key (raw key shown) and old `controller.js` lacked the click handler (dead tile). The new files loaded fresh, which is why only those worked.
+
+**Change:**
+- `index.html` — bumped `?v=` to `20260628b` on every file touched by the Prepositions work: `styles.css`, `preposition-data.js`, `app/{constants,bootstrap-data,bootstrap-runtime,session,ui,prepositions,controller}.js`.
+- `styles.css` — converted `.home-lesson-grid` from CSS grid to centered flex-wrap (`display:flex; flex-wrap:wrap; justify-content:center`) with per-breakpoint `flex-basis` calc for 2/3-per-row. The in-game `.game-picker` was split out of the shared rules and left as grid. Fixes the orphaned 7th tile (now centered in its row).
+
+**Files changed:** `index.html` (version queries), `styles.css` (home tile grid → centered flex at base + 3 media-query breakpoints).
+
+**Behavior changed:** Prepositions tile now shows its localized name (מילות יחס / Prepositions) and launches the game on click once the browser fetches the fresh JS. Home-screen tiles are horizontally centered, so an incomplete last row (e.g. the 7th tile) sits centered rather than left/column-aligned.
+
+**Tests run:** `npm test` 178/178 pass. Verified in browser preview: Hebrew tile name resolves to `מילות יחס` (note also localized), clicking launches the session (mode `prepositions`, queue populated), and the 7-tile grid renders with the last tile centered. No console errors.
+
+**Risks / regressions to check:** Users with the page already open must hard-reload (or the bumped `?v=` will force it on next load). The flex `flex-basis` calcs assume the per-breakpoint gap values (0.65/0.58/0.54rem) — if those gaps change, update the calc divisors. `.game-picker` intentionally unchanged.
+
+---
+
+### 2026-06-28 — New game mode: Prepositions (governed prepositions, inflected)
+
+**Requested:** Build a game to test Hebrew prepositions like מתגעגע אליך. User chose (1) test *both* the preposition a word governs and its inflection for the object, and (2) a unified content net spanning verbs, adjectives, and expressions. Then approved building it.
+
+**Change:** New multiple-choice mode cloned from the `advConj` flow. Each question shows a trigger + blank (e.g. `מתגעגע ____`) with an English hint ("to miss you (m.sg.)"); the player picks the correctly inflected preposition. Distractors are generated, not authored: two are *other* governed prepositions inflected to the same object (tests choice — e.g. עָלֶיךָ next to אֵלֶיךָ), one is the *right* preposition inflected to a different object (tests inflection). Options render with niqqud (vowels are what distinguish many forms; plain לך serves both 2ms/2fs). Reuses the shared streak/score, intro overlay, speech, feedback, and session-summary machinery.
+
+Data model in new `preposition-data.js`: a per-preposition inflection table (אל, על, ל, ב, מ, עם, and accusative את used mainly as a distractor base) × 8 object pronouns, plus 35 triggers each keyed to one preposition with an English `{o}` template. Triggers tested:
+- אל: מתגעגע (miss), ניגש (approach), פונה (turn to), מתייחס (relate to)
+- ל: מחכה (wait for), דואג (worry about), עוזר (help), מצפה (look forward to), שייך (belongs to), מתרגל (get used to), דומה (similar to)
+- על: חושב (think about), מסתכל (look at), שומע (hear about), מוותר (give up on), שומר (look after), מגן (protect), משפיע (influence), צוחק (laugh at)
+- ב: מאמין (believe in), מטפל (take care of), משתמש (use), מקנא (envy), בוטח (trust), גאה (proud of), מאוהב (in love with)
+- עם: מדבר (talk with), מסכים (agree with), מתחתן (marry)
+- מ: נהנה (enjoy), פוחד (afraid of), שונה (different from), מרוצה (satisfied with), אכפת לי (care about), נמאס לי (fed up with)
+
+**Files changed:**
+- `preposition-data.js` (new) — inflection tables, object list, 35 triggers; exposes globals + CommonJS export.
+- `app/prepositions.js` (new) — engine: deck/option builder (pure `buildPrepositionOptions`), start/intro/load/render/answer/stats/mistake-summary.
+- `app/constants.js` — `PREPOSITIONS_ROUNDS = 10`, `STORAGE_KEYS.prepositionsStats`.
+- `app/bootstrap-runtime.js` — element refs + `state.prepositions` slice.
+- `app/bootstrap-data.js` — EN + HE i18n (game name/note, feedback correct/wrong/detail, summary title).
+- `app/session.js` — active guards, `isModeSessionActive`, leave/summary cleanup, `resetPrepositionsState`/`clearPrepositionsIntro`/`finishPrepositions`.
+- `app/ui.js` — render dispatch, header progress, layout/feedback gating, prompt-speech payload, mode-title block, home-tile highlight.
+- `app/controller.js` — home/start button listeners, intro-overlay array, `openHomeLesson`/`continueFromResults`/`handleNextAction` cases.
+- `index.html` — home tile (🔗), intro overlay, `preposition-data.js` + `app/prepositions.js` script tags.
+- `tests/prepositions-data.test.js` (new) — paradigm completeness, trigger validity, option-builder invariants, deck answer strings.
+
+Note: app.js was intentionally NOT touched — session.js/ui.js reference `app.*` directly, so the mode wires in without changing the boot/validation glue.
+
+**Behavior changed:** New "Prepositions" tile on the home lesson grid launches a 10-round MCQ session with its own summary and persisted stats. No change to existing modes.
+
+**Tests run:** `npm test` 178/178 pass (174 prior + 4 new), green before and after. Verified in browser preview (port 3000): launched the mode, answered correct (score/streak/feedback/highlight/localStorage stats all correct), confirmed distractor design live (בוטח → בִּי vs עָלַי/אִתִּי/בּוֹ; מוותר → עָלֶיךָ vs אֵלֶיךָ), and the end-of-session summary renders ("Prepositions Complete", 90% ring, mistake list מוותר עָלֶיךָ). No console errors.
+
+**Risks / regressions to check:** Hand-authored niqqud on the inflection tables warrants a native-speaker proofread (esp. מ: מֵאִתָּנוּ for 1pl, and the עם/את comitative forms). Object pool is applied to every trigger, so a few random pairings read oddly (e.g. "marry us") though all are grammatical. Score accounting mirrors advConj (`correct = ROUNDS - wrong`), which assumes the player completes all 10 rounds. Same-object/different-preposition distractors lean on the inflection tables having no cross-preposition niqqud collisions — covered by the new test.
+
+---
+
 ### 2026-06-27 — Conjugation game: add 20 common verbs (irregular focus)
 
 **Requested:** Add new verbs to the conjugation game, targeting common verbs with a focus on irregulars — a curated list where the conjugations can be produced reliably, then implement all 20 in one pass. User approved the proposed 20-verb list and the default difficulty/priority scheme.
