@@ -623,14 +623,21 @@ body[data-gameplay-active="true"] {
   gap: 0.55rem;
 }
 
-.home-lesson-grid,
 .home-option-list {
   display: grid;
   gap: 0.65rem;
 }
 
 .home-lesson-grid {
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+}
+
+.home-lesson-grid > .game-tile {
+  flex: 0 1 calc((100% - 0.65rem) / 2);
+  min-width: 0;
 }
 
 .home-lesson-stage {
@@ -2627,9 +2634,12 @@ body[data-ui-lang="he"] .mastered-row input {
     align-items: start;
   }
 
-  .home-lesson-grid,
   .game-picker {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .home-lesson-grid > .game-tile {
+    flex-basis: calc((100% - 1.3rem) / 3);
   }
 
   .game-tile {
@@ -2756,10 +2766,17 @@ body[data-ui-lang="he"] .mastered-row input {
     width: 100%;
   }
 
-  .home-lesson-grid,
   .game-picker {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.58rem;
+  }
+
+  .home-lesson-grid {
+    gap: 0.58rem;
+  }
+
+  .home-lesson-grid > .game-tile {
+    flex-basis: calc((100% - 1.16rem) / 3);
   }
 
   .game-tile {
@@ -3061,10 +3078,17 @@ body[data-ui-lang="he"] .mastered-row input {
     gap: 0.78rem;
   }
 
-  .home-lesson-grid,
   .game-picker {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.54rem;
+  }
+
+  .home-lesson-grid {
+    gap: 0.54rem;
+  }
+
+  .home-lesson-grid > .game-tile {
+    flex-basis: calc((100% - 0.54rem) / 2);
   }
 
   .game-tile {

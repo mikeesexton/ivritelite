@@ -43,6 +43,7 @@ ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
       runtime.state?.sentenceBank?.introActive ||
       runtime.state?.abbreviation?.introActive ||
       runtime.state?.advConj?.introActive ||
+      runtime.state?.prepositions?.introActive ||
       runtime.state?.binyanBoard?.introActive ||
       runtime.state?.match?.verbIntroActive ||
       runtime.state?.wordMatch?.introActive ||
@@ -250,6 +251,12 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
         total: runtime.constants.ADV_CONJ_ROUNDS,
       });
       timeSeconds = runtime.state.advConj.elapsedSeconds;
+    } else if (runtime.state.mode === "prepositions") {
+      progressText = translate("session.round", {
+        current: runtime.state.prepositions.currentRound,
+        total: runtime.constants.PREPOSITIONS_ROUNDS,
+      });
+      timeSeconds = runtime.state.prepositions.elapsedSeconds;
     } else if (runtime.state.mode === "binyanBoard") {
       progressText = translate("session.round", {
         current: runtime.state.binyanBoard.clearedCount,
@@ -426,7 +433,7 @@ ui.updateLessonShellModeState = ui.updateLessonShellModeState || function update
 
   const layoutMode = (isVerbMatchMode() || isWordMatchMode())
     ? "verb-match"
-    : (runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "binyanBoard")
+    : (runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "prepositions" || runtime.state.mode === "binyanBoard")
       ? "standard"
       : "idle";
 
@@ -479,7 +486,7 @@ ui.updateStickyLessonActionsState = ui.updateStickyLessonActionsState || functio
   const feedbackDetail = runtime.el?.feedbackDetail || runtime.global?.document?.querySelector?.("#feedbackDetail");
   if (!actionBar) return;
   const hasVisibleAction = Array.from(actionBar.querySelectorAll("button")).some((button) => !button.classList.contains("hidden"));
-  const canShowFeedback = runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "binyanBoard";
+  const canShowFeedback = runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "prepositions" || runtime.state.mode === "binyanBoard";
   const hasFeedback = canShowFeedback && Boolean(
     String(feedbackSentence?.textContent || "").trim() ||
     String(feedbackDetail?.textContent || "").trim()
@@ -544,6 +551,9 @@ ui.getCurrentPromptSpeechPayload = ui.getCurrentPromptSpeechPayload || function 
   }
   if (runtime.state.mode === "advConj") {
     return app.advConj?.getAdvConjPromptSpeechPayload?.() || null;
+  }
+  if (runtime.state.mode === "prepositions") {
+    return app.prepositions?.getPrepositionsPromptSpeechPayload?.() || null;
   }
   if (runtime.state.mode === "binyanBoard") {
     return app.binyanBoard?.getBinyanBoardPromptSpeechPayload?.() || null;
@@ -657,6 +667,16 @@ ui.renderLearnState = ui.renderLearnState || function renderLearnState() {
     if (runtime.state.advConj.active && runtime.state.advConj.currentQuestion) {
       app.advConj?.renderAdvConjQuestion?.();
     } else if (runtime.state.advConj.active) {
+      ui.renderSessionHeader();
+    }
+    ui.renderPromptHint();
+    return;
+  }
+
+  if (runtime.state.mode === "prepositions") {
+    if (runtime.state.prepositions.active && runtime.state.prepositions.currentQuestion) {
+      app.prepositions?.renderPrepositionsQuestion?.();
+    } else if (runtime.state.prepositions.active) {
       ui.renderSessionHeader();
     }
     ui.renderPromptHint();
@@ -821,6 +841,23 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
     return;
   }
 
+  if (runtime.state.mode === "prepositions") {
+    const hasQuestion = runtime.state.prepositions.active && Boolean(runtime.state.prepositions.currentQuestion);
+    runtime.el.modeTitle.textContent = translate("game.prepositionsName");
+    ui.updateLessonProgress(
+      runtime.constants.PREPOSITIONS_ROUNDS
+        ? Math.round((runtime.state.prepositions.currentRound / runtime.constants.PREPOSITIONS_ROUNDS) * 100)
+        : 0
+    );
+    runtime.el.nextBtn.disabled = ui.questionNeedsSelection(runtime.state.prepositions.currentQuestion);
+    runtime.el.nextBtn.textContent = hasQuestion && !runtime.state.prepositions.currentQuestion?.locked
+      ? translate("session.submit")
+      : translate("session.next");
+    runtime.el.nextBtn.classList.toggle("hidden", !hasQuestion);
+    finalizeHeaderRender();
+    return;
+  }
+
   if (runtime.state.mode === "binyanBoard") {
     const board = runtime.state.binyanBoard;
     const question = board.currentQuestion;
@@ -927,8 +964,10 @@ ui.renderGameModePerformance = ui.renderGameModePerformance || function renderGa
   const data = getData();
   const runtime = getRuntime();
   const stats = data.calculateGameModeStats?.() || {
+    sentenceBank: { attempts: 0, correct: 0, wrong: 0 },
     conjugation: { attempts: 0, correct: 0, wrong: 0 },
     abbreviation: { attempts: 0, correct: 0, wrong: 0 },
+    prepositions: { attempts: 0, correct: 0, wrong: 0 },
     binyanBoard: { attempts: 0, correct: 0, wrong: 0 },
   };
   const cards = [
@@ -940,18 +979,25 @@ ui.renderGameModePerformance = ui.renderGameModePerformance || function renderGa
       wrong: stats.sentenceBank.wrong,
     },
     {
-      emoji: "🔗",
+      emoji: "🏃",
       title: translate("game.conjugationName"),
       attempts: stats.conjugation.attempts,
       correct: stats.conjugation.correct,
       wrong: stats.conjugation.wrong,
     },
     {
-      emoji: "⏩",
+      emoji: "✂️",
       title: translate("game.abbreviationName"),
       attempts: stats.abbreviation.attempts,
       correct: stats.abbreviation.correct,
       wrong: stats.abbreviation.wrong,
+    },
+    {
+      emoji: "🔗",
+      title: translate("game.prepositionsName"),
+      attempts: stats.prepositions.attempts,
+      correct: stats.prepositions.correct,
+      wrong: stats.prepositions.wrong,
     },
     {
       emoji: "🌳",
@@ -1312,6 +1358,7 @@ ui.renderHomeLessonButtons = ui.renderHomeLessonButtons || function renderHomeLe
   ui.setHomeLessonState(runtime.el?.homeVerbMatchBtn, highlightedMode === "verbMatch");
   ui.setHomeLessonState(runtime.el?.homeAbbreviationBtn, highlightedMode === "abbreviation" || highlightedMode === "abbrMatch");
   ui.setHomeLessonState(runtime.el?.homeAdvConjBtn, highlightedMode === "advConj");
+  ui.setHomeLessonState(runtime.el?.homePrepositionsBtn, highlightedMode === "prepositions");
 };
 
 ui.setHomeLessonState = ui.setHomeLessonState || function setHomeLessonState(button, isCurrent) {

@@ -481,6 +481,7 @@ globalThis.__appTestExports = {
   vm.createContext(context);
   [
     path.join(__dirname, "..", "verb-game-data.js"),
+    path.join(__dirname, "..", "preposition-data.js"),
     path.join(__dirname, "..", "app", "constants.js"),
     path.join(__dirname, "..", "app", "storage.js"),
     path.join(__dirname, "..", "app", "utils.js"),
@@ -499,6 +500,7 @@ globalThis.__appTestExports = {
     path.join(__dirname, "..", "app", "sentence-bank.js"),
     path.join(__dirname, "..", "app", "abbreviation.js"),
     path.join(__dirname, "..", "app", "adv-conj.js"),
+    path.join(__dirname, "..", "app", "prepositions.js"),
     path.join(__dirname, "..", "app", "verb-match.js"),
     path.join(__dirname, "..", "app", "match-engine.js"),
     path.join(__dirname, "..", "app", "word-match.js"),
@@ -920,6 +922,70 @@ test("binyanim answers update simple game mode analytics", () => {
   assert.ok(binyanCard);
   assert.equal(binyanCard.children[0]?.children[0]?.textContent, "🌳");
   assert.equal(binyanCard.children[1].children[1].textContent, "✅ 1  ❌ 1");
+});
+
+test("preposition answers update simple game mode analytics", () => {
+  const harness = loadAppHarness([]);
+  const { app, document } = harness;
+  const prep = app.runtime.state.prepositions;
+
+  app.runtime.helpers.playAnswerFeedbackSound = () => {};
+  app.runtime.helpers.renderSessionHeader = () => {};
+  app.runtime.helpers.renderDomainPerformance = () => {};
+  app.runtime.helpers.renderMostMissed = () => {};
+  app.prepositions.markPrepositionsChoiceResults = () => {};
+
+  app.runtime.state.mode = "prepositions";
+  prep.active = true;
+
+  prep.currentQuestion = {
+    triggerId: "prep-miss",
+    triggerHe: "מתגעגע",
+    promptText: "מתגעגע ____",
+    englishHint: "to miss you (m.sg.)",
+    correctAnswer: "אֵלֶיךָ",
+    answerPlain: "מתגעגע אליך",
+    answerNiqqud: "מתגעגע אֵלֶיךָ",
+    options: [
+      { id: "correct", text: "אליך", textNiqqud: "אֵלֶיךָ", isCorrect: true },
+      { id: "d1", text: "עליך", textNiqqud: "עָלֶיךָ", isCorrect: false },
+    ],
+    selectedOptionId: "correct",
+    locked: false,
+  };
+  app.prepositions.applyPrepositionsAnswer();
+
+  prep.currentQuestion = {
+    triggerId: "prep-wait",
+    triggerHe: "מחכה",
+    promptText: "מחכה ____",
+    englishHint: "to wait for me",
+    correctAnswer: "לִי",
+    answerPlain: "מחכה לי",
+    answerNiqqud: "מחכה לִי",
+    options: [
+      { id: "correct", text: "לי", textNiqqud: "לִי", isCorrect: true },
+      { id: "d1", text: "בי", textNiqqud: "בִּי", isCorrect: false },
+    ],
+    selectedOptionId: "d1",
+    locked: false,
+  };
+  app.prepositions.applyPrepositionsAnswer();
+
+  const storageKey = app.runtime.constants.STORAGE_KEYS.prepositionsStats;
+  assert.deepEqual(JSON.parse(harness.localStorage.getItem(storageKey)), { attempts: 2, correct: 1 });
+
+  const modeStats = app.data.calculateGameModeStats();
+  assert.equal(modeStats.prepositions.attempts, 2);
+  assert.equal(modeStats.prepositions.correct, 1);
+  assert.equal(modeStats.prepositions.wrong, 1);
+
+  app.ui.renderGameModePerformance();
+  const homeCards = document.querySelector("#homeModePerformance").children;
+  const prepCard = homeCards.find((card) => card.children[1]?.children[0]?.textContent === "Prepositions");
+  assert.ok(prepCard);
+  assert.equal(prepCard.children[0]?.children[0]?.textContent, "🔗");
+  assert.equal(prepCard.children[1].children[1].textContent, "✅ 1  ❌ 1");
 });
 
 test("sentence builder rewrites formal notes into short learner-facing tips", () => {

@@ -81,6 +81,8 @@ session.hasActiveLearnSession = session.hasActiveLearnSession || function hasAct
       runtime.state?.abbreviation?.introActive ||
       runtime.state?.advConj?.active ||
       runtime.state?.advConj?.introActive ||
+      runtime.state?.prepositions?.active ||
+      runtime.state?.prepositions?.introActive ||
       runtime.state?.binyanBoard?.active ||
       runtime.state?.binyanBoard?.introActive ||
       runtime.state?.match?.active ||
@@ -110,6 +112,9 @@ session.isModeSessionActive = session.isModeSessionActive || function isModeSess
   }
   if (mode === "advConj") {
     return Boolean(runtime.state?.advConj?.active || runtime.state?.advConj?.introActive);
+  }
+  if (mode === "prepositions") {
+    return Boolean(runtime.state?.prepositions?.active || runtime.state?.prepositions?.introActive);
   }
   if (mode === "binyanBoard") {
     return Boolean(runtime.state?.binyanBoard?.active || runtime.state?.binyanBoard?.introActive);
@@ -439,6 +444,7 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.clearAbbreviationIntro();
   session.clearWordMatchIntro?.();
   session.clearAdvConjIntro();
+  session.clearPrepositionsIntro?.();
   session.clearBinyanBoardIntro?.();
   h.resetSessionCounters?.();
   h.resetSentenceBankState?.();
@@ -446,6 +452,7 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   h.resetAbbreviationState?.();
   app.wordMatch?.resetWordMatchState?.();
   session.resetAdvConjState();
+  session.resetPrepositionsState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
@@ -482,6 +489,7 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   session.clearAbbreviationIntro();
   session.clearWordMatchIntro?.();
   session.clearAdvConjIntro();
+  session.clearPrepositionsIntro?.();
   session.clearBinyanBoardIntro?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
@@ -495,6 +503,8 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.abbreviation.currentQuestion = null;
   runtime.state.advConj.active = false;
   runtime.state.advConj.currentQuestion = null;
+  runtime.state.prepositions.active = false;
+  runtime.state.prepositions.currentQuestion = null;
   app.binyanBoard?.stopBinyanBoardTimer?.();
   runtime.state.binyanBoard.active = false;
   runtime.state.binyanBoard.currentQuestion = null;
@@ -684,6 +694,59 @@ session.clearAdvConjIntro = session.clearAdvConjIntro || function clearAdvConjIn
     runtime.el.advConjIntro.setAttribute("aria-hidden", "true");
   }
   runtime.state.advConj.introActive = false;
+};
+
+session.resetPrepositionsState = session.resetPrepositionsState || function resetPrepositionsState() {
+  const runtime = getRuntime();
+  if (runtime.state.prepositions.timerId) {
+    runtime.global.clearInterval(runtime.state.prepositions.timerId);
+  }
+  runtime.state.prepositions = {
+    active: false,
+    introActive: false,
+    currentRound: 0,
+    startMs: 0,
+    elapsedSeconds: 0,
+    timerId: null,
+    questionQueue: [],
+    currentQuestion: null,
+    wrongAnswers: 0,
+    sessionMistakes: [],
+  };
+};
+
+session.clearPrepositionsIntro = session.clearPrepositionsIntro || function clearPrepositionsIntro() {
+  const runtime = getRuntime();
+  session.clearIntroAutoAdvance();
+  if (runtime.el.prepositionsIntro) {
+    runtime.el.prepositionsIntro.classList.add("hidden");
+    runtime.el.prepositionsIntro.setAttribute("aria-hidden", "true");
+  }
+  runtime.state.prepositions.introActive = false;
+};
+
+session.finishPrepositions = session.finishPrepositions || function finishPrepositions() {
+  const runtime = getRuntime();
+  const rounds = runtime.constants.PREPOSITIONS_ROUNDS || 0;
+
+  if (runtime.state.prepositions.timerId) {
+    runtime.global.clearInterval(runtime.state.prepositions.timerId);
+    runtime.state.prepositions.timerId = null;
+  }
+  runtime.state.prepositions.active = false;
+  const wrong = runtime.state.prepositions.wrongAnswers;
+  const correct = rounds - wrong;
+  const seconds = runtime.state.prepositions.elapsedSeconds;
+  const mistakes = app.prepositions?.buildPrepositionsMistakeSummary?.() || [];
+  session.showSessionSummary({
+    game: "prepositions",
+    titleKey: "summary.prepositionsTitle",
+    noteKey: "summary.abbreviationNote",
+    correctCount: correct,
+    incorrectCount: wrong,
+    elapsedSeconds: seconds,
+    mistakes,
+  });
 };
 
 session.clearBinyanBoardIntro = session.clearBinyanBoardIntro || function clearBinyanBoardIntro() {

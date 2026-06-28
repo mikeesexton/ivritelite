@@ -37,6 +37,8 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.homeAbbreviationBtn?.addEventListener("click", () => controller.openHomeLesson("abbrMatch"));
   runtime.el.homeAdvConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
   runtime.el.advConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
+  runtime.el.homePrepositionsBtn?.addEventListener("click", () => controller.openHomeLesson("prepositions"));
+  runtime.el.prepositionsBtn?.addEventListener("click", () => controller.openHomeLesson("prepositions"));
   runtime.el.homeBinyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
   runtime.el.binyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
   runtime.el.lessonBtn.addEventListener("click", () => {
@@ -97,7 +99,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   global.addEventListener("keydown", controller.handleGlobalKeyDown);
   global.addEventListener("resize", controller.handleViewportResize);
 
-  [runtime.el.lessonStartIntro, runtime.el.secondChanceIntro, runtime.el.sentenceBankIntro, runtime.el.verbMatchIntro, runtime.el.abbreviationIntro, runtime.el.advConjIntro, runtime.el.binyanBoardIntro].forEach((overlay) => {
+  [runtime.el.lessonStartIntro, runtime.el.secondChanceIntro, runtime.el.sentenceBankIntro, runtime.el.verbMatchIntro, runtime.el.abbreviationIntro, runtime.el.advConjIntro, runtime.el.prepositionsIntro, runtime.el.binyanBoardIntro].forEach((overlay) => {
     overlay?.addEventListener("pointerdown", controller.stopIntroOverlayInteraction);
     overlay?.addEventListener("click", controller.stopIntroOverlayInteraction);
   });
@@ -256,6 +258,13 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
     return;
   }
 
+  if (mode === "prepositions") {
+    runtime.state.lastPlayedMode = "prepositions";
+    runtime.state.mode = "prepositions";
+    app.prepositions?.startPrepositions?.();
+    return;
+  }
+
   if (mode === "binyanBoard") {
     runtime.state.lastPlayedMode = "binyanBoard";
     runtime.state.mode = "binyanBoard";
@@ -292,6 +301,10 @@ controller.continueFromResults = controller.continueFromResults || function cont
   }
   if (runtime.state.summary.game === "advConj") {
     app.advConj?.startAdvConj?.();
+    return;
+  }
+  if (runtime.state.summary.game === "prepositions") {
+    app.prepositions?.startPrepositions?.();
     return;
   }
   if (runtime.state.summary.game === "binyanBoard") {
@@ -377,6 +390,20 @@ controller.handleNextAction = controller.handleNextAction || function handleNext
     }
     if (runtime.state.advConj.currentQuestion.selectedOptionId) {
       app.advConj?.applyAdvConjAnswer?.();
+    }
+    return;
+  }
+
+  if (runtime.state.mode === "prepositions") {
+    if (!runtime.state.prepositions.active || !runtime.state.prepositions.currentQuestion) {
+      return;
+    }
+    if (runtime.state.prepositions.currentQuestion.locked) {
+      app.prepositions?.loadPrepositionsQuestion?.();
+      return;
+    }
+    if (runtime.state.prepositions.currentQuestion.selectedOptionId) {
+      app.prepositions?.applyPrepositionsAnswer?.();
     }
     return;
   }

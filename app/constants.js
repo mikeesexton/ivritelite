@@ -15,6 +15,7 @@ constants.STORAGE_KEYS = constants.STORAGE_KEYS || Object.freeze({
   session: "ivriquest-session-v1",
   welcomeSeen: "ivriquest-welcome-seen-v1",
   advConjStats: "advConjStats",
+  prepositionsStats: "ivriquest-prepositions-stats-v1",
   binyanBoardStats: "ivriquest-binyan-board-stats-v1",
 });
 
@@ -31,6 +32,7 @@ constants.LEITNER_INTERVALS = constants.LEITNER_INTERVALS || Object.freeze([
 constants.LESSON_ROUNDS = constants.LESSON_ROUNDS || 10;
 constants.ABBREVIATION_ROUNDS = constants.ABBREVIATION_ROUNDS || 10;
 constants.ADV_CONJ_ROUNDS = constants.ADV_CONJ_ROUNDS || 10;
+constants.PREPOSITIONS_ROUNDS = constants.PREPOSITIONS_ROUNDS || 10;
 constants.TRANSLATION_MISS_RECOVERY_TARGET = constants.TRANSLATION_MISS_RECOVERY_TARGET || 5;
 constants.TRANSLATION_MISS_BIAS_PER_MISS = constants.TRANSLATION_MISS_BIAS_PER_MISS || 0.55;
 constants.STREAK_SOUND_INTERVAL = constants.STREAK_SOUND_INTERVAL || 4;
