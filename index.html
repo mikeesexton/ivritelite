@@ -480,6 +480,11 @@
         window.addEventListener(
           "error",
           function (event) {
+            var target = event && event.target;
+            if (target && target !== window && target.tagName) {
+              return;
+            }
+
             var message = (event && event.message) || "Unexpected runtime error";
             var file = (event && event.filename) || "";
             var fromIvriQuest = /app\.js|vocab-data\.js|index\.html/.test(file);
