@@ -7,6 +7,25 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-28 — Fix Prepositions game jumping straight to summary on GitHub Pages (missing deploy file)
+
+**Requested:** Diagnose why the Prepositions game, when played on the deployed GitHub Pages site, immediately lands on the end-of-game review/summary screen instead of playing (works fine locally).
+
+**Root cause:** The Pages deploy workflow `.github/workflows/deploy-pages.yml` builds `dist/` by copying an explicit, hardcoded list of files. When the Prepositions game was added (PR #13) the workflow was never updated to copy `preposition-data.js`, so that file 404s on GitHub Pages. `PREPOSITIONS`/`PREPOSITION_INFLECTIONS` are therefore undefined in the deployed bundle, `buildPrepositionsDeck()` returns an empty deck, and the first `loadPrepositionsQuestion()` sees an empty `questionQueue` and calls `finishPrepositions()` → session summary. Local dev served the whole directory, so the file was always present there. Verified via `curl`: live `preposition-data.js` returned HTTP 404 (GitHub's "Page not found" HTML) while sibling root data files returned 200.
+
+**Change:**
+- `.github/workflows/deploy-pages.yml` — added `cp preposition-data.js dist/` to the "Build static site bundle" step (placed between `hebrew-verbs.js` and `verb-game-data.js`). Cross-checked that the set of root-level `.js` files referenced by `index.html` now exactly matches the set copied by the workflow (no other omissions).
+
+**Files changed:** `.github/workflows/deploy-pages.yml`, `task-log.md`.
+
+**Behavior changed:** After the next deploy, `preposition-data.js` will be published, so the Prepositions game will load its deck and play normally on GitHub Pages instead of jumping to the summary. No change to local behavior.
+
+**Tests run:** `npm test` 184/184 pass. (Deploy-config change; not exercised by the suite.) Diagnosis confirmed by comparing live vs local file hashes and HTTP status codes via `curl`.
+
+**Risks / regressions to check:** Confirm on the deployed site after the workflow runs that `https://mikeesexton.github.io/ulpango/preposition-data.js` returns 200 and the game plays. Going forward, any new game mode that adds a root-level data file must also be added to this workflow's copy list (the hardcoded list is the failure mode here).
+
+---
+
 ### 2026-06-28 — Fix false "App error: Unexpected runtime error" banner from resource-load failures
 
 **Requested:** Investigate an "App error: Unexpected runtime error" banner that appears when running the deployed (GitHub Pages) site on iPad, even though the app plays fine.
