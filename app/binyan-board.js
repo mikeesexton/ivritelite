@@ -13,6 +13,16 @@ const TEACHING_POINT_KEYS = {
   "Pi'el SLOT realized as polel (CoCeC) because the root is hollow.": "binyan.teaching.hollowFactitiveActive",
   "Pu'al slot realized as polal.": "binyan.teaching.hollowFactitivePassive",
   "Hitpael slot realized as hitpolel for hollow roots.": "binyan.teaching.hollowReflexive",
+  "פ\"נ assimilation: the נ disappears into a dagesh (הנפיל → הִפִּיל).": "binyan.teaching.peNunAssimilation",
+  "Here the נ stays put — it follows the ת of the hitpa'el, so there is no assimilation.": "binyan.teaching.peNunNoAssimilation",
+  "The opening י stays a consonant after the ת, unlike the וֹ/וּ in נוֹשַׁב, הוֹשִׁיב, and הוּשַׁב.": "binyan.teaching.peYodConsonant",
+  "Voiced-sibilant metathesis: the ת moves after the ז and hardens to ד (התזמן → הזדמן).": "binyan.teaching.voicedSibilantMetathesis",
+  "פ\"ע guttural: the ע can't take a plain sheva, so it takes a hataf vowel and the prefix vowel shifts to match.": "binyan.teaching.peGuttural",
+  "ל\"א quiescent alef: the final א is silent and takes no vowel of its own (מָצָא, נִמְצָא).": "binyan.teaching.lamedAlefQuiescent",
+  "ע\"י but not hollow: the yod is a full consonant here, so this is a regular hitpa'el (הִתְקַיֵּם) — unlike hollow ק־ו־ם, which uses hitpolel (הִתְקוֹמֵם).": "binyan.teaching.ayinYodStrong",
+  "Geminate (ע\"ע) hif'il: the doubled radical collapses, giving הֵסֵב (not הִסְבִּיב).": "binyan.teaching.geminateHifil",
+  "Geminate (ע\"ע) hitpa'el plus ס metathesis: הִתְסוֹבֵב → הִסְתּוֹבֵב.": "binyan.teaching.geminateHitpaelSibilant",
+  "Geminate (ע\"ע) hitpa'el, no metathesis: מ is not a sibilant, so the order stays (הִתְמוֹדֵד).": "binyan.teaching.geminateHitpael",
 };
 
 function getRuntime() {

@@ -7,6 +7,153 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-28 — Prepositions: add four new inflectable prepositions (אצל, ליד, נגד, כמו)
+
+**Requested:** Implement new inflectable prepositions in the Prepositions game (planned approach: triggers + hints, scope אצל/ליד/נגד/כמו; בשביל deferred).
+
+**Change:**
+- `preposition-data.js` — added four new paradigms to `PREPOSITION_INFLECTIONS`: `etsel` (אצל), `leyad` (ליד), `neged` (נגד), `kmo` (כמו), each with `base` + all 8 object forms (plain + niqqud). Added 8 triggers to `PREPOSITIONS` (2 per preposition), each with an English hint that pins the preposition unambiguously and reads naturally with object pronouns: אצל — עובד "to work for {o}" / לומד "to study under {o}"; ליד — יושב "to sit next to {o}" / עומד "to stand next to {o}"; נגד — מצביע "to vote against {o}" / משחק "to play against {o}"; כמו — נראה "to look like {o}" / מתנהג "to behave like {o}".
+- `index.html` — bumped the `preposition-data.js` cache-busting query string `?v=20260628c` → `?v=20260628d` (also picks up the 23 triggers from the prior task).
+
+**Files changed:** `preposition-data.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Prepositions game now inflects 11 prepositions (was 7) and has 66 triggers (was 58). The four new prepositions appear both as correct answers (via their triggers) and as distractors. No engine, i18n, intro, or test changes were needed — the data is consumed generically.
+
+**Tests run:** `npm test` 184/184 pass (paradigm-coverage and option-builder tests auto-validate the 4 new paradigms; trigger test validates the 8 new triggers). Browser smoke check: 11 paradigm keys, each new paradigm has 8 distinct niqqud forms, 66 triggers, all 8 new trigger ids produce deck questions, `buildPrepositionOptions("kmo","3ms")` → 4 options with correct כָּמוֹהוּ, no console errors.
+
+**Suggested follow-up:** בשביל (distractor-only, overlaps ל); plural-base prepositions לפני / אחרי / בלעדי (yod-suffix paradigms).
+
+**Risks / regressions to check:** (1) Niqqud accuracy needs a native-speaker spot-check, especially the irregular כמו set (כָּמוֹהוּ / כָּמוֹהָ / כְּמוֹהֶם) and the 2ms/2fs minimal pairs across all four. (2) Separately noted: `verb-game-data.js` is still loaded as `?v=20260621a` in index.html despite the many roots added this session — its cache string should be bumped so deployed/returning users get the new roots (out of scope for this task, flagged for follow-up).
+
+---
+
+### 2026-06-28 — Prepositions: add 23 new governed-preposition triggers
+
+**Requested:** Add 23 new prepositional-phrase triggers to the Prepositions game (new inflectable prepositions deferred to a later task).
+
+**Change:**
+- `preposition-data.js` — appended 23 triggers to the `PREPOSITIONS` array, each governing an existing inflectable preposition (no new paradigms): ל — מפריע/מספר/מודה/מרשה/מתאים; על — כועס/סומך/ממליץ/חולם/אחראי; ב — תומך/נוגע/בוחר/תלוי/מעוניין; עם — נפגש/רב/מתווכח; מ — מתעלם/מבקש/סובל/נפרד/מאוכזב. Each entry has a unique `prep-*` id, a `type`, an `he` citation form, the governed `prep` key, and an `en` gloss with the `{o}` object slot.
+
+**Files changed:** `preposition-data.js`, `task-log.md`.
+
+**Behavior changed:** Prepositions game grows from 35 to 58 triggers; the generated deck goes from 280 to 464 questions (58 triggers × 8 object inflections). Rounds still draw `PREPOSITIONS_ROUNDS` at random. No engine or test changes were needed — triggers reference existing inflection tables and distractors are auto-generated.
+
+**Tests run:** `npm test` 184/184 pass (incl. the trigger-validation, option-builder, and deck-builder tests). Browser smoke check: 58 triggers load, no duplicate ids, all reference valid paradigms, all have the `{o}` slot, deck builds to 464 questions, no console errors.
+
+**Suggested follow-up:** Add new inflectable prepositions (paradigms) — e.g. בשביל, אצל, כמו, נגד, ליד — each requiring all 8 object forms with niqqud and a check against the distractor pool. More trigger candidates also remain (נזכר ב, מתמקד ב, חוזר על, יוצא עם, מתרשם מ).
+
+**Risks / regressions to check:** Native-speaker spot-check of governance is advisable (esp. מתאים ל "suits", תלוי ב "depends on", מבקש מ "request from"). The larger deck (464) is fine since rounds sample a fixed subset.
+
+---
+
+### 2026-06-28 — Binyanim: add ע"ע geminate roots (ס־ב־ב, מ־ד־ד)
+
+**Requested:** Add more roots; user chose the ע"ע geminate (כפולים) direction — the last missing structural class.
+
+**Change:**
+- `verb-game-data.js` — added two geminate roots. `s-b-b` (ס־ב־ב, turning/surrounding): paal סָבַב / nifal נָסַב / piel סִבֵּב / hifil הֵסֵב / hufal הוּסַב / hitpael הִסְתּוֹבֵב (6 forms; pual `exists: false`). `m-d-d` (מ־ד־ד, measuring/coping): paal מָדַד / nifal נִמְדַּד / hitpael הִתְמוֹדֵד (3 forms). Geminate hitpa'els carry `actual_binyan: "hitpolel"` (documentation only — confirmed `actual_binyan` is not consumed by any UI code). The pair is a teaching contrast: הִסְתּוֹבֵב adds ס-metathesis to the geminate base, while הִתְמוֹדֵד keeps its order (מ is not a sibilant).
+- `app/binyan-board.js` — registered three new teaching points in `TEACHING_POINT_KEYS`: geminateHifil (הֵסֵב), geminateHitpaelSibilant (הִסְתּוֹבֵב), geminateHitpael (הִתְמוֹדֵד).
+- `app/bootstrap-data.js` — added en + he strings for the three new teaching keys under `binyan.teaching`.
+- `tests/verb-game-data.test.js` — root count 25→27; added `m-d-d` to the ≥4-form exemption list (now `["ts-l-m", "b-y-n", "k-y-m", "m-d-d"]`); playable-form upper bound 130→145 (count went 121→130, was exactly at the old ceiling).
+
+**Files changed:** `verb-game-data.js`, `app/binyan-board.js`, `app/bootstrap-data.js`, `tests/verb-game-data.test.js`, `task-log.md`.
+
+**Behavior changed:** Binyanim pool grows 25→27 roots. The ע"ע geminate class is now represented, including the collapsed geminate hif'il (הֵסֵב) and the geminate hitpolel with/without metathesis (הִסְתּוֹבֵב vs הִתְמוֹדֵד), each with a localized teaching note. With this, all major weak-verb classes are covered.
+
+**Tests run:** `npm test` 184/184 pass. Browser smoke check: 27 roots load, ס־ב־ב = 6 forms / מ־ד־ד = 3 forms, all 19 teaching points resolve in en + he, no console errors.
+
+**Suggested roots still left to add:** none structurally required. Remaining options are pure vocabulary breadth (more שלמים, or פ"א initial-alef like א־כ־ל / א־ה־ב).
+
+**Risks / regressions to check:** Native-speaker spot-check advisable for the geminate forms — especially נָסַב (formal register), הֵסֵב / הוּסַב (the "endorse/divert" senses), and the geminate vocalizations. If a future batch pushes playable forms past 145, bump the test upper bound again.
+
+---
+
+### 2026-06-28 — Binyanim: add ק־י־ם as a minimal-pair contrast to ק־ו־ם
+
+**Requested:** Add ק־י־ם (kym) without causing problems with the existing look-alike ק־ו־ם (kwm).
+
+**Change:**
+- `verb-game-data.js` — added root `k-y-m` (ק־י־ם, ע"י): piel קִיֵּם / pual קֻיַּם / hitpael הִתְקַיֵּם (3 forms; paal/nifal/hifil/hufal marked `exists: false`, since those senses belong to ק־ו־ם). Unlike hollow ק־ו־ם (polel/polal/hitpolel), its `actual_binyan` values are the plain piel/pual/hitpael — the yod acts as a full consonant, which is the lesson. Also updated the `k-w-m` `notes` field: the sibling קִיֵּם/הִתְקַיֵּם forms are no longer described as "NOT listed here" but as living in their own root entry as a deliberate minimal pair.
+- `app/binyan-board.js` — registered one new teaching point in `TEACHING_POINT_KEYS` (`ayinYodStrong`) on הִתְקַיֵּם.
+- `app/bootstrap-data.js` — added `ayinYodStrong` en + he strings under `binyan.teaching`.
+- `tests/verb-game-data.test.js` — root count 24→25; added `k-y-m` to the 3-playable-form exemption list (now `["ts-l-m", "b-y-n", "k-y-m"]`). Playable-form count went 118→121, still under the 130 ceiling (no bound change).
+
+**Files changed:** `verb-game-data.js`, `app/binyan-board.js`, `app/bootstrap-data.js`, `tests/verb-game-data.test.js`, `task-log.md`.
+
+**Behavior changed:** Binyanim pool grows 24→25 roots. ק־ו־ם and ק־י־ם now coexist as an explicit ע"ו/ע"י minimal pair (קוֹמֵם/הִתְקוֹמֵם vs קִיֵּם/הִתְקַיֵּם), each cross-referenced in its notes, with a localized teaching note on הִתְקַיֵּם. No collision: the game keys everything off `root.id`; `root_letters`/Hebrew string are display-only, and no `form_plain` overlaps between the two roots.
+
+**Tests run:** `npm test` 184/184 pass. Browser smoke check: 25 roots load, both k-w-m and k-y-m present, k-y-m forms = piel,pual,hitpael, all 16 teaching points resolve in en + he, no console errors.
+
+**Suggested roots still left to add:** none outstanding from the original gizra-gap list; all major weak-verb classes and the ע"ו/ע"י minimal pair are now represented.
+
+**Risks / regressions to check:** Native-speaker spot-check still advisable for קֻיַּם register (less common than קִיֵּם / הִתְקַיֵּם). If a future batch pushes playable forms past 130, bump the test upper bound.
+
+---
+
+### 2026-06-28 — Binyanim: add third root batch (ל"א, ע"י, פ"נ)
+
+**Requested:** Add the next roots (the remaining tracked leftovers).
+
+**Change:**
+- `verb-game-data.js` — added three roots: `k-r-aa` (ק־ר־א, ל"א alternate to מ־צ־א: paal/nifal/hifil/hufal), `b-y-n` (ב־י־ן, ע"י hollow — the genuinely new gizra, counterpart to ק־ו־ם: hifil/hufal/hitpael, hitpa'el realized as hitpolel הִתְבּוֹנֵן), `n-g-d` (נ־ג־ד, second פ"נ root: paal/hifil/hufal/hitpael, נ assimilates in הִגִּיד/הֻגַּד). All forms hand-verified; rare הֻקְרָא marked `distractor_eligible: false`. All teaching points reuse existing i18n keys (hollowReflexive for הִתְבּוֹנֵן, the generic פ"נ "נ stays put" note for הִתְנַגֵּד) — no new i18n strings needed.
+- `tests/verb-game-data.test.js` — root count 21→24; added `b-y-n` to the 3-playable-form exemption alongside `ts-l-m`; playable-form upper bound 115→130 (count went 107→118).
+
+**Files changed:** `verb-game-data.js`, `tests/verb-game-data.test.js`, `task-log.md`.
+
+**Behavior changed:** Binyanim pool grows 21→24 roots (rounds still draw 6 at random). Adds the ע"י hollow class (contrasting the existing ע"ו קום), a second ל"א root, and a second פ"נ root. ב־י־ן is the first root in the game with only three playable forms besides צ־ל־ם.
+
+**Tests run:** `npm test` 184/184 pass. Browser smoke check: 24 roots load, new forms present, all 15 teaching points resolve in en + he, no console errors.
+
+**Suggested roots still left to add:** ק־י־ם (ע"י, would pair directly with ק־ו־ם via the yod/vav contrast — deferred because it overlaps the entangled-root warning already in the ק־ו־ם notes); otherwise the originally-suggested gizra gaps are now all represented.
+
+**Risks / regressions to check:** Native-speaker spot-check still advisable for the newest forms (הֻקְרָא register, נָגַד paal usage, the הִתְבּוֹנֵן hitpolel vocalization). If a future batch pushes playable forms past 130, bump the test upper bound again.
+
+---
+
+### 2026-06-28 — Binyanim: reword התנפל gloss and add second root batch
+
+**Requested:** Try a different gloss for הִתְנַפֵּל, then add the next batch of roots.
+
+**Change:**
+- `verb-game-data.js` — changed the `n-p-l` hitpa'el gloss from "pounced on, assaulted" to "attacked, lunged at". Added three roots covering classes the pool still lacked: `a-m-d` (ע־מ־ד, פ"ע initial-guttural: paal/nifal/hifil/hufal), `r-aa-h` (ר־א־ה, ל"ה + middle guttural, high-frequency: paal/nifal/hifil/hufal/hitpael), `m-ts-aa` (מ־צ־א, ל"א quiescent-alef: paal/nifal/hifil/hufal/hitpael). All vocalized forms authored and hand-verified; rare הֻרְאָה marked `distractor_eligible: false`.
+- `app/binyan-board.js` — registered two new teaching points in `TEACHING_POINT_KEYS` (peGuttural, lamedAlefQuiescent). peGuttural is attached to both the ע־מ־ד nifal and hifil forms.
+- `app/bootstrap-data.js` — added en + he i18n strings for the two new teaching keys.
+- `tests/verb-game-data.test.js` — updated the hardcoded root count 18→21 and the playable-form upper bound 95→115 (count went 93→107).
+
+**Files changed:** `verb-game-data.js`, `app/binyan-board.js`, `app/bootstrap-data.js`, `tests/verb-game-data.test.js`, `task-log.md`.
+
+**Behavior changed:** Binyanim pool grows 18→21 roots (rounds still draw 6 at random). The classes פ"ע (guttural) and ל"א (quiescent alef) now appear, plus the high-frequency seeing/showing root ר־א־ה, each with localized teaching notes. The נ־פ־ל reflexive now reads "attacked, lunged at".
+
+**Tests run:** `npm test` 184/184 pass. Browser smoke check via preview: 21 roots load, changed gloss present, all 13 teaching points resolve to localized text, no console errors.
+
+**Suggested roots still left to add:** שׂ־י־ם or ב־י־ן (ע"י hollow, to contrast existing ע"ו קום), ק־ר־א as an alternate ל"א, and נ־ג־ד as an alternate פ"נ.
+
+**Risks / regressions to check:** The new vocalized forms (especially נֶעֱמַד/הֶעֱמִיד/הֻעֲמַד hataf vowels, הֻרְאָה, and the הִתְמַצֵּא "well-versed" sense) should get a native-speaker spot-check. If a future batch pushes playable forms past 115, bump the test upper bound again.
+
+---
+
+### 2026-06-28 — Add four new roots to the Binyanim game
+
+**Requested:** Add as many new roots to the Binyanim game as could be authored reliably, and track any suggested roots left for later.
+
+**Change:**
+- `verb-game-data.js` — added four roots, each introducing a גזרה / spelling phenomenon the existing 14 roots did not cover: `n-p-l` (נ־פ־ל, פ"נ nun-assimilation: paal/hifil/hufal/hitpael), `y-sh-v` (י־שׁ־ב, פ"י initial-yod, all 7 slots), `k-n-h` (ק־נ־ה, ל"ה weak final radical: paal/nifal/hifil/hufal), `z-m-n` (ז־מ־ן, voiced-sibilant metathesis הזדמן, completing the ס/צ/ז trio: piel/pual/hifil/hufal/hitpael). All vocalized forms authored and hand-verified; rare/less-common passives marked `distractor_eligible: false`.
+- `app/binyan-board.js` — registered four new teaching points in `TEACHING_POINT_KEYS` (peNunAssimilation, peNunNoAssimilation, peYodConsonant, voicedSibilantMetathesis).
+- `app/bootstrap-data.js` — added en + he i18n strings for the four new teaching keys.
+- `tests/verb-game-data.test.js` — updated the hardcoded root count 14→18 and the playable-form upper bound 75→95 (count went 73→93).
+
+**Files changed:** `verb-game-data.js`, `app/binyan-board.js`, `app/bootstrap-data.js`, `tests/verb-game-data.test.js`, `task-log.md`.
+
+**Behavior changed:** The Binyanim game pool grows from 14 to 18 roots (rounds still draw 6 at random), so weak-verb classes פ"נ/פ"י/ל"ה and the ז voiced-sibilant metathesis can now appear, each with its own localized teaching note on correct/incorrect feedback.
+
+**Tests run:** `npm test` 184/184 pass (before and after). Browser smoke check via preview: app loads with no console errors; all 18 roots present with expected form slots.
+
+**Suggested roots still left to add (from this session's suggestions):** מ־צ־א or ק־ר־א (ל"א quiescent alef), ע־מ־ד (פ"ע initial guttural), שׂ־י־ם or ב־י־ן (ע"י hollow, to contrast existing ע"ו קום), ר־א־ה (ל"ה + guttural, high frequency), and נ־ג־ד as an alternate פ"נ. These were deferred to keep this batch to forms that could be authored with high confidence.
+
+**Risks / regressions to check:** New vocalized forms should get a native-speaker spot-check (especially יִשֵּׁב/יֻשַּׁב register and the הִתְנַפֵּל "assault" gloss). If a future batch pushes playable forms past 95, bump the test upper bound again.
+
+---
+
 ### 2026-06-28 — Clean up feedback and mistake-clinic copy
 
 **Requested:** Clean up the awkward end-of-game Binyanim feedback from the screenshot and review the other games' tips/feedback for similar improvements.
