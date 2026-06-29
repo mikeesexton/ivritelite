@@ -7,6 +7,23 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-28 — Fix false "App error: Unexpected runtime error" banner from resource-load failures
+
+**Requested:** Investigate an "App error: Unexpected runtime error" banner that appears when running the deployed (GitHub Pages) site on iPad, even though the app plays fine.
+
+**Change:**
+- `index.html` — the global `error` listener (registered in capture phase) was catching resource-load failures (`<img>`, `<link>`/font, `<script>`) in addition to real JS errors. Those resource errors are not `ErrorEvent`s and carry no `message`, so they fell through to the "Unexpected runtime error" fallback and showed the banner. Added a guard at the top of the handler that returns early when `event.target` is a DOM element (`target !== window && target.tagName`), so only genuine script errors surface the banner.
+
+**Files changed:** `index.html`, `task-log.md`.
+
+**Behavior changed:** Non-fatal resource-load failures (most likely the cross-origin Google Fonts `<link>` being blocked by an iOS content/privacy blocker, with silent fallback to system fonts) no longer trigger the "App error" banner. Genuine uncaught JS errors and unhandled promise rejections still show it.
+
+**Tests run:** `npm test` 184/184 pass (before and after). Browser repro: injecting a broken `<img>` into the DOM produced exactly "App error: Unexpected runtime error" before the fix; after the fix the banner stays hidden for the broken `<img>` but still shows "App error: Uncaught Error: ..." for a thrown error.
+
+**Risks / regressions to check:** Confirm on the actual iPad that the banner no longer appears. If a *critical* resource (e.g. a `<script>` the app depends on) ever fails to load, the banner will no longer announce it — but such a failure would surface as a downstream JS error instead, which is still reported.
+
+---
+
 ### 2026-06-28 — Prepositions: add four new inflectable prepositions (אצל, ליד, נגד, כמו)
 
 **Requested:** Implement new inflectable prepositions in the Prepositions game (planned approach: triggers + hints, scope אצל/ליד/נגד/כמו; בשביל deferred).
