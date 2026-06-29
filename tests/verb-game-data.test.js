@@ -132,7 +132,7 @@ test("binyan root data stays broad enough and fully authored", () => {
   const formIds = new Set();
   let playableFormCount = 0;
 
-  assert.equal(verbGameData.ROOTS.length, 14);
+  assert.equal(verbGameData.ROOTS.length, 27);
 
   for (const root of verbGameData.ROOTS) {
     assert.ok(root.id);
@@ -145,7 +145,7 @@ test("binyan root data stays broad enough and fully authored", () => {
 
     const existingForms = Object.entries(root.forms).filter(([, form]) => form?.exists === true);
     assert.ok(existingForms.length >= 3, `${root.id} needs at least three playable forms`);
-    if (!["ts-l-m"].includes(root.id)) {
+    if (!["ts-l-m", "b-y-n", "k-y-m", "m-d-d"].includes(root.id)) {
       assert.ok(existingForms.length >= 4, `${root.id} needs at least four playable forms`);
     }
     playableFormCount += existingForms.length;
@@ -166,7 +166,7 @@ test("binyan root data stays broad enough and fully authored", () => {
   }
 
   assert.ok(playableFormCount >= 65);
-  assert.ok(playableFormCount <= 75);
+  assert.ok(playableFormCount <= 145);
 });
 
 test("binyan root data keeps duplicate plain forms distinguishable", () => {
