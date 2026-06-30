@@ -7,6 +7,43 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-29 — Test ישיבה cleanly in the sentence game + trim basic-food words from the translation quiz
+
+**Requested:** (1) In the sentence-builder, test ישיבה without offering פגישה as a distractor (the "The meeting was postponed…" sentence pitted the synonyms הישיבה vs הפגישה against each other). (2) Re-review the translation-game vocabulary and remove words that are too simple. User chose: suppress (don't delete), conservative-core scope, keep kitchen utensils and cooking verbs, remove basic food only.
+
+**Change:**
+- `sentence-bank-data.js` — in `professional_19` (`הישיבה נדחתה…`), replaced the `הפגישה` Hebrew distractor with `השיחה` ("the call/conversation"). No longer a synonym for "meeting"; pairs with the existing English distractor "The call". The other two `הפגישה` distractors (`professional_13`, `professional_16`) test different words (call/launch) and were left unchanged.
+- `vocab-data.js` — added 40 basic-food Hebrew words to `LEXICON_AVAILABILITY_OVERRIDES` with `{ translationQuiz: false }` (עגבנייה, מלפפון, בצל, שום, תפוח אדמה, גזר, פלפל, חסה, לימון, תפוח, בננה, תפוז, ענבים, אבטיח, אבוקדו, עוף, דג, ביצה, חלב, גבינה, יוגורט, חמאה, שמנת, לחם, פיתה, אורז, פסטה, קמח, מלח, סוכר, דבש, מיץ, קפה, תה, יין, מחיר, תפריט, מלצר, טיפ, קינוח). This suppresses them from the translation quiz only; they remain available for sentence hints. Kitchen tools, cooking verbs, and borderline discourse/tech words were deliberately kept.
+
+**Files changed:** `sentence-bank-data.js`, `vocab-data.js`, `task-log.md`.
+
+**Behavior changed:** The ישיבה sentence no longer shows פגישה as a tile option. The translation/word-match quiz no longer draws the 40 basic-food words; they still appear as sentence hints. No game logic changed (both fixes are data-only).
+
+**Tests run:** `npm test` 184/184 pass before and after. Browser-verified on the running dev server: `getBaseVocabulary()` reports the food words as `translationQuiz=false, sentenceHints=true` and kept words (קערה, לטגן, הגדרות, אמון) as `translationQuiz=true`; `getSentenceBank()` shows `professional_19` distractors as `["השיחה","בוטלה","אשלח","ישן","מקום"]` (no הפגישה). Grep guard: `הפגישה` remains only in `professional_13` and `professional_16`.
+
+**Risks / regressions to check:** Override keys are bare Hebrew strings that suppress all senses of a word; confirmed each of the 40 appears in exactly one RAW entry (grep count = 2: RAW + override), so no cross-category collisions. `חשבון` was intentionally excluded (polysemous: bill/account/arithmetic). If a future review removes more words, keep verifying single-sense before adding.
+
+---
+
+### 2026-06-29 — Bump cache-bust tokens so the deployed Prepositions fix reaches cached browsers
+
+**Requested:** User reported the Prepositions game still jumps straight to the review/summary screen on the deployed GitHub Pages site, even though the previous session's deploy fix "works in the preview box."
+
+**Root cause:** The server side was already fully fixed by the prior session — verified that the live GitHub Pages deploy is healthy: `index.html` and all 38 referenced scripts/assets return HTTP 200, the latest `deploy-pages.yml` run succeeded, and the live `preposition-data.js` / `app/prepositions.js` are byte-identical to the working local files (live data populates 66 triggers, 8 objects, 11 inflection tables — deck builds non-empty). The remaining problem is purely client-side caching: the cache-bust query tokens on the two prep `<script>` tags (`preposition-data.js?v=20260628d`, `app/prepositions.js?v=20260628e`) were **not** bumped when the deploy fix shipped. Browsers that loaded those exact URLs during the broken window (when the data file 404'd) can keep serving the stale cached response, since the URL key never changed. No service worker is involved, so the HTTP cache keyed on the unchanged URL is the only thing pinning users to the broken state.
+
+**Change:**
+- `index.html` — bumped the cache-bust token on the two Prepositions script tags to `?v=20260629a` (`preposition-data.js` and `app/prepositions.js`), forcing every browser to fetch a URL it has never cached. No code logic changed.
+
+**Files changed:** `index.html`, `task-log.md`.
+
+**Behavior changed:** After deploy, all clients (including those with the broken state cached) fetch the corrected prep files and the game plays normally instead of jumping to the summary. A manual hard refresh would have fixed an individual machine, but this fixes it for everyone without one.
+
+**Tests run:** `npm test` 184/184 pass. Live-site verification via `curl` + `diff` + Node (globals populate) as described above.
+
+**Risks / regressions to check:** Must be committed, merged to `main`, and deployed for the new tokens to take effect — until then nothing changes for users. After deploy, confirm the game plays on GitHub Pages from a fresh browser. Going forward, when fixing a deploy/availability bug for an asset, also bump that asset's `?v=` token in `index.html` so cached clients pick up the fix.
+
+---
+
 ### 2026-06-28 — Fix Prepositions game jumping straight to summary on GitHub Pages (missing deploy file)
 
 **Requested:** Diagnose why the Prepositions game, when played on the deployed GitHub Pages site, immediately lands on the end-of-game review/summary screen instead of playing (works fine locally).
