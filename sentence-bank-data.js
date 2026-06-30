@@ -3553,7 +3553,7 @@ const SENTENCE_BANK = [
     "english": "The meeting was postponed, I'll update you later about a new time.",
     "hebrew_tokens": ["הישיבה", "נדחתה", "אעדכן", "אותך", "בהמשך", "לגבי", "מועד", "חדש"],
     "english_tokens": ["The meeting", "was postponed", "I'll update", "you", "later", "about", "a new", "time"],
-    "hebrew_distractors": ["הפגישה", "בוטלה", "אשלח", "ישן", "מקום"],
+    "hebrew_distractors": ["השיחה", "בוטלה", "אשלח", "ישן", "מקום"],
     "english_distractors": ["The call", "was canceled", "I'll send", "old", "a place"],
     "notes": "הישיבה נדחתה = the meeting was postponed; מועד = appointed time/date; בהמשך = later on."
   },
