@@ -75,7 +75,10 @@ wordMatch.buildConfig = wordMatch.buildConfig || function buildConfig(game) {
     isActive: () => Boolean(runtime.state.wordMatch.active && runtime.state.wordMatch.game === game),
     promptText: () => translate("match.prompt"),
     onSuccess: (id) => recordResult(ctx, id, true, mode),
-    onMismatch: (id) => recordResult(ctx, id, false, mode),
+    onMismatch: (leftId, rightId) => {
+      recordResult(ctx, leftId, false, mode);
+      recordResult(ctx, rightId, false, mode);
+    },
     onAllMatched: () => wordMatch.finishWordMatch(),
     getCardSpeechPayload: (card) => app.speech?.buildSpeechPayload?.({
       plain: card.hebrewPlain,

@@ -25,6 +25,29 @@ function tokenListsMatch(left, right) {
   return leftTokens.every((token, index) => token === rightTokens[index]);
 }
 
+function sanitizeRestoreAlternateList(alternates) {
+  return Array.isArray(alternates)
+    ? alternates.map((variant) => ({
+        text: String(variant?.text || "").trim(),
+        tokens: sanitizeRestoreTokenList(variant?.tokens),
+      }))
+    : [];
+}
+
+function serializeSentenceForRestoreCheck(sentence) {
+  return JSON.stringify({
+    english: String(sentence?.english || "").trim(),
+    hebrew: String(sentence?.hebrew || "").trim(),
+    englishTokens: sanitizeRestoreTokenList(sentence?.englishTokens),
+    hebrewTokens: sanitizeRestoreTokenList(sentence?.hebrewTokens),
+    englishAlternates: sanitizeRestoreAlternateList(sentence?.englishAlternates),
+    hebrewAlternates: sanitizeRestoreAlternateList(sentence?.hebrewAlternates),
+    englishDistractors: sanitizeRestoreTokenList(sentence?.englishDistractors),
+    hebrewDistractors: sanitizeRestoreTokenList(sentence?.hebrewDistractors),
+    difficulty: Number(sentence?.difficulty || 0),
+  });
+}
+
 function buildLiveSentenceBankQuestionState(question) {
   const runtime = getRuntime();
   const sentenceId = String(question?.sentence?.id || "").trim();
@@ -51,10 +74,10 @@ function isStaleRestoredSentenceBankQuestion(question) {
   if (!liveState) return true;
 
   return (
-    String(question?.sentence?.english || "").trim() !== String(liveState.sentence.english || "").trim()
-    || String(question?.sentence?.hebrew || "").trim() !== String(liveState.sentence.hebrew || "").trim()
-    || String(question?.prompt || "").trim() !== String(liveState.prompt || "").trim()
+    String(question?.prompt || "").trim() !== String(liveState.prompt || "").trim()
     || !tokenListsMatch(question?.targetTokens, liveState.targetTokens)
+    || serializeSentenceForRestoreCheck(question?.sentence)
+      !== serializeSentenceForRestoreCheck(liveState.sentence)
   );
 }
 
@@ -604,7 +627,7 @@ session.finishAbbreviation = session.finishAbbreviation || function finishAbbrev
   session.clearAbbreviationIntro();
 
   const roundsDone = runtime.state.abbreviation.currentRound;
-  const targetRounds = h.getAbbreviationRoundTarget?.() || abbreviationRounds;
+  const targetRounds = abbreviationRounds;
   const elapsed = runtime.state.abbreviation.elapsedSeconds;
 
   runtime.state.abbreviation.active = false;

@@ -84,6 +84,14 @@ class FakeElement {
     });
   }
 
+  remove() {
+    const parent = this.parentElement;
+    if (parent && Array.isArray(parent.children)) {
+      parent.children = parent.children.filter((child) => child !== this);
+    }
+    this.parentElement = null;
+  }
+
   appendChild(node) {
     if (node && typeof node === "object") {
       node.parentElement = this;
@@ -625,7 +633,8 @@ function simulateDragAndDrop(source, target) {
 }
 
 function simulateTouchDragAndDrop(document, source, target) {
-  const touchPoint = { clientX: 24, clientY: 24 };
+  const startPoint = { clientX: 24, clientY: 24 };
+  const movePoint = { clientX: 220, clientY: 220 };
   document.__elementFromPointTarget = target;
   const baseEvent = {
     preventDefault() {},
@@ -635,22 +644,22 @@ function simulateTouchDragAndDrop(document, source, target) {
     ...baseEvent,
     target: source,
     currentTarget: source,
-    touches: [touchPoint],
-    changedTouches: [touchPoint],
+    touches: [startPoint],
+    changedTouches: [startPoint],
   }));
   (source.listeners.touchmove || []).forEach((handler) => handler({
     ...baseEvent,
     target: source,
     currentTarget: source,
-    touches: [touchPoint],
-    changedTouches: [touchPoint],
+    touches: [movePoint],
+    changedTouches: [movePoint],
   }));
   (source.listeners.touchend || []).forEach((handler) => handler({
     ...baseEvent,
     target: source,
     currentTarget: source,
     touches: [],
-    changedTouches: [touchPoint],
+    changedTouches: [movePoint],
   }));
   document.__elementFromPointTarget = null;
 }
@@ -845,6 +854,10 @@ test("sentence builder renders english answer lines left-to-right, keeps punctua
   assert.equal(document.querySelector("#stickyLessonActions").textContent.includes("Hint"), false);
   assert.equal(document.querySelector("#stickyLessonActions").textContent.includes("Clear"), false);
   assert.equal(document.querySelector("#promptHint").classList.contains("hidden"), true);
+  assert.equal(
+    document.querySelector("#choiceContainer").querySelector(".sentence-drag-tip").textContent,
+    "Tip: drag answer blocks to any slot in the sentence."
+  );
   assert.equal(document.querySelector("#promptLabel").classList.contains("hidden"), true);
   assert.equal(getSentenceSlots(document)[0].getAttribute("dir"), undefined);
 
@@ -1085,6 +1098,35 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.state.binyanBoard.introActive, false);
   assert.ok(harness.state.binyanBoard.startMs > 0);
   harness.goHome();
+});
+
+test("translation match records both mismatched words, including the Hebrew (right) card", () => {
+  const vocabulary = Array.from({ length: 8 }, (_, index) => ({
+    id: `word-${index + 1}`,
+    category: "core_advanced",
+    en: `word ${index + 1}`,
+    he: `מילה${index + 1}`,
+    heNiqqud: `מִילָה${index + 1}`,
+    utility: 80 - index,
+    source: "test",
+  }));
+  const harness = loadAppHarness(vocabulary);
+
+  harness.app.wordMatch.startLessonMatch();
+  harness.app.wordMatch.beginWordMatchFromIntro();
+
+  const ctx = harness.state.wordMatch;
+  const leftCard = ctx.leftCards[0];
+  const rightCard = ctx.rightCards.find((card) => card.pairId !== leftCard.pairId);
+  assert.ok(leftCard && rightCard, "board has a mismatching left/right pair");
+
+  const config = harness.app.wordMatch.buildConfig("lessonMatch");
+  harness.app.matchEngine.handleLeft(config, leftCard.id);
+  harness.app.matchEngine.handleRight(config, rightCard.id);
+
+  assert.ok(ctx.sessionMistakeIds.includes(leftCard.pairId), "left (English) word recorded as a miss");
+  assert.ok(ctx.sessionMistakeIds.includes(rightCard.pairId), "right (Hebrew) word recorded as a miss");
+  assert.ok(harness.getProgressRecord(rightCard.pairId).attempts > 0, "right word's progress registered the attempt");
 });
 
 test("sentence builder gives English prompts explicit LTR prompt styling in Hebrew UI", () => {
@@ -1561,6 +1603,62 @@ test("sentence builder supports touch dragging on mobile/tablet layouts", () => 
   );
   assert.equal(findVisibleButtonByText(document.querySelector("#choiceContainer"), ".sentence-token", "We"), undefined);
   assert.equal(findVisibleButtonByText(document.querySelector("#choiceContainer"), ".sentence-token", "tomorrow"), undefined);
+});
+
+test("sentence builder never strands a mouse drag ghost after dragstart", () => {
+  const sentenceBank = [
+    {
+      id: "sb-ghost",
+      category: "everyday",
+      difficulty: 1,
+      english: "We will see you tomorrow.",
+      hebrew: "נראה אותך מחר.",
+      english_tokens: ["We", "will", "see", "you", "tomorrow"],
+      hebrew_tokens: ["נראה", "אותך", "מחר"],
+      english_distractors: ["later", "them"],
+      hebrew_distractors: ["עכשיו", "אותם"],
+      notes: "",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { document, state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "he2en")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  const findBodyGhosts = () => document.body.children.filter(
+    (child) => child?.classList?.contains?.("sentence-drag-ghost")
+  );
+  const fireDragEvent = (node, type, dataTransfer) => {
+    (node.listeners[type] || []).forEach((handler) => handler({
+      preventDefault() {},
+      stopPropagation() {},
+      target: node,
+      currentTarget: node,
+      dataTransfer,
+    }));
+  };
+  const token = findVisibleButtonByText(document.querySelector("#choiceContainer"), ".sentence-token", "We");
+
+  const throwingDataTransfer = {
+    ...createFakeDataTransfer(),
+    setDragImage() {
+      throw new Error("setDragImage unsupported");
+    },
+  };
+  fireDragEvent(token, "dragstart", throwingDataTransfer);
+  assert.equal(findBodyGhosts().length, 0);
+
+  const workingDataTransfer = {
+    ...createFakeDataTransfer(),
+    setDragImage() {},
+  };
+  fireDragEvent(token, "dragstart", workingDataTransfer);
+  assert.equal(findBodyGhosts().length, 1);
+  fireDragEvent(token, "dragend", workingDataTransfer);
+  assert.equal(findBodyGhosts().length, 0);
 });
 
 test("sentence builder contracts the bank after a word is used instead of keeping placeholders", () => {
@@ -2248,6 +2346,82 @@ test("sentence builder drops stale restored questions when the live sentence ent
   assert.equal(restoredHarness.state.mode, "lesson");
   assert.equal(restoredHarness.state.route, "home");
   assert.equal(restoredHarness.state.lastPlayedMode, "sentenceBank");
+  assert.equal(restoredHarness.state.sentenceBank.active, false);
+  assert.equal(restoredHarness.state.sentenceBank.currentQuestion, null);
+});
+
+test("sentence builder drops stale restored questions when only the sentence alternates change", () => {
+  const baseSentence = {
+    id: "sb-stale-alternates",
+    category: "everyday",
+    difficulty: 1,
+    english: "We will see you tomorrow.",
+    hebrew: "נראה אותך מחר.",
+    english_tokens: ["We", "will", "see", "you", "tomorrow"],
+    hebrew_tokens: ["נראה", "אותך", "מחר"],
+    english_distractors: ["later", "them"],
+    hebrew_distractors: ["עכשיו", "אותם"],
+    notes: "",
+  };
+  const oldSentenceBank = [{ ...baseSentence }];
+  const updatedSentenceBank = [{
+    ...baseSentence,
+    hebrew_alternates: [
+      { text: "מחר נראה אותך.", tokens: ["מחר", "נראה", "אותך"] },
+    ],
+  }];
+
+  const firstHarness = loadAppHarness([], [], [], { sentenceBank: oldSentenceBank });
+  firstHarness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  firstHarness.state.mode = "sentenceBank";
+  firstHarness.state.sentenceBank.active = true;
+  firstHarness.nextSentenceBankQuestion();
+  firstHarness.app.persistence.persistSessionState();
+
+  const restoredHarness = loadAppHarness([], [], [], {
+    sentenceBank: updatedSentenceBank,
+    localStorageData: firstHarness.localStorage.__dump(),
+  });
+
+  assert.equal(restoredHarness.state.mode, "lesson");
+  assert.equal(restoredHarness.state.route, "home");
+  assert.equal(restoredHarness.state.sentenceBank.active, false);
+  assert.equal(restoredHarness.state.sentenceBank.currentQuestion, null);
+});
+
+test("sentence builder drops stale restored questions when only the sentence distractors change", () => {
+  const baseSentence = {
+    id: "sb-stale-distractors",
+    category: "everyday",
+    difficulty: 1,
+    english: "We will see you tomorrow.",
+    hebrew: "נראה אותך מחר.",
+    english_tokens: ["We", "will", "see", "you", "tomorrow"],
+    hebrew_tokens: ["נראה", "אותך", "מחר"],
+    english_distractors: ["later", "them"],
+    hebrew_distractors: ["עכשיו", "אותם"],
+    notes: "",
+  };
+  const oldSentenceBank = [{ ...baseSentence }];
+  const updatedSentenceBank = [{
+    ...baseSentence,
+    hebrew_distractors: ["עכשיו", "אתכם"],
+  }];
+
+  const firstHarness = loadAppHarness([], [], [], { sentenceBank: oldSentenceBank });
+  firstHarness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  firstHarness.state.mode = "sentenceBank";
+  firstHarness.state.sentenceBank.active = true;
+  firstHarness.nextSentenceBankQuestion();
+  firstHarness.app.persistence.persistSessionState();
+
+  const restoredHarness = loadAppHarness([], [], [], {
+    sentenceBank: updatedSentenceBank,
+    localStorageData: firstHarness.localStorage.__dump(),
+  });
+
+  assert.equal(restoredHarness.state.mode, "lesson");
+  assert.equal(restoredHarness.state.route, "home");
   assert.equal(restoredHarness.state.sentenceBank.active, false);
   assert.equal(restoredHarness.state.sentenceBank.currentQuestion, null);
 });

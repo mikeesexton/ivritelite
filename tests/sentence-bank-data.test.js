@@ -661,3 +661,24 @@ test("sentence bank data shape-matches Hebrew multiword compounds with multiword
     );
   });
 });
+
+test("sentence bank data exposes the flexible modifier tokens used for adjacent-swap grading", () => {
+  const api = loadSentenceBankApi();
+  assert.equal(typeof api.getFlexibleModifierTokens, "function");
+
+  const tokens = api.getFlexibleModifierTokens();
+  assert.ok(Array.isArray(tokens));
+  assert.ok(tokens.length > 0);
+  tokens.forEach((token) => {
+    assert.equal(typeof token, "string");
+    assert.equal(token, token.trim());
+    assert.ok(token.length > 0);
+  });
+  assert.equal(new Set(tokens).size, tokens.length);
+  ["די", "לגמרי", "ממש", "מאוד"].forEach((expected) => {
+    assert.ok(tokens.includes(expected), `missing flexible modifier ${expected}`);
+  });
+
+  tokens.push("mutated");
+  assert.ok(!api.getFlexibleModifierTokens().includes("mutated"));
+});
