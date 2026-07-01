@@ -226,7 +226,7 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
         : translate("match.progress", { current: 0, total: 0 });
       timeSeconds = runtime.state.match.elapsedSeconds;
     } else if (runtime.state.mode === "abbreviation") {
-      const targetRounds = app.abbreviation?.getAbbreviationRoundTarget?.() || runtime.constants.ABBREVIATION_ROUNDS;
+      const targetRounds = runtime.constants.ABBREVIATION_ROUNDS;
       progressText = translate("session.round", {
         current: runtime.state.abbreviation.currentRound,
         total: targetRounds,
@@ -783,7 +783,7 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
   }
 
   if (runtime.state.mode === "abbreviation") {
-    const targetRounds = app.abbreviation?.getAbbreviationRoundTarget?.() || runtime.constants.ABBREVIATION_ROUNDS;
+    const targetRounds = runtime.constants.ABBREVIATION_ROUNDS;
     const hasQuestion = runtime.state.abbreviation.active && Boolean(runtime.state.abbreviation.currentQuestion);
     runtime.el.modeTitle.textContent = runtime.state.abbreviation.active
       ? translate("session.abbreviationTitle")

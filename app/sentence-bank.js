@@ -6,6 +6,8 @@ const sentenceBank = app.sentenceBank = app.sentenceBank || {};
 let activeSentenceDrag = null;
 let activeSentenceTouchDrag = null;
 let suppressSentenceTapUntil = 0;
+let sentenceDragGhostEl = null;
+const SENTENCE_DRAG_ACTIVATE_PX = 8;
 
 function getRuntime() {
   return app.runtime || {};
@@ -78,12 +80,7 @@ const NON_DISTINCT_DISTRACTOR_GROUPS = [
   ["מדויקות", "נכונות"],
 ];
 
-const HEBREW_FLEXIBLE_MODIFIER_TOKENS = new Set([
-  "די",
-  "לגמרי",
-  "ממש",
-  "מאוד",
-]);
+const FALLBACK_HEBREW_FLEXIBLE_MODIFIER_TOKENS = ["די", "לגמרי", "ממש", "מאוד"];
 
 const NON_DISTINCT_DISTRACTOR_INDEX = new Map();
 NON_DISTINCT_DISTRACTOR_GROUPS.forEach((group, groupIndex) => {
@@ -123,7 +120,12 @@ function sanitizeDistractors(tokens, targetTokens) {
 }
 
 function isHebrewFlexibleModifierToken(token) {
-  return HEBREW_FLEXIBLE_MODIFIER_TOKENS.has(normalizeComparableHebrewToken(token));
+  const fromApi = getRuntime().sentenceBankApi?.getFlexibleModifierTokens?.();
+  const tokens = Array.isArray(fromApi) && fromApi.length
+    ? fromApi
+    : FALLBACK_HEBREW_FLEXIBLE_MODIFIER_TOKENS;
+  const normalized = normalizeComparableHebrewToken(token);
+  return tokens.some((candidate) => normalizeComparableHebrewToken(candidate) === normalized);
 }
 
 function isAttachableSentenceSuffix(text) {
@@ -495,6 +497,77 @@ function clearSentenceDragPayload() {
   activeSentenceDrag = null;
 }
 
+function resolveDragPayloadText(question, payload) {
+  const token = payload?.tokenId ? getQuestionTokenById(question, payload.tokenId) : null;
+  return String(token?.text || "").trim();
+}
+
+function createSentenceDragGhostEl(text, isHebrew) {
+  const doc = global.document;
+  if (!doc?.body || !text) return null;
+  const ghost = doc.createElement("div");
+  ghost.className = `sentence-drag-ghost ${isHebrew ? "hebrew" : ""}`.trim();
+  ghost.setAttribute("dir", isHebrew ? "rtl" : "ltr");
+  ghost.setAttribute("aria-hidden", "true");
+  ghost.textContent = text;
+  return ghost;
+}
+
+function positionSentenceDragGhost(point) {
+  if (!sentenceDragGhostEl || !point) return;
+  sentenceDragGhostEl.style.left = `${point.clientX}px`;
+  sentenceDragGhostEl.style.top = `${point.clientY}px`;
+}
+
+function showSentenceTouchDragGhost(text, isHebrew, point) {
+  removeSentenceDragGhost();
+  const ghost = createSentenceDragGhostEl(text, isHebrew);
+  if (!ghost) return;
+  global.document.body.appendChild(ghost);
+  sentenceDragGhostEl = ghost;
+  positionSentenceDragGhost(point);
+}
+
+function removeSentenceDragGhost() {
+  if (sentenceDragGhostEl && typeof sentenceDragGhostEl.remove === "function") {
+    sentenceDragGhostEl.remove();
+  }
+  sentenceDragGhostEl = null;
+}
+
+function applyMouseDragImage(event, text, isHebrew) {
+  if (!event?.dataTransfer?.setDragImage) return;
+  const ghost = createSentenceDragGhostEl(text, isHebrew);
+  if (!ghost) return;
+  ghost.classList.add("sentence-drag-ghost--mouse");
+  ghost.style.left = "-1000px";
+  ghost.style.top = "-1000px";
+  removeSentenceDragGhost();
+  global.document.body.appendChild(ghost);
+  sentenceDragGhostEl = ghost;
+  const removeGhost = () => {
+    if (sentenceDragGhostEl === ghost) sentenceDragGhostEl = null;
+    if (typeof ghost.remove === "function") ghost.remove();
+  };
+  let applied = false;
+  try {
+    event.dataTransfer.setDragImage(ghost, ghost.offsetWidth / 2, ghost.offsetHeight / 2);
+    applied = true;
+  } catch {}
+  if (!applied) {
+    removeGhost();
+    return;
+  }
+  if (typeof global.requestAnimationFrame === "function") {
+    global.requestAnimationFrame(removeGhost);
+  }
+  if (typeof global.setTimeout === "function") {
+    global.setTimeout(removeGhost, 100);
+  } else if (typeof global.requestAnimationFrame !== "function") {
+    removeGhost();
+  }
+}
+
 function suppressSentenceTap(durationMs = 400) {
   suppressSentenceTapUntil = getNowMs() + Math.max(0, Number(durationMs || 0));
 }
@@ -512,6 +585,7 @@ function clearSentenceTouchDragTargets() {
 
 function clearSentenceDragState() {
   activeSentenceTouchDrag = null;
+  removeSentenceDragGhost();
   clearSentenceTouchDragTargets();
   clearSentenceDragPayload();
 }
@@ -554,23 +628,39 @@ function startSentenceTouchDrag(question, payload, touchPoint) {
   activeSentenceTouchDrag = {
     payload: { ...payload },
     slotIndex: null,
+    activated: false,
+    startPoint: touchPoint ? { x: touchPoint.clientX, y: touchPoint.clientY } : null,
+    ghostText: resolveDragPayloadText(question, payload),
+    isHebrew: Boolean(question.answerIsHebrew),
   };
   setSentenceDragPayload(payload);
-  updateSentenceTouchDragTarget(question, touchPoint);
 }
 
 function handleSentenceTouchMove(question, event) {
   if (!activeSentenceTouchDrag?.payload) return;
   const touchPoint = event?.touches?.[0];
   if (!touchPoint) return;
-  const activeTarget = updateSentenceTouchDragTarget(question, touchPoint);
-  if (activeTarget) {
-    event.preventDefault?.();
+  if (!activeSentenceTouchDrag.activated) {
+    const start = activeSentenceTouchDrag.startPoint;
+    const dx = start ? touchPoint.clientX - start.x : SENTENCE_DRAG_ACTIVATE_PX;
+    const dy = start ? touchPoint.clientY - start.y : SENTENCE_DRAG_ACTIVATE_PX;
+    if ((dx * dx) + (dy * dy) < (SENTENCE_DRAG_ACTIVATE_PX * SENTENCE_DRAG_ACTIVATE_PX)) {
+      return;
+    }
+    activeSentenceTouchDrag.activated = true;
+    showSentenceTouchDragGhost(activeSentenceTouchDrag.ghostText, activeSentenceTouchDrag.isHebrew, touchPoint);
   }
+  positionSentenceDragGhost(touchPoint);
+  updateSentenceTouchDragTarget(question, touchPoint);
+  event.preventDefault?.();
 }
 
 function finishSentenceTouchDrag(question, event) {
   if (!activeSentenceTouchDrag?.payload) return false;
+  if (!activeSentenceTouchDrag.activated) {
+    clearSentenceDragState();
+    return false;
+  }
   const touchPoint = event?.changedTouches?.[0] || event?.touches?.[0] || null;
   const activeTarget = updateSentenceTouchDragTarget(question, touchPoint);
   const handled = activeTarget
@@ -1344,6 +1434,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
             event.dataTransfer.setData("application/x-ivriquest-sentence-token", JSON.stringify({ type: "slot", slotIndex: index, tokenId }));
             event.dataTransfer.effectAllowed = "move";
           }
+          applyMouseDragImage(event, token.text, question.answerIsHebrew);
         });
         slot.addEventListener("dragend", () => {
           clearSentenceDragState();
@@ -1440,6 +1531,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
           event.dataTransfer.setData("application/x-ivriquest-sentence-token", JSON.stringify({ type: "bank", tokenId: token.id }));
           event.dataTransfer.effectAllowed = "move";
         }
+        applyMouseDragImage(event, token.text, question.answerIsHebrew);
       });
       btn.addEventListener("dragend", () => {
         clearSentenceDragState();
@@ -1460,7 +1552,14 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
     bankGrid.append(btn);
   });
 
-  board.append(answerRow, answerMeta, bankGrid);
+  board.append(answerRow);
+  if (!question.locked) {
+    const dragTip = global.document.createElement("p");
+    dragTip.className = "sentence-drag-tip";
+    dragTip.textContent = translate("prompt.sentenceBankDragTip");
+    board.append(dragTip);
+  }
+  board.append(answerMeta, bankGrid);
   runtime.el.choiceContainer.append(board);
 };
 

@@ -7,6 +7,25 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-06-29 — Add follow-the-cursor/finger drag visuals + a drag tip to the sentence builder
+
+**Requested:** In the sentences game, dragging answer tokens to slots works but gives no visual feedback that dragging is a valid interaction (the only confirmation was seeing a slot fill). Add natural visual dragging that follows the cursor/finger, plus an unobtrusive in-game tip ("Tip: you can drag answer blocks to any slot in the sentence.") with a Hebrew translation, styled consistently with other game tips.
+
+**Change:**
+- `app/bootstrap-data.js` — added `prompt.sentenceBankDragTip` to both EN ("Tip: drag answer blocks to any slot in the sentence.") and HE ("טיפ: אפשר לגרור אבני תשובה לכל משבצת במשפט.") string tables.
+- `app/sentence-bank.js` — `renderSentenceBankBoard()` now renders the drag tip as a `<p class="sentence-drag-tip">` inside the board, positioned between the answer blanks (`sentence-answer-line`) and the word-count meta (`sentence-answer-meta`)/token bank; only shown while the question is unlocked. Also added a floating drag-ghost token that follows the pointer. Mouse path: `applyMouseDragImage()` builds a styled clone and calls `dataTransfer.setDragImage()` in both `dragstart` handlers (slot + bank) so a consistent ghost follows the cursor. Touch path: the ghost is created lazily once the finger moves past an 8px threshold (`SENTENCE_DRAG_ACTIVATE_PX`), repositioned on every `touchmove`, and removed on end/cancel via `clearSentenceDragState()`. Touch drag now activates only after the threshold (taps/small moves no longer hijack scroll or flash a ghost). Helpers added: `resolveDragPayloadText`, `createSentenceDragGhostEl`, `positionSentenceDragGhost`, `showSentenceTouchDragGhost`, `removeSentenceDragGhost`, `applyMouseDragImage`.
+- `app/ui.js` — no net change; `renderPromptHint()` left as the original speech-tip logic (an interim version that showed the drag tip in `#promptHint` was reverted when the tip moved into the board).
+- `styles.css` — added `.sentence-drag-tip` (centered, 0.75rem, `var(--ink-soft)`, matches the soft look of other in-game tips; the board's grid gap handles spacing). Added `.sentence-drag-ghost` (fixed-position, pointer-events:none, z-index 1200, token-styled, transl(-50%,-135%) so it sits above the finger), `.sentence-drag-ghost.hebrew`, `.sentence-drag-ghost--mouse` (transform reset for the mouse drag image), and a light-theme variant.
+- `tests/app-progress.test.js` — `simulateTouchDragAndDrop` now moves the finger from the start point to a distinct point (24,24 → 220,220) so it crosses the new activation threshold, matching a real drag. Updated the "renders english answer lines…" test to assert `#promptHint` stays hidden and that the in-board `.sentence-drag-tip` (queried via `#choiceContainer`) shows the expected EN text during an active question.
+
+**Behavior changed:** Sentence-builder questions now show a drag tip inside the board, directly below the answer blanks and just above the word count and token bank (Hebrew or English per UI language); it disappears once the question is answered/locked. Dragging a token (mouse or touch) now shows a token-styled ghost following the cursor/finger; touch dragging requires an ~8px move to start (small taps still select via tap, page scroll still works until a drag begins).
+
+**Tests run:** `npm test` — 184/184 pass (after updating two affected tests). Browser-verified on the dev server: board child order is `sentence-answer-line → sentence-drag-tip → sentence-answer-meta → sentence-token-bank`, the tip shows the Hebrew text, `#promptHint` stays hidden; synthetic touch drag creates a `.sentence-drag-ghost` (position:fixed, z-index 1200) that tracks the touch point and is removed on touchend; a sub-threshold move creates no ghost; no console errors.
+
+**Risks / regressions to check:** Touch `touchmove` now calls `preventDefault()` once a drag is active, which intentionally locks page scroll during an in-progress drag — verify on a real device that scrolling the token bank still feels normal when not dragging. `setDragImage` is feature-detected and ghost creation guards on `global.document?.body`, so Node tests are unaffected. If the ghost ever appears to "stick," confirm `clearSentenceDragState()` runs on `dragend`/`touchcancel`.
+
+---
+
 ### 2026-06-29 — Test ישיבה cleanly in the sentence game + trim basic-food words from the translation quiz
 
 **Requested:** (1) In the sentence-builder, test ישיבה without offering פגישה as a distractor (the "The meeting was postponed…" sentence pitted the synonyms הישיבה vs הפגישה against each other). (2) Re-review the translation-game vocabulary and remove words that are too simple. User chose: suppress (don't delete), conservative-core scope, keep kitchen utensils and cooking verbs, remove basic food only.
@@ -3299,3 +3318,69 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** `npm test` before = 173/173 pass; after = 173/173 pass (no test covers layout/CSS). Live-verified via preview server: desktop 1280×800 results render 3 columns (`grid-template-columns` = 3 tracks, 8 sample correct rows, section titles span full width, no overflow); tablet 768×1024 and 1000×800 — app-shell centers at 920, game board + prompt both 680px and left-aligned at the same offset (44px @768, 160px @1000), no horizontal overflow (`body.scrollWidth` == viewport); results screen at 768 reads well at 2 columns with bumped fonts; Hebrew/RTL keeps the board centered and mirrors topbar/nav correctly; no console errors. Settings-card computed `max-width:600px` confirmed.
 
 **Risks / regressions to check:** (1) The 680px game-column cap applies to all game modes on tablet (verb match, sentence bank, binyan board, conjugation) — spot-checked translation match; other modes share `.prompt-card`/`.choices` so should behave the same but worth a glance. (2) Larger tablet fonts could wrap unusually long bilingual answer rows or long Hebrew prompts — verified no wrapping on sampled content at 768 and 1000px. (3) The app-shell 920 cap also narrows the topbar and bottom nav on wide tablets (intended; they stay aligned with content). (4) `width: 100%` on the grid-item caps is required — removing it would collapse those elements to content width.
+
+---
+
+### 2026-07-01 — Codebase review + four conservative hardening fixes (Claude Code)
+
+**Requested:** A get-to-know-the-codebase review answering six questions (bugs, optimizations, fun/effectiveness/new-game/content ideas). User then chose to execute only the fix batch: (1) strengthen the stale sentence-bank restore check, (2) harden the uncommitted drag-ghost cleanup, (3) de-fragilize the hardcoded flexible-modifier list, (4) a tiny dead-code cleanup. Decisions: `VERB_MATCH_ROUNDS = 1` is intentional and was left alone; the game/content ideas (Rush timed mode, cross-mode Daily Review, "Shema" listening game, idiom expansion) were parked for future sessions.
+
+**Change:**
+- `app/session.js` — added `sanitizeRestoreAlternateList()` and `serializeSentenceForRestoreCheck()`; `isStaleRestoredSentenceBankQuestion()` now compares a canonical serialization of the persisted vs live sentence (english, hebrew, both token lists, both alternate lists, both distractor lists, difficulty) instead of just english/hebrew text, keeping the existing prompt/targetTokens checks. Closes the gap where edits to a sentence's alternates, distractors, or difficulty survived a mid-round restore with stale grading data. Also removed the dead `h.getAbbreviationRoundTarget?.()` call in `finishAbbreviation` (the helper is defined nowhere; the constant fallback was always used).
+- `app/sentence-bank.js` — hardened `applyMouseDragImage()`: the mouse drag ghost is now tracked in `sentenceDragGhostEl` (so the existing `dragend → clearSentenceDragState()` path cleans it), any prior ghost is removed before appending, removal is idempotent, a `setDragImage` failure removes the ghost synchronously, and on success both a rAF and a 100ms timeout backstop are scheduled (rAF alone can stall in hidden tabs). Also renamed the flexible-modifier const to `FALLBACK_HEBREW_FLEXIBLE_MODIFIER_TOKENS`; `isHebrewFlexibleModifierToken()` now resolves the list lazily from `runtime.sentenceBankApi?.getFlexibleModifierTokens?.()` with the local fallback.
+- `sentence-bank-data.js` — added `HEBREW_FLEXIBLE_MODIFIER_TOKENS` (["די","לגמרי","ממש","מאוד"]) near the top with an author-facing comment, exposed via new `getFlexibleModifierTokens()` on the `IvriQuestSentenceBank` API, so sentence authors see the swap-tolerance list next to the data they edit.
+- `app/ui.js` — removed two dead `app.abbreviation?.getAbbreviationRoundTarget?.()` calls (lines that always fell through to `runtime.constants.ABBREVIATION_ROUNDS`).
+- `tests/app-progress.test.js` — added `FakeElement.remove()` to the harness; new test "sentence builder never strands a mouse drag ghost after dragstart" (throwing `setDragImage` → ghost removed synchronously; working `setDragImage` → ghost present after dragstart, gone after dragend); two new stale-restore tests asserting invalidation when only `hebrew_alternates` or only `hebrew_distractors` change between save and restore.
+- `tests/sentence-bank-data.test.js` — new test asserting `getFlexibleModifierTokens()` exists, returns unique trimmed non-empty strings including all four modifiers, and returns a fresh copy per call.
+
+**Files changed:** `app/session.js`, `app/sentence-bank.js`, `app/ui.js`, `sentence-bank-data.js`, `tests/app-progress.test.js`, `tests/sentence-bank-data.test.js`, `task-log.md`.
+
+**Behavior changed:** A restored mid-round sentence-builder question is now dropped (safe fallback to home) if the sentence's alternates, distractors, or difficulty changed in the data — previously only text changes were caught; identical data still restores normally. Mouse drag ghosts can no longer strand on screen in edge cases (setDragImage failure, throttled rAF). No other observable changes; the flexible-modifier and dead-code changes are behavior-identical.
+
+**Tests run:** `npm test` — 184/184 pass before changes (baseline including the pre-existing uncommitted drag-ghost work), 188/188 pass after (4 new tests). Browser-verified on the dev server (`npx serve`, port 3000): app boots with zero console errors/warnings; sentence-builder board renders and plays; synthetic dragstart with a real DataTransfer creates exactly one `.sentence-drag-ghost` and dragend removes it; mid-round page reload restores the identical question (mode stays `sentenceBank`, same prompt) confirming no over-invalidation.
+
+**Risks / regressions to check:** (1) Fix 1 makes invalidation stricter — after any future sentence-data edit, users mid-round on that sentence will be bounced to home once; reordering a distractor array without content changes also invalidates (accepted trade-off). (2) When these files deploy, bump the `?v=` cache-bust tokens in `index.html` for `sentence-bank-data.js`, `app/sentence-bank.js`, `app/session.js`, and `app/ui.js` (see the 2026-06-29 cache-bust entry for why). (3) Preview-only observation, pre-existing and unchanged: on very short viewports the sticky Check bar overlaps the token bank; renders fine at normal sizes.
+
+---
+
+### 2026-07-01 — Fix right-column mismatch logging in match games + accept floating-adverb sentence orders (Claude Code)
+
+**Requested:** User reported two bugs from live play: (1) in the Translation game they mismatched חיסון (vaccination) but it never showed as wrong on the results page; (2) the sentence "שוב נפגשנו במקרה? פעם שלישית גלידה!" rejected their answer "נפגשנו במקרה שוב?" even though the שוב placement is interchangeable. Asked to apply both fixes and sweep the sentence bank for other floating-adverb sentences with the same missing-alternate gap.
+
+**Root cause (bug 1):** The Translation and Abbreviation games are the shared two-column match game. On a mismatch, `matchEngine.applyMismatch` calls `config.onMismatch(leftCard.pairId, rightCard.pairId)` — passing both the English (left) and Hebrew (right) word ids. But `word-match.js` defined `onMismatch: (id) => recordResult(ctx, id, false, mode)` with a single parameter, so only the left card's word was recorded; the right card's word was silently dropped from both `sessionMistakeIds` (the summary) and the spaced-repetition `updateProgress` call. Mis-tapping a Hebrew tile (right column) therefore never registered. (verb-match's own mismatch handler already records both sides — word-match was the outlier.)
+
+**Change:**
+- `app/word-match.js` — `buildConfig().onMismatch` now takes `(leftId, rightId)` and calls `recordResult` for both, so a mismatch records both involved words. Fixes both the Translation and Abbreviation match games.
+- `sentence-bank-data.js` — added `hebrew_alternates` to three sentences with genuinely interchangeable floating-adverb orders (each alternate is a pure reordering of the same token multiset):
+  - `colloquial_25` (ice cream): accept "נפגשנו שוב במקרה?" and "נפגשנו במקרה שוב?" alongside the stored "שוב נפגשנו במקרה?".
+  - `professional_05`: accept "לבדוק שוב את הנתונים" alongside "לבדוק את הנתונים שוב".
+  - `colloquial_02`: accept fronted "עכשיו אין לי כוח לזה…" alongside "אין לי כוח לזה עכשיו…".
+- `tests/app-progress.test.js` — new test "translation match records both mismatched words, including the Hebrew (right) card": drives a lessonMatch mismatch and asserts both pairIds land in `sessionMistakeIds` and the right word's progress record registered the attempt.
+
+**Sweep result:** Scanned all 115 sentences for ~23 candidate floating adverbs (שוב, כבר, עדיין, תמיד, עכשיו, היום/מחר/אתמול, ממש, מאוד, לגמרי, די, באמת, בכלל, סתם, פשוט, אולי, …). 30 contained a candidate; only the 3 above are true, unambiguous reorderings needing a new alternate. Deliberately rejected the rest, e.g.: degree words bound to their adjective (ממש מטורף, ממש על הפנים, פשוט יותר where פשוט is the adjective "simple"); cases already covered by the existing adjacent-swap logic for די/לגמרי/ממש/מאוד (colloquial_07 "הזוי לגמרי", colloquial_12 "חם כאן מאוד"); and — importantly — `professional_08` "זה לא לגמרי ברור", where moving לגמרי to "זה לגמרי לא ברור" flips the negation scope ("not completely clear" → "completely unclear"), a meaning change, so no alternate was added.
+
+**Files changed:** `app/word-match.js`, `sentence-bank-data.js`, `tests/app-progress.test.js`, `task-log.md`.
+
+**Behavior changed:** Mismatching a Hebrew (right-column) word in the Translation/Abbreviation match games now correctly flags that word on the results page and feeds its spaced-repetition schedule. The three swept sentences now accept the additional natural word orders instead of marking them wrong.
+
+**Tests run:** `npm test` — 189/189 pass (was 188; +1 new test). Verified via node that all `hebrew_alternates` on the three edited sentences are exact token-multiset permutations of their base, and that the data file loads. Browser-verified on the running dev server (port 3000): a fresh fetch of `sentence-bank-data.js` contains all four new alternate strings.
+
+**Risks / regressions to check:** (1) The mismatch fix now records BOTH words as wrong on a mismatch (previously only the left). This is intentional and matches verb-match, but it means a mismatch dings the English-side word's SR schedule too — acceptable, recovers on next correct. (2) When deploying, bump the `?v=` cache-bust tokens in `index.html` for `app/word-match.js` and `sentence-bank-data.js` (see the 2026-06-29 cache-bust entry). (3) The three new sentence alternates were vetted for naturalness and meaning-equivalence by hand; if more are added later, keep verifying the reorder doesn't change negation/emphasis scope (see the professional_08 rejection above).
+
+---
+
+### 2026-07-01 — Ship to GitHub Pages: bump cache-bust tokens + merge working tree to main (Claude Code)
+
+**Requested:** "Push to GitHub and merge with main."
+
+**Change:**
+- `index.html` — bumped `?v=` cache-bust tokens to `20260701a` for every file changed in the working tree so GitHub Pages returning visitors fetch the new code instead of stale cached copies: `styles.css`, `sentence-bank-data.js`, `app/bootstrap-data.js`, `app/session.js`, `app/ui.js`, `app/sentence-bank.js`, `app/word-match.js`.
+- Committed and merged the full working tree, which bundles three previously-logged bodies of work: (1) the drag-ghost/drag-tip sentence-builder UX (2026-06-29 entry), (2) the four conservative hardening fixes — stale-restore check, drag-ghost cleanup, flexible-modifier relocation, dead-code removal (2026-07-01 entry), and (3) the match-game right-column mismatch logging fix + floating-adverb sentence alternates (2026-07-01 entry).
+
+**Files changed:** `index.html`, `task-log.md` (plus the already-logged files carried in this merge).
+
+**Behavior changed:** None beyond the already-logged changes; the token bump only forces caches to refresh on deploy.
+
+**Tests run:** `npm test` — 189/189 pass.
+
+**Risks / regressions to check:** After the Pages deploy completes, hard-refresh once and confirm the app boots (all 40 scripts 200) and a sentence round plays; if any file was changed but its token missed a bump, cached clients would run mismatched versions.

@@ -1,6 +1,10 @@
 (function initIvriQuestSentenceBank(global) {
 "use strict";
 
+// Degree adverbs the sentence builder accepts in either adjacent order.
+// Add here when authoring sentences that rely on flexible modifier placement.
+const HEBREW_FLEXIBLE_MODIFIER_TOKENS = ["די", "לגמרי", "ממש", "מאוד"];
+
 const SENTENCE_BANK = [
   {
     "id": "colloquial_01",
@@ -79,6 +83,9 @@ const SENTENCE_BANK = [
       "נדבר",
       "אחר",
       "כך"
+    ],
+    "hebrew_alternates": [
+      { "text": "עכשיו אין לי כוח לזה, נדבר אחר כך.", "tokens": ["עכשיו", "אין", "לי", "כוח", "לזה", "נדבר", "אחר", "כך"] }
     ],
     "english_tokens": [
       "I",
@@ -2120,6 +2127,9 @@ const SENTENCE_BANK = [
       "שיש",
       "טעות"
     ],
+    "hebrew_alternates": [
+      { "text": "אני ממליץ לבדוק שוב את הנתונים, ייתכן שיש טעות.", "tokens": ["אני", "ממליץ", "לבדוק", "שוב", "את", "הנתונים", "ייתכן", "שיש", "טעות"] }
+    ],
     "english_tokens": [
       "I",
       "recommend",
@@ -3295,6 +3305,10 @@ const SENTENCE_BANK = [
     "english": "We met by chance again? Third time you owe me ice cream!",
     "hebrew_tokens": ["שוב", "נפגשנו", "במקרה", "פעם", "שלישית", "גלידה"],
     "english_tokens": ["We met", "by chance", "again", "Third time", "you owe me", "ice cream"],
+    "hebrew_alternates": [
+      { "text": "נפגשנו שוב במקרה? פעם שלישית גלידה!", "tokens": ["נפגשנו", "שוב", "במקרה", "פעם", "שלישית", "גלידה"] },
+      { "text": "נפגשנו במקרה שוב? פעם שלישית גלידה!", "tokens": ["נפגשנו", "במקרה", "שוב", "פעם", "שלישית", "גלידה"] }
+    ],
     "hebrew_distractors": ["אולי", "בכוונה", "ראשונה", "קפה", "שוקולד"],
     "english_distractors": ["on purpose", "the first time", "coffee's on you", "by mistake", "tomorrow"],
     "notes": "פעם שלישית גלידה ('third time, ice cream') is a playful saying — keep bumping into someone and the third time 'earns' a treat. Israel's 'we have to stop meeting like this.'"
@@ -3879,6 +3893,9 @@ function cloneSentence(item) {
 global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
+  },
+  getFlexibleModifierTokens() {
+    return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
   __build: "20260622a",
 };
