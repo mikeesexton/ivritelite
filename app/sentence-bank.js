@@ -786,8 +786,12 @@ function buildSentenceFeedbackDetail(question, isCorrect) {
   return details.join(" ").trim();
 }
 
+function normalizeSentenceDirection(direction) {
+  return direction === "en2he" || direction === "listen" ? direction : "he2en";
+}
+
 function buildSentenceProgressKey(sentenceId, direction) {
-  return `${String(sentenceId || "").trim()}::${direction === "en2he" ? "en2he" : "he2en"}`;
+  return `${String(sentenceId || "").trim()}::${normalizeSentenceDirection(direction)}`;
 }
 
 function getQuestionKey(question) {
@@ -860,6 +864,7 @@ const SENTENCE_BANK_MAX_TILES = 12;
 const SENTENCE_BANK_MIN_DISTRACTORS = 3;
 
 function getAlternateRequiredDistractors(sentence, direction, targetTokens) {
+  if (direction === "listen") return new Set();
   const alternates = direction === "en2he" ? sentence?.hebrewAlternates : sentence?.englishAlternates;
   if (!Array.isArray(alternates) || !alternates.length) return new Set();
   const targetSet = new Set(targetTokens);
@@ -895,15 +900,16 @@ function buildQuestionFromPair(pair, options = {}) {
   const shuffle = app.utils?.shuffle;
   const doShuffle = typeof shuffle === "function" ? shuffle : (items) => [...items];
   const sentence = pair?.sentence;
-  const direction = pair?.direction === "en2he" ? "en2he" : "he2en";
+  const direction = normalizeSentenceDirection(pair?.direction);
   if (!sentence) return null;
 
-  const targetTokens = direction === "en2he"
+  const answerIsHebrew = direction !== "he2en";
+  const targetTokens = answerIsHebrew
     ? [...sentence.hebrewTokens]
     : [...sentence.englishTokens];
   const distractorTokens = capSentenceBankDistractors(
     targetTokens,
-    direction === "en2he" ? [...sentence.hebrewDistractors] : [...sentence.englishDistractors],
+    answerIsHebrew ? [...sentence.hebrewDistractors] : [...sentence.englishDistractors],
     sentence,
     direction,
     doShuffle
@@ -919,14 +925,16 @@ function buildQuestionFromPair(pair, options = {}) {
     direction,
     questionKey: buildSentenceProgressKey(sentence.id, direction),
     promptLabel: translate(
-      options.isReview
-        ? direction === "en2he" ? "prompt.reviewToHebrew" : "prompt.reviewToEnglish"
-        : direction === "en2he" ? "prompt.toHebrew" : "prompt.toEnglish"
+      direction === "listen"
+        ? "prompt.shemaListen"
+        : options.isReview
+          ? direction === "en2he" ? "prompt.reviewToHebrew" : "prompt.reviewToEnglish"
+          : direction === "en2he" ? "prompt.toHebrew" : "prompt.toEnglish"
     ),
     prompt: direction === "en2he" ? sentence.english : sentence.hebrew,
     promptIsHebrew: direction === "he2en",
-    optionsAreHebrew: direction === "en2he",
-    answerIsHebrew: direction === "en2he",
+    optionsAreHebrew: answerIsHebrew,
+    answerIsHebrew,
     targetTokens,
     bankTokens,
     slotTokenIds: buildEmptySentenceSlots(targetTokens.length),
@@ -934,7 +942,7 @@ function buildQuestionFromPair(pair, options = {}) {
     selectedBankTokenId: "",
     selectedSlotIndex: null,
     wasLastAnswerCorrect: false,
-    scoreValue: direction === "en2he" ? sentence.difficulty + 1 : sentence.difficulty,
+    scoreValue: direction === "he2en" ? sentence.difficulty : sentence.difficulty + 1,
     isReview: options.isReview === true,
     locked: false,
   };
@@ -955,12 +963,14 @@ function isAnswerComplete(question) {
 function getAcceptedAnswerVariants(question) {
   if (!question) return [];
   const primaryTokens = sanitizeTokenList(question.targetTokens);
-  const primaryText = question.direction === "en2he"
-    ? String(question?.sentence?.hebrew || "").trim()
-    : String(question?.sentence?.english || "").trim();
+  const primaryText = question.direction === "he2en"
+    ? String(question?.sentence?.english || "").trim()
+    : String(question?.sentence?.hebrew || "").trim();
   const alternates = question.direction === "en2he"
     ? question?.sentence?.hebrewAlternates
-    : question?.sentence?.englishAlternates;
+    : question.direction === "listen"
+      ? []
+      : question?.sentence?.englishAlternates;
 
   return [
     { text: primaryText, tokens: primaryTokens },
@@ -986,13 +996,16 @@ function getCorrectAnswerText(question, options = {}) {
   if (matchedVariant?.text) {
     return matchedVariant.text;
   }
-  return question.direction === "en2he" ? question.sentence.hebrew : question.sentence.english;
+  return question.direction === "he2en" ? question.sentence.english : question.sentence.hebrew;
 }
 
 function buildCandidatePairs(pool, askedSentenceIds) {
   const freshPool = askedSentenceIds.length < pool.length
     ? pool.filter((sentence) => !askedSentenceIds.includes(sentence.id))
     : pool;
+  if (getRuntime().state?.sentenceBank?.shemaMode) {
+    return (freshPool.length ? freshPool : pool).map((sentence) => ({ sentence, direction: "listen" }));
+  }
   return (freshPool.length ? freshPool : pool).flatMap((sentence) => ([
     { sentence, direction: "he2en" },
     { sentence, direction: "en2he" },
@@ -1076,11 +1089,21 @@ sentenceBank.prepareSentenceBankDeck = sentenceBank.prepareSentenceBankDeck || f
 };
 
 sentenceBank.getSentenceBankPromptSpeechPayload = sentenceBank.getSentenceBankPromptSpeechPayload || function getSentenceBankPromptSpeechPayload(question = getRuntime().state.sentenceBank.currentQuestion) {
-  if (!question?.promptIsHebrew) return null;
+  if (!question) return null;
+  if (!question.promptIsHebrew && question.direction !== "listen") return null;
   return app.speech?.buildSpeechPayload?.({
     plain: question.prompt,
     source: "prompt",
   }) || null;
+};
+
+sentenceBank.playShemaPrompt = sentenceBank.playShemaPrompt || function playShemaPrompt(options = {}) {
+  const payload = sentenceBank.getSentenceBankPromptSpeechPayload();
+  if (!payload) return false;
+  return app.speech?.speak?.(payload, {
+    force: true,
+    rate: options.slow ? 0.65 : undefined,
+  }) || false;
 };
 
 sentenceBank.cloneSentenceBankQuestionSnapshot = sentenceBank.cloneSentenceBankQuestionSnapshot || function cloneSentenceBankQuestionSnapshot(question) {
@@ -1109,8 +1132,16 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
       const [sentenceId, direction = "he2en"] = String(key || "").split("::");
       const sentence = lookup.get(sentenceId);
       if (!sentence) return null;
-      const toHebrew = direction === "en2he";
       const clinicNote = buildSentenceClinicNote(sentence.notes);
+      if (direction === "listen") {
+        return {
+          primary: sentence.hebrew,
+          secondary: `${translate("game.shemaName")}: ${sentence.english}`,
+          clinicKey: clinicNote ? "results.sentenceClinic" : "",
+          clinicVars: clinicNote ? { note: clinicNote } : {},
+        };
+      }
+      const toHebrew = direction === "en2he";
       return {
         primary: toHebrew ? sentence.hebrew : sentence.english,
         secondary: `${translate(toHebrew ? "prompt.toHebrew" : "prompt.toEnglish")}: ${toHebrew ? sentence.english : sentence.hebrew}`,
@@ -1146,6 +1177,7 @@ sentenceBank.resetSentenceBankState = sentenceBank.resetSentenceBankState || fun
   runtime.state.sentenceBank.wrongAnswers = 0;
   runtime.state.sentenceBank.sessionMistakeKeys = [];
   runtime.state.sentenceBank.availableScore = 0;
+  runtime.state.sentenceBank.shemaMode = false;
 };
 
 sentenceBank.renderSentenceBankIdleState = sentenceBank.renderSentenceBankIdleState || function renderSentenceBankIdleState() {
@@ -1166,7 +1198,11 @@ sentenceBank.renderSentenceBankIdleState = sentenceBank.renderSentenceBankIdleSt
   app.ui?.renderPromptSpeechButton?.();
 };
 
-sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function startSentenceBank() {
+sentenceBank.startShema = sentenceBank.startShema || function startShema() {
+  sentenceBank.startSentenceBank({ shema: true });
+};
+
+sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function startSentenceBank(options = {}) {
   const runtime = getRuntime();
   const h = getHelpers();
   const session = getSession();
@@ -1195,11 +1231,14 @@ sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function star
   session.clearBinyanBoardIntro?.();
   app.wordMatch?.resetWordMatchState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
+  session.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   h.resetSessionScore?.();
   sentenceBank.resetSentenceBankState();
+  runtime.state.sentenceBank.shemaMode = options.shema === true;
   runtime.state.mode = "sentenceBank";
   runtime.state.route = "home";
-  runtime.state.lastPlayedMode = "sentenceBank";
+  runtime.state.lastPlayedMode = options.shema === true ? "shema" : "sentenceBank";
   runtime.el.choiceContainer.innerHTML = "";
   runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.clearFeedback?.();
@@ -1332,6 +1371,9 @@ sentenceBank.nextSentenceBankQuestion = sentenceBank.nextSentenceBankQuestion ||
   runtime.state.sentenceBank.currentQuestion = question;
   h.clearFeedback?.();
   sentenceBank.renderSentenceBankQuestion();
+  if (question.direction === "listen") {
+    sentenceBank.playShemaPrompt();
+  }
 };
 
 sentenceBank.canSubmitCurrentQuestion = sentenceBank.canSubmitCurrentQuestion || function canSubmitCurrentQuestion(question = getRuntime().state.sentenceBank.currentQuestion) {
@@ -1377,6 +1419,23 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
 
   const board = global.document.createElement("div");
   board.className = "sentence-builder";
+
+  if (question.direction === "listen") {
+    const controls = global.document.createElement("div");
+    controls.className = "shema-controls";
+    const playBtn = global.document.createElement("button");
+    playBtn.type = "button";
+    playBtn.className = "choice-btn shema-play-btn";
+    playBtn.textContent = translate("prompt.shemaPlay");
+    playBtn.addEventListener("click", () => sentenceBank.playShemaPrompt());
+    const slowBtn = global.document.createElement("button");
+    slowBtn.type = "button";
+    slowBtn.className = "choice-btn shema-play-btn";
+    slowBtn.textContent = translate("prompt.shemaPlaySlow");
+    slowBtn.addEventListener("click", () => sentenceBank.playShemaPrompt({ slow: true }));
+    controls.append(playBtn, slowBtn);
+    board.append(controls);
+  }
 
   const answerRow = global.document.createElement("section");
   answerRow.className = `sentence-answer-line ${question.answerIsHebrew ? "hebrew" : "english"}`;
@@ -1831,23 +1890,35 @@ sentenceBank.applySentenceBankAnswer = sentenceBank.applySentenceBankAnswer || f
   }
 
   h.setFeedback?.(
-    question.direction === "he2en"
+    question.direction === "listen"
       ? {
           tone: isCorrect ? "success" : "error",
           sentence: translate(
-            isCorrect ? "feedback.sentenceBankCorrectToEnglish" : "feedback.sentenceBankWrongToEnglish",
+            isCorrect ? "feedback.shemaCorrect" : "feedback.shemaWrong",
             { answer: correctAnswer }
           ),
-          detail: buildSentenceFeedbackDetail(question, isCorrect),
+          detail: [
+            translate("feedback.shemaMeaning", { english: question.sentence.english }),
+            buildSentenceFeedbackDetail(question, isCorrect),
+          ].filter(Boolean).join(" "),
         }
-      : {
-          tone: isCorrect ? "success" : "error",
-          sentence: translate(
-            isCorrect ? "feedback.sentenceBankCorrectToHebrew" : "feedback.sentenceBankWrongToHebrew",
-            { answer: correctAnswer }
-          ),
-          detail: buildSentenceFeedbackDetail(question, isCorrect),
-        }
+      : question.direction === "he2en"
+        ? {
+            tone: isCorrect ? "success" : "error",
+            sentence: translate(
+              isCorrect ? "feedback.sentenceBankCorrectToEnglish" : "feedback.sentenceBankWrongToEnglish",
+              { answer: correctAnswer }
+            ),
+            detail: buildSentenceFeedbackDetail(question, isCorrect),
+          }
+        : {
+            tone: isCorrect ? "success" : "error",
+            sentence: translate(
+              isCorrect ? "feedback.sentenceBankCorrectToHebrew" : "feedback.sentenceBankWrongToHebrew",
+              { answer: correctAnswer }
+            ),
+            detail: buildSentenceFeedbackDetail(question, isCorrect),
+          }
   );
   h.playAnswerFeedbackSound?.(isCorrect);
 

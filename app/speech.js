@@ -137,6 +137,10 @@ speech.speak = speech.speak || function speak(payload, options = {}) {
 
   utterance.lang = payload.lang || "he-IL";
   utterance.voice = voice;
+  const rate = Number(options.rate);
+  if (Number.isFinite(rate) && rate > 0) {
+    utterance.rate = rate;
+  }
 
   speech.cancel();
 

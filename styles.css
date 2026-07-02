@@ -1739,6 +1739,19 @@ body[data-theme="light"] .sentence-drag-ghost {
   color: var(--ink-soft);
 }
 
+.shema-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.44rem;
+  justify-content: center;
+}
+
+.shema-play-btn {
+  min-height: 44px;
+  padding: 0.36rem 1rem;
+  white-space: nowrap;
+}
+
 .lesson-shell.mode-sentence-bank .lesson-footer {
   gap: 0.44rem;
   padding-top: 0.12rem;
@@ -3707,4 +3720,77 @@ body[data-theme="light"] .binyan-root-tile:hover {
   font-family: "Assistant", sans-serif;
   font-size: 2rem;
   font-weight: 700;
+}
+
+.prompt-card.prompt-card--audio .prompt-content-row {
+  min-height: 0;
+  padding: 0;
+}
+
+.prompt-text.handwriting-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: min(100%, 42ch);
+}
+
+.handwriting-line {
+  direction: rtl;
+  font-family: "Assistant", sans-serif;
+  font-size: clamp(1.3rem, 4.2vw, 1.9rem);
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.handwriting-line .hw-cell {
+  padding: 0 0.03em;
+  border-radius: 5px;
+}
+
+.handwriting-line .hw-cell.done {
+  color: var(--ink-soft);
+}
+
+.handwriting-line .hw-cell.current {
+  background: var(--brand);
+  color: var(--paper);
+}
+
+.handwriting-en {
+  direction: ltr;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+  line-height: 1.3;
+}
+
+.handwriting-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.handwriting-canvas {
+  width: 100%;
+  max-width: min(100%, 60vh);
+  aspect-ratio: 1 / 1;
+  touch-action: none;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--field-bg);
+  cursor: crosshair;
+}
+
+.handwriting-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.handwriting-tool-btn {
+  min-width: 76px;
 }

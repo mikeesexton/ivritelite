@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Handwriting Template Authoring</title>
+    <style>
+      body { font-family: sans-serif; background: #0b132b; color: #f4f7fb; margin: 0; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; }
+      .panel { display: flex; flex-direction: column; gap: 8px; max-width: 520px; }
+      canvas { border: 1px solid #444; border-radius: 8px; background: #101a33; touch-action: none; cursor: crosshair; width: 480px; height: 480px; }
+      .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+      button { padding: 6px 12px; border-radius: 8px; border: 1px solid #555; background: #1a2742; color: inherit; cursor: pointer; }
+      button.accent { background: #f4c430; color: #0b132b; font-weight: 700; }
+      textarea { width: 100%; min-height: 160px; background: #101a33; color: #cfe0ff; border: 1px solid #444; border-radius: 8px; font-family: monospace; font-size: 11px; }
+      label { font-size: 13px; }
+      select, input[type="range"] { max-width: 220px; }
+      .hint { font-size: 12px; color: #a0aec0; max-width: 480px; }
+    </style>
+  </head>
+  <body>
+    <div class="panel">
+      <h2>Cursive Template Authoring</h2>
+      <p class="hint">
+        Trace one letter at a time. Guides: topline y=0.15, baseline y=0.75, descender floor y=0.98.
+        Load a reference image of a cursive alphabet chart, adjust its opacity, draw strokes in writing order,
+        then Export JSON and paste the strokes array into handwriting-data.js.
+        To QA committed templates, load handwriting-data.js below and pick a letter to replay.
+      </p>
+      <div class="row">
+        <label>Reference image <input type="file" id="refImage" accept="image/*" /></label>
+        <label>Opacity <input type="range" id="refOpacity" min="0" max="100" value="35" /></label>
+      </div>
+      <canvas id="board" width="960" height="960"></canvas>
+      <div class="row">
+        <button id="undoBtn">Undo stroke</button>
+        <button id="clearBtn">Clear</button>
+        <button id="exportBtn" class="accent">Export JSON</button>
+        <label><input type="checkbox" id="snapResample" checked /> Resample to 24 points/stroke</label>
+      </div>
+      <textarea id="output" placeholder="Exported strokes JSON appears here. Paste replay JSON here and press Replay."></textarea>
+      <div class="row">
+        <button id="replayBtn">Replay JSON from box</button>
+        <input type="file" id="dataFile" accept=".js,.json" />
+        <select id="letterPick" disabled></select>
+        <button id="replayLetterBtn" disabled>Replay letter</button>
+      </div>
+    </div>
+    <script>
+      const TOPLINE = 0.15, BASELINE = 0.75, DESCENDER = 0.98;
+      const board = document.getElementById("board");
+      const ctx = board.getContext("2d");
+      const output = document.getElementById("output");
+      let strokes = [];
+      let activePoints = null;
+      let refBitmap = null;
+      let refOpacity = 0.35;
+      let replayStrokes = null;
+
+      function toX(x) { return x * board.width; }
+      function toY(y) { return y * board.height; }
+
+      function repaint() {
+        ctx.clearRect(0, 0, board.width, board.height);
+        if (refBitmap) {
+          ctx.save();
+          ctx.globalAlpha = refOpacity;
+          ctx.drawImage(refBitmap, 0, 0, board.width, board.height);
+          ctx.restore();
+        }
+        ctx.save();
+        ctx.strokeStyle = "#8899bb";
+        ctx.setLineDash([12, 12]);
+        ctx.lineWidth = 2;
+        [TOPLINE, BASELINE, DESCENDER].forEach((y) => {
+          ctx.beginPath();
+          ctx.moveTo(toX(0.02), toY(y));
+          ctx.lineTo(toX(0.98), toY(y));
+          ctx.stroke();
+        });
+        ctx.restore();
+
+        const drawSet = (set, color, width) => {
+          ctx.save();
+          ctx.strokeStyle = color;
+          ctx.lineWidth = width;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+          set.forEach((stroke, i) => {
+            const pts = stroke.points;
+            if (!pts || pts.length < 2) return;
+            ctx.beginPath();
+            ctx.moveTo(toX(pts[0][0]), toY(pts[0][1]));
+            for (let k = 1; k < pts.length; k += 1) ctx.lineTo(toX(pts[k][0]), toY(pts[k][1]));
+            ctx.stroke();
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(toX(pts[0][0]), toY(pts[0][1]), 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#0b132b";
+            ctx.font = "700 16px sans-serif";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(String(i + 1), toX(pts[0][0]), toY(pts[0][1]));
+          });
+          ctx.restore();
+        };
+        if (replayStrokes) drawSet(replayStrokes, "#f4c430", 18);
+        drawSet(strokes, "#f4f7fb", 8);
+        if (activePoints) drawSet([{ points: activePoints }], "#8fd0ff", 8);
+      }
+
+      function normPoint(event) {
+        const rect = board.getBoundingClientRect();
+        return [
+          Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width)),
+          Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height)),
+        ];
+      }
+
+      board.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        board.setPointerCapture(event.pointerId);
+        activePoints = [normPoint(event)];
+        repaint();
+      });
+      board.addEventListener("pointermove", (event) => {
+        if (!activePoints) return;
+        const p = normPoint(event);
+        const last = activePoints[activePoints.length - 1];
+        if (Math.hypot(p[0] - last[0], p[1] - last[1]) >= 0.003) {
+          activePoints.push(p);
+          repaint();
+        }
+      });
+      const endStroke = () => {
+        if (activePoints && activePoints.length >= 2) strokes.push({ points: activePoints });
+        activePoints = null;
+        repaint();
+      };
+      board.addEventListener("pointerup", endStroke);
+      board.addEventListener("pointercancel", endStroke);
+
+      document.getElementById("undoBtn").addEventListener("click", () => { strokes.pop(); repaint(); });
+      document.getElementById("clearBtn").addEventListener("click", () => { strokes = []; replayStrokes = null; repaint(); });
+
+      function pathLength(points) {
+        let total = 0;
+        for (let i = 1; i < points.length; i += 1) total += Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]);
+        return total;
+      }
+
+      function resample(points, count) {
+        const total = pathLength(points);
+        if (!total) return points.slice(0, 1);
+        const step = total / (count - 1);
+        const out = [points[0].slice()];
+        let carried = 0;
+        for (let i = 1; i < points.length; i += 1) {
+          let prev = points[i - 1];
+          const current = points[i];
+          let segment = Math.hypot(current[0] - prev[0], current[1] - prev[1]);
+          while (carried + segment >= step && segment > 0) {
+            const ratio = (step - carried) / segment;
+            const next = [prev[0] + ratio * (current[0] - prev[0]), prev[1] + ratio * (current[1] - prev[1])];
+            out.push(next);
+            prev = next;
+            segment = Math.hypot(current[0] - prev[0], current[1] - prev[1]);
+            carried = 0;
+          }
+          carried += segment;
+        }
+        while (out.length < count) out.push(points[points.length - 1].slice());
+        return out.slice(0, count);
+      }
+
+      document.getElementById("exportBtn").addEventListener("click", () => {
+        const doResample = document.getElementById("snapResample").checked;
+        const exported = strokes.map((stroke) => ({
+          points: (doResample ? resample(stroke.points, 24) : stroke.points).map(([x, y]) => [Number(x.toFixed(4)), Number(y.toFixed(4))]),
+        }));
+        output.value = JSON.stringify(exported);
+      });
+
+      document.getElementById("replayBtn").addEventListener("click", () => {
+        try {
+          const parsed = JSON.parse(output.value);
+          replayStrokes = Array.isArray(parsed) ? parsed : parsed.strokes || null;
+          repaint();
+        } catch (error) {
+          alert("Could not parse JSON: " + error.message);
+        }
+      });
+
+      document.getElementById("refImage").addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        refBitmap = await createImageBitmap(file);
+        repaint();
+      });
+      document.getElementById("refOpacity").addEventListener("input", (event) => {
+        refOpacity = Number(event.target.value) / 100;
+        repaint();
+      });
+
+      const letterPick = document.getElementById("letterPick");
+      const replayLetterBtn = document.getElementById("replayLetterBtn");
+      let loadedForms = [];
+      document.getElementById("dataFile").addEventListener("change", async (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        const text = await file.text();
+        try {
+          if (file.name.endsWith(".json")) {
+            const parsed = JSON.parse(text);
+            loadedForms = parsed.letters
+              ? Object.entries(parsed.letters).map(([letter, value]) => ({ id: letter, letter, strokes: value.strokes }))
+              : parsed;
+          } else {
+            const shim = { IvriQuestHandwritingData: undefined };
+            const fn = new Function("window", "globalThis", text + "; return window.IvriQuestHandwritingData || globalThis.IvriQuestHandwritingData;");
+            const data = fn(shim, shim);
+            loadedForms = data?.getLetterforms?.() || data?.LETTERFORMS || [];
+          }
+          letterPick.innerHTML = loadedForms.map((form, index) => `<option value="${index}">${form.letter || form.id} (${form.id})</option>`).join("");
+          letterPick.disabled = !loadedForms.length;
+          replayLetterBtn.disabled = !loadedForms.length;
+        } catch (error) {
+          alert("Could not load data file: " + error.message);
+        }
+      });
+      replayLetterBtn.addEventListener("click", () => {
+        const form = loadedForms[Number(letterPick.value)];
+        if (!form) return;
+        replayStrokes = form.strokes;
+        strokes = [];
+        repaint();
+      });
+
+      repaint();
+    </script>
+  </body>
+</html>

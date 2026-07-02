@@ -216,6 +216,7 @@ persistence.persistSessionState = persistence.persistSessionState || function pe
       wrongAnswers: runtime.state.sentenceBank.wrongAnswers,
       sessionMistakeKeys: runtime.state.sentenceBank.sessionMistakeKeys,
       availableScore: runtime.state.sentenceBank.availableScore,
+      shemaMode: runtime.state.sentenceBank.shemaMode,
     },
     abbreviation: {
       active: runtime.state.abbreviation.active,

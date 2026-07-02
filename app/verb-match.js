@@ -93,6 +93,8 @@ verbMatch.startVerbMatch = verbMatch.startVerbMatch || function startVerbMatch()
   s.clearSummaryState?.();
   app.wordMatch?.resetWordMatchState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
+  s.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
   runtime.state.currentQuestion = null;

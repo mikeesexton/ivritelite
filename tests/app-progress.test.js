@@ -883,6 +883,113 @@ test("sentence builder renders english answer lines left-to-right, keeps punctua
   assert.equal(modeStats.sentenceBank.wrong, 0);
 });
 
+test("shema round speaks the sentence, hides the Hebrew prompt, and tracks listen progress", () => {
+  const sentenceBank = [
+    {
+      id: "sb-1",
+      category: "everyday",
+      difficulty: 2,
+      english: "He's just talking nonsense, don't take him seriously.",
+      hebrew: "הוא סתם מדבר שטויות, אל תיקח אותו ברצינות.",
+      english_tokens: ["He's", "just", "talking", "nonsense", "don't", "take", "him", "seriously"],
+      hebrew_tokens: ["הוא", "סתם", "מדבר", "שטויות", "אל", "תיקח", "אותו", "ברצינות"],
+      english_distractors: ["she", "truth", "listen", "later"],
+      hebrew_distractors: ["היא", "אמת", "תקשיב", "מחר"],
+      notes: "Third person gender swap (הוא/היא, מדבר/מדברת, אותו/אותה) is a good distractor set here.",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { document, state } = harness;
+
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  state.sentenceBank.shemaMode = true;
+  harness.nextSentenceBankQuestion();
+
+  const question = state.sentenceBank.currentQuestion;
+  assert.equal(question.direction, "listen");
+  assert.equal(question.answerIsHebrew, true);
+  assert.equal(document.querySelector("#promptText").textContent, "");
+  assert.equal(document.querySelector("#promptText").classList.contains("hidden"), true);
+  assert.equal(harness.speechSpeakLog.length, 1);
+  assert.equal(harness.speechSpeakLog[0].text, "הוא סתם מדבר שטויות, אל תיקח אותו ברצינות.");
+  assert.equal(harness.speechSpeakLog[0].lang, "he-IL");
+
+  const playButtons = document.querySelector("#choiceContainer").querySelectorAll(".shema-play-btn");
+  assert.equal(playButtons.length, 2);
+  playButtons[0].click();
+  assert.equal(harness.speechSpeakLog.length, 2);
+
+  fillSentenceAnswerByTap(document, ["הוא", "סתם", "מדבר", "שטויות", "אל", "תיקח", "אותו", "ברצינות"]);
+  assert.equal(document.querySelector("#nextBtn").disabled, false);
+  document.querySelector("#nextBtn").click();
+
+  assert.equal(state.sessionScore, 3);
+  assert.equal(
+    getFeedbackText(document),
+    "Correct. You heard הוא סתם מדבר שטויות, אל תיקח אותו ברצינות. "
+      + "Meaning: He's just talking nonsense, don't take him seriously. "
+      + "Tip: Watch the gender match here."
+  );
+  assert.equal(state.sentenceProgress["sb-1::listen"].attempts, 1);
+  assert.equal(state.sentenceProgress["sb-1::listen"].correct, 1);
+  assert.equal(state.sentenceProgress["sb-1::he2en"], undefined);
+  assert.equal(state.sentenceProgress["sb-1::en2he"], undefined);
+});
+
+test("shema requires the exact spoken word order and rejects written alternates", () => {
+  const sentenceBank = [
+    {
+      id: "sb-2",
+      category: "colloquial",
+      difficulty: 2,
+      english: "What's going on with you? I haven't heard from you all day.",
+      hebrew: "מה נסגר איתך? לא שמעתי ממך כל היום.",
+      english_tokens: ["What's", "going on", "with you", "I haven't", "heard", "from you", "all", "day"],
+      hebrew_tokens: ["מה", "נסגר", "איתך", "לא", "שמעתי", "ממך", "כל", "היום"],
+      hebrew_alternates: [
+        {
+          text: "מה נסגר איתך? כל היום לא שמעתי ממך.",
+          tokens: ["מה", "נסגר", "איתך", "כל", "היום", "לא", "שמעתי", "ממך"],
+        },
+      ],
+      english_distractors: ["the plan", "saw", "from him"],
+      hebrew_distractors: ["נגמר", "אליך", "שמעת"],
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { document, state } = harness;
+
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  state.sentenceBank.shemaMode = true;
+  harness.nextSentenceBankQuestion();
+
+  assert.equal(state.sentenceBank.currentQuestion.direction, "listen");
+  fillSentenceAnswerByTap(document, ["מה", "נסגר", "איתך", "כל", "היום", "לא", "שמעתי", "ממך"]);
+  document.querySelector("#nextBtn").click();
+
+  assert.equal(state.sessionScore, 0);
+  assert.equal(
+    getFeedbackText(document),
+    "Not quite. The sentence was מה נסגר איתך? לא שמעתי ממך כל היום. "
+      + "Meaning: What's going on with you? I haven't heard from you all day."
+  );
+  assert.equal(state.sentenceProgress["sb-2::listen"].misses, 1);
+  assert.equal(state.sentenceBank.reviewQueue.length, 1);
+  assert.equal(state.sentenceBank.reviewQueue[0].direction, "listen");
+});
+
+test("shema home tile is only shown when a Hebrew voice is available", () => {
+  const withVoice = loadAppHarness([], [], [], {});
+  withVoice.app.ui.renderHomeState();
+  assert.equal(withVoice.document.querySelector("#homeShemaBtn").classList.contains("hidden"), false);
+
+  const withoutVoice = loadAppHarness([], [], [], { speechVoices: [] });
+  withoutVoice.app.ui.renderHomeState();
+  assert.equal(withoutVoice.document.querySelector("#homeShemaBtn").classList.contains("hidden"), true);
+});
+
 test("binyanim answers update simple game mode analytics", () => {
   const harness = loadAppHarness([]);
   const { app, document, state } = harness;

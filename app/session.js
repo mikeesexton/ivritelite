@@ -51,7 +51,7 @@ function serializeSentenceForRestoreCheck(sentence) {
 function buildLiveSentenceBankQuestionState(question) {
   const runtime = getRuntime();
   const sentenceId = String(question?.sentence?.id || "").trim();
-  const direction = question?.direction === "en2he" || question?.direction === "he2en"
+  const direction = question?.direction === "en2he" || question?.direction === "he2en" || question?.direction === "listen"
     ? question.direction
     : "";
   if (!sentenceId || !direction) return null;
@@ -63,7 +63,7 @@ function buildLiveSentenceBankQuestionState(question) {
     direction,
     sentence,
     prompt: direction === "en2he" ? sentence.english : sentence.hebrew,
-    targetTokens: direction === "en2he" ? sentence.hebrewTokens : sentence.englishTokens,
+    targetTokens: direction === "he2en" ? sentence.englishTokens : sentence.hebrewTokens,
   };
 }
 
@@ -108,6 +108,8 @@ session.hasActiveLearnSession = session.hasActiveLearnSession || function hasAct
       runtime.state?.prepositions?.introActive ||
       runtime.state?.binyanBoard?.active ||
       runtime.state?.binyanBoard?.introActive ||
+      runtime.state?.handwriting?.active ||
+      runtime.state?.handwriting?.introActive ||
       runtime.state?.match?.active ||
       runtime.state?.match?.verbIntroActive ||
       runtime.state?.wordMatch?.active ||
@@ -131,7 +133,16 @@ session.isModeSessionActive = session.isModeSessionActive || function isModeSess
     );
   }
   if (mode === "sentenceBank") {
-    return Boolean(runtime.state?.sentenceBank?.active || runtime.state?.sentenceBank?.introActive);
+    return Boolean(
+      (runtime.state?.sentenceBank?.active || runtime.state?.sentenceBank?.introActive) &&
+      !runtime.state?.sentenceBank?.shemaMode
+    );
+  }
+  if (mode === "shema") {
+    return Boolean(
+      (runtime.state?.sentenceBank?.active || runtime.state?.sentenceBank?.introActive) &&
+      runtime.state?.sentenceBank?.shemaMode
+    );
   }
   if (mode === "advConj") {
     return Boolean(runtime.state?.advConj?.active || runtime.state?.advConj?.introActive);
@@ -141,6 +152,9 @@ session.isModeSessionActive = session.isModeSessionActive || function isModeSess
   }
   if (mode === "binyanBoard") {
     return Boolean(runtime.state?.binyanBoard?.active || runtime.state?.binyanBoard?.introActive);
+  }
+  if (mode === "handwriting") {
+    return Boolean(runtime.state?.handwriting?.active || runtime.state?.handwriting?.introActive);
   }
   return Boolean(
     runtime.state?.lesson?.active ||
@@ -240,6 +254,7 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       wrongAnswers: Math.max(0, Number(snapshot.sentenceBank.wrongAnswers || 0)),
       sessionMistakeKeys: Array.isArray(snapshot.sentenceBank.sessionMistakeKeys) ? snapshot.sentenceBank.sessionMistakeKeys : [],
       availableScore: Math.max(0, Number(snapshot.sentenceBank.availableScore || 0)),
+      shemaMode: Boolean(snapshot.sentenceBank.shemaMode),
       timerId: null,
     });
     if (runtime.state.sentenceBank.currentQuestion) {
@@ -477,6 +492,8 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.resetAdvConjState();
   session.resetPrepositionsState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
+  session.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
   runtime.state.sentenceBank.active = false;
@@ -531,6 +548,9 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   app.binyanBoard?.stopBinyanBoardTimer?.();
   runtime.state.binyanBoard.active = false;
   runtime.state.binyanBoard.currentQuestion = null;
+  session.clearHandwritingIntro?.();
+  app.handwriting?.stopHandwritingTimer?.();
+  runtime.state.handwriting.active = false;
   runtime.state.mode = "summary";
   runtime.state.summary.active = true;
   runtime.state.summary.game = String(config.game || "");
@@ -595,9 +615,10 @@ session.finishSentenceBank = session.finishSentenceBank || function finishSenten
   runtime.state.sentenceBank.secondChanceCurrent = 0;
   runtime.state.sentenceBank.secondChanceTotal = 0;
 
+  const isShema = Boolean(runtime.state.sentenceBank.shemaMode);
   session.showSessionSummary({
-    game: "sentenceBank",
-    titleKey: "summary.sentenceBankTitle",
+    game: isShema ? "shema" : "sentenceBank",
+    titleKey: isShema ? "summary.shemaTitle" : "summary.sentenceBankTitle",
     scoreKey: "summary.score",
     scoreVars: {
       score: runtime.state.sessionScore,
@@ -778,6 +799,13 @@ session.clearBinyanBoardIntro = session.clearBinyanBoardIntro || function clearB
   runtime.state.binyanBoard.introActive = false;
   session.clearIntroAutoAdvance();
   getHelpers().hideBlockingOverlay?.(runtime.el.binyanBoardIntro);
+};
+
+session.clearHandwritingIntro = session.clearHandwritingIntro || function clearHandwritingIntro() {
+  const runtime = getRuntime();
+  runtime.state.handwriting.introActive = false;
+  session.clearIntroAutoAdvance();
+  getHelpers().hideBlockingOverlay?.(runtime.el.handwritingIntro);
 };
 
 session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {

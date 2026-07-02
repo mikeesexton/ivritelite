@@ -300,6 +300,8 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   s.clearSummaryState?.();
   app.wordMatch?.resetWordMatchState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
+  s.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   s.resetAdvConjState?.();
   h.resetSessionScore?.();
   runtime.state.mode = "advConj";

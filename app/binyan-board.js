@@ -323,6 +323,8 @@ binyanBoard.startBinyanBoard = binyanBoard.startBinyanBoard || function startBin
   s.clearAdvConjIntro?.();
   s.clearBinyanBoardIntro?.();
   s.resetAdvConjState?.();
+  s.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   app.wordMatch?.resetWordMatchState?.();
   h.resetVerbMatchState?.();
   h.resetAbbreviationState?.();
