@@ -42,6 +42,7 @@ jobs:
           cp preposition-data.js dist/
           cp verb-game-data.js dist/
           cp hebrew-idioms.js dist/
+          cp handwriting-data.js dist/
           cp .nojekyll dist/
           cp -r assets dist/
 
