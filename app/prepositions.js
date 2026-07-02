@@ -181,6 +181,8 @@ prepositions.startPrepositions = prepositions.startPrepositions || function star
   s.clearSummaryState?.();
   app.wordMatch?.resetWordMatchState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
+  s.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   s.resetAdvConjState?.();
   s.resetPrepositionsState?.();
   h.resetSessionScore?.();

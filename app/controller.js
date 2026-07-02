@@ -33,6 +33,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   });
   runtime.el.homeLessonBtn?.addEventListener("click", () => controller.openHomeLesson("lessonMatch"));
   runtime.el.homeSentenceBankBtn?.addEventListener("click", () => controller.openHomeLesson("sentenceBank"));
+  runtime.el.homeShemaBtn?.addEventListener("click", () => controller.openHomeLesson("shema"));
   runtime.el.homeVerbMatchBtn?.addEventListener("click", () => controller.openHomeLesson("verbMatch"));
   runtime.el.homeAbbreviationBtn?.addEventListener("click", () => controller.openHomeLesson("abbrMatch"));
   runtime.el.homeAdvConjBtn?.addEventListener("click", () => controller.openHomeLesson("advConj"));
@@ -41,6 +42,8 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.prepositionsBtn?.addEventListener("click", () => controller.openHomeLesson("prepositions"));
   runtime.el.homeBinyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
   runtime.el.binyanBoardBtn?.addEventListener("click", () => controller.openHomeLesson("binyanBoard"));
+  runtime.el.homeHandwritingBtn?.addEventListener("click", () => controller.openHomeLesson("handwriting"));
+  runtime.el.handwritingBtn?.addEventListener("click", () => controller.openHomeLesson("handwriting"));
   runtime.el.lessonBtn.addEventListener("click", () => {
     runtime.state.lastPlayedMode = "lessonMatch";
     runtime.state.mode = "lessonMatch";
@@ -99,7 +102,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   global.addEventListener("keydown", controller.handleGlobalKeyDown);
   global.addEventListener("resize", controller.handleViewportResize);
 
-  [runtime.el.lessonStartIntro, runtime.el.secondChanceIntro, runtime.el.sentenceBankIntro, runtime.el.verbMatchIntro, runtime.el.abbreviationIntro, runtime.el.advConjIntro, runtime.el.prepositionsIntro, runtime.el.binyanBoardIntro].forEach((overlay) => {
+  [runtime.el.lessonStartIntro, runtime.el.secondChanceIntro, runtime.el.sentenceBankIntro, runtime.el.verbMatchIntro, runtime.el.abbreviationIntro, runtime.el.advConjIntro, runtime.el.prepositionsIntro, runtime.el.binyanBoardIntro, runtime.el.handwritingIntro].forEach((overlay) => {
     overlay?.addEventListener("pointerdown", controller.stopIntroOverlayInteraction);
     overlay?.addEventListener("click", controller.stopIntroOverlayInteraction);
   });
@@ -210,6 +213,18 @@ controller.stopIntroOverlayInteraction = controller.stopIntroOverlayInteraction 
 controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson(mode) {
   const runtime = getRuntime();
   const session = getSession();
+  if (mode === "shema") {
+    if (session.isModeSessionActive?.("shema")) {
+      runtime.state.mode = "sentenceBank";
+      session.navigateTo?.("home");
+      return;
+    }
+    runtime.state.lastPlayedMode = "shema";
+    runtime.state.mode = "sentenceBank";
+    app.sentenceBank?.startShema?.();
+    return;
+  }
+
   if (session.isModeSessionActive?.(mode)) {
     runtime.state.mode = mode;
     session.navigateTo?.("home");
@@ -272,6 +287,13 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
     return;
   }
 
+  if (mode === "handwriting") {
+    runtime.state.lastPlayedMode = "handwriting";
+    runtime.state.mode = "handwriting";
+    app.handwriting?.startHandwriting?.();
+    return;
+  }
+
   runtime.state.lastPlayedMode = "lesson";
   runtime.state.mode = "lesson";
   app.lessonMode?.startLesson?.();
@@ -285,6 +307,10 @@ controller.continueFromResults = controller.continueFromResults || function cont
   }
   if (runtime.state.summary.game === "sentenceBank") {
     app.sentenceBank?.startSentenceBank?.();
+    return;
+  }
+  if (runtime.state.summary.game === "shema") {
+    app.sentenceBank?.startShema?.();
     return;
   }
   if (runtime.state.summary.game === "abbreviation") {
@@ -309,6 +335,10 @@ controller.continueFromResults = controller.continueFromResults || function cont
   }
   if (runtime.state.summary.game === "binyanBoard") {
     app.binyanBoard?.startBinyanBoard?.();
+    return;
+  }
+  if (runtime.state.summary.game === "handwriting") {
+    app.handwriting?.startHandwriting?.();
     return;
   }
   app.lessonMode?.startLesson?.();

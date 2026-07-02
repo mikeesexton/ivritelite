@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260701a" />
+    <link rel="stylesheet" href="./styles.css?v=20260702c" />
   </head>
   <body data-theme="dark">
     <div class="ambient ambient-a" aria-hidden="true"></div>
@@ -75,6 +75,11 @@
                         <span class="game-tile-title" data-i18n="game.sentenceBankName">Sentences</span>
                         <span class="game-tile-note" data-i18n="game.sentenceBankNote">Build full translations from a shuffled word bank.</span>
                       </button>
+                      <button type="button" id="homeShemaBtn" class="game-tile home-game-tile hidden">
+                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">👂</span>
+                        <span class="game-tile-title" data-i18n="game.shemaName">Shema</span>
+                        <span class="game-tile-note" data-i18n="game.shemaNote">Listen to a Hebrew sentence and build what you hear.</span>
+                      </button>
                       <button type="button" id="homeVerbMatchBtn" class="game-tile home-game-tile">
                         <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🏃</span>
                         <span class="game-tile-title" data-i18n="game.conjugationName">Conjugation</span>
@@ -99,6 +104,11 @@
                         <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🌳</span>
                         <span class="game-tile-title" data-i18n="game.binyanName">Binyanim</span>
                         <span class="game-tile-note" data-i18n="game.binyanNote">Pick a root, then guess what each of its binyanim means.</span>
+                      </button>
+                      <button type="button" id="homeHandwritingBtn" class="game-tile home-game-tile">
+                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">✍️</span>
+                        <span class="game-tile-title" data-i18n="game.handwritingName">Handwriting</span>
+                        <span class="game-tile-note" data-i18n="game.handwritingNote">Trace cursive Hebrew letters by hand.</span>
                       </button>
                     </div>
                   </article>
@@ -176,6 +186,11 @@
                       <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-binyanim.png?v=20260619c" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.binyanName">Binyanim</span>
                       <span class="game-tile-note" data-i18n="game.binyanNote">Pick a root, then guess what each of its binyanim means.</span>
+                    </button>
+                    <button type="button" id="handwritingBtn" class="game-tile">
+                      <span class="game-tile-icon game-tile-emoji" aria-hidden="true">✍️</span>
+                      <span class="game-tile-title" data-i18n="game.handwritingName">Handwriting</span>
+                      <span class="game-tile-note" data-i18n="game.handwritingNote">Trace cursive Hebrew letters by hand.</span>
                     </button>
                   </section>
 
@@ -425,6 +440,13 @@
       </div>
     </div>
 
+    <div id="handwritingIntro" class="second-chance-intro hidden" aria-hidden="true">
+      <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Handwriting intro">
+        <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
+      </div>
+    </div>
+
     <div id="welcomeModal" class="session-leave-modal hidden" aria-hidden="true">
       <section class="welcome-dialog card" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle">
         <div class="welcome-head">
@@ -513,30 +535,33 @@
     <script defer src="./hebrew-idioms.js?v=20260314c"></script>
     <script defer src="./preposition-data.js?v=20260629a"></script>
     <script defer src="./verb-game-data.js?v=20260621a"></script>
-    <script defer src="./app/constants.js?v=20260628b"></script>
+    <script defer src="./handwriting-data.js?v=20260702d"></script>
+    <script defer src="./app/constants.js?v=20260702d"></script>
     <script defer src="./app/storage.js?v=20260315o"></script>
     <script defer src="./app/utils.js?v=20260315o"></script>
     <script defer src="./app/hebrew.js?v=20260315o"></script>
-    <script defer src="./app/bootstrap-data.js?v=20260701a"></script>
+    <script defer src="./app/handwriting-core.js?v=20260702c"></script>
+    <script defer src="./app/bootstrap-data.js?v=20260702c"></script>
     <script defer src="./app/content-sources.js?v=20260324a"></script>
-    <script defer src="./app/bootstrap-runtime.js?v=20260628e"></script>
+    <script defer src="./app/bootstrap-runtime.js?v=20260702c"></script>
     <script defer src="./app/audio.js?v=20260315o"></script>
-    <script defer src="./app/speech.js?v=20260315o"></script>
-    <script defer src="./app/persistence.js?v=20260622a"></script>
-    <script defer src="./app/session.js?v=20260701a"></script>
+    <script defer src="./app/speech.js?v=20260702a"></script>
+    <script defer src="./app/persistence.js?v=20260702a"></script>
+    <script defer src="./app/session.js?v=20260702b"></script>
     <script defer src="./app/i18n.js?v=20260315o"></script>
-    <script defer src="./app/ui.js?v=20260701a"></script>
+    <script defer src="./app/ui.js?v=20260702c"></script>
     <script defer src="./app/data.js?v=20260628d"></script>
     <script defer src="./app/lesson.js?v=20260315o"></script>
-    <script defer src="./app/sentence-bank.js?v=20260701a"></script>
+    <script defer src="./app/sentence-bank.js?v=20260702b"></script>
     <script defer src="./app/abbreviation.js?v=20260315o"></script>
-    <script defer src="./app/adv-conj.js?v=20260628e"></script>
-    <script defer src="./app/prepositions.js?v=20260629a"></script>
-    <script defer src="./app/verb-match.js?v=20260622a"></script>
+    <script defer src="./app/adv-conj.js?v=20260702b"></script>
+    <script defer src="./app/prepositions.js?v=20260702b"></script>
+    <script defer src="./app/verb-match.js?v=20260702b"></script>
     <script defer src="./app/match-engine.js?v=20260620b"></script>
-    <script defer src="./app/word-match.js?v=20260701a"></script>
-    <script defer src="./app/binyan-board.js?v=20260628e"></script>
-    <script defer src="./app/controller.js?v=20260628b"></script>
+    <script defer src="./app/word-match.js?v=20260702b"></script>
+    <script defer src="./app/binyan-board.js?v=20260702b"></script>
+    <script defer src="./app/handwriting.js?v=20260702c"></script>
+    <script defer src="./app/controller.js?v=20260702b"></script>
     <script defer src="./app.js?v=20260329a"></script>
   </body>
 </html>

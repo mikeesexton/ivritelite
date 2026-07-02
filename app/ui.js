@@ -45,6 +45,7 @@ ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
       runtime.state?.advConj?.introActive ||
       runtime.state?.prepositions?.introActive ||
       runtime.state?.binyanBoard?.introActive ||
+      runtime.state?.handwriting?.introActive ||
       runtime.state?.match?.verbIntroActive ||
       runtime.state?.wordMatch?.introActive ||
       runtime.state?.leaveConfirmOpen ||
@@ -263,6 +264,12 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
         total: runtime.state.binyanBoard.totalRoots,
       });
       timeSeconds = runtime.state.binyanBoard.elapsedSeconds;
+    } else if (runtime.state.mode === "handwriting") {
+      progressText = translate("session.round", {
+        current: runtime.state.handwriting.roundIndex,
+        total: runtime.state.handwriting.totalRounds,
+      });
+      timeSeconds = runtime.state.handwriting.elapsedSeconds;
     } else {
       const inSecondChance = Boolean(runtime.state.lesson.inReview);
       progressText = inSecondChance
@@ -433,7 +440,7 @@ ui.updateLessonShellModeState = ui.updateLessonShellModeState || function update
 
   const layoutMode = (isVerbMatchMode() || isWordMatchMode())
     ? "verb-match"
-    : (runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "prepositions" || runtime.state.mode === "binyanBoard")
+    : (runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "prepositions" || runtime.state.mode === "binyanBoard" || runtime.state.mode === "handwriting")
       ? "standard"
       : "idle";
 
@@ -486,7 +493,7 @@ ui.updateStickyLessonActionsState = ui.updateStickyLessonActionsState || functio
   const feedbackDetail = runtime.el?.feedbackDetail || runtime.global?.document?.querySelector?.("#feedbackDetail");
   if (!actionBar) return;
   const hasVisibleAction = Array.from(actionBar.querySelectorAll("button")).some((button) => !button.classList.contains("hidden"));
-  const canShowFeedback = runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "prepositions" || runtime.state.mode === "binyanBoard";
+  const canShowFeedback = runtime.state.mode === "lesson" || runtime.state.mode === "sentenceBank" || runtime.state.mode === "abbreviation" || runtime.state.mode === "advConj" || runtime.state.mode === "prepositions" || runtime.state.mode === "binyanBoard" || runtime.state.mode === "handwriting";
   const hasFeedback = canShowFeedback && Boolean(
     String(feedbackSentence?.textContent || "").trim() ||
     String(feedbackDetail?.textContent || "").trim()
@@ -547,6 +554,7 @@ ui.getCurrentPromptSpeechPayload = ui.getCurrentPromptSpeechPayload || function 
     return app.abbreviation?.getAbbreviationPromptSpeechPayload?.() || null;
   }
   if (runtime.state.mode === "sentenceBank") {
+    if (runtime.state.sentenceBank?.currentQuestion?.direction === "listen") return null;
     return app.sentenceBank?.getSentenceBankPromptSpeechPayload?.() || null;
   }
   if (runtime.state.mode === "advConj") {
@@ -693,6 +701,16 @@ ui.renderLearnState = ui.renderLearnState || function renderLearnState() {
     return;
   }
 
+  if (runtime.state.mode === "handwriting") {
+    if (runtime.state.handwriting.active) {
+      app.handwriting?.renderHandwritingRound?.();
+    } else {
+      app.handwriting?.renderHandwritingIdleState?.();
+    }
+    ui.renderPromptHint();
+    return;
+  }
+
   if (runtime.state.lesson.active || runtime.state.mode === "lesson") {
     if (runtime.state.lesson.active && runtime.state.currentQuestion) {
       app.lessonMode?.renderQuestion?.();
@@ -805,9 +823,10 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
     const totalRounds = app.sentenceBank?.getRoundTarget?.() || runtime.constants.LESSON_ROUNDS;
     const canCheck = app.sentenceBank?.canSubmitCurrentQuestion?.(question) || false;
 
+    const isShema = Boolean(runtime.state.sentenceBank.shemaMode);
     runtime.el.modeTitle.textContent = inReview
-      ? translate("session.sentenceBankSecondChanceTitle")
-      : translate("session.sentenceBankTitle");
+      ? translate(isShema ? "session.shemaSecondChanceTitle" : "session.sentenceBankSecondChanceTitle")
+      : translate(isShema ? "session.shemaTitle" : "session.sentenceBankTitle");
     ui.updateLessonProgress(
       inReview
         ? (runtime.state.sentenceBank.secondChanceTotal
@@ -874,6 +893,15 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
     return;
   }
 
+  if (runtime.state.mode === "handwriting") {
+    const ctx = runtime.state.handwriting;
+    runtime.el.modeTitle.textContent = translate("game.handwritingName");
+    ui.updateLessonProgress(ctx.totalRounds ? Math.round((ctx.roundIndex / ctx.totalRounds) * 100) : 0);
+    runtime.el.nextBtn.classList.add("hidden");
+    finalizeHeaderRender();
+    return;
+  }
+
   const inSecondChance = Boolean(runtime.state.lesson.inReview);
   const hasQuestion = runtime.state.lesson.active && Boolean(runtime.state.currentQuestion);
   runtime.el.modeTitle.textContent = inSecondChance
@@ -896,6 +924,7 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
 
 ui.renderPromptText = ui.renderPromptText || function renderPromptText(question = getRuntime().state.currentQuestion) {
   const runtime = getRuntime();
+  runtime.el.promptCard?.classList.remove("prompt-card--audio");
   if (isVerbMatchMode()) {
     app.verbMatch?.renderVerbMatchPrompt?.();
     ui.renderPromptSpeechButton();
@@ -907,6 +936,18 @@ ui.renderPromptText = ui.renderPromptText || function renderPromptText(question 
     ui.renderPromptSpeechButton();
     return;
   }
+
+  if (runtime.state.mode === "sentenceBank" && question.direction === "listen") {
+    runtime.el.promptText.classList.add("hidden");
+    runtime.el.promptText.textContent = "";
+    runtime.el.promptCard?.classList.add("prompt-card--audio");
+    ui.renderNiqqudToggle();
+    ui.renderPromptSpeechButton();
+    return;
+  }
+
+  runtime.el.promptText.classList.remove("hidden");
+  runtime.el.promptCard?.classList.remove("prompt-card--audio");
 
   const promptUsesWordSurface = question.promptUsesWordSurface !== false;
   const hasHebrewSurface = Boolean(question.promptIsHebrew || question.optionsAreHebrew);
@@ -1363,7 +1404,8 @@ ui.renderIdleLessonState = ui.renderIdleLessonState || function renderIdleLesson
   runtime.el.choiceContainer.classList.remove("summary-grid");
   h.renderSessionHeader?.();
   ui.renderPromptLabel("", false);
-  runtime.el.promptText.classList.remove("hebrew");
+  runtime.el.promptCard?.classList.remove("prompt-card--audio");
+  runtime.el.promptText.classList.remove("hebrew", "hidden", "handwriting-prompt");
   runtime.el.promptText.classList.add("english-prompt");
   runtime.el.promptText.textContent = translate("learn.idlePrompt");
   runtime.el.choiceContainer.innerHTML = "";
@@ -1378,8 +1420,11 @@ ui.renderHomeLessonButtons = ui.renderHomeLessonButtons || function renderHomeLe
   const highlightedMode = app.session?.hasActiveLearnSession?.()
     ? runtime.state.mode
     : runtime.state.lastPlayedMode || "lesson";
+  const shemaSession = Boolean(runtime.state.sentenceBank?.shemaMode);
+  runtime.el?.homeShemaBtn?.classList.toggle("hidden", !(app.speech?.isSupported?.() || false));
   ui.setHomeLessonState(runtime.el?.homeLessonBtn, highlightedMode === "lesson" || highlightedMode === "lessonMatch");
-  ui.setHomeLessonState(runtime.el?.homeSentenceBankBtn, highlightedMode === "sentenceBank");
+  ui.setHomeLessonState(runtime.el?.homeSentenceBankBtn, highlightedMode === "sentenceBank" && !shemaSession);
+  ui.setHomeLessonState(runtime.el?.homeShemaBtn, highlightedMode === "shema" || (highlightedMode === "sentenceBank" && shemaSession));
   ui.setHomeLessonState(runtime.el?.homeVerbMatchBtn, highlightedMode === "verbMatch");
   ui.setHomeLessonState(runtime.el?.homeAbbreviationBtn, highlightedMode === "abbreviation" || highlightedMode === "abbrMatch");
   ui.setHomeLessonState(runtime.el?.homeAdvConjBtn, highlightedMode === "advConj");

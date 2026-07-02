@@ -159,6 +159,8 @@ function resetCompetingSessions() {
   s.clearSentenceBankIntro?.();
   s.clearWordMatchIntro?.();
   s.clearBinyanBoardIntro?.();
+  s.clearHandwritingIntro?.();
+  app.handwriting?.resetHandwritingState?.();
   s.clearSummaryState?.();
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
