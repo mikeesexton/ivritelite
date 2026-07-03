@@ -102,6 +102,12 @@ function normalizeComparableHebrewToken(token) {
     : stripped.trim();
 }
 
+function sentenceTokenDisplayText(token) {
+  if (!token) return "";
+  const showNiqqud = getRuntime().state?.showNiqqudInline;
+  return showNiqqud && token.display ? token.display : token.text;
+}
+
 function isNonDistinctDistractor(targetToken, distractorToken) {
   const targetGroup = NON_DISTINCT_DISTRACTOR_INDEX.get(normalizeComparableToken(targetToken));
   const distractorGroup = NON_DISTINCT_DISTRACTOR_INDEX.get(normalizeComparableToken(distractorToken));
@@ -499,7 +505,7 @@ function clearSentenceDragPayload() {
 
 function resolveDragPayloadText(question, payload) {
   const token = payload?.tokenId ? getQuestionTokenById(question, payload.tokenId) : null;
-  return String(token?.text || "").trim();
+  return String(sentenceTokenDisplayText(token) || "").trim();
 }
 
 function createSentenceDragGhostEl(text, isHebrew) {
@@ -914,9 +920,11 @@ function buildQuestionFromPair(pair, options = {}) {
     direction,
     doShuffle
   );
+  const niqqudByToken = answerIsHebrew && sentence.hebrewNiqqudByToken ? sentence.hebrewNiqqudByToken : null;
+  const tokenDisplay = (text) => (niqqudByToken && niqqudByToken[text]) || text;
   const bankTokens = doShuffle([
-    ...targetTokens.map((text, index) => ({ id: `answer-${index}`, text, isCorrect: true })),
-    ...distractorTokens.map((text, index) => ({ id: `distractor-${index}`, text, isCorrect: false })),
+    ...targetTokens.map((text, index) => ({ id: `answer-${index}`, text, display: tokenDisplay(text), isCorrect: true })),
+    ...distractorTokens.map((text, index) => ({ id: `distractor-${index}`, text, display: tokenDisplay(text), isCorrect: false })),
   ]);
 
   return {
@@ -932,6 +940,7 @@ function buildQuestionFromPair(pair, options = {}) {
           : direction === "en2he" ? "prompt.toHebrew" : "prompt.toEnglish"
     ),
     prompt: direction === "en2he" ? sentence.english : sentence.hebrew,
+    promptNiqqud: direction === "he2en" ? sentence.hebrewNiqqud || "" : "",
     promptIsHebrew: direction === "he2en",
     optionsAreHebrew: answerIsHebrew,
     answerIsHebrew,
@@ -997,6 +1006,16 @@ function getCorrectAnswerText(question, options = {}) {
     return matchedVariant.text;
   }
   return question.direction === "he2en" ? question.sentence.english : question.sentence.hebrew;
+}
+
+function getCorrectAnswerDisplayText(question, options = {}) {
+  const plain = getCorrectAnswerText(question, options);
+  if (!question?.sentence || question.direction === "he2en") return plain;
+  if (!getRuntime().state?.showNiqqudInline) return plain;
+  if (plain === question.sentence.hebrew && question.sentence.hebrewNiqqud) {
+    return question.sentence.hebrewNiqqud;
+  }
+  return plain;
 }
 
 function buildCandidatePairs(pool, askedSentenceIds) {
@@ -1066,6 +1085,26 @@ sentenceBank.prepareSentenceBankDeck = sentenceBank.prepareSentenceBankDeck || f
     }
     seenIds.add(id);
 
+    const hebrewNiqqudByToken = {};
+    const addNiqqudPair = (plain, marked) => {
+      const key = String(plain || "").trim();
+      const value = String(marked || "").trim();
+      if (key && value && !hebrewNiqqudByToken[key]) {
+        hebrewNiqqudByToken[key] = value;
+      }
+    };
+    const rawHebrewTokens = Array.isArray(entry?.hebrew_tokens) ? entry.hebrew_tokens : [];
+    const rawHebrewTokensNiqqud = Array.isArray(entry?.hebrew_tokens_niqqud) ? entry.hebrew_tokens_niqqud : [];
+    rawHebrewTokens.forEach((token, tokenIndex) => addNiqqudPair(token, rawHebrewTokensNiqqud[tokenIndex]));
+    const rawHebrewDistractors = Array.isArray(entry?.hebrew_distractors) ? entry.hebrew_distractors : [];
+    const rawHebrewDistractorsNiqqud = Array.isArray(entry?.hebrew_distractors_niqqud) ? entry.hebrew_distractors_niqqud : [];
+    rawHebrewDistractors.forEach((token, tokenIndex) => addNiqqudPair(token, rawHebrewDistractorsNiqqud[tokenIndex]));
+    (Array.isArray(entry?.hebrew_alternates) ? entry.hebrew_alternates : []).forEach((variant) => {
+      const altTokens = Array.isArray(variant?.tokens) ? variant.tokens : [];
+      const altTokensNiqqud = Array.isArray(variant?.tokens_niqqud) ? variant.tokens_niqqud : [];
+      altTokens.forEach((token, tokenIndex) => addNiqqudPair(token, altTokensNiqqud[tokenIndex]));
+    });
+
     cleaned.push({
       id,
       category: String(entry?.category || "general").trim() || "general",
@@ -1074,6 +1113,8 @@ sentenceBank.prepareSentenceBankDeck = sentenceBank.prepareSentenceBankDeck || f
       emoji: String(entry?.emoji || "").trim(),
       english,
       hebrew,
+      hebrewNiqqud: String(entry?.hebrew_niqqud || "").trim(),
+      hebrewNiqqudByToken,
       englishTokens,
       hebrewTokens,
       englishAlternates: sanitizeAnswerVariants(entry?.english_alternates || entry?.englishAlternates, englishTokens),
@@ -1133,9 +1174,12 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
       const sentence = lookup.get(sentenceId);
       if (!sentence) return null;
       const clinicNote = buildSentenceClinicNote(sentence.notes);
+      const hebrewText = runtime.state?.showNiqqudInline && sentence.hebrewNiqqud
+        ? sentence.hebrewNiqqud
+        : sentence.hebrew;
       if (direction === "listen") {
         return {
-          primary: sentence.hebrew,
+          primary: hebrewText,
           secondary: `${translate("game.shemaName")}: ${sentence.english}`,
           clinicKey: clinicNote ? "results.sentenceClinic" : "",
           clinicVars: clinicNote ? { note: clinicNote } : {},
@@ -1143,8 +1187,8 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
       }
       const toHebrew = direction === "en2he";
       return {
-        primary: toHebrew ? sentence.hebrew : sentence.english,
-        secondary: `${translate(toHebrew ? "prompt.toHebrew" : "prompt.toEnglish")}: ${toHebrew ? sentence.english : sentence.hebrew}`,
+        primary: toHebrew ? hebrewText : sentence.english,
+        secondary: `${translate(toHebrew ? "prompt.toHebrew" : "prompt.toEnglish")}: ${toHebrew ? sentence.english : hebrewText}`,
         clinicKey: clinicNote ? "results.sentenceClinic" : "",
         clinicVars: clinicNote ? { note: clinicNote } : {},
       };
@@ -1463,7 +1507,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
     slot.setAttribute("aria-description", buildSentenceSlotAriaDescription(question, token));
     if (token) {
       slot.classList.add("filled");
-      slot.textContent = token.text;
+      slot.textContent = sentenceTokenDisplayText(token);
       if (question.selectedBankTokenId === tokenId) {
         slot.classList.add("selected");
       }
@@ -1493,7 +1537,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
             event.dataTransfer.setData("application/x-ivriquest-sentence-token", JSON.stringify({ type: "slot", slotIndex: index, tokenId }));
             event.dataTransfer.effectAllowed = "move";
           }
-          applyMouseDragImage(event, token.text, question.answerIsHebrew);
+          applyMouseDragImage(event, sentenceTokenDisplayText(token), question.answerIsHebrew);
         });
         slot.addEventListener("dragend", () => {
           clearSentenceDragState();
@@ -1570,7 +1614,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
     const btn = global.document.createElement("button");
     btn.type = "button";
     btn.className = `choice-btn sentence-token ${question.answerIsHebrew ? "hebrew" : ""}`;
-    btn.textContent = token.text;
+    btn.textContent = sentenceTokenDisplayText(token);
     const isSelected = question.selectedBankTokenId === token.id;
     btn.classList.toggle("selected", isSelected);
     btn.setAttribute("aria-label", buildSentenceBankTokenAriaLabel(token));
@@ -1590,7 +1634,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
           event.dataTransfer.setData("application/x-ivriquest-sentence-token", JSON.stringify({ type: "bank", tokenId: token.id }));
           event.dataTransfer.effectAllowed = "move";
         }
-        applyMouseDragImage(event, token.text, question.answerIsHebrew);
+        applyMouseDragImage(event, sentenceTokenDisplayText(token), question.answerIsHebrew);
       });
       btn.addEventListener("dragend", () => {
         clearSentenceDragState();
@@ -1855,7 +1899,7 @@ sentenceBank.applySentenceBankAnswer = sentenceBank.applySentenceBankAnswer || f
   const placedTokens = getPlacedAnswerTokens(question);
   const matchedVariant = findMatchingAcceptedAnswerVariant(question, placedTokens);
   const isCorrect = Boolean(matchedVariant);
-  const correctAnswer = getCorrectAnswerText(question, { matchingVariant: matchedVariant, actualTokens: placedTokens });
+  const correctAnswer = getCorrectAnswerDisplayText(question, { matchingVariant: matchedVariant, actualTokens: placedTokens });
   const questionKey = getQuestionKey(question);
 
   app.speech?.cancel?.();
