@@ -13,6 +13,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "מה נסגר איתך? לא שמעתי ממך כל היום.",
+    "hebrew_niqqud": "מָה נִסְגַּר אִתְּךָ? לֹא שָׁמַעְתִּי מִמְּךָ כָּל הַיּוֹם.",
     "english": "What's going on with you? I haven't heard from you all day.",
     "hebrew_tokens": [
       "מה",
@@ -23,6 +24,16 @@ const SENTENCE_BANK = [
       "ממך",
       "כל",
       "היום"
+    ],
+    "hebrew_tokens_niqqud": [
+      "מָה",
+      "נִסְגַּר",
+      "אִתְּךָ",
+      "לֹא",
+      "שָׁמַעְתִּי",
+      "מִמְּךָ",
+      "כָּל",
+      "הַיּוֹם"
     ],
     "english_tokens": [
       "What's",
@@ -41,9 +52,25 @@ const SENTENCE_BANK = [
       "הלילה",
       "עליך"
     ],
+    "hebrew_distractors_niqqud": [
+      "נִגְמַר",
+      "אֵלֶיךָ",
+      "שָׁמַעְתָּ",
+      "הַלַּיְלָה",
+      "עָלֶיךָ"
+    ],
+    "english_distractors": [
+      "the plan",
+      "about him",
+      "saw",
+      "from him",
+      "last night",
+      "I just"
+    ],
     "hebrew_alternates": [
       {
         "text": "מה נסגר איתך? כל היום לא שמעתי ממך.",
+        "text_niqqud": "מָה נִסְגַּר אִתְּךָ? כָּל הַיּוֹם לֹא שָׁמַעְתִּי מִמְּךָ.",
         "tokens": [
           "מה",
           "נסגר",
@@ -53,16 +80,18 @@ const SENTENCE_BANK = [
           "לא",
           "שמעתי",
           "ממך"
+        ],
+        "tokens_niqqud": [
+          "מָה",
+          "נִסְגַּר",
+          "אִתְּךָ",
+          "כָּל",
+          "הַיּוֹם",
+          "לֹא",
+          "שָׁמַעְתִּי",
+          "מִמְּךָ"
         ]
       }
-    ],
-    "english_distractors": [
-      "the plan",
-      "about him",
-      "saw",
-      "from him",
-      "last night",
-      "I just"
     ],
     "notes": "נסגר is slang — literally 'closed' but means 'going on/happening' in colloquial speech."
   },
@@ -73,6 +102,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אין לי כוח לזה עכשיו, נדבר אחר כך.",
+    "hebrew_niqqud": "אֵין לִי כּוֹחַ לְזֶה עַכְשָׁו, נְדַבֵּר אַחַר כָּךְ.",
     "english": "I don't have energy for this right now, we'll talk later.",
     "hebrew_tokens": [
       "אין",
@@ -84,8 +114,15 @@ const SENTENCE_BANK = [
       "אחר",
       "כך"
     ],
-    "hebrew_alternates": [
-      { "text": "עכשיו אין לי כוח לזה, נדבר אחר כך.", "tokens": ["עכשיו", "אין", "לי", "כוח", "לזה", "נדבר", "אחר", "כך"] }
+    "hebrew_tokens_niqqud": [
+      "אֵין",
+      "לִי",
+      "כּוֹחַ",
+      "לְזֶה",
+      "עַכְשָׁו",
+      "נְדַבֵּר",
+      "אַחַר",
+      "כָּךְ"
     ],
     "english_tokens": [
       "I",
@@ -105,12 +142,45 @@ const SENTENCE_BANK = [
       "דיברנו",
       "בשביל"
     ],
+    "hebrew_distractors_niqqud": [
+      "יֵשׁ",
+      "זְמַן",
+      "מָחָר",
+      "דִּבַּרְנוּ",
+      "בִּשְׁבִיל"
+    ],
     "english_distractors": [
       "more time",
       "tomorrow morning",
       "spoke",
       "never",
       "want"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "עכשיו אין לי כוח לזה, נדבר אחר כך.",
+        "text_niqqud": "עַכְשָׁו אֵין לִי כּוֹחַ לָזֶה, נְדַבֵּר אַחַר כָּךְ.",
+        "tokens": [
+          "עכשיו",
+          "אין",
+          "לי",
+          "כוח",
+          "לזה",
+          "נדבר",
+          "אחר",
+          "כך"
+        ],
+        "tokens_niqqud": [
+          "עַכְשָׁו",
+          "אֵין",
+          "לִי",
+          "כּוֹחַ",
+          "לָזֶה",
+          "נְדַבֵּר",
+          "אַחַר",
+          "כָּךְ"
+        ]
+      }
     ],
     "notes": "אין לי כוח is a very common colloquial phrase meaning 'I can't deal' or 'I have no energy for this.'"
   },
@@ -121,6 +191,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "זה היה ממש מטורף אתמול, לא האמנתי למה שקרה.",
+    "hebrew_niqqud": "זֶה הָיָה מַמָּשׁ מְטֹרָף אֶתְמוֹל, לֹא הֶאֱמַנְתִּי לְמָה שֶׁקָּרָה.",
     "english": "That was totally crazy yesterday, I couldn't believe what happened.",
     "hebrew_tokens": [
       "זה",
@@ -132,6 +203,17 @@ const SENTENCE_BANK = [
       "האמנתי",
       "למה",
       "שקרה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "זֶה",
+      "הָיָה",
+      "מַמָּשׁ",
+      "מְטֹרָף",
+      "אֶתְמוֹל",
+      "לֹא",
+      "הֶאֱמַנְתִּי",
+      "לְמָה",
+      "שֶׁקָּרָה"
     ],
     "english_tokens": [
       "That was",
@@ -147,9 +229,24 @@ const SENTENCE_BANK = [
       "ראיתי",
       "איפה"
     ],
+    "hebrew_distractors_niqqud": [
+      "קְצָת",
+      "נוֹרְמָלִי",
+      "הַיּוֹם",
+      "רָאִיתִי",
+      "אֵיפֹה"
+    ],
+    "english_distractors": [
+      "It was",
+      "completely normal",
+      "this morning",
+      "I totally saw",
+      "what changed"
+    ],
     "hebrew_alternates": [
       {
         "text": "אתמול זה היה ממש מטורף, לא האמנתי למה שקרה.",
+        "text_niqqud": "אֶתְמוֹל זֶה הָיָה מַמָּשׁ מְטֹרָף, לֹא הֶאֱמַנְתִּי לְמָה שֶׁקָּרָה.",
         "tokens": [
           "אתמול",
           "זה",
@@ -160,15 +257,19 @@ const SENTENCE_BANK = [
           "האמנתי",
           "למה",
           "שקרה"
+        ],
+        "tokens_niqqud": [
+          "אֶתְמוֹל",
+          "זֶה",
+          "הָיָה",
+          "מַמָּשׁ",
+          "מְטֹרָף",
+          "לֹא",
+          "הֶאֱמַנְתִּי",
+          "לְמָה",
+          "שֶׁקָּרָה"
         ]
       }
-    ],
-    "english_distractors": [
-      "It was",
-      "completely normal",
-      "this morning",
-      "I totally saw",
-      "what changed"
     ],
     "notes": "מטורף literally means 'insane' but is used casually like 'crazy/wild' in English."
   },
@@ -179,6 +280,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "חכה שנייה, אני כבר בא למטה.",
+    "hebrew_niqqud": "חַכֵּה שְׁנִיָּה, אֲנִי כְּבָר בָּא לְמַטָּה.",
     "english": "Wait a second, I'm coming downstairs right now.",
     "hebrew_tokens": [
       "חכה",
@@ -187,6 +289,14 @@ const SENTENCE_BANK = [
       "כבר",
       "בא",
       "למטה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "חַכֵּה",
+      "שְׁנִיָּה",
+      "אֲנִי",
+      "כְּבָר",
+      "בָּא",
+      "לְמַטָּה"
     ],
     "english_tokens": [
       "Wait",
@@ -205,18 +315,13 @@ const SENTENCE_BANK = [
       "פה",
       "באה"
     ],
-    "hebrew_alternates": [
-      {
-        "text": "חכה שנייה, אני כבר באה למטה.",
-        "tokens": [
-          "חכה",
-          "שנייה",
-          "אני",
-          "כבר",
-          "באה",
-          "למטה"
-        ]
-      }
+    "hebrew_distractors_niqqud": [
+      "דַּקָּה",
+      "עַכְשָׁו",
+      "לְמַעְלָה",
+      "הוֹלֵךְ",
+      "פֹּה",
+      "בָּאָה"
     ],
     "english_distractors": [
       "one minute",
@@ -224,6 +329,28 @@ const SENTENCE_BANK = [
       "going",
       "right here",
       "leaving"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "חכה שנייה, אני כבר באה למטה.",
+        "text_niqqud": "חַכֵּה שְׁנִיָּה, אֲנִי כְּבָר בָּאָה לְמַטָּה.",
+        "tokens": [
+          "חכה",
+          "שנייה",
+          "אני",
+          "כבר",
+          "באה",
+          "למטה"
+        ],
+        "tokens_niqqud": [
+          "חַכֵּה",
+          "שְׁנִיָּה",
+          "אֲנִי",
+          "כְּבָר",
+          "בָּאָה",
+          "לְמַטָּה"
+        ]
+      }
     ],
     "notes": "כבר בא adds urgency — 'already coming' implies 'on my way right now.'"
   },
@@ -234,6 +361,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "הוא סתם מדבר שטויות, אל תיקח אותו ברצינות.",
+    "hebrew_niqqud": "הוּא סְתָם מְדַבֵּר שְׁטוּיוֹת, אַל תִּקַּח אוֹתוֹ בִּרְצִינוּת.",
     "english": "He's just talking nonsense, don't take him seriously.",
     "hebrew_tokens": [
       "הוא",
@@ -244,6 +372,16 @@ const SENTENCE_BANK = [
       "תיקח",
       "אותו",
       "ברצינות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הוּא",
+      "סְתָם",
+      "מְדַבֵּר",
+      "שְׁטוּיוֹת",
+      "אַל",
+      "תִּקַּח",
+      "אוֹתוֹ",
+      "בִּרְצִינוּת"
     ],
     "english_tokens": [
       "He's",
@@ -261,6 +399,13 @@ const SENTENCE_BANK = [
       "אמת",
       "אותה",
       "תשמע"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הִיא",
+      "מְדַבֶּרֶת",
+      "אֱמֶת",
+      "אוֹתָהּ",
+      "תִּשְׁמַע"
     ],
     "english_distractors": [
       "She's",
@@ -280,6 +425,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "בא לי משהו מתוק, אולי נלך לקנות גלידה.",
+    "hebrew_niqqud": "בָּא לִי מַשֶּׁהוּ מָתוֹק, אוּלַי נֵלֵךְ לִקְנוֹת גְּלִידָה.",
     "english": "I feel like something sweet, maybe we should go get ice cream.",
     "hebrew_tokens": [
       "בא",
@@ -290,6 +436,16 @@ const SENTENCE_BANK = [
       "נלך",
       "לקנות",
       "גלידה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בָּא",
+      "לִי",
+      "מַשֶּׁהוּ",
+      "מָתוֹק",
+      "אוּלַי",
+      "נֵלֵךְ",
+      "לִקְנוֹת",
+      "גְּלִידָה"
     ],
     "english_tokens": [
       "I feel like",
@@ -304,6 +460,13 @@ const SENTENCE_BANK = [
       "בטוח",
       "שוקולד",
       "רוצה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מָלוּחַ",
+      "לֶאֱכֹל",
+      "בָּטוּחַ",
+      "שׁוֹקוֹלָד",
+      "רוֹצֶה"
     ],
     "english_distractors": [
       "I want",
@@ -321,6 +484,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אתה רציני עכשיו? זה נשמע לי הזוי לגמרי.",
+    "hebrew_niqqud": "אַתָּה רְצִינִי עַכְשָׁו? זֶה נִשְׁמָע לִי הָזוּי לְגַמְרֵי.",
     "english": "Are you serious right now? That sounds completely ridiculous to me.",
     "hebrew_tokens": [
       "אתה",
@@ -331,6 +495,16 @@ const SENTENCE_BANK = [
       "לי",
       "הזוי",
       "לגמרי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אַתָּה",
+      "רְצִינִי",
+      "עַכְשָׁו",
+      "זֶה",
+      "נִשְׁמָע",
+      "לִי",
+      "הָזוּי",
+      "לְגַמְרֵי"
     ],
     "english_tokens": [
       "Are you",
@@ -346,6 +520,13 @@ const SENTENCE_BANK = [
       "נורא",
       "באמת",
       "לך"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נִרְאֶה",
+      "קְצָת",
+      "נוֹרָא",
+      "בֶּאֱמֶת",
+      "לְךָ"
     ],
     "english_distractors": [
       "You look",
@@ -363,6 +544,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "לא זורם לי הרעיון הזה, בוא נחשוב על משהו אחר.",
+    "hebrew_niqqud": "לֹא זוֹרֵם לִי הָרַעֲיוֹן הַזֶּה, בּוֹא נַחֲשֹׁב עַל מַשֶּׁהוּ אַחֵר.",
     "english": "I'm not into that idea, let's think of something else.",
     "hebrew_tokens": [
       "לא",
@@ -375,6 +557,18 @@ const SENTENCE_BANK = [
       "על",
       "משהו",
       "אחר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "לֹא",
+      "זוֹרֵם",
+      "לִי",
+      "הָרַעֲיוֹן",
+      "הַזֶּה",
+      "בּוֹא",
+      "נַחֲשֹׁב",
+      "עַל",
+      "מַשֶּׁהוּ",
+      "אַחֵר"
     ],
     "english_tokens": [
       "I'm not",
@@ -392,6 +586,13 @@ const SENTENCE_BANK = [
       "טוב",
       "רוצה"
     ],
+    "hebrew_distractors_niqqud": [
+      "מַתְאִים",
+      "הַזֹּאת",
+      "נַעֲשֶׂה",
+      "טוֹב",
+      "רוֹצֶה"
+    ],
     "english_distractors": [
       "that plan",
       "let's do",
@@ -408,6 +609,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "היא עשתה לי קטע מסריח, אני לא סומך עליה יותר.",
+    "hebrew_niqqud": "הִיא עָשְׂתָה לִי קֶטַע מַסְרִיחַ, אֲנִי לֹא סוֹמֵךְ עָלֶיהָ יוֹתֵר.",
     "english": "She did something shady to me, I don't trust her anymore.",
     "hebrew_tokens": [
       "היא",
@@ -420,6 +622,18 @@ const SENTENCE_BANK = [
       "סומך",
       "עליה",
       "יותר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הִיא",
+      "עָשְׂתָה",
+      "לִי",
+      "קֶטַע",
+      "מַסְרִיחַ",
+      "אֲנִי",
+      "לֹא",
+      "סוֹמֵךְ",
+      "עָלֶיהָ",
+      "יוֹתֵר"
     ],
     "english_tokens": [
       "She",
@@ -440,9 +654,24 @@ const SENTENCE_BANK = [
       "סומכת",
       "טוב"
     ],
+    "hebrew_distractors_niqqud": [
+      "הוּא",
+      "עֲשֵׂה",
+      "עָלָיו",
+      "סוֹמֶכֶת",
+      "טוֹב"
+    ],
+    "english_distractors": [
+      "He",
+      "made",
+      "nice",
+      "for me",
+      "him"
+    ],
     "hebrew_alternates": [
       {
         "text": "היא עשתה לי קטע מסריח, אני לא סומכת עליה יותר.",
+        "text_niqqud": "הִיא עָשְׂתָה לִי קֶטַע מַסְרִיחַ, אֲנִי לֹא סוֹמֶכֶת עָלֶיהָ יוֹתֵר.",
         "tokens": [
           "היא",
           "עשתה",
@@ -454,15 +683,20 @@ const SENTENCE_BANK = [
           "סומכת",
           "עליה",
           "יותר"
+        ],
+        "tokens_niqqud": [
+          "הִיא",
+          "עָשְׂתָה",
+          "לִי",
+          "קֶטַע",
+          "מַסְרִיחַ",
+          "אֲנִי",
+          "לֹא",
+          "סוֹמֶכֶת",
+          "עָלֶיהָ",
+          "יוֹתֵר"
         ]
       }
-    ],
-    "english_distractors": [
-      "He",
-      "made",
-      "nice",
-      "for me",
-      "him"
     ],
     "notes": "קטע מסריח literally 'a stinky bit/segment' — heavy slang meaning 'a shady/messed up move.' Third-person gender distractors work well here."
   },
@@ -473,6 +707,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "יאללה, בוא נזוז, נהיה מאוחר.",
+    "hebrew_niqqud": "יַאלְלָה, בּוֹא נָזוּז, נִהְיֶה מְאֻחָר.",
     "english": "Come on, let's go, it's getting late.",
     "hebrew_tokens": [
       "יאללה",
@@ -480,6 +715,13 @@ const SENTENCE_BANK = [
       "נזוז",
       "נהיה",
       "מאוחר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יַאלְלָה",
+      "בּוֹא",
+      "נָזוּז",
+      "נִהְיֶה",
+      "מְאֻחָר"
     ],
     "english_tokens": [
       "Come on",
@@ -492,6 +734,13 @@ const SENTENCE_BANK = [
       "עכשיו",
       "כבר",
       "לאן"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נֵלֵךְ",
+      "מֻקְדָּם",
+      "עַכְשָׁו",
+      "כְּבָר",
+      "לְאָן"
     ],
     "english_distractors": [
       "Hang on",
@@ -507,6 +756,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "איפה שמתי את המפתחות שלי? אני לא מוצא אותם.",
+    "hebrew_niqqud": "אֵיפֹה שַׂמְתִּי אֶת הַמַּפְתְּחוֹת שֶׁלִּי? אֲנִי לֹא מוֹצֵא אוֹתָם.",
     "english": "Where did I put my keys? I can't find them.",
     "hebrew_tokens": [
       "איפה",
@@ -518,6 +768,17 @@ const SENTENCE_BANK = [
       "לא",
       "מוצא",
       "אותם"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֵיפֹה",
+      "שַׂמְתִּי",
+      "אֶת",
+      "הַמַּפְתְּחוֹת",
+      "שֶׁלִּי",
+      "אֲנִי",
+      "לֹא",
+      "מוֹצֵא",
+      "אוֹתָם"
     ],
     "english_tokens": [
       "Where",
@@ -535,9 +796,25 @@ const SENTENCE_BANK = [
       "רואה",
       "מוצאת"
     ],
+    "hebrew_distractors_niqqud": [
+      "מָתַי",
+      "הָאַרְנָק",
+      "שֶׁלְּךָ",
+      "אוֹתָן",
+      "רוֹאֶה",
+      "מוֹצֵאת"
+    ],
+    "english_distractors": [
+      "When",
+      "did I lose",
+      "my wallet",
+      "see",
+      "it"
+    ],
     "hebrew_alternates": [
       {
         "text": "איפה שמתי את המפתחות שלי? אני לא מוצאת אותם.",
+        "text_niqqud": "אֵיפֹה שַׂמְתִּי אֶת הַמַּפְתְּחוֹת שֶׁלִּי? אֲנִי לֹא מוֹצֵאת אוֹתָם.",
         "tokens": [
           "איפה",
           "שמתי",
@@ -548,15 +825,19 @@ const SENTENCE_BANK = [
           "לא",
           "מוצאת",
           "אותם"
+        ],
+        "tokens_niqqud": [
+          "אֵיפֹה",
+          "שַׂמְתִּי",
+          "אֶת",
+          "הַמַּפְתְּחוֹת",
+          "שֶׁלִּי",
+          "אֲנִי",
+          "לֹא",
+          "מוֹצֵאת",
+          "אוֹתָם"
         ]
       }
-    ],
-    "english_distractors": [
-      "When",
-      "did I lose",
-      "my wallet",
-      "see",
-      "it"
     ],
     "notes": "אותם vs אותן tests masculine vs feminine pronoun for 'them' — מפתחות is masculine plural."
   },
@@ -567,6 +848,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אפשר לפתוח את החלון? חם כאן מאוד.",
+    "hebrew_niqqud": "אֶפְשָׁר לִפְתֹּחַ אֶת הַחַלּוֹן? חַם כָּאן מְאוֹד.",
     "english": "Can you open the window? It's very hot here.",
     "hebrew_tokens": [
       "אפשר",
@@ -576,6 +858,15 @@ const SENTENCE_BANK = [
       "חם",
       "כאן",
       "מאוד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֶפְשָׁר",
+      "לִפְתֹּחַ",
+      "אֶת",
+      "הַחַלּוֹן",
+      "חַם",
+      "כָּאן",
+      "מְאוֹד"
     ],
     "english_tokens": [
       "Can you open",
@@ -589,6 +880,13 @@ const SENTENCE_BANK = [
       "קר",
       "שם",
       "בחוץ"
+    ],
+    "hebrew_distractors_niqqud": [
+      "לִסְגֹּר",
+      "הַדֶּלֶת",
+      "קַר",
+      "שֵׁם",
+      "בַּחוּץ"
     ],
     "english_distractors": [
       "Can you close",
@@ -605,6 +903,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "וואלה, לא ידעתי שזה ככה. תודה שאמרת לי.",
+    "hebrew_niqqud": "וָואלָה, לֹא יָדַעְתִּי שֶׁזֶּה כָּכָה. תּוֹדָה שֶׁאָמַרְתְּ לִי.",
     "english": "Wow, I had no idea it was like that. Thanks for telling me.",
     "hebrew_tokens": [
       "וואלה",
@@ -615,6 +914,16 @@ const SENTENCE_BANK = [
       "תודה",
       "שאמרת",
       "לי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "וָואלָה",
+      "לֹא",
+      "יָדַעְתִּי",
+      "שֶׁזֶּה",
+      "כָּכָה",
+      "תּוֹדָה",
+      "שֶׁאָמַרְתְּ",
+      "לִי"
     ],
     "english_tokens": [
       "Wow",
@@ -632,6 +941,13 @@ const SENTENCE_BANK = [
       "אחרת",
       "סליחה",
       "ששמעת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בֶּאֱמֶת",
+      "חָשַׁבְתִּי",
+      "אַחֶרֶת",
+      "סְלִיחָה",
+      "שֶׁשָּׁמַעְתָּ"
     ],
     "english_distractors": [
       "Really",
@@ -652,6 +968,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "הוא בסדר גמור, אחי, אל תגזים בכלל.",
+    "hebrew_niqqud": "הוּא בְּסֵדֶר גָּמוּר, אָחִי, אַל תַּגְזִים בִּכְלָל.",
     "english": "He's totally fine, bro, don't exaggerate.",
     "hebrew_tokens": [
       "הוא",
@@ -661,6 +978,15 @@ const SENTENCE_BANK = [
       "אל",
       "תגזים",
       "בכלל"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הוּא",
+      "בְּסֵדֶר",
+      "גָּמוּר",
+      "אָחִי",
+      "אַל",
+      "תַּגְזִים",
+      "בִּכְלָל"
     ],
     "english_tokens": [
       "He's",
@@ -676,6 +1002,13 @@ const SENTENCE_BANK = [
       "תדאג",
       "חבר",
       "קצת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הִיא",
+      "לֹא",
+      "תִּדְאַג",
+      "חָבֵר",
+      "קְצָת"
     ],
     "english_distractors": [
       "She's",
@@ -693,6 +1026,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "פצצה! לא ציפיתי לזה בכלל, כל הכבוד.",
+    "hebrew_niqqud": "פְּצָצָה! לֹא צִפִּיתִי לָזֶה בִּכְלָל, כָּל הַכָּבוֹד.",
     "english": "Amazing! I didn't expect that at all, well done.",
     "hebrew_tokens": [
       "פצצה",
@@ -702,6 +1036,15 @@ const SENTENCE_BANK = [
       "בכלל",
       "כל",
       "הכבוד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "פְּצָצָה",
+      "לֹא",
+      "צִפִּיתִי",
+      "לָזֶה",
+      "בִּכְלָל",
+      "כָּל",
+      "הַכָּבוֹד"
     ],
     "english_tokens": [
       "Amazing",
@@ -720,6 +1063,13 @@ const SENTENCE_BANK = [
       "חבל",
       "תודה"
     ],
+    "hebrew_distractors_niqqud": [
+      "יֹפִי",
+      "רָצִיתִי",
+      "מַמָּשׁ",
+      "חֲבָל",
+      "תּוֹדָה"
+    ],
     "english_distractors": [
       "great",
       "wanted",
@@ -736,6 +1086,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נו, אתה בא איתנו או לא? תחליט כבר.",
+    "hebrew_niqqud": "נוּ, אַתָּה בָּא אִתָּנוּ אוֹ לֹא? תַּחְלִיט כְּבָר.",
     "english": "Well, are you coming with us or not? Make up your mind already.",
     "hebrew_tokens": [
       "נו",
@@ -746,6 +1097,16 @@ const SENTENCE_BANK = [
       "לא",
       "תחליט",
       "כבר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נוּ",
+      "אַתָּה",
+      "בָּא",
+      "אִתָּנוּ",
+      "אוֹ",
+      "לֹא",
+      "תַּחְלִיט",
+      "כְּבָר"
     ],
     "english_tokens": [
       "Well",
@@ -766,9 +1127,27 @@ const SENTENCE_BANK = [
       "באה",
       "תחליטי"
     ],
+    "hebrew_distractors_niqqud": [
+      "הוֹלֵךְ",
+      "אֲלֵיהֶם",
+      "אוּלַי",
+      "תַּגִּיד",
+      "עַכְשָׁו",
+      "אֶת",
+      "בָּאָה",
+      "תַּחְלִיטִי"
+    ],
+    "english_distractors": [
+      "are they",
+      "without us",
+      "going home",
+      "Take your time",
+      "right now"
+    ],
     "hebrew_alternates": [
       {
         "text": "נו, את באה איתנו או לא? תחליטי כבר.",
+        "text_niqqud": "נוּ, אַתְּ בָּאָה אִתָּנוּ אוֹ לֹא? תַּחְלִיטִי כְּבָר.",
         "tokens": [
           "נו",
           "את",
@@ -778,15 +1157,18 @@ const SENTENCE_BANK = [
           "לא",
           "תחליטי",
           "כבר"
+        ],
+        "tokens_niqqud": [
+          "נוּ",
+          "אַתְּ",
+          "בָּאָה",
+          "אִתָּנוּ",
+          "אוֹ",
+          "לֹא",
+          "תַּחְלִיטִי",
+          "כְּבָר"
         ]
       }
-    ],
-    "english_distractors": [
-      "are they",
-      "without us",
-      "going home",
-      "Take your time",
-      "right now"
     ],
     "notes": "נו is borrowed from Yiddish — an impatient 'well?/so?/come on!' Very common in spoken Hebrew. תחליט כבר adds impatience: 'decide already.'"
   },
@@ -797,6 +1179,7 @@ const SENTENCE_BANK = [
     "style": "whatsapp",
     "difficulty": 1,
     "hebrew": "נו?? מה קורה, אתה בסדר? ענה לי.",
+    "hebrew_niqqud": "נוּ?? מָה קוֹרֶה, אַתָּה בְּסֵדֶר? עָנָה לִי.",
     "english": "Well?? What's going on, are you ok? Answer me.",
     "hebrew_tokens": [
       "נו",
@@ -806,6 +1189,15 @@ const SENTENCE_BANK = [
       "בסדר",
       "ענה",
       "לי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נוּ",
+      "מָה",
+      "קוֹרֶה",
+      "אַתָּה",
+      "בְּסֵדֶר",
+      "עָנָה",
+      "לִי"
     ],
     "english_tokens": [
       "Well",
@@ -819,6 +1211,13 @@ const SENTENCE_BANK = [
       "תגיד",
       "שלום",
       "כן"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֵיפֹה",
+      "טוֹב",
+      "תַּגִּיד",
+      "שָׁלוֹם",
+      "כֵּן"
     ],
     "english_distractors": [
       "Hello",
@@ -835,6 +1234,7 @@ const SENTENCE_BANK = [
     "style": "whatsapp",
     "difficulty": 1,
     "hebrew": "סבבה, מחר ב-8, אל תאחר.",
+    "hebrew_niqqud": "סַבַּבָּה, מָחָר בְּ-8, אַל תְּאַחֵר.",
     "english": "Cool, tomorrow at 8, don't be late.",
     "hebrew_tokens": [
       "סבבה",
@@ -842,6 +1242,13 @@ const SENTENCE_BANK = [
       "ב-8",
       "אל",
       "תאחר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "סַבַּבָּה",
+      "מָחָר",
+      "בִּ-8",
+      "אַל",
+      "תְּאַחֵר"
     ],
     "english_tokens": [
       "Cool",
@@ -854,6 +1261,13 @@ const SENTENCE_BANK = [
       "ב-9",
       "תבוא",
       "מוקדם"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בְּסֵדֶר",
+      "הַיּוֹם",
+      "בְּ-9",
+      "תָּבוֹא",
+      "מֻקְדָּם"
     ],
     "english_distractors": [
       "Okay",
@@ -869,6 +1283,7 @@ const SENTENCE_BANK = [
     "style": "whatsapp",
     "difficulty": 1,
     "hebrew": "וואלה, ראיתי את זה. מגניב. שלח לי את הפרטים.",
+    "hebrew_niqqud": "וָואלָה, רָאִיתִי אֶת זֶה. מַגְנִיב. שְׁלַח לִי אֶת הַפְּרָטִים.",
     "english": "Wow, I saw it. Cool. Send me the details.",
     "hebrew_tokens": [
       "וואלה",
@@ -879,6 +1294,16 @@ const SENTENCE_BANK = [
       "שלח",
       "לי",
       "הפרטים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "וָואלָה",
+      "רָאִיתִי",
+      "אֶת",
+      "זֶה",
+      "מַגְנִיב",
+      "שְׁלַח",
+      "לִי",
+      "הַפְּרָטִים"
     ],
     "english_tokens": [
       "Wow",
@@ -895,6 +1320,13 @@ const SENTENCE_BANK = [
       "תראה",
       "המידע",
       "בבקשה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שָׁמַעְתִּי",
+      "יָפֶה",
+      "תִּרְאֶה",
+      "הַמֵּידָע",
+      "בְּבַקָּשָׁה"
     ],
     "english_distractors": [
       "Really",
@@ -913,6 +1345,7 @@ const SENTENCE_BANK = [
     "style": "whatsapp",
     "difficulty": 1,
     "hebrew": "אחי חכה, אני עונה לך בעוד שנייה.",
+    "hebrew_niqqud": "אָחִי חַכֵּה, אֲנִי עוֹנֶה לְךָ בְּעוֹד שְׁנִיָּה.",
     "english": "Bro hold on, I'll get back to you in a sec.",
     "hebrew_tokens": [
       "אחי",
@@ -922,6 +1355,15 @@ const SENTENCE_BANK = [
       "לך",
       "בעוד",
       "שנייה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אָחִי",
+      "חַכֵּה",
+      "אֲנִי",
+      "עוֹנֶה",
+      "לְךָ",
+      "בְּעוֹד",
+      "שְׁנִיָּה"
     ],
     "english_tokens": [
       "Bro",
@@ -936,6 +1378,13 @@ const SENTENCE_BANK = [
       "כותב",
       "עכשיו",
       "דקה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "חָבֵר",
+      "רֶגַע",
+      "כּוֹתֵב",
+      "עַכְשָׁו",
+      "דַּקָּה"
     ],
     "english_distractors": [
       "my friend",
@@ -953,6 +1402,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אני צריך לקנות חלב ולחם, אין כלום בבית.",
+    "hebrew_niqqud": "אֲנִי צָרִיךְ לִקְנוֹת חָלָב וְלֶחֶם, אֵין כְּלוּם בַּבַּיִת.",
     "english": "I need to buy milk and bread, there's nothing at home.",
     "hebrew_tokens": [
       "אני",
@@ -963,6 +1413,16 @@ const SENTENCE_BANK = [
       "אין",
       "כלום",
       "בבית"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "צָרִיךְ",
+      "לִקְנוֹת",
+      "חָלָב",
+      "וְלֶחֶם",
+      "אֵין",
+      "כְּלוּם",
+      "בַּבַּיִת"
     ],
     "english_tokens": [
       "I",
@@ -982,9 +1442,25 @@ const SENTENCE_BANK = [
       "רוצה",
       "צריכה"
     ],
+    "hebrew_distractors_niqqud": [
+      "לִמְכֹּר",
+      "וּבֵיצִים",
+      "הַכֹּל",
+      "בַּחֲנוּת",
+      "רוֹצֶה",
+      "צְרִיכָה"
+    ],
+    "english_distractors": [
+      "to sell",
+      "eggs",
+      "and cheese",
+      "everything",
+      "at the store"
+    ],
     "hebrew_alternates": [
       {
         "text": "אני צריכה לקנות חלב ולחם, אין כלום בבית.",
+        "text_niqqud": "אֲנִי צְרִיכָה לִקְנוֹת חָלָב וְלֶחֶם, אֵין כְּלוּם בַּבַּיִת.",
         "tokens": [
           "אני",
           "צריכה",
@@ -994,15 +1470,18 @@ const SENTENCE_BANK = [
           "אין",
           "כלום",
           "בבית"
+        ],
+        "tokens_niqqud": [
+          "אֲנִי",
+          "צְרִיכָה",
+          "לִקְנוֹת",
+          "חָלָב",
+          "וְלֶחֶם",
+          "אֵין",
+          "כְּלוּם",
+          "בַּבַּיִת"
         ]
       }
-    ],
-    "english_distractors": [
-      "to sell",
-      "eggs",
-      "and cheese",
-      "everything",
-      "at the store"
     ],
     "notes": "Basic shopping vocabulary. ולחם combines the conjunction ו (and) with לחם (bread) — common Hebrew pattern."
   },
@@ -1013,6 +1492,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "באיזה שעה אתה חוזר הביתה? אני רוצה לתכנן ארוחת ערב.",
+    "hebrew_niqqud": "בְּאֵיזֶה שָׁעָה אַתָּה חוֹזֵר הַבַּיְתָה? אֲנִי רוֹצָה לְתַכְנֵן אֲרוּחַת עֶרֶב.",
     "english": "What time are you coming home? I want to plan dinner.",
     "hebrew_tokens": [
       "באיזה",
@@ -1024,6 +1504,17 @@ const SENTENCE_BANK = [
       "רוצה",
       "לתכנן",
       "ארוחת ערב"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בְּאֵיזֶה",
+      "שָׁעָה",
+      "אַתָּה",
+      "חוֹזֵר",
+      "הַבַּיְתָה",
+      "אֲנִי",
+      "רוֹצָה",
+      "לְתַכְנֵן",
+      "אֲרוּחַת עֶרֶב"
     ],
     "english_tokens": [
       "What",
@@ -1045,9 +1536,27 @@ const SENTENCE_BANK = [
       "את",
       "חוזרת"
     ],
+    "hebrew_distractors_niqqud": [
+      "יוֹצֵא",
+      "לָעֲבוֹדָה",
+      "צָרִיךְ",
+      "אֲרוּחַת צָהֳרַיִם",
+      "אֲרוּחַת בֹּקֶר",
+      "אֶת",
+      "חוֹזֶרֶת"
+    ],
+    "english_distractors": [
+      "day",
+      "leaving",
+      "work",
+      "I need",
+      "to make",
+      "lunch"
+    ],
     "hebrew_alternates": [
       {
         "text": "באיזה שעה את חוזרת הביתה? אני רוצה לתכנן ארוחת ערב.",
+        "text_niqqud": "בְּאֵיזֶה שָׁעָה אַתְּ חוֹזֶרֶת הַבַּיְתָה? אֲנִי רוֹצָה לְתַכְנֵן אֲרוּחַת עֶרֶב.",
         "tokens": [
           "באיזה",
           "שעה",
@@ -1058,16 +1567,19 @@ const SENTENCE_BANK = [
           "רוצה",
           "לתכנן",
           "ארוחת ערב"
+        ],
+        "tokens_niqqud": [
+          "בְּאֵיזֶה",
+          "שָׁעָה",
+          "אַתְּ",
+          "חוֹזֶרֶת",
+          "הַבַּיְתָה",
+          "אֲנִי",
+          "רוֹצָה",
+          "לְתַכְנֵן",
+          "אֲרוּחַת עֶרֶב"
         ]
       }
-    ],
-    "english_distractors": [
-      "day",
-      "leaving",
-      "work",
-      "I need",
-      "to make",
-      "lunch"
     ],
     "notes": "ארוחת ערב (evening meal) contrasts cleanly with ארוחת צהריים (lunch) and ארוחת בוקר (breakfast)."
   },
@@ -1078,6 +1590,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "שכחתי להטעין את הטלפון, הוא עומד להיכבות.",
+    "hebrew_niqqud": "שָׁכַחְתִּי לְהַטְעִין אֶת הַטֵּלֵפוֹן, הוּא עוֹמֵד לְהִכָּבוֹת.",
     "english": "I forgot to charge my phone, it's about to die.",
     "hebrew_tokens": [
       "שכחתי",
@@ -1087,6 +1600,15 @@ const SENTENCE_BANK = [
       "הוא",
       "עומד",
       "להיכבות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "שָׁכַחְתִּי",
+      "לְהַטְעִין",
+      "אֶת",
+      "הַטֵּלֵפוֹן",
+      "הוּא",
+      "עוֹמֵד",
+      "לְהִכָּבוֹת"
     ],
     "english_tokens": [
       "I forgot",
@@ -1102,6 +1624,13 @@ const SENTENCE_BANK = [
       "המחשב",
       "כבר",
       "נדלק"
+    ],
+    "hebrew_distractors_niqqud": [
+      "זָכַרְתִּי",
+      "לְכַבּוֹת",
+      "הַמַּחְשֵׁב",
+      "כְּבָר",
+      "נִדְלַק"
     ],
     "english_distractors": [
       "I remembered",
@@ -1120,6 +1649,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "יש לך עט שאני יכול להשתמש בו? אני צריך לכתוב משהו.",
+    "hebrew_niqqud": "יֵשׁ לְךָ עֵט שֶׁאֲנִי יָכוֹל לְהִשְׁתַּמֵּשׁ בּוֹ? אֲנִי צָרִיךְ לִכְתֹּב מַשֶּׁהוּ.",
     "english": "Do you have a pen I can use? I need to write something.",
     "hebrew_tokens": [
       "יש",
@@ -1133,6 +1663,19 @@ const SENTENCE_BANK = [
       "צריך",
       "לכתוב",
       "משהו"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לְךָ",
+      "עֵט",
+      "שֶׁאֲנִי",
+      "יָכוֹל",
+      "לְהִשְׁתַּמֵּשׁ",
+      "בּוֹ",
+      "אֲנִי",
+      "צָרִיךְ",
+      "לִכְתֹּב",
+      "מַשֶּׁהוּ"
     ],
     "english_tokens": [
       "Do you have",
@@ -1152,9 +1695,26 @@ const SENTENCE_BANK = [
       "יכולה",
       "צריכה"
     ],
+    "hebrew_distractors_niqqud": [
+      "עִפָּרוֹן",
+      "לִקְרֹא",
+      "בָּהּ",
+      "רוֹצֶה",
+      "אֵין",
+      "יְכוֹלָה",
+      "צְרִיכָה"
+    ],
+    "english_distractors": [
+      "a pencil",
+      "borrow",
+      "I want",
+      "to read",
+      "anything"
+    ],
     "hebrew_alternates": [
       {
         "text": "יש לך עט שאני יכולה להשתמש בו? אני צריכה לכתוב משהו.",
+        "text_niqqud": "יֵשׁ לְךָ עֵט שֶׁאֲנִי יְכוֹלָה לְהִשְׁתַּמֵּשׁ בּוֹ? אֲנִי צְרִיכָה לִכְתֹּב מַשֶּׁהוּ.",
         "tokens": [
           "יש",
           "לך",
@@ -1167,15 +1727,21 @@ const SENTENCE_BANK = [
           "צריכה",
           "לכתוב",
           "משהו"
+        ],
+        "tokens_niqqud": [
+          "יֵשׁ",
+          "לְךָ",
+          "עֵט",
+          "שֶׁאֲנִי",
+          "יְכוֹלָה",
+          "לְהִשְׁתַּמֵּשׁ",
+          "בּוֹ",
+          "אֲנִי",
+          "צְרִיכָה",
+          "לִכְתֹּב",
+          "מַשֶּׁהוּ"
         ]
       }
-    ],
-    "english_distractors": [
-      "a pencil",
-      "borrow",
-      "I want",
-      "to read",
-      "anything"
     ],
     "notes": "בו (in it, masc.) vs בה (in it, fem.) — עט is masculine so בו is correct."
   },
@@ -1186,6 +1752,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אנחנו נפגשים ליד התחנה, אל תאחר.",
+    "hebrew_niqqud": "אֲנַחְנוּ נִפְגָּשִׁים לְיַד הַתַּחֲנָה, אַל תְּאַחֵר.",
     "english": "We're meeting near the station, don't be late.",
     "hebrew_tokens": [
       "אנחנו",
@@ -1194,6 +1761,14 @@ const SENTENCE_BANK = [
       "התחנה",
       "אל",
       "תאחר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנַחְנוּ",
+      "נִפְגָּשִׁים",
+      "לְיַד",
+      "הַתַּחֲנָה",
+      "אַל",
+      "תְּאַחֵר"
     ],
     "english_tokens": [
       "We're",
@@ -1209,6 +1784,13 @@ const SENTENCE_BANK = [
       "תבוא",
       "מוקדם",
       "בתוך"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מוּל",
+      "הַקַּנְיוֹן",
+      "תָּבוֹא",
+      "מֻקְדָּם",
+      "בְּתוֹךְ"
     ],
     "english_distractors": [
       "across",
@@ -1226,6 +1808,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אני מאחר בכמה דקות, כבר יוצא לדרך.",
+    "hebrew_niqqud": "אֲנִי מְאַחֵר בְּכַמָּה דַּקּוֹת, כְּבָר יוֹצֵא לַדֶּרֶךְ.",
     "english": "I'm running a few minutes late, I'm already on my way.",
     "hebrew_tokens": [
       "אני",
@@ -1235,6 +1818,15 @@ const SENTENCE_BANK = [
       "כבר",
       "יוצא",
       "לדרך"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "מְאַחֵר",
+      "בְּכַמָּה",
+      "דַּקּוֹת",
+      "כְּבָר",
+      "יוֹצֵא",
+      "לַדֶּרֶךְ"
     ],
     "english_tokens": [
       "I'm running",
@@ -1248,6 +1840,13 @@ const SENTENCE_BANK = [
       "עוד",
       "מוקדם",
       "חוזר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שָׁעוֹת",
+      "מַגִּיעַ",
+      "עוֹד",
+      "מֻקְדָּם",
+      "חוֹזֵר"
     ],
     "english_distractors": [
       "I'm arriving",
@@ -1264,6 +1863,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "תזכיר לי לשלוח את המייל, אני תמיד שוכח.",
+    "hebrew_niqqud": "תַּזְכִּיר לִי לִשְׁלֹחַ אֶת הֲמֵיְל, אֲנִי תָּמִיד שׁוֹכֵחַ.",
     "english": "Remind me to send the email, I always forget.",
     "hebrew_tokens": [
       "תזכיר",
@@ -1274,6 +1874,16 @@ const SENTENCE_BANK = [
       "אני",
       "תמיד",
       "שוכח"
+    ],
+    "hebrew_tokens_niqqud": [
+      "תַּזְכִּיר",
+      "לִי",
+      "לִשְׁלֹחַ",
+      "אֶת",
+      "הֲמֵיְל",
+      "אֲנִי",
+      "תָּמִיד",
+      "שׁוֹכֵחַ"
     ],
     "english_tokens": [
       "Remind",
@@ -1290,6 +1900,13 @@ const SENTENCE_BANK = [
       "ההודעה",
       "לפעמים",
       "זוכר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "תַּגִּיד",
+      "לִקְרֹא",
+      "הַהוֹדָעָה",
+      "לִפְעָמִים",
+      "זוֹכֵר"
     ],
     "english_distractors": [
       "Tell",
@@ -1309,6 +1926,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "זה קרוב מכאן או רחוק? אני לא מכיר את האזור.",
+    "hebrew_niqqud": "זֶה קָרוֹב מִכָּאן אוֹ רָחוֹק? אֲנִי לֹא מַכִּיר אֶת הָאֵזוֹר.",
     "english": "Is it near here or far from here? I don't know the area.",
     "hebrew_tokens": [
       "זה",
@@ -1321,6 +1939,18 @@ const SENTENCE_BANK = [
       "מכיר",
       "את",
       "האזור"
+    ],
+    "hebrew_tokens_niqqud": [
+      "זֶה",
+      "קָרוֹב",
+      "מִכָּאן",
+      "אוֹ",
+      "רָחוֹק",
+      "אֲנִי",
+      "לֹא",
+      "מַכִּיר",
+      "אֶת",
+      "הָאֵזוֹר"
     ],
     "english_tokens": [
       "Is",
@@ -1340,6 +1970,13 @@ const SENTENCE_BANK = [
       "העיר",
       "קטן"
     ],
+    "hebrew_distractors_niqqud": [
+      "מִשָּׁם",
+      "גָּדוֹל",
+      "מִבֵּין",
+      "הָעִיר",
+      "קָטָן"
+    ],
     "english_distractors": [
       "from there",
       "very big",
@@ -1356,6 +1993,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אפשר לקבל את החשבון, בבקשה?",
+    "hebrew_niqqud": "אֶפְשָׁר לְקַבֵּל אֶת הַחֶשְׁבּוֹן, בְּבַקָּשָׁה?",
     "english": "Can I get the bill, please?",
     "hebrew_tokens": [
       "אפשר",
@@ -1363,6 +2001,13 @@ const SENTENCE_BANK = [
       "את",
       "החשבון",
       "בבקשה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֶפְשָׁר",
+      "לְקַבֵּל",
+      "אֶת",
+      "הַחֶשְׁבּוֹן",
+      "בְּבַקָּשָׁה"
     ],
     "english_tokens": [
       "Can I get",
@@ -1375,6 +2020,13 @@ const SENTENCE_BANK = [
       "תודה",
       "לראות",
       "הקבלה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "לְשַׁלֵּם",
+      "הַתַּפְרִיט",
+      "תּוֹדָה",
+      "לִרְאוֹת",
+      "הַקַּבָּלָה"
     ],
     "english_distractors": [
       "Can I pay",
@@ -1392,6 +2044,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "מה אתה רוצה לאכול הערב? אני לא יודע מה לבשל.",
+    "hebrew_niqqud": "מָה אַתָּה רוֹצֶה לֶאֱכֹל הָעֶרֶב? אֲנִי לֹא יוֹדֵעַ מָה לְבַשֵּׁל.",
     "english": "What do you want to eat tonight? I don't know what to cook.",
     "hebrew_tokens": [
       "מה",
@@ -1404,6 +2057,18 @@ const SENTENCE_BANK = [
       "יודע",
       "מה",
       "לבשל"
+    ],
+    "hebrew_tokens_niqqud": [
+      "מָה",
+      "אַתָּה",
+      "רוֹצֶה",
+      "לֶאֱכֹל",
+      "הָעֶרֶב",
+      "אֲנִי",
+      "לֹא",
+      "יוֹדֵעַ",
+      "מָה",
+      "לְבַשֵּׁל"
     ],
     "english_tokens": [
       "What",
@@ -1425,22 +2090,13 @@ const SENTENCE_BANK = [
       "אוהב",
       "יודעת"
     ],
-    "hebrew_alternates": [
-      {
-        "text": "מה אתה רוצה לאכול הערב? אני לא יודעת מה לבשל.",
-        "tokens": [
-          "מה",
-          "אתה",
-          "רוצה",
-          "לאכול",
-          "הערב",
-          "אני",
-          "לא",
-          "יודעת",
-          "מה",
-          "לבשל"
-        ]
-      }
+    "hebrew_distractors_niqqud": [
+      "לִשְׁתּוֹת",
+      "הַבֹּקֶר",
+      "יָכוֹל",
+      "לְהַזְמִין",
+      "אוֹהֵב",
+      "יוֹדַעַת"
     ],
     "english_distractors": [
       "When",
@@ -1454,6 +2110,36 @@ const SENTENCE_BANK = [
       "which",
       "to order"
     ],
+    "hebrew_alternates": [
+      {
+        "text": "מה אתה רוצה לאכול הערב? אני לא יודעת מה לבשל.",
+        "text_niqqud": "מָה אַתָּה רוֹצֶה לֶאֱכֹל הָעֶרֶב? אֲנִי לֹא יוֹדַעַת מָה לְבַשֵּׁל.",
+        "tokens": [
+          "מה",
+          "אתה",
+          "רוצה",
+          "לאכול",
+          "הערב",
+          "אני",
+          "לא",
+          "יודעת",
+          "מה",
+          "לבשל"
+        ],
+        "tokens_niqqud": [
+          "מָה",
+          "אַתָּה",
+          "רוֹצֶה",
+          "לֶאֱכֹל",
+          "הָעֶרֶב",
+          "אֲנִי",
+          "לֹא",
+          "יוֹדַעַת",
+          "מָה",
+          "לְבַשֵּׁל"
+        ]
+      }
+    ],
     "notes": "לאכול (to eat) vs לבשל (to cook) vs להזמין (to order) — food-related verb distractors."
   },
   {
@@ -1463,6 +2149,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "הזמנו פיצה, היא אמורה להגיע בעוד עשרים דקות.",
+    "hebrew_niqqud": "הִזְמַנּוּ פִּיצָה, הִיא אֲמוּרָה לְהַגִּיעַ בְּעוֹד עֶשְׂרִים דַּקּוֹת.",
     "english": "We ordered pizza, it should arrive in about twenty minutes.",
     "hebrew_tokens": [
       "הזמנו",
@@ -1473,6 +2160,16 @@ const SENTENCE_BANK = [
       "בעוד",
       "עשרים",
       "דקות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הִזְמַנּוּ",
+      "פִּיצָה",
+      "הִיא",
+      "אֲמוּרָה",
+      "לְהַגִּיעַ",
+      "בְּעוֹד",
+      "עֶשְׂרִים",
+      "דַּקּוֹת"
     ],
     "english_tokens": [
       "We ordered",
@@ -1490,6 +2187,13 @@ const SENTENCE_BANK = [
       "אמור",
       "לצאת",
       "עשר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בִּשַּׁלְנוּ",
+      "סוּשִׁי",
+      "אֱמֹר",
+      "לָצֵאת",
+      "עָשָׂר"
     ],
     "english_distractors": [
       "They cooked",
@@ -1510,6 +2214,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "כמה זמן לוקח להגיע לשם באוטובוס?",
+    "hebrew_niqqud": "כַּמָּה זְמַן לוֹקֵחַ לְהַגִּיעַ לְשָׁם בָּאוֹטוֹבּוּס?",
     "english": "How long does it take to get there by bus?",
     "hebrew_tokens": [
       "כמה",
@@ -1518,6 +2223,14 @@ const SENTENCE_BANK = [
       "להגיע",
       "לשם",
       "באוטובוס"
+    ],
+    "hebrew_tokens_niqqud": [
+      "כַּמָּה",
+      "זְמַן",
+      "לוֹקֵחַ",
+      "לְהַגִּיעַ",
+      "לְשָׁם",
+      "בָּאוֹטוֹבּוּס"
     ],
     "english_tokens": [
       "How long",
@@ -1531,6 +2244,13 @@ const SENTENCE_BANK = [
       "עולה",
       "רחוק",
       "במכונית"
+    ],
+    "hebrew_distractors_niqqud": [
+      "לְכָאן",
+      "בָּרַכֶּבֶת",
+      "עוֹלֶה",
+      "רָחוֹק",
+      "בַּמְּכוֹנִית"
     ],
     "english_distractors": [
       "How far",
@@ -1548,6 +2268,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אין חניה פה, בוא נחפש קצת יותר רחוק.",
+    "hebrew_niqqud": "אֵין חֲנָיָה פֹּה, בּוֹא נְחַפֵּשׂ קְצָת יוֹתֵר רָחוֹק.",
     "english": "There's no parking here, let's look a bit further away.",
     "hebrew_tokens": [
       "אין",
@@ -1558,6 +2279,16 @@ const SENTENCE_BANK = [
       "קצת",
       "יותר",
       "רחוק"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֵין",
+      "חֲנָיָה",
+      "פֹּה",
+      "בּוֹא",
+      "נְחַפֵּשׂ",
+      "קְצָת",
+      "יוֹתֵר",
+      "רָחוֹק"
     ],
     "english_tokens": [
       "There's no",
@@ -1576,6 +2307,13 @@ const SENTENCE_BANK = [
       "נלך",
       "קרוב"
     ],
+    "hebrew_distractors_niqqud": [
+      "יֵשׁ",
+      "מָקוֹם",
+      "שֵׁם",
+      "נֵלֵךְ",
+      "קָרוֹב"
+    ],
     "english_distractors": [
       "There's lots",
       "space",
@@ -1592,6 +2330,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "הרכבת מתעכבת, כדאי לקחת מונית.",
+    "hebrew_niqqud": "הָרַכֶּבֶת מִתְעַכֶּבֶת, כְּדַאי לָקַחַת מוֹנִית.",
     "english": "The train is delayed, we should take a taxi.",
     "hebrew_tokens": [
       "הרכבת",
@@ -1599,6 +2338,13 @@ const SENTENCE_BANK = [
       "כדאי",
       "לקחת",
       "מונית"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הָרַכֶּבֶת",
+      "מִתְעַכֶּבֶת",
+      "כְּדַאי",
+      "לָקַחַת",
+      "מוֹנִית"
     ],
     "english_tokens": [
       "The train",
@@ -1612,6 +2358,13 @@ const SENTENCE_BANK = [
       "אפשר",
       "לחכות",
       "אוטובוס"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הָאוֹטוֹבּוּס",
+      "מַגִּיעָה",
+      "אֶפְשָׁר",
+      "לְחַכּוֹת",
+      "אוֹטוֹבּוּס"
     ],
     "english_distractors": [
       "The bus",
@@ -1629,6 +2382,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "הכביסה מוכנה, אפשר להוציא אותה מהמייבש?",
+    "hebrew_niqqud": "הַכְּבִיסָה מוּכָנָה, אֶפְשָׁר לְהוֹצִיא אוֹתָהּ מֵהַמְּיַבֵּשׁ?",
     "english": "The laundry is done, can you take it out of the dryer?",
     "hebrew_tokens": [
       "הכביסה",
@@ -1637,6 +2391,14 @@ const SENTENCE_BANK = [
       "להוציא",
       "אותה",
       "מהמייבש"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַכְּבִיסָה",
+      "מוּכָנָה",
+      "אֶפְשָׁר",
+      "לְהוֹצִיא",
+      "אוֹתָהּ",
+      "מֵהַמְּיַבֵּשׁ"
     ],
     "english_tokens": [
       "The laundry",
@@ -1654,6 +2416,13 @@ const SENTENCE_BANK = [
       "מהמכונה",
       "לקפל"
     ],
+    "hebrew_distractors_niqqud": [
+      "מוּכָן",
+      "לְהַכְנִיס",
+      "אוֹתוֹ",
+      "מֵהַמְּכוֹנָה",
+      "לְקַפֵּל"
+    ],
     "english_distractors": [
       "all set",
       "put in",
@@ -1670,6 +2439,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "מישהו ראה את השלט של הטלוויזיה?",
+    "hebrew_niqqud": "מִישֶׁהוּ רָאָה אֶת הַשַּׁלָּט שֶׁל הַטֵּלֵוִיזְיָה?",
     "english": "Has anyone seen the TV remote?",
     "hebrew_tokens": [
       "מישהו",
@@ -1678,6 +2448,14 @@ const SENTENCE_BANK = [
       "השלט",
       "של",
       "הטלוויזיה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "מִישֶׁהוּ",
+      "רָאָה",
+      "אֶת",
+      "הַשַּׁלָּט",
+      "שֶׁל",
+      "הַטֵּלֵוִיזְיָה"
     ],
     "english_tokens": [
       "Has anyone",
@@ -1690,6 +2468,13 @@ const SENTENCE_BANK = [
       "המפתחות",
       "הטלפון",
       "שמע"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מַשֶּׁהוּ",
+      "לֶקַח",
+      "הַמַּפְתְּחוֹת",
+      "הַטֵּלֵפוֹן",
+      "שְׁמַע"
     ],
     "english_distractors": [
       "someone else",
@@ -1707,12 +2492,19 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "נגמר הסבון, צריך לקנות.",
+    "hebrew_niqqud": "נִגְמַר הַסַּבּוֹן, צָרִיךְ לִקְנוֹת.",
     "english": "The soap ran out, we need to buy more.",
     "hebrew_tokens": [
       "נגמר",
       "הסבון",
       "צריך",
       "לקנות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִגְמַר",
+      "הַסַּבּוֹן",
+      "צָרִיךְ",
+      "לִקְנוֹת"
     ],
     "english_tokens": [
       "The soap",
@@ -1727,6 +2519,13 @@ const SENTENCE_BANK = [
       "רוצה",
       "להביא",
       "יש"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נִשְׁאַר",
+      "הַשַּׁמְפּוּ",
+      "רוֹצֶה",
+      "לְהָבִיא",
+      "יֵשׁ"
     ],
     "english_distractors": [
       "hair gel",
@@ -1744,6 +2543,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "הייתי בתור חצי שעה ועדיין לא הגיע תורי.",
+    "hebrew_niqqud": "הָיִיתִי בְּתוֹר חֲצִי שָׁעָה וַעֲדַיִן לֹא הִגִּיעַ תּוֹרִי.",
     "english": "I've been in line for half an hour and it's still not my turn.",
     "hebrew_tokens": [
       "הייתי",
@@ -1754,6 +2554,16 @@ const SENTENCE_BANK = [
       "לא",
       "הגיע",
       "תורי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הָיִיתִי",
+      "בְּתוֹר",
+      "חֲצִי",
+      "שָׁעָה",
+      "וַעֲדַיִן",
+      "לֹא",
+      "הִגִּיעַ",
+      "תּוֹרִי"
     ],
     "english_tokens": [
       "I've",
@@ -1771,9 +2581,24 @@ const SENTENCE_BANK = [
       "עברתי",
       "תורך"
     ],
+    "hebrew_distractors_niqqud": [
+      "רֶבַע",
+      "דַּקָּה",
+      "כְּבָר",
+      "עָבַרְתִּי",
+      "תּוֹרְךָ"
+    ],
+    "english_distractors": [
+      "a quarter",
+      "ten minutes",
+      "already done",
+      "passed by",
+      "your turn"
+    ],
     "hebrew_alternates": [
       {
         "text": "הייתי חצי שעה בתור ועדיין לא הגיע תורי.",
+        "text_niqqud": "הָיִיתִי חֲצִי שָׁעָה בַּתּוֹר וַעֲדַיִן לֹא הִגִּיעַ תּוֹרִי.",
         "tokens": [
           "הייתי",
           "חצי",
@@ -1783,15 +2608,18 @@ const SENTENCE_BANK = [
           "לא",
           "הגיע",
           "תורי"
+        ],
+        "tokens_niqqud": [
+          "הָיִיתִי",
+          "חֲצִי",
+          "שָׁעָה",
+          "בַּתּוֹר",
+          "וַעֲדַיִן",
+          "לֹא",
+          "הִגִּיעַ",
+          "תּוֹרִי"
         ]
       }
-    ],
-    "english_distractors": [
-      "a quarter",
-      "ten minutes",
-      "already done",
-      "passed by",
-      "your turn"
     ],
     "notes": "תורי (my turn) — the possessive suffix is attached directly. תורך (your turn) is a good distractor."
   },
@@ -1802,6 +2630,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "תוריד לי את הקול קצת, אני בטלפון.",
+    "hebrew_niqqud": "תּוֹרִיד לִי אֶת הַקּוֹל קְצָת, אֲנִי בַּטֵּלֵפוֹן.",
     "english": "Turn it down a bit, I'm on the phone.",
     "hebrew_tokens": [
       "תוריד",
@@ -1811,6 +2640,15 @@ const SENTENCE_BANK = [
       "קצת",
       "אני",
       "בטלפון"
+    ],
+    "hebrew_tokens_niqqud": [
+      "תּוֹרִיד",
+      "לִי",
+      "אֶת",
+      "הַקּוֹל",
+      "קְצָת",
+      "אֲנִי",
+      "בַּטֵּלֵפוֹן"
     ],
     "english_tokens": [
       "Turn",
@@ -1826,6 +2664,13 @@ const SENTENCE_BANK = [
       "הרבה",
       "במחשב",
       "תכבה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "תַּעֲלֶה",
+      "הַמּוּזִיקָה",
+      "הַרְבֵּה",
+      "בַּמַּחְשֵׁב",
+      "תִּכְבֶּה"
     ],
     "english_distractors": [
       "up",
@@ -1843,6 +2688,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אם אני לא עונה, תשאיר הודעה.",
+    "hebrew_niqqud": "אִם אֲנִי לֹא עוֹנֶה, תַּשְׁאִיר הוֹדָעָה.",
     "english": "If I don't answer, leave a message.",
     "hebrew_tokens": [
       "אם",
@@ -1851,6 +2697,14 @@ const SENTENCE_BANK = [
       "עונה",
       "תשאיר",
       "הודעה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אִם",
+      "אֲנִי",
+      "לֹא",
+      "עוֹנֶה",
+      "תַּשְׁאִיר",
+      "הוֹדָעָה"
     ],
     "english_tokens": [
       "If",
@@ -1865,6 +2719,13 @@ const SENTENCE_BANK = [
       "מכתב",
       "תשלח",
       "תמיד"
+    ],
+    "hebrew_distractors_niqqud": [
+      "כְּשֶׁ",
+      "תִּתְקַשֵּׁר",
+      "מִכְתָּב",
+      "תִּשְׁלַח",
+      "תָּמִיד"
     ],
     "english_distractors": [
       "When",
@@ -1882,6 +2743,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "הוא שלח לי הודעה במוצאי שבת כאילו לא קרה כלום.",
+    "hebrew_niqqud": "הוּא שָׁלַח לִי הוֹדָעָה בְּמוֹצָאֵי שַׁבָּת כְּאִלּוּ לֹא קָרָה כְּלוּם.",
     "english": "He texted me Saturday night as if nothing happened.",
     "hebrew_tokens": [
       "הוא",
@@ -1894,6 +2756,17 @@ const SENTENCE_BANK = [
       "לא קרה",
       "כלום"
     ],
+    "hebrew_tokens_niqqud": [
+      "הוּא",
+      "שָׁלַח",
+      "לִי",
+      "הוֹדָעָה",
+      "בְּמוֹצָאֵי",
+      "שַׁבָּת",
+      "כְּאִלּוּ",
+      "לֹא קָרָה",
+      "כְּלוּם"
+    ],
     "english_tokens": [
       "He",
       "texted",
@@ -1904,9 +2777,33 @@ const SENTENCE_BANK = [
       "nothing",
       "happened"
     ],
+    "hebrew_distractors": [
+      "בלילה",
+      "מחר",
+      "פתאום",
+      "אחרי",
+      "בבוקר",
+      "לא ענה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בַּלַּיְלָה",
+      "מָחָר",
+      "פִּתְאוֹם",
+      "אַחֲרֵי",
+      "בַּבֹּקֶר",
+      "לֹא עָנָה"
+    ],
+    "english_distractors": [
+      "called",
+      "Friday",
+      "morning",
+      "like nothing",
+      "changed"
+    ],
     "hebrew_alternates": [
       {
         "text": "הוא שלח לי הודעה במוצאי שבת כאילו כלום לא קרה.",
+        "text_niqqud": "הוּא שָׁלַח לִי הוֹדָעָה בְּמוֹצָאֵי שַׁבָּת כְּאִלּוּ כְּלוּם לֹא קָרָה.",
         "tokens": [
           "הוא",
           "שלח",
@@ -1917,23 +2814,19 @@ const SENTENCE_BANK = [
           "כאילו",
           "כלום",
           "לא קרה"
+        ],
+        "tokens_niqqud": [
+          "הוּא",
+          "שָׁלַח",
+          "לִי",
+          "הוֹדָעָה",
+          "בְּמוֹצָאֵי",
+          "שַׁבָּת",
+          "כְּאִלּוּ",
+          "כְּלוּם",
+          "לֹא קָרָה"
         ]
       }
-    ],
-    "hebrew_distractors": [
-      "בלילה",
-      "מחר",
-      "פתאום",
-      "אחרי",
-      "בבוקר",
-      "לא ענה"
-    ],
-    "english_distractors": [
-      "called",
-      "Friday",
-      "morning",
-      "like nothing",
-      "changed"
     ],
     "notes": "מוצאי שבת means Saturday night / right after Shabbat. כאילו לא קרה כלום and כאילו כלום לא קרה both mean 'as if nothing happened.'"
   },
@@ -1944,6 +2837,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אני אעבור על המסמך ואחזור אליך בהקדם.",
+    "hebrew_niqqud": "אֲנִי אֶעֱבֹר עַל הַמִּסְמָךְ וְאֶחֱזֹר אֵלֶיךָ בְּהֶקְדֵּם.",
     "english": "I'll review the document and get back to you shortly.",
     "hebrew_tokens": [
       "אני",
@@ -1953,6 +2847,15 @@ const SENTENCE_BANK = [
       "ואחזור",
       "אליך",
       "בהקדם"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "אֶעֱבֹר",
+      "עַל",
+      "הַמִּסְמָךְ",
+      "וְאֶחֱזֹר",
+      "אֵלֶיךָ",
+      "בְּהֶקְדֵּם"
     ],
     "english_tokens": [
       "I'll",
@@ -1970,6 +2873,13 @@ const SENTENCE_BANK = [
       "מאוחר",
       "אשלח"
     ],
+    "hebrew_distractors_niqqud": [
+      "אֶקְרָא",
+      "הַדּוּחַ",
+      "אֵלָיו",
+      "מְאֻחָר",
+      "אֶשְׁלַח"
+    ],
     "english_distractors": [
       "read through",
       "the report",
@@ -1986,6 +2896,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נצטרך לתאם פגישה לשבוע הבא, מתי אתה פנוי?",
+    "hebrew_niqqud": "נִצְטָרֵךְ לְתָאֵם פְּגִישָׁה לַשָּׁבוּעַ הַבָּא, מָתַי אַתָּה פָּנוּי?",
     "english": "We'll need to schedule a meeting for next week, when are you available?",
     "hebrew_tokens": [
       "נצטרך",
@@ -1996,6 +2907,16 @@ const SENTENCE_BANK = [
       "מתי",
       "אתה",
       "פנוי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִצְטָרֵךְ",
+      "לְתָאֵם",
+      "פְּגִישָׁה",
+      "לַשָּׁבוּעַ",
+      "הַבָּא",
+      "מָתַי",
+      "אַתָּה",
+      "פָּנוּי"
     ],
     "english_tokens": [
       "We'll",
@@ -2014,6 +2935,13 @@ const SENTENCE_BANK = [
       "עסוק",
       "איפה"
     ],
+    "hebrew_distractors_niqqud": [
+      "לְבַטֵּל",
+      "שִׂיחָה",
+      "הַזֶּה",
+      "עָסוּק",
+      "אֵיפֹה"
+    ],
     "english_distractors": [
       "cancel",
       "team call",
@@ -2030,6 +2958,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "זה לא תואם את הדרישות שהוגדרו, נצטרך לעדכן.",
+    "hebrew_niqqud": "זֶה לֹא תּוֹאֵם אֶת הַדְּרִישׁוֹת שֶׁהֻגְדְּרוּ, נִצְטָרֵךְ לְעַדְכֵּן.",
     "english": "This doesn't align with the defined requirements, we'll need to update it.",
     "hebrew_tokens": [
       "זה",
@@ -2040,6 +2969,16 @@ const SENTENCE_BANK = [
       "שהוגדרו",
       "נצטרך",
       "לעדכן"
+    ],
+    "hebrew_tokens_niqqud": [
+      "זֶה",
+      "לֹא",
+      "תּוֹאֵם",
+      "אֶת",
+      "הַדְּרִישׁוֹת",
+      "שֶׁהֻגְדְּרוּ",
+      "נִצְטָרֵךְ",
+      "לְעַדְכֵּן"
     ],
     "english_tokens": [
       "This",
@@ -2054,6 +2993,13 @@ const SENTENCE_BANK = [
       "שנכתבו",
       "לשנות",
       "אפשר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מַתְאִים",
+      "הַנְּתוּנִים",
+      "שֶׁנִּכְתְּבוּ",
+      "לְשַׁנּוֹת",
+      "אֶפְשָׁר"
     ],
     "english_distractors": [
       "this fits",
@@ -2071,6 +3017,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "יש עדכון לגבי הפרויקט? אני רוצה להבין איפה זה עומד.",
+    "hebrew_niqqud": "יֵשׁ עִדְכּוּן לְגַבֵּי הַפְּרוֹיֵקְט? אֲנִי רוֹצֶה לְהָבִין אֵיפֹה זֶה עוֹמֵד.",
     "english": "Is there an update on the project? I want to understand where it stands.",
     "hebrew_tokens": [
       "יש",
@@ -2083,6 +3030,18 @@ const SENTENCE_BANK = [
       "איפה",
       "זה",
       "עומד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "עִדְכּוּן",
+      "לְגַבֵּי",
+      "הַפְּרוֹיֵקְט",
+      "אֲנִי",
+      "רוֹצֶה",
+      "לְהָבִין",
+      "אֵיפֹה",
+      "זֶה",
+      "עוֹמֵד"
     ],
     "english_tokens": [
       "Is there an update",
@@ -2098,6 +3057,13 @@ const SENTENCE_BANK = [
       "התוכנית",
       "צריך",
       "לדעת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שִׁנּוּי",
+      "עַל",
+      "הַתָּכְנִית",
+      "צָרִיךְ",
+      "לָדַעַת"
     ],
     "english_distractors": [
       "latest change",
@@ -2115,6 +3081,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אני ממליץ לבדוק את הנתונים שוב, ייתכן שיש טעות.",
+    "hebrew_niqqud": "אֲנִי מַמְלִיץ לִבְדֹּק אֶת הַנְּתוּנִים שׁוּב, יִתָּכֵן שֶׁיֵּשׁ טָעוּת.",
     "english": "I recommend checking the data again, there may be an error.",
     "hebrew_tokens": [
       "אני",
@@ -2127,8 +3094,16 @@ const SENTENCE_BANK = [
       "שיש",
       "טעות"
     ],
-    "hebrew_alternates": [
-      { "text": "אני ממליץ לבדוק שוב את הנתונים, ייתכן שיש טעות.", "tokens": ["אני", "ממליץ", "לבדוק", "שוב", "את", "הנתונים", "ייתכן", "שיש", "טעות"] }
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "מַמְלִיץ",
+      "לִבְדֹּק",
+      "אֶת",
+      "הַנְּתוּנִים",
+      "שׁוּב",
+      "יִתָּכֵן",
+      "שֶׁיֵּשׁ",
+      "טָעוּת"
     ],
     "english_tokens": [
       "I",
@@ -2146,6 +3121,13 @@ const SENTENCE_BANK = [
       "בטוח",
       "בעיה"
     ],
+    "hebrew_distractors_niqqud": [
+      "מַצִּיעַ",
+      "לְשַׁנּוֹת",
+      "הַמִּסְמָכִים",
+      "בָּטוּחַ",
+      "בְּעָיָה"
+    ],
     "english_distractors": [
       "I suggest",
       "small",
@@ -2153,6 +3135,34 @@ const SENTENCE_BANK = [
       "the documents",
       "for sure",
       "a problem"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "אני ממליץ לבדוק שוב את הנתונים, ייתכן שיש טעות.",
+        "text_niqqud": "אֲנִי מַמְלִיץ לִבְדֹּק שׁוּב אֶת הַנְּתוּנִים, יִתָּכֵן שֶׁיֵּשׁ טָעוּת.",
+        "tokens": [
+          "אני",
+          "ממליץ",
+          "לבדוק",
+          "שוב",
+          "את",
+          "הנתונים",
+          "ייתכן",
+          "שיש",
+          "טעות"
+        ],
+        "tokens_niqqud": [
+          "אֲנִי",
+          "מַמְלִיץ",
+          "לִבְדֹּק",
+          "שׁוּב",
+          "אֶת",
+          "הַנְּתוּנִים",
+          "יִתָּכֵן",
+          "שֶׁיֵּשׁ",
+          "טָעוּת"
+        ]
+      }
     ],
     "notes": "ייתכן (it's possible/may be) is a more formal way to express uncertainty. ממליץ (recommend) vs מציע (suggest)."
   },
@@ -2163,6 +3173,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אנחנו עובדים על זה כרגע, נעדכן כשיהיו תוצאות.",
+    "hebrew_niqqud": "אֲנַחְנוּ עוֹבְדִים עַל זֶה כָּרֶגַע, נְעַדְכֵּן כְּשֶׁיִּהְיוּ תּוֹצָאוֹת.",
     "english": "We're working on it right now, we'll update when there are results.",
     "hebrew_tokens": [
       "אנחנו",
@@ -2173,6 +3184,16 @@ const SENTENCE_BANK = [
       "נעדכן",
       "כשיהיו",
       "תוצאות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנַחְנוּ",
+      "עוֹבְדִים",
+      "עַל",
+      "זֶה",
+      "כָּרֶגַע",
+      "נְעַדְכֵּן",
+      "כְּשֶׁיִּהְיוּ",
+      "תּוֹצָאוֹת"
     ],
     "english_tokens": [
       "We're",
@@ -2190,6 +3211,13 @@ const SENTENCE_BANK = [
       "נדווח",
       "מחר"
     ],
+    "hebrew_distractors_niqqud": [
+      "סִיַּמְנוּ",
+      "אַחֲרֵי",
+      "שִׁנּוּיִים",
+      "נְדַוֵּחַ",
+      "מָחָר"
+    ],
     "english_distractors": [
       "already finished",
       "after that",
@@ -2206,6 +3234,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "זה דורש אישור מההנהלה, אי אפשר להתקדם בלי זה.",
+    "hebrew_niqqud": "זֶה דּוֹרֵשׁ אִשּׁוּר מֵהַהַנְהָלָה, אִי אֶפְשָׁר לְהִתְקַדֵּם בְּלִי זֶה.",
     "english": "This requires approval from management, we can't proceed without it.",
     "hebrew_tokens": [
       "זה",
@@ -2217,6 +3246,17 @@ const SENTENCE_BANK = [
       "להתקדם",
       "בלי",
       "זה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "זֶה",
+      "דּוֹרֵשׁ",
+      "אִשּׁוּר",
+      "מֵהַהַנְהָלָה",
+      "אִי",
+      "אֶפְשָׁר",
+      "לְהִתְקַדֵּם",
+      "בְּלִי",
+      "זֶה"
     ],
     "english_tokens": [
       "This",
@@ -2235,6 +3275,13 @@ const SENTENCE_BANK = [
       "אישורים",
       "עם"
     ],
+    "hebrew_distractors_niqqud": [
+      "צָרִיךְ",
+      "הַסְכָּמָה",
+      "מֵהַצֶּוֶת",
+      "אִשּׁוּרִים",
+      "עַם"
+    ],
     "english_distractors": [
       "needs",
       "permission",
@@ -2251,6 +3298,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אפשר לקבל הבהרה בנושא הזה? זה לא לגמרי ברור.",
+    "hebrew_niqqud": "אֶפְשָׁר לְקַבֵּל הַבְהָרָה בַּנּוֹשֵׂא הַזֶּה? זֶה לֹא לְגַמְרֵי בָּרוּר.",
     "english": "Can we get clarification on this matter? It's not entirely clear.",
     "hebrew_tokens": [
       "אפשר",
@@ -2262,6 +3310,17 @@ const SENTENCE_BANK = [
       "לא",
       "לגמרי",
       "ברור"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֶפְשָׁר",
+      "לְקַבֵּל",
+      "הַבְהָרָה",
+      "בַּנּוֹשֵׂא",
+      "הַזֶּה",
+      "זֶה",
+      "לֹא",
+      "לְגַמְרֵי",
+      "בָּרוּר"
     ],
     "english_tokens": [
       "Can we get",
@@ -2276,6 +3335,13 @@ const SENTENCE_BANK = [
       "ההוא",
       "בכלל",
       "מובן"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הֶסְבֵּר",
+      "עַל",
+      "הַהוּא",
+      "בִּכְלָל",
+      "מוּבָן"
     ],
     "english_distractors": [
       "quick summary",
@@ -2293,6 +3359,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נשלח גרסה מעודכנת בהמשך היום, אחרי שנבצע תיקונים.",
+    "hebrew_niqqud": "נִשְׁלַח גִּרְסָה מְעֻדְכֶּנֶת בְּהֶמְשֵׁךְ הַיּוֹם, אַחֲרֵי שֶׁנְּבַצֵּעַ תִּקּוּנִים.",
     "english": "We'll send an updated version later today, after making revisions.",
     "hebrew_tokens": [
       "נשלח",
@@ -2303,6 +3370,16 @@ const SENTENCE_BANK = [
       "אחרי",
       "שנבצע",
       "תיקונים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִשְׁלַח",
+      "גִּרְסָה",
+      "מְעֻדְכֶּנֶת",
+      "בְּהֶמְשֵׁךְ",
+      "הַיּוֹם",
+      "אַחֲרֵי",
+      "שֶׁנְּבַצֵּעַ",
+      "תִּקּוּנִים"
     ],
     "english_tokens": [
       "We'll send",
@@ -2321,6 +3398,13 @@ const SENTENCE_BANK = [
       "מחר",
       "לפני",
       "שינויים"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נְקַבֵּל",
+      "יֶשְׁנָהּ",
+      "מָחָר",
+      "לִפְנֵי",
+      "שִׁנּוּיִים"
     ],
     "english_distractors": [
       "We'll receive",
@@ -2342,6 +3426,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "חשוב לעמוד בלוחות הזמנים, אחרת זה יעכב את כולם.",
+    "hebrew_niqqud": "חָשׁוּב לַעֲמֹד בְּלוּחוֹת הַזְּמַנִּים, אַחֶרֶת זֶה יְעַכֵּב אֶת כֻּלָּם.",
     "english": "It's important to meet the deadlines, otherwise it will delay everyone.",
     "hebrew_tokens": [
       "חשוב",
@@ -2353,6 +3438,17 @@ const SENTENCE_BANK = [
       "יעכב",
       "את",
       "כולם"
+    ],
+    "hebrew_tokens_niqqud": [
+      "חָשׁוּב",
+      "לַעֲמֹד",
+      "בְּלוּחוֹת",
+      "הַזְּמַנִּים",
+      "אַחֶרֶת",
+      "זֶה",
+      "יְעַכֵּב",
+      "אֶת",
+      "כֻּלָּם"
     ],
     "english_tokens": [
       "It's important",
@@ -2369,6 +3465,13 @@ const SENTENCE_BANK = [
       "התקציב",
       "אולי",
       "יעזור"
+    ],
+    "hebrew_distractors_niqqud": [
+      "קָשֶׁה",
+      "לִשְׁמֹר",
+      "הַתַּקְצִיב",
+      "אוּלַי",
+      "יַעֲזֹר"
     ],
     "english_distractors": [
       "It's difficult",
@@ -2388,6 +3491,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "יש לשקול את ההשלכות ארוכות הטווח לפני קבלת החלטה.",
+    "hebrew_niqqud": "יֵשׁ לִשְׁקֹל אֶת הַהַשְׁלָכוֹת אֲרֻכּוֹת הַטְּוָח לִפְנֵי קַבָּלַת הַחְלָטָה.",
     "english": "One must consider the long-term implications before making a decision.",
     "hebrew_tokens": [
       "יש",
@@ -2399,6 +3503,17 @@ const SENTENCE_BANK = [
       "לפני",
       "קבלת",
       "החלטה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לִשְׁקֹל",
+      "אֶת",
+      "הַהַשְׁלָכוֹת",
+      "אֲרֻכּוֹת",
+      "הַטְּוָח",
+      "לִפְנֵי",
+      "קַבָּלַת",
+      "הַחְלָטָה"
     ],
     "english_tokens": [
       "One must",
@@ -2416,9 +3531,24 @@ const SENTENCE_BANK = [
       "ההחלטה",
       "התוצאות"
     ],
+    "hebrew_distractors_niqqud": [
+      "לַחֲשֹׁב",
+      "קְצָרוֹת",
+      "אַחֲרֵי",
+      "הַהַחְלָטָה",
+      "הַתּוֹצָאוֹת"
+    ],
+    "english_distractors": [
+      "One should",
+      "ignore",
+      "the short-term",
+      "after",
+      "an opinion"
+    ],
     "hebrew_alternates": [
       {
         "text": "לפני קבלת החלטה יש לשקול את ההשלכות ארוכות הטווח.",
+        "text_niqqud": "לִפְנֵי קַבָּלַת הַחְלָטָה יֵשׁ לִשְׁקֹל אֶת הַהַשְׁלָכוֹת אֲרֻכּוֹת הַטְּוָח.",
         "tokens": [
           "לפני",
           "קבלת",
@@ -2429,15 +3559,19 @@ const SENTENCE_BANK = [
           "ההשלכות",
           "ארוכות",
           "הטווח"
+        ],
+        "tokens_niqqud": [
+          "לִפְנֵי",
+          "קַבָּלַת",
+          "הַחְלָטָה",
+          "יֵשׁ",
+          "לִשְׁקֹל",
+          "אֶת",
+          "הַהַשְׁלָכוֹת",
+          "אֲרֻכּוֹת",
+          "הַטְּוָח"
         ]
       }
-    ],
-    "english_distractors": [
-      "One should",
-      "ignore",
-      "the short-term",
-      "after",
-      "an opinion"
     ],
     "notes": "יש לשקול is formal register — colloquial would be צריך לחשוב על. Good test of register awareness."
   },
@@ -2448,6 +3582,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הנתונים מצביעים על מגמה ברורה, למרות התנודות הקטנות.",
+    "hebrew_niqqud": "הַנְּתוּנִים מַצְבִּיעִים עַל מְגַמָּה בְּרוּרָה, לַמְרוֹת הַתְּנוּדוֹת הַקְּטַנּוֹת.",
     "english": "The data indicate a clear trend, despite minor fluctuations.",
     "hebrew_tokens": [
       "הנתונים",
@@ -2458,6 +3593,16 @@ const SENTENCE_BANK = [
       "למרות",
       "התנודות",
       "הקטנות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַנְּתוּנִים",
+      "מַצְבִּיעִים",
+      "עַל",
+      "מְגַמָּה",
+      "בְּרוּרָה",
+      "לַמְרוֹת",
+      "הַתְּנוּדוֹת",
+      "הַקְּטַנּוֹת"
     ],
     "english_tokens": [
       "The data",
@@ -2475,9 +3620,24 @@ const SENTENCE_BANK = [
       "בגלל",
       "התוצאות"
     ],
+    "hebrew_distractors_niqqud": [
+      "מַרְאִים",
+      "שִׁנּוּי",
+      "גְּדוֹלוֹת",
+      "בִּגְלַל",
+      "הַתּוֹצָאוֹת"
+    ],
+    "english_distractors": [
+      "show",
+      "a vague",
+      "change",
+      "because of",
+      "major"
+    ],
     "hebrew_alternates": [
       {
         "text": "למרות התנודות הקטנות, הנתונים מצביעים על מגמה ברורה.",
+        "text_niqqud": "לַמְרוֹת הַתְּנוּדוֹת הַקְּטַנּוֹת, הַנְּתוּנִים מַצְבִּיעִים עַל מְגַמָּה בְּרוּרָה.",
         "tokens": [
           "למרות",
           "התנודות",
@@ -2487,15 +3647,18 @@ const SENTENCE_BANK = [
           "על",
           "מגמה",
           "ברורה"
+        ],
+        "tokens_niqqud": [
+          "לַמְרוֹת",
+          "הַתְּנוּדוֹת",
+          "הַקְּטַנּוֹת",
+          "הַנְּתוּנִים",
+          "מַצְבִּיעִים",
+          "עַל",
+          "מְגַמָּה",
+          "בְּרוּרָה"
         ]
       }
-    ],
-    "english_distractors": [
-      "show",
-      "a vague",
-      "change",
-      "because of",
-      "major"
     ],
     "notes": "מצביעים (indicate/point to) is more formal than מראים (show). למרות (despite) vs בגלל (because of) — causal logic distractor."
   },
@@ -2506,6 +3669,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "ניתן להסיק מכך כי המודל אינו יציב בתנאים מסוימים.",
+    "hebrew_niqqud": "נִתָּן לְהַסִּיק מִכָּךְ כִּי הַמּוֹדֵל אֵינוֹ יַצִּיב בִּתְנָאִים מְסֻיָּמִים.",
     "english": "It can be inferred from this that the model is not stable under certain conditions.",
     "hebrew_tokens": [
       "ניתן",
@@ -2517,6 +3681,17 @@ const SENTENCE_BANK = [
       "יציב",
       "בתנאים",
       "מסוימים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִתָּן",
+      "לְהַסִּיק",
+      "מִכָּךְ",
+      "כִּי",
+      "הַמּוֹדֵל",
+      "אֵינוֹ",
+      "יַצִּיב",
+      "בִּתְנָאִים",
+      "מְסֻיָּמִים"
     ],
     "english_tokens": [
       "It",
@@ -2541,6 +3716,13 @@ const SENTENCE_BANK = [
       "מדויק",
       "בכל"
     ],
+    "hebrew_distractors_niqqud": [
+      "אֶפְשָׁר",
+      "לִרְאוֹת",
+      "שֶׁהוּא",
+      "מְדֻיָּק",
+      "בְּכָל"
+    ],
     "english_distractors": [
       "can see",
       "look at",
@@ -2557,6 +3739,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "השאלה המרכזית היא כיצד ליישם זאת בפועל, ולא רק בתיאוריה.",
+    "hebrew_niqqud": "הַשְּׁאֵלָה הַמֶּרְכָּזִית הִיא כֵּיצַד לְיַשֵּׂם זֹאת בְּפֹעַל, וְלֹא רַק בַּתֵּאוֹרְיָה.",
     "english": "The central question is how to implement this in practice, not just in theory.",
     "hebrew_tokens": [
       "השאלה",
@@ -2569,6 +3752,18 @@ const SENTENCE_BANK = [
       "ולא",
       "רק",
       "בתיאוריה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַשְּׁאֵלָה",
+      "הַמֶּרְכָּזִית",
+      "הִיא",
+      "כֵּיצַד",
+      "לְיַשֵּׂם",
+      "זֹאת",
+      "בְּפֹעַל",
+      "וְלֹא",
+      "רַק",
+      "בַּתֵּאוֹרְיָה"
     ],
     "english_tokens": [
       "The central question",
@@ -2588,6 +3783,13 @@ const SENTENCE_BANK = [
       "בעיקרון",
       "החשובה"
     ],
+    "hebrew_distractors_niqqud": [
+      "מַדּוּעַ",
+      "לַעֲשׂוֹת",
+      "אֶת",
+      "בְּעִקָּרוֹן",
+      "הַחֲשׁוּבָה"
+    ],
     "english_distractors": [
       "to do",
       "in principle",
@@ -2604,6 +3806,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "קיימת שונות משמעותית בין הקבוצות, ויש להסביר אותה.",
+    "hebrew_niqqud": "קַיֶּמֶת שׁוֹנוּת מַשְׁמָעוּתִית בֵּין הַקְּבוּצוֹת, וְיֵשׁ לְהַסְבִּיר אוֹתָהּ.",
     "english": "There is significant variation between the groups, and it must be explained.",
     "hebrew_tokens": [
       "קיימת",
@@ -2614,6 +3817,16 @@ const SENTENCE_BANK = [
       "ויש",
       "להסביר",
       "אותה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "קַיֶּמֶת",
+      "שׁוֹנוּת",
+      "מַשְׁמָעוּתִית",
+      "בֵּין",
+      "הַקְּבוּצוֹת",
+      "וְיֵשׁ",
+      "לְהַסְבִּיר",
+      "אוֹתָהּ"
     ],
     "english_tokens": [
       "There is",
@@ -2629,6 +3842,14 @@ const SENTENCE_BANK = [
       "בתוך",
       "לבדוק",
       "אותו"
+    ],
+    "hebrew_distractors_niqqud": [
+      "קַיָּם",
+      "הֶבְדֵּל",
+      "קְטַנָּה",
+      "בְּתוֹךְ",
+      "לִבְדֹּק",
+      "אוֹתוֹ"
     ],
     "english_distractors": [
       "There was",
@@ -2646,6 +3867,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הניתוח מבוסס על מספר הנחות יסוד, שייתכן שאינן מדויקות.",
+    "hebrew_niqqud": "הַנִּתּוּחַ מְבֻסָּס עַל מִסְפַּר הֲנָחוֹת יְסוֹד, שֶׁיִּתָּכֵן שֶׁאֵינָן מְדֻיָּקוֹת.",
     "english": "The analysis is based on several assumptions, which may not be accurate.",
     "hebrew_tokens": [
       "הניתוח",
@@ -2657,6 +3879,17 @@ const SENTENCE_BANK = [
       "שייתכן",
       "שאינן",
       "מדויקות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַנִּתּוּחַ",
+      "מְבֻסָּס",
+      "עַל",
+      "מִסְפַּר",
+      "הֲנָחוֹת",
+      "יְסוֹד",
+      "שֶׁיִּתָּכֵן",
+      "שֶׁאֵינָן",
+      "מְדֻיָּקוֹת"
     ],
     "english_tokens": [
       "The analysis",
@@ -2672,6 +3905,13 @@ const SENTENCE_BANK = [
       "הרבה",
       "שאינם",
       "מוכחות"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַמֶּחְקָר",
+      "תָּלוּי",
+      "הַרְבֵּה",
+      "שֶׁאֵינָם",
+      "מוּכָחוֹת"
     ],
     "english_distractors": [
       "The research",
@@ -2689,6 +3929,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "יש לבחון את האפשרויות השונות לעומק לפני בחירה.",
+    "hebrew_niqqud": "יֵשׁ לִבְחֹן אֶת הָאֶפְשָׁרוּיוֹת הַשּׁוֹנוֹת לָעֹמֶק לִפְנֵי בְּחִירָה.",
     "english": "The different options should be examined in depth before choosing.",
     "hebrew_tokens": [
       "יש",
@@ -2699,6 +3940,16 @@ const SENTENCE_BANK = [
       "לעומק",
       "לפני",
       "בחירה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לִבְחֹן",
+      "אֶת",
+      "הָאֶפְשָׁרוּיוֹת",
+      "הַשּׁוֹנוֹת",
+      "לָעֹמֶק",
+      "לִפְנֵי",
+      "בְּחִירָה"
     ],
     "english_tokens": [
       "The different",
@@ -2716,9 +3967,24 @@ const SENTENCE_BANK = [
       "אחרי",
       "החלטה"
     ],
+    "hebrew_distractors_niqqud": [
+      "לִבְדֹּק",
+      "הַדְּרָכִים",
+      "בִּמְהִירוּת",
+      "אַחֲרֵי",
+      "הַחְלָטָה"
+    ],
+    "english_distractors": [
+      "The same",
+      "methods",
+      "can be",
+      "reviewed",
+      "after"
+    ],
     "hebrew_alternates": [
       {
         "text": "לפני בחירה יש לבחון את האפשרויות השונות לעומק.",
+        "text_niqqud": "לִפְנֵי בְּחִירָה יֵשׁ לִבְחֹן אֶת הָאֶפְשָׁרוּיוֹת הַשּׁוֹנוֹת לָעֹמֶק.",
         "tokens": [
           "לפני",
           "בחירה",
@@ -2728,15 +3994,18 @@ const SENTENCE_BANK = [
           "האפשרויות",
           "השונות",
           "לעומק"
+        ],
+        "tokens_niqqud": [
+          "לִפְנֵי",
+          "בְּחִירָה",
+          "יֵשׁ",
+          "לִבְחֹן",
+          "אֶת",
+          "הָאֶפְשָׁרוּיוֹת",
+          "הַשּׁוֹנוֹת",
+          "לָעֹמֶק"
         ]
       }
-    ],
-    "english_distractors": [
-      "The same",
-      "methods",
-      "can be",
-      "reviewed",
-      "after"
     ],
     "notes": "לעומק (in depth) vs במהירות (quickly) — contrasting manner adverbs. יש לבחון is formal impersonal obligation."
   },
@@ -2747,6 +4016,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הממצאים תומכים בהשערה הראשונית, אך לא באופן מלא.",
+    "hebrew_niqqud": "הַמִּמְצָאִים תּוֹמְכִים בַּהַשְׁעָרָה הָרִאשׁוֹנִית, אַךְ לֹא בְּאֹפֶן מָלֵא.",
     "english": "The findings support the initial hypothesis, but not completely.",
     "hebrew_tokens": [
       "הממצאים",
@@ -2757,6 +4027,16 @@ const SENTENCE_BANK = [
       "לא",
       "באופן",
       "מלא"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַמִּמְצָאִים",
+      "תּוֹמְכִים",
+      "בַּהַשְׁעָרָה",
+      "הָרִאשׁוֹנִית",
+      "אַךְ",
+      "לֹא",
+      "בְּאֹפֶן",
+      "מָלֵא"
     ],
     "english_tokens": [
       "The findings",
@@ -2774,6 +4054,13 @@ const SENTENCE_BANK = [
       "לכן",
       "חלקי"
     ],
+    "hebrew_distractors_niqqud": [
+      "הַתּוֹצָאוֹת",
+      "סוֹתְרִים",
+      "הַסּוֹפִית",
+      "לָכֵן",
+      "חֶלְקִי"
+    ],
     "english_distractors": [
       "The results",
       "contradict",
@@ -2790,6 +4077,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "מדובר בתופעה מורכבת ורב-ממדית, שקשה להגדיר בפשטות.",
+    "hebrew_niqqud": "מְדֻבָּר בְּתוֹפָעָה מֻרְכֶּבֶת וְרַב-מְמַדִּית, שֶׁקָּשֶׁה לְהַגְדִּיר בְּפַשְׁטוּת.",
     "english": "This is a complex, multi-dimensional phenomenon that is difficult to define simply.",
     "hebrew_tokens": [
       "מדובר",
@@ -2799,6 +4087,15 @@ const SENTENCE_BANK = [
       "שקשה",
       "להגדיר",
       "בפשטות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "מְדֻבָּר",
+      "בְּתוֹפָעָה",
+      "מֻרְכֶּבֶת",
+      "וְרַב-מְמַדִּית",
+      "שֶׁקָּשֶׁה",
+      "לְהַגְדִּיר",
+      "בְּפַשְׁטוּת"
     ],
     "english_tokens": [
       "This is",
@@ -2816,6 +4113,13 @@ const SENTENCE_BANK = [
       "שקל",
       "במדויק"
     ],
+    "hebrew_distractors_niqqud": [
+      "בִּבְעָיָה",
+      "פְּשׁוּטָה",
+      "לְהַסְבִּיר",
+      "שֶׁקֶל",
+      "בִּמְדֻיָּק"
+    ],
     "english_distractors": [
       "the problem",
       "very simple",
@@ -2832,6 +4136,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "יש להבחין בין סיבה לתוצאה, אחרת נגיע למסקנות שגויות.",
+    "hebrew_niqqud": "יֵשׁ לְהַבְחִין בֵּין סִבָּה לְתוֹצָאָה, אַחֶרֶת נַגִּיעַ לְמַסְקָנוֹת שְׁגוּיוֹת.",
     "english": "One must distinguish between cause and effect, otherwise we'll reach incorrect conclusions.",
     "hebrew_tokens": [
       "יש",
@@ -2843,6 +4148,17 @@ const SENTENCE_BANK = [
       "נגיע",
       "למסקנות",
       "שגויות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לְהַבְחִין",
+      "בֵּין",
+      "סִבָּה",
+      "לְתוֹצָאָה",
+      "אַחֶרֶת",
+      "נַגִּיעַ",
+      "לְמַסְקָנוֹת",
+      "שְׁגוּיוֹת"
     ],
     "english_tokens": [
       "One must",
@@ -2862,6 +4178,13 @@ const SENTENCE_BANK = [
       "להנחה",
       "נכונות",
       "נבין"
+    ],
+    "hebrew_distractors_niqqud": [
+      "לְהַפְרִיד",
+      "וּבֵין",
+      "לַהֲנָחָה",
+      "נְכוֹנוּת",
+      "נָבִין"
     ],
     "english_distractors": [
       "One should",
@@ -2883,6 +4206,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הטקס התקיים באולם המרכזי אחרי השקיעה.",
+    "hebrew_niqqud": "הַטֶּקֶס הִתְקַיֵּם בָּאוּלָם הַמֶּרְכָּזִי אַחֲרֵי הַשְּׁקִיעָה.",
     "english": "The ceremony was held in the main hall after sunset.",
     "hebrew_tokens": [
       "הטקס",
@@ -2891,6 +4215,14 @@ const SENTENCE_BANK = [
       "המרכזי",
       "אחרי",
       "השקיעה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַטֶּקֶס",
+      "הִתְקַיֵּם",
+      "בָּאוּלָם",
+      "הַמֶּרְכָּזִי",
+      "אַחֲרֵי",
+      "הַשְּׁקִיעָה"
     ],
     "english_tokens": [
       "The ceremony",
@@ -2904,6 +4236,13 @@ const SENTENCE_BANK = [
       "בחדר",
       "הקטן",
       "לפני"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַדִּיּוּן",
+      "בֻּטַּל",
+      "בַּחֶדֶר",
+      "הַקָּטָן",
+      "לִפְנֵי"
     ],
     "english_distractors": [
       "The meeting",
@@ -2920,6 +4259,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הדיון התקיים בזום ולא במשרד.",
+    "hebrew_niqqud": "הַדִּיּוּן הִתְקַיֵּם בְּזוּם וְלֹא בַּמִּשְׂרָד.",
     "english": "The discussion took place on Zoom, not in the office.",
     "hebrew_tokens": [
       "הדיון",
@@ -2927,6 +4267,13 @@ const SENTENCE_BANK = [
       "בזום",
       "ולא",
       "במשרד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַדִּיּוּן",
+      "הִתְקַיֵּם",
+      "בְּזוּם",
+      "וְלֹא",
+      "בַּמִּשְׂרָד"
     ],
     "english_tokens": [
       "The discussion",
@@ -2941,6 +4288,13 @@ const SENTENCE_BANK = [
       "בטלפון",
       "וגם",
       "באולם"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַטֶּקֶס",
+      "נִדְחָה",
+      "בַּטֵּלֵפוֹן",
+      "וְגַם",
+      "בָּאוּלָם"
     ],
     "english_distractors": [
       "The ceremony",
@@ -2958,6 +4312,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "קיים פתרון פשוט יותר לבעיה הזאת.",
+    "hebrew_niqqud": "קַיָּם פִּתְרוֹן פָּשׁוּט יוֹתֵר לַבְּעָיָה הַזֹּאת.",
     "english": "There is a simpler solution to this problem.",
     "hebrew_tokens": [
       "קיים",
@@ -2966,6 +4321,14 @@ const SENTENCE_BANK = [
       "יותר",
       "לבעיה",
       "הזאת"
+    ],
+    "hebrew_tokens_niqqud": [
+      "קַיָּם",
+      "פִּתְרוֹן",
+      "פָּשׁוּט",
+      "יוֹתֵר",
+      "לַבְּעָיָה",
+      "הַזֹּאת"
     ],
     "english_tokens": [
       "There is",
@@ -2982,6 +4345,13 @@ const SENTENCE_BANK = [
       "מורכב",
       "פחות",
       "לשאלה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "קַיֶּמֶת",
+      "סִכּוּן",
+      "מֻרְכָּב",
+      "פָּחוֹת",
+      "לַשְּׁאֵלָה"
     ],
     "english_distractors": [
       "There are",
@@ -3002,6 +4372,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "קיימים כמה סיכונים שצריך לקחת בחשבון.",
+    "hebrew_niqqud": "קַיָּמִים כַּמָּה סִכּוּנִים שֶׁצָּרִיךְ לָקַחַת בְּחֶשְׁבּוֹן.",
     "english": "There are several risks that need to be taken into account.",
     "hebrew_tokens": [
       "קיימים",
@@ -3010,6 +4381,14 @@ const SENTENCE_BANK = [
       "שצריך",
       "לקחת",
       "בחשבון"
+    ],
+    "hebrew_tokens_niqqud": [
+      "קַיָּמִים",
+      "כַּמָּה",
+      "סִכּוּנִים",
+      "שֶׁצָּרִיךְ",
+      "לָקַחַת",
+      "בְּחֶשְׁבּוֹן"
     ],
     "english_tokens": [
       "There are",
@@ -3025,6 +4404,13 @@ const SENTENCE_BANK = [
       "יתרונות",
       "שאפשר",
       "להתעלם"
+    ],
+    "hebrew_distractors_niqqud": [
+      "קַיָּם",
+      "הַרְבֵּה",
+      "יִתְרוֹנוֹת",
+      "שֶׁאֶפְשָׁר",
+      "לְהִתְעַלֵּם"
     ],
     "english_distractors": [
       "There is",
@@ -3042,6 +4428,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "ההסכם עדיין קיים למרות השינויים.",
+    "hebrew_niqqud": "הַהֶסְכֵּם עֲדַיִן קַיָּם לַמְרוֹת הַשִּׁנּוּיִים.",
     "english": "The agreement still exists despite the changes.",
     "hebrew_tokens": [
       "ההסכם",
@@ -3049,6 +4436,13 @@ const SENTENCE_BANK = [
       "קיים",
       "למרות",
       "השינויים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַהֶסְכֵּם",
+      "עֲדַיִן",
+      "קַיָּם",
+      "לַמְרוֹת",
+      "הַשִּׁנּוּיִים"
     ],
     "english_tokens": [
       "The agreement",
@@ -3062,6 +4456,13 @@ const SENTENCE_BANK = [
       "בוטל",
       "בגלל",
       "הבעיות"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַמִּסְמָךְ",
+      "כְּבָר",
+      "בֻּטַּל",
+      "בִּגְלַל",
+      "הַבְּעָיוֹת"
     ],
     "english_distractors": [
       "The document",
@@ -3078,6 +4479,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הפתרון הזה בר קיימא גם בטווח הארוך.",
+    "hebrew_niqqud": "הַפִּתְרוֹן הַזֶּה בַּר קְיָמָא גַּם בַּטְּוָח הָאָרֹךְ.",
     "english": "This solution is sustainable even in the long term.",
     "hebrew_tokens": [
       "הפתרון",
@@ -3086,6 +4488,14 @@ const SENTENCE_BANK = [
       "גם",
       "בטווח",
       "הארוך"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַפִּתְרוֹן",
+      "הַזֶּה",
+      "בַּר קְיָמָא",
+      "גַּם",
+      "בַּטְּוָח",
+      "הָאָרֹךְ"
     ],
     "english_tokens": [
       "This solution",
@@ -3099,6 +4509,13 @@ const SENTENCE_BANK = [
       "לא יציב",
       "רק",
       "בטווח קצר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הָרַעֲיוֹן",
+      "הַהוּא",
+      "לֹא יַצִּיב",
+      "רַק",
+      "בִּטְוָח קָצָר"
     ],
     "english_distractors": [
       "That idea",
@@ -3115,6 +4532,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "קיום חיים מחוץ לכדור הארץ עדיין לא הוכח.",
+    "hebrew_niqqud": "קִיּוּם חַיִּים מִחוּץ לְכַדּוּר הָאָרֶץ עֲדַיִן לֹא הוּכַח.",
     "english": "The existence of life outside Earth has not yet been proven.",
     "hebrew_tokens": [
       "קיום",
@@ -3125,6 +4543,16 @@ const SENTENCE_BANK = [
       "עדיין",
       "לא",
       "הוכח"
+    ],
+    "hebrew_tokens_niqqud": [
+      "קִיּוּם",
+      "חַיִּים",
+      "מִחוּץ",
+      "לְכַדּוּר",
+      "הָאָרֶץ",
+      "עֲדַיִן",
+      "לֹא",
+      "הוּכַח"
     ],
     "english_tokens": [
       "The existence",
@@ -3144,6 +4572,14 @@ const SENTENCE_BANK = [
       "כבר",
       "אושר"
     ],
+    "hebrew_distractors_niqqud": [
+      "סִיּוּם",
+      "מֶחְקָר",
+      "בְּתוֹךְ",
+      "הַמַּעְבָּדָה",
+      "כְּבָר",
+      "אֹשֶׁר"
+    ],
     "english_distractors": [
       "The end",
       "of research",
@@ -3162,6 +4598,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "בשבילו זו לא בעיה טכנית, אלא משבר קיומי.",
+    "hebrew_niqqud": "בִּשְׁבִילוֹ זוֹ לֹא בְּעָיָה טֶכְנִית, אֶלָּא מַשְׁבֵּר קִיּוּמִי.",
     "english": "For him, this is not a technical problem, but an existential crisis.",
     "hebrew_tokens": [
       "בשבילו",
@@ -3172,6 +4609,16 @@ const SENTENCE_BANK = [
       "אלא",
       "משבר",
       "קיומי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בִּשְׁבִילוֹ",
+      "זוֹ",
+      "לֹא",
+      "בְּעָיָה",
+      "טֶכְנִית",
+      "אֶלָּא",
+      "מַשְׁבֵּר",
+      "קִיּוּמִי"
     ],
     "english_tokens": [
       "For him",
@@ -3187,6 +4634,14 @@ const SENTENCE_BANK = [
       "מעשית",
       "וגם",
       "דיון"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בִּשְׁבִילָהּ",
+      "זֶה",
+      "שָׁאֲלָה",
+      "מַעֲשִׂית",
+      "וְגַם",
+      "דִּיּוּן"
     ],
     "english_distractors": [
       "For her",
@@ -3204,6 +4659,7 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "קיימות היא לא רק סיסמה אלא דרך עבודה.",
+    "hebrew_niqqud": "קַיָּמוֹת הִיא לֹא רַק סִיסְמָה אֶלָּא דֶּרֶךְ עֲבוֹדָה.",
     "english": "Sustainability is not just a slogan but a way of working.",
     "hebrew_tokens": [
       "קיימות",
@@ -3214,6 +4670,16 @@ const SENTENCE_BANK = [
       "אלא",
       "דרך",
       "עבודה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "קַיָּמוֹת",
+      "הִיא",
+      "לֹא",
+      "רַק",
+      "סִיסְמָה",
+      "אֶלָּא",
+      "דֶּרֶךְ",
+      "עֲבוֹדָה"
     ],
     "english_tokens": [
       "Sustainability",
@@ -3229,6 +4695,14 @@ const SENTENCE_BANK = [
       "כותרת",
       "וגם",
       "שיטת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "יְעִילוּת",
+      "זֶה",
+      "בְּעִקָּר",
+      "כּוֹתֶרֶת",
+      "וְגַם",
+      "שִׁיטַת"
     ],
     "english_distractors": [
       "Efficiency",
@@ -3246,11 +4720,65 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "כמה זה? נו, תן לי מחיר טוב ואני לוקח שניים.",
+    "hebrew_niqqud": "כַּמָּה זֶה? נוּ, תֵּן לִי מְחִיר טוֹב וַאֲנִי לוֹקֵחַ שְׁנַיִם.",
     "english": "How much is this? Come on, give me a good price and I'll take two.",
-    "hebrew_tokens": ["כמה", "זה", "נו", "תן", "לי", "מחיר", "טוב", "ואני", "לוקח", "שניים"],
-    "english_tokens": ["How much", "is this", "Come on", "give", "me", "a good", "price", "and", "I'll take", "two"],
-    "hebrew_distractors": ["יקר", "זול", "מוכר", "אחד", "עכשיו"],
-    "english_distractors": ["That's too expensive", "the cheapest one", "I'll sell", "just one", "right now"],
+    "hebrew_tokens": [
+      "כמה",
+      "זה",
+      "נו",
+      "תן",
+      "לי",
+      "מחיר",
+      "טוב",
+      "ואני",
+      "לוקח",
+      "שניים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "כַּמָּה",
+      "זֶה",
+      "נוּ",
+      "תֵּן",
+      "לִי",
+      "מְחִיר",
+      "טוֹב",
+      "וַאֲנִי",
+      "לוֹקֵחַ",
+      "שְׁנַיִם"
+    ],
+    "english_tokens": [
+      "How much",
+      "is this",
+      "Come on",
+      "give",
+      "me",
+      "a good",
+      "price",
+      "and",
+      "I'll take",
+      "two"
+    ],
+    "hebrew_distractors": [
+      "יקר",
+      "זול",
+      "מוכר",
+      "אחד",
+      "עכשיו"
+    ],
+    "hebrew_distractors_niqqud": [
+      "יָקָר",
+      "זוֹל",
+      "מוֹכֵר",
+      "אֶחָד",
+      "עַכְשָׁו"
+    ],
+    "english_distractors": [
+      "That's too expensive",
+      "the cheapest one",
+      "I'll sell",
+      "just one",
+      "right now"
+    ],
     "notes": "נו is an all-purpose nudge — 'come on / well.' Haggling at the שוק (market) is expected, not rude."
   },
   {
@@ -3260,11 +4788,59 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "חצי מנה בפיתה, עם הכול ובלי חריף בבקשה.",
+    "hebrew_niqqud": "חֲצִי מָנָה בְּפִתָּה, עִם הַכֹּל וּבְלִי חָרִיף בְּבַקָּשָׁה.",
     "english": "Half a portion in a pita, with everything and without spicy please.",
-    "hebrew_tokens": ["חצי", "מנה", "בפיתה", "עם", "הכול", "ובלי", "חריף", "בבקשה"],
-    "english_tokens": ["Half", "a portion", "in a pita", "with", "everything", "and without", "spicy", "please"],
-    "hebrew_distractors": ["שלמה", "בלאפה", "חסה", "מתוק", "פלאפל"],
-    "english_distractors": ["A full portion", "in a laffa", "with salad", "extra sauce", "no salt"],
+    "hebrew_tokens": [
+      "חצי",
+      "מנה",
+      "בפיתה",
+      "עם",
+      "הכול",
+      "ובלי",
+      "חריף",
+      "בבקשה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "חֲצִי",
+      "מָנָה",
+      "בְּפִתָּה",
+      "עִם",
+      "הַכֹּל",
+      "וּבְלִי",
+      "חָרִיף",
+      "בְּבַקָּשָׁה"
+    ],
+    "english_tokens": [
+      "Half",
+      "a portion",
+      "in a pita",
+      "with",
+      "everything",
+      "and without",
+      "spicy",
+      "please"
+    ],
+    "hebrew_distractors": [
+      "שלמה",
+      "בלאפה",
+      "חסה",
+      "מתוק",
+      "פלאפל"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שְׁלֹמֹה",
+      "בְּלָאפָה",
+      "חַסָּה",
+      "מָתוֹק",
+      "פָלָאפֶל"
+    ],
+    "english_distractors": [
+      "A full portion",
+      "in a laffa",
+      "with salad",
+      "extra sauce",
+      "no salt"
+    ],
     "notes": "עם הכול ('with everything') is the standard way to order toppings; חריף = spicy/hot sauce."
   },
   {
@@ -3274,11 +4850,58 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "האוכל שם היה חבל על הזמן, חייבים לחזור.",
+    "hebrew_niqqud": "הָאֹכֶל שָׁם הָיָה חֲבָל עַל הַזְּמַן, חַיָּבִים לַחְזֹר.",
     "english": "The food there was amazing, we have to go back.",
-    "hebrew_tokens": ["האוכל", "שם", "היה", "חבל", "על", "הזמן", "חייבים", "לחזור"],
-    "english_tokens": ["The food", "there", "was", "amazing", "we", "have to", "go back"],
-    "hebrew_distractors": ["גרוע", "פעם", "אסור", "להישאר", "יקר"],
-    "english_distractors": ["was terrible", "we shouldn't", "stay home", "next time", "too pricey"],
+    "hebrew_tokens": [
+      "האוכל",
+      "שם",
+      "היה",
+      "חבל",
+      "על",
+      "הזמן",
+      "חייבים",
+      "לחזור"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הָאֹכֶל",
+      "שָׁם",
+      "הָיָה",
+      "חֲבָל",
+      "עַל",
+      "הַזְּמַן",
+      "חַיָּבִים",
+      "לַחְזֹר"
+    ],
+    "english_tokens": [
+      "The food",
+      "there",
+      "was",
+      "amazing",
+      "we",
+      "have to",
+      "go back"
+    ],
+    "hebrew_distractors": [
+      "גרוע",
+      "פעם",
+      "אסור",
+      "להישאר",
+      "יקר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "גָּרוּעַ",
+      "פַּעַם",
+      "אָסוּר",
+      "לְהִשָּׁאֵר",
+      "יָקָר"
+    ],
+    "english_distractors": [
+      "was terrible",
+      "we shouldn't",
+      "stay home",
+      "next time",
+      "too pricey"
+    ],
     "notes": "חבל על הזמן literally means 'a waste of time,' but in slang it's high praise — 'amazing / out of this world.' Tone decides the meaning."
   },
   {
@@ -3288,11 +4911,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "השירות במסעדה הזאת היה ממש על הפנים.",
+    "hebrew_niqqud": "הַשֵּׁרוּת בַּמִּסְעָדָה הַזֹּאת הָיָה מַמָּשׁ עַל הַפָּנִים.",
     "english": "The service at this restaurant was really terrible.",
-    "hebrew_tokens": ["השירות", "במסעדה", "הזאת", "היה", "ממש", "על", "הפנים"],
-    "english_tokens": ["The service", "at", "this restaurant", "was", "really", "terrible"],
-    "hebrew_distractors": ["האוכל", "מצוין", "קצת", "מהיר", "נחמד"],
-    "english_distractors": ["The food", "was excellent", "a little", "quite fast", "very friendly"],
+    "hebrew_tokens": [
+      "השירות",
+      "במסעדה",
+      "הזאת",
+      "היה",
+      "ממש",
+      "על",
+      "הפנים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַשֵּׁרוּת",
+      "בַּמִּסְעָדָה",
+      "הַזֹּאת",
+      "הָיָה",
+      "מַמָּשׁ",
+      "עַל",
+      "הַפָּנִים"
+    ],
+    "english_tokens": [
+      "The service",
+      "at",
+      "this restaurant",
+      "was",
+      "really",
+      "terrible"
+    ],
+    "hebrew_distractors": [
+      "האוכל",
+      "מצוין",
+      "קצת",
+      "מהיר",
+      "נחמד"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הָאֹכֶל",
+      "מְצֻיָּן",
+      "קְצָת",
+      "מָהִיר",
+      "נֶחְמָד"
+    ],
+    "english_distractors": [
+      "The food",
+      "was excellent",
+      "a little",
+      "quite fast",
+      "very friendly"
+    ],
     "notes": "על הפנים (literally 'on the face') is slang for 'awful / lousy' — used for service, weather, or how you feel."
   },
   {
@@ -3302,15 +4969,95 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "שוב נפגשנו במקרה? פעם שלישית גלידה!",
+    "hebrew_niqqud": "שׁוּב נִפְגַּשְׁנוּ בְּמִקְרֶה? פַּעַם שְׁלִישִׁית גְּלִידָה!",
     "english": "We met by chance again? Third time you owe me ice cream!",
-    "hebrew_tokens": ["שוב", "נפגשנו", "במקרה", "פעם", "שלישית", "גלידה"],
-    "english_tokens": ["We met", "by chance", "again", "Third time", "you owe me", "ice cream"],
-    "hebrew_alternates": [
-      { "text": "נפגשנו שוב במקרה? פעם שלישית גלידה!", "tokens": ["נפגשנו", "שוב", "במקרה", "פעם", "שלישית", "גלידה"] },
-      { "text": "נפגשנו במקרה שוב? פעם שלישית גלידה!", "tokens": ["נפגשנו", "במקרה", "שוב", "פעם", "שלישית", "גלידה"] }
+    "hebrew_tokens": [
+      "שוב",
+      "נפגשנו",
+      "במקרה",
+      "פעם",
+      "שלישית",
+      "גלידה"
     ],
-    "hebrew_distractors": ["אולי", "בכוונה", "ראשונה", "קפה", "שוקולד"],
-    "english_distractors": ["on purpose", "the first time", "coffee's on you", "by mistake", "tomorrow"],
+    "hebrew_tokens_niqqud": [
+      "שׁוּב",
+      "נִפְגַּשְׁנוּ",
+      "בְּמִקְרֶה",
+      "פַּעַם",
+      "שְׁלִישִׁית",
+      "גְּלִידָה"
+    ],
+    "english_tokens": [
+      "We met",
+      "by chance",
+      "again",
+      "Third time",
+      "you owe me",
+      "ice cream"
+    ],
+    "hebrew_distractors": [
+      "אולי",
+      "בכוונה",
+      "ראשונה",
+      "קפה",
+      "שוקולד"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אוּלַי",
+      "בְּכַוָּנָה",
+      "רִאשׁוֹנָה",
+      "קָפֶה",
+      "שׁוֹקוֹלָד"
+    ],
+    "english_distractors": [
+      "on purpose",
+      "the first time",
+      "coffee's on you",
+      "by mistake",
+      "tomorrow"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "נפגשנו שוב במקרה? פעם שלישית גלידה!",
+        "text_niqqud": "נִפְגַּשְׁנוּ שׁוּב בְּמִקְרֶה? פַּעַם שְׁלִישִׁית גְּלִידָה!",
+        "tokens": [
+          "נפגשנו",
+          "שוב",
+          "במקרה",
+          "פעם",
+          "שלישית",
+          "גלידה"
+        ],
+        "tokens_niqqud": [
+          "נִפְגַּשְׁנוּ",
+          "שׁוּב",
+          "בְּמִקְרֶה",
+          "פַּעַם",
+          "שְׁלִישִׁית",
+          "גְּלִידָה"
+        ]
+      },
+      {
+        "text": "נפגשנו במקרה שוב? פעם שלישית גלידה!",
+        "text_niqqud": "נִפְגַּשְׁנוּ בְּמִקְרֶה שׁוּב? פַּעַם שְׁלִישִׁית גְּלִידָה!",
+        "tokens": [
+          "נפגשנו",
+          "במקרה",
+          "שוב",
+          "פעם",
+          "שלישית",
+          "גלידה"
+        ],
+        "tokens_niqqud": [
+          "נִפְגַּשְׁנוּ",
+          "בְּמִקְרֶה",
+          "שׁוּב",
+          "פַּעַם",
+          "שְׁלִישִׁית",
+          "גְּלִידָה"
+        ]
+      }
+    ],
     "notes": "פעם שלישית גלידה ('third time, ice cream') is a playful saying — keep bumping into someone and the third time 'earns' a treat. Israel's 'we have to stop meeting like this.'"
   },
   {
@@ -3320,11 +5067,56 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "לקחתי מספר ואני כבר מחכה שעה בתור.",
+    "hebrew_niqqud": "לָקַחְתִּי מִסְפָּר וַאֲנִי כְּבָר מְחַכֶּה שָׁעָה בַּתּוֹר.",
     "english": "I took a number and I've already been waiting an hour in line.",
-    "hebrew_tokens": ["לקחתי", "מספר", "ואני", "כבר", "מחכה", "שעה", "בתור"],
-    "english_tokens": ["I took", "a number", "and I've", "already", "been waiting", "an hour", "in line"],
-    "hebrew_distractors": ["שכחתי", "טופס", "הלכתי", "דקה", "בבית"],
-    "english_distractors": ["I forgot", "a form", "for a minute", "I left", "at the desk"],
+    "hebrew_tokens": [
+      "לקחתי",
+      "מספר",
+      "ואני",
+      "כבר",
+      "מחכה",
+      "שעה",
+      "בתור"
+    ],
+    "hebrew_tokens_niqqud": [
+      "לָקַחְתִּי",
+      "מִסְפָּר",
+      "וַאֲנִי",
+      "כְּבָר",
+      "מְחַכֶּה",
+      "שָׁעָה",
+      "בַּתּוֹר"
+    ],
+    "english_tokens": [
+      "I took",
+      "a number",
+      "and I've",
+      "already",
+      "been waiting",
+      "an hour",
+      "in line"
+    ],
+    "hebrew_distractors": [
+      "שכחתי",
+      "טופס",
+      "הלכתי",
+      "דקה",
+      "בבית"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שָׁכַחְתִּי",
+      "טֹפֶס",
+      "הָלַכְתִּי",
+      "דַּקָּה",
+      "בַּבַּיִת"
+    ],
+    "english_distractors": [
+      "I forgot",
+      "a form",
+      "for a minute",
+      "I left",
+      "at the desk"
+    ],
     "notes": "Standing בתור (in line) and taking a מספר (number) is a rite of passage at any Israeli office or clinic. כבר here adds the 'already' impatience."
   },
   {
@@ -3334,17 +5126,80 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "בוא נלך לים לפני שיהיה חם מדי.",
+    "hebrew_niqqud": "בּוֹא נֵלֵךְ לַיָּם לִפְנֵי שֶׁיִּהְיֶה חַם מִדַּי.",
     "english": "Let's go to the beach before it gets too hot.",
-    "hebrew_tokens": ["בוא", "נלך", "לים", "לפני", "שיהיה", "חם", "מדי"],
-    "english_tokens": ["Let's", "go", "to the beach", "before", "it gets", "too", "hot"],
-    "hebrew_distractors": ["נישאר", "לפארק", "אחרי", "קר", "עכשיו"],
+    "hebrew_tokens": [
+      "בוא",
+      "נלך",
+      "לים",
+      "לפני",
+      "שיהיה",
+      "חם",
+      "מדי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בּוֹא",
+      "נֵלֵךְ",
+      "לַיָּם",
+      "לִפְנֵי",
+      "שֶׁיִּהְיֶה",
+      "חַם",
+      "מִדַּי"
+    ],
+    "english_tokens": [
+      "Let's",
+      "go",
+      "to the beach",
+      "before",
+      "it gets",
+      "too",
+      "hot"
+    ],
+    "hebrew_distractors": [
+      "נישאר",
+      "לפארק",
+      "אחרי",
+      "קר",
+      "עכשיו"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נִשָּׁאֵר",
+      "לַפַּארְק",
+      "אַחֲרֵי",
+      "קַר",
+      "עַכְשָׁו"
+    ],
+    "english_distractors": [
+      "Let's stay",
+      "to the park",
+      "after",
+      "too cold",
+      "later"
+    ],
     "hebrew_alternates": [
       {
         "text": "לפני שיהיה חם מדי, בוא נלך לים.",
-        "tokens": ["לפני", "שיהיה", "חם", "מדי", "בוא", "נלך", "לים"]
+        "text_niqqud": "לִפְנֵי שֶׁיִּהְיֶה חַם מִדַּי, בּוֹא נֵלֵךְ לַיָּם.",
+        "tokens": [
+          "לפני",
+          "שיהיה",
+          "חם",
+          "מדי",
+          "בוא",
+          "נלך",
+          "לים"
+        ],
+        "tokens_niqqud": [
+          "לִפְנֵי",
+          "שֶׁיִּהְיֶה",
+          "חַם",
+          "מִדַּי",
+          "בּוֹא",
+          "נֵלֵךְ",
+          "לַיָּם"
+        ]
       }
     ],
-    "english_distractors": ["Let's stay", "to the park", "after", "too cold", "later"],
     "notes": "ים (literally 'sea') is how Israelis say 'the beach.' בוא נ... ('come, let's...') is the everyday way to suggest doing something."
   },
   {
@@ -3354,11 +5209,54 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נהג, אפשר לרדת בתחנה הבאה? תודה.",
+    "hebrew_niqqud": "נַהָג, אֶפְשָׁר לָרֶדֶת בַּתַּחֲנָה הַבָּאָה? תּוֹדָה.",
     "english": "Driver, can I get off at the next stop? Thanks.",
-    "hebrew_tokens": ["נהג", "אפשר", "לרדת", "בתחנה", "הבאה", "תודה"],
-    "english_tokens": ["Driver", "can I", "get off", "at the", "next", "stop", "Thanks"],
-    "hebrew_distractors": ["מונית", "לעלות", "הקודמת", "עכשיו", "כסף"],
-    "english_distractors": ["Taxi", "get on", "the previous stop", "right here", "the fare"],
+    "hebrew_tokens": [
+      "נהג",
+      "אפשר",
+      "לרדת",
+      "בתחנה",
+      "הבאה",
+      "תודה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נַהָג",
+      "אֶפְשָׁר",
+      "לָרֶדֶת",
+      "בַּתַּחֲנָה",
+      "הַבָּאָה",
+      "תּוֹדָה"
+    ],
+    "english_tokens": [
+      "Driver",
+      "can I",
+      "get off",
+      "at the",
+      "next",
+      "stop",
+      "Thanks"
+    ],
+    "hebrew_distractors": [
+      "מונית",
+      "לעלות",
+      "הקודמת",
+      "עכשיו",
+      "כסף"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מוֹנִית",
+      "לַעֲלוֹת",
+      "הַקּוֹדֶמֶת",
+      "עַכְשָׁו",
+      "כֶּסֶף"
+    ],
+    "english_distractors": [
+      "Taxi",
+      "get on",
+      "the previous stop",
+      "right here",
+      "the fare"
+    ],
     "notes": "On a מונית שירות (shared taxi) you call out to the נהג (driver) to be let off; לרדת ('to go down') is how you say to get off a bus or taxi."
   },
   {
@@ -3368,11 +5266,61 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אין מצב! לא מאמין שהוא באמת אמר את זה.",
+    "hebrew_niqqud": "אֵין מַצָּב! לֹא מַאֲמִין שֶׁהוּא בֶּאֱמֶת אָמַר אֶת זֶה.",
     "english": "No way! I can't believe he really said that.",
-    "hebrew_tokens": ["אין", "מצב", "לא", "מאמין", "שהוא", "באמת", "אמר", "את", "זה"],
-    "english_tokens": ["No", "way", "I can't", "believe", "he", "really", "said", "that"],
-    "hebrew_distractors": ["יש", "ברור", "שמעתי", "אולי", "שתק"],
-    "english_distractors": ["Of course", "I heard that", "maybe", "he asked", "stayed quiet"],
+    "hebrew_tokens": [
+      "אין",
+      "מצב",
+      "לא",
+      "מאמין",
+      "שהוא",
+      "באמת",
+      "אמר",
+      "את",
+      "זה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֵין",
+      "מַצָּב",
+      "לֹא",
+      "מַאֲמִין",
+      "שֶׁהוּא",
+      "בֶּאֱמֶת",
+      "אָמַר",
+      "אֶת",
+      "זֶה"
+    ],
+    "english_tokens": [
+      "No",
+      "way",
+      "I can't",
+      "believe",
+      "he",
+      "really",
+      "said",
+      "that"
+    ],
+    "hebrew_distractors": [
+      "יש",
+      "ברור",
+      "שמעתי",
+      "אולי",
+      "שתק"
+    ],
+    "hebrew_distractors_niqqud": [
+      "יֵשׁ",
+      "בָּרוּר",
+      "שָׁמַעְתִּי",
+      "אוּלַי",
+      "שָׁתַק"
+    ],
+    "english_distractors": [
+      "Of course",
+      "I heard that",
+      "maybe",
+      "he asked",
+      "stayed quiet"
+    ],
     "notes": "אין מצב (literally 'there's no situation') means 'no way! / impossible!' — disbelief or flat refusal, depending on tone."
   },
   {
@@ -3382,11 +5330,58 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "כפרה עליך, לא יודעת מה הייתי עושה בלעדיך.",
+    "hebrew_niqqud": "כַּפָּרָה עָלֶיךָ, לֹא יוֹדַעַת מָה הָיִיתִי עוֹשָׂה בִּלְעָדֶיךָ.",
     "english": "You're a lifesaver, I don't know what I'd do without you.",
-    "hebrew_tokens": ["כפרה", "עליך", "לא", "יודעת", "מה", "הייתי", "עושה", "בלעדיך"],
-    "english_tokens": ["You're a lifesaver", "I don't", "know", "what", "I'd", "do", "without you"],
-    "hebrew_distractors": ["איתך", "כן", "חושבת", "איפה", "בלעדיו"],
-    "english_distractors": ["Thank you", "I do", "when", "I can", "with you"],
+    "hebrew_tokens": [
+      "כפרה",
+      "עליך",
+      "לא",
+      "יודעת",
+      "מה",
+      "הייתי",
+      "עושה",
+      "בלעדיך"
+    ],
+    "hebrew_tokens_niqqud": [
+      "כַּפָּרָה",
+      "עָלֶיךָ",
+      "לֹא",
+      "יוֹדַעַת",
+      "מָה",
+      "הָיִיתִי",
+      "עוֹשָׂה",
+      "בִּלְעָדֶיךָ"
+    ],
+    "english_tokens": [
+      "You're a lifesaver",
+      "I don't",
+      "know",
+      "what",
+      "I'd",
+      "do",
+      "without you"
+    ],
+    "hebrew_distractors": [
+      "איתך",
+      "כן",
+      "חושבת",
+      "איפה",
+      "בלעדיו"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אִתְּךָ",
+      "כֵּן",
+      "חוֹשֶׁבֶת",
+      "אֵיפֹה",
+      "בִּלְעָדָיו"
+    ],
+    "english_distractors": [
+      "Thank you",
+      "I do",
+      "when",
+      "I can",
+      "with you"
+    ],
     "notes": "כפרה עליך (Mizrahi origin, literally 'atonement upon you') is a deeply affectionate expression of love and gratitude — much warmer than a plain 'sweetheart,' closer to 'you're a lifesaver / I adore you.' On its own, כפרה can be used as a tender 'sweetheart.'"
   },
   {
@@ -3396,11 +5391,52 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אני לא מסוגל לקום מוקדם בבוקר.",
+    "hebrew_niqqud": "אֲנִי לֹא מְסֻגָּל לָקוּם מֻקְדָּם בַּבֹּקֶר.",
     "english": "I can't get up early in the morning.",
-    "hebrew_tokens": ["אני", "לא", "מסוגל", "לקום", "מוקדם", "בבוקר"],
-    "english_tokens": ["I", "can't", "get up", "early", "in the morning"],
-    "hebrew_distractors": ["רוצה", "אוהב", "לישון", "מאוחר", "בלילה"],
-    "english_distractors": ["I want", "love to", "sleep", "late", "at night"],
+    "hebrew_tokens": [
+      "אני",
+      "לא",
+      "מסוגל",
+      "לקום",
+      "מוקדם",
+      "בבוקר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "לֹא",
+      "מְסֻגָּל",
+      "לָקוּם",
+      "מֻקְדָּם",
+      "בַּבֹּקֶר"
+    ],
+    "english_tokens": [
+      "I",
+      "can't",
+      "get up",
+      "early",
+      "in the morning"
+    ],
+    "hebrew_distractors": [
+      "רוצה",
+      "אוהב",
+      "לישון",
+      "מאוחר",
+      "בלילה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "רוֹצֶה",
+      "אוֹהֵב",
+      "לִישֹׁן",
+      "מְאֻחָר",
+      "בַּלַּיְלָה"
+    ],
+    "english_distractors": [
+      "I want",
+      "love to",
+      "sleep",
+      "late",
+      "at night"
+    ],
     "notes": "מסוגל means 'capable of / able to' and is followed by an infinitive; 'לא מסוגל' is a very common way to say 'I just can't (bring myself to).'"
   },
   {
@@ -3410,11 +5446,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "היא מסוגלת לעבוד שתים עשרה שעות ברצף.",
+    "hebrew_niqqud": "הִיא מְסֻגֶּלֶת לַעֲבֹד שְׁתֵּים עֶשְׂרֵה שָׁעוֹת בְּרֶצֶף.",
     "english": "She is able to work twelve hours straight.",
-    "hebrew_tokens": ["היא", "מסוגלת", "לעבוד", "שתים", "עשרה", "שעות", "ברצף"],
-    "english_tokens": ["She", "is able to", "work", "twelve", "hours", "straight"],
-    "hebrew_distractors": ["רוצה", "צריכה", "לנוח", "שלוש", "לבד"],
-    "english_distractors": ["wants to", "needs to", "rest", "three", "alone"],
+    "hebrew_tokens": [
+      "היא",
+      "מסוגלת",
+      "לעבוד",
+      "שתים",
+      "עשרה",
+      "שעות",
+      "ברצף"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הִיא",
+      "מְסֻגֶּלֶת",
+      "לַעֲבֹד",
+      "שְׁתֵּים",
+      "עֶשְׂרֵה",
+      "שָׁעוֹת",
+      "בְּרֶצֶף"
+    ],
+    "english_tokens": [
+      "She",
+      "is able to",
+      "work",
+      "twelve",
+      "hours",
+      "straight"
+    ],
+    "hebrew_distractors": [
+      "רוצה",
+      "צריכה",
+      "לנוח",
+      "שלוש",
+      "לבד"
+    ],
+    "hebrew_distractors_niqqud": [
+      "רוֹצֶה",
+      "צְרִיכָה",
+      "לָנוּחַ",
+      "שָׁלוֹשׁ",
+      "לְבַד"
+    ],
+    "english_distractors": [
+      "wants to",
+      "needs to",
+      "rest",
+      "three",
+      "alone"
+    ],
     "notes": "מסוגלת is the feminine singular of מסוגל; ברצף means 'in a row / straight / continuously.'"
   },
   {
@@ -3424,11 +5504,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אתה באמת מסוגל לעשות את זה לבד?",
+    "hebrew_niqqud": "אַתָּה בֶּאֱמֶת מְסֻגָּל לַעֲשׂוֹת אֶת זֶה לְבַד?",
     "english": "Are you really capable of doing this alone?",
-    "hebrew_tokens": ["אתה", "באמת", "מסוגל", "לעשות", "את", "זה", "לבד"],
-    "english_tokens": ["Are you", "really", "capable of", "doing", "this", "alone"],
-    "hebrew_distractors": ["היא", "אולי", "לסיים", "אותו", "יחד"],
-    "english_distractors": ["Is she", "maybe", "finishing", "it", "together"],
+    "hebrew_tokens": [
+      "אתה",
+      "באמת",
+      "מסוגל",
+      "לעשות",
+      "את",
+      "זה",
+      "לבד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אַתָּה",
+      "בֶּאֱמֶת",
+      "מְסֻגָּל",
+      "לַעֲשׂוֹת",
+      "אֶת",
+      "זֶה",
+      "לְבַד"
+    ],
+    "english_tokens": [
+      "Are you",
+      "really",
+      "capable of",
+      "doing",
+      "this",
+      "alone"
+    ],
+    "hebrew_distractors": [
+      "היא",
+      "אולי",
+      "לסיים",
+      "אותו",
+      "יחד"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הִיא",
+      "אוּלַי",
+      "לְסַיֵּם",
+      "אוֹתוֹ",
+      "יַחַד"
+    ],
+    "english_distractors": [
+      "Is she",
+      "maybe",
+      "finishing",
+      "it",
+      "together"
+    ],
     "notes": "מסוגל ל־ + infinitive = 'capable of doing'; here it carries a slightly challenging, 'you sure?' tone."
   },
   {
@@ -3438,11 +5562,56 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "אני פשוט לא מסוגל להאמין שזה קרה.",
+    "hebrew_niqqud": "אֲנִי פָּשׁוּט לֹא מְסֻגָּל לְהַאֲמִין שֶׁזֶּה קָרָה.",
     "english": "I just can't believe that this happened.",
-    "hebrew_tokens": ["אני", "פשוט", "לא", "מסוגל", "להאמין", "שזה", "קרה"],
-    "english_tokens": ["I", "just", "can't", "believe", "that", "this", "happened"],
-    "hebrew_distractors": ["מוכן", "עדיין", "לזכור", "שהוא", "נגמר"],
-    "english_distractors": ["willing", "still", "remember", "that he", "ended"],
+    "hebrew_tokens": [
+      "אני",
+      "פשוט",
+      "לא",
+      "מסוגל",
+      "להאמין",
+      "שזה",
+      "קרה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "פָּשׁוּט",
+      "לֹא",
+      "מְסֻגָּל",
+      "לְהַאֲמִין",
+      "שֶׁזֶּה",
+      "קָרָה"
+    ],
+    "english_tokens": [
+      "I",
+      "just",
+      "can't",
+      "believe",
+      "that",
+      "this",
+      "happened"
+    ],
+    "hebrew_distractors": [
+      "מוכן",
+      "עדיין",
+      "לזכור",
+      "שהוא",
+      "נגמר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מוּכָן",
+      "עֲדַיִן",
+      "לִזְכֹּר",
+      "שֶׁהוּא",
+      "נִגְמַר"
+    ],
+    "english_distractors": [
+      "willing",
+      "still",
+      "remember",
+      "that he",
+      "ended"
+    ],
     "notes": "'לא מסוגל להאמין' is the everyday 'I can't believe it' — מסוגל adds a sense of being emotionally unable, stronger than a plain לא יכול."
   },
   {
@@ -3452,11 +5621,50 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "אנחנו מסוגלים לעמוד ביעדים שהוצבו.",
+    "hebrew_niqqud": "אֲנַחְנוּ מְסֻגָּלִים לַעֲמֹד בַּיְּעָדִים שֶׁהֻצְּבוּ.",
     "english": "We are able to meet the targets that were set.",
-    "hebrew_tokens": ["אנחנו", "מסוגלים", "לעמוד", "ביעדים", "שהוצבו"],
-    "english_tokens": ["We", "are able to", "meet", "the targets", "that were set"],
-    "hebrew_distractors": ["מתכוונים", "לסיים", "במשימות", "שבוטלו", "מחר"],
-    "english_distractors": ["intend to", "finish", "the tasks", "that were canceled", "tomorrow"],
+    "hebrew_tokens": [
+      "אנחנו",
+      "מסוגלים",
+      "לעמוד",
+      "ביעדים",
+      "שהוצבו"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנַחְנוּ",
+      "מְסֻגָּלִים",
+      "לַעֲמֹד",
+      "בַּיְּעָדִים",
+      "שֶׁהֻצְּבוּ"
+    ],
+    "english_tokens": [
+      "We",
+      "are able to",
+      "meet",
+      "the targets",
+      "that were set"
+    ],
+    "hebrew_distractors": [
+      "מתכוונים",
+      "לסיים",
+      "במשימות",
+      "שבוטלו",
+      "מחר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מִתְכַּוְּנִים",
+      "לְסַיֵּם",
+      "בִּמְשִׂימוֹת",
+      "שֶׁבֻּטְּלוּ",
+      "מָחָר"
+    ],
+    "english_distractors": [
+      "intend to",
+      "finish",
+      "the tasks",
+      "that were canceled",
+      "tomorrow"
+    ],
     "notes": "מסוגלים is the masculine plural; לעמוד ב־ means 'to meet / live up to' a target, deadline, or standard."
   },
   {
@@ -3466,11 +5674,63 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אני אעביר את זה לצוות ואחזור אליך עם תשובה.",
+    "hebrew_niqqud": "אֲנִי אַעֲבִיר אֶת זֶה לַצֶּוֶת וְאֶחֱזֹר אֵלֶיךָ עִם תְּשׁוּבָה.",
     "english": "I'll pass this on to the team and get back to you with an answer.",
-    "hebrew_tokens": ["אני", "אעביר", "את", "זה", "לצוות", "ואחזור", "אליך", "עם", "תשובה"],
-    "english_tokens": ["I'll", "pass", "this", "on to", "the team", "and", "get back", "to you", "with", "an answer"],
-    "hebrew_distractors": ["אמסור", "למנהל", "הודעה", "מחר", "שאלה"],
-    "english_distractors": ["I won't", "forward", "a message", "tomorrow", "a question"],
+    "hebrew_tokens": [
+      "אני",
+      "אעביר",
+      "את",
+      "זה",
+      "לצוות",
+      "ואחזור",
+      "אליך",
+      "עם",
+      "תשובה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "אַעֲבִיר",
+      "אֶת",
+      "זֶה",
+      "לַצֶּוֶת",
+      "וְאֶחֱזֹר",
+      "אֵלֶיךָ",
+      "עִם",
+      "תְּשׁוּבָה"
+    ],
+    "english_tokens": [
+      "I'll",
+      "pass",
+      "this",
+      "on to",
+      "the team",
+      "and",
+      "get back",
+      "to you",
+      "with",
+      "an answer"
+    ],
+    "hebrew_distractors": [
+      "אמסור",
+      "למנהל",
+      "הודעה",
+      "מחר",
+      "שאלה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֶמְסֹר",
+      "לַמְּנַהֵל",
+      "הוֹדָעָה",
+      "מָחָר",
+      "שָׁאֲלָה"
+    ],
+    "english_distractors": [
+      "I won't",
+      "forward",
+      "a message",
+      "tomorrow",
+      "a question"
+    ],
     "notes": "אעביר ל־ = pass/forward to; ואחזור אליך = and get back to you — standard email follow-up phrasing."
   },
   {
@@ -3480,11 +5740,59 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "בוא נסגור את הפרטים בשיחה קצרה מחר בבוקר.",
+    "hebrew_niqqud": "בּוֹא נִסְגֹּר אֶת הַפְּרָטִים בְּשִׂיחָה קְצָרָה מָחָר בַּבֹּקֶר.",
     "english": "Let's finalize the details in a short call tomorrow morning.",
-    "hebrew_tokens": ["בוא", "נסגור", "את", "הפרטים", "בשיחה", "קצרה", "מחר", "בבוקר"],
-    "english_tokens": ["Let's", "finalize", "the details", "in", "a short", "call", "tomorrow", "morning"],
-    "hebrew_distractors": ["נדחה", "הפגישה", "ארוכה", "הערב", "במייל"],
-    "english_distractors": ["postpone", "the meeting", "a long", "tonight", "by email"],
+    "hebrew_tokens": [
+      "בוא",
+      "נסגור",
+      "את",
+      "הפרטים",
+      "בשיחה",
+      "קצרה",
+      "מחר",
+      "בבוקר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בּוֹא",
+      "נִסְגֹּר",
+      "אֶת",
+      "הַפְּרָטִים",
+      "בְּשִׂיחָה",
+      "קְצָרָה",
+      "מָחָר",
+      "בַּבֹּקֶר"
+    ],
+    "english_tokens": [
+      "Let's",
+      "finalize",
+      "the details",
+      "in",
+      "a short",
+      "call",
+      "tomorrow",
+      "morning"
+    ],
+    "hebrew_distractors": [
+      "נדחה",
+      "הפגישה",
+      "ארוכה",
+      "הערב",
+      "במייל"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נִדְחָה",
+      "הַפְּגִישָׁה",
+      "אֲרֻכָּה",
+      "הָעֶרֶב",
+      "בְּמֵיְל"
+    ],
+    "english_distractors": [
+      "postpone",
+      "the meeting",
+      "a long",
+      "tonight",
+      "by email"
+    ],
     "notes": "נסגור פרטים (literally 'close details') = finalize/nail down the details; בשיחה = in a call."
   },
   {
@@ -3494,11 +5802,60 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "צירפתי את הקובץ למייל, תגיד לי אם משהו חסר.",
+    "hebrew_niqqud": "צֵרַפְתִּי אֶת הַקֹּבֶץ לְמֵיְל, תַּגִּיד לִי אִם מַשֶּׁהוּ חָסֵר.",
     "english": "I attached the file to the email, let me know if anything is missing.",
-    "hebrew_tokens": ["צירפתי", "את", "הקובץ", "למייל", "תגיד", "לי", "אם", "משהו", "חסר"],
-    "english_tokens": ["I attached", "the file", "to the email", "let me know", "if", "anything", "is missing"],
-    "hebrew_distractors": ["שלחתי", "הקישור", "להודעה", "תבדוק", "נכון"],
-    "english_distractors": ["I deleted", "the link", "to the message", "check", "is correct"],
+    "hebrew_tokens": [
+      "צירפתי",
+      "את",
+      "הקובץ",
+      "למייל",
+      "תגיד",
+      "לי",
+      "אם",
+      "משהו",
+      "חסר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "צֵרַפְתִּי",
+      "אֶת",
+      "הַקֹּבֶץ",
+      "לְמֵיְל",
+      "תַּגִּיד",
+      "לִי",
+      "אִם",
+      "מַשֶּׁהוּ",
+      "חָסֵר"
+    ],
+    "english_tokens": [
+      "I attached",
+      "the file",
+      "to the email",
+      "let me know",
+      "if",
+      "anything",
+      "is missing"
+    ],
+    "hebrew_distractors": [
+      "שלחתי",
+      "הקישור",
+      "להודעה",
+      "תבדוק",
+      "נכון"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שָׁלַחְתִּי",
+      "הַקִּשּׁוּר",
+      "לַהוֹדָעָה",
+      "תִּבְדֹּק",
+      "נָכוֹן"
+    ],
+    "english_distractors": [
+      "I deleted",
+      "the link",
+      "to the message",
+      "check",
+      "is correct"
+    ],
     "notes": "צירפתי = I attached; תגיד לי אם = let me know if; חסר here = is missing/lacking."
   },
   {
@@ -3508,11 +5865,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "הלקוח ביקש שינויים, נצטרך לעדכן את ההצעה.",
+    "hebrew_niqqud": "הַלָּקוֹחַ בִּקֵּשׁ שִׁנּוּיִים, נִצְטָרֵךְ לְעַדְכֵּן אֶת הַהַצָּעָה.",
     "english": "The client asked for changes, we'll need to update the proposal.",
-    "hebrew_tokens": ["הלקוח", "ביקש", "שינויים", "נצטרך", "לעדכן", "את", "ההצעה"],
-    "english_tokens": ["The client", "asked for", "changes", "we'll need", "to update", "the proposal"],
-    "hebrew_distractors": ["המנהל", "אישר", "תוספות", "נוכל", "החוזה"],
-    "english_distractors": ["The manager", "approved", "additions", "we'll be able", "the contract"],
+    "hebrew_tokens": [
+      "הלקוח",
+      "ביקש",
+      "שינויים",
+      "נצטרך",
+      "לעדכן",
+      "את",
+      "ההצעה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַלָּקוֹחַ",
+      "בִּקֵּשׁ",
+      "שִׁנּוּיִים",
+      "נִצְטָרֵךְ",
+      "לְעַדְכֵּן",
+      "אֶת",
+      "הַהַצָּעָה"
+    ],
+    "english_tokens": [
+      "The client",
+      "asked for",
+      "changes",
+      "we'll need",
+      "to update",
+      "the proposal"
+    ],
+    "hebrew_distractors": [
+      "המנהל",
+      "אישר",
+      "תוספות",
+      "נוכל",
+      "החוזה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַמְּנַהֵל",
+      "אִשֵּׁר",
+      "תּוֹסָפוֹת",
+      "נוּכַל",
+      "הַחוֹזֶה"
+    ],
+    "english_distractors": [
+      "The manager",
+      "approved",
+      "additions",
+      "we'll be able",
+      "the contract"
+    ],
     "notes": "הלקוח = the client; ביקש שינויים = asked for changes; ההצעה = the proposal/offer."
   },
   {
@@ -3522,11 +5923,54 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אני חושב שכדאי לדחות את ההשקה בשבוע.",
+    "hebrew_niqqud": "אֲנִי חוֹשֵׁב שֶׁכְּדַאי לִדְחוֹת אֶת הַהַשָּׁקָה בְּשָׁבוּעַ.",
     "english": "I think we should postpone the launch by a week.",
-    "hebrew_tokens": ["אני", "חושב", "שכדאי", "לדחות", "את", "ההשקה", "בשבוע"],
-    "english_tokens": ["I think", "we should", "postpone", "the launch", "by a week"],
-    "hebrew_distractors": ["מציע", "שעדיף", "להקדים", "הפגישה", "בחודש"],
-    "english_distractors": ["I suggest", "it's better", "move up", "the meeting", "by a month"],
+    "hebrew_tokens": [
+      "אני",
+      "חושב",
+      "שכדאי",
+      "לדחות",
+      "את",
+      "ההשקה",
+      "בשבוע"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "חוֹשֵׁב",
+      "שֶׁכְּדַאי",
+      "לִדְחוֹת",
+      "אֶת",
+      "הַהַשָּׁקָה",
+      "בְּשָׁבוּעַ"
+    ],
+    "english_tokens": [
+      "I think",
+      "we should",
+      "postpone",
+      "the launch",
+      "by a week"
+    ],
+    "hebrew_distractors": [
+      "מציע",
+      "שעדיף",
+      "להקדים",
+      "הפגישה",
+      "בחודש"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מַצִּיעַ",
+      "שֶׁעָדִיף",
+      "לְהַקְדִּים",
+      "הַפְּגִישָׁה",
+      "בַּחֹדֶשׁ"
+    ],
+    "english_distractors": [
+      "I suggest",
+      "it's better",
+      "move up",
+      "the meeting",
+      "by a month"
+    ],
     "notes": "כדאי = it's worthwhile/we should; לדחות = postpone; ההשקה = the launch (of a product)."
   },
   {
@@ -3536,11 +5980,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נסכם את הנקודות העיקריות ונשלח סיכום לכולם.",
+    "hebrew_niqqud": "נְסַכֵּם אֶת הַנְּקֻדּוֹת הָעִקָּרִיּוֹת וְנִשְׁלַח סִכּוּם לְכֻלָּם.",
     "english": "Let's summarize the main points and send a recap to everyone.",
-    "hebrew_tokens": ["נסכם", "את", "הנקודות", "העיקריות", "ונשלח", "סיכום", "לכולם"],
-    "english_tokens": ["Let's summarize", "the main", "points", "and send", "a recap", "to everyone"],
-    "hebrew_distractors": ["נפרט", "הסעיפים", "המשניות", "נדפיס", "לצוות"],
-    "english_distractors": ["Let's expand", "the sections", "the minor", "print", "to the team"],
+    "hebrew_tokens": [
+      "נסכם",
+      "את",
+      "הנקודות",
+      "העיקריות",
+      "ונשלח",
+      "סיכום",
+      "לכולם"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נְסַכֵּם",
+      "אֶת",
+      "הַנְּקֻדּוֹת",
+      "הָעִקָּרִיּוֹת",
+      "וְנִשְׁלַח",
+      "סִכּוּם",
+      "לְכֻלָּם"
+    ],
+    "english_tokens": [
+      "Let's summarize",
+      "the main",
+      "points",
+      "and send",
+      "a recap",
+      "to everyone"
+    ],
+    "hebrew_distractors": [
+      "נפרט",
+      "הסעיפים",
+      "המשניות",
+      "נדפיס",
+      "לצוות"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נְפָרֵט",
+      "הַסְּעִיפִים",
+      "הַמִּשְׁנָיוֹת",
+      "נַדְפִּיס",
+      "לַצֶּוֶת"
+    ],
+    "english_distractors": [
+      "Let's expand",
+      "the sections",
+      "the minor",
+      "print",
+      "to the team"
+    ],
     "notes": "נסכם = let's summarize; הנקודות העיקריות = the main points; סיכום = summary/recap."
   },
   {
@@ -3550,11 +6038,58 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "תוכל לשלוח לי את הדוח עד סוף היום?",
+    "hebrew_niqqud": "תּוּכַל לִשְׁלֹחַ לִי אֶת הַדּוּחַ עַד סוֹף הַיּוֹם?",
     "english": "Could you send me the report by the end of the day?",
-    "hebrew_tokens": ["תוכל", "לשלוח", "לי", "את", "הדוח", "עד", "סוף", "היום"],
-    "english_tokens": ["Could you", "send", "me", "the report", "by", "the end of", "the day"],
-    "hebrew_distractors": ["תוכלי", "להעביר", "הסיכום", "תחילת", "השבוע"],
-    "english_distractors": ["Can she", "forward", "the summary", "the start of", "the week"],
+    "hebrew_tokens": [
+      "תוכל",
+      "לשלוח",
+      "לי",
+      "את",
+      "הדוח",
+      "עד",
+      "סוף",
+      "היום"
+    ],
+    "hebrew_tokens_niqqud": [
+      "תּוּכַל",
+      "לִשְׁלֹחַ",
+      "לִי",
+      "אֶת",
+      "הַדּוּחַ",
+      "עַד",
+      "סוֹף",
+      "הַיּוֹם"
+    ],
+    "english_tokens": [
+      "Could you",
+      "send",
+      "me",
+      "the report",
+      "by",
+      "the end of",
+      "the day"
+    ],
+    "hebrew_distractors": [
+      "תוכלי",
+      "להעביר",
+      "הסיכום",
+      "תחילת",
+      "השבוע"
+    ],
+    "hebrew_distractors_niqqud": [
+      "תּוּכְלִי",
+      "לְהַעֲבִיר",
+      "הַסִּכּוּם",
+      "תְּחִלַּת",
+      "הַשָּׁבוּעַ"
+    ],
+    "english_distractors": [
+      "Can she",
+      "forward",
+      "the summary",
+      "the start of",
+      "the week"
+    ],
     "notes": "תוכל = could you (m.); עד סוף היום = by the end of the day."
   },
   {
@@ -3564,11 +6099,59 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "הישיבה נדחתה, אעדכן אותך בהמשך לגבי מועד חדש.",
+    "hebrew_niqqud": "הַיְּשִׁיבָה נִדְחֲתָה, אֲעַדְכֵּן אוֹתְךָ בַּהֶמְשֵׁךְ לְגַבֵּי מוֹעֵד חָדָשׁ.",
     "english": "The meeting was postponed, I'll update you later about a new time.",
-    "hebrew_tokens": ["הישיבה", "נדחתה", "אעדכן", "אותך", "בהמשך", "לגבי", "מועד", "חדש"],
-    "english_tokens": ["The meeting", "was postponed", "I'll update", "you", "later", "about", "a new", "time"],
-    "hebrew_distractors": ["השיחה", "בוטלה", "אשלח", "ישן", "מקום"],
-    "english_distractors": ["The call", "was canceled", "I'll send", "old", "a place"],
+    "hebrew_tokens": [
+      "הישיבה",
+      "נדחתה",
+      "אעדכן",
+      "אותך",
+      "בהמשך",
+      "לגבי",
+      "מועד",
+      "חדש"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַיְּשִׁיבָה",
+      "נִדְחֲתָה",
+      "אֲעַדְכֵּן",
+      "אוֹתְךָ",
+      "בַּהֶמְשֵׁךְ",
+      "לְגַבֵּי",
+      "מוֹעֵד",
+      "חָדָשׁ"
+    ],
+    "english_tokens": [
+      "The meeting",
+      "was postponed",
+      "I'll update",
+      "you",
+      "later",
+      "about",
+      "a new",
+      "time"
+    ],
+    "hebrew_distractors": [
+      "השיחה",
+      "בוטלה",
+      "אשלח",
+      "ישן",
+      "מקום"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַשִּׂיחָה",
+      "בֻּטְּלָה",
+      "אֶשְׁלַח",
+      "יָשָׁן",
+      "מָקוֹם"
+    ],
+    "english_distractors": [
+      "The call",
+      "was canceled",
+      "I'll send",
+      "old",
+      "a place"
+    ],
     "notes": "הישיבה נדחתה = the meeting was postponed; מועד = appointed time/date; בהמשך = later on."
   },
   {
@@ -3578,11 +6161,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "יש לנו חריגה בתקציב, צריך לבדוק איפה.",
+    "hebrew_niqqud": "יֵשׁ לָנוּ חֲרִיגָה בַּתַּקְצִיב, צָרִיךְ לִבְדֹּק אֵיפֹה.",
     "english": "We have an overrun in the budget, we need to check where.",
-    "hebrew_tokens": ["יש", "לנו", "חריגה", "בתקציב", "צריך", "לבדוק", "איפה"],
-    "english_tokens": ["We have", "an overrun", "in the budget", "we need", "to check", "where"],
-    "hebrew_distractors": ["אין", "עודף", "בלוח", "לתקן", "מתי"],
-    "english_distractors": ["We don't have", "a surplus", "in the schedule", "to fix", "when"],
+    "hebrew_tokens": [
+      "יש",
+      "לנו",
+      "חריגה",
+      "בתקציב",
+      "צריך",
+      "לבדוק",
+      "איפה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לָנוּ",
+      "חֲרִיגָה",
+      "בַּתַּקְצִיב",
+      "צָרִיךְ",
+      "לִבְדֹּק",
+      "אֵיפֹה"
+    ],
+    "english_tokens": [
+      "We have",
+      "an overrun",
+      "in the budget",
+      "we need",
+      "to check",
+      "where"
+    ],
+    "hebrew_distractors": [
+      "אין",
+      "עודף",
+      "בלוח",
+      "לתקן",
+      "מתי"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֵין",
+      "עֹדֶף",
+      "בַּלּוּחַ",
+      "לְתַקֵּן",
+      "מָתַי"
+    ],
+    "english_distractors": [
+      "We don't have",
+      "a surplus",
+      "in the schedule",
+      "to fix",
+      "when"
+    ],
     "notes": "חריגה בתקציב = budget overrun/deviation; בתקציב from תקציב (budget)."
   },
   {
@@ -3592,11 +6219,60 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אני מעדיף לסגור את זה בכתב כדי שיהיה תיעוד.",
+    "hebrew_niqqud": "אֲנִי מַעֲדִיף לִסְגֹּר אֶת זֶה בִּכְתָב כְּדֵי שֶׁיִּהְיֶה תִּעוּד.",
     "english": "I prefer to settle this in writing so there's a record.",
-    "hebrew_tokens": ["אני", "מעדיף", "לסגור", "את", "זה", "בכתב", "כדי", "שיהיה", "תיעוד"],
-    "english_tokens": ["I prefer", "to settle", "this", "in writing", "so", "there's", "a record"],
-    "hebrew_distractors": ["מעדיפה", "להשאיר", "בעל פה", "הסכם", "פרוטוקול"],
-    "english_distractors": ["I'd rather", "to leave", "out loud", "an agreement", "a protocol"],
+    "hebrew_tokens": [
+      "אני",
+      "מעדיף",
+      "לסגור",
+      "את",
+      "זה",
+      "בכתב",
+      "כדי",
+      "שיהיה",
+      "תיעוד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "מַעֲדִיף",
+      "לִסְגֹּר",
+      "אֶת",
+      "זֶה",
+      "בִּכְתָב",
+      "כְּדֵי",
+      "שֶׁיִּהְיֶה",
+      "תִּעוּד"
+    ],
+    "english_tokens": [
+      "I prefer",
+      "to settle",
+      "this",
+      "in writing",
+      "so",
+      "there's",
+      "a record"
+    ],
+    "hebrew_distractors": [
+      "מעדיפה",
+      "להשאיר",
+      "בעל פה",
+      "הסכם",
+      "פרוטוקול"
+    ],
+    "hebrew_distractors_niqqud": [
+      "מַעֲדִיפָה",
+      "לְהַשְׁאִיר",
+      "בְּעַל פֶּה",
+      "הֶסְכֵּם",
+      "פְּרוֹטוֹקוֹל"
+    ],
+    "english_distractors": [
+      "I'd rather",
+      "to leave",
+      "out loud",
+      "an agreement",
+      "a protocol"
+    ],
     "notes": "לסגור בכתב = settle in writing; כדי שיהיה תיעוד = so there will be documentation/a record."
   },
   {
@@ -3606,11 +6282,61 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "הצוות עמוס השבוע, אפשר להעביר את זה לשבוע הבא?",
+    "hebrew_niqqud": "הַצֶּוֶת עָמוּס הַשָּׁבוּעַ, אֶפְשָׁר לְהַעֲבִיר אֶת זֶה לַשָּׁבוּעַ הַבָּא?",
     "english": "The team is busy this week, can we move this to next week?",
-    "hebrew_tokens": ["הצוות", "עמוס", "השבוע", "אפשר", "להעביר", "את", "זה", "לשבוע", "הבא"],
-    "english_tokens": ["The team", "is busy", "this week", "can we", "move", "this", "to", "next week"],
-    "hebrew_distractors": ["המנהל", "פנוי", "היום", "לדחות", "לחודש"],
-    "english_distractors": ["The manager", "is free", "today", "postpone", "to next month"],
+    "hebrew_tokens": [
+      "הצוות",
+      "עמוס",
+      "השבוע",
+      "אפשר",
+      "להעביר",
+      "את",
+      "זה",
+      "לשבוע",
+      "הבא"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַצֶּוֶת",
+      "עָמוּס",
+      "הַשָּׁבוּעַ",
+      "אֶפְשָׁר",
+      "לְהַעֲבִיר",
+      "אֶת",
+      "זֶה",
+      "לַשָּׁבוּעַ",
+      "הַבָּא"
+    ],
+    "english_tokens": [
+      "The team",
+      "is busy",
+      "this week",
+      "can we",
+      "move",
+      "this",
+      "to",
+      "next week"
+    ],
+    "hebrew_distractors": [
+      "המנהל",
+      "פנוי",
+      "היום",
+      "לדחות",
+      "לחודש"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַמְּנַהֵל",
+      "פָּנוּי",
+      "הַיּוֹם",
+      "לִדְחוֹת",
+      "לַחֹדֶשׁ"
+    ],
+    "english_distractors": [
+      "The manager",
+      "is free",
+      "today",
+      "postpone",
+      "to next month"
+    ],
     "notes": "עמוס = busy/loaded; להעביר ל = move/push to; לשבוע הבא = to next week."
   },
   {
@@ -3620,11 +6346,60 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "אני אקח אחריות על המשימה הזאת ואדווח על ההתקדמות.",
+    "hebrew_niqqud": "אֲנִי אֶקַּח אַחְרָיוּת עַל הַמְּשִׂימָה הַזֹּאת וַאֲדַוֵּחַ עַל הַהִתְקַדְּמוּת.",
     "english": "I'll take responsibility for this task and report on the progress.",
-    "hebrew_tokens": ["אני", "אקח", "אחריות", "על", "המשימה", "הזאת", "ואדווח", "על", "ההתקדמות"],
-    "english_tokens": ["I'll take", "responsibility", "for", "this task", "and report", "on", "the progress"],
-    "hebrew_distractors": ["אתן", "שליטה", "המטלה", "ואסביר", "התהליך"],
-    "english_distractors": ["I'll give", "control", "the chore", "and explain", "the process"],
+    "hebrew_tokens": [
+      "אני",
+      "אקח",
+      "אחריות",
+      "על",
+      "המשימה",
+      "הזאת",
+      "ואדווח",
+      "על",
+      "ההתקדמות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "אֶקַּח",
+      "אַחְרָיוּת",
+      "עַל",
+      "הַמְּשִׂימָה",
+      "הַזֹּאת",
+      "וַאֲדַוֵּחַ",
+      "עַל",
+      "הַהִתְקַדְּמוּת"
+    ],
+    "english_tokens": [
+      "I'll take",
+      "responsibility",
+      "for",
+      "this task",
+      "and report",
+      "on",
+      "the progress"
+    ],
+    "hebrew_distractors": [
+      "אתן",
+      "שליטה",
+      "המטלה",
+      "ואסביר",
+      "התהליך"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אִתָּן",
+      "שְׁלִיטָה",
+      "הַמַּטָּלָה",
+      "וְאַסְבִּיר",
+      "הַתַּהֲלִיךְ"
+    ],
+    "english_distractors": [
+      "I'll give",
+      "control",
+      "the chore",
+      "and explain",
+      "the process"
+    ],
     "notes": "אקח אחריות = I'll take responsibility; אדווח על = report on; ההתקדמות = the progress."
   },
   {
@@ -3634,11 +6409,57 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "תודה על המשוב, ניקח את ההערות לתשומת לבנו.",
+    "hebrew_niqqud": "תּוֹדָה עַל הַמָּשׁוֹב, נִקַּח אֶת הַהֶעָרוֹת לִתְשׂוּמֶת לִבֵּנוּ.",
     "english": "Thanks for the feedback, we'll take the comments into consideration.",
-    "hebrew_tokens": ["תודה", "על", "המשוב", "ניקח", "את", "ההערות", "לתשומת", "לבנו"],
-    "english_tokens": ["Thanks", "for", "the feedback", "we'll take", "the comments", "into consideration"],
-    "hebrew_distractors": ["סליחה", "הביקורת", "נדחה", "הבקשות", "בחשבון"],
-    "english_distractors": ["Sorry", "the criticism", "we'll reject", "the requests", "into account"],
+    "hebrew_tokens": [
+      "תודה",
+      "על",
+      "המשוב",
+      "ניקח",
+      "את",
+      "ההערות",
+      "לתשומת",
+      "לבנו"
+    ],
+    "hebrew_tokens_niqqud": [
+      "תּוֹדָה",
+      "עַל",
+      "הַמָּשׁוֹב",
+      "נִקַּח",
+      "אֶת",
+      "הַהֶעָרוֹת",
+      "לִתְשׂוּמֶת",
+      "לִבֵּנוּ"
+    ],
+    "english_tokens": [
+      "Thanks",
+      "for",
+      "the feedback",
+      "we'll take",
+      "the comments",
+      "into consideration"
+    ],
+    "hebrew_distractors": [
+      "סליחה",
+      "הביקורת",
+      "נדחה",
+      "הבקשות",
+      "בחשבון"
+    ],
+    "hebrew_distractors_niqqud": [
+      "סְלִיחָה",
+      "הַבִּקֹּרֶת",
+      "נִדְחָה",
+      "הַבַּקָּשׁוֹת",
+      "בְּחֶשְׁבּוֹן"
+    ],
+    "english_distractors": [
+      "Sorry",
+      "the criticism",
+      "we'll reject",
+      "the requests",
+      "into account"
+    ],
     "notes": "המשוב = the feedback; ניקח לתשומת לבנו = we'll take into our consideration/attention."
   },
   {
@@ -3648,11 +6469,54 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נצטרך אישור מהמחלקה המשפטית לפני שנחתום.",
+    "hebrew_niqqud": "נִצְטָרֵךְ אִשּׁוּר מֵהַמַּחְלָקָה הַמִּשְׁפָּטִית לִפְנֵי שֶׁנַּחְתֹּם.",
     "english": "We'll need approval from the legal department before we sign.",
-    "hebrew_tokens": ["נצטרך", "אישור", "מהמחלקה", "המשפטית", "לפני", "שנחתום"],
-    "english_tokens": ["We'll need", "approval", "from", "the legal", "department", "before", "we sign"],
-    "hebrew_distractors": ["נבקש", "חתימה", "מההנהלה", "הכספית", "שנסכם"],
-    "english_distractors": ["We'll ask for", "a signature", "from management", "the financial", "we summarize"],
+    "hebrew_tokens": [
+      "נצטרך",
+      "אישור",
+      "מהמחלקה",
+      "המשפטית",
+      "לפני",
+      "שנחתום"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִצְטָרֵךְ",
+      "אִשּׁוּר",
+      "מֵהַמַּחְלָקָה",
+      "הַמִּשְׁפָּטִית",
+      "לִפְנֵי",
+      "שֶׁנַּחְתֹּם"
+    ],
+    "english_tokens": [
+      "We'll need",
+      "approval",
+      "from",
+      "the legal",
+      "department",
+      "before",
+      "we sign"
+    ],
+    "hebrew_distractors": [
+      "נבקש",
+      "חתימה",
+      "מההנהלה",
+      "הכספית",
+      "שנסכם"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נְבַקֵּשׁ",
+      "חֲתִימָה",
+      "מֵהַהַנְהָלָה",
+      "הַכַּסְפִּית",
+      "שֶׁנְּסַכֵּם"
+    ],
+    "english_distractors": [
+      "We'll ask for",
+      "a signature",
+      "from management",
+      "the financial",
+      "we summarize"
+    ],
     "notes": "אישור = approval; המחלקה המשפטית = the legal department; לפני שנחתום = before we sign."
   },
   {
@@ -3662,11 +6526,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "יש להתייחס לנתונים בזהירות, שכן המדגם מצומצם.",
+    "hebrew_niqqud": "יֵשׁ לְהִתְיַחֵס לַנְּתוּנִים בִּזְהִירוּת, שֶׁכֵּן הַמִּדְגָּם מְצֻמְצָם.",
     "english": "The data should be treated with caution, since the sample is small.",
-    "hebrew_tokens": ["יש", "להתייחס", "לנתונים", "בזהירות", "שכן", "המדגם", "מצומצם"],
-    "english_tokens": ["The data", "should be treated", "with caution", "since", "the sample", "is small"],
-    "hebrew_distractors": ["אין", "להסתמך", "למסקנות", "בביטחון", "גדול"],
-    "english_distractors": ["one must not", "rely", "on the conclusions", "with confidence", "is large"],
+    "hebrew_tokens": [
+      "יש",
+      "להתייחס",
+      "לנתונים",
+      "בזהירות",
+      "שכן",
+      "המדגם",
+      "מצומצם"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לְהִתְיַחֵס",
+      "לַנְּתוּנִים",
+      "בִּזְהִירוּת",
+      "שֶׁכֵּן",
+      "הַמִּדְגָּם",
+      "מְצֻמְצָם"
+    ],
+    "english_tokens": [
+      "The data",
+      "should be treated",
+      "with caution",
+      "since",
+      "the sample",
+      "is small"
+    ],
+    "hebrew_distractors": [
+      "אין",
+      "להסתמך",
+      "למסקנות",
+      "בביטחון",
+      "גדול"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֵין",
+      "לְהִסְתַּמֵּךְ",
+      "לְמַסְקָנוֹת",
+      "בְּבִטָּחוֹן",
+      "גָּדוֹל"
+    ],
+    "english_distractors": [
+      "one must not",
+      "rely",
+      "on the conclusions",
+      "with confidence",
+      "is large"
+    ],
     "notes": "יש להתייחס בזהירות = should be treated with caution; שכן = since/because (formal); המדגם מצומצם = the sample is limited/small."
   },
   {
@@ -3676,11 +6584,57 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "המחקר מעלה שאלות נוספות שטרם נמצא להן מענה.",
+    "hebrew_niqqud": "הַמֶּחְקָר מַעֲלֶה שְׁאֵלוֹת נוֹסָפוֹת שֶׁטֶּרֶם נִמְצָא לָהֶן מַעֲנֶה.",
     "english": "The research raises further questions that have yet to be answered.",
-    "hebrew_tokens": ["המחקר", "מעלה", "שאלות", "נוספות", "שטרם", "נמצא", "להן", "מענה"],
-    "english_tokens": ["The research", "raises", "further", "questions", "that have yet", "to be answered"],
-    "hebrew_distractors": ["הניסוי", "פותר", "ישנות", "תשובות", "פתרון"],
-    "english_distractors": ["The experiment", "solves", "old", "answers", "a solution"],
+    "hebrew_tokens": [
+      "המחקר",
+      "מעלה",
+      "שאלות",
+      "נוספות",
+      "שטרם",
+      "נמצא",
+      "להן",
+      "מענה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַמֶּחְקָר",
+      "מַעֲלֶה",
+      "שְׁאֵלוֹת",
+      "נוֹסָפוֹת",
+      "שֶׁטֶּרֶם",
+      "נִמְצָא",
+      "לָהֶן",
+      "מַעֲנֶה"
+    ],
+    "english_tokens": [
+      "The research",
+      "raises",
+      "further",
+      "questions",
+      "that have yet",
+      "to be answered"
+    ],
+    "hebrew_distractors": [
+      "הניסוי",
+      "פותר",
+      "ישנות",
+      "תשובות",
+      "פתרון"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַנִּסּוּי",
+      "פּוֹתֵר",
+      "יְשָׁנוֹת",
+      "תְּשׁוּבוֹת",
+      "פִּתְרוֹן"
+    ],
+    "english_distractors": [
+      "The experiment",
+      "solves",
+      "old",
+      "answers",
+      "a solution"
+    ],
     "notes": "מעלה שאלות = raises questions; שטרם נמצא להן מענה = that have yet to be answered (טרם = not yet, formal)."
   },
   {
@@ -3690,11 +6644,59 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "ההבחנה בין שני המושגים אינה תמיד ברורה דיה.",
+    "hebrew_niqqud": "הַהַבְחָנָה בֵּין שְׁנֵי הַמֻּשָּׂגִים אֵינָהּ תָּמִיד בְּרוּרָה דַּיָּה.",
     "english": "The distinction between the two concepts is not always sufficiently clear.",
-    "hebrew_tokens": ["ההבחנה", "בין", "שני", "המושגים", "אינה", "תמיד", "ברורה", "דיה"],
-    "english_tokens": ["The distinction", "between", "the two", "concepts", "is not", "always", "sufficiently", "clear"],
-    "hebrew_distractors": ["ההבדל", "שלושה", "הרעיונות", "לעולם", "מספיק"],
-    "english_distractors": ["The difference", "three", "the ideas", "never", "enough"],
+    "hebrew_tokens": [
+      "ההבחנה",
+      "בין",
+      "שני",
+      "המושגים",
+      "אינה",
+      "תמיד",
+      "ברורה",
+      "דיה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַהַבְחָנָה",
+      "בֵּין",
+      "שְׁנֵי",
+      "הַמֻּשָּׂגִים",
+      "אֵינָהּ",
+      "תָּמִיד",
+      "בְּרוּרָה",
+      "דַּיָּה"
+    ],
+    "english_tokens": [
+      "The distinction",
+      "between",
+      "the two",
+      "concepts",
+      "is not",
+      "always",
+      "sufficiently",
+      "clear"
+    ],
+    "hebrew_distractors": [
+      "ההבדל",
+      "שלושה",
+      "הרעיונות",
+      "לעולם",
+      "מספיק"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַהֶבְדֵּל",
+      "שְׁלוֹשָׁה",
+      "הָרַעֲיוֹנוֹת",
+      "לְעוֹלָם",
+      "מַסְפִּיק"
+    ],
+    "english_distractors": [
+      "The difference",
+      "three",
+      "the ideas",
+      "never",
+      "enough"
+    ],
     "notes": "ההבחנה בין = the distinction between; אינה = formal negation (is not, f.); ברורה דיה = sufficiently clear (דיה = enough)."
   },
   {
@@ -3704,11 +6706,59 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "יש לאזן בין היתרונות לחסרונות בטרם קבלת ההחלטה.",
+    "hebrew_niqqud": "יֵשׁ לְאַזֵּן בֵּין הַיִּתְרוֹנוֹת לְחֶסְרוֹנוֹת בְּטֶרֶם קַבָּלַת הַהַחְלָטָה.",
     "english": "One must balance the advantages against the disadvantages before making the decision.",
-    "hebrew_tokens": ["יש", "לאזן", "בין", "היתרונות", "לחסרונות", "בטרם", "קבלת", "ההחלטה"],
-    "english_tokens": ["One must", "balance", "the advantages", "against", "the disadvantages", "before", "making", "the decision"],
-    "hebrew_distractors": ["אפשר", "להשוות", "הסיכונים", "הרווחים", "ההצבעה"],
-    "english_distractors": ["one can", "to compare", "the risks", "the profits", "the vote"],
+    "hebrew_tokens": [
+      "יש",
+      "לאזן",
+      "בין",
+      "היתרונות",
+      "לחסרונות",
+      "בטרם",
+      "קבלת",
+      "ההחלטה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לְאַזֵּן",
+      "בֵּין",
+      "הַיִּתְרוֹנוֹת",
+      "לְחֶסְרוֹנוֹת",
+      "בְּטֶרֶם",
+      "קַבָּלַת",
+      "הַהַחְלָטָה"
+    ],
+    "english_tokens": [
+      "One must",
+      "balance",
+      "the advantages",
+      "against",
+      "the disadvantages",
+      "before",
+      "making",
+      "the decision"
+    ],
+    "hebrew_distractors": [
+      "אפשר",
+      "להשוות",
+      "הסיכונים",
+      "הרווחים",
+      "ההצבעה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֶפְשָׁר",
+      "לְהַשְׁווֹת",
+      "הַסִּכּוּנִים",
+      "הָרְוָחִים",
+      "הַהַצְבָּעָה"
+    ],
+    "english_distractors": [
+      "one can",
+      "to compare",
+      "the risks",
+      "the profits",
+      "the vote"
+    ],
     "notes": "יש לאזן בין = one must balance between; בטרם = before (formal); קבלת ההחלטה = making the decision (literally 'receiving the decision')."
   },
   {
@@ -3718,11 +6768,64 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "הטענה מבוססת על ראיות חלקיות בלבד, ולכן יש לבחון אותה מחדש.",
+    "hebrew_niqqud": "הַטַּעֲנָה מְבֻסֶּסֶת עַל רְאָיוֹת חֶלְקִיּוֹת בִּלְבַד, וְלָכֵן יֵשׁ לִבְחֹן אוֹתָהּ מֵחָדָשׁ.",
     "english": "The claim rests on partial evidence only, and therefore must be reexamined.",
-    "hebrew_tokens": ["הטענה", "מבוססת", "על", "ראיות", "חלקיות", "בלבד", "ולכן", "יש", "לבחון", "אותה", "מחדש"],
-    "english_tokens": ["The claim", "rests on", "partial", "evidence", "only", "and therefore", "must be reexamined"],
-    "hebrew_distractors": ["ההשערה", "נשענת", "מלאות", "עדויות", "לאשר"],
-    "english_distractors": ["The hypothesis", "leans on", "full", "testimonies", "be confirmed"],
+    "hebrew_tokens": [
+      "הטענה",
+      "מבוססת",
+      "על",
+      "ראיות",
+      "חלקיות",
+      "בלבד",
+      "ולכן",
+      "יש",
+      "לבחון",
+      "אותה",
+      "מחדש"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַטַּעֲנָה",
+      "מְבֻסֶּסֶת",
+      "עַל",
+      "רְאָיוֹת",
+      "חֶלְקִיּוֹת",
+      "בִּלְבַד",
+      "וְלָכֵן",
+      "יֵשׁ",
+      "לִבְחֹן",
+      "אוֹתָהּ",
+      "מֵחָדָשׁ"
+    ],
+    "english_tokens": [
+      "The claim",
+      "rests on",
+      "partial",
+      "evidence",
+      "only",
+      "and therefore",
+      "must be reexamined"
+    ],
+    "hebrew_distractors": [
+      "ההשערה",
+      "נשענת",
+      "מלאות",
+      "עדויות",
+      "לאשר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַהַשְׁעָרָה",
+      "נִשְׁעֶנֶת",
+      "מְלֵאוּת",
+      "עֵדוּיוֹת",
+      "לְאַשֵּׁר"
+    ],
+    "english_distractors": [
+      "The hypothesis",
+      "leans on",
+      "full",
+      "testimonies",
+      "be confirmed"
+    ],
     "notes": "הטענה מבוססת על = the claim is based on; ראיות חלקיות = partial evidence; יש לבחון מחדש = must be reexamined."
   },
   {
@@ -3732,11 +6835,55 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "ניתן לראות בכך עדות למגמה רחבה יותר.",
+    "hebrew_niqqud": "נִתָּן לִרְאוֹת בְּכָךְ עֵדוּת לִמְגַמָּה רְחָבָה יוֹתֵר.",
     "english": "This can be seen as evidence of a broader trend.",
-    "hebrew_tokens": ["ניתן", "לראות", "בכך", "עדות", "למגמה", "רחבה", "יותר"],
-    "english_tokens": ["This", "can be seen", "as evidence", "of", "a broader", "trend"],
-    "hebrew_distractors": ["אפשר", "להבחין", "סימן", "לתופעה", "צרה"],
-    "english_distractors": ["it's possible", "to notice", "a sign", "of a phenomenon", "narrower"],
+    "hebrew_tokens": [
+      "ניתן",
+      "לראות",
+      "בכך",
+      "עדות",
+      "למגמה",
+      "רחבה",
+      "יותר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִתָּן",
+      "לִרְאוֹת",
+      "בְּכָךְ",
+      "עֵדוּת",
+      "לִמְגַמָּה",
+      "רְחָבָה",
+      "יוֹתֵר"
+    ],
+    "english_tokens": [
+      "This",
+      "can be seen",
+      "as evidence",
+      "of",
+      "a broader",
+      "trend"
+    ],
+    "hebrew_distractors": [
+      "אפשר",
+      "להבחין",
+      "סימן",
+      "לתופעה",
+      "צרה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֶפְשָׁר",
+      "לְהַבְחִין",
+      "סִימָן",
+      "לַתּוֹפָעָה",
+      "צָרָה"
+    ],
+    "english_distractors": [
+      "it's possible",
+      "to notice",
+      "a sign",
+      "of a phenomenon",
+      "narrower"
+    ],
     "notes": "ניתן לראות בכך = this can be seen as (literally 'one can see in this'); מגמה = trend; רחבה יותר = broader."
   },
   {
@@ -3746,11 +6893,57 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "המסקנות אינן חד-משמעיות, ויש מקום לפרשנויות שונות.",
+    "hebrew_niqqud": "הַמַּסְקָנוֹת אֵינָן חַד-מַשְׁמָעִיּוֹת, וְיֵשׁ מָקוֹם לְפַרְשָׁנוּיוֹת שׁוֹנוֹת.",
     "english": "The conclusions are not unequivocal, and there is room for differing interpretations.",
-    "hebrew_tokens": ["המסקנות", "אינן", "חד-משמעיות", "ויש", "מקום", "לפרשנויות", "שונות"],
-    "english_tokens": ["The conclusions", "are not", "unequivocal", "and there is", "room", "for", "differing", "interpretations"],
-    "hebrew_distractors": ["הממצאים", "הינן", "ברורות", "אין", "דומות"],
-    "english_distractors": ["The findings", "are", "clear", "there is no", "similar"],
+    "hebrew_tokens": [
+      "המסקנות",
+      "אינן",
+      "חד-משמעיות",
+      "ויש",
+      "מקום",
+      "לפרשנויות",
+      "שונות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַמַּסְקָנוֹת",
+      "אֵינָן",
+      "חַד-מַשְׁמָעִיּוֹת",
+      "וְיֵשׁ",
+      "מָקוֹם",
+      "לְפַרְשָׁנוּיוֹת",
+      "שׁוֹנוֹת"
+    ],
+    "english_tokens": [
+      "The conclusions",
+      "are not",
+      "unequivocal",
+      "and there is",
+      "room",
+      "for",
+      "differing",
+      "interpretations"
+    ],
+    "hebrew_distractors": [
+      "הממצאים",
+      "הינן",
+      "ברורות",
+      "אין",
+      "דומות"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַמִּמְצָאִים",
+      "הִנָּן",
+      "בְּרוּרוֹת",
+      "אֵין",
+      "דּוֹמוֹת"
+    ],
+    "english_distractors": [
+      "The findings",
+      "are",
+      "clear",
+      "there is no",
+      "similar"
+    ],
     "notes": "אינן = formal negation (are not, f.pl.); חד-משמעיות = unequivocal (single hyphenated compound); פרשנויות שונות = differing interpretations."
   },
   {
@@ -3760,11 +6953,58 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "השפעת הגורם הזה על התוצאה עדיין שנויה במחלוקת.",
+    "hebrew_niqqud": "הַשְׁפָּעַת הַגּוֹרֵם הַזֶּה עַל הַתּוֹצָאָה עֲדַיִן שְׁנוּיָה בְּמַחְלֹקֶת.",
     "english": "The effect of this factor on the outcome is still disputed.",
-    "hebrew_tokens": ["השפעת", "הגורם", "הזה", "על", "התוצאה", "עדיין", "שנויה", "במחלוקת"],
-    "english_tokens": ["The effect", "of this", "factor", "on", "the outcome", "is still", "disputed"],
-    "hebrew_distractors": ["תרומת", "הנתון", "הסיבה", "כבר", "מוסכמת"],
-    "english_distractors": ["The contribution", "the datum", "the cause", "already", "agreed"],
+    "hebrew_tokens": [
+      "השפעת",
+      "הגורם",
+      "הזה",
+      "על",
+      "התוצאה",
+      "עדיין",
+      "שנויה",
+      "במחלוקת"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַשְׁפָּעַת",
+      "הַגּוֹרֵם",
+      "הַזֶּה",
+      "עַל",
+      "הַתּוֹצָאָה",
+      "עֲדַיִן",
+      "שְׁנוּיָה",
+      "בְּמַחְלֹקֶת"
+    ],
+    "english_tokens": [
+      "The effect",
+      "of this",
+      "factor",
+      "on",
+      "the outcome",
+      "is still",
+      "disputed"
+    ],
+    "hebrew_distractors": [
+      "תרומת",
+      "הנתון",
+      "הסיבה",
+      "כבר",
+      "מוסכמת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "תְּרוּמַת",
+      "הַנָּתוּן",
+      "הַסִּבָּה",
+      "כְּבָר",
+      "מֻסְכֶּמֶת"
+    ],
+    "english_distractors": [
+      "The contribution",
+      "the datum",
+      "the cause",
+      "already",
+      "agreed"
+    ],
     "notes": "השפעת הגורם = the effect of the factor; שנוי/שנויה במחלוקת = (a matter that is) disputed/controversial."
   },
   {
@@ -3774,11 +7014,58 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 3,
     "hebrew": "יש להפריד בין העמדה האישית לבין הניתוח האובייקטיבי.",
+    "hebrew_niqqud": "יֵשׁ לְהַפְרִיד בֵּין הָעֶמְדָּה הָאִישִׁית לְבֵין הַנִּתּוּחַ הָאוֹבְּיֶקְטִיבִי.",
     "english": "One must separate the personal stance from the objective analysis.",
-    "hebrew_tokens": ["יש", "להפריד", "בין", "העמדה", "האישית", "לבין", "הניתוח", "האובייקטיבי"],
-    "english_tokens": ["One must", "separate", "the personal", "stance", "from", "the objective", "analysis"],
-    "hebrew_distractors": ["אפשר", "לחבר", "הדעה", "המקצועית", "הסובייקטיבי"],
-    "english_distractors": ["one can", "to combine", "the opinion", "the professional", "the subjective"],
+    "hebrew_tokens": [
+      "יש",
+      "להפריד",
+      "בין",
+      "העמדה",
+      "האישית",
+      "לבין",
+      "הניתוח",
+      "האובייקטיבי"
+    ],
+    "hebrew_tokens_niqqud": [
+      "יֵשׁ",
+      "לְהַפְרִיד",
+      "בֵּין",
+      "הָעֶמְדָּה",
+      "הָאִישִׁית",
+      "לְבֵין",
+      "הַנִּתּוּחַ",
+      "הָאוֹבְּיֶקְטִיבִי"
+    ],
+    "english_tokens": [
+      "One must",
+      "separate",
+      "the personal",
+      "stance",
+      "from",
+      "the objective",
+      "analysis"
+    ],
+    "hebrew_distractors": [
+      "אפשר",
+      "לחבר",
+      "הדעה",
+      "המקצועית",
+      "הסובייקטיבי"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֶפְשָׁר",
+      "לְחַבֵּר",
+      "הַדֵּעָה",
+      "הַמִּקְצוֹעִית",
+      "הַסּוּבְּיֶקְטִיבִי"
+    ],
+    "english_distractors": [
+      "one can",
+      "to combine",
+      "the opinion",
+      "the professional",
+      "the subjective"
+    ],
     "notes": "יש להפריד בין... לבין = one must separate between X and Y; העמדה האישית = the personal stance/position; אובייקטיבי = objective."
   },
   {
@@ -3788,11 +7075,47 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "אפשר לשבת ליד החלון?",
+    "hebrew_niqqud": "אֶפְשָׁר לָשֶׁבֶת לְיַד הַחַלּוֹן?",
     "english": "Can we sit by the window?",
-    "hebrew_tokens": ["אפשר", "לשבת", "ליד", "החלון"],
-    "english_tokens": ["Can we", "sit", "by", "the window"],
-    "hebrew_distractors": ["אסור", "לעמוד", "מול", "הדלת", "בחוץ"],
-    "english_distractors": ["We can't", "stand", "across from", "the door", "outside"],
+    "hebrew_tokens": [
+      "אפשר",
+      "לשבת",
+      "ליד",
+      "החלון"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֶפְשָׁר",
+      "לָשֶׁבֶת",
+      "לְיַד",
+      "הַחַלּוֹן"
+    ],
+    "english_tokens": [
+      "Can we",
+      "sit",
+      "by",
+      "the window"
+    ],
+    "hebrew_distractors": [
+      "אסור",
+      "לעמוד",
+      "מול",
+      "הדלת",
+      "בחוץ"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אָסוּר",
+      "לַעֲמֹד",
+      "מוּל",
+      "הַדֶּלֶת",
+      "בַּחוּץ"
+    ],
+    "english_distractors": [
+      "We can't",
+      "stand",
+      "across from",
+      "the door",
+      "outside"
+    ],
     "notes": "אפשר ל = can we / is it possible to; ליד = next to/by; החלון = the window."
   },
   {
@@ -3802,11 +7125,52 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "נגמר לי הקפה, אני קופץ לסופר.",
+    "hebrew_niqqud": "נִגְמַר לִי הַקָּפֶה, אֲנִי קוֹפֵץ לַסּוּפֶּר.",
     "english": "I'm out of coffee, I'm popping over to the supermarket.",
-    "hebrew_tokens": ["נגמר", "לי", "הקפה", "אני", "קופץ", "לסופר"],
-    "english_tokens": ["I'm out of", "coffee", "I'm", "popping over", "to the supermarket"],
-    "hebrew_distractors": ["נשאר", "הסוכר", "היא", "רצה", "הביתה"],
-    "english_distractors": ["I still have", "sugar", "she", "running", "home"],
+    "hebrew_tokens": [
+      "נגמר",
+      "לי",
+      "הקפה",
+      "אני",
+      "קופץ",
+      "לסופר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "נִגְמַר",
+      "לִי",
+      "הַקָּפֶה",
+      "אֲנִי",
+      "קוֹפֵץ",
+      "לַסּוּפֶּר"
+    ],
+    "english_tokens": [
+      "I'm out of",
+      "coffee",
+      "I'm",
+      "popping over",
+      "to the supermarket"
+    ],
+    "hebrew_distractors": [
+      "נשאר",
+      "הסוכר",
+      "היא",
+      "רצה",
+      "הביתה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "נִשְׁאַר",
+      "הַסֻּכָּר",
+      "הִיא",
+      "רָצָה",
+      "הַבַּיְתָה"
+    ],
+    "english_distractors": [
+      "I still have",
+      "sugar",
+      "she",
+      "running",
+      "home"
+    ],
     "notes": "נגמר לי = I've run out of; קופץ ל = popping over to (קופץ literally 'jumping'); לסופר = to the supermarket."
   },
   {
@@ -3816,11 +7180,52 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "תכבה את האור לפני שאתה יוצא.",
+    "hebrew_niqqud": "תְּכַבֶּה אֶת הָאוֹר לִפְנֵי שֶׁאַתָּה יוֹצֵא.",
     "english": "Turn off the light before you leave.",
-    "hebrew_tokens": ["תכבה", "את", "האור", "לפני", "שאתה", "יוצא"],
-    "english_tokens": ["Turn off", "the light", "before", "you", "leave"],
-    "hebrew_distractors": ["תדליק", "המזגן", "אחרי", "שאני", "נכנס"],
-    "english_distractors": ["Turn on", "the AC", "after", "I", "enter"],
+    "hebrew_tokens": [
+      "תכבה",
+      "את",
+      "האור",
+      "לפני",
+      "שאתה",
+      "יוצא"
+    ],
+    "hebrew_tokens_niqqud": [
+      "תְּכַבֶּה",
+      "אֶת",
+      "הָאוֹר",
+      "לִפְנֵי",
+      "שֶׁאַתָּה",
+      "יוֹצֵא"
+    ],
+    "english_tokens": [
+      "Turn off",
+      "the light",
+      "before",
+      "you",
+      "leave"
+    ],
+    "hebrew_distractors": [
+      "תדליק",
+      "המזגן",
+      "אחרי",
+      "שאני",
+      "נכנס"
+    ],
+    "hebrew_distractors_niqqud": [
+      "תַּדְלִיק",
+      "הַמַּזְגָן",
+      "אַחֲרֵי",
+      "שֶׁאֲנִי",
+      "נִכְנַס"
+    ],
+    "english_distractors": [
+      "Turn on",
+      "the AC",
+      "after",
+      "I",
+      "enter"
+    ],
     "notes": "תכבה = turn off (imperative m.); את האור = the light; לפני שאתה יוצא = before you leave."
   },
   {
@@ -3830,11 +7235,51 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "הילדים רעבים, מתי האוכל מוכן?",
+    "hebrew_niqqud": "הַיְּלָדִים רְעֵבִים, מָתַי הָאֹכֶל מוּכָן?",
     "english": "The kids are hungry, when is the food ready?",
-    "hebrew_tokens": ["הילדים", "רעבים", "מתי", "האוכל", "מוכן"],
-    "english_tokens": ["The kids", "are hungry", "when", "is", "the food", "ready"],
-    "hebrew_distractors": ["ההורים", "עייפים", "איפה", "הקינוח", "חם"],
-    "english_distractors": ["The parents", "are tired", "where", "the dessert", "hot"],
+    "hebrew_tokens": [
+      "הילדים",
+      "רעבים",
+      "מתי",
+      "האוכל",
+      "מוכן"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הַיְּלָדִים",
+      "רְעֵבִים",
+      "מָתַי",
+      "הָאֹכֶל",
+      "מוּכָן"
+    ],
+    "english_tokens": [
+      "The kids",
+      "are hungry",
+      "when",
+      "is",
+      "the food",
+      "ready"
+    ],
+    "hebrew_distractors": [
+      "ההורים",
+      "עייפים",
+      "איפה",
+      "הקינוח",
+      "חם"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הַהוֹרִים",
+      "עֲיֵפִים",
+      "אֵיפֹה",
+      "הַקִּנּוּחַ",
+      "חַם"
+    ],
+    "english_distractors": [
+      "The parents",
+      "are tired",
+      "where",
+      "the dessert",
+      "hot"
+    ],
     "notes": "הילדים רעבים = the kids are hungry; מתי = when; מוכן = ready (m.)."
   },
   {
@@ -3844,11 +7289,52 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 2,
     "hebrew": "שכחתי את המטרייה והתחיל לרדת גשם.",
+    "hebrew_niqqud": "שָׁכַחְתִּי אֶת הַמִּטְרִיָּה וְהִתְחִיל לָרֶדֶת גֶּשֶׁם.",
     "english": "I forgot my umbrella and it started to rain.",
-    "hebrew_tokens": ["שכחתי", "את", "המטרייה", "והתחיל", "לרדת", "גשם"],
-    "english_tokens": ["I forgot", "my umbrella", "and", "it started", "to rain"],
-    "hebrew_distractors": ["לקחתי", "המעיל", "והפסיק", "לבוא", "שלג"],
-    "english_distractors": ["I took", "my coat", "and it stopped", "to come", "snow"],
+    "hebrew_tokens": [
+      "שכחתי",
+      "את",
+      "המטרייה",
+      "והתחיל",
+      "לרדת",
+      "גשם"
+    ],
+    "hebrew_tokens_niqqud": [
+      "שָׁכַחְתִּי",
+      "אֶת",
+      "הַמִּטְרִיָּה",
+      "וְהִתְחִיל",
+      "לָרֶדֶת",
+      "גֶּשֶׁם"
+    ],
+    "english_tokens": [
+      "I forgot",
+      "my umbrella",
+      "and",
+      "it started",
+      "to rain"
+    ],
+    "hebrew_distractors": [
+      "לקחתי",
+      "המעיל",
+      "והפסיק",
+      "לבוא",
+      "שלג"
+    ],
+    "hebrew_distractors_niqqud": [
+      "לָקַחְתִּי",
+      "הַמְּעִיל",
+      "וְהִפְסִיק",
+      "לָבוֹא",
+      "שֶׁלֶג"
+    ],
+    "english_distractors": [
+      "I took",
+      "my coat",
+      "and it stopped",
+      "to come",
+      "snow"
+    ],
     "notes": "שכחתי = I forgot; המטרייה = the umbrella; התחיל לרדת גשם = it started to rain (literally 'rain started to fall')."
   },
   {
@@ -3858,11 +7344,52 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "הוא ישן, אפשר לדבר יותר בשקט?",
+    "hebrew_niqqud": "הוּא יָשַׁן, אֶפְשָׁר לְדַבֵּר יוֹתֵר בְּשֶׁקֶט?",
     "english": "He's sleeping, can we talk more quietly?",
-    "hebrew_tokens": ["הוא", "ישן", "אפשר", "לדבר", "יותר", "בשקט"],
-    "english_tokens": ["He's sleeping", "can we", "talk", "more", "quietly"],
-    "hebrew_distractors": ["היא", "ערה", "לצעוק", "פחות", "בקול"],
-    "english_distractors": ["She's awake", "shout", "less", "loudly", "outside"],
+    "hebrew_tokens": [
+      "הוא",
+      "ישן",
+      "אפשר",
+      "לדבר",
+      "יותר",
+      "בשקט"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הוּא",
+      "יָשַׁן",
+      "אֶפְשָׁר",
+      "לְדַבֵּר",
+      "יוֹתֵר",
+      "בְּשֶׁקֶט"
+    ],
+    "english_tokens": [
+      "He's sleeping",
+      "can we",
+      "talk",
+      "more",
+      "quietly"
+    ],
+    "hebrew_distractors": [
+      "היא",
+      "ערה",
+      "לצעוק",
+      "פחות",
+      "בקול"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הִיא",
+      "עֵרָה",
+      "לִצְעֹק",
+      "פָּחוֹת",
+      "בְּקוֹל"
+    ],
+    "english_distractors": [
+      "She's awake",
+      "shout",
+      "less",
+      "loudly",
+      "outside"
+    ],
     "notes": "הוא ישן = he's sleeping; אפשר לדבר = can we talk; יותר בשקט = more quietly."
   },
   {
@@ -3872,21 +7399,60 @@ const SENTENCE_BANK = [
     "style": null,
     "difficulty": 1,
     "hebrew": "צריך לקבוע תור לרופא שיניים.",
+    "hebrew_niqqud": "צָרִיךְ לִקְבֹּעַ תּוֹר לְרוֹפֵא שִׁנַּיִם.",
     "english": "We need to make a dentist appointment.",
-    "hebrew_tokens": ["צריך", "לקבוע", "תור", "לרופא שיניים"],
-    "english_tokens": ["We need", "to make", "a dentist", "appointment"],
-    "hebrew_distractors": ["אפשר", "לבטל", "פגישה", "לרופא עיניים", "מחר"],
-    "english_distractors": ["I can", "to cancel", "a meeting", "an eye doctor", "tomorrow"],
+    "hebrew_tokens": [
+      "צריך",
+      "לקבוע",
+      "תור",
+      "לרופא שיניים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "צָרִיךְ",
+      "לִקְבֹּעַ",
+      "תּוֹר",
+      "לְרוֹפֵא שִׁנַּיִם"
+    ],
+    "english_tokens": [
+      "We need",
+      "to make",
+      "a dentist",
+      "appointment"
+    ],
+    "hebrew_distractors": [
+      "אפשר",
+      "לבטל",
+      "פגישה",
+      "לרופא עיניים",
+      "מחר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אֶפְשָׁר",
+      "לְבַטֵּל",
+      "פְּגִישָׁה",
+      "לְרוֹפֵא עֵינַיִם",
+      "מָחָר"
+    ],
+    "english_distractors": [
+      "I can",
+      "to cancel",
+      "a meeting",
+      "an eye doctor",
+      "tomorrow"
+    ],
     "notes": "צריך לקבוע תור = we need to make/schedule an appointment; רופא שיניים = dentist (kept as one compound chip)."
-  }];
+  }
+];
 
 function cloneSentence(item) {
   return {
     ...item,
     english_tokens: Array.isArray(item?.english_tokens) ? [...item.english_tokens] : [],
     hebrew_tokens: Array.isArray(item?.hebrew_tokens) ? [...item.hebrew_tokens] : [],
+    hebrew_tokens_niqqud: Array.isArray(item?.hebrew_tokens_niqqud) ? [...item.hebrew_tokens_niqqud] : [],
     english_distractors: Array.isArray(item?.english_distractors) ? [...item.english_distractors] : [],
     hebrew_distractors: Array.isArray(item?.hebrew_distractors) ? [...item.hebrew_distractors] : [],
+    hebrew_distractors_niqqud: Array.isArray(item?.hebrew_distractors_niqqud) ? [...item.hebrew_distractors_niqqud] : [],
   };
 }
 
@@ -3897,6 +7463,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260622a",
+  __build: "20260702a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
