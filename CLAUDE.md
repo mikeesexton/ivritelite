@@ -24,6 +24,14 @@ Do not skip the log entry even for small or documentation-only tasks.
 - Do not add comments or docstrings to code you did not write.
 - Run `npm test` before and after non-trivial code changes and record the result in the log.
 
+## Cache-busting (required before push — do not skip)
+
+`index.html` loads every `.js`/`.css` file with a `?v=YYYYMMDD<letter>` query string (e.g. `hebrew-verbs.js?v=20260704a`). GitHub Pages and browsers cache by full URL, so **a change won't go live until its `?v=` string is bumped**, even after the code is merged.
+
+- For **every** `.js` or `.css` file you edit, bump that file's `?v=` in `index.html` in the same commit. Data files (`hebrew-verbs.js`, `vocab-data.js`, etc.) count too — they're easy to forget because they're not in `app/`.
+- Use today's date plus a letter (`20260704a`, then `b` for a second push the same day).
+- Before pushing, verify: every path in your diff that is `.js`/`.css` has a matching `?v=` bump in `index.html`.
+
 ## Project structure
 
 - `index.html` — app entry point (no build step; open directly or via local HTTP server). Loads every module/data file as a `<script defer>`.
