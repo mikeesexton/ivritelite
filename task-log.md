@@ -3556,3 +3556,21 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** `npm test` — 213/213 pass. Node-harness checks: all 9 verbs' plain present/past/future forms match the generation engine exactly (no consonant typos; the only diffs were correct sofit ם on לשלם that the raw generator leaves medial); every deck form carries niqqud; צריך is present-only (4 forms); English past labels resolve correctly (thought/sold/told/paid via the irregulars map).
 
 **Risks / regressions to check:** (1) The hand-authored niqqud on the 9 verbs is standard-pattern and self-reviewed, but the exact vowel points (esp. guttural לחשוב/לחפש and dagesh placement) should be spot-checked by a fluent reader; plain consonants are generator-verified so any error would be in vowels only. (2) These 9 are `translationQuiz:false`, so they appear only in the conjugation game, not the word-meaning quiz — flip to `true` if you also want them there. (3) צריך is present-only by design; if broader coverage is wanted, the past/future belong in the sentence bank rather than this drill.
+
+### 2026-07-04 — Fix stale deploy of the verb changes; add cache-bust rule to CLAUDE.md
+
+**Requested:** The "rised"→"rose" fix (merged in PR #22) was not visible on the live GitHub Pages site; investigate. Then add a note to prevent recurrence.
+
+**Root cause:** `index.html` loads each file with a `?v=` cache-bust query string. PR #22 bumped the strings for `app/ui.js` and `styles.css` but not for `hebrew-verbs.js`, which stayed at `?v=20260628g`. Browsers and the Pages CDN cache by full URL, so the old `hebrew-verbs.js` kept being served even though the new file was deployed.
+
+**Change:**
+- `index.html` — bumped `hebrew-verbs.js` cache-bust `20260628g` → `20260704a` (PR #23), so the rise fix, צריך, and the 9 new verbs actually load.
+- `CLAUDE.md` — added a "Cache-busting (required before push)" section: bump the `?v=` for every `.js`/`.css` file you edit (data files included) in the same commit, and verify before pushing.
+
+**Files changed:** `index.html` (cache-bust bump), `CLAUDE.md` (new rule), `task-log.md`.
+
+**Behavior changed:** Live site now serves the current `hebrew-verbs.js` after a Pages rebuild + hard reload; no runtime code behavior change.
+
+**Tests run:** `npm test` — 213/213 pass (no logic changed).
+
+**Risks / regressions to check:** None. Confirm on the live site (hard reload) that לקום shows "rose" and the new verbs/צריך appear.
