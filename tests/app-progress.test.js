@@ -1340,8 +1340,13 @@ test("all viewports share the single-page layout with the bottom nav", () => {
   assert.match(markup, /id="mobileBottomNav"[\s\S]*data-route="home"[\s\S]*data-route="review"[\s\S]*data-route="settings"/s);
   // The old desktop "hub" layout is gone entirely.
   assert.doesNotMatch(styles, /data-desktop-hub-layout="true"/);
-  // The bottom nav is never hidden (it was previously display:none at >=1024).
-  assert.doesNotMatch(styles, /\.mobile-bottom-nav\s*\{[^}]*display:\s*none/s);
+  // The bottom nav is never hidden by viewport width (it was previously
+  // display:none at >=1024); the only hide rules are scoped to active gameplay.
+  const navHideRules = styles.match(/[^{}]*\.mobile-bottom-nav[^{}]*\{[^}]*display:\s*none[^}]*\}/g) || [];
+  assert.ok(navHideRules.length > 0);
+  for (const rule of navHideRules) {
+    assert.match(rule, /body\[data-gameplay-active="true"\]/);
+  }
   // On wide screens the bottom nav is centered rather than stretched edge-to-edge.
   assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.mobile-bottom-nav\s*\{[^}]*left:\s*50%;[^}]*transform:\s*translateX\(-50%\);/s);
 });

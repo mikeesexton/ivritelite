@@ -3092,7 +3092,7 @@ body[data-ui-lang="he"] .mastered-row input {
 }
 
 @media (max-width: 1023px) {
-  .shell-topbar-home {
+  body:not([data-gameplay-active="true"]) .shell-topbar-home {
     display: none !important;
   }
 }
@@ -3625,6 +3625,50 @@ body[data-ui-lang="he"] .mastered-row input {
 
   .match-card.hebrew {
     font-size: 0.94rem;
+  }
+}
+
+/* Compact gameplay chrome on mobile: hide the bottom nav, drop the sticky
+   footer to the viewport edge, and slim the topbar while a session is live. */
+@media (max-width: 767px) {
+  body[data-gameplay-active="true"] .mobile-bottom-nav {
+    display: none;
+  }
+
+  body[data-gameplay-active="true"] .app-shell {
+    padding-bottom: calc(0.62rem + env(safe-area-inset-bottom));
+  }
+
+  body[data-gameplay-active="true"] .lesson-shell .lesson-footer {
+    bottom: calc(0.5rem + env(safe-area-inset-bottom));
+  }
+
+  body[data-gameplay-active="true"] .shell-topbar {
+    padding: 0.42rem 0.64rem;
+  }
+
+  body[data-gameplay-active="true"] .shell-logo {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+
+  body[data-gameplay-active="true"] .shell-brand-title h1 {
+    font-size: 1.18rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body[data-gameplay-active="true"] .shell-gameplay-pill {
+    padding: 0.34rem 0.6rem;
+    font-size: 0.84rem;
+  }
+
+  body[data-gameplay-active="true"] .shell-topbar-home {
+    min-width: 2.2rem;
+    min-height: 2.2rem;
+    padding: 0.22rem 0.5rem;
+    font-size: 0.95rem;
   }
 }
 

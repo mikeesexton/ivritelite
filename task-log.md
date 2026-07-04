@@ -3517,3 +3517,42 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** `npm test` — 213/213 pass. Browser-verified: rendered all 27 templates with start/end markers before and after; resh/he/qof now start right; a full session runs exactly one sentence (29 letters skipped → summary appears immediately after).
 
 **Risks / regressions to check:** Stroke direction has no universal standard — if the user writes gimel/dalet/lamed/pe differently than the kept convention, reverse those strokes the same way (reverse the `points` arrays; scoring is unaffected). One sentence per session means per-session letter coverage is narrower; the Leitner progress still accumulates across sessions.
+
+---
+
+### 2026-07-03 — Reclaim vertical space during gameplay on mobile (hide bottom nav, compact topbar, drop sticky footer)
+
+**Requested:** Gameplay screens on mobile used vertical space poorly across games — the feedback tray + Next button covered the last answer choice (including the highlighted correct answer), and the fixed bottom nav plus its reserved padding wasted ~120px mid-game. Figure out how to optimize the mobile display.
+
+**Change:**
+- `styles.css` — new `@media (max-width: 767px)` block scoped to `body[data-gameplay-active="true"]`: hides `.mobile-bottom-nav` during active gameplay; shrinks `.app-shell` bottom padding from `5.2rem` to `0.62rem` (+safe-area); drops the sticky `.lesson-footer` from `bottom: 4.15rem` to `0.5rem` (+safe-area) via a `body[…] .lesson-shell .lesson-footer` selector whose specificity also overrides the sentence-bank and short-viewport variants; compacts the topbar (padding `0.42rem`, logo `1.9rem`, title `1.18rem` with nowrap/ellipsis, smaller gameplay pill and home button). Also changed the `@media (max-width: 1023px)` rule that force-hid `.shell-topbar-home` so it only applies outside gameplay (`body:not([data-gameplay-active="true"])`), since the 🏠 button is now the exit path while the nav is hidden.
+- `app/ui.js` — `renderShellChrome()`: `showShellHomeButton` is now `gameplayActive || (viewportWidth >= 1024 && results-with-summary)` instead of requiring `>=1024px` for both cases, so the topbar 🏠 (already wired to `session.requestGoHome`, i.e. the leave-game confirm) shows on mobile/tablet during gameplay. Desktop behavior unchanged.
+- `tests/app-progress.test.js` — the "bottom nav is never hidden" guard now asserts that any `.mobile-bottom-nav` `display: none` rule is scoped to `body[data-gameplay-active="true"]` (the original intent — no viewport-width hiding — still enforced).
+- `index.html` — cache-bust bumps to `?v=20260703a` for styles.css and app/ui.js.
+
+**Files changed:** `styles.css`, `app/ui.js`, `tests/app-progress.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** On phones (≤767px) during an active game session: the Home/Review/Settings bottom nav disappears and a compact 🏠 button appears in the (slimmed) topbar instead — tapping it opens the existing leave-game confirmation. The Next button + feedback tray now sit at the bottom edge of the screen, reclaiming ~110–120px, so a standard 4-choice round plus feedback fits fully on screen (verified down to 375×667) with no choices hidden behind the footer. Outside gameplay (home, review, settings, results) nothing changes — the bottom nav returns and the 🏠 hides. Tablets (768–1023px) keep their bottom nav but also gain the topbar 🏠 during gameplay. Desktop unchanged.
+
+**Tests run:** `npm test` — 213/213 pass (before and after; one test updated as described). Browser-verified at 375×812 and 375×667: nav hidden + compact topbar during a lesson and prepositions round; all four choices, Submit/Next, and the feedback tray visible simultaneously with no overlap; 🏠 → leave-confirm → home restores the nav and hides 🏠; no console errors.
+
+**Risks / regressions to check:** (1) Mid-game on mobile there is now no direct Review/Settings access — exiting via 🏠 is required first (intended, matches the leave-confirm flow the nav triggered anyway). (2) The compact 🏠 (2.2rem ≈ 35px) is slightly below the 44px ideal tap target. (3) Games whose footer appears in other states (e.g. sentence-bank second chance) inherit the new `bottom: 0.5rem` via the higher-specificity override — spot-check sentence builder on a real phone. (4) If a future rule hides `.mobile-bottom-nav` outside gameplay scope, the updated test will (intentionally) fail.
+
+### 2026-07-03 — Fix "rised"→"rose"; add צריך (present-only) and 9 common verbs to the conjugation game
+
+**Requested:** (1) The verb-conjugation match game showed the English past of "to rise" as "rised" — should be "rose". (2) Add צריך to the conjugation game. (3) Add any more verbs that can be added reliably. Follow-up: add the 9 candidate verbs, and advise whether צריך's compound past forms are natural or need a different learning method.
+
+**Change (all in `hebrew-verbs.js`):**
+- **rise fix:** Added `["rise", "rose"]` to `ENGLISH_PAST_IRREGULARS`. `inflectEnglishPast()` was falling through to the regular `/e$/`→`+d` rule and producing "rised"; the map now yields "rose" for every past-tense English label of לקום. Audited all 62 distinct verb glosses first — "rise" was the only incorrect English past.
+- **צריך (present-only):** Added curated entry `common-verb-tzarich` with only the 4 present forms (צריך/צריכה/צריכים/צריכות → he/she needs, they need), fully vocalized. Deliberately NO past/future: צריך's past is a two-word compound (היה צריך) and its future is a different verb (nif'al להצטרך → אצטרך), neither of which fits a single-word conjugation drill without misrepresenting what they are. An earlier draft that included the compound past + nif'al future was reverted in favor of present-only; the entry's `notes` records that the past/future are taught as sentence patterns instead.
+- **9 new common verbs (full curated tables, 24 forms each):** pa'al o-stem — לחשוב (think), לזכור (remember), למכור (sell), לגמור (finish); pi'el — לבקש (request), לספר (tell), לשלם (pay), לקבל (receive), לחפש (search). Consonantal (plain, ktiv-male) forms were taken from the tested generation engine (`buildGeneratedForms`) and verified to match programmatically; niqqud was hand-authored following the existing לסגור (paal_o) and לתקן (pi'el) templates — ktiv-haser-menuqad with dagesh, guttural chataf-patach for לחשוב/לחפש, sin dot for לחפש. All set `conjugation_mode:"curated"`, `translationQuiz:false` (conjugation game only; the flag doesn't gate that game anyway), `sentenceHints:true`.
+
+**Investigation note:** The conjugation game (`app/verb-match.js`) consumes the full `buildVerbConjugationDeck()` output and does NOT filter by `availability.translationQuiz` — that flag only gates the separate word-meaning quiz. So new verbs enter the conjugation game purely by having valid vocalized tables (deck now 65 verbs, was 55). The deck enforces a tested invariant that every learner-facing form carry niqqud (`tests/hebrew-verbs.test.js:659`), which is why generation-backed (unvocalized) entries can't be used and full vocalized tables are required.
+
+**Files changed:** `hebrew-verbs.js` (rise irregular + 10 new verb entries), `task-log.md`.
+
+**Behavior changed:** In the verb-match conjugation game: לקום past options now read "rose" not "rised"; צריך appears as a present-only round (4 pairs); and think/remember/sell/finish/request/tell/pay/receive/search are now playable with present/past/future/imperative rounds.
+
+**Tests run:** `npm test` — 213/213 pass. Node-harness checks: all 9 verbs' plain present/past/future forms match the generation engine exactly (no consonant typos; the only diffs were correct sofit ם on לשלם that the raw generator leaves medial); every deck form carries niqqud; צריך is present-only (4 forms); English past labels resolve correctly (thought/sold/told/paid via the irregulars map).
+
+**Risks / regressions to check:** (1) The hand-authored niqqud on the 9 verbs is standard-pattern and self-reviewed, but the exact vowel points (esp. guttural לחשוב/לחפש and dagesh placement) should be spot-checked by a fluent reader; plain consonants are generator-verified so any error would be in vowels only. (2) These 9 are `translationQuiz:false`, so they appear only in the conjugation game, not the word-meaning quiz — flip to `true` if you also want them there. (3) צריך is present-only by design; if broader coverage is wanted, the past/future belong in the sentence bank rather than this drill.
