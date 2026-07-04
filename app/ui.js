@@ -319,7 +319,7 @@ ui.renderShellChrome = ui.renderShellChrome || function renderShellChrome() {
   const runtime = getRuntime();
   const { gameplayActive } = ui.getGameplayHeaderMeta();
   const viewportWidth = Math.max(0, Number(runtime.global?.innerWidth || 0));
-  const showShellHomeButton = viewportWidth >= 1024 && (gameplayActive || (runtime.state.route === "results" && runtime.state.summary.active));
+  const showShellHomeButton = gameplayActive || (viewportWidth >= 1024 && runtime.state.route === "results" && runtime.state.summary.active);
   runtime.global.document.body?.setAttribute("data-gameplay-active", gameplayActive ? "true" : "false");
   if (runtime.el?.shellTopbar) {
     runtime.el.shellTopbar.classList.toggle("gameplay-active", gameplayActive);

@@ -2764,6 +2764,484 @@ function buildStarterVerbEntries() {
       personal_priority: 62,
     }),
     createVerbEntry({
+      id: "common-verb-tzarich",
+      availability: { translationQuiz: true, sentenceHints: true },
+      lemma: "צריך",
+      lemma_niqqud: "צָרִיךְ",
+      root: ["צ", "ר", "כ"],
+      binyan: "paal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to need", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("צריך", "צָרִיךְ"),
+          markedForm("צריכה", "צְרִיכָה"),
+          markedForm("צריכים", "צְרִיכִים"),
+          markedForm("צריכות", "צְרִיכוֹת")
+        )
+      ),
+      review_status: "approved",
+      notes: "Modal 'need / must / should'. Drilled present-only: it agrees in gender/number (צריך/צריכה/צריכים/צריכות) but is not a full verb — the past is a compound with היה (היה צריך) and the future uses the separate nif'al להצטרך (אצטרך), so those are taught as sentence patterns rather than single-word conjugations.",
+      difficulty_level: 2,
+      tags: ["paal", "irregular", "modal"],
+      personal_priority: 70,
+    }),
+    createVerbEntry({
+      id: "common-verb-lachshov",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לחשוב",
+      lemma_niqqud: "לַחְשֹׁב",
+      root: ["ח", "ש", "ב"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      generation_pattern: "paal_o",
+      senses: [makeSense("to think", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("חושב", "חוֹשֵׁב"),
+          markedForm("חושבת", "חוֹשֶׁבֶת"),
+          markedForm("חושבים", "חוֹשְׁבִים"),
+          markedForm("חושבות", "חוֹשְׁבוֹת")
+        ),
+        makePast(
+          markedForm("חשבתי", "חָשַׁבְתִּי"),
+          markedForm("חשבת", "חָשַׁבְתָּ"),
+          markedForm("חשבת", "חָשַׁבְתְּ"),
+          markedForm("חשב", "חָשַׁב"),
+          markedForm("חשבה", "חָשְׁבָה"),
+          markedForm("חשבנו", "חָשַׁבְנוּ"),
+          markedForm("חשבתם", "חֲשַׁבְתֶּם"),
+          markedForm("חשבתן", "חֲשַׁבְתֶּן"),
+          markedForm("חשבו", "חָשְׁבוּ")
+        ),
+        makeFuture(
+          markedForm("אחשוב", "אֶחְשׁוֹב"),
+          markedForm("תחשוב", "תַּחְשׁוֹב"),
+          markedForm("תחשבי", "תַּחְשְׁבִי"),
+          markedForm("יחשוב", "יַחְשׁוֹב"),
+          markedForm("תחשוב", "תַּחְשׁוֹב"),
+          markedForm("נחשוב", "נַחְשׁוֹב"),
+          markedForm("תחשבו", "תַּחְשְׁבוּ"),
+          markedForm("יחשבו", "יַחְשְׁבוּ")
+        ),
+        makeImperative(
+          markedForm("חשוב", "חֲשֹׁב"),
+          markedForm("חשבי", "חִשְׁבִי"),
+          markedForm("חשבו", "חִשְׁבוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pa'al strong verb (ח-ש-ב), o-future; first-radical guttural.",
+      difficulty_level: 2,
+      tags: ["paal", "regular"],
+      personal_priority: 66,
+    }),
+    createVerbEntry({
+      id: "common-verb-lizkor",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לזכור",
+      lemma_niqqud: "לִזְכֹּר",
+      root: ["ז", "כ", "ר"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      generation_pattern: "paal_o",
+      senses: [makeSense("to remember", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("זוכר", "זוֹכֵר"),
+          markedForm("זוכרת", "זוֹכֶרֶת"),
+          markedForm("זוכרים", "זוֹכְרִים"),
+          markedForm("זוכרות", "זוֹכְרוֹת")
+        ),
+        makePast(
+          markedForm("זכרתי", "זָכַרְתִּי"),
+          markedForm("זכרת", "זָכַרְתָּ"),
+          markedForm("זכרת", "זָכַרְתְּ"),
+          markedForm("זכר", "זָכַר"),
+          markedForm("זכרה", "זָכְרָה"),
+          markedForm("זכרנו", "זָכַרְנוּ"),
+          markedForm("זכרתם", "זְכַרְתֶּם"),
+          markedForm("זכרתן", "זְכַרְתֶּן"),
+          markedForm("זכרו", "זָכְרוּ")
+        ),
+        makeFuture(
+          markedForm("אזכור", "אֶזְכּוֹר"),
+          markedForm("תזכור", "תִּזְכּוֹר"),
+          markedForm("תזכרי", "תִּזְכְּרִי"),
+          markedForm("יזכור", "יִזְכּוֹר"),
+          markedForm("תזכור", "תִּזְכּוֹר"),
+          markedForm("נזכור", "נִזְכּוֹר"),
+          markedForm("תזכרו", "תִּזְכְּרוּ"),
+          markedForm("יזכרו", "יִזְכְּרוּ")
+        ),
+        makeImperative(
+          markedForm("זכור", "זְכֹר"),
+          markedForm("זכרי", "זִכְרִי"),
+          markedForm("זכרו", "זִכְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pa'al strong verb (ז-כ-ר), o-future.",
+      difficulty_level: 2,
+      tags: ["paal", "regular"],
+      personal_priority: 66,
+    }),
+    createVerbEntry({
+      id: "common-verb-limkor",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "למכור",
+      lemma_niqqud: "לִמְכֹּר",
+      root: ["מ", "כ", "ר"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      generation_pattern: "paal_o",
+      senses: [makeSense("to sell", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מוכר", "מוֹכֵר"),
+          markedForm("מוכרת", "מוֹכֶרֶת"),
+          markedForm("מוכרים", "מוֹכְרִים"),
+          markedForm("מוכרות", "מוֹכְרוֹת")
+        ),
+        makePast(
+          markedForm("מכרתי", "מָכַרְתִּי"),
+          markedForm("מכרת", "מָכַרְתָּ"),
+          markedForm("מכרת", "מָכַרְתְּ"),
+          markedForm("מכר", "מָכַר"),
+          markedForm("מכרה", "מָכְרָה"),
+          markedForm("מכרנו", "מָכַרְנוּ"),
+          markedForm("מכרתם", "מְכַרְתֶּם"),
+          markedForm("מכרתן", "מְכַרְתֶּן"),
+          markedForm("מכרו", "מָכְרוּ")
+        ),
+        makeFuture(
+          markedForm("אמכור", "אֶמְכּוֹר"),
+          markedForm("תמכור", "תִּמְכּוֹר"),
+          markedForm("תמכרי", "תִּמְכְּרִי"),
+          markedForm("ימכור", "יִמְכּוֹר"),
+          markedForm("תמכור", "תִּמְכּוֹר"),
+          markedForm("נמכור", "נִמְכּוֹר"),
+          markedForm("תמכרו", "תִּמְכְּרוּ"),
+          markedForm("ימכרו", "יִמְכְּרוּ")
+        ),
+        makeImperative(
+          markedForm("מכור", "מְכֹר"),
+          markedForm("מכרי", "מִכְרִי"),
+          markedForm("מכרו", "מִכְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pa'al strong verb (מ-כ-ר), o-future.",
+      difficulty_level: 2,
+      tags: ["paal", "regular"],
+      personal_priority: 64,
+    }),
+    createVerbEntry({
+      id: "common-verb-ligmor",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לגמור",
+      lemma_niqqud: "לִגְמֹר",
+      root: ["ג", "מ", "ר"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      generation_pattern: "paal_o",
+      senses: [makeSense("to finish", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("גומר", "גּוֹמֵר"),
+          markedForm("גומרת", "גּוֹמֶרֶת"),
+          markedForm("גומרים", "גּוֹמְרִים"),
+          markedForm("גומרות", "גּוֹמְרוֹת")
+        ),
+        makePast(
+          markedForm("גמרתי", "גָּמַרְתִּי"),
+          markedForm("גמרת", "גָּמַרְתָּ"),
+          markedForm("גמרת", "גָּמַרְתְּ"),
+          markedForm("גמר", "גָּמַר"),
+          markedForm("גמרה", "גָּמְרָה"),
+          markedForm("גמרנו", "גָּמַרְנוּ"),
+          markedForm("גמרתם", "גְּמַרְתֶּם"),
+          markedForm("גמרתן", "גְּמַרְתֶּן"),
+          markedForm("גמרו", "גָּמְרוּ")
+        ),
+        makeFuture(
+          markedForm("אגמור", "אֶגְמוֹר"),
+          markedForm("תגמור", "תִּגְמוֹר"),
+          markedForm("תגמרי", "תִּגְמְרִי"),
+          markedForm("יגמור", "יִגְמוֹר"),
+          markedForm("תגמור", "תִּגְמוֹר"),
+          markedForm("נגמור", "נִגְמוֹר"),
+          markedForm("תגמרו", "תִּגְמְרוּ"),
+          markedForm("יגמרו", "יִגְמְרוּ")
+        ),
+        makeImperative(
+          markedForm("גמור", "גְּמֹר"),
+          markedForm("גמרי", "גִּמְרִי"),
+          markedForm("גמרו", "גִּמְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pa'al strong verb (ג-מ-ר), o-future.",
+      difficulty_level: 2,
+      tags: ["paal", "regular"],
+      personal_priority: 62,
+    }),
+    createVerbEntry({
+      id: "common-verb-levakesh",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לבקש",
+      lemma_niqqud: "לְבַקֵּשׁ",
+      root: ["ב", "ק", "ש"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to request", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מבקש", "מְבַקֵּשׁ"),
+          markedForm("מבקשת", "מְבַקֶּשֶׁת"),
+          markedForm("מבקשים", "מְבַקְּשִׁים"),
+          markedForm("מבקשות", "מְבַקְּשׁוֹת")
+        ),
+        makePast(
+          markedForm("ביקשתי", "בִּקַּשְׁתִּי"),
+          markedForm("ביקשת", "בִּקַּשְׁתָּ"),
+          markedForm("ביקשת", "בִּקַּשְׁתְּ"),
+          markedForm("ביקש", "בִּקֵּשׁ"),
+          markedForm("ביקשה", "בִּקְּשָׁה"),
+          markedForm("ביקשנו", "בִּקַּשְׁנוּ"),
+          markedForm("ביקשתם", "בִּקַּשְׁתֶּם"),
+          markedForm("ביקשתן", "בִּקַּשְׁתֶּן"),
+          markedForm("ביקשו", "בִּקְּשׁוּ")
+        ),
+        makeFuture(
+          markedForm("אבקש", "אֲבַקֵּשׁ"),
+          markedForm("תבקש", "תְּבַקֵּשׁ"),
+          markedForm("תבקשי", "תְּבַקְּשִׁי"),
+          markedForm("יבקש", "יְבַקֵּשׁ"),
+          markedForm("תבקש", "תְּבַקֵּשׁ"),
+          markedForm("נבקש", "נְבַקֵּשׁ"),
+          markedForm("תבקשו", "תְּבַקְּשׁוּ"),
+          markedForm("יבקשו", "יְבַקְּשׁוּ")
+        ),
+        makeImperative(
+          markedForm("בקש", "בַּקֵּשׁ"),
+          markedForm("בקשי", "בַּקְּשִׁי"),
+          markedForm("בקשו", "בַּקְּשׁוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el strong verb (ב-ק-ש).",
+      difficulty_level: 2,
+      tags: ["piel", "regular"],
+      personal_priority: 66,
+    }),
+    createVerbEntry({
+      id: "common-verb-lesaper",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לספר",
+      lemma_niqqud: "לְסַפֵּר",
+      root: ["ס", "פ", "ר"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to tell", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מספר", "מְסַפֵּר"),
+          markedForm("מספרת", "מְסַפֶּרֶת"),
+          markedForm("מספרים", "מְסַפְּרִים"),
+          markedForm("מספרות", "מְסַפְּרוֹת")
+        ),
+        makePast(
+          markedForm("סיפרתי", "סִפַּרְתִּי"),
+          markedForm("סיפרת", "סִפַּרְתָּ"),
+          markedForm("סיפרת", "סִפַּרְתְּ"),
+          markedForm("סיפר", "סִפֵּר"),
+          markedForm("סיפרה", "סִפְּרָה"),
+          markedForm("סיפרנו", "סִפַּרְנוּ"),
+          markedForm("סיפרתם", "סִפַּרְתֶּם"),
+          markedForm("סיפרתן", "סִפַּרְתֶּן"),
+          markedForm("סיפרו", "סִפְּרוּ")
+        ),
+        makeFuture(
+          markedForm("אספר", "אֲסַפֵּר"),
+          markedForm("תספר", "תְּסַפֵּר"),
+          markedForm("תספרי", "תְּסַפְּרִי"),
+          markedForm("יספר", "יְסַפֵּר"),
+          markedForm("תספר", "תְּסַפֵּר"),
+          markedForm("נספר", "נְסַפֵּר"),
+          markedForm("תספרו", "תְּסַפְּרוּ"),
+          markedForm("יספרו", "יְסַפְּרוּ")
+        ),
+        makeImperative(
+          markedForm("ספר", "סַפֵּר"),
+          markedForm("ספרי", "סַפְּרִי"),
+          markedForm("ספרו", "סַפְּרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el strong verb (ס-פ-ר).",
+      difficulty_level: 2,
+      tags: ["piel", "regular"],
+      personal_priority: 66,
+    }),
+    createVerbEntry({
+      id: "common-verb-leshalem",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לשלם",
+      lemma_niqqud: "לְשַׁלֵּם",
+      root: ["ש", "ל", "מ"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to pay", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("משלם", "מְשַׁלֵּם"),
+          markedForm("משלמת", "מְשַׁלֶּמֶת"),
+          markedForm("משלמים", "מְשַׁלְּמִים"),
+          markedForm("משלמות", "מְשַׁלְּמוֹת")
+        ),
+        makePast(
+          markedForm("שילמתי", "שִׁלַּמְתִּי"),
+          markedForm("שילמת", "שִׁלַּמְתָּ"),
+          markedForm("שילמת", "שִׁלַּמְתְּ"),
+          markedForm("שילם", "שִׁלֵּם"),
+          markedForm("שילמה", "שִׁלְּמָה"),
+          markedForm("שילמנו", "שִׁלַּמְנוּ"),
+          markedForm("שילמתם", "שִׁלַּמְתֶּם"),
+          markedForm("שילמתן", "שִׁלַּמְתֶּן"),
+          markedForm("שילמו", "שִׁלְּמוּ")
+        ),
+        makeFuture(
+          markedForm("אשלם", "אֲשַׁלֵּם"),
+          markedForm("תשלם", "תְּשַׁלֵּם"),
+          markedForm("תשלמי", "תְּשַׁלְּמִי"),
+          markedForm("ישלם", "יְשַׁלֵּם"),
+          markedForm("תשלם", "תְּשַׁלֵּם"),
+          markedForm("נשלם", "נְשַׁלֵּם"),
+          markedForm("תשלמו", "תְּשַׁלְּמוּ"),
+          markedForm("ישלמו", "יְשַׁלְּמוּ")
+        ),
+        makeImperative(
+          markedForm("שלם", "שַׁלֵּם"),
+          markedForm("שלמי", "שַׁלְּמִי"),
+          markedForm("שלמו", "שַׁלְּמוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el strong verb (ש-ל-מ).",
+      difficulty_level: 2,
+      tags: ["piel", "regular"],
+      personal_priority: 64,
+    }),
+    createVerbEntry({
+      id: "common-verb-lekabel",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לקבל",
+      lemma_niqqud: "לְקַבֵּל",
+      root: ["ק", "ב", "ל"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to receive", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מקבל", "מְקַבֵּל"),
+          markedForm("מקבלת", "מְקַבֶּלֶת"),
+          markedForm("מקבלים", "מְקַבְּלִים"),
+          markedForm("מקבלות", "מְקַבְּלוֹת")
+        ),
+        makePast(
+          markedForm("קיבלתי", "קִבַּלְתִּי"),
+          markedForm("קיבלת", "קִבַּלְתָּ"),
+          markedForm("קיבלת", "קִבַּלְתְּ"),
+          markedForm("קיבל", "קִבֵּל"),
+          markedForm("קיבלה", "קִבְּלָה"),
+          markedForm("קיבלנו", "קִבַּלְנוּ"),
+          markedForm("קיבלתם", "קִבַּלְתֶּם"),
+          markedForm("קיבלתן", "קִבַּלְתֶּן"),
+          markedForm("קיבלו", "קִבְּלוּ")
+        ),
+        makeFuture(
+          markedForm("אקבל", "אֲקַבֵּל"),
+          markedForm("תקבל", "תְּקַבֵּל"),
+          markedForm("תקבלי", "תְּקַבְּלִי"),
+          markedForm("יקבל", "יְקַבֵּל"),
+          markedForm("תקבל", "תְּקַבֵּל"),
+          markedForm("נקבל", "נְקַבֵּל"),
+          markedForm("תקבלו", "תְּקַבְּלוּ"),
+          markedForm("יקבלו", "יְקַבְּלוּ")
+        ),
+        makeImperative(
+          markedForm("קבל", "קַבֵּל"),
+          markedForm("קבלי", "קַבְּלִי"),
+          markedForm("קבלו", "קַבְּלוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el strong verb (ק-ב-ל).",
+      difficulty_level: 2,
+      tags: ["piel", "regular"],
+      personal_priority: 66,
+    }),
+    createVerbEntry({
+      id: "common-verb-lechapes",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לחפש",
+      lemma_niqqud: "לְחַפֵּשׂ",
+      root: ["ח", "פ", "ש"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to search", null, true)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מחפש", "מְחַפֵּשׂ"),
+          markedForm("מחפשת", "מְחַפֶּשֶׂת"),
+          markedForm("מחפשים", "מְחַפְּשִׂים"),
+          markedForm("מחפשות", "מְחַפְּשׂוֹת")
+        ),
+        makePast(
+          markedForm("חיפשתי", "חִפַּשְׂתִּי"),
+          markedForm("חיפשת", "חִפַּשְׂתָּ"),
+          markedForm("חיפשת", "חִפַּשְׂתְּ"),
+          markedForm("חיפש", "חִפֵּשׂ"),
+          markedForm("חיפשה", "חִפְּשָׂה"),
+          markedForm("חיפשנו", "חִפַּשְׂנוּ"),
+          markedForm("חיפשתם", "חִפַּשְׂתֶּם"),
+          markedForm("חיפשתן", "חִפַּשְׂתֶּן"),
+          markedForm("חיפשו", "חִפְּשׂוּ")
+        ),
+        makeFuture(
+          markedForm("אחפש", "אֲחַפֵּשׂ"),
+          markedForm("תחפש", "תְּחַפֵּשׂ"),
+          markedForm("תחפשי", "תְּחַפְּשִׂי"),
+          markedForm("יחפש", "יְחַפֵּשׂ"),
+          markedForm("תחפש", "תְּחַפֵּשׂ"),
+          markedForm("נחפש", "נְחַפֵּשׂ"),
+          markedForm("תחפשו", "תְּחַפְּשׂוּ"),
+          markedForm("יחפשו", "יְחַפְּשׂוּ")
+        ),
+        makeImperative(
+          markedForm("חפש", "חַפֵּשׂ"),
+          markedForm("חפשי", "חַפְּשִׂי"),
+          markedForm("חפשו", "חַפְּשׂוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el strong verb (ח-פ-שׂ); first-radical guttural.",
+      difficulty_level: 2,
+      tags: ["piel", "regular"],
+      personal_priority: 64,
+    }),
+    createVerbEntry({
       id: "common-verb-lashir",
       availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לשיר",
@@ -3865,6 +4343,7 @@ const ENGLISH_PAST_IRREGULARS = new Map([
   ["plan", "planned"],
   ["put", "put"],
   ["read", "read"],
+  ["rise", "rose"],
   ["run", "ran"],
   ["say", "said"],
   ["see", "saw"],
