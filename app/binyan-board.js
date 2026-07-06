@@ -381,6 +381,10 @@ binyanBoard.beginBinyanBoardFromIntro = binyanBoard.beginBinyanBoardFromIntro ||
     runtime.state.binyanBoard.elapsedSeconds = 0;
     binyanBoard.startBinyanBoardTimer();
   }
+  if (runtime.state.binyanBoard.inReview && !runtime.state.binyanBoard.currentQuestion) {
+    binyanBoard.loadBinyanBoardReviewQuestion();
+    return;
+  }
   getHelpers().renderAll?.();
 };
 
@@ -421,6 +425,10 @@ binyanBoard.resetBinyanBoardState = binyanBoard.resetBinyanBoardState || functio
     correctCount: 0,
     wrongAnswers: 0,
     sessionMistakeIds: [],
+    inReview: false,
+    reviewQueue: [],
+    secondChanceCurrent: 0,
+    secondChanceTotal: 0,
     startMs: 0,
     elapsedSeconds: 0,
     timerId: null,
@@ -472,13 +480,18 @@ binyanBoard.applyBinyanBoardAnswer = binyanBoard.applyBinyanBoardAnswer || funct
 
   if (isCorrect) {
     runtime.state.sessionStreak += 1;
-    runtime.state.sessionScore += 1;
+    if (!question.isReview) {
+      runtime.state.sessionScore += 1;
+    }
     board.correctCount += 1;
   } else {
     runtime.state.sessionStreak = 0;
     board.wrongAnswers += 1;
     if (!board.sessionMistakeIds.includes(question.formId)) {
       board.sessionMistakeIds.push(question.formId);
+    }
+    if (!question.isReview && !board.reviewQueue.includes(question.formId)) {
+      board.reviewQueue.push(question.formId);
     }
   }
 
@@ -499,6 +512,10 @@ binyanBoard.handleBinyanBoardNext = binyanBoard.handleBinyanBoardNext || functio
   const question = board.currentQuestion;
   if (!question) return;
   if (question.locked) {
+    if (board.inReview) {
+      binyanBoard.loadBinyanBoardReviewQuestion();
+      return;
+    }
     board.roundIndex += 1;
     binyanBoard.loadRoundQuestion();
     return;
@@ -521,10 +538,44 @@ binyanBoard.finishRoot = binyanBoard.finishRoot || function finishRoot(rootEntry
   board.roundIndex = 0;
 
   if (board.deck.every((root) => root.cleared)) {
+    if (binyanBoard.tryStartBinyanBoardReviewPhase()) return;
     binyanBoard.finishBinyanBoard();
     return;
   }
   binyanBoard.returnToBoard();
+};
+
+binyanBoard.tryStartBinyanBoardReviewPhase = binyanBoard.tryStartBinyanBoardReviewPhase || function tryStartBinyanBoardReviewPhase() {
+  const board = getRuntime().state.binyanBoard;
+  if (board.inReview || !board.reviewQueue.length) return false;
+  board.inReview = true;
+  board.secondChanceTotal = board.reviewQueue.length;
+  board.secondChanceCurrent = 0;
+  getHelpers().renderSessionHeader?.();
+  binyanBoard.playBinyanBoardIntro();
+  return true;
+};
+
+binyanBoard.loadBinyanBoardReviewQuestion = binyanBoard.loadBinyanBoardReviewQuestion || function loadBinyanBoardReviewQuestion() {
+  const runtime = getRuntime();
+  const h = getHelpers();
+  const board = runtime.state.binyanBoard;
+  const byId = new Map();
+  board.deck.forEach((root) => root.forms.forEach((form) => byId.set(form.formId, { form, rootEntry: root })));
+  while (board.reviewQueue.length) {
+    const formId = board.reviewQueue.shift();
+    const found = byId.get(formId);
+    if (!found) continue;
+    board.secondChanceCurrent += 1;
+    const question = binyanBoard.buildBinyanBoardQuestion(found.form, found.rootEntry);
+    question.isReview = true;
+    board.currentQuestion = question;
+    h.clearFeedback?.();
+    binyanBoard.renderBinyanBoard();
+    h.renderSessionHeader?.();
+    return;
+  }
+  binyanBoard.finishBinyanBoard();
 };
 
 binyanBoard.returnToBoard = binyanBoard.returnToBoard || function returnToBoard() {
@@ -544,13 +595,17 @@ binyanBoard.finishBinyanBoard = binyanBoard.finishBinyanBoard || function finish
   binyanBoard.stopBinyanBoardTimer();
   const mistakes = binyanBoard.buildBinyanBoardMistakeSummary();
   const total = board.correctCount + board.wrongAnswers;
+  const reviewRounds = board.secondChanceTotal;
+  board.inReview = false;
+  board.secondChanceCurrent = 0;
+  board.secondChanceTotal = 0;
   s.showSessionSummary?.({
     game: "binyanBoard",
     titleKey: "summary.binyanTitle",
     scoreKey: "summary.score",
     scoreVars: { score: board.correctCount, total },
-    noteKey: "summary.binyanNote",
-    noteVars: { roots: board.totalRoots },
+    noteKey: reviewRounds > 0 ? "summary.lessonNote" : "summary.binyanNote",
+    noteVars: reviewRounds > 0 ? { count: reviewRounds } : { roots: board.totalRoots },
     correctCount: board.correctCount,
     incorrectCount: board.wrongAnswers,
     elapsedSeconds: board.elapsedSeconds,

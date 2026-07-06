@@ -236,6 +236,11 @@ const TRANSLATION_HIDDEN_STARTER_VERB_IDS = new Set([
   "starter-verb-letachnen",
   "advanced-verb-lehochiach",
   "advanced-verb-letaken",
+  "starter-verb-lishmor",
+  "starter-verb-leshacharer",
+  "starter-verb-lekhabot",
+  "starter-verb-letzanen",
+  "advanced-verb-lehishtamesh",
 ]);
 
 function normalizeAvailability(availability) {
@@ -1528,7 +1533,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "physical-verb-limchotz",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "למחוץ",
       lemma_niqqud: "לִמְחוֹץ",
       root: ["מ", "ח", "ץ"],
@@ -2565,7 +2570,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-latzet",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לצאת",
       lemma_niqqud: "לָצֵאת",
       root: ["י", "צ", "א"],
@@ -2665,7 +2670,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lipol",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "ליפול",
       lemma_niqqud: "לִיפֹּל",
       root: ["נ", "פ", "ל"],
@@ -2715,7 +2720,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lakum",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לקום",
       lemma_niqqud: "לָקוּם",
       root: ["ק", "ו", "מ"],
@@ -2764,27 +2769,43 @@ function buildStarterVerbEntries() {
       personal_priority: 62,
     }),
     createVerbEntry({
-      id: "common-verb-tzarich",
-      availability: { translationQuiz: true, sentenceHints: true },
-      lemma: "צריך",
-      lemma_niqqud: "צָרִיךְ",
+      id: "common-verb-lehitztarech",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "להצטרך",
+      lemma_niqqud: "לְהִצְטָרֵךְ",
       root: ["צ", "ר", "כ"],
-      binyan: "paal",
+      binyan: "hitpael",
       regularity: "irregular",
       conjugation_mode: "curated",
       senses: [makeSense("to need", null, false)],
       forms: makeForms(
-        makePresent(
-          markedForm("צריך", "צָרִיךְ"),
-          markedForm("צריכה", "צְרִיכָה"),
-          markedForm("צריכים", "צְרִיכִים"),
-          markedForm("צריכות", "צְרִיכוֹת")
+        null,
+        makePast(
+          markedForm("הצטרכתי", "הִצְטָרַכְתִּי"),
+          markedForm("הצטרכת", "הִצְטָרַכְתָּ"),
+          markedForm("הצטרכת", "הִצְטָרַכְתְּ"),
+          markedForm("הצטרך", "הִצְטָרֵךְ"),
+          markedForm("הצטרכה", "הִצְטָרְכָה"),
+          markedForm("הצטרכנו", "הִצְטָרַכְנוּ"),
+          markedForm("הצטרכתם", "הִצְטָרַכְתֶּם"),
+          markedForm("הצטרכתן", "הִצְטָרַכְתֶּן"),
+          markedForm("הצטרכו", "הִצְטָרְכוּ")
+        ),
+        makeFuture(
+          markedForm("אצטרך", "אֶצְטָרֵךְ"),
+          markedForm("תצטרך", "תִּצְטָרֵךְ"),
+          markedForm("תצטרכי", "תִּצְטָרְכִי"),
+          markedForm("יצטרך", "יִצְטָרֵךְ"),
+          markedForm("תצטרך", "תִּצְטָרֵךְ"),
+          markedForm("נצטרך", "נִצְטָרֵךְ"),
+          markedForm("תצטרכו", "תִּצְטָרְכוּ"),
+          markedForm("יצטרכו", "יִצְטָרְכוּ")
         )
       ),
       review_status: "approved",
-      notes: "Modal 'need / must / should'. Drilled present-only: it agrees in gender/number (צריך/צריכה/צריכים/צריכות) but is not a full verb — the past is a compound with היה (היה צריך) and the future uses the separate nif'al להצטרך (אצטרך), so those are taught as sentence patterns rather than single-word conjugations.",
-      difficulty_level: 2,
-      tags: ["paal", "irregular", "modal"],
+      notes: "Hitpa'el of צ-ר-כ with the standard צ+ת→צט metathesis. Supplies the past (הצטרכתי 'needed') and future (אצטרך 'will need') of the suppletive 'need' paradigm; the present is the modal צריך/צריכה/צריכים/צריכות, taught as a sentence pattern rather than drilled here. No imperative in normal use.",
+      difficulty_level: 3,
+      tags: ["hitpael", "irregular", "modal"],
       personal_priority: 70,
     }),
     createVerbEntry({
@@ -3493,7 +3514,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lishmoa",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לשמוע",
       lemma_niqqud: "לִשְׁמֹעַ",
       root: ["ש", "מ", "ע"],
@@ -3543,7 +3564,7 @@ function buildStarterVerbEntries() {
     }),
     createVerbEntry({
       id: "common-verb-lachzor",
-      availability: { translationQuiz: true, sentenceHints: true },
+      availability: { translationQuiz: false, sentenceHints: true },
       lemma: "לחזור",
       lemma_niqqud: "לַחֲזֹר",
       root: ["ח", "ז", "ר"],

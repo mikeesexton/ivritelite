@@ -217,14 +217,33 @@ prepositions.beginPrepositionsFromIntro = prepositions.beginPrepositionsFromIntr
   prepositions.loadPrepositionsQuestion();
 };
 
+prepositions.tryStartPrepositionsReviewPhase = prepositions.tryStartPrepositionsReviewPhase || function tryStartPrepositionsReviewPhase() {
+  const state = getRuntime().state.prepositions;
+  if (state.inReview || !state.reviewQueue.length) return false;
+  state.inReview = true;
+  state.secondChanceTotal = state.reviewQueue.length;
+  state.secondChanceCurrent = 0;
+  return true;
+};
+
 prepositions.loadPrepositionsQuestion = prepositions.loadPrepositionsQuestion || function loadPrepositionsQuestion() {
   const runtime = getRuntime();
-  runtime.state.prepositions.currentRound += 1;
-  if (runtime.state.prepositions.questionQueue.length === 0) {
+  const state = runtime.state.prepositions;
+  if (state.questionQueue.length === 0) {
+    if (!state.inReview && prepositions.tryStartPrepositionsReviewPhase()) {
+      state.questionQueue = state.reviewQueue;
+      state.reviewQueue = [];
+      state.currentQuestion = null;
+      getHelpers().renderSessionHeader?.();
+      prepositions.playPrepositionsIntro();
+      return;
+    }
     getSession().finishPrepositions?.();
     return;
   }
-  runtime.state.prepositions.currentQuestion = runtime.state.prepositions.questionQueue.shift();
+  state.currentQuestion = state.questionQueue.shift();
+  if (state.inReview) state.secondChanceCurrent += 1;
+  else state.currentRound += 1;
   getHelpers().clearFeedback?.();
   prepositions.renderPrepositionsQuestion();
 };
@@ -300,21 +319,38 @@ prepositions.applyPrepositionsAnswer = prepositions.applyPrepositionsAnswer || f
   const isCorrect = selected?.isCorrect ?? false;
   if (isCorrect) {
     runtime.state.sessionStreak += 1;
-    runtime.state.sessionScore += 1;
+    if (!question.isReview) {
+      runtime.state.sessionScore += 1;
+    }
   } else {
     runtime.state.sessionStreak = 0;
     runtime.state.prepositions.wrongAnswers += 1;
-    runtime.state.prepositions.sessionMistakes.push({
-      primary: question.answerNiqqud,
-      secondary: question.englishHint,
-      clinicKey: "results.prepositionClinic",
-      clinicVars: {
-        trigger: question.triggerHe,
-        prep: question.prepBase,
-        object: question.objectLabel,
-        answer: question.answerNiqqud,
-      },
-    });
+    const mistakeKey = `${question.triggerId}:${question.objectKey}`;
+    if (!runtime.state.prepositions.sessionMistakes.some((entry) => entry.key === mistakeKey)) {
+      runtime.state.prepositions.sessionMistakes.push({
+        key: mistakeKey,
+        primary: question.answerNiqqud,
+        secondary: question.englishHint,
+        clinicKey: "results.prepositionClinic",
+        clinicVars: {
+          trigger: question.triggerHe,
+          prep: question.prepBase,
+          object: question.objectLabel,
+          answer: question.answerNiqqud,
+        },
+      });
+    }
+    if (!question.isReview && !runtime.state.prepositions.reviewQueue.some((entry) => entry.key === mistakeKey)) {
+      const shuffle = app.utils?.shuffle || ((list) => list);
+      runtime.state.prepositions.reviewQueue.push({
+        ...question,
+        key: mistakeKey,
+        options: shuffle(question.options.map((option) => ({ ...option }))),
+        selectedOptionId: null,
+        locked: false,
+        isReview: true,
+      });
+    }
   }
 
   h.setFeedback?.({

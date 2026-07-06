@@ -153,6 +153,7 @@ persistence.persistUiState = persistence.persistUiState || function persistUiSta
   runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.ui, {
     route: runtime.state.route,
     lastPlayedMode: runtime.state.lastPlayedMode,
+    reviewTab: runtime.state.reviewTab,
   });
 };
 

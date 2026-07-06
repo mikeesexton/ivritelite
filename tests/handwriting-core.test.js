@@ -169,3 +169,38 @@ test("buildSentenceCells keeps every character in order and maps only letters", 
   assert.equal(core.countLetterCells(cells), 4);
   assert.equal(core.countLetterCells([]), 0);
 });
+
+test("rankWeakestLetters filters by min attempts and sorts by box, lastScore, order", () => {
+  const forms = [
+    { id: "alef", order: 1 },
+    { id: "bet", order: 2 },
+    { id: "gimel", order: 3 },
+    { id: "dalet", order: 4 },
+  ];
+  const progress = {
+    alef: { attempts: 5, box: 2, lastScore: 80 },
+    bet: { attempts: 1, box: 0, lastScore: 10 },
+    gimel: { attempts: 4, box: 0, lastScore: 55 },
+    dalet: { attempts: 3, box: 0, lastScore: 55 },
+  };
+
+  const ranked = core.rankWeakestLetters(progress, forms, { minAttempts: 2, limit: 8 });
+  assert.deepEqual(plain(ranked.map((entry) => entry.form.id)), ["gimel", "dalet", "alef"]);
+
+  const limited = core.rankWeakestLetters(progress, forms, { minAttempts: 2, limit: 1 });
+  assert.equal(limited.length, 1);
+  assert.equal(limited[0].form.id, "gimel");
+
+  assert.deepEqual(plain(core.rankWeakestLetters({}, forms, {})), []);
+});
+
+test("countLearnedLetters counts entries at or above the box threshold", () => {
+  const progress = {
+    alef: { attempts: 5, box: 3 },
+    bet: { attempts: 5, box: 7 },
+    gimel: { attempts: 5, box: 2 },
+  };
+  assert.equal(core.countLearnedLetters(progress, 3), 2);
+  assert.equal(core.countLearnedLetters(progress, 1), 3);
+  assert.equal(core.countLearnedLetters({}, 3), 0);
+});

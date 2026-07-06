@@ -834,6 +834,45 @@ function setSentenceProgressRecord(sentenceId, direction, record) {
   runtime.state.sentenceProgress[buildSentenceProgressKey(sentenceId, direction)] = record;
 }
 
+sentenceBank.getWorstSentences = sentenceBank.getWorstSentences || function getWorstSentences(limit = 5) {
+  const runtime = getRuntime();
+  const deckById = new Map((runtime.sentenceBankDeck || []).map((sentence) => [sentence.id, sentence]));
+  const entries = [];
+  Object.entries(runtime.state.sentenceProgress || {}).forEach(([key, raw]) => {
+    const [sentenceId, direction] = String(key).split("::");
+    const sentence = deckById.get(sentenceId);
+    if (!sentence) return;
+    const rec = getSentenceProgressRecord(sentenceId, direction);
+    if (rec.attempts < 2 || rec.misses < 1) return;
+    entries.push({
+      sentence,
+      direction: normalizeSentenceDirection(direction),
+      attempts: rec.attempts,
+      correct: rec.correct,
+      misses: rec.misses,
+      missRate: rec.misses / rec.attempts,
+    });
+  });
+  entries.sort((a, b) => {
+    if (a.missRate !== b.missRate) return b.missRate - a.missRate;
+    if (a.misses !== b.misses) return b.misses - a.misses;
+    return String(a.sentence.hebrew).localeCompare(String(b.sentence.hebrew), "he");
+  });
+  return entries.slice(0, Math.max(0, limit));
+};
+
+sentenceBank.getPracticedSentenceCount = sentenceBank.getPracticedSentenceCount || function getPracticedSentenceCount() {
+  const runtime = getRuntime();
+  const deckIds = new Set((runtime.sentenceBankDeck || []).map((sentence) => sentence.id));
+  const practiced = new Set();
+  Object.entries(runtime.state.sentenceProgress || {}).forEach(([key, raw]) => {
+    const sentenceId = String(key).split("::")[0];
+    if (!deckIds.has(sentenceId)) return;
+    if (Math.max(0, Number(raw?.attempts || 0)) > 0) practiced.add(sentenceId);
+  });
+  return practiced.size;
+};
+
 function updateSentenceProgress(sentenceId, direction, isCorrect) {
   const runtime = getRuntime();
   const record = getSentenceProgressRecord(sentenceId, direction);
@@ -1134,6 +1173,7 @@ sentenceBank.getSentenceBankPromptSpeechPayload = sentenceBank.getSentenceBankPr
   if (!question.promptIsHebrew && question.direction !== "listen") return null;
   return app.speech?.buildSpeechPayload?.({
     plain: question.prompt,
+    niqqud: question.sentence?.hebrewNiqqud,
     source: "prompt",
   }) || null;
 };

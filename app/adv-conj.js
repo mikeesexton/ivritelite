@@ -335,14 +335,33 @@ advConj.beginAdvConjFromIntro = advConj.beginAdvConjFromIntro || function beginA
   advConj.loadAdvConjQuestion();
 };
 
+advConj.tryStartAdvConjReviewPhase = advConj.tryStartAdvConjReviewPhase || function tryStartAdvConjReviewPhase() {
+  const state = getRuntime().state.advConj;
+  if (state.inReview || !state.reviewQueue.length) return false;
+  state.inReview = true;
+  state.secondChanceTotal = state.reviewQueue.length;
+  state.secondChanceCurrent = 0;
+  return true;
+};
+
 advConj.loadAdvConjQuestion = advConj.loadAdvConjQuestion || function loadAdvConjQuestion() {
   const runtime = getRuntime();
-  runtime.state.advConj.currentRound += 1;
-  if (runtime.state.advConj.questionQueue.length === 0) {
+  const state = runtime.state.advConj;
+  if (state.questionQueue.length === 0) {
+    if (!state.inReview && advConj.tryStartAdvConjReviewPhase()) {
+      state.questionQueue = state.reviewQueue;
+      state.reviewQueue = [];
+      state.currentQuestion = null;
+      getHelpers().renderSessionHeader?.();
+      advConj.playAdvConjIntro();
+      return;
+    }
     getSession().finishAdvConj?.();
     return;
   }
-  runtime.state.advConj.currentQuestion = runtime.state.advConj.questionQueue.shift();
+  state.currentQuestion = state.questionQueue.shift();
+  if (state.inReview) state.secondChanceCurrent += 1;
+  else state.currentRound += 1;
   getHelpers().clearFeedback?.();
   advConj.renderAdvConjQuestion();
 };
@@ -421,7 +440,9 @@ advConj.applyAdvConjAnswer = advConj.applyAdvConjAnswer || function applyAdvConj
   const isCorrect = selected?.isCorrect ?? false;
   if (isCorrect) {
     runtime.state.sessionStreak += 1;
-    runtime.state.sessionScore += 1;
+    if (!question.isReview) {
+      runtime.state.sessionScore += 1;
+    }
   } else {
     runtime.state.sessionStreak = 0;
     runtime.state.advConj.wrongAnswers += 1;
@@ -450,6 +471,17 @@ advConj.applyAdvConjAnswer = advConj.applyAdvConjAnswer || function applyAdvConj
           tense: question.tense || "",
           object: question.objectLabel || "",
         },
+      });
+    }
+    if (!question.isReview && !runtime.state.advConj.reviewQueue.some((entry) => entry.key === mistakeKey)) {
+      const shuffle = app.utils?.shuffle || ((list) => list);
+      runtime.state.advConj.reviewQueue.push({
+        ...question,
+        key: mistakeKey,
+        options: shuffle(question.options.map((option) => ({ ...option }))),
+        selectedOptionId: null,
+        locked: false,
+        isReview: true,
       });
     }
   }
