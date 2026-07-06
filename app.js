@@ -218,11 +218,8 @@ const renderHomeLessonButtons = uiModule.renderHomeLessonButtons;
 const setHomeLessonState = uiModule.setHomeLessonState;
 const renderHomeOptions = uiModule.renderHomeOptions;
 const renderMostMissed = uiModule.renderMostMissed;
-const closeMasteredModal = uiModule.closeMasteredModal;
 const closeWelcomeModal = uiModule.closeWelcomeModal;
 const renderWelcomeModal = uiModule.renderWelcomeModal;
-const renderMasteredModal = uiModule.renderMasteredModal;
-const restoreSelectedMasteredWords = uiModule.restoreSelectedMasteredWords;
 const renderPromptHint = uiModule.renderPromptHint;
 
 const getMostMissedRanked = dataModule.getMostMissedRanked;
@@ -479,11 +476,8 @@ if (
   !setHomeLessonState ||
   !renderHomeOptions ||
   !renderMostMissed ||
-  !closeMasteredModal ||
   !closeWelcomeModal ||
   !renderWelcomeModal ||
-  !renderMasteredModal ||
-  !restoreSelectedMasteredWords ||
   !renderPromptHint ||
   !getMostMissedRanked ||
   !buildLessonMistakeSummary ||
@@ -688,7 +682,6 @@ appRuntime.helpers = {
   cloneAbbreviationQuestionSnapshot,
   cloneLessonQuestionSnapshot,
   cloneSentenceBankQuestionSnapshot,
-  closeMasteredModal,
   finishAbbreviation,
   finishAdvConj,
   finishLesson,
@@ -717,7 +710,6 @@ appRuntime.helpers = {
   renderAdvConjQuestion,
   renderAll,
   renderDomainPerformance,
-  renderMasteredModal,
   renderMostMissed,
   renderNiqqudToggle,
   renderPoolMeta,

@@ -95,6 +95,18 @@ handwriting.loadHandwritingProgress = handwriting.loadHandwritingProgress || fun
   return { version: 1, letters };
 };
 
+handwriting.getWeakestLetters = handwriting.getWeakestLetters || function getWeakestLetters(limit = 8) {
+  const core = getCore();
+  if (!core.rankWeakestLetters) return [];
+  return core.rankWeakestLetters(handwriting.loadHandwritingProgress().letters, getLetterforms(), { limit });
+};
+
+handwriting.getLearnedLetterCount = handwriting.getLearnedLetterCount || function getLearnedLetterCount() {
+  const core = getCore();
+  if (!core.countLearnedLetters) return 0;
+  return core.countLearnedLetters(handwriting.loadHandwritingProgress().letters, 3);
+};
+
 handwriting.saveHandwritingProgress = handwriting.saveHandwritingProgress || function saveHandwritingProgress(progress) {
   const runtime = getRuntime();
   const storageKey = runtime.constants?.STORAGE_KEYS?.handwritingProgress;

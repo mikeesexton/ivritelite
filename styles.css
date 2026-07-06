@@ -2169,6 +2169,211 @@ body[data-theme="light"] .feedback-tray.error .feedback-detail {
   font-size: 0.8rem;
 }
 
+.review-tabs {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: rgba(166, 186, 214, 0.12);
+}
+
+.review-tab {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 0.4rem;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: transparent;
+  cursor: pointer;
+}
+
+.review-tab.active {
+  background: var(--brand);
+  color: #1A202C;
+}
+
+.review-tab-panel {
+  display: grid;
+  gap: 0.98rem;
+}
+
+.review-tab-panel[hidden] {
+  display: none;
+}
+
+.review-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.review-stat-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--row-bg);
+  padding: 0.6rem 0.4rem;
+  text-align: center;
+}
+
+.review-stat-value {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--brand);
+}
+
+.review-stat-label {
+  margin: 0.14rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.trouble-list {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.letter-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+}
+
+.letter-chip {
+  display: grid;
+  place-items: center;
+  gap: 0.1rem;
+  min-width: 3.2rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--row-bg);
+  padding: 0.4rem 0.5rem;
+}
+
+.letter-chip-glyph {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.letter-chip-box {
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+.wordbank-search {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--row-bg);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.7rem;
+}
+
+.wordbank-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.wordbank-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.32rem 0.7rem;
+  cursor: pointer;
+}
+
+.wordbank-chip.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #1A202C;
+}
+
+.wordbank-list {
+  max-height: min(58vh, 540px);
+  overflow-y: auto;
+  display: grid;
+  gap: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.45rem;
+}
+
+.wordbank-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid rgba(166, 186, 214, 0.16);
+  padding: 0.4rem 0.1rem;
+}
+
+.wordbank-row:last-child {
+  border-bottom: none;
+}
+
+.wordbank-row--mastered {
+  opacity: 0.55;
+}
+
+.wordbank-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.wordbank-he {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  direction: rtl;
+  text-align: start;
+  unicode-bidi: isolate;
+}
+
+.wordbank-en {
+  margin: 0.05rem 0 0;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wordbank-meta {
+  margin: 0;
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.wordbank-master-btn {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.wordbank-master-btn[aria-pressed="true"] {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #1A202C;
+}
+
 .missed-list {
   margin: 0;
 }
@@ -2308,77 +2513,6 @@ body[data-theme="light"] .mobile-bottom-nav .nav-link.active .nav-link-icon {
 .mobile-nav-link span:last-child {
   font-size: 0.84rem;
   line-height: 1.1;
-}
-
-.mastered-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  display: grid;
-  place-items: center;
-  background: var(--overlay-bg);
-  backdrop-filter: blur(2px);
-}
-
-.mastered-dialog {
-  width: min(92vw, 580px);
-  max-height: min(88vh, 760px);
-  display: grid;
-  gap: 0.62rem;
-  padding: 1rem;
-}
-
-.mastered-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.55rem;
-}
-
-.mastered-list {
-  min-height: 140px;
-  max-height: min(48vh, 420px);
-  overflow: auto;
-  display: grid;
-  gap: 0.4rem;
-  padding: 0.45rem;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--list-bg);
-}
-
-.mastered-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.55rem;
-  align-items: start;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 0.45rem 0.55rem;
-  background: var(--row-bg);
-}
-
-.mastered-row input {
-  margin-top: 0.2rem;
-}
-
-.mastered-row-he {
-  margin: 0;
-  font-size: 1.08rem;
-  font-weight: 700;
-  direction: rtl;
-}
-
-.mastered-row-en {
-  margin: 0.08rem 0 0;
-  color: var(--ink-soft);
-  font-size: 0.86rem;
-}
-
-.mastered-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
 }
 
 .hidden {
@@ -2613,12 +2747,15 @@ body[data-ui-lang="he"] #reviewView .missed-word {
 }
 
 
-body[data-ui-lang="he"] .mastered-row {
-  grid-template-columns: 1fr auto;
+body[data-ui-lang="he"] #reviewView .wordbank-row {
+  direction: rtl;
 }
 
-body[data-ui-lang="he"] .mastered-row input {
-  order: 2;
+body[data-ui-lang="he"] #reviewView .wordbank-en,
+body[data-ui-lang="he"] #reviewView .review-stat-label,
+body[data-ui-lang="he"] #reviewView .wordbank-meta {
+  direction: rtl;
+  unicode-bidi: isolate;
 }
 
 @media (min-width: 1024px) {
@@ -2736,14 +2873,20 @@ body[data-ui-lang="he"] .mastered-row input {
   }
 
   .review-panel-content {
-    grid-template-columns: minmax(220px, 280px) 1fr;
     gap: 1.6rem;
     align-items: start;
   }
 
+  .review-tabs {
+    max-width: 560px;
+  }
+
+  .review-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .review-panel-content .missed-col {
-    column-count: 1;
-    padding-left: 1.5rem;
+    column-count: 2;
   }
 
   .review-analytics-card {

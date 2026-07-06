@@ -381,6 +381,55 @@ data.getMasteredWords = data.getMasteredWords || function getMasteredWords() {
   return data.getVocabularyForMode("translationQuiz", { includeMastered: true }).filter((word) => data.isWordMastered(word.id));
 };
 
+data.getReviewOverviewStats = data.getReviewOverviewStats || function getReviewOverviewStats(now = Date.now()) {
+  const dueCount = data.getSelectedPool().filter((word) => {
+    const rec = data.getProgressRecord(word.id);
+    return rec.attempts > 0 && rec.nextDue <= now;
+  }).length;
+  return {
+    dueCount,
+    masteredCount: data.getMasteredWords().length,
+  };
+};
+
+data.getHardestVerbs = data.getHardestVerbs || function getHardestVerbs(limit = 5) {
+  const runtime = getRuntime();
+  const entries = [];
+  Object.entries(runtime.state.progress || {}).forEach(([wordId, rec]) => {
+    const attempts = Math.max(0, Number(rec?.conjugationAttempts || 0));
+    const correct = Math.max(0, Math.min(attempts, Number(rec?.conjugationCorrect || 0)));
+    if (attempts < 3 || correct >= attempts) return;
+    const word = data.getWordById(wordId);
+    if (!word) return;
+    entries.push({ word, attempts, correct, accuracy: correct / attempts });
+  });
+  entries.sort((a, b) => {
+    if (a.accuracy !== b.accuracy) return a.accuracy - b.accuracy;
+    if (b.attempts !== a.attempts) return b.attempts - a.attempts;
+    return a.word.en.localeCompare(b.word.en);
+  });
+  return entries.slice(0, Math.max(0, limit));
+};
+
+data.getWordBankEntries = data.getWordBankEntries || function getWordBankEntries(now = Date.now()) {
+  return data.getVocabularyForMode("translationQuiz", { includeMastered: true })
+    .slice()
+    .sort((a, b) => a.en.localeCompare(b.en))
+    .map((word) => {
+      const rec = data.getProgressRecord(word.id);
+      const isNew = rec.attempts === 0;
+      return {
+        word,
+        rec,
+        accuracy: rec.attempts ? Math.round((rec.correct / rec.attempts) * 100) : null,
+        isNew,
+        isDue: !isNew && rec.nextDue <= now,
+        mastered: Boolean(rec.mastered),
+        domainId: data.getDomainIdForWord(word),
+      };
+    });
+};
+
 data.setWordMastered = data.setWordMastered || function setWordMastered(wordId, mastered) {
   const runtime = getRuntime();
   if (!wordId) return false;

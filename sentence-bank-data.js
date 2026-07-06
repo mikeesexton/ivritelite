@@ -7441,6 +7441,611 @@ const SENTENCE_BANK = [
       "tomorrow"
     ],
     "notes": "צריך לקבוע תור = we need to make/schedule an appointment; רופא שיניים = dentist (kept as one compound chip)."
+  },
+  {
+    "id": "everyday_31",
+    "emoji": "🌅",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "אצטרך לקום מוקדם מחר בבוקר.",
+    "hebrew_niqqud": "אֶצְטָרֵךְ לָקוּם מֻקְדָּם מָחָר בַּבֹּקֶר.",
+    "english": "I'll need to get up early tomorrow morning.",
+    "hebrew_tokens": [
+      "אצטרך",
+      "לקום",
+      "מוקדם",
+      "מחר",
+      "בבוקר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֶצְטָרֵךְ",
+      "לָקוּם",
+      "מֻקְדָּם",
+      "מָחָר",
+      "בַּבֹּקֶר"
+    ],
+    "english_tokens": [
+      "I'll need",
+      "to get up",
+      "early",
+      "tomorrow",
+      "morning"
+    ],
+    "hebrew_distractors": [
+      "קמתי",
+      "מאוחר",
+      "אתמול",
+      "בערב",
+      "ללכת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "קַמְתִּי",
+      "מְאֻחָר",
+      "אֶתְמוֹל",
+      "בָּעֶרֶב",
+      "לָלֶכֶת"
+    ],
+    "english_distractors": [
+      "I got up",
+      "to leave",
+      "late",
+      "yesterday",
+      "evening"
+    ],
+    "notes": "אצטרך is the future of the suppletive 'need' paradigm — present צריך, past היה צריך, future אצטרך (from להצטרך). Like צריך, it takes an infinitive: אצטרך לקום = I'll have to get up."
+  },
+  {
+    "id": "everyday_32",
+    "emoji": "🔑",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "אני לא זוכר איפה שמתי את המפתחות.",
+    "hebrew_niqqud": "אֲנִי לֹא זוֹכֵר אֵיפֹה שַׂמְתִּי אֶת הַמַּפְתְּחוֹת.",
+    "english": "I don't remember where I put the keys.",
+    "hebrew_tokens": [
+      "אני",
+      "לא",
+      "זוכר",
+      "איפה",
+      "שמתי",
+      "את",
+      "המפתחות"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "לֹא",
+      "זוֹכֵר",
+      "אֵיפֹה",
+      "שַׂמְתִּי",
+      "אֶת",
+      "הַמַּפְתְּחוֹת"
+    ],
+    "english_tokens": [
+      "I",
+      "don't",
+      "remember",
+      "where",
+      "I put",
+      "the keys"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "אני לא זוכרת איפה שמתי את המפתחות.",
+        "text_niqqud": "אֲנִי לֹא זוֹכֶרֶת אֵיפֹה שַׂמְתִּי אֶת הַמַּפְתְּחוֹת.",
+        "tokens": [
+          "אני",
+          "לא",
+          "זוכרת",
+          "איפה",
+          "שמתי",
+          "את",
+          "המפתחות"
+        ],
+        "tokens_niqqud": [
+          "אֲנִי",
+          "לֹא",
+          "זוֹכֶרֶת",
+          "אֵיפֹה",
+          "שַׂמְתִּי",
+          "אֶת",
+          "הַמַּפְתְּחוֹת"
+        ]
+      }
+    ],
+    "hebrew_distractors": [
+      "שכחתי",
+      "מתי",
+      "הארנק",
+      "לקחתי",
+      "הדלת"
+    ],
+    "hebrew_distractors_niqqud": [
+      "שָׁכַחְתִּי",
+      "מָתַי",
+      "הָאַרְנָק",
+      "לָקַחְתִּי",
+      "הַדֶּלֶת"
+    ],
+    "english_distractors": [
+      "I forgot",
+      "when",
+      "the wallet",
+      "I took",
+      "the door"
+    ],
+    "notes": "זוכר agrees with the speaker — a woman says זוכרת (accepted as an alternate answer). שמתי (I put) is the past of לשים; איפה asks 'where', while the distractor מתי asks 'when'."
+  },
+  {
+    "id": "colloquial_33",
+    "emoji": "🚗",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "הוא מוכר את האוטו כי הוא צריך כסף.",
+    "hebrew_niqqud": "הוּא מוֹכֵר אֶת הָאוֹטוֹ כִּי הוּא צָרִיךְ כֶּסֶף.",
+    "english": "He's selling the car because he needs money.",
+    "hebrew_tokens": [
+      "הוא",
+      "מוכר",
+      "את",
+      "האוטו",
+      "כי",
+      "הוא",
+      "צריך",
+      "כסף"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הוּא",
+      "מוֹכֵר",
+      "אֶת",
+      "הָאוֹטוֹ",
+      "כִּי",
+      "הוּא",
+      "צָרִיךְ",
+      "כֶּסֶף"
+    ],
+    "english_tokens": [
+      "He's",
+      "selling",
+      "the car",
+      "because",
+      "he needs",
+      "money"
+    ],
+    "hebrew_distractors": [
+      "קונה",
+      "האופניים",
+      "אבל",
+      "רוצה",
+      "זמן"
+    ],
+    "hebrew_distractors_niqqud": [
+      "קוֹנֶה",
+      "הָאוֹפַנַּיִם",
+      "אֲבָל",
+      "רוֹצֶה",
+      "זְמַן"
+    ],
+    "english_distractors": [
+      "He's buying",
+      "the bike",
+      "but",
+      "he wants",
+      "time"
+    ],
+    "notes": "מוכר (sells) vs the opposite distractor קונה (buys). צריך כסף = needs money — the present of 'need' is the modal צריך; האוטו is the everyday word for car (המכונית is more formal)."
+  },
+  {
+    "id": "everyday_33",
+    "emoji": "💳",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "אפשר לשלם בכרטיס או רק במזומן?",
+    "hebrew_niqqud": "אֶפְשָׁר לְשַׁלֵּם בְּכַרְטִיס אוֹ רַק בִּמְזֻמָּן?",
+    "english": "Can I pay by card, or only in cash?",
+    "hebrew_tokens": [
+      "אפשר",
+      "לשלם",
+      "בכרטיס",
+      "או",
+      "רק",
+      "במזומן"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֶפְשָׁר",
+      "לְשַׁלֵּם",
+      "בְּכַרְטִיס",
+      "אוֹ",
+      "רַק",
+      "בִּמְזֻמָּן"
+    ],
+    "english_tokens": [
+      "Can I pay",
+      "by card",
+      "or",
+      "only",
+      "in cash"
+    ],
+    "hebrew_distractors": [
+      "לקנות",
+      "בצ׳ק",
+      "גם",
+      "בחנות",
+      "לחתום"
+    ],
+    "hebrew_distractors_niqqud": [
+      "לִקְנוֹת",
+      "בְּצֶ׳ק",
+      "גַּם",
+      "בַּחֲנוּת",
+      "לַחְתֹּם"
+    ],
+    "english_distractors": [
+      "Can I buy",
+      "by check",
+      "also",
+      "in the store",
+      "to sign"
+    ],
+    "notes": "לשלם (pi'el, to pay): שילמתי, אשלם. אפשר + infinitive is the standard 'can I…?' pattern; בכרטיס = by card, במזומן = in cash."
+  },
+  {
+    "id": "everyday_34",
+    "emoji": "🏷️",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "כל לקוח חדש מקבל הנחה של עשרה אחוזים.",
+    "hebrew_niqqud": "כָּל לָקוֹחַ חָדָשׁ מְקַבֵּל הֲנָחָה שֶׁל עֲשָׂרָה אֲחוּזִים.",
+    "english": "Every new customer gets a ten percent discount.",
+    "hebrew_tokens": [
+      "כל",
+      "לקוח",
+      "חדש",
+      "מקבל",
+      "הנחה",
+      "של",
+      "עשרה",
+      "אחוזים"
+    ],
+    "hebrew_tokens_niqqud": [
+      "כָּל",
+      "לָקוֹחַ",
+      "חָדָשׁ",
+      "מְקַבֵּל",
+      "הֲנָחָה",
+      "שֶׁל",
+      "עֲשָׂרָה",
+      "אֲחוּזִים"
+    ],
+    "english_tokens": [
+      "Every",
+      "new customer",
+      "gets",
+      "a ten percent",
+      "discount"
+    ],
+    "hebrew_distractors": [
+      "ותיק",
+      "נותן",
+      "מתנה",
+      "עשרים",
+      "משלם"
+    ],
+    "hebrew_distractors_niqqud": [
+      "וָתִיק",
+      "נוֹתֵן",
+      "מַתָּנָה",
+      "עֶשְׂרִים",
+      "מְשַׁלֵּם"
+    ],
+    "english_distractors": [
+      "a returning customer",
+      "gives",
+      "a gift",
+      "twenty",
+      "pays"
+    ],
+    "notes": "מקבל (pi'el ק-ב-ל, receives/gets) vs the distractors נותן (gives) and משלם (pays). הנחה here = discount; in formal writing the same word means 'assumption'. עשרה אחוזים = ten percent."
+  },
+  {
+    "id": "everyday_35",
+    "emoji": "🏠",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "אני מחפש דירה קרובה למרכז העיר.",
+    "hebrew_niqqud": "אֲנִי מְחַפֵּשׂ דִּירָה קְרוֹבָה לְמֶרְכַּז הָעִיר.",
+    "english": "I'm looking for an apartment close to the city center.",
+    "hebrew_tokens": [
+      "אני",
+      "מחפש",
+      "דירה",
+      "קרובה",
+      "למרכז",
+      "העיר"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲנִי",
+      "מְחַפֵּשׂ",
+      "דִּירָה",
+      "קְרוֹבָה",
+      "לְמֶרְכַּז",
+      "הָעִיר"
+    ],
+    "english_tokens": [
+      "I'm looking for",
+      "an apartment",
+      "close to",
+      "the city center"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "אני מחפשת דירה קרובה למרכז העיר.",
+        "text_niqqud": "אֲנִי מְחַפֶּשֶׂת דִּירָה קְרוֹבָה לְמֶרְכַּז הָעִיר.",
+        "tokens": [
+          "אני",
+          "מחפשת",
+          "דירה",
+          "קרובה",
+          "למרכז",
+          "העיר"
+        ],
+        "tokens_niqqud": [
+          "אֲנִי",
+          "מְחַפֶּשֶׂת",
+          "דִּירָה",
+          "קְרוֹבָה",
+          "לְמֶרְכַּז",
+          "הָעִיר"
+        ]
+      }
+    ],
+    "hebrew_distractors": [
+      "רחוקה",
+      "בית",
+      "גדולה",
+      "לתחנה",
+      "הכפר"
+    ],
+    "hebrew_distractors_niqqud": [
+      "רְחוֹקָה",
+      "בַּיִת",
+      "גְּדוֹלָה",
+      "לַתַּחֲנָה",
+      "הַכְּפָר"
+    ],
+    "english_distractors": [
+      "I'm renting out",
+      "a house",
+      "far from",
+      "the station",
+      "the village"
+    ],
+    "notes": "מחפש (pi'el, to look for) takes a direct object — no preposition like English 'for'. A woman says מחפשת (accepted as an alternate). קרובה agrees with דירה (fem.); רחוקה (far) is the opposite distractor."
+  },
+  {
+    "id": "colloquial_34",
+    "emoji": "🎨",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "אחותי עשתה קעקוע קטן על היד.",
+    "hebrew_niqqud": "אֲחוֹתִי עָשְׂתָה קַעֲקוּעַ קָטָן עַל הַיָּד.",
+    "english": "My sister got a small tattoo on her hand.",
+    "hebrew_tokens": [
+      "אחותי",
+      "עשתה",
+      "קעקוע",
+      "קטן",
+      "על",
+      "היד"
+    ],
+    "hebrew_tokens_niqqud": [
+      "אֲחוֹתִי",
+      "עָשְׂתָה",
+      "קַעֲקוּעַ",
+      "קָטָן",
+      "עַל",
+      "הַיָּד"
+    ],
+    "english_tokens": [
+      "My sister",
+      "got",
+      "a small",
+      "tattoo",
+      "on her hand"
+    ],
+    "hebrew_distractors": [
+      "אחי",
+      "ציור",
+      "גדול",
+      "הרגל",
+      "הורידה"
+    ],
+    "hebrew_distractors_niqqud": [
+      "אָחִי",
+      "צִיּוּר",
+      "גָּדוֹל",
+      "הָרֶגֶל",
+      "הוֹרִידָה"
+    ],
+    "english_distractors": [
+      "My brother",
+      "removed",
+      "a drawing",
+      "big",
+      "on her leg"
+    ],
+    "notes": "In Hebrew you 'do' a tattoo: עשתה קעקוע = got a tattoo (lit. made). קעקוע is the everyday noun; the formal dictionary term is כתובת קעקע."
+  },
+  {
+    "id": "everyday_36",
+    "emoji": "🍦",
+    "category": "everyday",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "בקיץ אנחנו אוכלים גלידה בחוץ.",
+    "hebrew_niqqud": "בַּקַּיִץ אֲנַחְנוּ אוֹכְלִים גְּלִידָה בַּחוּץ.",
+    "english": "In the summer we eat ice cream outside.",
+    "hebrew_tokens": [
+      "בקיץ",
+      "אנחנו",
+      "אוכלים",
+      "גלידה",
+      "בחוץ"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בַּקַּיִץ",
+      "אֲנַחְנוּ",
+      "אוֹכְלִים",
+      "גְּלִידָה",
+      "בַּחוּץ"
+    ],
+    "english_tokens": [
+      "In the summer",
+      "we",
+      "eat",
+      "ice cream",
+      "outside"
+    ],
+    "hebrew_distractors": [
+      "בחורף",
+      "הם",
+      "שותים",
+      "מרק",
+      "בבית"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בַּחֹרֶף",
+      "הֵם",
+      "שׁוֹתִים",
+      "מָרָק",
+      "בַּבַּיִת"
+    ],
+    "english_distractors": [
+      "In the winter",
+      "they",
+      "drink",
+      "soup",
+      "at home"
+    ],
+    "notes": "Final-form practice: ץ appears twice, in קיץ (summer) and חוץ (outside). The seasonal opposites בקיץ/בחורף and בחוץ/בבית are the distractor pairs."
+  },
+  {
+    "id": "colloquial_35",
+    "emoji": "💸",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 1,
+    "hebrew": "בסוף החודש אין לי כסף.",
+    "hebrew_niqqud": "בְּסוֹף הַחֹדֶשׁ אֵין לִי כֶּסֶף.",
+    "english": "At the end of the month I have no money.",
+    "hebrew_tokens": [
+      "בסוף",
+      "החודש",
+      "אין",
+      "לי",
+      "כסף"
+    ],
+    "hebrew_tokens_niqqud": [
+      "בְּסוֹף",
+      "הַחֹדֶשׁ",
+      "אֵין",
+      "לִי",
+      "כֶּסֶף"
+    ],
+    "english_tokens": [
+      "At the end",
+      "of the month",
+      "I have",
+      "no money"
+    ],
+    "hebrew_distractors": [
+      "בתחילת",
+      "השבוע",
+      "יש",
+      "לך",
+      "זמן"
+    ],
+    "hebrew_distractors_niqqud": [
+      "בִּתְחִלַּת",
+      "הַשָּׁבוּעַ",
+      "יֵשׁ",
+      "לְךָ",
+      "זְמַן"
+    ],
+    "english_distractors": [
+      "At the start",
+      "of the week",
+      "you have",
+      "plenty of money",
+      "time"
+    ],
+    "notes": "אין לי = I don't have (lit. 'there isn't to me') — the standard possession pattern, opposite יש לי. Final-form practice: ף in both סוף (end) and כסף (money)."
+  },
+  {
+    "id": "colloquial_36",
+    "emoji": "😺",
+    "category": "colloquial",
+    "style": null,
+    "difficulty": 2,
+    "hebrew": "היא סיפרה לי סיפור מצחיק על החתול שלה.",
+    "hebrew_niqqud": "הִיא סִפְּרָה לִי סִפּוּר מַצְחִיק עַל הֶחָתוּל שֶׁלָּהּ.",
+    "english": "She told me a funny story about her cat.",
+    "hebrew_tokens": [
+      "היא",
+      "סיפרה",
+      "לי",
+      "סיפור",
+      "מצחיק",
+      "על",
+      "החתול",
+      "שלה"
+    ],
+    "hebrew_tokens_niqqud": [
+      "הִיא",
+      "סִפְּרָה",
+      "לִי",
+      "סִפּוּר",
+      "מַצְחִיק",
+      "עַל",
+      "הֶחָתוּל",
+      "שֶׁלָּהּ"
+    ],
+    "english_tokens": [
+      "She told",
+      "me",
+      "a funny",
+      "story",
+      "about",
+      "her cat"
+    ],
+    "hebrew_distractors": [
+      "הוא",
+      "שאלה",
+      "עצוב",
+      "שיר",
+      "הכלב"
+    ],
+    "hebrew_distractors_niqqud": [
+      "הוּא",
+      "שָׁאֲלָה",
+      "עָצוּב",
+      "שִׁיר",
+      "הַכֶּלֶב"
+    ],
+    "english_distractors": [
+      "He told",
+      "asked",
+      "a sad",
+      "song",
+      "her dog"
+    ],
+    "notes": "Same root twice: סיפרה (pi'el ס-פ-ר, she told) and סיפור (a story). מצחיק = funny; עצוב (sad) is the opposite distractor."
   }
 ];
 
@@ -7463,6 +8068,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260702a",
+  __build: "20260704a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

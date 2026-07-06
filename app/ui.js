@@ -48,8 +48,7 @@ ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
       runtime.state?.handwriting?.introActive ||
       runtime.state?.match?.verbIntroActive ||
       runtime.state?.wordMatch?.introActive ||
-      runtime.state?.leaveConfirmOpen ||
-      runtime.state?.masteredModalOpen
+      runtime.state?.leaveConfirmOpen
   );
 };
 
@@ -247,22 +246,37 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
           });
       timeSeconds = runtime.state.sentenceBank.elapsedSeconds;
     } else if (runtime.state.mode === "advConj") {
-      progressText = translate("session.round", {
-        current: runtime.state.advConj.currentRound,
-        total: runtime.constants.ADV_CONJ_ROUNDS,
-      });
+      progressText = runtime.state.advConj.inReview
+        ? translate("session.secondChanceProgress", {
+            current: runtime.state.advConj.secondChanceCurrent,
+            total: runtime.state.advConj.secondChanceTotal,
+          })
+        : translate("session.round", {
+            current: runtime.state.advConj.currentRound,
+            total: runtime.constants.ADV_CONJ_ROUNDS,
+          });
       timeSeconds = runtime.state.advConj.elapsedSeconds;
     } else if (runtime.state.mode === "prepositions") {
-      progressText = translate("session.round", {
-        current: runtime.state.prepositions.currentRound,
-        total: runtime.constants.PREPOSITIONS_ROUNDS,
-      });
+      progressText = runtime.state.prepositions.inReview
+        ? translate("session.secondChanceProgress", {
+            current: runtime.state.prepositions.secondChanceCurrent,
+            total: runtime.state.prepositions.secondChanceTotal,
+          })
+        : translate("session.round", {
+            current: runtime.state.prepositions.currentRound,
+            total: runtime.constants.PREPOSITIONS_ROUNDS,
+          });
       timeSeconds = runtime.state.prepositions.elapsedSeconds;
     } else if (runtime.state.mode === "binyanBoard") {
-      progressText = translate("session.round", {
-        current: runtime.state.binyanBoard.clearedCount,
-        total: runtime.state.binyanBoard.totalRoots,
-      });
+      progressText = runtime.state.binyanBoard.inReview
+        ? translate("session.secondChanceProgress", {
+            current: runtime.state.binyanBoard.secondChanceCurrent,
+            total: runtime.state.binyanBoard.secondChanceTotal,
+          })
+        : translate("session.round", {
+            current: runtime.state.binyanBoard.clearedCount,
+            total: runtime.state.binyanBoard.totalRoots,
+          });
       timeSeconds = runtime.state.binyanBoard.elapsedSeconds;
     } else if (runtime.state.mode === "handwriting") {
       progressText = translate("session.round", {
@@ -610,7 +624,6 @@ ui.renderAll = ui.renderAll || function renderAll() {
   ui.renderPoolMeta();
   ui.renderDomainPerformance();
   ui.renderMostMissed();
-  ui.renderMasteredModal();
   ui.renderHomeState();
   ui.renderReviewState();
   ui.renderSettingsState();
@@ -844,12 +857,19 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
   }
 
   if (runtime.state.mode === "advConj") {
+    const inReview = Boolean(runtime.state.advConj.inReview);
     const hasQuestion = runtime.state.advConj.active && Boolean(runtime.state.advConj.currentQuestion);
-    runtime.el.modeTitle.textContent = translate("game.advConjName");
+    runtime.el.modeTitle.textContent = inReview
+      ? translate("session.advConjSecondChanceTitle")
+      : translate("game.advConjName");
     ui.updateLessonProgress(
-      runtime.constants.ADV_CONJ_ROUNDS
-        ? Math.round((runtime.state.advConj.currentRound / runtime.constants.ADV_CONJ_ROUNDS) * 100)
-        : 0
+      inReview
+        ? (runtime.state.advConj.secondChanceTotal
+            ? Math.round((runtime.state.advConj.secondChanceCurrent / runtime.state.advConj.secondChanceTotal) * 100)
+            : 0)
+        : runtime.constants.ADV_CONJ_ROUNDS
+          ? Math.round((runtime.state.advConj.currentRound / runtime.constants.ADV_CONJ_ROUNDS) * 100)
+          : 0
     );
     runtime.el.nextBtn.disabled = ui.questionNeedsSelection(runtime.state.advConj.currentQuestion);
     runtime.el.nextBtn.textContent = hasQuestion && !runtime.state.advConj.currentQuestion?.locked
@@ -861,12 +881,19 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
   }
 
   if (runtime.state.mode === "prepositions") {
+    const inReview = Boolean(runtime.state.prepositions.inReview);
     const hasQuestion = runtime.state.prepositions.active && Boolean(runtime.state.prepositions.currentQuestion);
-    runtime.el.modeTitle.textContent = translate("game.prepositionsName");
+    runtime.el.modeTitle.textContent = inReview
+      ? translate("session.prepositionsSecondChanceTitle")
+      : translate("game.prepositionsName");
     ui.updateLessonProgress(
-      runtime.constants.PREPOSITIONS_ROUNDS
-        ? Math.round((runtime.state.prepositions.currentRound / runtime.constants.PREPOSITIONS_ROUNDS) * 100)
-        : 0
+      inReview
+        ? (runtime.state.prepositions.secondChanceTotal
+            ? Math.round((runtime.state.prepositions.secondChanceCurrent / runtime.state.prepositions.secondChanceTotal) * 100)
+            : 0)
+        : runtime.constants.PREPOSITIONS_ROUNDS
+          ? Math.round((runtime.state.prepositions.currentRound / runtime.constants.PREPOSITIONS_ROUNDS) * 100)
+          : 0
     );
     runtime.el.nextBtn.disabled = ui.questionNeedsSelection(runtime.state.prepositions.currentQuestion);
     runtime.el.nextBtn.textContent = hasQuestion && !runtime.state.prepositions.currentQuestion?.locked
@@ -880,8 +907,16 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
   if (runtime.state.mode === "binyanBoard") {
     const board = runtime.state.binyanBoard;
     const question = board.currentQuestion;
-    runtime.el.modeTitle.textContent = translate("game.binyanName");
-    ui.updateLessonProgress(board.totalRoots ? Math.round((board.clearedCount / board.totalRoots) * 100) : 0);
+    runtime.el.modeTitle.textContent = board.inReview
+      ? translate("session.binyanSecondChanceTitle")
+      : translate("game.binyanName");
+    ui.updateLessonProgress(
+      board.inReview
+        ? (board.secondChanceTotal ? Math.round((board.secondChanceCurrent / board.secondChanceTotal) * 100) : 0)
+        : board.totalRoots
+          ? Math.round((board.clearedCount / board.totalRoots) * 100)
+          : 0
+    );
     if (question) {
       runtime.el.nextBtn.disabled = ui.questionNeedsSelection(question);
       runtime.el.nextBtn.textContent = !question.locked ? translate("session.submit") : translate("session.next");
@@ -1200,6 +1235,188 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
 };
 
 ui.renderReviewState = ui.renderReviewState || function renderReviewState() {
+  const runtime = getRuntime();
+  const tab = runtime.state.reviewTab || "overview";
+  (runtime.el?.reviewTabButtons || []).forEach((button) => {
+    const active = (button.dataset?.reviewTab || "overview") === tab;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  if (runtime.el?.reviewOverviewPanel) runtime.el.reviewOverviewPanel.hidden = tab !== "overview";
+  if (runtime.el?.reviewTroublePanel) runtime.el.reviewTroublePanel.hidden = tab !== "trouble";
+  if (runtime.el?.reviewWordBankPanel) runtime.el.reviewWordBankPanel.hidden = tab !== "wordbank";
+  if (runtime.state.route !== "review") return;
+  if (tab === "overview") ui.renderReviewOverviewStats();
+  if (tab === "trouble") ui.renderTroubleSpots();
+  if (tab === "wordbank") {
+    ui.renderWordBankFilters();
+    ui.renderWordBankList();
+  }
+};
+
+ui.renderReviewOverviewStats = ui.renderReviewOverviewStats || function renderReviewOverviewStats() {
+  const runtime = getRuntime();
+  const data = getData();
+  const overview = data.getReviewOverviewStats?.() || { dueCount: 0, masteredCount: 0 };
+  if (runtime.el?.reviewStatDue) runtime.el.reviewStatDue.textContent = String(overview.dueCount);
+  if (runtime.el?.reviewStatMastered) runtime.el.reviewStatMastered.textContent = String(overview.masteredCount);
+  if (runtime.el?.reviewStatSentences) {
+    runtime.el.reviewStatSentences.textContent = String(app.sentenceBank?.getPracticedSentenceCount?.() || 0);
+  }
+  if (runtime.el?.reviewStatLetters) {
+    runtime.el.reviewStatLetters.textContent = String(app.handwriting?.getLearnedLetterCount?.() || 0);
+  }
+};
+
+ui.renderTroubleSpots = ui.renderTroubleSpots || function renderTroubleSpots() {
+  const runtime = getRuntime();
+  const data = getData();
+  const h = getHelpers();
+
+  const sentences = app.sentenceBank?.getWorstSentences?.(5) || [];
+  if (runtime.el?.worstSentencesList && runtime.el?.worstSentencesEmpty) {
+    runtime.el.worstSentencesList.innerHTML = "";
+    runtime.el.worstSentencesEmpty.classList.toggle("hidden", sentences.length > 0);
+    sentences.forEach((entry) => {
+      const directionLabel = translate(`review.direction_${entry.direction}`);
+      runtime.el.worstSentencesList.append(
+        ui.createCompactRow({
+          title: entry.sentence.hebrew,
+          note: `${entry.sentence.english} · ${directionLabel} · ❌ ${entry.misses}/${entry.attempts}`,
+          variant: "wrong",
+        })
+      );
+    });
+  }
+
+  const verbs = data.getHardestVerbs?.(5) || [];
+  if (runtime.el?.hardestVerbsList && runtime.el?.hardestVerbsEmpty) {
+    runtime.el.hardestVerbsList.innerHTML = "";
+    runtime.el.hardestVerbsEmpty.classList.toggle("hidden", verbs.length > 0);
+    verbs.forEach((entry) => {
+      runtime.el.hardestVerbsList.append(
+        ui.createCompactRow({
+          title: h.getHebrewText?.(entry.word, true) || entry.word.he,
+          note: `${entry.word.en} · ${Math.round(entry.accuracy * 100)}% (${entry.correct}/${entry.attempts})`,
+          variant: "wrong",
+        })
+      );
+    });
+  }
+
+  const letters = app.handwriting?.getWeakestLetters?.(8) || [];
+  if (runtime.el?.weakestLettersList && runtime.el?.weakestLettersEmpty) {
+    runtime.el.weakestLettersList.innerHTML = "";
+    runtime.el.weakestLettersEmpty.classList.toggle("hidden", letters.length > 0);
+    letters.forEach(({ form, entry }) => {
+      const chip = global.document.createElement("span");
+      chip.className = "letter-chip";
+      const glyph = global.document.createElement("span");
+      glyph.className = "letter-chip-glyph hebrew";
+      glyph.dir = "rtl";
+      glyph.setAttribute("lang", "he");
+      glyph.textContent = form.letter;
+      const box = global.document.createElement("span");
+      box.className = "letter-chip-box";
+      box.textContent = translate("review.letterBox", { box: entry.box });
+      chip.append(glyph, box);
+      runtime.el.weakestLettersList.append(chip);
+    });
+  }
+};
+
+ui.renderWordBankFilters = ui.renderWordBankFilters || function renderWordBankFilters() {
+  const runtime = getRuntime();
+  if (runtime.el?.wordBankSearch) {
+    runtime.el.wordBankSearch.placeholder = translate("wordBank.searchPlaceholder");
+    if (runtime.el.wordBankSearch.value !== runtime.state.wordBank.search) {
+      runtime.el.wordBankSearch.value = runtime.state.wordBank.search;
+    }
+  }
+  if (!runtime.el?.wordBankFilters) return;
+  const domains = Array.isArray(runtime.performanceDomains) ? runtime.performanceDomains : [];
+  runtime.el.wordBankFilters.innerHTML = "";
+  ["all", ...domains.map((domain) => domain.id)].forEach((domainId) => {
+    const chip = global.document.createElement("button");
+    chip.type = "button";
+    chip.className = "wordbank-chip";
+    chip.dataset.domain = domainId;
+    const active = (runtime.state.wordBank.domain || "all") === domainId;
+    chip.classList.toggle("active", active);
+    chip.setAttribute("aria-pressed", String(active));
+    chip.textContent = domainId === "all" ? translate("wordBank.filterAll") : translate(`domain.${domainId}`);
+    runtime.el.wordBankFilters.append(chip);
+  });
+};
+
+ui.renderWordBankList = ui.renderWordBankList || function renderWordBankList() {
+  const runtime = getRuntime();
+  const data = getData();
+  const h = getHelpers();
+  if (!runtime.el?.wordBankList) return;
+
+  const search = String(runtime.state.wordBank.search || "").trim().toLowerCase();
+  const domain = runtime.state.wordBank.domain || "all";
+  const entries = data.getWordBankEntries?.() || [];
+  const filtered = entries.filter((entry) => {
+    if (domain !== "all" && entry.domainId !== domain) return false;
+    if (!search) return true;
+    const plainHe = h.getHebrewText?.(entry.word, false) || entry.word.he || "";
+    return entry.word.en.toLowerCase().includes(search) || plainHe.includes(search);
+  });
+
+  if (runtime.el?.wordBankCount) {
+    runtime.el.wordBankCount.textContent = translate("wordBank.count", {
+      shown: filtered.length,
+      total: entries.length,
+    });
+  }
+  if (runtime.el?.wordBankEmpty) {
+    runtime.el.wordBankEmpty.classList.toggle("hidden", filtered.length > 0);
+  }
+
+  const fragment = global.document.createDocumentFragment();
+  filtered.forEach((entry) => {
+    const row = global.document.createElement("article");
+    row.className = "wordbank-row";
+    row.classList.toggle("wordbank-row--mastered", entry.mastered);
+    row.dataset.wordId = entry.word.id;
+
+    const textWrap = global.document.createElement("div");
+    textWrap.className = "wordbank-text";
+    const he = global.document.createElement("p");
+    he.className = "wordbank-he hebrew";
+    he.dir = "rtl";
+    he.setAttribute("lang", "he");
+    he.textContent = h.getHebrewText?.(entry.word, true) || entry.word.he;
+    const en = global.document.createElement("p");
+    en.className = "wordbank-en";
+    en.textContent = entry.word.en;
+    textWrap.append(he, en);
+
+    const meta = global.document.createElement("p");
+    meta.className = "wordbank-meta";
+    if (entry.isNew) {
+      meta.textContent = translate("wordBank.newWord");
+    } else {
+      const parts = [`${entry.accuracy}%`, translate("wordBank.level", { level: entry.rec.level })];
+      if (entry.isDue && !entry.mastered) parts.push(translate("wordBank.due"));
+      meta.textContent = parts.join(" · ");
+    }
+
+    const toggle = global.document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "wordbank-master-btn";
+    toggle.dataset.wordId = entry.word.id;
+    toggle.setAttribute("aria-pressed", String(entry.mastered));
+    toggle.setAttribute("aria-label", translate(entry.mastered ? "wordBank.unmaster" : "wordBank.master"));
+    toggle.textContent = "✓";
+
+    row.append(textWrap, meta, toggle);
+    fragment.append(row);
+  });
+  runtime.el.wordBankList.innerHTML = "";
+  runtime.el.wordBankList.append(fragment);
 };
 
 ui.getSummaryScoreValue = ui.getSummaryScoreValue || function getSummaryScoreValue() {
@@ -1522,13 +1739,6 @@ ui.renderMostMissed = ui.renderMostMissed || function renderMostMissed() {
   runtime.el.mostMissedList.append(ol);
 };
 
-ui.closeMasteredModal = ui.closeMasteredModal || function closeMasteredModal() {
-  const runtime = getRuntime();
-  runtime.state.masteredModalOpen = false;
-  runtime.state.masteredSelection = new Set();
-  ui.renderMasteredModal();
-};
-
 ui.closeWelcomeModal = ui.closeWelcomeModal || function closeWelcomeModal() {
   const runtime = getRuntime();
   if (!runtime.state.welcomeModalOpen) return;
@@ -1546,70 +1756,4 @@ ui.renderWelcomeModal = ui.renderWelcomeModal || function renderWelcomeModal() {
   ui.updateUiLockState();
 };
 
-ui.renderMasteredModal = ui.renderMasteredModal || function renderMasteredModal() {
-  const runtime = getRuntime();
-  const data = getData();
-  const h = getHelpers();
-  if (!runtime.el?.masteredModal || !runtime.el?.masteredList || !runtime.el?.masteredEmpty || !runtime.el?.masteredRestoreBtn) return;
-
-  const open = Boolean(runtime.state.masteredModalOpen);
-  runtime.el.masteredModal.classList.toggle("hidden", !open);
-  runtime.el.masteredModal.setAttribute("aria-hidden", open ? "false" : "true");
-  ui.updateUiLockState();
-  if (!open) return;
-
-  const masteredWords = (data.getMasteredWords?.() || []).sort((a, b) => a.en.localeCompare(b.en));
-  const validIds = new Set(masteredWords.map((word) => word.id));
-  runtime.state.masteredSelection = new Set([...runtime.state.masteredSelection].filter((id) => validIds.has(id)));
-
-  runtime.el.masteredList.innerHTML = "";
-  runtime.el.masteredEmpty.classList.toggle("hidden", masteredWords.length > 0);
-
-  masteredWords.forEach((word) => {
-    const row = global.document.createElement("label");
-    row.className = "mastered-row";
-    row.title = word.en;
-
-    const input = global.document.createElement("input");
-    input.type = "checkbox";
-    input.checked = runtime.state.masteredSelection.has(word.id);
-    input.addEventListener("change", () => {
-      if (input.checked) {
-        runtime.state.masteredSelection.add(word.id);
-      } else {
-        runtime.state.masteredSelection.delete(word.id);
-      }
-      runtime.el.masteredRestoreBtn.disabled = runtime.state.masteredSelection.size === 0;
-    });
-
-    const textWrap = global.document.createElement("div");
-    const he = global.document.createElement("p");
-    he.className = "mastered-row-he";
-    he.textContent = h.getHebrewText?.(word, runtime.state.showNiqqudInline) || "";
-
-    const en = global.document.createElement("p");
-    en.className = "mastered-row-en";
-    en.textContent = word.en;
-
-    textWrap.append(he, en);
-    row.append(input, textWrap);
-    runtime.el.masteredList.append(row);
-  });
-
-  runtime.el.masteredRestoreBtn.disabled = runtime.state.masteredSelection.size === 0;
-};
-
-ui.restoreSelectedMasteredWords = ui.restoreSelectedMasteredWords || function restoreSelectedMasteredWords() {
-  const runtime = getRuntime();
-  const data = getData();
-  const h = getHelpers();
-  const selectedIds = [...runtime.state.masteredSelection].filter((wordId) => data.isWordMastered?.(wordId));
-  if (!selectedIds.length) return;
-
-  selectedIds.forEach((wordId) => data.setWordMastered?.(wordId, false));
-  app.persistence?.saveProgress?.();
-  runtime.state.masteredSelection = new Set();
-  h.renderAll?.();
-  h.setFeedback?.(translate("mastered.restored", { count: selectedIds.length }), true);
-};
 })(typeof window !== "undefined" ? window : globalThis);

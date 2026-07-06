@@ -4138,3 +4138,327 @@ test("translation pool excludes words marked unavailable for translation quiz", 
     ["alpha"]
   );
 });
+
+test("prepositions runs a second-chance review phase for missed questions", () => {
+  const harness = loadAppHarness([]);
+  const { app, state } = harness;
+  const prep = state.prepositions;
+
+  app.runtime.helpers.playAnswerFeedbackSound = () => {};
+  app.runtime.helpers.renderDomainPerformance = () => {};
+  app.runtime.helpers.renderMostMissed = () => {};
+  app.prepositions.markPrepositionsChoiceResults = () => {};
+  app.prepositions.renderPrepositionsQuestion = () => {};
+
+  state.mode = "prepositions";
+  prep.active = true;
+
+  const makeQuestion = (over = {}) => ({
+    triggerId: "prep-wait",
+    objectKey: "me",
+    triggerHe: "מחכה",
+    prepBase: "ל",
+    objectLabel: "me",
+    promptText: "מחכה ____",
+    englishHint: "to wait for me",
+    correctAnswer: "לִי",
+    answerPlain: "מחכה לי",
+    answerNiqqud: "מחכה לִי",
+    options: [
+      { id: "correct", text: "לי", textNiqqud: "לִי", isCorrect: true },
+      { id: "d1", text: "בי", textNiqqud: "בִּי", isCorrect: false },
+    ],
+    selectedOptionId: "d1",
+    locked: false,
+    ...over,
+  });
+
+  prep.currentQuestion = makeQuestion();
+  app.prepositions.applyPrepositionsAnswer();
+  assert.equal(prep.reviewQueue.length, 1);
+  assert.equal(prep.reviewQueue[0].isReview, true);
+  assert.equal(prep.reviewQueue[0].locked, false);
+  assert.equal(prep.reviewQueue[0].selectedOptionId, null);
+
+  prep.currentQuestion = makeQuestion();
+  app.prepositions.applyPrepositionsAnswer();
+  assert.equal(prep.reviewQueue.length, 1, "double miss must not duplicate the review item");
+  assert.equal(prep.sessionMistakes.length, 1, "double miss must not duplicate the clinic entry");
+
+  prep.questionQueue = [];
+  const scoreBefore = state.sessionScore;
+  app.prepositions.loadPrepositionsQuestion();
+  assert.equal(prep.inReview, true);
+  assert.equal(prep.secondChanceTotal, 1);
+  assert.equal(prep.introActive, true, "the game's own intro replays as the second-chance break");
+
+  app.prepositions.beginPrepositionsFromIntro();
+  assert.equal(prep.secondChanceCurrent, 1);
+  assert.equal(prep.currentQuestion.isReview, true);
+
+  prep.currentQuestion.selectedOptionId = "correct";
+  app.prepositions.applyPrepositionsAnswer();
+  assert.equal(state.sessionScore, scoreBefore, "review answers award no session score");
+
+  app.prepositions.loadPrepositionsQuestion();
+  assert.equal(state.summary.active, true);
+  assert.equal(state.summary.noteKey, "summary.lessonNote");
+  assert.equal(state.summary.noteVars.count, 1);
+  assert.equal(prep.inReview, false);
+  assert.equal(prep.secondChanceTotal, 0);
+});
+
+test("conjugation+ review re-asks missed questions once and never re-queues review misses", () => {
+  const harness = loadAppHarness([]);
+  const { app, state } = harness;
+  const advConj = state.advConj;
+
+  app.runtime.helpers.playAnswerFeedbackSound = () => {};
+  app.runtime.helpers.renderDomainPerformance = () => {};
+  app.runtime.helpers.renderMostMissed = () => {};
+  app.advConj.markAdvConjChoiceResults = () => {};
+  app.advConj.renderAdvConjQuestion = () => {};
+
+  state.mode = "advConj";
+  advConj.active = true;
+
+  const makeQuestion = (over = {}) => ({
+    idiomId: "idiom-1",
+    tense: "past",
+    subjectForm: "אני",
+    subjectLabel: "I",
+    objectKey: "him",
+    objectLabel: "him",
+    direction: "en2he",
+    promptText: "I trusted him",
+    correctAnswer: "סָמַכְתִּי עָלָיו",
+    options: [
+      { id: "correct", text: "סמכתי עליו", isCorrect: true },
+      { id: "d1", text: "סמכתי אותו", isCorrect: false },
+    ],
+    selectedOptionId: "d1",
+    locked: false,
+    ...over,
+  });
+
+  advConj.currentQuestion = makeQuestion();
+  app.advConj.applyAdvConjAnswer();
+  advConj.currentQuestion = makeQuestion();
+  app.advConj.applyAdvConjAnswer();
+  assert.equal(advConj.reviewQueue.length, 1, "same idiom/tense/subject/object missed twice queues once");
+
+  advConj.questionQueue = [];
+  app.advConj.loadAdvConjQuestion();
+  assert.equal(advConj.inReview, true);
+  assert.equal(advConj.secondChanceTotal, 1);
+  assert.equal(advConj.introActive, true);
+
+  app.advConj.beginAdvConjFromIntro();
+  assert.equal(advConj.secondChanceCurrent, 1);
+  assert.equal(advConj.currentQuestion.isReview, true);
+
+  const wrongBefore = advConj.wrongAnswers;
+  app.advConj.applyAdvConjAnswer();
+  assert.equal(advConj.wrongAnswers, wrongBefore + 1, "review misses still count as wrong");
+  assert.equal(advConj.reviewQueue.length, 0, "a miss during review must not re-queue");
+
+  app.advConj.loadAdvConjQuestion();
+  assert.equal(state.summary.active, true);
+  assert.equal(state.summary.noteKey, "summary.lessonNote");
+  assert.equal(state.summary.noteVars.count, 1);
+  assert.equal(advConj.inReview, false);
+});
+
+test("binyan board replays missed forms in a second-chance phase", () => {
+  const harness = loadAppHarness([]);
+  const { app, state } = harness;
+  const board = state.binyanBoard;
+
+  app.runtime.helpers.playAnswerFeedbackSound = () => {};
+  app.runtime.helpers.renderDomainPerformance = () => {};
+  app.runtime.helpers.renderMostMissed = () => {};
+  app.binyanBoard.renderBinyanBoardFeedback = () => {};
+  app.binyanBoard.markBinyanBoardChoiceResults = () => {};
+  app.binyanBoard.renderBinyanBoard = () => {};
+
+  state.mode = "binyanBoard";
+  board.active = true;
+  board.startMs = 1;
+  board.deck = [
+    {
+      id: "root1",
+      emoji: "🌳",
+      cleared: false,
+      forms: [
+        { formId: "f1", slot: "paal", binyanNameHe: "פָּעַל", formVocalized: "פָּתַח", gloss: "opened", func: "", teachingPoint: "", distractorEligible: true },
+        { formId: "f2", slot: "nifal", binyanNameHe: "נִפְעַל", formVocalized: "נִפְתַּח", gloss: "was opened", func: "", teachingPoint: "", distractorEligible: true },
+      ],
+    },
+  ];
+  board.distractorPool = ["developed", "was written", "closed"];
+  board.totalRoots = 1;
+
+  board.currentQuestion = {
+    formId: "f1",
+    formVocalized: "פָּתַח",
+    gloss: "opened",
+    options: [
+      { id: "correct", text: "opened", isCorrect: true },
+      { id: "d1", text: "closed", isCorrect: false },
+    ],
+    selectedOptionId: "d1",
+    locked: false,
+  };
+  app.binyanBoard.applyBinyanBoardAnswer();
+  assert.equal(board.reviewQueue.length, 1);
+  assert.equal(board.reviewQueue[0], "f1");
+
+  const scoreBefore = state.sessionScore;
+  const correctBefore = board.correctCount;
+  app.binyanBoard.finishRoot(board.deck[0]);
+  assert.equal(board.inReview, true);
+  assert.equal(board.secondChanceTotal, 1);
+  assert.equal(board.introActive, true, "binyan intro replays before the review phase");
+  assert.equal(state.summary.active, false, "summary must wait for the review phase");
+
+  app.binyanBoard.beginBinyanBoardFromIntro();
+  assert.equal(board.secondChanceCurrent, 1);
+  assert.ok(board.currentQuestion);
+  assert.equal(board.currentQuestion.formId, "f1");
+  assert.equal(board.currentQuestion.isReview, true);
+
+  board.currentQuestion.selectedOptionId = "correct";
+  app.binyanBoard.applyBinyanBoardAnswer();
+  assert.equal(state.sessionScore, scoreBefore, "review answers award no session score");
+  assert.equal(board.correctCount, correctBefore + 1, "review answers still count in the summary totals");
+
+  app.binyanBoard.handleBinyanBoardNext();
+  assert.equal(state.summary.active, true);
+  assert.equal(state.summary.noteKey, "summary.lessonNote");
+  assert.equal(state.summary.noteVars.count, 1);
+});
+
+test("gameplay header shows second-chance progress and review titles for the three quiz games", () => {
+  const harness = loadAppHarness([]);
+  const { app, state, document } = harness;
+
+  const cases = [
+    { mode: "prepositions", slice: state.prepositions, title: "Prepositions Review" },
+    { mode: "advConj", slice: state.advConj, title: "Conjugation+ Review" },
+    { mode: "binyanBoard", slice: state.binyanBoard, title: "Binyanim Review" },
+  ];
+
+  cases.forEach(({ mode, slice, title }) => {
+    state.mode = mode;
+    slice.active = true;
+    slice.inReview = true;
+    slice.secondChanceCurrent = 1;
+    slice.secondChanceTotal = 3;
+    const meta = app.ui.getGameplayHeaderMeta();
+    assert.equal(meta.progressText, "Second chance: 1/3", `${mode} header meta`);
+    app.ui.renderSessionHeader();
+    assert.equal(document.querySelector("#modeTitle").textContent, title, `${mode} review title`);
+    slice.active = false;
+    slice.inReview = false;
+  });
+});
+
+test("review page markup exposes three sub-tabs and no mastered modal", () => {
+  const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+
+  assert.match(markup, /data-review-tab="overview"[\s\S]*data-review-tab="trouble"[\s\S]*data-review-tab="wordbank"/s);
+  assert.match(markup, /id="reviewOverviewPanel"[\s\S]*id="reviewTroublePanel"[\s\S]*id="reviewWordBankPanel"/s);
+  assert.match(markup, /id="reviewPanelToggle"[\s\S]*aria-controls="reviewPanel"/s);
+  assert.match(markup, /id="mostMissedList"/);
+  assert.match(markup, /id="reviewDomainPerformance"/);
+  assert.match(markup, /id="wordBankSearch"[\s\S]*id="wordBankFilters"[\s\S]*id="wordBankList"/s);
+  assert.doesNotMatch(markup, /id="masteredModal"/);
+});
+
+test("getHardestVerbs ranks low-accuracy conjugation records above noise", () => {
+  const vocabulary = [
+    { id: "verb-a", category: "core", en: "to open", he: "לפתוח", heNiqqud: "לִפְתֹּחַ", utility: 90 },
+    { id: "verb-b", category: "core", en: "to close", he: "לסגור", heNiqqud: "לִסְגֹּר", utility: 90 },
+    { id: "verb-c", category: "core", en: "to write", he: "לכתוב", heNiqqud: "לִכְתֹּב", utility: 90 },
+  ];
+  const harness = loadAppHarness(vocabulary);
+  const { app, state } = harness;
+
+  state.progress["verb-a"] = { conjugationAttempts: 10, conjugationCorrect: 4 };
+  state.progress["verb-b"] = { conjugationAttempts: 2, conjugationCorrect: 0 };
+  state.progress["verb-c"] = { conjugationAttempts: 6, conjugationCorrect: 6 };
+
+  const hardest = app.data.getHardestVerbs(5);
+  assert.equal(hardest.length, 1, "below-threshold and perfect records are excluded");
+  assert.equal(hardest[0].word.id, "verb-a");
+  assert.equal(hardest[0].attempts, 10);
+  assert.equal(hardest[0].correct, 4);
+});
+
+test("getWorstSentences surfaces high-miss-rate sentence records by direction", () => {
+  const sentenceBank = [
+    {
+      id: "sb-1",
+      category: "everyday",
+      difficulty: 1,
+      english: "Good morning.",
+      hebrew: "בוקר טוב.",
+      english_tokens: ["Good", "morning"],
+      hebrew_tokens: ["בוקר", "טוב"],
+      english_distractors: ["evening"],
+      hebrew_distractors: ["ערב"],
+      notes: "n",
+    },
+    {
+      id: "sb-2",
+      category: "everyday",
+      difficulty: 1,
+      english: "Good night.",
+      hebrew: "לילה טוב.",
+      english_tokens: ["Good", "night"],
+      hebrew_tokens: ["לילה", "טוב"],
+      english_distractors: ["morning"],
+      hebrew_distractors: ["בוקר"],
+      notes: "n",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { app, state } = harness;
+
+  state.sentenceProgress["sb-1::he2en"] = { attempts: 4, correct: 1, misses: 3 };
+  state.sentenceProgress["sb-2::listen"] = { attempts: 4, correct: 3, misses: 1 };
+  state.sentenceProgress["sb-2::en2he"] = { attempts: 1, correct: 0, misses: 1 };
+
+  const worst = app.sentenceBank.getWorstSentences(5);
+  assert.equal(worst.length, 2, "single-attempt records are excluded");
+  assert.equal(worst[0].sentence.id, "sb-1");
+  assert.equal(worst[0].direction, "he2en");
+  assert.equal(worst[0].misses, 3);
+  assert.equal(worst[1].sentence.id, "sb-2");
+
+  assert.equal(app.sentenceBank.getPracticedSentenceCount(), 2);
+});
+
+test("review tab persists through ui state and word bank reflects mastered toggles", () => {
+  const vocabulary = [
+    { id: "word-a", category: "core", en: "table", he: "שולחן", heNiqqud: "שֻׁלְחָן", utility: 90 },
+    { id: "word-b", category: "core", en: "chair", he: "כיסא", heNiqqud: "כִּסֵּא", utility: 90 },
+  ];
+  const harness = loadAppHarness(vocabulary);
+  const { app, state } = harness;
+
+  state.reviewTab = "wordbank";
+  app.persistence.persistUiState();
+  const savedUi = JSON.parse(harness.localStorage.getItem(app.runtime.constants.STORAGE_KEYS.ui));
+  assert.equal(savedUi.reviewTab, "wordbank");
+
+  app.data.setWordMastered("word-a", true);
+  const entries = app.data.getWordBankEntries();
+  const masteredEntry = entries.find((entry) => entry.word.id === "word-a");
+  assert.equal(masteredEntry.mastered, true);
+  assert.equal(app.data.getSelectedPool().some((word) => word.id === "word-a"), false, "mastered words leave the translation pool");
+  assert.equal(app.data.getReviewOverviewStats().masteredCount, 1);
+
+  app.data.setWordMastered("word-a", false);
+  assert.equal(app.data.getSelectedPool().some((word) => word.id === "word-a"), true);
+});

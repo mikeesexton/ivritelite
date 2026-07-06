@@ -728,6 +728,10 @@ session.resetAdvConjState = session.resetAdvConjState || function resetAdvConjSt
     wrongAnswers: 0,
     sessionMistakeIds: [],
     sessionMistakes: [],
+    inReview: false,
+    reviewQueue: [],
+    secondChanceCurrent: 0,
+    secondChanceTotal: 0,
   };
 };
 
@@ -757,6 +761,10 @@ session.resetPrepositionsState = session.resetPrepositionsState || function rese
     currentQuestion: null,
     wrongAnswers: 0,
     sessionMistakes: [],
+    inReview: false,
+    reviewQueue: [],
+    secondChanceCurrent: 0,
+    secondChanceTotal: 0,
   };
 };
 
@@ -779,14 +787,19 @@ session.finishPrepositions = session.finishPrepositions || function finishPrepos
     runtime.state.prepositions.timerId = null;
   }
   runtime.state.prepositions.active = false;
+  const reviewRounds = runtime.state.prepositions.secondChanceTotal;
+  runtime.state.prepositions.inReview = false;
+  runtime.state.prepositions.secondChanceCurrent = 0;
+  runtime.state.prepositions.secondChanceTotal = 0;
   const wrong = runtime.state.prepositions.wrongAnswers;
-  const correct = rounds - wrong;
+  const correct = Math.max(0, rounds + reviewRounds - wrong);
   const seconds = runtime.state.prepositions.elapsedSeconds;
   const mistakes = app.prepositions?.buildPrepositionsMistakeSummary?.() || [];
   session.showSessionSummary({
     game: "prepositions",
     titleKey: "summary.prepositionsTitle",
-    noteKey: "summary.abbreviationNote",
+    noteKey: reviewRounds > 0 ? "summary.lessonNote" : "summary.abbreviationNote",
+    noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: correct,
     incorrectCount: wrong,
     elapsedSeconds: seconds,
@@ -818,13 +831,19 @@ session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {
     runtime.state.advConj.timerId = null;
   }
   runtime.state.advConj.active = false;
-  const correct = rounds - runtime.state.advConj.wrongAnswers;
+  const reviewRounds = runtime.state.advConj.secondChanceTotal;
+  runtime.state.advConj.inReview = false;
+  runtime.state.advConj.secondChanceCurrent = 0;
+  runtime.state.advConj.secondChanceTotal = 0;
   const wrong = runtime.state.advConj.wrongAnswers;
+  const correct = Math.max(0, rounds + reviewRounds - wrong);
   const seconds = runtime.state.advConj.elapsedSeconds;
   const mistakes = h.buildAdvConjMistakeSummary?.() || [];
   session.showSessionSummary({
     game: "advConj",
     titleKey: "summary.advConjTitle",
+    noteKey: reviewRounds > 0 ? "summary.lessonNote" : "",
+    noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: correct,
     incorrectCount: wrong,
     elapsedSeconds: seconds,

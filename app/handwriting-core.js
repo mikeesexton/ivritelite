@@ -140,6 +140,30 @@ handwritingCore.normalizeProgressEntry = handwritingCore.normalizeProgressEntry 
   };
 };
 
+handwritingCore.rankWeakestLetters = handwritingCore.rankWeakestLetters || function rankWeakestLetters(progressMap, letterforms, options = {}) {
+  const minAttempts = Math.max(1, Math.floor(Number.isFinite(options.minAttempts) ? options.minAttempts : 2));
+  const limit = Math.max(0, Math.floor(Number.isFinite(options.limit) ? options.limit : 8));
+  const source = progressMap && typeof progressMap === "object" ? progressMap : {};
+  const entries = [];
+  (Array.isArray(letterforms) ? letterforms : []).forEach((form) => {
+    if (!form?.id || !(form.id in source)) return;
+    const entry = handwritingCore.normalizeProgressEntry(source[form.id]);
+    if (entry.attempts < minAttempts) return;
+    entries.push({ form, entry });
+  });
+  entries.sort((a, b) => {
+    if (a.entry.box !== b.entry.box) return a.entry.box - b.entry.box;
+    if (a.entry.lastScore !== b.entry.lastScore) return a.entry.lastScore - b.entry.lastScore;
+    return (a.form.order || 0) - (b.form.order || 0);
+  });
+  return entries.slice(0, limit);
+};
+
+handwritingCore.countLearnedLetters = handwritingCore.countLearnedLetters || function countLearnedLetters(progressMap, threshold = 3) {
+  const source = progressMap && typeof progressMap === "object" ? progressMap : {};
+  return Object.values(source).filter((entry) => handwritingCore.normalizeProgressEntry(entry).box >= threshold).length;
+};
+
 handwritingCore.applyAttemptToProgress = handwritingCore.applyAttemptToProgress || function applyAttemptToProgress(entry, result = {}) {
   const normalized = handwritingCore.normalizeProgressEntry(entry);
   const pass = Boolean(result.pass);

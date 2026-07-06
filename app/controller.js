@@ -92,12 +92,33 @@ controller.bindUi = controller.bindUi || function bindUi() {
       app.ui?.closeWelcomeModal?.();
     }
   });
-  runtime.el.masteredCloseBtn?.addEventListener("click", () => app.ui?.closeMasteredModal?.());
-  runtime.el.masteredRestoreBtn?.addEventListener("click", () => app.ui?.restoreSelectedMasteredWords?.());
-  runtime.el.masteredModal?.addEventListener("click", (event) => {
-    if (event.target === runtime.el.masteredModal) {
-      app.ui?.closeMasteredModal?.();
-    }
+  (runtime.el.reviewTabButtons || []).forEach((button) => {
+    button.addEventListener("click", () => {
+      runtime.state.reviewTab = button.dataset?.reviewTab || "overview";
+      app.ui?.renderReviewState?.();
+      app.persistence?.persistUiState?.();
+    });
+  });
+  runtime.el.wordBankSearch?.addEventListener("input", () => {
+    runtime.state.wordBank.search = runtime.el.wordBankSearch.value || "";
+    app.ui?.renderWordBankList?.();
+  });
+  runtime.el.wordBankFilters?.addEventListener("click", (event) => {
+    const chip = event.target?.closest?.("[data-domain]");
+    if (!chip) return;
+    runtime.state.wordBank.domain = chip.dataset.domain || "all";
+    app.ui?.renderWordBankFilters?.();
+    app.ui?.renderWordBankList?.();
+  });
+  runtime.el.wordBankList?.addEventListener("click", (event) => {
+    const btn = event.target?.closest?.(".wordbank-master-btn");
+    const wordId = btn?.dataset?.wordId;
+    if (!wordId) return;
+    const data = app.data;
+    data?.setWordMastered?.(wordId, !data?.isWordMastered?.(wordId));
+    app.persistence?.saveProgress?.();
+    app.ui?.renderWordBankList?.();
+    app.ui?.renderReviewOverviewStats?.();
   });
   global.addEventListener("keydown", controller.handleGlobalKeyDown);
   global.addEventListener("resize", controller.handleViewportResize);
@@ -117,7 +138,6 @@ controller.bindUi = controller.bindUi || function bindUi() {
 
     runtime.state.progress = {};
     runtime.state.sentenceProgress = {};
-    runtime.state.masteredSelection = new Set();
     runtime.state.match.eligibleMasterWordId = "";
     h.resetSessionCounters?.();
     h.resetSentenceBankState?.();
@@ -125,7 +145,6 @@ controller.bindUi = controller.bindUi || function bindUi() {
     app.persistence?.saveProgress?.();
     app.persistence?.saveSentenceProgress?.();
     h.renderMostMissed?.();
-    h.renderMasteredModal?.();
     h.renderAll?.();
     if (runtime.state.mode === "lesson" && runtime.state.lesson.active) {
       app.lessonMode?.nextQuestion?.();
@@ -153,10 +172,6 @@ controller.handleGlobalKeyDown = controller.handleGlobalKeyDown || function hand
   if (event.key === "Escape") {
     if (runtime.state.welcomeModalOpen) {
       app.ui?.closeWelcomeModal?.();
-      return;
-    }
-    if (runtime.state.masteredModalOpen) {
-      app.ui?.closeMasteredModal?.();
     }
     return;
   }
