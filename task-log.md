@@ -7,6 +7,96 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-11 — Conjugation game: add 10 high-frequency verbs (74 → 84 lemmas)
+
+**Requested:** "Pick some more verbs to add to the conjugation game. You decide." Chosen to fill gaps between the conjugation deck and the verbs the Sentence Bank already drills constantly, while broadening binyan/gizra variety.
+
+**Change:**
+- `hebrew-verbs.js` — appended 10 fully curated `createVerbEntry` blocks at the end of `buildStarterVerbEntries()` (all `conjugation_mode: "curated"`, `review_status: "approved"`, full present/past/future/imperative with 1:1 plain+niqqud):
+  - Regular pa'al: **לשלוח** (to send), **לשכוח** (to forget) — ל-guttural patach futures like לפתוח; **לעזור** (to help, ל־) — פ-guttural like לעבוד; **לבדוק** (to check) — o-future like לסגור.
+  - Irregular pa'al: **לנסוע** (to travel) — פ"נ, nun assimilates (אסע/ייסע, imperative סע); **לרדת** (to go down / to get off) — פ"י tzere future (אֵרֵד, imperative רד); **לעלות** (to go up / to cost) — ל"ה like לעשות.
+  - Hif'il: **להזמין** (to order / to invite), **להחליט** (to decide, past הֶחְלִיט with guttural segol).
+  - Pi'el ל"ה: **לחכות** (to wait for, ל־).
+  - Also added `["cost", "cost"]` to the irregular English past map — the לעלות "to cost" sense otherwise rendered "he costed" (now "he cost (past)", with the ambiguity annotation applied automatically).
+- `index.html` — bumped `hebrew-verbs.js?v=` `20260711b` → `20260711d`.
+
+**Behavior changed:** Conjugation and Conjugation+ decks grow from 88 to 98 study items (10 lemmas, 3 of them dual-sense). Each new verb exposes 24 learner-facing forms with niqqud.
+
+**Tests run:** `npm test` before (228 pass, includes Codex's pending sentence-bank expansion) and after (228 pass). Live verification on dev server :3100 via browser JS: all 10 lemmas present in `getSeedVerbEntries()` (84 total) and in `buildVerbConjugationDeck` with `formSource: "authoritative"`, 0 forms missing `valuePlain`/`valueNiqqud`; irregular English labels correct (he went up / he got off / he forgot / he cost (past)); Conjugation game plays with no console errors.
+
+**Risks / regressions to check:** (1) During verification I fixed one authoring bug: a usage pattern set on only one sense of לרדת was promoted entry-wide by `deriveSharedUsagePattern`, mislabeling "to go down" as taking מ־/ב־ — both senses now use `null` (mirrors לצאת). Watch other dual-sense verbs for the same trap. (2) לעלות past 3ms עלה = present ms עולה distinction relies on niqqud; the "(past)" annotation already guards the cost sense's colliding English labels. (3) Deck weighting may surface many new verbs at once for existing players (fresh Leitner state).
+
+---
+
+### 2026-07-11 (correction) — Sentence Bank: reassign the three fixes to the sentences actually intended
+
+**Requested:** Correction to the prior entry — I had swapped which sentence needed which fix. Intended mapping: `everyday_08` needs the Hebrew word order קרוב או רחוק מכאן accepted (in addition to קרוב מכאן או רחוק); `formal_05` needs its English tokens "significant variation", "between the groups", and "it must be explained" broken down; `formal_16` (גם placement) was already correct. Keeping the extra everyday_08 English token split from the prior entry was explicitly fine.
+
+**Change:**
+- `sentence-bank-data.js`
+  - `everyday_08` — added a `hebrew_alternates` entry accepting "זה קרוב או רחוק מכאן? אני לא מכיר את האזור." (מכאן moved to the end). Kept the prior English token split (near / here / far / from here). Same 10-token multiset reordered — no new bank tiles.
+  - `formal_05` — broke the English tokens down from `["There is", "significant variation", "between the groups", "and", "it must be explained"]` to `["There is", "significant", "variation", "between", "the groups", "and", "it must be", "explained"]` (5 → 8 chips, now aligning 1:1-ish with the 8 Hebrew tokens). Removed the `hebrew_alternates` (fronted-PP) block I had wrongly added here in the prior entry and reverted its notes line.
+  - `formal_16` — unchanged (its גם word-order alternate from the prior entry was correct).
+- `tests/sentence-bank-data.test.js` — updated the `formal_05` CHUNKING_AUDIT entry: requiredTokens now the new fine chips, forbiddenTokens now the old fat chips.
+
+**Files changed:** `sentence-bank-data.js`, `tests/sentence-bank-data.test.js`, `task-log.md`. (`index.html` cache-bust for `sentence-bank-data.js` was already at `?v=20260711a` from the prior entry — unpushed, so no new bump.)
+
+**Behavior changed:** everyday_08 now accepts either קרוב מכאן או רחוק or קרוב או רחוק מכאן when building Hebrew; formal_05's English answer is assembled from 8 finer chips instead of 5. formal_16 unchanged from the prior entry.
+
+**Tests run:** `npm test` — 223/223 pass. Live-engine verification (dev server on 3100): everyday_08 exposes 1 alternate, both orders accepted, a scrambled order rejected; formal_05 has 8 fine tokens that tile the English string cleanly, no fat chunks remain, and the stray alternate is gone; no console errors.
+
+**Risks / regressions to check:** (1) formal_05's "and" chip still maps to the ו prefix of the single Hebrew token ויש, so the second-clause alignment is ~3-to-3 rather than strict 1:1 — expected. (2) everyday_08 still carries one more English locational chip ("from here") than Hebrew has words, unchanged from the prior entry.
+
+---
+
+### 2026-07-11 — Sentence Bank: word-order alternates for two sentences + finer English tokens for one
+
+**NOTE: this entry mis-assigned two of the three fixes (everyday_08 and formal_05 were swapped). Superseded by the correction entry above.**
+
+**Requested:** From three in-app screenshots: two Sentence Bank sentences need to accept a different (valid) word ordering, and one needs its English answer tokens broken down so they correspond more closely to individual Hebrew words.
+
+**Change:**
+- `sentence-bank-data.js`
+  - `everyday_08` ("Is it near here or far from here? I don't know the area.") — token breakdown: split the fat English chips `"near here"` → `"near"` + `"here"` and `"far from here"` → `"far"` + `"from here"`, so the spatial-clause chips align to individual Hebrew words (קרוב/מכאן/רחוק). English tokens went 9 → 11. The `english`/`hebrew` strings and all Hebrew tokens are unchanged; the new chips still tile the English string cleanly (verified against the `buildSentenceFrame` data test).
+  - `formal_16` ("הפתרון הזה בר קיימא גם בטווח הארוך.") — added a `hebrew_alternates` entry accepting `גם` before `בר קיימא` ("הפתרון הזה גם בר קיימא בטווח הארוך."). The engine only auto-allows adjacent swaps for a small flexible-modifier set (די/לגמרי/ממש/מאוד); `גם` isn't one, so an explicit alternate was required. Same 6-token multiset reordered — no new bank tiles needed.
+  - `formal_05` ("קיימת שונות משמעותית בין הקבוצות, ויש להסביר אותה.") — added a `hebrew_alternates` entry accepting the fronted prepositional phrase ("בין הקבוצות קיימת שונות משמעותית, ויש להסביר אותה."), a natural academic-Hebrew ordering. This is the en2he (build-Hebrew) direction; the he2en English answer stays fixed (English SVO offers no natural reorder here). Same 8-token multiset reordered.
+  - Both new alternates include `text_niqqud`/`tokens_niqqud` for house-style consistency (the engine's `sanitizeAnswerVariants` only consumes `text`/`tokens`).
+- `index.html` — cache-bust bump `sentence-bank-data.js?v=20260704b` → `?v=20260711a`.
+- `tests/sentence-bank-data.test.js` — updated the everyday_08 assertions to the new 11-token list and changed the `includes("near here")` check to `includes("from here")`.
+
+**Files changed:** `sentence-bank-data.js`, `index.html`, `tests/sentence-bank-data.test.js`, `task-log.md`.
+
+**Behavior changed:** In Sentence Bank, formal_16 now accepts `גם` in either position and formal_05 accepts the fronted `בין הקבוצות` order (both en2he); everyday_08's English answer is now assembled from finer chips (near / here / far / from here) instead of the two fat "near here" / "far from here" phrases. Primary displayed answers are unchanged.
+
+**Tests run:** `npm test` — 223/223 pass (before and after). Live-engine verification via the running dev server (port 3100): `prepareSentenceBankDeck` exposes each new alternate's exact token array (so the engine's equality-based `isEquivalentSentenceTokenOrder` accepts them — end-to-end alternate acceptance is already covered by the existing sentence-builder unit test); a deliberately wrong formal_16 order is still rejected; everyday_08 exposes the 11 fine tokens with no fat chunks; no console errors.
+
+**Risks / regressions to check:** (1) formal_05's alternate is the Hebrew (en2he) fronted-PP order — I inferred word-order flexibility is a Hebrew-side phenomenon since the English order is essentially fixed; if the intended flexibility was on a different phrase or the he2en side, adjust. (2) formal_16's `גם`-before-`בר קיימא` shifts nuance slightly ("also sustainable" vs "sustainable even in the long term"); accepted per the request. (3) everyday_08's `"from here"` chip has no distinct Hebrew counterpart (Hebrew uses מכאן once), so English still carries one more locational chip than Hebrew — unavoidable given the English phrasing, and it improves per-word alignment vs. the old fat chunks.
+
+---
+
+### 2026-07-11 — Curriculum content expansion: nif'al/hif'il/hitpa'el verbs, 9 new idioms, 31 vocab words
+
+**Requested:** Assess the current IvritElite curriculum and decide independently where to add new content within the existing games.
+
+**Assessment findings:** (1) The Verb Match conjugation deck (~64 verbs) had a severe binyan imbalance — 53 pa'al, 21 pi'el, 7 hif'il, 3 hitpa'el, and zero nif'al — and was missing top-frequency everyday verbs (להגיע, להתחיל, להרגיש, להיכנס, להישאר…). (2) Conjugation+ (Advanced Conjugation) had the smallest pool in the app: 22 idioms, only 2 at level 3. (3) Four vocab categories were far thinner than the rest: scientific_analytical 8, finance_investing 9, legal_civic 10, abstract_philosophy 13 (vs. 70–120 for the large categories). Sentence Bank (125), Binyan Board (27 roots), and Abbreviations (208) were judged healthy and left untouched.
+
+**Change:**
+- `hebrew-verbs.js` — added 8 fully curated verb entries (each with complete present/past/future/imperative forms, plain + niqqud, `conjugation_mode: "curated"`, `availability { translationQuiz: false, sentenceHints: true }` matching the existing common-verb pattern): nif'al להיכנס (to enter), להישאר (to stay/remain), להיפגש (to meet up, עם); hif'il להגיע (to arrive, ל־), להתחיל (to start/begin), להמשיך (to continue), להרגיש (to feel); hitpa'el להתקשר (to call, ל־). These are the deck's first nif'al verbs. Deck grows 76 → 84 study items.
+- `hebrew-idioms.js` — added 9 idioms for Conjugation+, all using the proven `l_dative` + `fixed_object` template shape: לבלבל/לשטוף למישהו את המוח, להוציא למישהו את הנשמה, לעלות למישהו על העצבים, לסובב למישהו את הראש, לשים למישהו רגל, לחמם למישהו את הלב (level 2); למרוט למישהו את העצבים, להוציא למישהו את הרוח מהמפרשים (level 3). Pool grows 22 → 31 idioms (deck cards 2042).
+- `vocab-data.js` — added 31 words to the four thin categories (all dupe-checked against the full RAW map): scientific_analytical +8 (ניסוי, מדידה, ממצא, נתונים, מדגם, מובהקות, מסקנה, דיוק), finance_investing +8 (בורסה, מניה, דיבידנד, תשואה, חיסכון, פנסיה, הלוואה, שער חליפין), legal_civic +8 (תביעה, פסק דין, עדות, נאשם, פרקליטות, חקיקה, הרשעה, זיכוי), abstract_philosophy +7 (מהות, משמעות, מציאות, אמונה, היגיון, תפיסת עולם, מצפון). Base vocabulary grows to 1,208 words.
+- `index.html` — cache-bust bumps to `?v=20260711a` for the three edited data files (`vocab-data.js`, `hebrew-verbs.js`, `hebrew-idioms.js`).
+- `.claude/launch.json` — added an `ulpango-dev-3100` config (port 3100) so this session could run its own preview server alongside another session's server on 3000. No app impact.
+
+**Files changed:** `hebrew-verbs.js`, `hebrew-idioms.js`, `vocab-data.js`, `index.html`, `.claude/launch.json`, `task-log.md`.
+
+**Behavior changed:** Verb Match now includes 8 more high-frequency verbs, including the first nif'al entries; Conjugation+ has 9 more idioms (7 level-2, 2 level-3); Word Match/translation-quiz pools for the four thin categories roughly double. New verbs are excluded from the translation quiz but available for sentence hints, matching existing common verbs.
+
+**Tests run:** `npm test` — 223/223 pass before and after. Node spot-checks: all 8 new verbs resolve as `authoritative` with 24 forms each and niqqud on every form; idiom deck builds 2042 cards; sample render "עולה לי על העצבים" correct. Browser-verified on a dev server (port 3100): no console errors; `HEBREW_IDIOMS.length === 31`; conjugation deck contains להיכנס/להישאר/להתקשר/להרגיש; `getBaseVocabulary()` returns 1,208 words with all new entries present (category counts 16/17/18/20).
+
+**Risks / regressions to check:** (1) Niqqud on the ~200 new hand-authored verb forms was written from standard paradigms — tests enforce presence, not correctness; worth a native-speaker skim, especially the nif'al future forms and hitpa'el past (הִתְקַשַּׁרְתִּי pattern). (2) New idioms reuse existing templates only (`l_dative` with `fixed_object`), so no new rendering paths; the שם/שמה present-vs-past homographs in simat_regel are handled by the game's existing ambiguity skip. (3) TTS pronunciation of the new niqqud-less plain forms (e.g. תיכנסי) relies on the same speech path as existing nif'al-free content — spot-check audio in Verb Match. (4) The added launch config is dev-tooling only.
+
+---
+
 ### 2026-07-11 — Remove the Word Bank tab and Weakest Letters section from the Review page
 
 **Requested:** In IvritElite, get rid of the "Word Bank" tab on the Review page as well as the "Weakest Letters" section.
@@ -3650,4 +3740,40 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 
 **Tests run:** `npm test` — 213/213 before, 223/223 after (10 new: three per-game review round-trips incl. dedup/no-re-queue/no-score assertions, header second-chance meta for all three games, review markup shape, getHardestVerbs, getWorstSentences + practiced count, reviewTab persistence + word-bank mastered round-trip, rankWeakestLetters, countLearnedLetters). Browser-verified on the dev server (375px + desktop, EN + HE): full 10-round prepositions session with 1 miss → intro replay → "Prepositions Review" header with "Second chance: 1/1" → correct review answer adds no score → summary notes 1 review round; Review page tabs switch and persist; Overview stats show live numbers; Trouble Spots populates all four sections from seeded progress; Word Bank search (EN+HE), domain chips, and mastered toggle round-trip (pool count drops/restores); Hebrew UI fully translated with RTL rows; Escape key clean; no console errors.
 
-**Risks / regressions to check:** (1) Review-phase question clones in prepositions/advConj hold live object references in state — these sessions were already non-persistent across reloads, unchanged. (2) `summary.lessonNote` ("Second-chance rounds: N") is stored but the results screen doesn't render notes — same as sentence-bank today; if the note should be visible, that's a small follow-up in `renderSummaryState`. (3) Anyone who had the (unreachable) mastered modal open via console hacks loses that path; Word Bank replaces it. (4) The desktop review panel is now single-column — the old side-by-side Most Missed/analytics layout is gone by design. (5) Binyan review questions rebuild with fresh distractors from the deck — a form whose root left the deck is skipped silently.
+**Risks / regressions to check:** (1) Review-phase question clones in prepositions/advConj hold live object references in state — these sessions were already non-persistent across reloads, unchanged. (2) `summary.lessonNote` ("Second-chance rounds: N") is stored but the current results screen doesn't render notes — same as sentence-bank today; if the note should be visible, that's a small follow-up in `renderSummaryState`. (3) Anyone who had the (unreachable) mastered modal open via console hacks loses that path; Word Bank replaces it. (4) The desktop review panel is now single-column — the old side-by-side Most Missed/analytics layout is gone by design. (5) Binyan review questions rebuild with fresh distractors from the deck — a form whose root left the deck is skipped silently.
+
+### 2026-07-11 14:59 EDT — Expand sentence bank with 60 high-utility sentences
+
+**Requested:** Implement the approved 60-sentence expansion: 24 everyday, 16 colloquial, 12 professional, and 8 formal entries, with complete niqqud, aligned chips/distractors, gender alternatives, tests, cache busting, and runtime checks.
+
+**Files changed:**
+- `sentence-bank-data.js` — added a small internal authoring helper plus `everyday_37–60`, `colloquial_37–52`, `professional_26–37`, and `formal_29–36`; every entry includes pointed Hebrew, parallel pointed token/distractor arrays, phrase-sized English chips, 4–6 contrastive distractors per language, teaching notes, and the planned feminine alternatives. Updated the data build to `20260711b`.
+- `tests/sentence-bank-data.test.js` — updated the expected bank size to 185 and added expansion-specific checks for IDs, category/difficulty distribution, niqqud/array alignment, chip coverage, distractor quality, and gender alternatives.
+- `index.html` — bumped the sentence-bank data cache-buster to `20260711b`.
+- `task-log.md` — recorded this work.
+
+**Behavior changed:** Sentence Builder and Shema now draw from 185 sentences instead of 125, with substantially broader transit, restaurant, shopping, healthcare, housing, bureaucracy, conversational-repair, workplace, and analytical coverage. Forty-eight of the 60 new sentences meet the handwriting game's 6–34-letter eligibility window.
+
+**Tests run:** Baseline `npm test` — 223/223 pass. `node --test tests/sentence-bank-data.test.js` — 20/20 pass. Final `npm test` — 225/225 pass. `git diff --check` — pass. Browser-verified on the local dev server: Sentence Builder launches and renders a full draggable/tappable round; at 375×812 the gameplay nav hides, compact Home control shows, chips wrap without horizontal overflow, and the board remains usable above the footer; Shema launches with hidden prompt plus Play/Slower controls, and manual Play produces no console warning/error. Live HTML requests `sentence-bank-data.js?v=20260711b`.
+
+**Risks / regressions to check:** (1) The new niqqud is manually authored and follows the bank's existing ktiv-male/plain versus ktiv-haser/pointed convention; a fluent-reader spot check remains worthwhile, especially for loanwords such as רב־קו, אלרגיה, אינסטלטור, and דוגרי. (2) Browser TTS voices differ by platform, so spot-check רב־קו, כספומט, and the new formal compounds on the deployment target. (3) The bank is now 60 entries larger; session selection is weighted and remains performant in current testing, but future very large expansions may justify moving the compact authoring rows into a separate generated data source.
+
+### 2026-07-11 15:41 EDT — Accept natural sentence orders; add הגיוני, חוקר, and להזהיר
+
+**Requested:** Accept grammatically and logically equivalent Hebrew word orders throughout the newly added sentence set (specifically including מה בדיוק זה אומר), add הגיוני to Translation Match with at least two example sentences, add חוקר to Translation Match, and add מזהיר / להזהיר to the conjugation game.
+
+**Files changed:**
+- `sentence-bank-data.js` — added 30 explicitly authored natural word-order alternatives across the 60-entry expansion, including combined feminine/reordered forms where needed; added `everyday_61` and `colloquial_53`, both using הגיוני and each carrying a second natural clause/order arrangement; bank count is now 187; build bumped to `20260711c`.
+- `vocab-data.js` — added הגיוני (“logical / reasonable”) and חוקר (“researcher”) as Translation Match vocabulary; build bumped to `20260711b`.
+- `hebrew-verbs.js` — added curated, fully pointed Hif'il conjugations for להזהיר (“to warn”), including present מזהיר, past, future, and modern imperative forms; kept the verb conjugation-only in the translation availability metadata; build bumped to `20260711b`.
+- `tests/sentence-bank-data.test.js` — updated count/category/difficulty expectations and added coverage for the 30 reordered rows and the reported מה בדיוק זה אומר order.
+- `tests/vocab-data.test.js` — asserted both new vocabulary cards are Translation Match eligible.
+- `tests/hebrew-verbs.test.js` — asserted the authoritative warn paradigm and conjugation-only availability.
+- `index.html` — bumped cache-busters for all three changed data files.
+- `task-log.md` — recorded this work.
+
+**Behavior changed:** Sentence Builder accepts ordinary equivalent orderings for the audited new rows instead of requiring only the displayed order; the reported מה בדיוק זה אומר answer is accepted. The bank now contains two additional practical הגיוני sentences. Translation Match can serve הגיוני and חוקר. Conjugation can serve להזהיר, including מזהיר and its other person/tense forms.
+
+**Tests run:** Baseline `npm test` — 225/225 pass. Focused `node --test tests/sentence-bank-data.test.js tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 57/57 pass. Final `npm test` — 228/228 pass. `git diff --check` — pass. Direct runtime inspection confirmed the reported alternate, both new sentences, both Translation Match entries, and the מזהיר conjugation card.
+
+**Risks / regressions to check:** Word-order equivalence is deliberately authored per sentence; it does not accept arbitrary permutations. Marked-but-possible orders remain rejected unless they are natural enough to teach. Shema still requires the exact spoken order by design. A fluent-reader spot check of the newly authored niqqud and the less common imperative הַזְהֵר remains worthwhile.
