@@ -288,7 +288,6 @@
                   <div id="reviewTabs" class="review-tabs" role="tablist">
                     <button type="button" class="review-tab" role="tab" data-review-tab="overview" aria-selected="true" aria-controls="reviewOverviewPanel" data-i18n="review.tabOverview">Overview</button>
                     <button type="button" class="review-tab" role="tab" data-review-tab="trouble" aria-selected="false" aria-controls="reviewTroublePanel" data-i18n="review.tabTrouble">Trouble Spots</button>
-                    <button type="button" class="review-tab" role="tab" data-review-tab="wordbank" aria-selected="false" aria-controls="reviewWordBankPanel" data-i18n="review.tabWordBank">Word Bank</button>
                   </div>
 
                   <div id="reviewOverviewPanel" class="review-tab-panel" role="tabpanel">
@@ -335,21 +334,6 @@
                       <h3 class="review-section-title" data-i18n="review.hardestVerbs">Hardest Verbs</h3>
                       <div id="hardestVerbsList" class="trouble-list"></div>
                       <p id="hardestVerbsEmpty" class="small-note" data-i18n="review.noTroubleData">Not enough plays yet.</p>
-                    </section>
-                    <section class="review-section">
-                      <h3 class="review-section-title" data-i18n="review.weakestLetters">Weakest Letters</h3>
-                      <div id="weakestLettersList" class="letter-chip-grid"></div>
-                      <p id="weakestLettersEmpty" class="small-note" data-i18n="review.noTroubleData">Not enough plays yet.</p>
-                    </section>
-                  </div>
-
-                  <div id="reviewWordBankPanel" class="review-tab-panel" role="tabpanel" hidden>
-                    <section class="review-section">
-                      <input id="wordBankSearch" class="wordbank-search" type="search" autocomplete="off" />
-                      <div id="wordBankFilters" class="wordbank-filters"></div>
-                      <p id="wordBankCount" class="small-note"></p>
-                      <div id="wordBankList" class="wordbank-list"></div>
-                      <p id="wordBankEmpty" class="small-note hidden" data-i18n="wordBank.empty">No words match.</p>
                     </section>
                   </div>
                 </div>
@@ -579,13 +563,13 @@
     <script defer src="./app/handwriting-core.js?v=20260705a"></script>
     <script defer src="./app/bootstrap-data.js?v=20260705a"></script>
     <script defer src="./app/content-sources.js?v=20260324a"></script>
-    <script defer src="./app/bootstrap-runtime.js?v=20260705a"></script>
+    <script defer src="./app/bootstrap-runtime.js?v=20260711a"></script>
     <script defer src="./app/audio.js?v=20260315o"></script>
     <script defer src="./app/speech.js?v=20260702a"></script>
     <script defer src="./app/persistence.js?v=20260705a"></script>
     <script defer src="./app/session.js?v=20260705a"></script>
     <script defer src="./app/i18n.js?v=20260315o"></script>
-    <script defer src="./app/ui.js?v=20260705a"></script>
+    <script defer src="./app/ui.js?v=20260711a"></script>
     <script defer src="./app/data.js?v=20260705a"></script>
     <script defer src="./app/lesson.js?v=20260315o"></script>
     <script defer src="./app/sentence-bank.js?v=20260705a"></script>
@@ -597,7 +581,7 @@
     <script defer src="./app/word-match.js?v=20260702b"></script>
     <script defer src="./app/binyan-board.js?v=20260705a"></script>
     <script defer src="./app/handwriting.js?v=20260705a"></script>
-    <script defer src="./app/controller.js?v=20260705a"></script>
+    <script defer src="./app/controller.js?v=20260711a"></script>
     <script defer src="./app.js?v=20260705a"></script>
   </body>
 </html>

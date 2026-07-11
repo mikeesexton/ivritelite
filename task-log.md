@@ -7,6 +7,27 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-11 — Remove the Word Bank tab and Weakest Letters section from the Review page
+
+**Requested:** In IvritElite, get rid of the "Word Bank" tab on the Review page as well as the "Weakest Letters" section.
+
+**Change:**
+- `index.html` — removed the `data-review-tab="wordbank"` tab button, the entire `#reviewWordBankPanel` panel (search/filters/count/list/empty), and the "Weakest Letters" `<section>` (`#weakestLettersList`/`#weakestLettersEmpty`) from the Trouble Spots panel. Bumped cache-bust `?v=` to `20260711a` for the three edited modules: `bootstrap-runtime.js`, `ui.js`, `controller.js`.
+- `app/ui.js` — `renderReviewState()` no longer toggles/renders the word-bank panel (dropped the `wordbank` tab branch and the `reviewWordBankPanel` hidden toggle). Removed the Weakest Letters rendering block from `renderTroubleSpots()`. Deleted the now-unused `renderWordBankFilters()` and `renderWordBankList()` functions.
+- `app/controller.js` — removed the three word-bank event listeners (`wordBankSearch` input, `wordBankFilters` click, `wordBankList` master-toggle click).
+- `app/bootstrap-runtime.js` — removed the dead element refs (`reviewWordBankPanel`, `weakestLettersList`, `weakestLettersEmpty`, `wordBankSearch/Filters/Count/List/Empty`), dropped `"wordbank"` from the allowed `reviewTab` values (invalid saved values now fall back to `overview`), and removed the `wordBank` state object.
+- `tests/app-progress.test.js` — updated the review-markup test to assert two sub-tabs and that the word-bank/weakest-letters IDs are gone; changed the persistence test's `reviewTab` from `"wordbank"` to `"trouble"`.
+
+**Data layer kept:** `data.getWordBankEntries`/`setWordMastered`/`isWordMastered` (mastered words still leave the translation pool) and `handwriting.getWeakestLetters`/`rankWeakestLetters` were left intact — the mastered logic is used beyond the tab and `rankWeakestLetters` is unit-tested. Only the Review-page UI surface was removed. `handwriting.getWeakestLetters` is now unused by the UI.
+
+**Behavior changed:** The Review page now has two tabs (Overview, Trouble Spots) instead of three — the Word Bank tab and its search/filter/mastered-toggle list are gone. Trouble Spots now shows only Most Missed, Toughest Sentences, and Hardest Verbs; the Weakest Letters chip grid is removed. A user whose saved `reviewTab` was `wordbank` now lands on Overview.
+
+**Tests run:** `npm test` — 223/223 pass (before and after). Browser-verified on the dev server: Review page shows two tabs; Trouble Spots titles are Most Missed / Toughest Sentences / Hardest Verbs (no Weakest Letters); word-bank/weakest DOM nodes absent; no console errors.
+
+**Risks / regressions to check:** (1) `handwriting.getWeakestLetters` is now dead code — harmless, left in place. (2) Unused i18n keys (`review.tabWordBank`, `review.weakestLetters`, `wordBank.*`) remain in `bootstrap-data.js`; left untouched to keep the diff focused. (3) Confirm nothing else linked to the Word Bank tab (e.g. a "see your words" affordance elsewhere) — none found in the app modules.
+
+---
+
 ### 2026-07-02 — Add nikkud (vocalization) to all sentence-bank sentences with a display toggle
 
 **Requested:** Add nikkud to all the sentences so the pronunciation is always correct; asked whether it was feasible in one run. Decided (via clarifying questions): generate the nikkud with the Dicta Nakdan auto-vocalizer, and store it in separate niqqud fields wired to the existing נִיקּוּד toggle (not inline in the plain fields).
