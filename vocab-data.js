@@ -370,6 +370,7 @@ const EXPANSION_TRACKS = {
 const RAW = {
   core_advanced: [
     ["priority", "עדיפות", "עֲדִיפוּת"],
+    ["logical / reasonable", "הגיוני", "הֶגְיוֹנִי"],
     ["responsibility", "אחריות", "אַחֲרָיוּת"],
     ["opportunity", "הזדמנות", "הִזְדַּמְּנוּת"],
     ["requirement", "דרישה", "דְּרִישָׁה"],
@@ -1023,6 +1024,13 @@ const RAW = {
     ["bias", "הטיה", "הֲטָיָה"],
     ["legitimacy", "לגיטימיות", "לְגִיטִימִיּוּת"],
     ["vocation / purpose", "ייעוד", "יִיעוּד"],
+    ["essence", "מהות", "מַהוּת"],
+    ["meaning / significance", "משמעות", "מַשְׁמָעוּת"],
+    ["reality", "מציאות", "מְצִיאוּת"],
+    ["belief / faith", "אמונה", "אֱמוּנָה"],
+    ["logic / common sense", "היגיון", "הִגָּיוֹן"],
+    ["worldview", "תפיסת עולם", "תְּפִיסַת עוֹלָם"],
+    ["conscience", "מצפון", "מַצְפּוּן"],
   ],
   emotional_nuance: [
     ["resentment", "טינה", "טִינָה"],
@@ -1086,6 +1094,14 @@ const RAW = {
     ["injunction", "צו מניעה", "צַו מְנִיעָה"],
     ["civil rights", "זכויות אזרח", "זְכֻיּוֹת אֶזְרָח"],
     ["national security", "ביטחון לאומי", "בִּטָּחוֹן לְאוּמִּי"],
+    ["lawsuit / claim", "תביעה", "תְּבִיעָה"],
+    ["verdict / ruling", "פסק דין", "פְּסַק דִּין"],
+    ["testimony", "עדות", "עֵדוּת"],
+    ["defendant", "נאשם", "נֶאֱשָׁם"],
+    ["state attorney's office", "פרקליטות", "פְּרַקְלִיטוּת"],
+    ["legislation", "חקיקה", "חֲקִיקָה"],
+    ["conviction", "הרשעה", "הַרְשָׁעָה"],
+    ["acquittal", "זיכוי", "זִכּוּי"],
   ],
   technology_ai: [
     ["algorithm", "אלגוריתם", "אַלְגוֹרִיתְם"],
@@ -1120,6 +1136,14 @@ const RAW = {
     ["interest rate", "ריבית", "רִיבִּית"],
     ["hedge", "גידור", "גִּידּוּר"],
     ["capital gains", "רווחי הון", "רִוְחֵי הוֹן"],
+    ["stock exchange", "בורסה", "בּוּרְסָה"],
+    ["share / stock", "מניה", "מְנָיָה"],
+    ["dividend", "דיבידנד", "דִּיבִידֶנְד"],
+    ["yield / return", "תשואה", "תְּשׂוּאָה"],
+    ["savings", "חיסכון", "חִסָּכוֹן"],
+    ["pension", "פנסיה", "פֶּנְסְיָה"],
+    ["loan", "הלוואה", "הַלְוָאָה"],
+    ["exchange rate", "שער חליפין", "שַׁעַר חֲלִיפִין"],
   ],
   social_cultural: [
     ["secular", "חילוני", "חִילּוֹנִי"],
@@ -1190,6 +1214,7 @@ const RAW = {
     ["direct object marker", "מילת המושא", "מִלַּת הַמּוּשָׂא"],
   ],
   scientific_analytical: [
+    ["researcher", "חוקר", "חוֹקֵר"],
     ["hypothesis", "השערה", "הַשְׁעָרָה"],
     ["methodology", "מתודולוגיה", "מֵתוֹדוֹלוֹגְיָה"],
     ["variable", "משתנה", "מִשְׁתַּנֶּה"],
@@ -1198,6 +1223,14 @@ const RAW = {
     ["margin of error", "טווח טעות", "טְוַח טָעוּת"],
     ["sample size", "גודל מדגם", "גּוֹדֶל מִדְגָּם"],
     ["peer review", "ביקורת עמיתים", "בִּקּוֹרֶת עֲמִיתִים"],
+    ["experiment", "ניסוי", "נִסּוּי"],
+    ["measurement", "מדידה", "מְדִידָה"],
+    ["finding", "ממצא", "מִמְצָא"],
+    ["data", "נתונים", "נְתוּנִים"],
+    ["sample (statistics)", "מדגם", "מִדְגָּם"],
+    ["statistical significance", "מובהקות", "מֻבְהָקוּת"],
+    ["conclusion", "מסקנה", "מַסְקָנָה"],
+    ["accuracy", "דיוק", "דִּיּוּק"],
   ],
   abstract_concepts_expanded: [
     ["abstract concept", "מושג מופשט", "מושג מופשט"],
@@ -1738,6 +1771,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260609a",
+  __build: "20260711b",
 };
 })(typeof window !== "undefined" ? window : globalThis);
