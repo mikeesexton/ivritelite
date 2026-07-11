@@ -7,6 +7,30 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-11 — Sentence Bank round 2: 71 new sentences (187 → 258)
+
+**Requested:** "Plan another round of strong additions to the sentences game" — the 71 sentences authored in the earlier planning session (never implemented; the bank was still at 187). User approved implementing all 71 and committing all pending work on one branch with topical commits.
+
+**Change:**
+- `sentence-bank-data.js`
+  - Extended `buildExpandedSentence` with an optional `style` parameter (previously hardcoded `style: null`) so expansion entries can be WhatsApp-styled.
+  - Added `SENTENCE_EXPANSION_ROUND2` (71 entries, pushed after the existing expansion): **everyday_62–86** (25 — health/pharmacy, groceries/cooking, home/family, bureaucracy/ארנונה, directions/weather/time), **colloquial_54–73** (20 — dating slang incl. ghosting/דגל אדום/יצא לך, banter with תכלס/באסה/לחפור, three `style:"whatsapp"` entries 69–71), **professional_38–51** (14 — invoices, negotiation/משא ומתן, bottleneck, feminine manager/speaker forms, a real conditional), **formal_37–48** (12 — passives נערך/נצפתה/אוששה/תיבחן, ככל ש...כך, comparatives, עשוי vs עלול).
+  - Grammar coverage targeted at prior gaps: ~20 feminine-subject/addressee sentences with gender-swap distractors, plural subjects, past narrative, true future, comparatives, numbers/time-telling, של-chains. 4 entries carry `hebrew_alternates` (masculine variants for everyday_62/67/81, word-order for everyday_84); alternate-only tokens (תקצוץ, תרד, ותפנה, צריך) are seeded in the distractor pools so alternates stay buildable.
+  - Bumped `__build` to `20260711e`.
+- `tests/sentence-bank-data.test.js` — master assertions 187 → 258; added `ROUND2_ENTRY_IDS`; category-count expectations updated (everyday 86, colloquial 73, professional 51, formal 48) plus a round-2 difficulty-mix assertion ({1:15, 2:39, 3:17}); the expansion alignment test now also iterates round-2 ids (niqqud parity, frame matching, English lexical coverage, distractor counts/dupes/target-reuse, alternate lengths); all 71 new ids added to `PHRASE_COMPACTED_ENTRY_IDS`.
+- `index.html` — `sentence-bank-data.js?v=` bumped `20260711c` → `20260711e`.
+- Also committed all previously pending work as topical commits on branch `sentence-bank-round-2` (Codex's 62 sentences; 19 conjugation verbs; 9 idioms + 33 vocab words; cache-busts/task-log).
+
+**Files changed:** `sentence-bank-data.js`, `tests/sentence-bank-data.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Sentences/Shema decks grow from 187 to 258 sentences across both directions; three new WhatsApp-style prompts; new feminine/plural/past/future grammar coverage.
+
+**Tests run:** `npm test` before (228 pass) and after (228 pass — one category-count test updated for the new totals). Live check on dev server :3100: `getSentenceBank().length === 258`, build `20260711e`, round-2 sample renders with full niqqud, Sentences round plays, no console errors. Programmatic sweep: zero banned near-synonym distractor pairs (איך/כיצד, אך/אבל, but/however, accurate/correct) anywhere in the bank.
+
+**Risks / regressions to check:** (1) Round-2 niqqud is hand-authored — TTS (Shema mode) should be spot-checked on a few new sentences (e.g. formal_46 אֻשְּׁשָׁה, colloquial_61 בָּאסָה). (2) The `style` param on `buildExpandedSentence` defaults to null — existing expansion entries unaffected. (3) New-item Leitner boost will surface many round-2 sentences at once for existing players.
+
+---
+
 ### 2026-07-11 — Conjugation game: add 10 high-frequency verbs (74 → 84 lemmas)
 
 **Requested:** "Pick some more verbs to add to the conjugation game. You decide." Chosen to fill gaps between the conjugation deck and the verbs the Sentence Bank already drills constantly, while broadening binyan/gizra variety.
