@@ -4363,15 +4363,18 @@ test("gameplay header shows second-chance progress and review titles for the thr
   });
 });
 
-test("review page markup exposes three sub-tabs and no mastered modal", () => {
+test("review page markup exposes two sub-tabs and no mastered modal", () => {
   const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
-  assert.match(markup, /data-review-tab="overview"[\s\S]*data-review-tab="trouble"[\s\S]*data-review-tab="wordbank"/s);
-  assert.match(markup, /id="reviewOverviewPanel"[\s\S]*id="reviewTroublePanel"[\s\S]*id="reviewWordBankPanel"/s);
+  assert.match(markup, /data-review-tab="overview"[\s\S]*data-review-tab="trouble"/s);
+  assert.match(markup, /id="reviewOverviewPanel"[\s\S]*id="reviewTroublePanel"/s);
   assert.match(markup, /id="reviewPanelToggle"[\s\S]*aria-controls="reviewPanel"/s);
   assert.match(markup, /id="mostMissedList"/);
   assert.match(markup, /id="reviewDomainPerformance"/);
-  assert.match(markup, /id="wordBankSearch"[\s\S]*id="wordBankFilters"[\s\S]*id="wordBankList"/s);
+  assert.doesNotMatch(markup, /data-review-tab="wordbank"/);
+  assert.doesNotMatch(markup, /id="reviewWordBankPanel"/);
+  assert.doesNotMatch(markup, /id="wordBankSearch"/);
+  assert.doesNotMatch(markup, /id="weakestLettersList"/);
   assert.doesNotMatch(markup, /id="masteredModal"/);
 });
 
@@ -4447,10 +4450,10 @@ test("review tab persists through ui state and word bank reflects mastered toggl
   const harness = loadAppHarness(vocabulary);
   const { app, state } = harness;
 
-  state.reviewTab = "wordbank";
+  state.reviewTab = "trouble";
   app.persistence.persistUiState();
   const savedUi = JSON.parse(harness.localStorage.getItem(app.runtime.constants.STORAGE_KEYS.ui));
-  assert.equal(savedUi.reviewTab, "wordbank");
+  assert.equal(savedUi.reviewTab, "trouble");
 
   app.data.setWordMastered("word-a", true);
   const entries = app.data.getWordBankEntries();

@@ -99,27 +99,6 @@ controller.bindUi = controller.bindUi || function bindUi() {
       app.persistence?.persistUiState?.();
     });
   });
-  runtime.el.wordBankSearch?.addEventListener("input", () => {
-    runtime.state.wordBank.search = runtime.el.wordBankSearch.value || "";
-    app.ui?.renderWordBankList?.();
-  });
-  runtime.el.wordBankFilters?.addEventListener("click", (event) => {
-    const chip = event.target?.closest?.("[data-domain]");
-    if (!chip) return;
-    runtime.state.wordBank.domain = chip.dataset.domain || "all";
-    app.ui?.renderWordBankFilters?.();
-    app.ui?.renderWordBankList?.();
-  });
-  runtime.el.wordBankList?.addEventListener("click", (event) => {
-    const btn = event.target?.closest?.(".wordbank-master-btn");
-    const wordId = btn?.dataset?.wordId;
-    if (!wordId) return;
-    const data = app.data;
-    data?.setWordMastered?.(wordId, !data?.isWordMastered?.(wordId));
-    app.persistence?.saveProgress?.();
-    app.ui?.renderWordBankList?.();
-    app.ui?.renderReviewOverviewStats?.();
-  });
   global.addEventListener("keydown", controller.handleGlobalKeyDown);
   global.addEventListener("resize", controller.handleViewportResize);
 
