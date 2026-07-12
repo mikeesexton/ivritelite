@@ -82,6 +82,15 @@ test("requested existential and event vocabulary is available for translation", 
   assert.equal(entriesByHebrew.get("קיימות")?.en, "sustainability");
 });
 
+test("logical and researcher vocabulary is available for translation", () => {
+  const entriesByHebrew = new Map(loadVocabulary().map((word) => [word.he, word]));
+
+  assert.equal(entriesByHebrew.get("הגיוני")?.en, "logical / reasonable");
+  assert.equal(entriesByHebrew.get("הגיוני")?.availability?.translationQuiz, true);
+  assert.equal(entriesByHebrew.get("חוקר")?.en, "researcher");
+  assert.equal(entriesByHebrew.get("חוקר")?.availability?.translationQuiz, true);
+});
+
 test("commitment uses the correct spelling and never adds the misspelled variant", () => {
   const vocabulary = loadVocabulary();
   const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));

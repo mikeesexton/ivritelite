@@ -260,6 +260,11 @@ const PHRASE_COMPACTED_ENTRY_IDS = [
   "formal_06",
   "formal_07",
   "formal_09",
+  // Round-2 expansion (everyday_62+, colloquial_54+, professional_38+, formal_37+)
+  ...Array.from({ length: 25 }, (_, i) => `everyday_${62 + i}`),
+  ...Array.from({ length: 20 }, (_, i) => `colloquial_${54 + i}`),
+  ...Array.from({ length: 14 }, (_, i) => `professional_${38 + i}`),
+  ...Array.from({ length: 12 }, (_, i) => `formal_${37 + i}`),
 ];
 
 const CHUNKING_AUDIT_ENTRIES = [
@@ -330,8 +335,8 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
   {
     id: "formal_05",
-    requiredTokens: ["There is", "significant variation", "between the groups", "it must be explained"],
-    forbiddenTokens: ["There", "is", "significant", "variation", "between", "the", "groups", "it", "must", "be", "explained"],
+    requiredTokens: ["There is", "significant", "variation", "between", "the groups", "it must be", "explained"],
+    forbiddenTokens: ["significant variation", "between the groups", "it must be explained"],
   },
   {
     id: "formal_07",
@@ -345,15 +350,58 @@ const CHUNKING_AUDIT_ENTRIES = [
   },
 ];
 
-test("sentence bank data exposes 125 complete entries with notes, distractors, and tokens", () => {
+function sentenceIdRange(prefix, start, end) {
+  return Array.from({ length: end - start + 1 }, (_, index) => `${prefix}_${start + index}`);
+}
+
+const EXPANSION_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 37, 61),
+  ...sentenceIdRange("colloquial", 37, 53),
+  ...sentenceIdRange("professional", 26, 37),
+  ...sentenceIdRange("formal", 29, 36),
+];
+
+const ROUND2_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 62, 86),
+  ...sentenceIdRange("colloquial", 54, 73),
+  ...sentenceIdRange("professional", 38, 51),
+  ...sentenceIdRange("formal", 37, 48),
+];
+
+const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
+  "everyday_39", "everyday_40", "everyday_43", "everyday_49", "everyday_52", "everyday_55",
+  "everyday_57", "everyday_59", "everyday_60", "everyday_61", "colloquial_39", "colloquial_40",
+  "colloquial_43", "colloquial_45", "colloquial_46", "colloquial_47", "colloquial_48", "colloquial_53",
+  "professional_26", "professional_27", "professional_31", "professional_33", "professional_34",
+  "professional_35", "professional_36", "professional_37", "formal_29", "formal_30", "formal_31", "formal_32",
+];
+
+const EXPANSION_GENDER_ALTERNATE_IDS = [
+  "everyday_48",
+  "everyday_50",
+  "everyday_54",
+  "everyday_58",
+  "colloquial_37",
+  "colloquial_38",
+  "colloquial_41",
+  "colloquial_42",
+  "colloquial_48",
+  "colloquial_49",
+  "colloquial_50",
+  "colloquial_52",
+  "professional_27",
+  "professional_29",
+];
+
+test("sentence bank data exposes 258 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 125);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 125);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 125);
+  assert.equal(entries.length, 258);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 258);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 258);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -370,6 +418,95 @@ test("sentence bank data exposes 125 complete entries with notes, distractors, a
     assert.ok(entry.hebrew_distractors.length > 0);
     assert.ok([1, 2, 3].includes(entry.difficulty));
   });
+});
+
+test("sentence bank expansion adds the planned category and difficulty mix", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const categoryCounts = {};
+  entries.forEach((entry) => {
+    categoryCounts[entry.category] = (categoryCounts[entry.category] || 0) + 1;
+  });
+
+  assert.deepEqual(categoryCounts, {
+    colloquial: 73,
+    everyday: 86,
+    professional: 51,
+    formal: 48,
+  });
+
+  const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
+  assert.equal(expansion.length, 62);
+  assert.ok(expansion.every(Boolean));
+  assert.deepEqual(
+    expansion.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 16, 2: 33, 3: 13 }
+  );
+
+  const round2 = ROUND2_ENTRY_IDS.map((id) => byId.get(id));
+  assert.equal(round2.length, 71);
+  assert.ok(round2.every(Boolean));
+  assert.deepEqual(
+    round2.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 15, 2: 39, 3: 17 }
+  );
+});
+
+test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const niqqudPattern = /[\u0591-\u05c7]/;
+
+  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS].forEach((id) => {
+    const entry = byId.get(id);
+    assert.ok(entry, `missing expansion entry ${id}`);
+    assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
+    assert.equal(entry.hebrew_tokens.length, entry.hebrew_tokens_niqqud.length, `${id} target niqqud alignment`);
+    assert.equal(entry.hebrew_distractors.length, entry.hebrew_distractors_niqqud.length, `${id} distractor niqqud alignment`);
+    assert.ok(entry.hebrew_distractors.length >= 4 && entry.hebrew_distractors.length <= 6, `${id} Hebrew distractor count`);
+    assert.ok(entry.english_distractors.length >= 4 && entry.english_distractors.length <= 6, `${id} English distractor count`);
+    assert.equal(new Set(entry.hebrew_distractors).size, entry.hebrew_distractors.length, `${id} duplicate Hebrew distractor`);
+    assert.equal(new Set(entry.english_distractors).size, entry.english_distractors.length, `${id} duplicate English distractor`);
+    assert.equal(entry.hebrew_distractors.some((token) => entry.hebrew_tokens.includes(token)), false, `${id} Hebrew target reused as distractor`);
+    assert.equal(entry.english_distractors.some((token) => entry.english_tokens.includes(token)), false, `${id} English target reused as distractor`);
+    assert.equal(buildSentenceFrame(entry.hebrew, entry.hebrew_tokens).failed, false, `${id} Hebrew chips do not match sentence`);
+    assert.equal(buildSentenceFrame(entry.english, entry.english_tokens).failed, false, `${id} English chips do not match sentence`);
+    assert.deepEqual(getStaticEnglishWordChunks(entry), [], `${id} leaves English outside selectable chips`);
+
+    (entry.hebrew_alternates || []).forEach((alternate) => {
+      assert.match(alternate.text_niqqud, niqqudPattern, `${id} alternate needs pointed Hebrew`);
+      assert.equal(alternate.tokens.length, entry.hebrew_tokens.length, `${id} alternate target length`);
+      assert.equal(alternate.tokens.length, alternate.tokens_niqqud.length, `${id} alternate niqqud alignment`);
+      assert.equal(buildSentenceFrame(alternate.text, alternate.tokens).failed, false, `${id} alternate chips do not match sentence`);
+    });
+  });
+
+  EXPANSION_GENDER_ALTERNATE_IDS.forEach((id) => {
+    assert.ok(byId.get(id).hebrew_alternates.length > 0, `${id} needs a feminine Hebrew alternative`);
+  });
+});
+
+test("new sentence-bank rows accept authored natural Hebrew word orders", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+
+  EXPANSION_WORD_ORDER_ALTERNATE_IDS.forEach((id) => {
+    const entry = byId.get(id);
+    assert.ok(entry, `missing ${id}`);
+    assert.ok(
+      entry.hebrew_alternates.some((alternate) => alternate.tokens.join("|") !== entry.hebrew_tokens.join("|")),
+      `${id} needs a reordered Hebrew alternate`
+    );
+  });
+
+  assert.equal(
+    byId.get("colloquial_39").hebrew_alternates.some((alternate) => alternate.text === "מה בדיוק זה אומר?"),
+    true
+  );
 });
 
 test("sentence bank data avoids exact-synonym distractors for curated formal entries", () => {
@@ -566,9 +703,9 @@ test("sentence bank data keeps english answer rows fully blank except for punctu
   assert.ok(englishTokens("formal_03").includes("from this"));
 
   assert.equal(byId.get("everyday_08").english, "Is it near here or far from here? I don't know the area.");
-  assert.deepEqual(englishTokens("everyday_08"), ["Is", "it", "near here", "or", "far from here", "I", "don't", "know", "the area"]);
+  assert.deepEqual(englishTokens("everyday_08"), ["Is", "it", "near", "here", "or", "far", "from here", "I", "don't", "know", "the area"]);
   assert.match(byId.get("everyday_08").notes, /\bfrom here\b/i);
-  assert.ok(englishTokens("everyday_08").includes("near here"));
+  assert.ok(englishTokens("everyday_08").includes("from here"));
 
   assert.ok(englishTokens("everyday_17").includes("The soap"));
   assert.ok(englishTokens("professional_06").includes("when there are"));

@@ -513,6 +513,20 @@ test("requested advanced verbs appear in conjugation with curated forms", () => 
   );
 });
 
+test("warn appears in conjugation with authoritative hifil forms", () => {
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  const warn = deck.find((entry) => entry.id === "advanced-verb-lehazhir--sense-1");
+
+  assert.ok(warn);
+  assert.equal(warn.formSource, "authoritative");
+  assert.equal(warn.word.he, "להזהיר את־ ... מפני/ש־");
+  assert.equal(warn.word.en, "to warn (את־ ... מפני/ש־)");
+  assert.equal(warn.word.availability.translationQuiz, false);
+  assert.equal(warn.forms.find((form) => form.id === "present_masculine_singular")?.valuePlain, "מזהיר");
+  assert.equal(warn.forms.find((form) => form.id === "past_first_person_singular")?.valuePlain, "הזהרתי");
+  assert.equal(warn.forms.find((form) => form.id === "future_first_person_singular")?.valuePlain, "אזהיר");
+});
+
 test("starter run verb appears in conjugation with the expected English labels", () => {
   const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
   const item = deck.find((entry) => entry.id === "starter-verb-larutz--sense-1");
