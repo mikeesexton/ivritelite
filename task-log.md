@@ -7,6 +7,27 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Prepositions game: 5 new paradigms + 34 new triggers (66 → 100)
+
+**Requested:** Batch 1 of the approved multi-game content-expansion plan ("plan a large addition of verbs… also plan additions to the prepositions and binyanim games"): add ~4 new inflected preposition paradigms plus ~30 new triggers.
+
+**Change:**
+- `preposition-data.js`
+  - Added 5 inflection paradigms (full 8-object tables, hand-authored niqqud): **bishvil** בשביל "for", **biglal** בגלל "because of" (kamatz→patach before the heavy suffix: בִּגְלַלְכֶם), **lifnei** לפני "before" (plural-type suffixes: לְפָנַי / לִפְנֵיכֶם alternation), **acharei** אחרי "after" (plural-type, chataf-patach under ח), **mul** מול "opposite". Plain spellings follow house ktiv male style (double-yud 1sg/2fs: לפניי/לפנייך).
+  - Added 34 triggers (66 → 100): rebalanced underused preps (el 4→7, im 6→10, etsel 2→4, kmo 2→4, neged 2→4, leyad 2→3), gave every new paradigm 2 triggers, promoted **et** את from distractor-only to 4 real triggers (פוגש/מכיר/מזמין/אוהב), and widened type variety (7 new expression-type, 1 adjective-type). All verb triggers use present-tense m.sg. forms so every one of the 8 object persons reads naturally. Deliberate same-verb/different-prep contrasts: עומד (ליד↔מול), חושב (על↔כמו) — the English hint disambiguates.
+  - Updated the stale `et` comment ("used mainly as a distractor base" → "also serves as a distractor base").
+- `index.html` — bumped `preposition-data.js?v=` `20260629a` → `20260712a`.
+
+**Files changed:** `preposition-data.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Prepositions deck question space grows from 66×8 to 100×8 combinations; new paradigms appear both as answers and as distractors for existing questions.
+
+**Tests run:** `npm test` before (228 pass) and after (228 pass — the preposition data tests iterate every paradigm×object and every trigger, so all new content is validated for distinct niqqud, unique ids, {o} slots, and 4-option question generation). Live check on dev server :3100: 16 paradigms / 100 triggers loaded under `?v=20260712a`; sampled generated questions for all 6 newly-triggerable preps (bishvil/biglal/lifnei/acharei/mul/et) render correct answers and sane distractors; no console errors.
+
+**Risks / regressions to check:** (1) Paradigm niqqud is hand-authored — spot-check בִּגְלַלְכֶם, לִפְנֵיכֶם/לְפָנַי, and אַחֲרַיִךְ against a reference. (2) New paradigms enter the distractor pool for existing questions, slightly changing distractor mix. (3) Same-verb contrast triggers (עומד, חושב, גר was not reused) rely on the English hint for disambiguation — verify hint visibility on mobile.
+
+---
+
 ### 2026-07-11 — Sentence Bank round 2: 71 new sentences (187 → 258)
 
 **Requested:** "Plan another round of strong additions to the sentences game" — the 71 sentences authored in the earlier planning session (never implemented; the bank was still at 187). User approved implementing all 71 and committing all pending work on one branch with topical commits.
