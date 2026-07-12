@@ -7,6 +7,29 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Sentence Bank round 3, tranche 1: 34 new sentences (258 → 292)
+
+**Requested:** Batch 2 of the approved multi-game content-expansion plan: ~70 new sentences themed tech & social media, opinions & news, and social plans & banter. This session lands tranche 1 (34); tranche 2 (~36: opinions/news for professional/formal plus narrative-sequencing and conditionals/numbers gap-fillers) is next.
+
+**Change:**
+- `sentence-bank-data.js`
+  - Added `SENTENCE_EXPANSION_ROUND3` (34 entries via `buildExpandedSentence`): **everyday_87–99** (13 — battery/reception/password/app-crash/online-order tech, hosting, rescheduling with משהו צץ לי, purpose-ש in שאדע), **colloquial_74–91** (18 — סטורי/חסם/ויראלי/גלילה social media, two `style:"whatsapp"` entries (78, 90), על האש hosting, אין מצב, זה עליי, מת ל…, עובד עליי banter), **professional_52–54** (3 — Zoom link, system-down + כבר, attached-file email).
+  - 10 feminine gender alternates (everyday_88/89/90/92/96, colloquial_77/84/85/89/91) with swap tokens seeded in distractor pools.
+  - Grammar targets: dative-experiencer (נגמרה לי, צץ לי), future-as-imperative (תשלח/תנמיך/תוציא/תביא/תשמרו/תאשר), reciprocal hitpa'el (התראינו, להיפגש), reflexive עצמך, hitpa'el software reflexives (התעדכן), dual (יומיים), purpose-ש + future.
+  - Bumped `__build` to `20260712a`.
+- `tests/sentence-bank-data.test.js` — master assertions 258 → 292; category counts (everyday 99, colloquial 91, professional 54, formal 48); new `ROUND3_ENTRY_IDS` + difficulty-mix assertion ({1:10, 2:24}); round-3 ids added to the expansion alignment iteration, `PHRASE_COMPACTED_ENTRY_IDS`, and the gender-alternate assertion list.
+- `index.html` — `sentence-bank-data.js?v=` bumped `20260711e` → `20260712a`.
+
+**Files changed:** `sentence-bank-data.js`, `tests/sentence-bank-data.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Sentences/Shema decks grow 258 → 292 in both directions; two new WhatsApp-style prompts; new tech/social-plans vocabulary domain.
+
+**Tests run:** `npm test` before (228 pass) and after (228 pass, first run — all frame/distractor/niqqud/gender invariants green). Live check on dev server :3100 under `?v=20260712a`: `getSentenceBank().length === 292`, `__build 20260712a`, round-3 count 34, whatsapp styling on colloquial_78/90, sample entry renders pointed with its feminine alternate; no console errors.
+
+**Risks / regressions to check:** (1) Round-3 niqqud is hand-authored — spot-check הֶעֶלְתָה (colloquial_74), אֶחֱזֹר (everyday_91), שֶׁסִּיַּמְתָּ (colloquial_83) and TTS on the two WhatsApp entries. (2) Round-3 difficulty mix is interim ({1:10, 2:24}); tranche 2 will update it when formal/professional level-3 entries land. (3) New-item Leitner boost will surface many round-3 sentences at once.
+
+---
+
 ### 2026-07-12 — Prepositions game: 5 new paradigms + 34 new triggers (66 → 100)
 
 **Requested:** Batch 1 of the approved multi-game content-expansion plan ("plan a large addition of verbs… also plan additions to the prepositions and binyanim games"): add ~4 new inflected preposition paradigms plus ~30 new triggers.

@@ -265,6 +265,10 @@ const PHRASE_COMPACTED_ENTRY_IDS = [
   ...Array.from({ length: 20 }, (_, i) => `colloquial_${54 + i}`),
   ...Array.from({ length: 14 }, (_, i) => `professional_${38 + i}`),
   ...Array.from({ length: 12 }, (_, i) => `formal_${37 + i}`),
+  // Round-3 expansion (everyday_87+, colloquial_74+, professional_52+)
+  ...Array.from({ length: 13 }, (_, i) => `everyday_${87 + i}`),
+  ...Array.from({ length: 18 }, (_, i) => `colloquial_${74 + i}`),
+  ...Array.from({ length: 3 }, (_, i) => `professional_${52 + i}`),
 ];
 
 const CHUNKING_AUDIT_ENTRIES = [
@@ -368,6 +372,12 @@ const ROUND2_ENTRY_IDS = [
   ...sentenceIdRange("formal", 37, 48),
 ];
 
+const ROUND3_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 87, 99),
+  ...sentenceIdRange("colloquial", 74, 91),
+  ...sentenceIdRange("professional", 52, 54),
+];
+
 const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
   "everyday_39", "everyday_40", "everyday_43", "everyday_49", "everyday_52", "everyday_55",
   "everyday_57", "everyday_59", "everyday_60", "everyday_61", "colloquial_39", "colloquial_40",
@@ -391,17 +401,28 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "colloquial_52",
   "professional_27",
   "professional_29",
+  // Round-3 expansion gender alternates
+  "everyday_88",
+  "everyday_89",
+  "everyday_90",
+  "everyday_92",
+  "everyday_96",
+  "colloquial_77",
+  "colloquial_84",
+  "colloquial_85",
+  "colloquial_89",
+  "colloquial_91",
 ];
 
-test("sentence bank data exposes 258 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 292 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 258);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 258);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 258);
+  assert.equal(entries.length, 292);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 292);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 292);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -429,9 +450,9 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 73,
-    everyday: 86,
-    professional: 51,
+    colloquial: 91,
+    everyday: 99,
+    professional: 54,
     formal: 48,
   });
 
@@ -456,13 +477,24 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
     }, {}),
     { 1: 15, 2: 39, 3: 17 }
   );
+
+  const round3 = ROUND3_ENTRY_IDS.map((id) => byId.get(id));
+  assert.equal(round3.length, 34);
+  assert.ok(round3.every(Boolean));
+  assert.deepEqual(
+    round3.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 10, 2: 24 }
+  );
 });
 
 test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
 
-  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS].forEach((id) => {
+  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
