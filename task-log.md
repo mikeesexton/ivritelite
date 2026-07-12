@@ -7,6 +7,30 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Conjugation game 4b/4c: 8 pi'el + 9 hif'il + 3 pa'al verbs (104 → 124 lemmas)
+
+**Requested:** Completion of Batch 4 of the content-expansion plan — the pi'el/hif'il and weak-root pa'al remainder of the ~40-verb addition, finishing the batch at +40 verbs total (84 → 124).
+
+**Change:**
+- `hebrew-verbs.js`
+  - Appended 20 fully curated `createVerbEntry` blocks (full hand-pointed present/past/future/imperative):
+    - **Pi'el (8):** ללמד (teach), לנסות (try, ל"ה), לנקות (clean, ל"ה), לשנות (change, ל"ה), לבשל (cook), לסדר (arrange), לטייל (travel, ע"י), לבקר (visit).
+    - **Hif'il (9):** להסביר (explain), להדליק (turn on), להפסיק (stop), להקשיב (listen), להכניס (put in), להחזיר (give back, ח guttural segol past), להצליח (succeed, ל"ח furtive patach), להכיר (know a person, פ"נ נ→dagesh), להוריד (take down/download, פ"י → holam).
+    - **Pa'al weak roots (3):** לצחוק (laugh — o-infinitive/a-future guttural, יִצְחַק), לטוס (fly, ע"ו hollow), לגעת (touch — doubly weak פ"נ + ל-guttural, נוֹגֵעַ/יִגַּע/גַּע).
+  - Added `["stop", "stopped"]` to `ENGLISH_PAST_IRREGULARS` (else להפסיק rendered "I stoped"). All other regular glosses (try→tried, change→changed, arrange→arranged, put in→put in) are handled by the existing e$/y→ied rules + irregular map.
+  - Bumped `__build` `20260712a` → `20260712b`.
+- `index.html` — `hebrew-verbs.js?v=` bumped `20260712a` → `20260712b`.
+
+**Files changed:** `hebrew-verbs.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Conjugation deck grows 104 → 124 lemmas (138 study items). Batch 4 complete; final binyan mix ≈ pa'al 54 / pi'el 23 / hif'il 20 / hitpa'el 16 / nif'al 11 (pa'al drops from 61% to ~44%).
+
+**Tests run:** `npm test` before and after: 228 pass, 0 fail. Live check on :3100 under `?v=20260712b`: all 20 lemmas in the deck, English derivation verified for the map-sensitive cases (I stopped=הִפְסַקְתִּי, I tried=נִסִּיתִי, he tries=מְנַסֶּה, I flew=טַסְתִּי, I knew=הִכַּרְתִּי, I took down=הוֹרַדְתִּי), full לגעת paradigm renders all doubly-weak forms correctly, לצחוק future is the a-type יִצְחַק; every form pointed; no console errors.
+
+**Risks / regressions to check:** (1) Hand-pointed niqqud — highest-risk spots: לצחוק's a-future (יִצְחַק vs the tempting *יִצְחֹק), הִצְלַחַתְּ (2fs furtive patach), לגעת's assimilated futures (יִגַּע/תִּגְּעִי), the ל"ה pi'el 3fs (נִסְּתָה/שִׁנְּתָה). Read-aloud spot-check recommended. (2) Two "to know" cards now coexist (לדעת factual, להכיר acquaintance) — intentional pairing, different Hebrew, no dedup collision. (3) Batch 5 (Conjugation+ idioms) is the only remaining plan item.
+
+---
+
 ### 2026-07-12 — Conjugation game 4a: 12 hitpa'el + 8 nif'al verbs (84 → 104 lemmas)
 
 **Requested:** Batch 4 (session 4a) of the approved content-expansion plan: the hitpa'el/nif'al rebalancing payload of the ~40-verb addition. Hitpa'el goes 4 → 16, nif'al 3 → 11.
