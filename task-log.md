@@ -7,6 +7,27 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Conjugation+ (idioms): 8 new expressions (31 → 39)
+
+**Requested:** Batch 5 (final item) of the content-expansion plan: ~6–8 new Conjugation+ idioms, diversifying beyond the "drive-someone-crazy" annoyance family.
+
+**Change:**
+- `hebrew-idioms.js` — appended 8 entries to the `raw` array (full present/past/future conjugations keyed msg/fsg/mpl/fpl, literal_sg/pl/past/future templates with {s}/{o}/{p}):
+  - **direct (2):** `sider` סידר אותי "screw someone over" (deception), `marach` מרח אותי "string someone along" (evasion).
+  - **l_dative (6):** `asiyat_yom` עשה לי את היום "make someone's day" (joy), `haramat_moral` הרים לי את המורל "lift someone's spirits" (encouragement), `harisat_matzav_ruach` הרס לי את מצב הרוח "ruin someone's mood", `gnivat_hatzaga` גנב לי את ההצגה "steal someone's thunder" (rivalry), `drichat_yabalot` דרך לי על היבלות "touch a sore spot" (על-object, not את), `tsvitat_lev` צבט לי בלב "tug at the heartstrings" (ב-object, empathy).
+  - Verified against near-neighbors: `merihat_atzabim` uses למרוט (pluck), not my למרוח (marach); `gnivat_lev`/`chimum_lev` use different verbs than my lev/hatzaga entries — no collisions.
+- `index.html` — `hebrew-idioms.js?v=` bumped `20260711a` → `20260712a`.
+
+**Files changed:** `hebrew-idioms.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Conjugation+ deck grows from 31 to 39 idioms (5 direct, 30 l_dative, 2 possessive_suffix), broadening the emotional range beyond annoyance.
+
+**Tests run:** `npm test` 228 pass (no dedicated idiom-data test exists; the file loads and normalizes cleanly). Live check on :3100 under `?v=20260712a`: 39 idioms loaded; deck generation sampled all 8 new ids — direct forms assemble as verb+object (מסדר אותו, מורח אותי), l_dative as verb+ל+fixed including the non-את cases (דורך לי על היבלות, צובט לי בלב); no console errors.
+
+**Risks / regressions to check:** (1) Idiom conjugations are unpointed and hand-authored with no schema test — spot-check the future forms (יהרוס, יגנוב, ידרוך, יצבוט) and the ל"ה עשה past עשתה. (2) This completes the full content-expansion plan (prepositions, sentences ×70, binyanim ×8 roots, verbs ×40, idioms ×8).
+
+---
+
 ### 2026-07-12 — Conjugation game 4b/4c: 8 pi'el + 9 hif'il + 3 pa'al verbs (104 → 124 lemmas)
 
 **Requested:** Completion of Batch 4 of the content-expansion plan — the pi'el/hif'il and weak-root pa'al remainder of the ~40-verb addition, finishing the batch at +40 verbs total (84 → 124).
