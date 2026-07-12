@@ -7,6 +7,29 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Conjugation game 4a: 12 hitpa'el + 8 nif'al verbs (84 → 104 lemmas)
+
+**Requested:** Batch 4 (session 4a) of the approved content-expansion plan: the hitpa'el/nif'al rebalancing payload of the ~40-verb addition. Hitpa'el goes 4 → 16, nif'al 3 → 11.
+
+**Change:**
+- `hebrew-verbs.js`
+  - Appended 20 fully curated `createVerbEntry` blocks (full present/past/future tables, hand-pointed; imperatives included except where archaic):
+    - **Hitpa'el (12):** להתלבש, להסתכל (metathesis), להסתדר (metathesis), להתרגל, להתרגש, להתעורר (hollow → hitpolel), להתקלח (ל"ח furtive patach), להתאמן, להתקדם, להתנהג (ה guttural chataf), להצטער (emphatic metathesis ט), להשתתף (metathesis).
+    - **Nif'al (8):** להיזהר, להירדם (ר → tsere prefix), להיגמר (pairs with לגמור; נגמר לי), להיפרד, להישבר, להיראות (ל"ה; נראה לי; imperative omitted), להיעלם (פ' guttural: נֶעְלָם/יֵעָלֵם), להיוולד (פ"י: נוֹלַד/יִוָּלֵד; imperative omitted).
+  - Added `["wake", "woke"]` to `ENGLISH_PAST_IRREGULARS` (להתעורר otherwise rendered "he waked up").
+  - Bumped `__build` `20260711b` → `20260712a`.
+- `index.html` — `hebrew-verbs.js?v=` bumped `20260711d` → `20260712a`.
+
+**Files changed:** `hebrew-verbs.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Conjugation deck grows from 84 to 104 lemmas; hitpa'el/nif'al now meaningfully represented (paal falls from 61% to ~49% of lemmas).
+
+**Tests run:** `npm test` before and after: 228 pass, 0 fail (niqqud-presence invariant, imperative-slot completeness, and label derivation all validated). Live check on :3100 under `?v=20260712a`: all 20 new lemmas in the deck (118 study items), "I woke up = הִתְעוֹרַרְתִּי" labels correctly, להיראות exposes zero imperative slots, every form pointed; no console errors.
+
+**Risks / regressions to check:** (1) Hand-pointed tables — highest-risk spots: נֶעְלָם/נֶעֶלְמָה (pe-guttural alternations), הִתְקַלַּחַתְּ (2fs with furtive patach), נִרְאֲתָה (ל"ה 3fs), אֶוָּלֵד/יִוָּלֵד. Read-aloud spot-check recommended. (2) התאמנו appears as both past-1pl and past-3pl in plain spelling (niqqud differs) — precedented by תכננו. (3) Sessions 4b (piel+hifil, 17 verbs) and 4c (paal weak roots, 3) remain.
+
+---
+
 ### 2026-07-12 — Binyanim board: 8 new roots (27 → 35, 130 → 169 playable forms)
 
 **Requested:** Batch 3 of the approved content-expansion plan: ~8 new roots for the binyanim game, chosen for binyan-contrast showcase value.
