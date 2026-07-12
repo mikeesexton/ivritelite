@@ -9999,6 +9999,379 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishDistractors: ["When", "kids", "are leaving", "So I remember", "to buy"],
     notes: "שאדע — 'so that I'll know'; bare ש + future expresses purpose in speech. בסוף = in the end. כמה covers both 'how many' and 'how much'."
   }),
+  // Round-3 tranche 2: opinions & news, narrative sequencing, conditionals & numbers.
+  buildExpandedSentence({
+    id: "professional_55", emoji: "🗣️", category: "professional", difficulty: 2,
+    hebrew: "לדעתי המצב מסובך יותר ממה שהוא נראה.", hebrewNiqqud: "לְדַעְתִּי הַמַּצָּב מְסֻבָּךְ יוֹתֵר מִמָּה שֶׁהוּא נִרְאֶה.",
+    english: "In my opinion the situation is more complicated than it seems.",
+    hebrewTokenPairs: [["לדעתי", "לְדַעְתִּי"], ["המצב", "הַמַּצָּב"], ["מסובך", "מְסֻבָּךְ"], ["יותר", "יוֹתֵר"], ["ממה שהוא", "מִמָּה שֶׁהוּא"], ["נראה", "נִרְאֶה"]],
+    englishTokens: ["In my opinion", "the situation", "is more complicated", "than", "it seems"],
+    hebrewDistractorPairs: [["לדעתה", "לְדַעְתָּהּ"], ["הפתרון", "הַפִּתְרוֹן"], ["פשוט", "פָּשׁוּט"], ["פחות", "פָּחוֹת"], ["ממה שהיא", "מִמָּה שֶׁהִיא"]],
+    englishDistractors: ["In her opinion", "the solution", "is simpler", "less", "she seems"],
+    notes: "לדעתי = in my opinion (דעה = opinion). יותר ממה ש… = 'more than what…' — the standard comparative over a clause."
+  }),
+  buildExpandedSentence({
+    id: "professional_56", emoji: "⚖️", category: "professional", difficulty: 2,
+    hebrew: "אני מסכים איתך, אבל חשוב לשמוע גם את הצד השני.", hebrewNiqqud: "אֲנִי מַסְכִּים אִתְּךָ, אֲבָל חָשׁוּב לִשְׁמֹעַ גַּם אֶת הַצַּד הַשֵּׁנִי.",
+    english: "I agree with you, but it's important to also hear the other side.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["מסכים", "מַסְכִּים"], ["איתך", "אִתְּךָ"], ["אבל", "אֲבָל"], ["חשוב", "חָשׁוּב"], ["לשמוע", "לִשְׁמֹעַ"], ["גם", "גַּם"], ["את", "אֶת"], ["הצד השני", "הַצַּד הַשֵּׁנִי"]],
+    englishTokens: ["I agree", "with you", "but", "it's important", "to also hear", "the other side"],
+    hebrewDistractorPairs: [["מסכימה", "מַסְכִּימָה"], ["איתו", "אִתּוֹ"], ["קל", "קַל"], ["להגיד", "לְהַגִּיד"], ["הדעה השנייה", "הַדֵּעָה הַשְּׁנִיָּה"]],
+    englishDistractors: ["she agrees", "with him", "it's easy", "to also say", "the second opinion"],
+    notes: "מסכים עם = agree with. חשוב + infinitive is the impersonal 'it's important to…'. הצד השני = the other side.",
+    hebrewAlternates: [{
+      text: "אני מסכימה איתך, אבל חשוב לשמוע גם את הצד השני.", textNiqqud: "אֲנִי מַסְכִּימָה אִתְּךָ, אֲבָל חָשׁוּב לִשְׁמֹעַ גַּם אֶת הַצַּד הַשֵּׁנִי.",
+      tokenPairs: [["אני", "אֲנִי"], ["מסכימה", "מַסְכִּימָה"], ["איתך", "אִתְּךָ"], ["אבל", "אֲבָל"], ["חשוב", "חָשׁוּב"], ["לשמוע", "לִשְׁמֹעַ"], ["גם", "גַּם"], ["את", "אֶת"], ["הצד השני", "הַצַּד הַשֵּׁנִי"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "professional_57", emoji: "📊", category: "professional", difficulty: 3,
+    hebrew: "לפי הדוח, המחירים עלו בעשרה אחוזים השנה.", hebrewNiqqud: "לְפִי הַדּוֹחַ, הַמְּחִירִים עָלוּ בַּעֲשָׂרָה אֲחוּזִים הַשָּׁנָה.",
+    english: "According to the report, prices rose by ten percent this year.",
+    hebrewTokenPairs: [["לפי", "לְפִי"], ["הדוח", "הַדּוֹחַ"], ["המחירים", "הַמְּחִירִים"], ["עלו", "עָלוּ"], ["בעשרה", "בַּעֲשָׂרָה"], ["אחוזים", "אֲחוּזִים"], ["השנה", "הַשָּׁנָה"]],
+    englishTokens: ["According to", "the report", "prices", "rose", "by ten", "percent", "this year"],
+    hebrewDistractorPairs: [["למרות", "לַמְרוֹת"], ["הסקר", "הַסֶּקֶר"], ["ירדו", "יָרְדוּ"], ["בחמישה", "בַּחֲמִשָּׁה"], ["החודש", "הַחֹדֶשׁ"]],
+    englishDistractors: ["Despite", "the survey", "fell", "by five", "this month"],
+    notes: "לפי = according to. עלו ב… — rose BY; the ב marks the amount of change. עשרה אחוזים = ten percent (אחוז is masculine, so עשרה)."
+  }),
+  buildExpandedSentence({
+    id: "professional_58", emoji: "🤝", category: "professional", difficulty: 3,
+    hebrew: "מצד אחד זה יקר, מצד שני זה חוסך לנו זמן.", hebrewNiqqud: "מִצַּד אֶחָד זֶה יָקָר, מִצַּד שֵׁנִי זֶה חוֹסֵךְ לָנוּ זְמַן.",
+    english: "On the one hand it's expensive; on the other hand it saves us time.",
+    hebrewTokenPairs: [["מצד אחד", "מִצַּד אֶחָד"], ["זה", "זֶה"], ["יקר", "יָקָר"], ["מצד שני", "מִצַּד שֵׁנִי"], ["זה", "זֶה"], ["חוסך", "חוֹסֵךְ"], ["לנו", "לָנוּ"], ["זמן", "זְמַן"]],
+    englishTokens: ["On the one hand", "it's expensive", "on the other hand", "it saves", "us", "time"],
+    hebrewDistractorPairs: [["זול", "זוֹל"], ["מבזבז", "מְבַזְבֵּז"], ["לכם", "לָכֶם"], ["כסף", "כֶּסֶף"], ["בסופו של דבר", "בְּסוֹפוֹ שֶׁל דָּבָר"]],
+    englishDistractors: ["it's cheap", "it wastes", "for them", "money", "at the end of the day"],
+    notes: "מצד אחד… מצד שני… — 'on the one hand… on the other…'; the paired discourse frame. חוסך = saves (time or money)."
+  }),
+  buildExpandedSentence({
+    id: "professional_59", emoji: "🧑‍⚖️", category: "professional", difficulty: 3,
+    hebrew: "רוב הציבור מתנגד להחלטה החדשה.", hebrewNiqqud: "רֹב הַצִּבּוּר מִתְנַגֵּד לַהַחְלָטָה הַחֲדָשָׁה.",
+    english: "Most of the public opposes the new decision.",
+    hebrewTokenPairs: [["רוב", "רֹב"], ["הציבור", "הַצִּבּוּר"], ["מתנגד", "מִתְנַגֵּד"], ["להחלטה", "לַהַחְלָטָה"], ["החדשה", "הַחֲדָשָׁה"]],
+    englishTokens: ["Most of", "the public", "opposes", "the new", "decision"],
+    hebrewDistractorPairs: [["חצי", "חֲצִי"], ["הממשלה", "הַמֶּמְשָׁלָה"], ["תומך", "תּוֹמֵךְ"], ["לתוכנית", "לַתָּכְנִית"], ["הישנה", "הַיְשָׁנָה"]],
+    englishDistractors: ["Half of", "the government", "supports", "the old", "plan"],
+    notes: "רוב ה… = most of the…. מתנגד ל = opposes (התנגד takes ל). Singular מתנגד agrees with the collective רוב."
+  }),
+  buildExpandedSentence({
+    id: "professional_60", emoji: "🕐", category: "professional", difficulty: 2,
+    hebrew: "הישיבה התארכה, אז נעדכן אתכם במייל.", hebrewNiqqud: "הַיְשִׁיבָה הִתְאָרְכָה, אָז נְעַדְכֵּן אֶתְכֶם בַּמֵּייל.",
+    english: "The meeting ran long, so we'll update you by email.",
+    hebrewTokenPairs: [["הישיבה", "הַיְשִׁיבָה"], ["התארכה", "הִתְאָרְכָה"], ["אז", "אָז"], ["נעדכן", "נְעַדְכֵּן"], ["אתכם", "אֶתְכֶם"], ["במייל", "בַּמֵּייל"]],
+    englishTokens: ["The meeting", "ran long", "so", "we'll update", "you", "by email"],
+    hebrewDistractorPairs: [["ההרצאה", "הַהַרְצָאָה"], ["התקצרה", "הִתְקַצְּרָה"], ["נשלח", "נִשְׁלַח"], ["אותם", "אוֹתָם"], ["בטלפון", "בַּטֵּלֶפוֹן"]],
+    englishDistractors: ["The lecture", "ended early", "we'll call", "them", "by phone"],
+    notes: "התארכה — hitpa'el, 'ran long / stretched out'. נעדכן = we'll update (לעדכן); עדכון is the noun 'update'."
+  }),
+  buildExpandedSentence({
+    id: "professional_61", emoji: "🎤", category: "professional", difficulty: 3,
+    hebrew: "העיתונאית שאלה אם השר מתכוון להתפטר.", hebrewNiqqud: "הָעִתּוֹנָאִית שָׁאֲלָה אִם הַשַּׂר מִתְכַּוֵּן לְהִתְפַּטֵּר.",
+    english: "The journalist asked whether the minister intends to resign.",
+    hebrewTokenPairs: [["העיתונאית", "הָעִתּוֹנָאִית"], ["שאלה", "שָׁאֲלָה"], ["אם", "אִם"], ["השר", "הַשַּׂר"], ["מתכוון", "מִתְכַּוֵּן"], ["להתפטר", "לְהִתְפַּטֵּר"]],
+    englishTokens: ["The journalist", "asked", "whether", "the minister", "intends", "to resign"],
+    hebrewDistractorPairs: [["העיתונאי", "הָעִתּוֹנַאי"], ["ענתה", "עָנְתָה"], ["למה", "לָמָּה"], ["ראש העיר", "רֹאשׁ הָעִיר"], ["מסרב", "מְסָרֵב"]],
+    englishDistractors: ["answered", "why", "the mayor", "refuses", "The editor"],
+    notes: "שאלה אם — 'asked whether'; indirect yes/no questions use אם. מתכוון ל = intends to. להתפטר = to resign (hitpa'el)."
+  }),
+  buildExpandedSentence({
+    id: "professional_62", emoji: "🧮", category: "professional", difficulty: 3,
+    hebrew: "נצטרך לבדוק את הנתונים לפני שנסיק מסקנות.", hebrewNiqqud: "נִצְטָרֵךְ לִבְדֹּק אֶת הַנְּתוּנִים לִפְנֵי שֶׁנַּסִּיק מַסְקָנוֹת.",
+    english: "We'll need to check the data before we draw conclusions.",
+    hebrewTokenPairs: [["נצטרך", "נִצְטָרֵךְ"], ["לבדוק", "לִבְדֹּק"], ["את", "אֶת"], ["הנתונים", "הַנְּתוּנִים"], ["לפני שנסיק", "לִפְנֵי שֶׁנַּסִּיק"], ["מסקנות", "מַסְקָנוֹת"]],
+    englishTokens: ["We'll need", "to check", "the data", "before we draw", "conclusions"],
+    hebrewDistractorPairs: [["נרצה", "נִרְצֶה"], ["למחוק", "לִמְחֹק"], ["התוצאות", "הַתּוֹצָאוֹת"], ["אחרי שנסיק", "אַחֲרֵי שֶׁנַּסִּיק"], ["שאלות", "שְׁאֵלוֹת"]],
+    englishDistractors: ["We'll want", "to delete", "the results", "after we draw", "questions"],
+    notes: "נצטרך = we'll need (future of להצטרך). להסיק מסקנות = to draw conclusions — a fixed collocation. לפני ש + future for 'before we…'."
+  }),
+  buildExpandedSentence({
+    id: "professional_63", emoji: "💰", category: "professional", difficulty: 3,
+    hebrew: "ההנהלה הודיעה שהתקציב יקוצץ בשנה הבאה.", hebrewNiqqud: "הַהַנְהָלָה הוֹדִיעָה שֶׁהַתַּקְצִיב יְקֻצַּץ בַּשָּׁנָה הַבָּאָה.",
+    english: "Management announced that the budget would be cut next year.",
+    hebrewTokenPairs: [["ההנהלה", "הַהַנְהָלָה"], ["הודיעה", "הוֹדִיעָה"], ["שהתקציב", "שֶׁהַתַּקְצִיב"], ["יקוצץ", "יְקֻצַּץ"], ["בשנה הבאה", "בַּשָּׁנָה הַבָּאָה"]],
+    englishTokens: ["Management", "announced", "that the budget", "would be cut", "next year"],
+    hebrewDistractorPairs: [["הוועדה", "הַוַּעֲדָה"], ["הכחישה", "הִכְחִישָׁה"], ["שהשכר", "שֶׁהַשָּׂכָר"], ["יוגדל", "יֻגְדַּל"], ["בשנה שעברה", "בַּשָּׁנָה שֶׁעָבְרָה"]],
+    englishDistractors: ["The committee", "denied", "that the salary", "would be increased", "last year"],
+    notes: "Indirect speech keeps the original future: הודיעה ש…יקוצץ = 'announced that it WILL be cut', rendered in English as 'would'. יקוצץ is a pu'al future passive."
+  }),
+  buildExpandedSentence({
+    id: "professional_64", emoji: "🥊", category: "professional", difficulty: 3,
+    hebrew: "ההצעה שלך מעניינת, אבל אני רואה את זה אחרת.", hebrewNiqqud: "הַהַצָּעָה שֶׁלְּךָ מְעַנְיֶנֶת, אֲבָל אֲנִי רוֹאֶה אֶת זֶה אַחֶרֶת.",
+    english: "Your proposal is interesting, but I see it differently.",
+    hebrewTokenPairs: [["ההצעה שלך", "הַהַצָּעָה שֶׁלְּךָ"], ["מעניינת", "מְעַנְיֶנֶת"], ["אבל", "אֲבָל"], ["אני", "אֲנִי"], ["רואה", "רוֹאֶה"], ["את זה", "אֶת זֶה"], ["אחרת", "אַחֶרֶת"]],
+    englishTokens: ["Your proposal", "is interesting", "but", "I see it", "differently"],
+    hebrewDistractorPairs: [["ההצעה שלה", "הַהַצָּעָה שֶׁלָּהּ"], ["משעממת", "מְשַׁעֲמֶמֶת"], ["ולכן", "וְלָכֵן"], ["מבין", "מֵבִין"], ["בדיוק ככה", "בְּדִיּוּק כָּכָה"]],
+    englishDistractors: ["Her proposal", "is boring", "and therefore", "I understand it", "exactly that way"],
+    notes: "רואה את זה אחרת — 'sees it differently'; the polite Israeli disagreement formula. מעניינת agrees with the feminine הצעה."
+  }),
+  buildExpandedSentence({
+    id: "professional_65", emoji: "🧭", category: "professional", difficulty: 2,
+    hebrew: "בוא נחזור לנושא, אנחנו קצת מתפזרים.", hebrewNiqqud: "בּוֹא נַחֲזֹר לַנּוֹשֵׂא, אֲנַחְנוּ קְצָת מִתְפַּזְּרִים.",
+    english: "Let's get back to the topic; we're getting a bit scattered.",
+    hebrewTokenPairs: [["בוא", "בּוֹא"], ["נחזור", "נַחֲזֹר"], ["לנושא", "לַנּוֹשֵׂא"], ["אנחנו", "אֲנַחְנוּ"], ["קצת", "קְצָת"], ["מתפזרים", "מִתְפַּזְּרִים"]],
+    englishTokens: ["Let's", "get back", "to the topic", "we're getting", "a bit", "scattered"],
+    hebrewDistractorPairs: [["בואי", "בּוֹאִי"], ["נעבור", "נַעֲבֹר"], ["להפסקה", "לַהַפְסָקָה"], ["מאוד", "מְאֹד"], ["מתקדמים", "מִתְקַדְּמִים"]],
+    englishDistractors: ["we'll move", "to a break", "very", "making progress", "Let's not"],
+    notes: "נחזור לנושא = back to the topic. מתפזרים — lit. 'scattering' — describes a discussion drifting. קצת softens it."
+  }),
+  buildExpandedSentence({
+    id: "formal_49", emoji: "🏛️", category: "formal", difficulty: 3,
+    hebrew: "הוחלט לדחות את ההצבעה לשבוע הבא.", hebrewNiqqud: "הֻחְלַט לִדְחוֹת אֶת הַהַצְבָּעָה לַשָּׁבוּעַ הַבָּא.",
+    english: "It was decided to postpone the vote until next week.",
+    hebrewTokenPairs: [["הוחלט", "הֻחְלַט"], ["לדחות", "לִדְחוֹת"], ["את", "אֶת"], ["ההצבעה", "הַהַצְבָּעָה"], ["לשבוע הבא", "לַשָּׁבוּעַ הַבָּא"]],
+    englishTokens: ["It was decided", "to postpone", "the vote", "until next week"],
+    hebrewDistractorPairs: [["הוצע", "הֻצַּע"], ["לקיים", "לְקַיֵּם"], ["הפגישה", "הַפְּגִישָׁה"], ["לחודש הבא", "לַחֹדֶשׁ הַבָּא"], ["סוכם", "סֻכַּם"]],
+    englishDistractors: ["It was proposed", "to hold", "the meeting", "until next month", "It was agreed"],
+    notes: "הוחלט — impersonal huf'al passive: 'it was decided', no stated subject; the backbone of Hebrew news style. הצבעה = vote."
+  }),
+  buildExpandedSentence({
+    id: "formal_50", emoji: "📺", category: "formal", difficulty: 3,
+    hebrew: "הריאיון שודר אמש בשידור חי.", hebrewNiqqud: "הָרֵאָיוֹן שֻׁדַּר אֶמֶשׁ בְּשִׁדּוּר חַי.",
+    english: "The interview was broadcast live last night.",
+    hebrewTokenPairs: [["הריאיון", "הָרֵאָיוֹן"], ["שודר", "שֻׁדַּר"], ["אמש", "אֶמֶשׁ"], ["בשידור חי", "בְּשִׁדּוּר חַי"]],
+    englishTokens: ["The interview", "was broadcast", "live", "last night"],
+    hebrewDistractorPairs: [["הנאום", "הַנְּאוּם"], ["הוקלט", "הֻקְלַט"], ["הבוקר", "הַבֹּקֶר"], ["בערוץ אחר", "בְּעָרוּץ אַחֵר"]],
+    englishDistractors: ["The speech", "was recorded", "this morning", "on another channel"],
+    notes: "שודר — pu'al passive, 'was broadcast'. אמש = last night (formal; colloquial אתמול בלילה). בשידור חי = live, lit. 'in live broadcast'."
+  }),
+  buildExpandedSentence({
+    id: "formal_51", emoji: "📰", category: "formal", difficulty: 3,
+    hebrew: "על פי הפרסומים, ההסכם ייחתם בקרוב.", hebrewNiqqud: "עַל פִּי הַפִּרְסוּמִים, הַהֶסְכֵּם יֵחָתֵם בְּקָרוֹב.",
+    english: "According to the reports, the agreement will be signed soon.",
+    hebrewTokenPairs: [["על פי", "עַל פִּי"], ["הפרסומים", "הַפִּרְסוּמִים"], ["ההסכם", "הַהֶסְכֵּם"], ["ייחתם", "יֵחָתֵם"], ["בקרוב", "בְּקָרוֹב"]],
+    englishTokens: ["According to", "the reports", "the agreement", "will be signed", "soon"],
+    hebrewDistractorPairs: [["למרות", "לַמְרוֹת"], ["השמועות", "הַשְּׁמוּעוֹת"], ["החוזה", "הַחוֹזֶה"], ["יבוטל", "יְבֻטַּל"], ["בעוד שנה", "בְּעוֹד שָׁנָה"]],
+    englishDistractors: ["Despite", "the rumors", "the contract", "will be canceled", "in a year"],
+    notes: "ייחתם — nif'al future passive, 'will be signed'. על פי = according to (higher register than לפי). בקרוב = soon."
+  }),
+  buildExpandedSentence({
+    id: "formal_52", emoji: "🗳️", category: "formal", difficulty: 3,
+    hebrew: "קשה לדעת מה יקרה בבחירות הקרובות.", hebrewNiqqud: "קָשֶׁה לָדַעַת מָה יִקְרֶה בַּבְּחִירוֹת הַקְּרוֹבוֹת.",
+    english: "It's hard to know what will happen in the upcoming elections.",
+    hebrewTokenPairs: [["קשה", "קָשֶׁה"], ["לדעת", "לָדַעַת"], ["מה", "מָה"], ["יקרה", "יִקְרֶה"], ["בבחירות", "בַּבְּחִירוֹת"], ["הקרובות", "הַקְּרוֹבוֹת"]],
+    englishTokens: ["It's hard", "to know", "what will happen", "in the upcoming", "elections"],
+    hebrewDistractorPairs: [["קל", "קַל"], ["לנחש", "לְנַחֵשׁ"], ["מה קרה", "מָה קָרָה"], ["בפגישות", "בַּפְּגִישׁוֹת"], ["הבאות", "הַבָּאוֹת"]],
+    englishDistractors: ["It's easy", "to guess", "what happened", "in the next", "meetings"],
+    notes: "קשה + infinitive — impersonal 'it's hard to…'. מה יקרה = an embedded question ('what will happen'). הקרובות agrees with plural בחירות."
+  }),
+  buildExpandedSentence({
+    id: "formal_53", emoji: "📉", category: "formal", difficulty: 3,
+    hebrew: "פורסם כי שיעור האבטלה ירד ברבעון האחרון.", hebrewNiqqud: "פֻּרְסַם כִּי שִׁעוּר הָאַבְטָלָה יָרַד בָּרִבְעוֹן הָאַחֲרוֹן.",
+    english: "It was published that the unemployment rate fell in the last quarter.",
+    hebrewTokenPairs: [["פורסם", "פֻּרְסַם"], ["כי", "כִּי"], ["שיעור האבטלה", "שִׁעוּר הָאַבְטָלָה"], ["ירד", "יָרַד"], ["ברבעון", "בָּרִבְעוֹן"], ["האחרון", "הָאַחֲרוֹן"]],
+    englishTokens: ["It was published", "that", "the unemployment rate", "fell", "in the last", "quarter"],
+    hebrewDistractorPairs: [["נמסר", "נִמְסַר"], ["שיעור הצמיחה", "שִׁעוּר הַצְּמִיחָה"], ["עלה", "עָלָה"], ["בחודש", "בַּחֹדֶשׁ"], ["הראשון", "הָרִאשׁוֹן"]],
+    englishDistractors: ["It was reported", "the growth rate", "rose", "in the first", "month"],
+    notes: "פורסם כי — 'it was published that'; כי replaces ש in formal register. שיעור האבטלה = the unemployment rate (a construct chain)."
+  }),
+  buildExpandedSentence({
+    id: "formal_54", emoji: "🔍", category: "formal", difficulty: 3,
+    hebrew: "הנושא ייבחן מחדש לאחר קבלת הממצאים.", hebrewNiqqud: "הַנּוֹשֵׂא יִבָּחֵן מֵחָדָשׁ לְאַחַר קַבָּלַת הַמִּמְצָאִים.",
+    english: "The issue will be re-examined after the findings are received.",
+    hebrewTokenPairs: [["הנושא", "הַנּוֹשֵׂא"], ["ייבחן", "יִבָּחֵן"], ["מחדש", "מֵחָדָשׁ"], ["לאחר", "לְאַחַר"], ["קבלת", "קַבָּלַת"], ["הממצאים", "הַמִּמְצָאִים"]],
+    englishTokens: ["The issue", "will be re-examined", "after", "the findings", "are received"],
+    hebrewDistractorPairs: [["ההסכם", "הַהֶסְכֵּם"], ["יידחה", "יִדָּחֶה"], ["לפני", "לִפְנֵי"], ["המסמכים", "הַמִּסְמָכִים"], ["שליחת", "שְׁלִיחַת"]],
+    englishDistractors: ["The agreement", "will be postponed", "before", "the documents", "are sent"],
+    notes: "ייבחן מחדש — nif'al future passive + מחדש ('anew') = will be re-examined. לאחר קבלת… — formal 'after receipt of…' with the verbal noun in construct."
+  }),
+  buildExpandedSentence({
+    id: "formal_55", emoji: "🌡️", category: "formal", difficulty: 2,
+    hebrew: "על פי התחזית, צפוי גל חום בסוף השבוע.", hebrewNiqqud: "עַל פִּי הַתַּחֲזִית, צָפוּי גַּל חֹם בְּסוֹף הַשָּׁבוּעַ.",
+    english: "According to the forecast, a heat wave is expected over the weekend.",
+    hebrewTokenPairs: [["על פי", "עַל פִּי"], ["התחזית", "הַתַּחֲזִית"], ["צפוי", "צָפוּי"], ["גל חום", "גַּל חֹם"], ["בסוף השבוע", "בְּסוֹף הַשָּׁבוּעַ"]],
+    englishTokens: ["According to", "the forecast", "a heat wave", "is expected", "over the weekend"],
+    hebrewDistractorPairs: [["גל קור", "גַּל קֹר"], ["ייתכן", "יִתָּכֵן"], ["באמצע השבוע", "בְּאֶמְצַע הַשָּׁבוּעַ"], ["למרות", "לַמְרוֹת"]],
+    englishDistractors: ["a cold snap", "is possible", "midweek", "Despite", "the report"],
+    notes: "צפוי = is expected (passive participle); weather Hebrew loves it. גל חום = heat wave; גל קור is the cold-snap twin. סוף השבוע = the weekend."
+  }),
+  buildExpandedSentence({
+    id: "formal_56", emoji: "🎓", category: "formal", difficulty: 2,
+    hebrew: "ההרשמה לקורס תיסגר בסוף החודש.", hebrewNiqqud: "הַהַרְשָׁמָה לַקּוּרְס תִּסָּגֵר בְּסוֹף הַחֹדֶשׁ.",
+    english: "Registration for the course will close at the end of the month.",
+    hebrewTokenPairs: [["ההרשמה", "הַהַרְשָׁמָה"], ["לקורס", "לַקּוּרְס"], ["תיסגר", "תִּסָּגֵר"], ["בסוף", "בְּסוֹף"], ["החודש", "הַחֹדֶשׁ"]],
+    englishTokens: ["Registration", "for the course", "will close", "at the end", "of the month"],
+    hebrewDistractorPairs: [["הבחינה", "הַבְּחִינָה"], ["לסמסטר", "לַסֵּמֶסְטֶר"], ["תיפתח", "תִּפָּתַח"], ["בתחילת", "בִּתְחִלַּת"], ["השבוע", "הַשָּׁבוּעַ"]],
+    englishDistractors: ["The exam", "for the semester", "will open", "at the beginning", "of the week"],
+    notes: "תיסגר — nif'al future, 'will close'; processes like registration take the passive voice. הרשמה = registration (from נרשם)."
+  }),
+  buildExpandedSentence({
+    id: "formal_57", emoji: "🚱", category: "formal", difficulty: 2,
+    hebrew: "אין לשתות את המים האלה לפני הרתחה.", hebrewNiqqud: "אֵין לִשְׁתּוֹת אֶת הַמַּיִם הָאֵלֶּה לִפְנֵי הַרְתָּחָה.",
+    english: "Do not drink this water before boiling.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["לשתות", "לִשְׁתּוֹת"], ["את", "אֶת"], ["המים האלה", "הַמַּיִם הָאֵלֶּה"], ["לפני", "לִפְנֵי"], ["הרתחה", "הַרְתָּחָה"]],
+    englishTokens: ["Do not drink", "this water", "before", "boiling"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לאכול", "לֶאֱכֹל"], ["הפירות האלה", "הַפֵּרוֹת הָאֵלֶּה"], ["אחרי", "אַחֲרֵי"], ["שטיפה", "שְׁטִיפָה"]],
+    englishDistractors: ["You may eat", "these fruits", "after", "washing", "Do not buy"],
+    notes: "אין + infinitive — formal prohibition: 'one must not…'. הרתחה = boiling (the hif'il verbal noun of להרתיח)."
+  }),
+  buildExpandedSentence({
+    id: "formal_58", emoji: "🕯️", category: "formal", difficulty: 3,
+    hebrew: "אלמלא הפקקים, היינו מגיעים בזמן.", hebrewNiqqud: "אִלְמָלֵא הַפְּקָקִים, הָיִינוּ מַגִּיעִים בַּזְּמַן.",
+    english: "Were it not for the traffic jams, we would have arrived on time.",
+    hebrewTokenPairs: [["אלמלא", "אִלְמָלֵא"], ["הפקקים", "הַפְּקָקִים"], ["היינו", "הָיִינוּ"], ["מגיעים", "מַגִּיעִים"], ["בזמן", "בַּזְּמַן"]],
+    englishTokens: ["Were it not", "for the traffic jams", "we would have", "arrived", "on time"],
+    hebrewDistractorPairs: [["בגלל", "בִּגְלַל"], ["הגשם", "הַגֶּשֶׁם"], ["היית", "הָיִיתָ"], ["מאחרים", "מְאַחֲרִים"], ["באיחור", "בְּאִחוּר"]],
+    englishDistractors: ["Because of", "the rain", "you would have", "been late", "this morning"],
+    notes: "אלמלא = 'were it not for' — the formal counterfactual. היינו + present participle (היינו מגיעים) is the standard 'would have' construction."
+  }),
+  buildExpandedSentence({
+    id: "formal_59", emoji: "🚀", category: "formal", difficulty: 3,
+    hebrew: "אם יאושר התקציב, הפרויקט יצא לדרך מיד.", hebrewNiqqud: "אִם יְאֻשַּׁר הַתַּקְצִיב, הַפְּרוֹיֶקְט יֵצֵא לַדֶּרֶךְ מִיָּד.",
+    english: "If the budget is approved, the project will get under way immediately.",
+    hebrewTokenPairs: [["אם", "אִם"], ["יאושר", "יְאֻשַּׁר"], ["התקציב", "הַתַּקְצִיב"], ["הפרויקט", "הַפְּרוֹיֶקְט"], ["יצא לדרך", "יֵצֵא לַדֶּרֶךְ"], ["מיד", "מִיָּד"]],
+    englishTokens: ["If", "the budget", "is approved", "the project", "will get under way", "immediately"],
+    hebrewDistractorPairs: [["יבוטל", "יְבֻטַּל"], ["ההסכם", "הַהֶסְכֵּם"], ["ייעצר", "יֵעָצֵר"], ["בהמשך", "בַּהֶמְשֵׁךְ"], ["יעלה לדיון", "יַעֲלֶה לְדִיּוּן"]],
+    englishDistractors: ["is canceled", "the agreement", "will be stopped", "later on", "will come up for discussion"],
+    notes: "אם + future in both clauses = the real conditional. יאושר — pu'al future passive, 'will be approved'. יצא לדרך — lit. 'set out on the road' = get under way / launch."
+  }),
+  buildExpandedSentence({
+    id: "formal_60", emoji: "🌍", category: "formal", difficulty: 3,
+    hebrew: "ככל שהטמפרטורות עולות, כך גובר הסיכון לשרפות.", hebrewNiqqud: "כְּכָל שֶׁהַטֶּמְפֵּרָטוּרוֹת עוֹלוֹת, כָּךְ גּוֹבֵר הַסִּכּוּן לִשְׂרֵפוֹת.",
+    english: "The more temperatures rise, the greater the risk of fires.",
+    hebrewTokenPairs: [["ככל", "כְּכָל"], ["שהטמפרטורות", "שֶׁהַטֶּמְפֵּרָטוּרוֹת"], ["עולות", "עוֹלוֹת"], ["כך", "כָּךְ"], ["גובר", "גּוֹבֵר"], ["הסיכון", "הַסִּכּוּן"], ["לשרפות", "לִשְׂרֵפוֹת"]],
+    englishTokens: ["The more", "temperatures", "rise", "the greater", "the risk", "of fires"],
+    hebrewDistractorPairs: [["שהמחירים", "שֶׁהַמְּחִירִים"], ["יורדות", "יוֹרְדוֹת"], ["פוחת", "פּוֹחֵת"], ["הסיכוי", "הַסִּכּוּי"], ["לשיטפונות", "לְשִׁטְפוֹנוֹת"]],
+    englishDistractors: ["prices", "fall", "the smaller", "the chance", "of floods"],
+    notes: "ככל ש… כך… = 'the more… the more…'. גובר = grows stronger (formal). סיכון (risk) vs סיכוי (chance) is a classic trap."
+  }),
+  buildExpandedSentence({
+    id: "everyday_100", emoji: "🚶", category: "everyday", difficulty: 1,
+    hebrew: "קודם אכלנו, ואחר כך יצאנו לטייל.", hebrewNiqqud: "קֹדֶם אָכַלְנוּ, וְאַחַר כָּךְ יָצָאנוּ לְטַיֵּל.",
+    english: "First we ate, and afterwards we went out for a walk.",
+    hebrewTokenPairs: [["קודם", "קֹדֶם"], ["אכלנו", "אָכַלְנוּ"], ["ואחר כך", "וְאַחַר כָּךְ"], ["יצאנו", "יָצָאנוּ"], ["לטייל", "לְטַיֵּל"]],
+    englishTokens: ["First", "we ate", "and afterwards", "we went out", "for a walk"],
+    hebrewDistractorPairs: [["אתמול", "אֶתְמוֹל"], ["בישלנו", "בִּשַּׁלְנוּ"], ["ולפני כן", "וְלִפְנֵי כֵן"], ["נשארנו", "נִשְׁאַרְנוּ"], ["לרוץ", "לָרוּץ"]],
+    englishDistractors: ["Yesterday", "we cooked", "and before that", "we stayed", "for a run"],
+    notes: "קודם… ואחר כך… — 'first… and afterwards…', the basic narrative sequencers. יצאנו לטייל = went out for a walk."
+  }),
+  buildExpandedSentence({
+    id: "everyday_101", emoji: "🍳", category: "everyday", difficulty: 2,
+    hebrew: "בזמן שבישלתי, היא ערכה את השולחן.", hebrewNiqqud: "בִּזְמַן שֶׁבִּשַּׁלְתִּי, הִיא עָרְכָה אֶת הַשֻּׁלְחָן.",
+    english: "While I was cooking, she set the table.",
+    hebrewTokenPairs: [["בזמן", "בִּזְמַן"], ["שבישלתי", "שֶׁבִּשַּׁלְתִּי"], ["היא", "הִיא"], ["ערכה", "עָרְכָה"], ["את", "אֶת"], ["השולחן", "הַשֻּׁלְחָן"]],
+    englishTokens: ["While", "I was cooking", "she", "set", "the table"],
+    hebrewDistractorPairs: [["אחרי", "אַחֲרֵי"], ["שניקיתי", "שֶׁנִּקִּיתִי"], ["הוא", "הוּא"], ["ערך", "עָרַךְ"], ["המיטה", "הַמִּטָּה"]],
+    englishDistractors: ["After", "I was cleaning", "he", "made", "the bed"],
+    notes: "בזמן ש = while. לערוך את השולחן = to set the table. ערכה agrees with היא; masculine ערך is the swap."
+  }),
+  buildExpandedSentence({
+    id: "everyday_102", emoji: "🔑", category: "everyday", difficulty: 2,
+    hebrew: "כשהגעתי הביתה, קלטתי שאיבדתי את המפתחות.", hebrewNiqqud: "כְּשֶׁהִגַּעְתִּי הַבַּיְתָה, קָלַטְתִּי שֶׁאִבַּדְתִּי אֶת הַמַּפְתְּחוֹת.",
+    english: "When I got home, I realized I'd lost the keys.",
+    hebrewTokenPairs: [["כשהגעתי", "כְּשֶׁהִגַּעְתִּי"], ["הביתה", "הַבַּיְתָה"], ["קלטתי", "קָלַטְתִּי"], ["שאיבדתי", "שֶׁאִבַּדְתִּי"], ["את", "אֶת"], ["המפתחות", "הַמַּפְתְּחוֹת"]],
+    englishTokens: ["When I got", "home", "I realized", "I'd lost", "the keys"],
+    hebrewDistractorPairs: [["כשיצאתי", "כְּשֶׁיָּצָאתִי"], ["לעבודה", "לָעֲבוֹדָה"], ["שכחתי", "שָׁכַחְתִּי"], ["שמצאתי", "שֶׁמָּצָאתִי"], ["הארנק", "הָאַרְנָק"]],
+    englishDistractors: ["When I left", "for work", "I forgot", "I'd found", "the wallet"],
+    notes: "קלטתי — colloquial 'I realized / it hit me' (לקלוט = to absorb). הביתה = homeward (the directional ־ה). איבדתי = I lost."
+  }),
+  buildExpandedSentence({
+    id: "everyday_103", emoji: "⏰", category: "everyday", difficulty: 1,
+    hebrew: "השיעור מתחיל בתשע ורבע בדיוק.", hebrewNiqqud: "הַשִּׁעוּר מַתְחִיל בְּתֵשַׁע וָרֶבַע בְּדִיּוּק.",
+    english: "The lesson starts at a quarter past nine exactly.",
+    hebrewTokenPairs: [["השיעור", "הַשִּׁעוּר"], ["מתחיל", "מַתְחִיל"], ["בתשע", "בְּתֵשַׁע"], ["ורבע", "וָרֶבַע"], ["בדיוק", "בְּדִיּוּק"]],
+    englishTokens: ["The lesson", "starts", "at a quarter past nine", "exactly"],
+    hebrewDistractorPairs: [["הסרט", "הַסֶּרֶט"], ["נגמר", "נִגְמָר"], ["בעשר", "בְּעֶשֶׂר"], ["וחצי", "וָחֵצִי"], ["בערך", "בְּעֵרֶךְ"]],
+    englishDistractors: ["The movie", "ends", "at half past ten", "roughly", "at noon"],
+    notes: "Clock time: תשע ורבע = 'nine and a quarter' (quarter past nine); עשר וחצי = half past ten. בדיוק = exactly; בערך = approximately."
+  }),
+  buildExpandedSentence({
+    id: "everyday_104", emoji: "💵", category: "everyday", difficulty: 2,
+    hebrew: "זה עולה מאתיים חמישים שקל בסך הכול.", hebrewNiqqud: "זֶה עוֹלֶה מָאתַיִם חֲמִשִּׁים שֶׁקֶל בְּסַךְ הַכֹּל.",
+    english: "It costs two hundred fifty shekels in total.",
+    hebrewTokenPairs: [["זה", "זֶה"], ["עולה", "עוֹלֶה"], ["מאתיים", "מָאתַיִם"], ["חמישים", "חֲמִשִּׁים"], ["שקל", "שֶׁקֶל"], ["בסך הכול", "בְּסַךְ הַכֹּל"]],
+    englishTokens: ["It costs", "two hundred", "fifty", "shekels", "in total"],
+    hebrewDistractorPairs: [["זאת", "זֹאת"], ["שווה", "שָׁוֶה"], ["שלוש מאות", "שְׁלֹשׁ מֵאוֹת"], ["לחודש", "לַחֹדֶשׁ"], ["אלף", "אֶלֶף"]],
+    englishDistractors: ["It's worth", "three hundred", "a thousand", "per month", "half price"],
+    notes: "מאתיים = two hundred (a dual!). Prices use singular שקל after numbers: חמישים שקל. בסך הכול = in total."
+  }),
+  buildExpandedSentence({
+    id: "everyday_105", emoji: "🕰️", category: "everyday", difficulty: 2,
+    hebrew: "אנחנו מחכים כבר כמעט חצי שעה.", hebrewNiqqud: "אֲנַחְנוּ מְחַכִּים כְּבָר כִּמְעַט חֲצִי שָׁעָה.",
+    english: "We've already been waiting for almost half an hour.",
+    hebrewTokenPairs: [["אנחנו", "אֲנַחְנוּ"], ["מחכים", "מְחַכִּים"], ["כבר", "כְּבָר"], ["כמעט", "כִּמְעַט"], ["חצי שעה", "חֲצִי שָׁעָה"]],
+    englishTokens: ["We've", "already", "been waiting", "for almost", "half an hour"],
+    hebrewDistractorPairs: [["הם", "הֵם"], ["יושבים", "יוֹשְׁבִים"], ["בקושי", "בְּקֹשִׁי"], ["שעה שלמה", "שָׁעָה שְׁלֵמָה"], ["מחכות", "מְחַכּוֹת"]],
+    englishDistractors: ["They've", "been sitting", "for barely", "a whole hour", "just now"],
+    notes: "Present tense מחכים + כבר + a duration covers the English perfect: 'have been waiting'. חצי שעה = half an hour."
+  }),
+  buildExpandedSentence({
+    id: "everyday_106", emoji: "🔁", category: "everyday", difficulty: 3,
+    hebrew: "זאת הפעם השלישית שאני מבקש ממך.", hebrewNiqqud: "זֹאת הַפַּעַם הַשְּׁלִישִׁית שֶׁאֲנִי מְבַקֵּשׁ מִמְּךָ.",
+    english: "This is the third time I'm asking you.",
+    hebrewTokenPairs: [["זאת", "זֹאת"], ["הפעם", "הַפַּעַם"], ["השלישית", "הַשְּׁלִישִׁית"], ["שאני", "שֶׁאֲנִי"], ["מבקש", "מְבַקֵּשׁ"], ["ממך", "מִמְּךָ"]],
+    englishTokens: ["This is", "the third time", "I'm asking", "you"],
+    hebrewDistractorPairs: [["זה", "זֶה"], ["הראשונה", "הָרִאשׁוֹנָה"], ["מבקשת", "מְבַקֶּשֶׁת"], ["ממנה", "מִמֶּנָּה"], ["בשבוע", "בַּשָּׁבוּעַ"]],
+    englishDistractors: ["the first time", "she's asking", "her", "this week", "That was"],
+    notes: "הפעם השלישית ש… — ordinal + ש clause: 'the third time that…'. פעם is feminine, so השלישית. מבקש מ = request from.",
+    hebrewAlternates: [{
+      text: "זאת הפעם השלישית שאני מבקשת ממך.", textNiqqud: "זֹאת הַפַּעַם הַשְּׁלִישִׁית שֶׁאֲנִי מְבַקֶּשֶׁת מִמְּךָ.",
+      tokenPairs: [["זאת", "זֹאת"], ["הפעם", "הַפַּעַם"], ["השלישית", "הַשְּׁלִישִׁית"], ["שאני", "שֶׁאֲנִי"], ["מבקשת", "מְבַקֶּשֶׁת"], ["ממך", "מִמְּךָ"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_92", emoji: "⏳", category: "colloquial", difficulty: 2,
+    hebrew: "הוא אמר שיגיע בשמונה, ובסוף הגיע בעשר.", hebrewNiqqud: "הוּא אָמַר שֶׁיַּגִּיעַ בִּשְׁמוֹנֶה, וּבַסּוֹף הִגִּיעַ בְּעֶשֶׂר.",
+    english: "He said he'd come at eight, and in the end he came at ten.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["אמר", "אָמַר"], ["שיגיע", "שֶׁיַּגִּיעַ"], ["בשמונה", "בִּשְׁמוֹנֶה"], ["ובסוף", "וּבַסּוֹף"], ["הגיע", "הִגִּיעַ"], ["בעשר", "בְּעֶשֶׂר"]],
+    englishTokens: ["He said", "he'd come", "at eight", "and in the end", "he came", "at ten"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["אמרה", "אָמְרָה"], ["שתגיע", "שֶׁתַּגִּיעַ"], ["בשבע", "בְּשֶׁבַע"], ["ובהתחלה", "וּבַהַתְחָלָה"]],
+    englishDistractors: ["She said", "she'd come", "at seven", "and at first", "she came"],
+    notes: "אמר שיגיע — 'said he WILL come': Hebrew keeps the original future in reported speech; English shifts to 'would'. ובסוף = and in the end."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_93", emoji: "🗣️", category: "colloquial", difficulty: 2,
+    hebrew: "היא שאלה אותי איפה למדתי עברית.", hebrewNiqqud: "הִיא שָׁאֲלָה אוֹתִי אֵיפֹה לָמַדְתִּי עִבְרִית.",
+    english: "She asked me where I had learned Hebrew.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["שאלה", "שָׁאֲלָה"], ["אותי", "אוֹתִי"], ["איפה", "אֵיפֹה"], ["למדתי", "לָמַדְתִּי"], ["עברית", "עִבְרִית"]],
+    englishTokens: ["She asked", "me", "where", "I had learned", "Hebrew"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["ענה", "עָנָה"], ["מתי", "מָתַי"], ["לימדתי", "לִמַּדְתִּי"], ["אנגלית", "אַנְגְּלִית"]],
+    englishDistractors: ["He answered", "when", "I had taught", "English", "them"],
+    notes: "An embedded WH-question: שאלה איפה למדתי — no word-order change and no tense shift in Hebrew. לימדתי (pi'el) = I taught; למדתי = I learned."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_94", emoji: "🏃", category: "colloquial", difficulty: 2,
+    hebrew: "ברגע שהישיבה נגמרה, כולם ברחו הביתה.", hebrewNiqqud: "בָּרֶגַע שֶׁהַיְשִׁיבָה נִגְמְרָה, כֻּלָּם בָּרְחוּ הַבַּיְתָה.",
+    english: "The moment the meeting ended, everyone bolted home.",
+    hebrewTokenPairs: [["ברגע", "בָּרֶגַע"], ["שהישיבה", "שֶׁהַיְשִׁיבָה"], ["נגמרה", "נִגְמְרָה"], ["כולם", "כֻּלָּם"], ["ברחו", "בָּרְחוּ"], ["הביתה", "הַבַּיְתָה"]],
+    englishTokens: ["The moment", "the meeting", "ended", "everyone", "bolted", "home"],
+    hebrewDistractorPairs: [["לפני", "לִפְנֵי"], ["שההרצאה", "שֶׁהַהַרְצָאָה"], ["התחילה", "הִתְחִילָה"], ["נשארו", "נִשְׁאֲרוּ"], ["למשרד", "לַמִּשְׂרָד"]],
+    englishDistractors: ["Before", "the lecture", "started", "stayed", "at the office"],
+    notes: "ברגע ש = the moment that. ברחו — lit. 'fled' — playful for rushing off. הביתה = homeward."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_95", emoji: "😅", category: "colloquial", difficulty: 3,
+    hebrew: "כבר עמדתי לוותר, אבל החלטתי להמשיך.", hebrewNiqqud: "כְּבָר עָמַדְתִּי לְוַתֵּר, אֲבָל הֶחְלַטְתִּי לְהַמְשִׁיךְ.",
+    english: "I was already about to give up, but I decided to keep going.",
+    hebrewTokenPairs: [["כבר", "כְּבָר"], ["עמדתי", "עָמַדְתִּי"], ["לוותר", "לְוַתֵּר"], ["אבל", "אֲבָל"], ["החלטתי", "הֶחְלַטְתִּי"], ["להמשיך", "לְהַמְשִׁיךְ"]],
+    englishTokens: ["I was already", "about to", "give up", "but", "I decided", "to keep going"],
+    hebrewDistractorPairs: [["עמדנו", "עָמַדְנוּ"], ["להתחיל", "לְהַתְחִיל"], ["ולכן", "וְלָכֵן"], ["שכחתי", "שָׁכַחְתִּי"], ["לעצור", "לַעֲצֹר"]],
+    englishDistractors: ["We were", "to start", "and so", "I forgot", "to stop"],
+    notes: "עמד ל + infinitive = 'was about to' — a compact, useful structure. לוותר = give up; להמשיך = continue. כבר adds 'already'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_96", emoji: "🥶", category: "colloquial", difficulty: 1,
+    hebrew: "עד שהגענו, האוכל כבר היה קר.", hebrewNiqqud: "עַד שֶׁהִגַּעְנוּ, הָאֹכֶל כְּבָר הָיָה קַר.",
+    english: "By the time we arrived, the food was already cold.",
+    hebrewTokenPairs: [["עד שהגענו", "עַד שֶׁהִגַּעְנוּ"], ["האוכל", "הָאֹכֶל"], ["כבר", "כְּבָר"], ["היה", "הָיָה"], ["קר", "קַר"]],
+    englishTokens: ["By the time", "we arrived", "the food", "was already", "cold"],
+    hebrewDistractorPairs: [["עד שיצאנו", "עַד שֶׁיָּצָאנוּ"], ["הקפה", "הַקָּפֶה"], ["חם", "חַם"], ["יהיה", "יִהְיֶה"], ["השולחן", "הַשֻּׁלְחָן"]],
+    englishDistractors: ["By the time we left", "the coffee", "hot", "will be", "the table"],
+    notes: "עד ש + past = 'by the time…'. כבר marks 'already'. Present-tense adjectives need no 'to be', but the past needs היה."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_97", emoji: "🤷", category: "colloquial", difficulty: 1,
+    hebrew: "לא יודע, תלוי במזג האוויר.", hebrewNiqqud: "לֹא יוֹדֵעַ, תָּלוּי בְּמֶזֶג הָאֲוִיר.",
+    english: "I don't know; it depends on the weather.",
+    hebrewTokenPairs: [["לא", "לֹא"], ["יודע", "יוֹדֵעַ"], ["תלוי", "תָּלוּי"], ["במזג האוויר", "בְּמֶזֶג הָאֲוִיר"]],
+    englishTokens: ["I don't know", "it depends", "on the weather"],
+    hebrewDistractorPairs: [["יודעת", "יוֹדַעַת"], ["בטוח", "בָּטוּחַ"], ["במצב הרוח", "בְּמַצַּב הָרוּחַ"], ["בכסף", "בַּכֶּסֶף"]],
+    englishDistractors: ["I'm not sure", "it's certain", "on the mood", "on the money"],
+    notes: "Dropped pronoun: לא יודע = '(I) don't know' — very Israeli. תלוי ב = depends on. מזג האוויר = the weather (a construct).",
+    hebrewAlternates: [{
+      text: "לא יודעת, תלוי במזג האוויר.", textNiqqud: "לֹא יוֹדַעַת, תָּלוּי בְּמֶזֶג הָאֲוִיר.",
+      tokenPairs: [["לא", "לֹא"], ["יודעת", "יוֹדַעַת"], ["תלוי", "תָּלוּי"], ["במזג האוויר", "בְּמֶזֶג הָאֲוִיר"]]
+    }]
+  }),
 ];
 
 SENTENCE_BANK.push(...SENTENCE_EXPANSION_ROUND3);
@@ -10022,6 +10395,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260712a",
+  __build: "20260712b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

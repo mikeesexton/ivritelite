@@ -265,10 +265,11 @@ const PHRASE_COMPACTED_ENTRY_IDS = [
   ...Array.from({ length: 20 }, (_, i) => `colloquial_${54 + i}`),
   ...Array.from({ length: 14 }, (_, i) => `professional_${38 + i}`),
   ...Array.from({ length: 12 }, (_, i) => `formal_${37 + i}`),
-  // Round-3 expansion (everyday_87+, colloquial_74+, professional_52+)
-  ...Array.from({ length: 13 }, (_, i) => `everyday_${87 + i}`),
-  ...Array.from({ length: 18 }, (_, i) => `colloquial_${74 + i}`),
-  ...Array.from({ length: 3 }, (_, i) => `professional_${52 + i}`),
+  // Round-3 expansion (everyday_87+, colloquial_74+, professional_52+, formal_49+)
+  ...Array.from({ length: 20 }, (_, i) => `everyday_${87 + i}`),
+  ...Array.from({ length: 24 }, (_, i) => `colloquial_${74 + i}`),
+  ...Array.from({ length: 14 }, (_, i) => `professional_${52 + i}`),
+  ...Array.from({ length: 12 }, (_, i) => `formal_${49 + i}`),
 ];
 
 const CHUNKING_AUDIT_ENTRIES = [
@@ -373,9 +374,10 @@ const ROUND2_ENTRY_IDS = [
 ];
 
 const ROUND3_ENTRY_IDS = [
-  ...sentenceIdRange("everyday", 87, 99),
-  ...sentenceIdRange("colloquial", 74, 91),
-  ...sentenceIdRange("professional", 52, 54),
+  ...sentenceIdRange("everyday", 87, 106),
+  ...sentenceIdRange("colloquial", 74, 97),
+  ...sentenceIdRange("professional", 52, 65),
+  ...sentenceIdRange("formal", 49, 60),
 ];
 
 const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
@@ -412,17 +414,20 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "colloquial_85",
   "colloquial_89",
   "colloquial_91",
+  "colloquial_97",
+  "professional_56",
+  "everyday_106",
 ];
 
-test("sentence bank data exposes 292 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 328 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 292);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 292);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 292);
+  assert.equal(entries.length, 328);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 328);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 328);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -450,10 +455,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 91,
-    everyday: 99,
-    professional: 54,
-    formal: 48,
+    colloquial: 97,
+    everyday: 106,
+    professional: 65,
+    formal: 60,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -479,14 +484,14 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   );
 
   const round3 = ROUND3_ENTRY_IDS.map((id) => byId.get(id));
-  assert.equal(round3.length, 34);
+  assert.equal(round3.length, 70);
   assert.ok(round3.every(Boolean));
   assert.deepEqual(
     round3.reduce((counts, entry) => {
       counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
       return counts;
     }, {}),
-    { 1: 10, 2: 24 }
+    { 1: 14, 2: 38, 3: 18 }
   );
 });
 

@@ -7,6 +7,29 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Sentence Bank round 3, tranche 2: 36 new sentences (292 → 328, round 3 complete)
+
+**Requested:** Completion of Batch 2 of the content-expansion plan — the opinions & news, narrative-sequencing, and conditionals/numbers portions of round 3.
+
+**Change:**
+- `sentence-bank-data.js`
+  - Extended `SENTENCE_EXPANSION_ROUND3` with 36 entries: **professional_55–65** (11 — לדעתי + clause comparative, מצד אחד/מצד שני, רוב + collective agreement, indirect speech with retained future (הודיעה ש…יקוצץ), שאלה אם, להסיק מסקנות, polite disagreement רואה את זה אחרת), **formal_49–60** (12 — impersonal passives הוחלט/שודר/פורסם כי/ייחתם/ייבחן/תיסגר, אין + infinitive prohibition, אלמלא counterfactual, real conditional with pu'al passive + יצא לדרך, ככל ש…כך, סיכון/סיכוי trap), **everyday_100–106** (7 — קודם/ואחר כך, בזמן ש, כש + קלטתי ש, clock time תשע ורבע, מאתיים חמישים שקל, כבר + duration, ordinal הפעם השלישית), **colloquial_92–97** (6 — future-in-past אמר שיגיע, embedded WH, ברגע ש, עמד ל, עד ש + כבר, dropped-pronoun לא יודע).
+  - 3 more gender alternates (professional_56, everyday_106, colloquial_97) → 13 total in round 3.
+  - Round-3 final difficulty mix {1:14, 2:38, 3:18} — exactly the plan target; tranche 2 carried all 18 level-3 entries.
+  - Bumped `__build` to `20260712b`.
+- `tests/sentence-bank-data.test.js` — master assertions 292 → 328; category counts (everyday 106, colloquial 97, professional 65, formal 60); `ROUND3_ENTRY_IDS` extended to all four categories; difficulty assertion now {1:14, 2:38, 3:18} over 70; `PHRASE_COMPACTED_ENTRY_IDS` round-3 ranges extended; 3 ids added to the gender-alternate list.
+- `index.html` — `sentence-bank-data.js?v=` bumped `20260712a` → `20260712b`.
+
+**Files changed:** `sentence-bank-data.js`, `tests/sentence-bank-data.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Sentences/Shema decks grow 292 → 328; round 3 (70 sentences) is complete across all four categories.
+
+**Tests run:** `npm test` after tranche 2: 228 pass, 0 fail (first run — includes the יצא לדרך nuance guardrail on formal_59). Live check on :3100 under `?v=20260712b`: 328 entries, `__build 20260712b`, category totals match, formal_59 renders pointed.
+
+**Risks / regressions to check:** (1) Tranche-2 niqqud is hand-authored and passive-heavy — spot-check יְקֻצַּץ (professional_63), יֵחָתֵם (formal_51), אִלְמָלֵא (formal_58), הָעִתּוֹנָאִית (professional_61). (2) 18 new level-3 entries get the ×1.56 difficulty boost in Leitner weighting and will surface prominently.
+
+---
+
 ### 2026-07-12 — Sentence Bank round 3, tranche 1: 34 new sentences (258 → 292)
 
 **Requested:** Batch 2 of the approved multi-game content-expansion plan: ~70 new sentences themed tech & social media, opinions & news, and social plans & banter. This session lands tranche 1 (34); tranche 2 (~36: opinions/news for professional/formal plus narrative-sequencing and conditionals/numbers gap-fillers) is next.
