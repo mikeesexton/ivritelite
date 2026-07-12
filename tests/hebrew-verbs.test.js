@@ -26,6 +26,21 @@ function forms(present, past, future, imperative) {
   return result;
 }
 
+test("learner-facing conjugation glosses avoid redundant synonym pairs", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const byLemma = new Map(entries.map((entry) => [entry.lemma, entry]));
+
+  assert.equal(byLemma.get("להתחיל")?.senses[0]?.gloss, "to start");
+  assert.equal(byLemma.get("להישאר")?.senses[0]?.gloss, "to stay");
+
+  const slashGlosses = entries.flatMap((entry) =>
+    entry.senses
+      .filter((item) => /\s\/\s/.test(item.gloss))
+      .map((item) => `${entry.lemma}: ${item.gloss}`)
+  );
+  assert.deepEqual(slashGlosses, []);
+});
+
 test("ambiguous verbs are split by sense instead of appearing as one generic conjugation card", () => {
   const deck = verbApi.buildVerbConjugationDeck({
     vocabulary: [],

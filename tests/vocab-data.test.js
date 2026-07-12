@@ -55,10 +55,10 @@ test("duplicate Hebrew glosses are collapsed into shared translations", () => {
     entriesByHebrew.set(word.he, bucket);
   });
 
-  assert.deepEqual(entriesByHebrew.get("חובה"), ["obligation / mandatory"]);
-  assert.deepEqual(entriesByHebrew.get("לערבב"), ["to stir / mix"]);
-  assert.deepEqual(entriesByHebrew.get("להקציף"), ["to beat / whip"]);
-  assert.deepEqual(entriesByHebrew.get("לגרד"), ["to grate / scrape"]);
+  assert.deepEqual(entriesByHebrew.get("חובה"), ["obligation"]);
+  assert.deepEqual(entriesByHebrew.get("לערבב"), ["to stir"]);
+  assert.deepEqual(entriesByHebrew.get("להקציף"), ["to whip"]);
+  assert.deepEqual(entriesByHebrew.get("לגרד"), ["to grate"]);
 });
 
 test("מוצאי שבת keeps its Saturday-night translation", () => {
@@ -74,10 +74,10 @@ test("requested existential and event vocabulary is available for translation", 
   const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
 
   assert.equal(entriesByHebrew.get("טקס")?.en, "ceremony");
-  assert.equal(entriesByHebrew.get("התקיים")?.en, "took place / was held");
-  assert.equal(entriesByHebrew.get("מלמטה למעלה")?.en, "bottom-up / from the bottom up");
-  assert.equal(entriesByHebrew.get("מלמעלה למטה")?.en, "top-down / from the top down");
-  assert.equal(entriesByHebrew.get("קיום")?.en, "existence / fulfillment");
+  assert.equal(entriesByHebrew.get("התקיים")?.en, "took place");
+  assert.equal(entriesByHebrew.get("מלמטה למעלה")?.en, "bottom-up");
+  assert.equal(entriesByHebrew.get("מלמעלה למטה")?.en, "top-down");
+  assert.equal(entriesByHebrew.get("קיום")?.en, "existence");
   assert.equal(entriesByHebrew.get("קיומי")?.en, "existential");
   assert.equal(entriesByHebrew.get("קיימות")?.en, "sustainability");
 });
@@ -85,7 +85,7 @@ test("requested existential and event vocabulary is available for translation", 
 test("logical and researcher vocabulary is available for translation", () => {
   const entriesByHebrew = new Map(loadVocabulary().map((word) => [word.he, word]));
 
-  assert.equal(entriesByHebrew.get("הגיוני")?.en, "logical / reasonable");
+  assert.equal(entriesByHebrew.get("הגיוני")?.en, "logical");
   assert.equal(entriesByHebrew.get("הגיוני")?.availability?.translationQuiz, true);
   assert.equal(entriesByHebrew.get("חוקר")?.en, "researcher");
   assert.equal(entriesByHebrew.get("חוקר")?.availability?.translationQuiz, true);
@@ -97,4 +97,86 @@ test("commitment uses the correct spelling and never adds the misspelled variant
 
   assert.equal(entriesByHebrew.get("מחויבות")?.en, "commitment");
   assert.equal(entriesByHebrew.has("מחוביות"), false);
+});
+
+test("Translation Match uses one primary English gloss per playable card", () => {
+  const vocabulary = loadVocabulary();
+  const playable = vocabulary.filter((word) => word.availability?.translationQuiz);
+
+  assert.equal(playable.filter((word) => word.en.includes("/")).length, 0);
+
+  const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
+  assert.equal(entriesByHebrew.get("הגיוני")?.id, "core_advanced-002-logical-reasonable");
+  assert.equal(entriesByHebrew.get("התקיים")?.id, "core_advanced-019-took-place-was-held");
+  assert.equal(entriesByHebrew.get("עדיין")?.id, "conversation_glue-025-still-yet");
+  assert.equal(entriesByHebrew.get("חשבון")?.id, "groceries_food-070-bill-check");
+});
+
+function getPlannedExpansion(vocabulary) {
+  const originalCategorySizes = new Map([
+    ["core_advanced", 124],
+    ["conversation_glue", 24],
+    ["scientific_analytical", 17],
+  ]);
+
+  return vocabulary.filter((word) => {
+    const originalSize = originalCategorySizes.get(word.category);
+    if (!originalSize) return false;
+    const idMatch = word.id.match(/^[a-z_]+-(\d{3})-/);
+    return idMatch && Number(idMatch[1]) > originalSize;
+  });
+}
+
+test("planned Translation Match expansion adds 144 append-only cards", () => {
+  const vocabulary = loadVocabulary();
+  const expansion = getPlannedExpansion(vocabulary);
+  const countsByCategory = expansion.reduce((counts, word) => {
+    counts[word.category] = (counts[word.category] || 0) + 1;
+    return counts;
+  }, {});
+
+  assert.equal(vocabulary.length, 1354);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1300);
+  assert.equal(expansion.length, 144);
+  assert.deepEqual(countsByCategory, {
+    core_advanced: 36,
+    conversation_glue: 72,
+    scientific_analytical: 36,
+  });
+  assert.ok(expansion.every((word) => word.availability?.translationQuiz));
+
+  const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
+  assert.equal(entriesByHebrew.get("רשע")?.id, "core_advanced-124-wicked-villain");
+  assert.equal(entriesByHebrew.get("לדחות")?.id, "core_advanced-125-to-postpone");
+  assert.equal(entriesByHebrew.get("קורע")?.id, "conversation_glue-024-hilarious-slang");
+  assert.equal(entriesByHebrew.get("עדיין")?.id, "conversation_glue-025-still-yet");
+  assert.equal(entriesByHebrew.get("דיוק")?.id, "scientific_analytical-017-accuracy");
+  assert.equal(entriesByHebrew.get("ישיבה")?.id, "scientific_analytical-018-work-meeting");
+});
+
+test("planned Translation Match cards have niqqud and no gloss collisions", () => {
+  const vocabulary = loadVocabulary();
+  const expansion = getPlannedExpansion(vocabulary);
+  const hebrewCounts = new Map();
+  const englishCounts = new Map();
+
+  vocabulary.forEach((word) => {
+    hebrewCounts.set(word.he, (hebrewCounts.get(word.he) || 0) + 1);
+    englishCounts.set(word.en, (englishCounts.get(word.en) || 0) + 1);
+  });
+
+  expansion.forEach((word) => {
+    assert.match(word.heNiqqud, /[\u05B0-\u05BC\u05C1\u05C2\u05C7]/, `expected niqqud for ${word.he}`);
+    assert.equal(hebrewCounts.get(word.he), 1, `duplicate Hebrew card: ${word.he}`);
+    assert.equal(englishCounts.get(word.en), 1, `duplicate English card: ${word.en}`);
+  });
+});
+
+test("planned compound cards stay inside the narrow-mobile stress envelope", () => {
+  const expansion = getPlannedExpansion(loadVocabulary());
+  const longestEnglish = expansion.reduce((longest, word) => word.en.length > longest.en.length ? word : longest);
+  const longestHebrew = expansion.reduce((longest, word) => word.he.length > longest.he.length ? word : longest);
+
+  assert.ok(longestEnglish.en.length <= 20, `${longestEnglish.en} exceeds the English stress envelope`);
+  assert.ok(longestHebrew.he.length <= 12, `${longestHebrew.he} exceeds the Hebrew stress envelope`);
 });

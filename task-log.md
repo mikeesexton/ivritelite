@@ -3957,3 +3957,82 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 225/225 pass. Focused `node --test tests/sentence-bank-data.test.js tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 57/57 pass. Final `npm test` — 228/228 pass. `git diff --check` — pass. Direct runtime inspection confirmed the reported alternate, both new sentences, both Translation Match entries, and the מזהיר conjugation card.
 
 **Risks / regressions to check:** Word-order equivalence is deliberately authored per sentence; it does not accept arbitrary permutations. Marked-but-possible orders remain rejected unless they are natural enough to teach. Shema still requires the exact spoken order by design. A fluent-reader spot check of the newly authored niqqud and the less common imperative הַזְהֵר remains worthwhile.
+
+### 2026-07-12 16:00 EDT — Plan a large Translation Match vocabulary expansion
+
+**Requested:** Audit the current Translation Match vocabulary and the full sentence bank, identify high-impact coverage gaps, and produce a concrete plan for a large vocabulary addition. Also diagnose why the initially opened Codex workspace appeared empty and confirm whether the recent Ulpango changes were visible.
+
+**Files changed:**
+- `generated/vocabulary-expansion-plan.md` — added a current-state audit and a four-batch, 144-card expansion plan covering conversation glue, advanced verbs, professional/analytical vocabulary, and Israeli colloquial/practical chunks, plus implementation sequencing, progress-safety guardrails, and acceptance criteria.
+- `task-log.md` — recorded this planning session.
+
+**Behavior changed:** None. This task produced a reviewed implementation plan only; no game data or application code changed.
+
+**Tests run:** Loaded `vocab-data.js` and `sentence-bank-data.js` through their runtime APIs to verify 1,210 base vocabulary entries, 1,156 Translation Match-eligible base entries, 35 vocabulary categories, and 328 sentences (106 everyday / 97 colloquial / 65 professional / 60 formal). Cross-referenced recurring sentence tokens against Translation Match entries and checked proposed Hebrew forms for exact base-vocabulary collisions. `git diff --check` — pass.
+
+**Risks / regressions to check:** (1) Current base vocabulary IDs include each row's array index, so implementation must append rather than insert/reorder rows or saved learner progress may be orphaned. (2) Proposed polysemous entries need concise learner-facing gloss review. (3) Niqqud is intentionally deferred to implementation and needs fluent review. (4) The initial access problem was workspace selection only: this Codex task opened in `/Users/mikesexton/Documents/New project`, while the healthy, clean Ulpango checkout is `/Users/mikesexton/Documents/Ulpango` on `main` at `7f7d156`, synchronized with `origin/main`.
+
+### 2026-07-12 16:10 EDT — Add a single-line mobile gate to the vocabulary plan
+
+**Requested:** Ensure proposed compound words and phrases in Translation Match are not long enough to wrap cards onto two lines on mobile or other interfaces.
+
+**Files changed:**
+- `generated/vocabulary-expansion-plan.md` — clarified that table glosses are provisional, added a one-line-only card guardrail, specified deterministic 320px/375px browser checks in both UI languages with niqqud on/off, and added the requirement to shorten or exclude cards that wrap rather than shrinking them further.
+- `task-log.md` — recorded the planning refinement.
+
+**Behavior changed:** None. This tightens the future implementation and visual acceptance criteria only.
+
+**Tests run:** Inspected the live Translation Match rendering path and responsive styles. Confirmed the current implementation allows wrapping (`white-space: normal`, `overflow-wrap: anywhere`), applies reduced typography after 16 characters, and filters only above 40 characters, so character count alone cannot guarantee a single line. `git diff --check` — pass.
+
+**Risks / regressions to check:** The proposed 144-card tables contain semantic descriptions rather than final display labels. Several English glosses and some Hebrew chunks will need shortening or removal during implementation to pass the new rendered-width gate.
+
+### 2026-07-12 16:25 EDT — Implement the 144-card Translation Match expansion
+
+**Requested:** Implement the approved four-batch Translation Match vocabulary expansion, while ensuring compound cards remain on one line on mobile and other interfaces.
+
+**Files changed:**
+- `vocab-data.js` — appended 144 fully pointed, Translation Match-eligible entries without inserting or reordering existing rows: 36 high-utility advanced verbs in `core_advanced`, 72 conversation/colloquial/practical cards in `conversation_glue`, and 36 professional/analytical bridge words in `scientific_analytical`. Final base lexicon is 1,354 entries, of which 1,300 are Translation Match eligible. Bumped `__build` to `20260712c`.
+- `tests/vocab-data.test.js` — added expansion count/category checks, append-only ID boundary assertions, niqqud and exact-gloss collision checks, and a narrow-mobile length stress envelope.
+- `generated/vocab-mobile-fit-audit.html` — added a deterministic same-origin QA fixture that renders all 144 additions in the production match-card layout, pairing English with both pointed and unpointed Hebrew and supporting English/Hebrew UI direction.
+- `generated/vocabulary-expansion-plan.md` — marked the plan implemented and synchronized the few final label choices (`data collection`, `preparedness`, `governability`, and `data reliability`).
+- `index.html` — bumped the `vocab-data.js` cache-buster to `20260712c`.
+- `task-log.md` — recorded the implementation.
+
+**Behavior changed:** Translation Match gains 144 high-impact cards spanning conversation glue, everyday Israeli chunks, advanced verbs, and professional/analytical vocabulary. Base playable vocabulary grows from 1,156 to 1,300 cards. Existing 1,210 entries retain their original IDs, so saved learner progress remains attached.
+
+**Tests run:** Baseline `npm test` — 228/228 pass. Focused `node --test tests/vocab-data.test.js` — 10/10 pass. Final `npm test` — 231/231 pass. Runtime comparison against `HEAD:vocab-data.js` confirmed exactly 144 additions, zero changed/missing legacy ID+gloss records, and zero new exact Hebrew or English collisions. Hebrew Academy terminology was checked for high-risk professional forms including הִתָּכְנוּת, הֵעָרְכוּת, מְהֵימָנוּת, and מְשִׁילוּת. Browser audit with the production stylesheet rendered 576 stress cards (English + pointed Hebrew and English + plain Hebrew for every addition): zero multi-line or horizontally overflowing labels at 320px and 375px; Hebrew UI at 320px also had zero offenders. Live app loaded `vocab-data.js?v=20260712c` with no browser console warnings/errors. `git diff --check` — pass.
+
+**Risks / regressions to check:** (1) Niqqud is hand-authored; the sentence-linked forms were aligned to existing sentence data and uncertain professional forms were checked against Academy terminology, but a fluent-reader pass remains worthwhile. (2) The permanent mobile-fit fixture depends on production class names and should be updated if the Translation Match markup changes. (3) Some colloquial chunks intentionally use compact learner-facing glosses rather than exhaustive literal definitions. (4) Existing position-based ID generation remains fragile if future work inserts or reorders rows; append-only authoring is still required.
+
+### 2026-07-12 19:03 EDT — Simplify slash-separated game definitions
+
+**Requested:** Audit Translation Match and Conjugation for cards that display two English definitions separated by a slash, and prefer one primary gloss when the meanings are similar, especially “stay / remain.”
+
+**Files changed:**
+- `vocab-data.js` — replaced all 41 slash-bearing playable Translation Match labels with one primary English gloss; retained each former English label as an ID-only source so every existing card ID remains stable; bumped the data build to `20260712d`.
+- `hebrew-verbs.js` — simplified the learner-facing senses “to start / begin” to “to start” and “to stay / remain” to “to stay”; bumped the data build to `20260712c`.
+- `tests/vocab-data.test.js` — updated affected expectations and added a complete playable-card slash audit plus representative legacy-ID assertions.
+- `tests/hebrew-verbs.test.js` — added a seed-sense audit that rejects spaced slash synonym pairs and explicitly checks להתחיל and להישאר.
+- `index.html` — bumped the vocabulary and verb-data cache-busters.
+- `task-log.md` — recorded this work.
+
+**Behavior changed:** Translation Match now shows one primary English meaning on every playable card, with examples including “logical,” “experience,” “acceptable,” “stock,” and “cash register.” Conjugation now renders “to stay” and forms such as “we stayed,” without the repeated “/ remain”; “to start” is similarly simplified. Grammar patterns that use slash notation, such as alternative governed prepositions, are unchanged because they are not competing definitions. Saved Translation Match progress remains attached to the same IDs.
+
+**Tests run:** Baseline `npm test` — 231/231 pass. Focused `node --test tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 41/41 pass; final vocabulary-only recheck `node --test tests/vocab-data.test.js` — 11/11 pass. Final `npm test` — 233/233 pass. Runtime comparison with `HEAD:vocab-data.js` confirmed all 1,210 pre-expansion ID+Hebrew records remain present and stable. Browser verification loaded `vocab-data.js?v=20260712d` and `hebrew-verbs.js?v=20260712c`, launched a fresh Conjugation round, found no button overflow in the narrow viewport check, and reported no console warnings/errors. `git diff --check` — pass.
+
+**Risks / regressions to check:** Polysemous words now teach one selected primary sense in Translation Match; secondary senses such as ניסיון “attempt,” דמיון “similarity,” and קיום “fulfillment” are intentionally no longer printed on the isolated card. They can be taught later as separate sense-specific cards or through sentences if needed. Stable ID-English overrides live in the existing fourth-field metadata object alongside other card metadata.
+
+### 2026-07-12 19:40 EDT — Pre-publish cleanup audit
+
+**Requested:** Check whether the completed Translation Match and Conjugation changes need any cleanup before committing to GitHub and merging with `main`.
+
+**Files changed:**
+- `vocab-data.js` — converted the legacy ID-English overrides from bare fourth-field strings to named `idEnglish` properties in the existing row metadata object, keeping the data shape consistent with other card metadata.
+- `generated/vocab-mobile-fit-audit.html` — synchronized the vocabulary cache-buster with the final `20260712d` data build.
+- `task-log.md` — corrected the ID-override implementation note and recorded this audit.
+
+**Behavior changed:** None. The cleanup preserves the same visible glosses, card IDs, vocabulary counts, and game behavior.
+
+**Tests run:** `git fetch origin --prune` confirmed local `main` is 0 ahead / 0 behind `origin/main`. `npm test` — 233/233 pass. Runtime comparison against `HEAD:vocab-data.js` confirmed all 1,210 legacy ID+Hebrew records remain stable; the playable vocabulary contains zero slash labels and introduces zero new English/Hebrew conflicts. Repository scans found no merge markers, TODO/FIXME/debug statements, or whitespace errors in the changed files. `git diff --check` — pass.
+
+**Risks / regressions to check:** No blocking cleanup remains. The working tree is intentionally uncommitted on `main`; create a feature branch before committing so the changes can be reviewed and merged through the repository's normal pull-request flow. Both new files under `generated/` are intentional deliverables and should be included in the commit.

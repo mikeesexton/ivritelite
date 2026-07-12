@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Translation Match Vocabulary Fit Audit</title>
+  <link rel="stylesheet" href="../styles.css">
+  <script defer src="../vocab-data.js?v=20260712d"></script>
+  <style>
+    html,
+    body {
+      height: auto;
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .audit-title {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+    }
+
+    .lesson-shell,
+    .match-columns {
+      width: 100%;
+    }
+  </style>
+</head>
+<body data-theme="dark" data-ui-lang="en" data-gameplay-active="true">
+  <main class="app-shell">
+    <article class="lesson-shell">
+      <h1 class="audit-title">Translation Match vocabulary fit audit</h1>
+      <div class="choices match-grid">
+        <div id="auditCards" class="match-columns"></div>
+      </div>
+    </article>
+  </main>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      if (new URLSearchParams(window.location.search).get("ui") === "he") {
+        document.body.dataset.uiLang = "he";
+        document.documentElement.lang = "he";
+        document.documentElement.dir = "rtl";
+      }
+      const originalCategorySizes = new Map([
+        ["core_advanced", 124],
+        ["conversation_glue", 24],
+        ["scientific_analytical", 17],
+      ]);
+      const entries = window.IvriQuestVocab.getBaseVocabulary().filter((word) => {
+        const originalSize = originalCategorySizes.get(word.category);
+        const idMatch = word.id.match(/^[a-z_]+-(\d{3})-/);
+        return originalSize && idMatch && Number(idMatch[1]) > originalSize;
+      });
+      const container = document.getElementById("auditCards");
+
+      entries.forEach((word) => {
+        [
+          [word.en, "en"],
+          [word.heNiqqud, "he-niqqud"],
+          [word.en, "en-plain-pair"],
+          [word.he, "he-plain"],
+        ].forEach(([text, side]) => {
+          const button = document.createElement("button");
+          const span = document.createElement("span");
+          button.type = "button";
+          button.className = `choice-btn match-card${side.startsWith("he") ? " hebrew" : ""}${text.length > 16 ? " match-card-long" : ""}`;
+          button.dataset.id = word.id;
+          button.dataset.side = side;
+          span.textContent = text;
+          button.append(span);
+          container.append(button);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -3722,7 +3722,7 @@ function buildStarterVerbEntries() {
       binyan: "hifil",
       regularity: "regular",
       conjugation_mode: "curated",
-      senses: [makeSense("to start / begin", null, false)],
+      senses: [makeSense("to start", null, false)],
       forms: makeForms(
         makePresent(
           markedForm("מתחיל", "מַתְחִיל"),
@@ -3922,7 +3922,7 @@ function buildStarterVerbEntries() {
       binyan: "nifal",
       regularity: "regular",
       conjugation_mode: "curated",
-      senses: [makeSense("to stay / remain", null, false)],
+      senses: [makeSense("to stay", null, false)],
       forms: makeForms(
         makePresent(
           markedForm("נשאר", "נִשְׁאָר"),
@@ -7485,6 +7485,6 @@ return {
   buildGeneratedForms,
   resolveLearnerFacingForms,
   normalizeAndValidateFormSet,
-  __build: "20260712b",
+  __build: "20260712c",
 };
 });
