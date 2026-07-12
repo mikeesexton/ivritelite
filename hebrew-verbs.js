@@ -4563,6 +4563,996 @@ function buildStarterVerbEntries() {
       tags: ["piel", "irregular", "lamed-hey", "high-frequency"],
       personal_priority: 64,
     }),
+    createVerbEntry({
+      id: "advanced-verb-lehitlabesh",
+      availability: getStarterVerbAvailability("advanced-verb-lehitlabesh"),
+      lemma: "להתלבש",
+      lemma_niqqud: "לְהִתְלַבֵּשׁ",
+      root: ["ל", "ב", "ש"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to get dressed", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתלבש", "מִתְלַבֵּשׁ"),
+          markedForm("מתלבשת", "מִתְלַבֶּשֶׁת"),
+          markedForm("מתלבשים", "מִתְלַבְּשִׁים"),
+          markedForm("מתלבשות", "מִתְלַבְּשׁוֹת")
+        ),
+        makePast(
+          markedForm("התלבשתי", "הִתְלַבַּשְׁתִּי"),
+          markedForm("התלבשת", "הִתְלַבַּשְׁתָּ"),
+          markedForm("התלבשת", "הִתְלַבַּשְׁתְּ"),
+          markedForm("התלבש", "הִתְלַבֵּשׁ"),
+          markedForm("התלבשה", "הִתְלַבְּשָׁה"),
+          markedForm("התלבשנו", "הִתְלַבַּשְׁנוּ"),
+          markedForm("התלבשתם", "הִתְלַבַּשְׁתֶּם"),
+          markedForm("התלבשתן", "הִתְלַבַּשְׁתֶּן"),
+          markedForm("התלבשו", "הִתְלַבְּשׁוּ")
+        ),
+        makeFuture(
+          markedForm("אתלבש", "אֶתְלַבֵּשׁ"),
+          markedForm("תתלבש", "תִּתְלַבֵּשׁ"),
+          markedForm("תתלבשי", "תִּתְלַבְּשִׁי"),
+          markedForm("יתלבש", "יִתְלַבֵּשׁ"),
+          markedForm("תתלבש", "תִּתְלַבֵּשׁ"),
+          markedForm("נתלבש", "נִתְלַבֵּשׁ"),
+          markedForm("תתלבשו", "תִּתְלַבְּשׁוּ"),
+          markedForm("יתלבשו", "יִתְלַבְּשׁוּ")
+        ),
+        makeImperative(
+          markedForm("התלבש", "הִתְלַבֵּשׁ"),
+          markedForm("התלבשי", "הִתְלַבְּשִׁי"),
+          markedForm("התלבשו", "הִתְלַבְּשׁוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Reflexive hitpa'el of ל-ב-ש: dress oneself. Pairs with the binyan-board root ל-ב-ש (לבש/הלביש/התלבש).",
+      difficulty_level: 2,
+      tags: ["hitpael", "regular", "everyday", "high-frequency"],
+      personal_priority: 85,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehistakel",
+      availability: getStarterVerbAvailability("advanced-verb-lehistakel"),
+      lemma: "להסתכל",
+      lemma_niqqud: "לְהִסְתַּכֵּל",
+      root: ["ס", "כ", "ל"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to look at", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מסתכל", "מִסְתַּכֵּל"),
+          markedForm("מסתכלת", "מִסְתַּכֶּלֶת"),
+          markedForm("מסתכלים", "מִסְתַּכְּלִים"),
+          markedForm("מסתכלות", "מִסְתַּכְּלוֹת")
+        ),
+        makePast(
+          markedForm("הסתכלתי", "הִסְתַּכַּלְתִּי"),
+          markedForm("הסתכלת", "הִסְתַּכַּלְתָּ"),
+          markedForm("הסתכלת", "הִסְתַּכַּלְתְּ"),
+          markedForm("הסתכל", "הִסְתַּכֵּל"),
+          markedForm("הסתכלה", "הִסְתַּכְּלָה"),
+          markedForm("הסתכלנו", "הִסְתַּכַּלְנוּ"),
+          markedForm("הסתכלתם", "הִסְתַּכַּלְתֶּם"),
+          markedForm("הסתכלתן", "הִסְתַּכַּלְתֶּן"),
+          markedForm("הסתכלו", "הִסְתַּכְּלוּ")
+        ),
+        makeFuture(
+          markedForm("אסתכל", "אֶסְתַּכֵּל"),
+          markedForm("תסתכל", "תִּסְתַּכֵּל"),
+          markedForm("תסתכלי", "תִּסְתַּכְּלִי"),
+          markedForm("יסתכל", "יִסְתַּכֵּל"),
+          markedForm("תסתכל", "תִּסְתַּכֵּל"),
+          markedForm("נסתכל", "נִסְתַּכֵּל"),
+          markedForm("תסתכלו", "תִּסְתַּכְּלוּ"),
+          markedForm("יסתכלו", "יִסְתַּכְּלוּ")
+        ),
+        makeImperative(
+          markedForm("הסתכל", "הִסְתַּכֵּל"),
+          markedForm("הסתכלי", "הִסְתַּכְּלִי"),
+          markedForm("הסתכלו", "הִסְתַּכְּלוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Sibilant metathesis: the ת of hitpa'el swaps with ס (התסכל → הסתכל). Takes על or ב (מסתכל עליך / בזה).",
+      difficulty_level: 3,
+      tags: ["hitpael", "metathesis", "everyday", "high-frequency"],
+      personal_priority: 88,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehistader",
+      availability: getStarterVerbAvailability("advanced-verb-lehistader"),
+      lemma: "להסתדר",
+      lemma_niqqud: "לְהִסְתַּדֵּר",
+      root: ["ס", "ד", "ר"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to manage", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מסתדר", "מִסְתַּדֵּר"),
+          markedForm("מסתדרת", "מִסְתַּדֶּרֶת"),
+          markedForm("מסתדרים", "מִסְתַּדְּרִים"),
+          markedForm("מסתדרות", "מִסְתַּדְּרוֹת")
+        ),
+        makePast(
+          markedForm("הסתדרתי", "הִסְתַּדַּרְתִּי"),
+          markedForm("הסתדרת", "הִסְתַּדַּרְתָּ"),
+          markedForm("הסתדרת", "הִסְתַּדַּרְתְּ"),
+          markedForm("הסתדר", "הִסְתַּדֵּר"),
+          markedForm("הסתדרה", "הִסְתַּדְּרָה"),
+          markedForm("הסתדרנו", "הִסְתַּדַּרְנוּ"),
+          markedForm("הסתדרתם", "הִסְתַּדַּרְתֶּם"),
+          markedForm("הסתדרתן", "הִסְתַּדַּרְתֶּן"),
+          markedForm("הסתדרו", "הִסְתַּדְּרוּ")
+        ),
+        makeFuture(
+          markedForm("אסתדר", "אֶסְתַּדֵּר"),
+          markedForm("תסתדר", "תִּסְתַּדֵּר"),
+          markedForm("תסתדרי", "תִּסְתַּדְּרִי"),
+          markedForm("יסתדר", "יִסְתַּדֵּר"),
+          markedForm("תסתדר", "תִּסְתַּדֵּר"),
+          markedForm("נסתדר", "נִסְתַּדֵּר"),
+          markedForm("תסתדרו", "תִּסְתַּדְּרוּ"),
+          markedForm("יסתדרו", "יִסְתַּדְּרוּ")
+        ),
+        makeImperative(
+          markedForm("הסתדר", "הִסְתַּדֵּר"),
+          markedForm("הסתדרי", "הִסְתַּדְּרִי"),
+          markedForm("הסתדרו", "הִסְתַּדְּרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "The 'it'll work out' verb: אני אסתדר = I'll manage. Sibilant metathesis like הסתכל; also the binyan-board showcase for it (root ס-ד-ר).",
+      difficulty_level: 3,
+      tags: ["hitpael", "metathesis", "everyday", "high-frequency"],
+      personal_priority: 87,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitragel",
+      availability: getStarterVerbAvailability("advanced-verb-lehitragel"),
+      lemma: "להתרגל",
+      lemma_niqqud: "לְהִתְרַגֵּל",
+      root: ["ר", "ג", "ל"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to get used to", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתרגל", "מִתְרַגֵּל"),
+          markedForm("מתרגלת", "מִתְרַגֶּלֶת"),
+          markedForm("מתרגלים", "מִתְרַגְּלִים"),
+          markedForm("מתרגלות", "מִתְרַגְּלוֹת")
+        ),
+        makePast(
+          markedForm("התרגלתי", "הִתְרַגַּלְתִּי"),
+          markedForm("התרגלת", "הִתְרַגַּלְתָּ"),
+          markedForm("התרגלת", "הִתְרַגַּלְתְּ"),
+          markedForm("התרגל", "הִתְרַגֵּל"),
+          markedForm("התרגלה", "הִתְרַגְּלָה"),
+          markedForm("התרגלנו", "הִתְרַגַּלְנוּ"),
+          markedForm("התרגלתם", "הִתְרַגַּלְתֶּם"),
+          markedForm("התרגלתן", "הִתְרַגַּלְתֶּן"),
+          markedForm("התרגלו", "הִתְרַגְּלוּ")
+        ),
+        makeFuture(
+          markedForm("אתרגל", "אֶתְרַגֵּל"),
+          markedForm("תתרגל", "תִּתְרַגֵּל"),
+          markedForm("תתרגלי", "תִּתְרַגְּלִי"),
+          markedForm("יתרגל", "יִתְרַגֵּל"),
+          markedForm("תתרגל", "תִּתְרַגֵּל"),
+          markedForm("נתרגל", "נִתְרַגֵּל"),
+          markedForm("תתרגלו", "תִּתְרַגְּלוּ"),
+          markedForm("יתרגלו", "יִתְרַגְּלוּ")
+        ),
+        makeImperative(
+          markedForm("התרגל", "הִתְרַגֵּל"),
+          markedForm("התרגלי", "הִתְרַגְּלִי"),
+          markedForm("התרגלו", "הִתְרַגְּלוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Takes ל־: מתרגל לחום = getting used to the heat. From the same root as רגיל (usual) and תרגיל (exercise).",
+      difficulty_level: 2,
+      tags: ["hitpael", "regular", "everyday", "high-frequency"],
+      personal_priority: 84,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitragesh",
+      availability: getStarterVerbAvailability("advanced-verb-lehitragesh"),
+      lemma: "להתרגש",
+      lemma_niqqud: "לְהִתְרַגֵּשׁ",
+      root: ["ר", "ג", "ש"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to get excited", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתרגש", "מִתְרַגֵּשׁ"),
+          markedForm("מתרגשת", "מִתְרַגֶּשֶׁת"),
+          markedForm("מתרגשים", "מִתְרַגְּשִׁים"),
+          markedForm("מתרגשות", "מִתְרַגְּשׁוֹת")
+        ),
+        makePast(
+          markedForm("התרגשתי", "הִתְרַגַּשְׁתִּי"),
+          markedForm("התרגשת", "הִתְרַגַּשְׁתָּ"),
+          markedForm("התרגשת", "הִתְרַגַּשְׁתְּ"),
+          markedForm("התרגש", "הִתְרַגֵּשׁ"),
+          markedForm("התרגשה", "הִתְרַגְּשָׁה"),
+          markedForm("התרגשנו", "הִתְרַגַּשְׁנוּ"),
+          markedForm("התרגשתם", "הִתְרַגַּשְׁתֶּם"),
+          markedForm("התרגשתן", "הִתְרַגַּשְׁתֶּן"),
+          markedForm("התרגשו", "הִתְרַגְּשׁוּ")
+        ),
+        makeFuture(
+          markedForm("אתרגש", "אֶתְרַגֵּשׁ"),
+          markedForm("תתרגש", "תִּתְרַגֵּשׁ"),
+          markedForm("תתרגשי", "תִּתְרַגְּשִׁי"),
+          markedForm("יתרגש", "יִתְרַגֵּשׁ"),
+          markedForm("תתרגש", "תִּתְרַגֵּשׁ"),
+          markedForm("נתרגש", "נִתְרַגֵּשׁ"),
+          markedForm("תתרגשו", "תִּתְרַגְּשׁוּ"),
+          markedForm("יתרגשו", "יִתְרַגְּשׁוּ")
+        ),
+        makeImperative(
+          markedForm("התרגש", "הִתְרַגֵּשׁ"),
+          markedForm("התרגשי", "הִתְרַגְּשִׁי"),
+          markedForm("התרגשו", "הִתְרַגְּשׁוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Emotion hitpa'el from ר-ג-ש (feeling): get excited or moved. Same root as להרגיש and the binyan-board root ר-ג-ש.",
+      difficulty_level: 2,
+      tags: ["hitpael", "regular", "everyday"],
+      personal_priority: 82,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitorer",
+      availability: getStarterVerbAvailability("advanced-verb-lehitorer"),
+      lemma: "להתעורר",
+      lemma_niqqud: "לְהִתְעוֹרֵר",
+      root: ["ע", "ו", "ר"],
+      binyan: "hitpael",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to wake up", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתעורר", "מִתְעוֹרֵר"),
+          markedForm("מתעוררת", "מִתְעוֹרֶרֶת"),
+          markedForm("מתעוררים", "מִתְעוֹרְרִים"),
+          markedForm("מתעוררות", "מִתְעוֹרְרוֹת")
+        ),
+        makePast(
+          markedForm("התעוררתי", "הִתְעוֹרַרְתִּי"),
+          markedForm("התעוררת", "הִתְעוֹרַרְתָּ"),
+          markedForm("התעוררת", "הִתְעוֹרַרְתְּ"),
+          markedForm("התעורר", "הִתְעוֹרֵר"),
+          markedForm("התעוררה", "הִתְעוֹרְרָה"),
+          markedForm("התעוררנו", "הִתְעוֹרַרְנוּ"),
+          markedForm("התעוררתם", "הִתְעוֹרַרְתֶּם"),
+          markedForm("התעוררתן", "הִתְעוֹרַרְתֶּן"),
+          markedForm("התעוררו", "הִתְעוֹרְרוּ")
+        ),
+        makeFuture(
+          markedForm("אתעורר", "אֶתְעוֹרֵר"),
+          markedForm("תתעורר", "תִּתְעוֹרֵר"),
+          markedForm("תתעוררי", "תִּתְעוֹרְרִי"),
+          markedForm("יתעורר", "יִתְעוֹרֵר"),
+          markedForm("תתעורר", "תִּתְעוֹרֵר"),
+          markedForm("נתעורר", "נִתְעוֹרֵר"),
+          markedForm("תתעוררו", "תִּתְעוֹרְרוּ"),
+          markedForm("יתעוררו", "יִתְעוֹרְרוּ")
+        ),
+        makeImperative(
+          markedForm("התעורר", "הִתְעוֹרֵר"),
+          markedForm("התעוררי", "הִתְעוֹרְרִי"),
+          markedForm("התעוררו", "הִתְעוֹרְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Hollow root ע-ו-ר, so the hitpa'el slot is realized as hitpolel (הִתְעוֹרֵר) — same pattern as התקומם from the binyan board.",
+      difficulty_level: 4,
+      tags: ["hitpael", "irregular", "hitpolel", "everyday", "high-frequency"],
+      personal_priority: 86,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitkaleach",
+      availability: getStarterVerbAvailability("advanced-verb-lehitkaleach"),
+      lemma: "להתקלח",
+      lemma_niqqud: "לְהִתְקַלֵּחַ",
+      root: ["ק", "ל", "ח"],
+      binyan: "hitpael",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to shower", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתקלח", "מִתְקַלֵּחַ"),
+          markedForm("מתקלחת", "מִתְקַלַּחַת"),
+          markedForm("מתקלחים", "מִתְקַלְּחִים"),
+          markedForm("מתקלחות", "מִתְקַלְּחוֹת")
+        ),
+        makePast(
+          markedForm("התקלחתי", "הִתְקַלַּחְתִּי"),
+          markedForm("התקלחת", "הִתְקַלַּחְתָּ"),
+          markedForm("התקלחת", "הִתְקַלַּחַתְּ"),
+          markedForm("התקלח", "הִתְקַלֵּחַ"),
+          markedForm("התקלחה", "הִתְקַלְּחָה"),
+          markedForm("התקלחנו", "הִתְקַלַּחְנוּ"),
+          markedForm("התקלחתם", "הִתְקַלַּחְתֶּם"),
+          markedForm("התקלחתן", "הִתְקַלַּחְתֶּן"),
+          markedForm("התקלחו", "הִתְקַלְּחוּ")
+        ),
+        makeFuture(
+          markedForm("אתקלח", "אֶתְקַלֵּחַ"),
+          markedForm("תתקלח", "תִּתְקַלֵּחַ"),
+          markedForm("תתקלחי", "תִּתְקַלְּחִי"),
+          markedForm("יתקלח", "יִתְקַלֵּחַ"),
+          markedForm("תתקלח", "תִּתְקַלֵּחַ"),
+          markedForm("נתקלח", "נִתְקַלֵּחַ"),
+          markedForm("תתקלחו", "תִּתְקַלְּחוּ"),
+          markedForm("יתקלחו", "יִתְקַלְּחוּ")
+        ),
+        makeImperative(
+          markedForm("התקלח", "הִתְקַלֵּחַ"),
+          markedForm("התקלחי", "הִתְקַלְּחִי"),
+          markedForm("התקלחו", "הִתְקַלְּחוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "ל\"ח verb: the final ח takes a furtive patach (מִתְקַלֵּחַ) and colors nearby vowels (מִתְקַלַּחַת, הִתְקַלַּחַתְּ). From קילוח (a stream of water).",
+      difficulty_level: 3,
+      tags: ["hitpael", "irregular", "lamed-guttural", "everyday"],
+      personal_priority: 83,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitamen",
+      availability: getStarterVerbAvailability("advanced-verb-lehitamen"),
+      lemma: "להתאמן",
+      lemma_niqqud: "לְהִתְאַמֵּן",
+      root: ["א", "מ", "נ"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to work out", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתאמן", "מִתְאַמֵּן"),
+          markedForm("מתאמנת", "מִתְאַמֶּנֶת"),
+          markedForm("מתאמנים", "מִתְאַמְּנִים"),
+          markedForm("מתאמנות", "מִתְאַמְּנוֹת")
+        ),
+        makePast(
+          markedForm("התאמנתי", "הִתְאַמַּנְתִּי"),
+          markedForm("התאמנת", "הִתְאַמַּנְתָּ"),
+          markedForm("התאמנת", "הִתְאַמַּנְתְּ"),
+          markedForm("התאמן", "הִתְאַמֵּן"),
+          markedForm("התאמנה", "הִתְאַמְּנָה"),
+          markedForm("התאמנו", "הִתְאַמַּנּוּ"),
+          markedForm("התאמנתם", "הִתְאַמַּנְתֶּם"),
+          markedForm("התאמנתן", "הִתְאַמַּנְתֶּן"),
+          markedForm("התאמנו", "הִתְאַמְּנוּ")
+        ),
+        makeFuture(
+          markedForm("אתאמן", "אֶתְאַמֵּן"),
+          markedForm("תתאמן", "תִּתְאַמֵּן"),
+          markedForm("תתאמני", "תִּתְאַמְּנִי"),
+          markedForm("יתאמן", "יִתְאַמֵּן"),
+          markedForm("תתאמן", "תִּתְאַמֵּן"),
+          markedForm("נתאמן", "נִתְאַמֵּן"),
+          markedForm("תתאמנו", "תִּתְאַמְּנוּ"),
+          markedForm("יתאמנו", "יִתְאַמְּנוּ")
+        ),
+        makeImperative(
+          markedForm("התאמן", "הִתְאַמֵּן"),
+          markedForm("התאמני", "הִתְאַמְּנִי"),
+          markedForm("התאמנו", "הִתְאַמְּנוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Gym and practice verb (מתאמן בחדר כושר). Past 1pl הִתְאַמַּנּוּ and 3pl הִתְאַמְּנוּ share the plain spelling התאמנו — only the niqqud separates them, like תכננו from לתכנן.",
+      difficulty_level: 2,
+      tags: ["hitpael", "regular", "everyday"],
+      personal_priority: 80,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitkadem",
+      availability: getStarterVerbAvailability("advanced-verb-lehitkadem"),
+      lemma: "להתקדם",
+      lemma_niqqud: "לְהִתְקַדֵּם",
+      root: ["ק", "ד", "מ"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to make progress", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתקדם", "מִתְקַדֵּם"),
+          markedForm("מתקדמת", "מִתְקַדֶּמֶת"),
+          markedForm("מתקדמים", "מִתְקַדְּמִים"),
+          markedForm("מתקדמות", "מִתְקַדְּמוֹת")
+        ),
+        makePast(
+          markedForm("התקדמתי", "הִתְקַדַּמְתִּי"),
+          markedForm("התקדמת", "הִתְקַדַּמְתָּ"),
+          markedForm("התקדמת", "הִתְקַדַּמְתְּ"),
+          markedForm("התקדם", "הִתְקַדֵּם"),
+          markedForm("התקדמה", "הִתְקַדְּמָה"),
+          markedForm("התקדמנו", "הִתְקַדַּמְנוּ"),
+          markedForm("התקדמתם", "הִתְקַדַּמְתֶּם"),
+          markedForm("התקדמתן", "הִתְקַדַּמְתֶּן"),
+          markedForm("התקדמו", "הִתְקַדְּמוּ")
+        ),
+        makeFuture(
+          markedForm("אתקדם", "אֶתְקַדֵּם"),
+          markedForm("תתקדם", "תִּתְקַדֵּם"),
+          markedForm("תתקדמי", "תִּתְקַדְּמִי"),
+          markedForm("יתקדם", "יִתְקַדֵּם"),
+          markedForm("תתקדם", "תִּתְקַדֵּם"),
+          markedForm("נתקדם", "נִתְקַדֵּם"),
+          markedForm("תתקדמו", "תִּתְקַדְּמוּ"),
+          markedForm("יתקדמו", "יִתְקַדְּמוּ")
+        ),
+        makeImperative(
+          markedForm("התקדם", "הִתְקַדֵּם"),
+          markedForm("התקדמי", "הִתְקַדְּמִי"),
+          markedForm("התקדמו", "הִתְקַדְּמוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Progress verb from ק-ד-מ (front/forward): advance, move ahead — literal steps or a project. בוא נתקדם = let's move forward.",
+      difficulty_level: 2,
+      tags: ["hitpael", "regular", "everyday", "work"],
+      personal_priority: 78,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitnaheg",
+      availability: getStarterVerbAvailability("advanced-verb-lehitnaheg"),
+      lemma: "להתנהג",
+      lemma_niqqud: "לְהִתְנַהֵג",
+      root: ["נ", "ה", "ג"],
+      binyan: "hitpael",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to behave", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתנהג", "מִתְנַהֵג"),
+          markedForm("מתנהגת", "מִתְנַהֶגֶת"),
+          markedForm("מתנהגים", "מִתְנַהֲגִים"),
+          markedForm("מתנהגות", "מִתְנַהֲגוֹת")
+        ),
+        makePast(
+          markedForm("התנהגתי", "הִתְנַהַגְתִּי"),
+          markedForm("התנהגת", "הִתְנַהַגְתָּ"),
+          markedForm("התנהגת", "הִתְנַהַגְתְּ"),
+          markedForm("התנהג", "הִתְנַהֵג"),
+          markedForm("התנהגה", "הִתְנַהֲגָה"),
+          markedForm("התנהגנו", "הִתְנַהַגְנוּ"),
+          markedForm("התנהגתם", "הִתְנַהַגְתֶּם"),
+          markedForm("התנהגתן", "הִתְנַהַגְתֶּן"),
+          markedForm("התנהגו", "הִתְנַהֲגוּ")
+        ),
+        makeFuture(
+          markedForm("אתנהג", "אֶתְנַהֵג"),
+          markedForm("תתנהג", "תִּתְנַהֵג"),
+          markedForm("תתנהגי", "תִּתְנַהֲגִי"),
+          markedForm("יתנהג", "יִתְנַהֵג"),
+          markedForm("תתנהג", "תִּתְנַהֵג"),
+          markedForm("נתנהג", "נִתְנַהֵג"),
+          markedForm("תתנהגו", "תִּתְנַהֲגוּ"),
+          markedForm("יתנהגו", "יִתְנַהֲגוּ")
+        ),
+        makeImperative(
+          markedForm("התנהג", "הִתְנַהֵג"),
+          markedForm("התנהגי", "הִתְנַהֲגִי"),
+          markedForm("התנהגו", "הִתְנַהֲגוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "ע' guttural: the ה refuses dagesh and a plain sheva, so plural forms take chataf-patach (מִתְנַהֲגִים). Same root as נהג (driver).",
+      difficulty_level: 3,
+      tags: ["hitpael", "irregular", "ayin-guttural", "everyday"],
+      personal_priority: 77,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehitstaer",
+      availability: getStarterVerbAvailability("advanced-verb-lehitstaer"),
+      lemma: "להצטער",
+      lemma_niqqud: "לְהִצְטַעֵר",
+      root: ["צ", "ע", "ר"],
+      binyan: "hitpael",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to be sorry", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מצטער", "מִצְטַעֵר"),
+          markedForm("מצטערת", "מִצְטַעֶרֶת"),
+          markedForm("מצטערים", "מִצְטַעֲרִים"),
+          markedForm("מצטערות", "מִצְטַעֲרוֹת")
+        ),
+        makePast(
+          markedForm("הצטערתי", "הִצְטַעַרְתִּי"),
+          markedForm("הצטערת", "הִצְטַעַרְתָּ"),
+          markedForm("הצטערת", "הִצְטַעַרְתְּ"),
+          markedForm("הצטער", "הִצְטַעֵר"),
+          markedForm("הצטערה", "הִצְטַעֲרָה"),
+          markedForm("הצטערנו", "הִצְטַעַרְנוּ"),
+          markedForm("הצטערתם", "הִצְטַעַרְתֶּם"),
+          markedForm("הצטערתן", "הִצְטַעַרְתֶּן"),
+          markedForm("הצטערו", "הִצְטַעֲרוּ")
+        ),
+        makeFuture(
+          markedForm("אצטער", "אֶצְטַעֵר"),
+          markedForm("תצטער", "תִּצְטַעֵר"),
+          markedForm("תצטערי", "תִּצְטַעֲרִי"),
+          markedForm("יצטער", "יִצְטַעֵר"),
+          markedForm("תצטער", "תִּצְטַעֵר"),
+          markedForm("נצטער", "נִצְטַעֵר"),
+          markedForm("תצטערו", "תִּצְטַעֲרוּ"),
+          markedForm("יצטערו", "יִצְטַעֲרוּ")
+        ),
+        makeImperative(
+          markedForm("הצטער", "הִצְטַעֵר"),
+          markedForm("הצטערי", "הִצְטַעֲרִי"),
+          markedForm("הצטערו", "הִצְטַעֲרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Emphatic metathesis: the ת swaps and hardens to ט after צ (התצער → הצטער), like הצטלם. The everyday מצטער = 'sorry'. Same mechanics as the seed verb להצטרך.",
+      difficulty_level: 3,
+      tags: ["hitpael", "irregular", "metathesis", "everyday", "high-frequency"],
+      personal_priority: 85,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehishtatef",
+      availability: getStarterVerbAvailability("advanced-verb-lehishtatef"),
+      lemma: "להשתתף",
+      lemma_niqqud: "לְהִשְׁתַּתֵּף",
+      root: ["ש", "ת", "פ"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to participate", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("משתתף", "מִשְׁתַּתֵּף"),
+          markedForm("משתתפת", "מִשְׁתַּתֶּפֶת"),
+          markedForm("משתתפים", "מִשְׁתַּתְּפִים"),
+          markedForm("משתתפות", "מִשְׁתַּתְּפוֹת")
+        ),
+        makePast(
+          markedForm("השתתפתי", "הִשְׁתַּתַּפְתִּי"),
+          markedForm("השתתפת", "הִשְׁתַּתַּפְתָּ"),
+          markedForm("השתתפת", "הִשְׁתַּתַּפְתְּ"),
+          markedForm("השתתף", "הִשְׁתַּתֵּף"),
+          markedForm("השתתפה", "הִשְׁתַּתְּפָה"),
+          markedForm("השתתפנו", "הִשְׁתַּתַּפְנוּ"),
+          markedForm("השתתפתם", "הִשְׁתַּתַּפְתֶּם"),
+          markedForm("השתתפתן", "הִשְׁתַּתַּפְתֶּן"),
+          markedForm("השתתפו", "הִשְׁתַּתְּפוּ")
+        ),
+        makeFuture(
+          markedForm("אשתתף", "אֶשְׁתַּתֵּף"),
+          markedForm("תשתתף", "תִּשְׁתַּתֵּף"),
+          markedForm("תשתתפי", "תִּשְׁתַּתְּפִי"),
+          markedForm("ישתתף", "יִשְׁתַּתֵּף"),
+          markedForm("תשתתף", "תִּשְׁתַּתֵּף"),
+          markedForm("נשתתף", "נִשְׁתַּתֵּף"),
+          markedForm("תשתתפו", "תִּשְׁתַּתְּפוּ"),
+          markedForm("ישתתפו", "יִשְׁתַּתְּפוּ")
+        ),
+        makeImperative(
+          markedForm("השתתף", "הִשְׁתַּתֵּף"),
+          markedForm("השתתפי", "הִשְׁתַּתְּפִי"),
+          markedForm("השתתפו", "הִשְׁתַּתְּפוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Takes ב־: משתתף בפגישה = participates in the meeting. Sibilant metathesis with ש, exactly like the seed verb להשתמש.",
+      difficulty_level: 3,
+      tags: ["hitpael", "metathesis", "work", "everyday"],
+      personal_priority: 76,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehizaher",
+      availability: getStarterVerbAvailability("advanced-verb-lehizaher"),
+      lemma: "להיזהר",
+      lemma_niqqud: "לְהִזָּהֵר",
+      root: ["ז", "ה", "ר"],
+      binyan: "nifal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to be careful", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נזהר", "נִזְהָר"),
+          markedForm("נזהרת", "נִזְהֶרֶת"),
+          markedForm("נזהרים", "נִזְהָרִים"),
+          markedForm("נזהרות", "נִזְהָרוֹת")
+        ),
+        makePast(
+          markedForm("נזהרתי", "נִזְהַרְתִּי"),
+          markedForm("נזהרת", "נִזְהַרְתָּ"),
+          markedForm("נזהרת", "נִזְהַרְתְּ"),
+          markedForm("נזהר", "נִזְהַר"),
+          markedForm("נזהרה", "נִזְהֲרָה"),
+          markedForm("נזהרנו", "נִזְהַרְנוּ"),
+          markedForm("נזהרתם", "נִזְהַרְתֶּם"),
+          markedForm("נזהרתן", "נִזְהַרְתֶּן"),
+          markedForm("נזהרו", "נִזְהֲרוּ")
+        ),
+        makeFuture(
+          markedForm("איזהר", "אֶזָּהֵר"),
+          markedForm("תיזהר", "תִּזָּהֵר"),
+          markedForm("תיזהרי", "תִּזָּהֲרִי"),
+          markedForm("ייזהר", "יִזָּהֵר"),
+          markedForm("תיזהר", "תִּזָּהֵר"),
+          markedForm("ניזהר", "נִזָּהֵר"),
+          markedForm("תיזהרו", "תִּזָּהֲרוּ"),
+          markedForm("ייזהרו", "יִזָּהֲרוּ")
+        ),
+        makeImperative(
+          markedForm("היזהר", "הִזָּהֵר"),
+          markedForm("היזהרי", "הִזָּהֲרִי"),
+          markedForm("היזהרו", "הִזָּהֲרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "The warning verb: תיזהר! = careful! Takes מ־ for the danger (נזהר מהכלב). The ה takes chataf-patach before vocalic endings (נִזְהֲרָה, תִּזָּהֲרִי).",
+      difficulty_level: 3,
+      tags: ["nifal", "irregular", "everyday", "high-frequency"],
+      personal_priority: 84,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-leheradem",
+      availability: getStarterVerbAvailability("advanced-verb-leheradem"),
+      lemma: "להירדם",
+      lemma_niqqud: "לְהֵרָדֵם",
+      root: ["ר", "ד", "מ"],
+      binyan: "nifal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to fall asleep", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נרדם", "נִרְדָּם"),
+          markedForm("נרדמת", "נִרְדֶּמֶת"),
+          markedForm("נרדמים", "נִרְדָּמִים"),
+          markedForm("נרדמות", "נִרְדָּמוֹת")
+        ),
+        makePast(
+          markedForm("נרדמתי", "נִרְדַּמְתִּי"),
+          markedForm("נרדמת", "נִרְדַּמְתָּ"),
+          markedForm("נרדמת", "נִרְדַּמְתְּ"),
+          markedForm("נרדם", "נִרְדַּם"),
+          markedForm("נרדמה", "נִרְדְּמָה"),
+          markedForm("נרדמנו", "נִרְדַּמְנוּ"),
+          markedForm("נרדמתם", "נִרְדַּמְתֶּם"),
+          markedForm("נרדמתן", "נִרְדַּמְתֶּן"),
+          markedForm("נרדמו", "נִרְדְּמוּ")
+        ),
+        makeFuture(
+          markedForm("אירדם", "אֵרָדֵם"),
+          markedForm("תירדם", "תֵּרָדֵם"),
+          markedForm("תירדמי", "תֵּרָדְמִי"),
+          markedForm("יירדם", "יֵרָדֵם"),
+          markedForm("תירדם", "תֵּרָדֵם"),
+          markedForm("נירדם", "נֵרָדֵם"),
+          markedForm("תירדמו", "תֵּרָדְמוּ"),
+          markedForm("יירדמו", "יֵרָדְמוּ")
+        ),
+        makeImperative(
+          markedForm("הירדם", "הֵרָדֵם"),
+          markedForm("הירדמי", "הֵרָדְמִי"),
+          markedForm("הירדמו", "הֵרָדְמוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "The ר rejects the nif'al dagesh, so the future/infinitive prefix compensates with tsere: לְהֵרָדֵם, יֵרָדֵם (not *יִרָּדֵם).",
+      difficulty_level: 3,
+      tags: ["nifal", "irregular", "everyday", "high-frequency"],
+      personal_priority: 83,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehigamer",
+      availability: getStarterVerbAvailability("advanced-verb-lehigamer"),
+      lemma: "להיגמר",
+      lemma_niqqud: "לְהִגָּמֵר",
+      root: ["ג", "מ", "ר"],
+      binyan: "nifal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to end", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נגמר", "נִגְמָר"),
+          markedForm("נגמרת", "נִגְמֶרֶת"),
+          markedForm("נגמרים", "נִגְמָרִים"),
+          markedForm("נגמרות", "נִגְמָרוֹת")
+        ),
+        makePast(
+          markedForm("נגמרתי", "נִגְמַרְתִּי"),
+          markedForm("נגמרת", "נִגְמַרְתָּ"),
+          markedForm("נגמרת", "נִגְמַרְתְּ"),
+          markedForm("נגמר", "נִגְמַר"),
+          markedForm("נגמרה", "נִגְמְרָה"),
+          markedForm("נגמרנו", "נִגְמַרְנוּ"),
+          markedForm("נגמרתם", "נִגְמַרְתֶּם"),
+          markedForm("נגמרתן", "נִגְמַרְתֶּן"),
+          markedForm("נגמרו", "נִגְמְרוּ")
+        ),
+        makeFuture(
+          markedForm("איגמר", "אֶגָּמֵר"),
+          markedForm("תיגמר", "תִּגָּמֵר"),
+          markedForm("תיגמרי", "תִּגָּמְרִי"),
+          markedForm("ייגמר", "יִגָּמֵר"),
+          markedForm("תיגמר", "תִּגָּמֵר"),
+          markedForm("ניגמר", "נִגָּמֵר"),
+          markedForm("תיגמרו", "תִּגָּמְרוּ"),
+          markedForm("ייגמרו", "יִגָּמְרוּ")
+        ),
+        makeImperative(
+          markedForm("היגמר", "הִגָּמֵר"),
+          markedForm("היגמרי", "הִגָּמְרִי"),
+          markedForm("היגמרו", "הִגָּמְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Intransitive twin of the seed verb לגמור: השיעור נגמר = the lesson ended. With a dative it means running out: נגמר לי הכסף (see the sentence bank's נגמרה לי הסוללה).",
+      difficulty_level: 2,
+      tags: ["nifal", "regular", "everyday", "high-frequency"],
+      personal_priority: 82,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehipared",
+      availability: getStarterVerbAvailability("advanced-verb-lehipared"),
+      lemma: "להיפרד",
+      lemma_niqqud: "לְהִפָּרֵד",
+      root: ["פ", "ר", "ד"],
+      binyan: "nifal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to say goodbye", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נפרד", "נִפְרָד"),
+          markedForm("נפרדת", "נִפְרֶדֶת"),
+          markedForm("נפרדים", "נִפְרָדִים"),
+          markedForm("נפרדות", "נִפְרָדוֹת")
+        ),
+        makePast(
+          markedForm("נפרדתי", "נִפְרַדְתִּי"),
+          markedForm("נפרדת", "נִפְרַדְתָּ"),
+          markedForm("נפרדת", "נִפְרַדְתְּ"),
+          markedForm("נפרד", "נִפְרַד"),
+          markedForm("נפרדה", "נִפְרְדָה"),
+          markedForm("נפרדנו", "נִפְרַדְנוּ"),
+          markedForm("נפרדתם", "נִפְרַדְתֶּם"),
+          markedForm("נפרדתן", "נִפְרַדְתֶּן"),
+          markedForm("נפרדו", "נִפְרְדוּ")
+        ),
+        makeFuture(
+          markedForm("איפרד", "אֶפָּרֵד"),
+          markedForm("תיפרד", "תִּפָּרֵד"),
+          markedForm("תיפרדי", "תִּפָּרְדִי"),
+          markedForm("ייפרד", "יִפָּרֵד"),
+          markedForm("תיפרד", "תִּפָּרֵד"),
+          markedForm("ניפרד", "נִפָּרֵד"),
+          markedForm("תיפרדו", "תִּפָּרְדוּ"),
+          markedForm("ייפרדו", "יִפָּרְדוּ")
+        ),
+        makeImperative(
+          markedForm("היפרד", "הִפָּרֵד"),
+          markedForm("היפרדי", "הִפָּרְדִי"),
+          markedForm("היפרדו", "הִפָּרְדוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Takes מ־: נפרדתי מההורים = I said goodbye to my parents. Between partners it means breaking up (הם נפרדו).",
+      difficulty_level: 2,
+      tags: ["nifal", "regular", "everyday"],
+      personal_priority: 78,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehishaver",
+      availability: getStarterVerbAvailability("advanced-verb-lehishaver"),
+      lemma: "להישבר",
+      lemma_niqqud: "לְהִשָּׁבֵר",
+      root: ["ש", "ב", "ר"],
+      binyan: "nifal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to break", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נשבר", "נִשְׁבָּר"),
+          markedForm("נשברת", "נִשְׁבֶּרֶת"),
+          markedForm("נשברים", "נִשְׁבָּרִים"),
+          markedForm("נשברות", "נִשְׁבָּרוֹת")
+        ),
+        makePast(
+          markedForm("נשברתי", "נִשְׁבַּרְתִּי"),
+          markedForm("נשברת", "נִשְׁבַּרְתָּ"),
+          markedForm("נשברת", "נִשְׁבַּרְתְּ"),
+          markedForm("נשבר", "נִשְׁבַּר"),
+          markedForm("נשברה", "נִשְׁבְּרָה"),
+          markedForm("נשברנו", "נִשְׁבַּרְנוּ"),
+          markedForm("נשברתם", "נִשְׁבַּרְתֶּם"),
+          markedForm("נשברתן", "נִשְׁבַּרְתֶּן"),
+          markedForm("נשברו", "נִשְׁבְּרוּ")
+        ),
+        makeFuture(
+          markedForm("אישבר", "אֶשָּׁבֵר"),
+          markedForm("תישבר", "תִּשָּׁבֵר"),
+          markedForm("תישברי", "תִּשָּׁבְרִי"),
+          markedForm("יישבר", "יִשָּׁבֵר"),
+          markedForm("תישבר", "תִּשָּׁבֵר"),
+          markedForm("נישבר", "נִשָּׁבֵר"),
+          markedForm("תישברו", "תִּשָּׁבְרוּ"),
+          markedForm("יישברו", "יִשָּׁבְרוּ")
+        ),
+        makeImperative(
+          markedForm("הישבר", "הִשָּׁבֵר"),
+          markedForm("הישברי", "הִשָּׁבְרִי"),
+          markedForm("הישברו", "הִשָּׁבְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Intransitive break: הכוס נשברה = the glass broke. Slang with dative: נשבר לי = I've had it / I'm fed up.",
+      difficulty_level: 2,
+      tags: ["nifal", "regular", "everyday"],
+      personal_priority: 77,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-leheraot",
+      availability: getStarterVerbAvailability("advanced-verb-leheraot"),
+      lemma: "להיראות",
+      lemma_niqqud: "לְהֵרָאוֹת",
+      root: ["ר", "א", "ה"],
+      binyan: "nifal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to seem", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נראה", "נִרְאֶה"),
+          markedForm("נראית", "נִרְאֵית"),
+          markedForm("נראים", "נִרְאִים"),
+          markedForm("נראות", "נִרְאוֹת")
+        ),
+        makePast(
+          markedForm("נראיתי", "נִרְאֵיתִי"),
+          markedForm("נראית", "נִרְאֵיתָ"),
+          markedForm("נראית", "נִרְאֵית"),
+          markedForm("נראה", "נִרְאָה"),
+          markedForm("נראתה", "נִרְאֲתָה"),
+          markedForm("נראינו", "נִרְאֵינוּ"),
+          markedForm("נראיתם", "נִרְאֵיתֶם"),
+          markedForm("נראיתן", "נִרְאֵיתֶן"),
+          markedForm("נראו", "נִרְאוּ")
+        ),
+        makeFuture(
+          markedForm("איראה", "אֵרָאֶה"),
+          markedForm("תיראה", "תֵּרָאֶה"),
+          markedForm("תיראי", "תֵּרָאִי"),
+          markedForm("ייראה", "יֵרָאֶה"),
+          markedForm("תיראה", "תֵּרָאֶה"),
+          markedForm("ניראה", "נֵרָאֶה"),
+          markedForm("תיראו", "תֵּרָאוּ"),
+          markedForm("ייראו", "יֵרָאוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "ל\"ה nif'al of ר-א-ה: look/seem/appear. The workhorse phrase is נראה לי = 'seems to me / I think'. Imperative is archaic, so it is omitted. The ר forces a tsere prefix (לְהֵרָאוֹת, יֵרָאֶה).",
+      difficulty_level: 4,
+      tags: ["nifal", "irregular", "lamed-hey", "high-frequency"],
+      personal_priority: 88,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehealem",
+      availability: getStarterVerbAvailability("advanced-verb-lehealem"),
+      lemma: "להיעלם",
+      lemma_niqqud: "לְהֵעָלֵם",
+      root: ["ע", "ל", "מ"],
+      binyan: "nifal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to disappear", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נעלם", "נֶעְלָם"),
+          markedForm("נעלמת", "נֶעְלֶמֶת"),
+          markedForm("נעלמים", "נֶעְלָמִים"),
+          markedForm("נעלמות", "נֶעְלָמוֹת")
+        ),
+        makePast(
+          markedForm("נעלמתי", "נֶעְלַמְתִּי"),
+          markedForm("נעלמת", "נֶעְלַמְתָּ"),
+          markedForm("נעלמת", "נֶעְלַמְתְּ"),
+          markedForm("נעלם", "נֶעְלַם"),
+          markedForm("נעלמה", "נֶעֶלְמָה"),
+          markedForm("נעלמנו", "נֶעְלַמְנוּ"),
+          markedForm("נעלמתם", "נֶעְלַמְתֶּם"),
+          markedForm("נעלמתן", "נֶעְלַמְתֶּן"),
+          markedForm("נעלמו", "נֶעֶלְמוּ")
+        ),
+        makeFuture(
+          markedForm("איעלם", "אֵעָלֵם"),
+          markedForm("תיעלם", "תֵּעָלֵם"),
+          markedForm("תיעלמי", "תֵּעָלְמִי"),
+          markedForm("ייעלם", "יֵעָלֵם"),
+          markedForm("תיעלם", "תֵּעָלֵם"),
+          markedForm("ניעלם", "נֵעָלֵם"),
+          markedForm("תיעלמו", "תֵּעָלְמוּ"),
+          markedForm("ייעלמו", "יֵעָלְמוּ")
+        ),
+        makeImperative(
+          markedForm("היעלם", "הֵעָלֵם"),
+          markedForm("היעלמי", "הֵעָלְמִי"),
+          markedForm("היעלמו", "הֵעָלְמוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "פ' guttural nif'al: the ע rejects the dagesh, so the prefix takes tsere (לְהֵעָלֵם, יֵעָלֵם) and the present opens with segol (נֶעְלָם). Ghosting vocabulary: הוא פשוט נעלם.",
+      difficulty_level: 3,
+      tags: ["nifal", "irregular", "pe-guttural", "everyday"],
+      personal_priority: 79,
+    }),
+    createVerbEntry({
+      id: "advanced-verb-lehivaled",
+      availability: getStarterVerbAvailability("advanced-verb-lehivaled"),
+      lemma: "להיוולד",
+      lemma_niqqud: "לְהִוָּלֵד",
+      root: ["י", "ל", "ד"],
+      binyan: "nifal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to be born", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("נולד", "נוֹלָד"),
+          markedForm("נולדת", "נוֹלֶדֶת"),
+          markedForm("נולדים", "נוֹלָדִים"),
+          markedForm("נולדות", "נוֹלָדוֹת")
+        ),
+        makePast(
+          markedForm("נולדתי", "נוֹלַדְתִּי"),
+          markedForm("נולדת", "נוֹלַדְתָּ"),
+          markedForm("נולדת", "נוֹלַדְתְּ"),
+          markedForm("נולד", "נוֹלַד"),
+          markedForm("נולדה", "נוֹלְדָה"),
+          markedForm("נולדנו", "נוֹלַדְנוּ"),
+          markedForm("נולדתם", "נוֹלַדְתֶּם"),
+          markedForm("נולדתן", "נוֹלַדְתֶּן"),
+          markedForm("נולדו", "נוֹלְדוּ")
+        ),
+        makeFuture(
+          markedForm("איוולד", "אֶוָּלֵד"),
+          markedForm("תיוולד", "תִּוָּלֵד"),
+          markedForm("תיוולדי", "תִּוָּלְדִי"),
+          markedForm("ייוולד", "יִוָּלֵד"),
+          markedForm("תיוולד", "תִּוָּלֵד"),
+          markedForm("ניוולד", "נִוָּלֵד"),
+          markedForm("תיוולדו", "תִּוָּלְדוּ"),
+          markedForm("ייוולדו", "יִוָּלְדוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "פ\"י nif'al: the yod becomes וֹ in past/present (נוֹלַד — like נוֹדַע) but a doubled consonantal ו in the future (יִוָּלֵד, plain ייוולד). נולדתי ב… = I was born in…. Imperative omitted (unused).",
+      difficulty_level: 4,
+      tags: ["nifal", "irregular", "pe-yod", "high-frequency"],
+      personal_priority: 81,
+    }),
   ];
 }
 
@@ -5333,6 +6323,7 @@ const ENGLISH_PAST_IRREGULARS = new Map([
   ["tell", "told"],
   ["think", "thought"],
   ["understand", "understood"],
+  ["wake", "woke"],
   ["wear", "wore"],
   ["win", "won"],
   ["write", "wrote"],
@@ -5493,6 +6484,6 @@ return {
   buildGeneratedForms,
   resolveLearnerFacingForms,
   normalizeAndValidateFormSet,
-  __build: "20260711b",
+  __build: "20260712a",
 };
 });
