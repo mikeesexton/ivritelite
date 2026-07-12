@@ -7,6 +7,27 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-12 — Binyanim board: 8 new roots (27 → 35, 130 → 169 playable forms)
+
+**Requested:** Batch 3 of the approved content-expansion plan: ~8 new roots for the binyanim game, chosen for binyan-contrast showcase value.
+
+**Change:**
+- `verb-game-data.js`
+  - Appended 8 fully hand-authored roots (39 playable forms): **ח־ש־ב** (6 slots — think/be considered/calculate/be calculated/deem important/be considerate), **ס־פ־ר** (5 — counted/told/got a haircut, reuses the sibilant-metathesis teaching point), **ד־ב־ר** (4 — no paal!; נדברנו, מדובר, הדביר), **ק־ש־ר** (5 — tied → phoned), **ע־ב־ד** (5 — pe-guttural, reuses the פ"ע hataf teaching point on הֶעֱבִיד), **ז־כ־ר** (4 — remembered/suddenly recalled/reminded/was mentioned), **י־ד־ע** (5 — pe-yod: נוֹדַע/הוֹדִיעַ/הוּדַע/הִתְוַדַּע), **פ־ק־ד** (5 — the classic meaning-spread demo: visited upon/was absent/commanded/deposited/was deposited).
+  - Rare/formal forms flagged (`register`, `distractor_eligible: false` on קֻשַּׁר, נֶעֱבַד, הוּדַע). Zero new teaching-point strings — both used points are byte-identical to existing `TEACHING_POINT_KEYS` entries, so no i18n changes.
+- `tests/verb-game-data.test.js` — root count 27 → 35; playable-form upper bound 145 → 200 (now 169).
+- `index.html` — `verb-game-data.js?v=` bumped `20260621a` → `20260712a` (this string was already stale — the 2026-06-28 edit never bumped it).
+
+**Files changed:** `verb-game-data.js`, `tests/verb-game-data.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Binyanim board root pool grows 27 → 35; sessions still draw 6 roots, so variety between sessions increases. Stale cache-bust fixed, so users will finally fetch the current file.
+
+**Tests run:** `npm test` before and after: 228 pass, 0 fail (suite validates per-form required fields, same-plain niqqud/gloss distinctness, sibling gloss collisions, question generation, and en+he teaching-point resolution for all roots). Live check on :3100 under `?v=20260712a`: 35 roots / 169 playable forms loaded, all 8 new ids present, a new root appeared in a sampled 6-root board deck; no console errors.
+
+**Risks / regressions to check:** (1) Niqqud/gloss accuracy on the rarer forms — spot-check נֶעֱבַד, הוּדַע, הִתְוַדַּע, פִּקֵּד vs פָּקַד. (2) ס-פ-ר hitpael reuses the metathesis teaching string whose example cites הסתדר (s-d-r) — same phenomenon, different root example; acceptable but worth a glance in-game. (3) The form-count cap is now 200; next root batch has ~31 forms of headroom.
+
+---
+
 ### 2026-07-12 — Sentence Bank round 3, tranche 2: 36 new sentences (292 → 328, round 3 complete)
 
 **Requested:** Completion of Batch 2 of the content-expansion plan — the opinions & news, narrative-sequencing, and conditionals/numbers portions of round 3.
