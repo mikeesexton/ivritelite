@@ -73,11 +73,37 @@ verbMatch.moveEligibleVerbToMastered = verbMatch.moveEligibleVerbToMastered || f
 
 };
 
+verbMatch.pickVerbMatchQueue = verbMatch.pickVerbMatchQueue || function pickVerbMatchQueue(deck, count) {
+  const runtime = getRuntime();
+  const data = getData();
+  const utils = app.utils || {};
+  if (typeof utils.pickWeightedSubset !== "function" || typeof utils.getAdaptiveWeight !== "function") {
+    const shuffled = typeof utils.shuffle === "function" ? utils.shuffle(deck) : [...deck];
+    return shuffled.slice(0, count);
+  }
+
+  const masterStreak = Math.max(1, Number(runtime.constants?.CONJUGATION_MASTER_STREAK || 10));
+  const weighted = deck.map((entry) => {
+    const wordId = entry?.id || entry?.word?.id || "";
+    const rec = data.getProgressRecord?.(wordId) || {};
+    const streak = Math.max(0, Math.min(masterStreak, Number(rec.conjugationStreak || 0)));
+    const streakDamp = Math.max(0.2, 1 - (streak / masterStreak) * 0.8);
+    const masteredDamp = data.isWordMastered?.(wordId) ? 0.35 : 1;
+    const weight = utils.getAdaptiveWeight({
+      attempts: rec.conjugationAttempts,
+      correct: rec.conjugationCorrect,
+      lastSeen: rec.lastConjugationSeen,
+    }) * streakDamp * masteredDamp;
+    return { word: entry, weight };
+  });
+
+  return utils.pickWeightedSubset(weighted, count);
+};
+
 verbMatch.startVerbMatch = verbMatch.startVerbMatch || function startVerbMatch() {
   const runtime = getRuntime();
   const h = getHelpers();
   const s = getSession();
-  const shuffle = app.utils?.shuffle;
   app.speech?.cancel?.();
   s.stopVerbMatchTimer?.();
   s.stopLessonTimer?.();
@@ -116,8 +142,7 @@ verbMatch.startVerbMatch = verbMatch.startVerbMatch || function startVerbMatch()
   }
 
   runtime.state.match.active = true;
-  const shuffledDeck = typeof shuffle === "function" ? shuffle(runtime.verbFormDeck) : [...runtime.verbFormDeck];
-  runtime.state.match.verbQueue = shuffledDeck.slice(0, runtime.constants.VERB_MATCH_ROUNDS);
+  runtime.state.match.verbQueue = verbMatch.pickVerbMatchQueue(runtime.verbFormDeck, runtime.constants.VERB_MATCH_ROUNDS);
   runtime.state.match.totalVerbs = runtime.state.match.verbQueue.length;
   runtime.state.match.currentVerbIndex = 0;
   runtime.state.match.startMs = 0;

@@ -61,7 +61,17 @@ function getTranslatedText(key, vars = {}) {
 }
 
 function selectBinyanRoundRoots(roots) {
-  return shuffle(roots.slice()).slice(0, BINYAN_ROUND_ROOT_COUNT);
+  const utils = app.utils || {};
+  if (typeof utils.pickWeightedSubset !== "function" || typeof utils.getAdaptiveWeight !== "function") {
+    return shuffle(roots.slice()).slice(0, BINYAN_ROUND_ROOT_COUNT);
+  }
+
+  const stats = binyanBoard.getBinyanItemStats();
+  const weighted = roots.map((root) => ({
+    word: root,
+    weight: utils.getAdaptiveWeight(stats[root.id]),
+  }));
+  return utils.pickWeightedSubset(weighted, BINYAN_ROUND_ROOT_COUNT);
 }
 
 function getBinyanGlossMeaningParts(gloss) {
@@ -199,6 +209,32 @@ binyanBoard.updateBinyanBoardStats = binyanBoard.updateBinyanBoardStats || funct
   const attempts = Math.max(0, Number(stats.attempts || 0)) + 1;
   const correct = Math.max(0, Math.min(attempts, Number(stats.correct || 0) + (isCorrect ? 1 : 0)));
   runtime.storageApi.saveJson(storageKey, { attempts, correct });
+};
+
+binyanBoard.getBinyanItemStats = binyanBoard.getBinyanItemStats || function getBinyanItemStats() {
+  const runtime = getRuntime();
+  const storageKey = runtime.constants?.STORAGE_KEYS?.binyanBoardItemStats;
+  if (!storageKey || !runtime.storageApi?.loadJson) return {};
+  return runtime.storageApi.loadJson(storageKey, {}) || {};
+};
+
+binyanBoard.updateBinyanItemStats = binyanBoard.updateBinyanItemStats || function updateBinyanItemStats(rootId, isCorrect) {
+  const runtime = getRuntime();
+  const storageKey = runtime.constants?.STORAGE_KEYS?.binyanBoardItemStats;
+  if (!rootId || !storageKey || !runtime.storageApi?.loadJson || !runtime.storageApi?.saveJson) return;
+  if (typeof app.utils?.normalizeAdaptiveRecord !== "function") return;
+
+  const stats = runtime.storageApi.loadJson(storageKey, {}) || {};
+  const rec = app.utils.normalizeAdaptiveRecord(stats[rootId]);
+  rec.attempts += 1;
+  if (isCorrect) {
+    rec.correct += 1;
+  } else {
+    rec.misses += 1;
+  }
+  rec.lastSeen = Date.now();
+  stats[rootId] = rec;
+  runtime.storageApi.saveJson(storageKey, stats);
 };
 
 binyanBoard.getBinyanBoardPromptSpeechPayload = binyanBoard.getBinyanBoardPromptSpeechPayload || function getBinyanBoardPromptSpeechPayload(question = getRuntime().state.binyanBoard.currentQuestion) {
@@ -497,6 +533,7 @@ binyanBoard.applyBinyanBoardAnswer = binyanBoard.applyBinyanBoardAnswer || funct
 
   question.isCorrect = isCorrect;
   binyanBoard.updateBinyanBoardStats(isCorrect);
+  binyanBoard.updateBinyanItemStats(question.rootId, isCorrect);
   binyanBoard.renderBinyanBoardFeedback(question);
   h.playAnswerFeedbackSound?.(isCorrect);
   binyanBoard.markBinyanBoardChoiceResults(question);

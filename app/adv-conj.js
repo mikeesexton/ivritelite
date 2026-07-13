@@ -91,13 +91,19 @@ function getAdvConjSubjectEnglishLabel(idiom, subj, tense) {
   const currentVerbForm = tenseData?.[subj?.form];
   if (!currentVerbForm) return label;
 
-  const hasEquivalentSubject = advConj.getAdvConjSubjectsForTense(tense).some((candidate) => {
+  // Keep the gender/number qualifier when another subject sharing the same bare
+  // English label (e.g. another "you") conjugates to a different verb form.
+  // Dropping it there would make a distractor built from that other subject a
+  // valid reading of the bare label, so the prompt would be ambiguous. Only
+  // collapse to the bare label when every same-label subject shares one form.
+  const hasDivergentSubject = advConj.getAdvConjSubjectsForTense(tense).some((candidate) => {
     if (!candidate || candidate.form === subj?.form) return false;
-    return stripAdvConjEnglishQualifier(sanitizeEnglishText(candidate.en)) === baseLabel
-      && tenseData?.[candidate.form] === currentVerbForm;
+    if (stripAdvConjEnglishQualifier(sanitizeEnglishText(candidate.en)) !== baseLabel) return false;
+    const candidateVerbForm = tenseData?.[candidate.form];
+    return candidateVerbForm && candidateVerbForm !== currentVerbForm;
   });
 
-  return hasEquivalentSubject ? baseLabel : label;
+  return hasDivergentSubject ? label : baseLabel;
 }
 
 advConj.buildAdvConjHebrewAnswer = advConj.buildAdvConjHebrewAnswer || function buildAdvConjHebrewAnswer(idiom, subjectForm, subjectPronoun, objectKey, tense) {
@@ -283,11 +289,28 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
   return deck;
 };
 
+advConj.pickAdvConjQuestions = advConj.pickAdvConjQuestions || function pickAdvConjQuestions(deck, count) {
+  const utils = app.utils || {};
+  if (typeof utils.pickWeightedSubset !== "function" || typeof utils.getAdaptiveWeight !== "function") {
+    const shuffled = typeof utils.shuffle === "function" ? utils.shuffle(deck) : [...deck];
+    return shuffled.slice(0, count);
+  }
+
+  const stats = advConj.getAdvConjItemStats();
+  const idiomWeights = {};
+  const weighted = deck.map((question) => {
+    if (!(question.idiomId in idiomWeights)) {
+      idiomWeights[question.idiomId] = utils.getAdaptiveWeight(stats[question.idiomId]);
+    }
+    return { word: question, weight: idiomWeights[question.idiomId] };
+  });
+  return utils.pickWeightedSubset(weighted, count);
+};
+
 advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   const runtime = getRuntime();
   const h = getHelpers();
   const s = getSession();
-  const shuffle = app.utils?.shuffle;
   app.speech?.cancel?.();
   s.stopVerbMatchTimer?.();
   s.stopLessonTimer?.();
@@ -308,7 +331,7 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "advConj";
   const deck = advConj.buildAdvConjDeck();
-  runtime.state.advConj.questionQueue = (typeof shuffle === "function" ? shuffle(deck) : deck).slice(0, runtime.constants.ADV_CONJ_ROUNDS);
+  runtime.state.advConj.questionQueue = advConj.pickAdvConjQuestions(deck, runtime.constants.ADV_CONJ_ROUNDS);
   runtime.state.advConj.active = true;
   runtime.state.advConj.startMs = Date.now();
   runtime.state.advConj.timerId = runtime.global.setInterval(() => {
@@ -501,6 +524,7 @@ advConj.applyAdvConjAnswer = advConj.applyAdvConjAnswer || function applyAdvConj
   );
   h.playAnswerFeedbackSound?.(isCorrect);
   advConj.updateAdvConjStats(isCorrect);
+  advConj.updateAdvConjItemStats(question.idiomId, isCorrect);
   advConj.markAdvConjChoiceResults(runtime.state.advConj.currentQuestion);
   h.renderSessionHeader?.();
   h.renderDomainPerformance?.();
@@ -513,6 +537,27 @@ advConj.updateAdvConjStats = advConj.updateAdvConjStats || function updateAdvCon
   stats.attempts += 1;
   if (isCorrect) stats.correct += 1;
   runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.advConjStats, stats);
+};
+
+advConj.getAdvConjItemStats = advConj.getAdvConjItemStats || function getAdvConjItemStats() {
+  const runtime = getRuntime();
+  return runtime.storageApi.loadJson(runtime.constants.STORAGE_KEYS.advConjItemStats, {}) || {};
+};
+
+advConj.updateAdvConjItemStats = advConj.updateAdvConjItemStats || function updateAdvConjItemStats(idiomId, isCorrect) {
+  if (!idiomId || typeof app.utils?.normalizeAdaptiveRecord !== "function") return;
+  const runtime = getRuntime();
+  const stats = advConj.getAdvConjItemStats();
+  const rec = app.utils.normalizeAdaptiveRecord(stats[idiomId]);
+  rec.attempts += 1;
+  if (isCorrect) {
+    rec.correct += 1;
+  } else {
+    rec.misses += 1;
+  }
+  rec.lastSeen = Date.now();
+  stats[idiomId] = rec;
+  runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.advConjItemStats, stats);
 };
 
 advConj.buildAdvConjMistakeSummary = advConj.buildAdvConjMistakeSummary || function buildAdvConjMistakeSummary() {

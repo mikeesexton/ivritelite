@@ -9713,7 +9713,11 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["Is there", "internet", "here", "What's", "the password"],
     hebrewDistractorPairs: [["אין", "אֵין"], ["שם", "שָׁם"], ["קליטה", "קְלִיטָה"], ["איפה", "אֵיפֹה"], ["השעה", "הַשָּׁעָה"]],
     englishDistractors: ["There's no", "reception", "there", "Where's", "the time"],
-    notes: "Rising intonation turns יש כאן אינטרנט into a yes/no question — no question word needed. הסיסמה = the password."
+    notes: "Rising intonation turns יש כאן אינטרנט into a yes/no question — no question word needed. הסיסמה = the password.",
+    hebrewAlternates: [{
+      text: "יש אינטרנט כאן? מה הסיסמה?", textNiqqud: "יֵשׁ אִינְטֶרְנֶט כָּאן? מָה הַסִּסְמָה?",
+      tokenPairs: [["יש", "יֵשׁ"], ["אינטרנט", "אִינְטֶרְנֶט"], ["כאן", "כָּאן"], ["מה", "מָה"], ["הסיסמה", "הַסִּסְמָה"]]
+    }]
   }),
   buildExpandedSentence({
     id: "everyday_95", emoji: "📦", category: "everyday", difficulty: 2,
