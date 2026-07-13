@@ -47,6 +47,50 @@ utils.shuffle = utils.shuffle || function shuffle(items) {
   return arr;
 };
 
+utils.normalizeAdaptiveRecord = utils.normalizeAdaptiveRecord || function normalizeAdaptiveRecord(raw) {
+  const attempts = Math.max(0, Number(raw?.attempts || 0));
+  const correct = Math.max(0, Math.min(attempts, Number(raw?.correct || 0)));
+  const explicitMisses = Number(raw?.misses);
+  const misses = Number.isFinite(explicitMisses) && explicitMisses >= 0
+    ? Math.round(explicitMisses)
+    : attempts - correct;
+  return {
+    attempts,
+    correct,
+    misses,
+    lastSeen: Math.max(0, Number(raw?.lastSeen || 0)),
+  };
+};
+
+utils.getAdaptiveWeight = utils.getAdaptiveWeight || function getAdaptiveWeight(record) {
+  const rec = utils.normalizeAdaptiveRecord(record);
+  const accuracy = rec.attempts ? rec.correct / rec.attempts : 0;
+
+  const newBoost = rec.attempts === 0 ? 1.45 : 1;
+  const weaknessBoost = 1 + (1 - accuracy) * 0.85;
+  const missBoost = 1 + Math.min(3, rec.misses) * 0.5;
+  const strengthDamp = rec.attempts >= 6 && accuracy >= 0.9 ? 0.45 : 1;
+  const recencyDamp = rec.lastSeen && Date.now() - rec.lastSeen < 10 * 60 * 1000 ? 0.6 : 1;
+  const jitter = 0.7 + Math.random() * 0.8;
+
+  return newBoost * weaknessBoost * missBoost * strengthDamp * recencyDamp * jitter;
+};
+
+utils.pickWeightedSubset = utils.pickWeightedSubset || function pickWeightedSubset(weightedItems, count) {
+  const remaining = [...weightedItems];
+  const picked = [];
+
+  while (picked.length < count && remaining.length) {
+    const word = utils.weightedRandomWord(remaining);
+    if (word === null) break;
+    const idx = remaining.findIndex((item) => item.word === word);
+    picked.push(word);
+    remaining.splice(idx === -1 ? remaining.length - 1 : idx, 1);
+  }
+
+  return picked;
+};
+
 utils.sanitizeEnglishDisplayText = utils.sanitizeEnglishDisplayText || function sanitizeEnglishDisplayText(text) {
   let cleaned = String(text || "").trim();
   if (!cleaned) return "";

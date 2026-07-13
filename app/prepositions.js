@@ -163,11 +163,25 @@ prepositions.buildPrepositionsDeck = prepositions.buildPrepositionsDeck || funct
   return typeof shuffle === "function" ? shuffle(deck) : deck;
 };
 
+prepositions.pickPrepositionsQuestions = prepositions.pickPrepositionsQuestions || function pickPrepositionsQuestions(deck, count) {
+  const utils = app.utils || {};
+  if (typeof utils.pickWeightedSubset !== "function" || typeof utils.getAdaptiveWeight !== "function") {
+    const shuffled = typeof utils.shuffle === "function" ? utils.shuffle(deck) : [...deck];
+    return shuffled.slice(0, count);
+  }
+
+  const stats = prepositions.getPrepositionsItemStats();
+  const weighted = deck.map((question) => ({
+    word: question,
+    weight: utils.getAdaptiveWeight(stats[`${question.triggerId}:${question.objectKey}`]),
+  }));
+  return utils.pickWeightedSubset(weighted, count);
+};
+
 prepositions.startPrepositions = prepositions.startPrepositions || function startPrepositions() {
   const runtime = getRuntime();
   const h = getHelpers();
   const s = getSession();
-  const shuffle = app.utils?.shuffle;
   app.speech?.cancel?.();
   s.stopVerbMatchTimer?.();
   s.stopLessonTimer?.();
@@ -190,7 +204,7 @@ prepositions.startPrepositions = prepositions.startPrepositions || function star
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "prepositions";
   const deck = prepositions.buildPrepositionsDeck();
-  runtime.state.prepositions.questionQueue = (typeof shuffle === "function" ? shuffle(deck) : deck).slice(0, runtime.constants.PREPOSITIONS_ROUNDS);
+  runtime.state.prepositions.questionQueue = prepositions.pickPrepositionsQuestions(deck, runtime.constants.PREPOSITIONS_ROUNDS);
   runtime.state.prepositions.active = true;
   runtime.state.prepositions.startMs = Date.now();
   runtime.state.prepositions.timerId = runtime.global.setInterval(() => {
@@ -363,6 +377,7 @@ prepositions.applyPrepositionsAnswer = prepositions.applyPrepositionsAnswer || f
   });
   h.playAnswerFeedbackSound?.(isCorrect);
   prepositions.updatePrepositionsStats(isCorrect);
+  prepositions.updatePrepositionsItemStats(`${question.triggerId}:${question.objectKey}`, isCorrect);
   prepositions.markPrepositionsChoiceResults(question);
   h.renderSessionHeader?.();
   h.renderDomainPerformance?.();
@@ -375,6 +390,27 @@ prepositions.updatePrepositionsStats = prepositions.updatePrepositionsStats || f
   stats.attempts += 1;
   if (isCorrect) stats.correct += 1;
   runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.prepositionsStats, stats);
+};
+
+prepositions.getPrepositionsItemStats = prepositions.getPrepositionsItemStats || function getPrepositionsItemStats() {
+  const runtime = getRuntime();
+  return runtime.storageApi.loadJson(runtime.constants.STORAGE_KEYS.prepositionsItemStats, {}) || {};
+};
+
+prepositions.updatePrepositionsItemStats = prepositions.updatePrepositionsItemStats || function updatePrepositionsItemStats(itemKey, isCorrect) {
+  if (!itemKey || typeof app.utils?.normalizeAdaptiveRecord !== "function") return;
+  const runtime = getRuntime();
+  const stats = prepositions.getPrepositionsItemStats();
+  const rec = app.utils.normalizeAdaptiveRecord(stats[itemKey]);
+  rec.attempts += 1;
+  if (isCorrect) {
+    rec.correct += 1;
+  } else {
+    rec.misses += 1;
+  }
+  rec.lastSeen = Date.now();
+  stats[itemKey] = rec;
+  runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.prepositionsItemStats, stats);
 };
 
 prepositions.buildPrepositionsMistakeSummary = prepositions.buildPrepositionsMistakeSummary || function buildPrepositionsMistakeSummary() {

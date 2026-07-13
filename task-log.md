@@ -7,6 +7,53 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-13 — Rename Translation→Vocabulary, review tracking note, sentence word-order fix, disambiguate Conjugation+ "you" prompts
+
+**Requested:** Four changes from screenshots: (1) rename the "Translation" game to "Vocabulary"; (2) add a short note on the Review page saying IvritElite tracks performance to optimize improvement; (3) accept both word orders for the internet/password sentence (כאן before or after אינטרנט); (4) fix ambiguous "you" prompts in Conjugation+ where the bare "you" left a differently-gendered/numbered distractor also correct, and scan for other ambiguous prompts.
+
+**Change:**
+- `app/bootstrap-data.js` — renamed the user-facing "Translation" game name/titles to "Vocabulary" in both `en` and `he`: `game.translationName`, `session.mixedTitle`/`secondChanceTitle`/`start`/`restart`, `status.start`/`startAnother`, `results.lessonTitle`, `perf.summary`, and the `masteredOnly` title/body. Hebrew "תרגום" (as the game name) → "אוצר מילים"; the two Hebrew mastered strings rephrased naturally. Mechanic-descriptive uses left intact (`translationNote` "Match Hebrew words…", `sentenceBankNote`/`sentenceBankStart` "…translations…", the `translationCorrect/Wrong…` feedback). Added new i18n key `review.trackingNote` (en + he).
+- `index.html` — added `<p class="small-note review-tracking-note" data-i18n="review.trackingNote">` at the top of `#reviewOverviewPanel`. Cache-bust bumps: `bootstrap-data.js` `20260705a→20260713a`, `sentence-bank-data.js` `20260712c→20260713a`, `adv-conj.js` `20260713a→20260713b`.
+- `sentence-bank-data.js` — `everyday_94` ("יש כאן אינטרנט? מה הסיסמה?") gained a `hebrewAlternates` entry accepting the equally valid order "יש אינטרנט כאן? מה הסיסמה?" (with niqud + token pairs).
+- `app/adv-conj.js` — rewrote `getAdvConjSubjectEnglishLabel`. The old check dropped the gender/number qualifier when another same-label subject shared the *identical* verb form, which is exactly when a differently-inflected distractor (e.g. עולות for f.pl.) made the bare "you" ambiguous. New logic keeps the qualifier whenever any same-label subject conjugates to a *different* verb form, collapsing to the bare label only when all same-label subjects share one form.
+
+**Scan result (task 4):** The "you" ambiguity was specific to Conjugation+ (adv-conj). Verb Match (`hebrew-verbs.js` present tense) deliberately labels present forms as he/she/they and never offers 2nd-person present, so no bare-"you" ambiguity. Prepositions (`preposition-data.js`) uses qualified object labels ("you (m.sg.)", "you (f.sg.)", "you (pl.)") with a single "you (pl.)" entry, and the subject person isn't varied. No other changes needed.
+
+**Files changed:** `app/bootstrap-data.js`, `index.html`, `sentence-bank-data.js`, `app/adv-conj.js`, `.claude/launch.json` (added a `ulpango-dev-3242` config for this session's preview since 3000/3100 were occupied by other chats), `task-log.md`.
+
+**Behavior changed:** Home/session/results/settings UI now say "Vocabulary" instead of "Translation" (en + he). The Review → Overview tab shows a one-line note about performance tracking. The internet/password sentence now accepts either word order. Conjugation+ en→he prompts with a 2nd-person subject now always show the gender/number (e.g. "you (m.sg.) climb on our nerves"), removing the case where a distractor was also a valid answer.
+
+**Tests run:** `npm test` after: 240 pass, 0 fail (240 before too). Live check on a local `serve` (:3242): home + Review render correctly, no console errors; `buildAdvConjEnglishSentence` for the nerves idiom returns "you (m.sg.) climb on our nerves" / "you (f.sg.) climb on our nerves"; prepared `everyday_94` now has primary "יש כאן אינטרנט…" plus alternate "יש אינטרנט כאן…".
+
+**Risks / regressions to check:** (1) Conjugation+ present-tense "you" prompts are now slightly longer (always carry the qualifier) — intended. (2) Other idioms where 2nd-person forms share spelling now generate two distinct prompts (m.sg. and f.sg.) instead of one collapsed "you"; both are valid. (3) The Hebrew game-name rename (אוצר מילים) affects any place that displayed "תרגום" as a title — verify no layout overflow in the Hebrew UI. (4) Only `everyday_94` got the alternate order; other sentences with flexible adverb placement are unchanged.
+
+---
+
+### 2026-07-13 — Adaptive (weakness-weighted) selection for Conjugation, Binyanim, Conjugation+, and Prepositions
+
+**Requested:** Skew content selection in all game modes toward items the user struggles with and away from mastered items. Vocab/abbreviation/sentence modes already do this via Leitner + weighted selection; Verb Match, Binyan Board, Advanced Conjugation, and Prepositions picked purely at random. User-approved plan: close the gap with per-item stats stores and weighted sampling, always-on (no toggle), reusing the `pickBestWord` weighting factors.
+
+**Change:**
+- `app/constants.js` — three new `STORAGE_KEYS`: `advConjItemStats` (`ivriquest-adv-conj-item-stats-v1`), `prepositionsItemStats` (`ivriquest-prepositions-item-stats-v1`), `binyanBoardItemStats` (`ivriquest-binyan-item-stats-v1`). Records are flat maps `{ [itemKey]: {attempts, correct, misses, lastSeen} }` — no Leitner scheduling, since these modes pick a session subset up front.
+- `app/utils.js` — three shared helpers: `normalizeAdaptiveRecord` (spread-defaults normalizer, clamps and derives misses), `getAdaptiveWeight` (newBoost 1.45 for unseen, weaknessBoost up to ×1.85, missBoost up to ×2.5, strengthDamp ×0.45 at ≥6 attempts & ≥90% accuracy, recencyDamp ×0.6 within 10 min, jitter 0.7–1.5), `pickWeightedSubset` (weighted sampling without replacement over `utils.weightedRandomWord`, resolved at call time so test stubs intercept).
+- `app/verb-match.js` — new `pickVerbMatchQueue(deck, count)` replaces the random `shuffle().slice(0, 1)` in `startVerbMatch`. Weights read the EXISTING per-verb conjugation stats in `state.progress` (`conjugationAttempts/Correct/Streak`, `lastConjugationSeen`), with streakDamp down to ×0.2 near `CONJUGATION_MASTER_STREAK` and ×0.35 for mastered words. Handles both `entry.id` and `entry.word.id` deck shapes. No recording changes (hooks already existed).
+- `app/binyan-board.js` — `getBinyanItemStats`/`updateBinyanItemStats` (keyed by `root.id`); `selectBinyanRoundRoots` now weight-samples the 6 round roots (falls back to shuffle if utils helpers missing); recording hook in `applyBinyanBoardAnswer` next to the aggregate writer.
+- `app/adv-conj.js` — `getAdvConjItemStats`/`updateAdvConjItemStats` (keyed by `idiomId`); `pickAdvConjQuestions` replaces shuffle+slice in `startAdvConj` (weight computed once per idiom); recording hook in `applyAdvConjAnswer`. Review-phase answers count, same as the aggregate writer.
+- `app/prepositions.js` — `getPrepositionsItemStats`/`updatePrepositionsItemStats` (keyed `${triggerId}:${objectKey}`, the existing session mistakeKey); `pickPrepositionsQuestions` replaces shuffle+slice in `startPrepositions` (deck-build shuffle kept — it also randomizes distractors); recording hook in `applyPrepositionsAnswer`.
+- `index.html` — `?v=20260713a` bumps for all six edited files: `app/constants.js`, `app/utils.js`, `app/adv-conj.js`, `app/prepositions.js`, `app/verb-match.js`, `app/binyan-board.js`.
+- `tests/adaptive-picker.test.js` (new) — 4 pure vm-load tests over `app/utils.js` with seeded `Math.random`/`Date.now`: normalizer defaults/clamping/miss derivation; weight ordering (new > strong-clean, missy > clean, recency and strength damps exact); `pickWeightedSubset` without-replacement ordering, count ≥ pool, all-zero weights fallback.
+- `tests/app-progress.test.js` — binyan analytics test extended with `rootId` + per-root record assertions; prepositions analytics test extended with `objectKey` + per-item record assertions; 3 new harness tests: verb match picks the weak verb over a streaky/strong one (captured weights + queue contents), adv-conj weights weak idioms higher and records per-idiom results through `applyAdvConjAnswer`, prepositions weights weak trigger-object pairs higher.
+
+**Files changed:** `app/constants.js`, `app/utils.js`, `app/verb-match.js`, `app/binyan-board.js`, `app/adv-conj.js`, `app/prepositions.js`, `index.html`, `tests/adaptive-picker.test.js`, `tests/app-progress.test.js`, `task-log.md`.
+
+**Behavior changed:** Conjugation (Verb Match), Binyanim, Conjugation+, and Prepositions now bias session content toward items the learner has missed or answers poorly, and away from items answered strongly (≥90% over ≥6 attempts) or seen in the last 10 minutes; unseen items keep a 1.45× boost so new content isn't starved. Selection remains randomized (jitter), so nothing is ever excluded. Vocab/abbreviation/sentence modes unchanged. Three new localStorage keys begin accumulating per-item history.
+
+**Tests run:** `npm test` before: 233 pass, 0 fail. After: 240 pass, 0 fail. Live check on :3000 under `?v=20260713a`: all new helpers present on `IvriQuestApp`, Prepositions session starts through the weighted picker, answering writes `ivriquest-prepositions-item-stats-v1` (`prep-enjoy:3ms → {attempts:1, correct:1, misses:0}`) alongside the aggregate key; 2000-round in-page sample shows the weak item picked ~90% vs a strong item; `pickVerbMatchQueue` returns a valid entry from the real verb deck; no console errors.
+
+**Risks / regressions to check:** (1) Idioms that generate more deck combos still get proportionally more selection chances in Conjugation+ (same bias as the old uniform slice — weighting is per idiom, not per combo). (2) Weight tuning constants are duplicated from `pickBestWord` by design; if translation weighting is retuned later, consider whether `getAdaptiveWeight` should follow. (3) The three new stores grow one record per distinct item answered (bounded by content size — dozens to a few hundred keys); no eviction implemented. (4) Verb Match weighting is only as good as the existing conjugation stats; verbs never played still rely on the newBoost path.
+
+---
+
 ### 2026-07-12 — Sentence bank ROUND4: 70 Tel Aviv slang/culture sentences (328 → 398)
 
 **Requested:** A big new sentence-bank batch featuring Israeli slang and Tel Aviv culture/institutions — hip, gossipy, real-world vibe. User-approved plan: ~70 sentences split ~60% colloquial / ~25% everyday / ~10% professional (startup culture) / ~5% formal (ironic municipal).

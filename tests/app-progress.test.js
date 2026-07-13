@@ -1004,6 +1004,7 @@ test("binyanim answers update simple game mode analytics", () => {
 
   board.currentQuestion = {
     formId: "test:paal",
+    rootId: "test",
     formVocalized: "פָּתַח",
     gloss: "opened",
     options: [
@@ -1017,6 +1018,7 @@ test("binyanim answers update simple game mode analytics", () => {
 
   board.currentQuestion = {
     formId: "test:nifal",
+    rootId: "test",
     formVocalized: "נִפְתַּח",
     gloss: "was opened",
     options: [
@@ -1030,6 +1032,13 @@ test("binyanim answers update simple game mode analytics", () => {
 
   const storageKey = app.runtime.constants.STORAGE_KEYS.binyanBoardStats;
   assert.deepEqual(JSON.parse(harness.localStorage.getItem(storageKey)), { attempts: 2, correct: 1 });
+
+  const itemStatsKey = app.runtime.constants.STORAGE_KEYS.binyanBoardItemStats;
+  const itemRecord = JSON.parse(harness.localStorage.getItem(itemStatsKey)).test;
+  assert.equal(itemRecord.attempts, 2);
+  assert.equal(itemRecord.correct, 1);
+  assert.equal(itemRecord.misses, 1);
+  assert.ok(itemRecord.lastSeen > 0);
 
   const modeStats = app.data.calculateGameModeStats();
   assert.equal(modeStats.binyanBoard.attempts, 2);
@@ -1060,6 +1069,7 @@ test("preposition answers update simple game mode analytics", () => {
 
   prep.currentQuestion = {
     triggerId: "prep-miss",
+    objectKey: "2msg",
     triggerHe: "מתגעגע",
     promptText: "מתגעגע ____",
     englishHint: "to miss you (m.sg.)",
@@ -1077,6 +1087,7 @@ test("preposition answers update simple game mode analytics", () => {
 
   prep.currentQuestion = {
     triggerId: "prep-wait",
+    objectKey: "1sg",
     triggerHe: "מחכה",
     promptText: "מחכה ____",
     englishHint: "to wait for me",
@@ -1095,6 +1106,15 @@ test("preposition answers update simple game mode analytics", () => {
   const storageKey = app.runtime.constants.STORAGE_KEYS.prepositionsStats;
   assert.deepEqual(JSON.parse(harness.localStorage.getItem(storageKey)), { attempts: 2, correct: 1 });
 
+  const itemStatsKey = app.runtime.constants.STORAGE_KEYS.prepositionsItemStats;
+  const itemStats = JSON.parse(harness.localStorage.getItem(itemStatsKey));
+  assert.equal(itemStats["prep-miss:2msg"].attempts, 1);
+  assert.equal(itemStats["prep-miss:2msg"].correct, 1);
+  assert.equal(itemStats["prep-miss:2msg"].misses, 0);
+  assert.equal(itemStats["prep-wait:1sg"].attempts, 1);
+  assert.equal(itemStats["prep-wait:1sg"].correct, 0);
+  assert.equal(itemStats["prep-wait:1sg"].misses, 1);
+
   const modeStats = app.data.calculateGameModeStats();
   assert.equal(modeStats.prepositions.attempts, 2);
   assert.equal(modeStats.prepositions.correct, 1);
@@ -1106,6 +1126,166 @@ test("preposition answers update simple game mode analytics", () => {
   assert.ok(prepCard);
   assert.equal(prepCard.children[0]?.children[0]?.textContent, "🔗");
   assert.equal(prepCard.children[1].children[1].textContent, "✅ 1  ❌ 1");
+});
+
+test("verb match session picks the weakest verb using conjugation history", () => {
+  const vocabulary = [
+    { id: "verb-weak", category: "core_advanced", en: "to fall", he: "ליפול", heNiqqud: "לִיפֹּל", utility: 80, source: "test" },
+    { id: "verb-strong", category: "core_advanced", en: "to go", he: "ללכת", heNiqqud: "לָלֶכֶת", utility: 80, source: "test" },
+  ];
+  const verbDeck = [
+    {
+      id: "verb-weak",
+      word: { id: "verb-weak", en: "to fall", he: "ליפול", heNiqqud: "לִיפֹּל" },
+      formSource: "validated",
+      forms: [
+        { id: "present_masculine_singular", englishText: "he falls", valuePlain: "נופל", valueNiqqud: "נוֹפֵל" },
+        { id: "past_first_person_singular", englishText: "I fell", valuePlain: "נפלתי", valueNiqqud: "נָפַלְתִּי" },
+        { id: "present_feminine_singular", englishText: "she falls", valuePlain: "נופלת", valueNiqqud: "נוֹפֶלֶת" },
+      ],
+    },
+    {
+      id: "verb-strong",
+      word: { id: "verb-strong", en: "to go", he: "ללכת", heNiqqud: "לָלֶכֶת" },
+      formSource: "validated",
+      forms: [
+        { id: "present_masculine_singular", englishText: "he goes", valuePlain: "הולך", valueNiqqud: "הוֹלֵךְ" },
+        { id: "past_first_person_singular", englishText: "I went", valuePlain: "הלכתי", valueNiqqud: "הָלַכְתִּי" },
+        { id: "present_feminine_singular", englishText: "she goes", valuePlain: "הולכת", valueNiqqud: "הוֹלֶכֶת" },
+      ],
+    },
+  ];
+  const harness = loadAppHarness(vocabulary, [], verbDeck, { mathRandom: () => 0 });
+
+  harness.state.progress["verb-weak"] = {
+    attempts: 0,
+    correct: 0,
+    level: 0,
+    nextDue: 0,
+    lastSeen: 0,
+    mastered: false,
+    misses: 0,
+    conjugationAttempts: 6,
+    conjugationCorrect: 1,
+    conjugationStreak: 0,
+    lastConjugationSeen: 0,
+  };
+  harness.state.progress["verb-strong"] = {
+    attempts: 0,
+    correct: 0,
+    level: 0,
+    nextDue: 0,
+    lastSeen: 0,
+    mastered: false,
+    misses: 0,
+    conjugationAttempts: 6,
+    conjugationCorrect: 6,
+    conjugationStreak: 8,
+    lastConjugationSeen: 0,
+  };
+
+  let captured = [];
+  harness.app.utils.weightedRandomWord = (items) => {
+    if (!captured.length) captured = [...items];
+    return items.reduce((best, item) => (item.weight > best.weight ? item : best), items[0]).word;
+  };
+
+  harness.startVerbMatch();
+
+  const weakWeight = captured.find((item) => item.word.id === "verb-weak")?.weight || 0;
+  const strongWeight = captured.find((item) => item.word.id === "verb-strong")?.weight || 0;
+  assert.ok(weakWeight > strongWeight);
+  assert.equal(harness.state.match.verbQueue.length, 1);
+  assert.equal(harness.state.match.verbQueue[0].id, "verb-weak");
+});
+
+test("advanced conjugation selection favors idioms with weak history and records per-idiom results", () => {
+  const idiomShape = {
+    object_type: "l_dative",
+    fixed_object: "את העיניים",
+    literal_sg: "{s} opens {p} eyes",
+    literal_pl: "{s} open {p} eyes",
+    literal_past: "{s} opened {p} eyes",
+    literal_future: "{s} will open {p} eyes",
+    present_tense: { msg: "פותח", fsg: "פותחת", mpl: "פותחים", fpl: "פותחות" },
+    past_tense: { msg: "פתח", fsg: "פתחה", mpl: "פתחו", fpl: "פתחו" },
+    future_tense: { msg: "יפתח", fsg: "תפתח", mpl: "יפתחו", fpl: "יפתחו" },
+  };
+  const idioms = [
+    { ...idiomShape, id: "idiom-weak" },
+    { ...idiomShape, id: "idiom-strong" },
+  ];
+  const harness = loadAppHarness([], [], [], {
+    idioms,
+    mathRandom: () => 0,
+    localStorageData: {
+      "ivriquest-welcome-seen-v1": "1",
+      "ivriquest-adv-conj-item-stats-v1": JSON.stringify({
+        "idiom-weak": { attempts: 6, correct: 1, misses: 5, lastSeen: 0 },
+        "idiom-strong": { attempts: 6, correct: 6, misses: 0, lastSeen: 0 },
+      }),
+    },
+  });
+
+  let captured = [];
+  harness.app.utils.weightedRandomWord = (items) => {
+    if (!captured.length) captured = [...items];
+    return items[0]?.word || null;
+  };
+
+  const deck = harness.buildAdvConjDeck();
+  const picked = harness.app.advConj.pickAdvConjQuestions(deck, 5);
+  assert.equal(picked.length, 5);
+
+  const weakWeight = captured.find((item) => item.word.idiomId === "idiom-weak")?.weight || 0;
+  const strongWeight = captured.find((item) => item.word.idiomId === "idiom-strong")?.weight || 0;
+  assert.ok(weakWeight > strongWeight);
+
+  harness.state.advConj.currentQuestion = {
+    locked: false,
+    idiomId: "idiom-weak",
+    correctAnswer: "פתח לך את העיניים",
+    options: [{ id: "right", text: "פתח לך את העיניים", isCorrect: true }],
+    selectedOptionId: "right",
+  };
+  harness.applyAdvConjAnswer();
+
+  const itemStats = JSON.parse(harness.localStorage.getItem("ivriquest-adv-conj-item-stats-v1"));
+  assert.equal(itemStats["idiom-weak"].attempts, 7);
+  assert.equal(itemStats["idiom-weak"].correct, 2);
+  assert.equal(itemStats["idiom-weak"].misses, 5);
+  assert.ok(itemStats["idiom-weak"].lastSeen > 0);
+});
+
+test("prepositions selection favors trigger-object pairs with weak history", () => {
+  const harness = loadAppHarness([], [], [], {
+    mathRandom: () => 0,
+    localStorageData: {
+      "ivriquest-welcome-seen-v1": "1",
+      "ivriquest-prepositions-item-stats-v1": JSON.stringify({
+        "trig-a:1sg": { attempts: 6, correct: 1, misses: 5, lastSeen: 0 },
+        "trig-b:2msg": { attempts: 6, correct: 6, misses: 0, lastSeen: 0 },
+      }),
+    },
+  });
+
+  const deck = [
+    { triggerId: "trig-a", objectKey: "1sg" },
+    { triggerId: "trig-b", objectKey: "2msg" },
+  ];
+
+  let captured = [];
+  harness.app.utils.weightedRandomWord = (items) => {
+    if (!captured.length) captured = [...items];
+    return items[0]?.word || null;
+  };
+
+  const picked = harness.app.prepositions.pickPrepositionsQuestions(deck, 1);
+  assert.equal(picked.length, 1);
+
+  const weakWeight = captured.find((item) => item.word.triggerId === "trig-a")?.weight || 0;
+  const strongWeight = captured.find((item) => item.word.triggerId === "trig-b")?.weight || 0;
+  assert.ok(weakWeight > strongWeight);
 });
 
 test("sentence builder rewrites formal notes into short learner-facing tips", () => {

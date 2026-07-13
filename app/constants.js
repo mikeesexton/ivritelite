@@ -18,6 +18,9 @@ constants.STORAGE_KEYS = constants.STORAGE_KEYS || Object.freeze({
   prepositionsStats: "ivriquest-prepositions-stats-v1",
   binyanBoardStats: "ivriquest-binyan-board-stats-v1",
   handwritingProgress: "ivriquest-handwriting-progress-v1",
+  advConjItemStats: "ivriquest-adv-conj-item-stats-v1",
+  prepositionsItemStats: "ivriquest-prepositions-item-stats-v1",
+  binyanBoardItemStats: "ivriquest-binyan-item-stats-v1",
 });
 
 constants.LEITNER_INTERVALS = constants.LEITNER_INTERVALS || Object.freeze([
