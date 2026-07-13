@@ -7,7 +7,25 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
-### 2026-07-12 — Conjugation+ (idioms): 8 new expressions (31 → 39)
+### 2026-07-12 — Sentence bank ROUND4: 70 Tel Aviv slang/culture sentences (328 → 398)
+
+**Requested:** A big new sentence-bank batch featuring Israeli slang and Tel Aviv culture/institutions — hip, gossipy, real-world vibe. User-approved plan: ~70 sentences split ~60% colloquial / ~25% everyday / ~10% professional (startup culture) / ~5% formal (ironic municipal).
+
+**Change:**
+- `sentence-bank-data.js`
+  - Appended `SENTENCE_EXPANSION_ROUND4` (70 `buildExpandedSentence` entries) after the ROUND3 push: `colloquial_98–139` (42), `everyday_107–124` (18), `professional_66–72` (7), `formal_61–63` (3). Difficulty mix 15/37/18 (L1/L2/L3); 9 `style:"whatsapp"` clipped messages; 10 entries with feminine/masculine `hebrewAlternates` gender swaps (colloquial_106/114/115/117/122/124/127/131/137/138).
+  - Themes: nightlife & dating gossip (סלקטור, הבריז, חי בסרט, נפל האסימון, סטוץ, אפטר), WhatsApp group drama (וי כחול, פדיחה, voice notes, muted building group), reality-TV/celeb gossip (הודח, ספוילר, סלב, משפיענית, פרסומת סמויה), social media (קרינג' ברמות, פומו, הייפ, לייקים, רילס), Israeli character (קומבינה, פרוטקציה, פראייר, לפרגן, חרטא, אשכרה, יש מצב, סוף הדרך, מהממת), TLV geography/transit (רכבת קלה, קורקינט, דיזנגוף, פלורנטין, פארק הירקון, תחנת השלום, שוק הכרמל, חוף גורדון, הטיילת), beach/matkot/מדוזות, café & food (הפוך על סויה, קופיקס, לנגב חומוס, ברנץ', בורקס, טבעוני, שקשוקה), apartment hunting (דמי תיווך, ועד בית, בעל הבית, יד שנייה, 30-person viewings), startup register (אקזיט, גייס סבב, אופן ספייס, דדליין/ספרינט, מנכ"ל, באג/פיצ'ר, office dog), ironic municipal notices (עיריית ת"א scooter warning, מתרחצים beach request, אי הנוחות light-rail apology). Derogatory/vulgar slang (ארס/פרחה etc.) deliberately excluded; all slang checked as fresh (not featured in the existing 328).
+  - Bumped `__build` `20260712b` → `20260712c`.
+- `tests/sentence-bank-data.test.js` — master count test 328 → 398 (name + 3 assertions); `categoryCounts` → `{colloquial:139, everyday:124, professional:72, formal:63}`; new `ROUND4_ENTRY_IDS` (`sentenceIdRange` ×4); new round4 difficulty-mix block (`70`, `{1:15, 2:37, 3:18}`); alignment loop extended with `...ROUND4_ENTRY_IDS`; `PHRASE_COMPACTED_ENTRY_IDS` extended with the four round-4 ranges; 10 ids appended to `EXPANSION_GENDER_ALTERNATE_IDS`.
+- `index.html` — `sentence-bank-data.js?v=` bumped `20260712b` → `20260712c`.
+
+**Files changed:** `sentence-bank-data.js`, `tests/sentence-bank-data.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Sentences/Shema deck grows 328 → 398 sentences; the new items enter the unseen-first selection pool immediately.
+
+**Tests run:** `npm test` before: 233 pass, 0 fail. After: 233 pass, 0 fail (the alignment/frame/nuance/distractor tests now validate all 70 new entries; also verified with a standalone replica validator: 0 problems). Live check on :3000 under `?v=20260712c`: `IvriQuestSentenceBank.__build === "20260712c"`, 398 entries with correct per-category counts, Sentences mode starts and renders a tiled question, no console errors.
+
+**Risks / regressions to check:** (1) Hand-pointed niqqud on 70 new sentences + distractors + alternates — spot-check loanword pointings (סְפּוֹיְלֶר, קוֹרְקִינֵט, הַהַייפּ, בָּאוֹפֶן סְפֵּייס) and the classical-vs-male pairs (plain אליי/עכשיו ↔ pointed אֵלַי/עַכְשָׁו, matching bank convention). (2) Slang register is intentionally colloquial (e.g. סטוץ 'fling' in colloquial_105) — flag if too racy for the app's audience. (3) המנכ"ל/הסמנכ"ל tokens contain an embedded `"` (escaped in JS) — verified frame-building works, but check UI rendering of the quote character in tiles.
 
 **Requested:** Batch 5 (final item) of the content-expansion plan: ~6–8 new Conjugation+ idioms, diversifying beyond the "drive-someone-crazy" annoyance family.
 

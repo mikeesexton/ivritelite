@@ -10376,6 +10376,821 @@ const SENTENCE_EXPANSION_ROUND3 = [
 
 SENTENCE_BANK.push(...SENTENCE_EXPANSION_ROUND3);
 
+const SENTENCE_EXPANSION_ROUND4 = [
+  buildExpandedSentence({
+    id: "colloquial_98", emoji: "🙈", category: "colloquial", difficulty: 2, style: "whatsapp",
+    hebrew: "ראית מה היא כתבה בקבוצה? איזה פדיחה.",
+    hebrewNiqqud: "רָאִית מָה הִיא כָּתְבָה בַּקְּבוּצָה? אֵיזֶה פָּדִיחָה.",
+    english: "Did you see what she wrote in the group? So embarrassing.",
+    hebrewTokenPairs: [["ראית", "רָאִית"], ["מה", "מָה"], ["היא", "הִיא"], ["כתבה", "כָּתְבָה"], ["בקבוצה", "בַּקְּבוּצָה"], ["איזה", "אֵיזֶה"], ["פדיחה", "פָּדִיחָה"]],
+    englishTokens: ["Did you see", "what", "she", "wrote", "in the group", "So", "embarrassing"],
+    hebrewDistractorPairs: [["שמעת", "שָׁמַעְתְּ"], ["הוא", "הוּא"], ["כתב", "כָּתַב"], ["בסטורי", "בַּסְּטוֹרִי"], ["איזו", "אֵיזוֹ"]],
+    englishDistractors: ["Did you hear", "he", "posted", "in the story", "How", "awkward"],
+    notes: "פדיחה (from Arabic) = an embarrassing moment, a cringe. Spoken Hebrew says איזה פדיחה even though פדיחה is feminine — the normative איזו is the grammar-trap distractor. ראית here addresses a woman."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_99", emoji: "🎬", category: "colloquial", difficulty: 2,
+    hebrew: "הוא חושב שהיא תחזור אליו? הוא חי בסרט.",
+    hebrewNiqqud: "הוּא חוֹשֵׁב שֶׁהִיא תַּחְזֹר אֵלָיו? הוּא חַי בְּסֶרֶט.",
+    english: "He thinks she'll come back to him? He's living in a movie.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["חושב", "חוֹשֵׁב"], ["שהיא", "שֶׁהִיא"], ["תחזור", "תַּחְזֹר"], ["אליו", "אֵלָיו"], ["הוא", "הוּא"], ["חי", "חַי"], ["בסרט", "בְּסֶרֶט"]],
+    englishTokens: ["He", "thinks", "she'll", "come back", "to him", "He's", "living in a movie"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["מאמין", "מַאֲמִין"], ["שהוא", "שֶׁהוּא"], ["תסלח", "תִּסְלַח"], ["בסרטים", "בַּסְּרָטִים"]],
+    englishDistractors: ["She", "believes", "he'll", "forgive him", "to her", "dreaming out loud"],
+    notes: "חי בסרט — literally 'lives in a movie' — is the slang for someone delusional; the plural חי בסרטים also exists (distractor). תחזור אליו = 'will come back to him'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_100", emoji: "🕗", category: "colloquial", difficulty: 2, style: "whatsapp",
+    hebrew: "קבענו בשמונה והוא הבריז לי ברגע האחרון.",
+    hebrewNiqqud: "קָבַעְנוּ בִּשְׁמוֹנֶה וְהוּא הִבְרִיז לִי בָּרֶגַע הָאַחֲרוֹן.",
+    english: "We made plans for eight and he bailed on me at the last minute.",
+    hebrewTokenPairs: [["קבענו", "קָבַעְנוּ"], ["בשמונה", "בִּשְׁמוֹנֶה"], ["והוא", "וְהוּא"], ["הבריז", "הִבְרִיז"], ["לי", "לִי"], ["ברגע", "בָּרֶגַע"], ["האחרון", "הָאַחֲרוֹן"]],
+    englishTokens: ["We made plans", "for eight", "and he", "bailed on me", "at the last", "minute"],
+    hebrewDistractorPairs: [["ביטלנו", "בִּטַּלְנוּ"], ["בתשע", "בְּתֵשַׁע"], ["והיא", "וְהִיא"], ["הופיע", "הוֹפִיעַ"], ["בזמן", "בַּזְּמַן"]],
+    englishDistractors: ["We forgot", "for nine", "and she", "showed up", "in the end", "moment"],
+    notes: "הבריז (slang, from Arabic) = to bail on someone, stand them up. קבענו = 'we set (a time to meet)' — the standard verb for making plans."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_101", emoji: "🚪", category: "colloquial", difficulty: 2,
+    hebrew: "הסלקטור לא הכניס אותנו, אז הלכנו לבר בפלורנטין.",
+    hebrewNiqqud: "הַסֶּלֶקְטוֹר לֹא הִכְנִיס אוֹתָנוּ, אָז הָלַכְנוּ לְבָר בִּפְלוֹרֶנְטִין.",
+    english: "The selector didn't let us in, so we went to a bar in Florentin.",
+    hebrewTokenPairs: [["הסלקטור", "הַסֶּלֶקְטוֹר"], ["לא", "לֹא"], ["הכניס", "הִכְנִיס"], ["אותנו", "אוֹתָנוּ"], ["אז", "אָז"], ["הלכנו", "הָלַכְנוּ"], ["לבר", "לְבָר"], ["בפלורנטין", "בִּפְלוֹרֶנְטִין"]],
+    englishTokens: ["The selector", "didn't", "let us in", "so", "we went", "to a bar", "in Florentin"],
+    hebrewDistractorPairs: [["הברמן", "הַבַּרְמֶן"], ["הוציא", "הוֹצִיא"], ["אותם", "אוֹתָם"], ["לרחוב", "לָרְחוֹב"], ["ביפו", "בְּיָפוֹ"]],
+    englishDistractors: ["The bartender", "let us through", "so that", "we drove", "to a club", "in Jaffa"],
+    notes: "סלקטור — the club doorman who decides who gets in, a fixture of Tel Aviv nightlife. הכניס = 'let (someone) in', literally 'brought in'. Florentin is the south-side bar neighborhood."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_102", emoji: "🌅", category: "colloquial", difficulty: 3,
+    hebrew: "הם המשיכו לאפטר וחזרו הביתה בשבע בבוקר.",
+    hebrewNiqqud: "הֵם הִמְשִׁיכוּ לָאַפְטֶר וְחָזְרוּ הַבַּיְתָה בְּשֶׁבַע בַּבֹּקֶר.",
+    english: "They went on to the after-party and got home at seven in the morning.",
+    hebrewTokenPairs: [["הם", "הֵם"], ["המשיכו", "הִמְשִׁיכוּ"], ["לאפטר", "לָאַפְטֶר"], ["וחזרו", "וְחָזְרוּ"], ["הביתה", "הַבַּיְתָה"], ["בשבע", "בְּשֶׁבַע"], ["בבוקר", "בַּבֹּקֶר"]],
+    englishTokens: ["They", "went on", "to the after-party", "and got home", "at seven", "in the morning"],
+    hebrewDistractorPairs: [["הן", "הֵן"], ["הפסיקו", "הִפְסִיקוּ"], ["למועדון", "לַמּוֹעֲדוֹן"], ["ונסעו", "וְנָסְעוּ"], ["בצהריים", "בַּצָּהֳרַיִם"]],
+    englishDistractors: ["We", "stayed", "at the bar", "and slept", "at noon", "until the morning"],
+    notes: "אפטר (from English 'after') = the after-party that starts when the club closes — a Tel Aviv institution. המשיכו ל־ = 'continued on to'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_103", emoji: "👀", category: "colloquial", difficulty: 2,
+    hebrew: "ראיתי את האקס שלה בדייט עם מישהי חדשה בדיזנגוף.",
+    hebrewNiqqud: "רָאִיתִי אֶת הָאֶקְס שֶׁלָּהּ בְּדֵייט עִם מִישֶׁהִי חֲדָשָׁה בְּדִיזֶנְגוֹף.",
+    english: "I saw her ex on a date with someone new on Dizengoff.",
+    hebrewTokenPairs: [["ראיתי", "רָאִיתִי"], ["את", "אֶת"], ["האקס", "הָאֶקְס"], ["שלה", "שֶׁלָּהּ"], ["בדייט", "בְּדֵייט"], ["עם", "עִם"], ["מישהי", "מִישֶׁהִי"], ["חדשה", "חֲדָשָׁה"], ["בדיזנגוף", "בְּדִיזֶנְגוֹף"]],
+    englishTokens: ["I saw", "her ex", "on a date", "with someone", "new", "on Dizengoff"],
+    hebrewDistractorPairs: [["שמעתי", "שָׁמַעְתִּי"], ["האקסית", "הָאֶקְסִית"], ["שלו", "שֶׁלּוֹ"], ["בפגישה", "בִּפְגִישָׁה"], ["מישהו", "מִישֶׁהוּ"], ["ברוטשילד", "בְּרוֹטְשִׁילְד"]],
+    englishDistractors: ["I heard", "his ex", "at brunch", "with a friend", "on Rothschild"],
+    notes: "האקס / האקסית — 'the ex' (m/f), straight from English; דייט is likewise borrowed. Dizengoff Street is prime Tel Aviv people-watching territory."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_104", emoji: "🪙", category: "colloquial", difficulty: 3,
+    hebrew: "פתאום נפל לי האסימון: הם חזרו להיות זוג.",
+    hebrewNiqqud: "פִּתְאוֹם נָפַל לִי הָאֲסִימוֹן: הֵם חָזְרוּ לִהְיוֹת זוּג.",
+    english: "Suddenly the penny dropped for me: they're back together.",
+    hebrewTokenPairs: [["פתאום", "פִּתְאוֹם"], ["נפל", "נָפַל"], ["לי", "לִי"], ["האסימון", "הָאֲסִימוֹן"], ["הם", "הֵם"], ["חזרו", "חָזְרוּ"], ["להיות", "לִהְיוֹת"], ["זוג", "זוּג"]],
+    englishTokens: ["Suddenly", "the penny dropped", "for me", "they're", "back together"],
+    hebrewDistractorPairs: [["לאט לאט", "לְאַט לְאַט"], ["עלה", "עָלָה"], ["לה", "לָהּ"], ["הרעיון", "הָרַעְיוֹן"], ["להיפרד", "לְהִפָּרֵד"]],
+    englishDistractors: ["Finally", "the coin fell", "for us", "she's", "broken up"],
+    notes: "נפל האסימון — literally 'the token dropped' (old payphone tokens) = the penny dropped, it finally clicked. נפל לי האסימון puts the person realizing it in לי."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_105", emoji: "💔", category: "colloquial", difficulty: 3,
+    hebrew: "זה היה רק סטוץ, היא לא מחפשת קשר רציני.",
+    hebrewNiqqud: "זֶה הָיָה רַק סְטוּץ, הִיא לֹא מְחַפֶּשֶׂת קֶשֶׁר רְצִינִי.",
+    english: "It was just a fling, she isn't looking for anything serious.",
+    hebrewTokenPairs: [["זה", "זֶה"], ["היה", "הָיָה"], ["רק", "רַק"], ["סטוץ", "סְטוּץ"], ["היא", "הִיא"], ["לא", "לֹא"], ["מחפשת", "מְחַפֶּשֶׂת"], ["קשר", "קֶשֶׁר"], ["רציני", "רְצִינִי"]],
+    englishTokens: ["It", "was", "just", "a fling", "she", "isn't", "looking for", "anything serious"],
+    hebrewDistractorPairs: [["זאת", "זֹאת"], ["הייתה", "הָיְתָה"], ["אהבה", "אַהֲבָה"], ["הוא", "הוּא"], ["מחפש", "מְחַפֵּשׂ"], ["רומן", "רוֹמָן"]],
+    englishDistractors: ["a crush", "he", "wasn't", "looking at", "something casual"],
+    notes: "סטוץ = a fling, a no-strings romance. קשר רציני = a serious relationship — the phrase every dating-app bio negotiates. רק = 'just/only'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_106", emoji: "🗣️", category: "colloquial", difficulty: 3,
+    hebrew: "כל השמועות האלה? חרטא אחד גדול, תאמיני לי.",
+    hebrewNiqqud: "כָּל הַשְּׁמוּעוֹת הָאֵלֶּה? חַרְטָא אֶחָד גָּדוֹל, תַּאֲמִינִי לִי.",
+    english: "All those rumors? One big pile of nonsense, believe me.",
+    hebrewTokenPairs: [["כל", "כָּל"], ["השמועות", "הַשְּׁמוּעוֹת"], ["האלה", "הָאֵלֶּה"], ["חרטא", "חַרְטָא"], ["אחד", "אֶחָד"], ["גדול", "גָּדוֹל"], ["תאמיני", "תַּאֲמִינִי"], ["לי", "לִי"]],
+    englishTokens: ["All", "those rumors", "One big", "pile of nonsense", "believe", "me"],
+    hebrewDistractorPairs: [["רוב", "רֹב"], ["הסיפורים", "הַסִּפּוּרִים"], ["קטן", "קָטָן"], ["תאמין", "תַּאֲמִין"], ["ממני", "מִמֶּנִּי"]],
+    englishDistractors: ["Some", "of the stories", "A little", "bit of gossip", "trust", "us"],
+    notes: "חרטא (from Arabic) = utter nonsense, baloney. תאמיני לי addresses a woman; the masculine תאמין לי is accepted as an alternate.",
+    hebrewAlternates: [{
+      text: "כל השמועות האלה? חרטא אחד גדול, תאמין לי.", textNiqqud: "כָּל הַשְּׁמוּעוֹת הָאֵלֶּה? חַרְטָא אֶחָד גָּדוֹל, תַּאֲמִין לִי.",
+      tokenPairs: [["כל", "כָּל"], ["השמועות", "הַשְּׁמוּעוֹת"], ["האלה", "הָאֵלֶּה"], ["חרטא", "חַרְטָא"], ["אחד", "אֶחָד"], ["גדול", "גָּדוֹל"], ["תאמין", "תַּאֲמִין"], ["לי", "לִי"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_107", emoji: "🔕", category: "colloquial", difficulty: 1, style: "whatsapp",
+    hebrew: "השתקתי את הקבוצה של הבניין עד יום ראשון.",
+    hebrewNiqqud: "הִשְׁתַּקְתִּי אֶת הַקְּבוּצָה שֶׁל הַבִּנְיָן עַד יוֹם רִאשׁוֹן.",
+    english: "I muted the building group until Sunday.",
+    hebrewTokenPairs: [["השתקתי", "הִשְׁתַּקְתִּי"], ["את", "אֶת"], ["הקבוצה", "הַקְּבוּצָה"], ["של", "שֶׁל"], ["הבניין", "הַבִּנְיָן"], ["עד", "עַד"], ["יום ראשון", "יוֹם רִאשׁוֹן"]],
+    englishTokens: ["I muted", "the building group", "until", "Sunday"],
+    hebrewDistractorPairs: [["עזבתי", "עָזַבְתִּי"], ["ההודעות", "הַהוֹדָעוֹת"], ["השכנים", "הַשְּׁכֵנִים"], ["יום שישי", "יוֹם שִׁישִׁי"], ["מחר", "מָחָר"]],
+    englishDistractors: ["I left", "the parents' group", "after", "Friday", "by accident"],
+    notes: "השתקתי = 'I muted' — the survival move for every Israeli building's WhatsApp group (הקבוצה של הבניין). עד יום ראשון = until Sunday, the first day of the Israeli week."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_108", emoji: "✔️", category: "colloquial", difficulty: 2, style: "whatsapp",
+    hebrew: "יש וי כחול כבר יומיים והוא לא עונה.",
+    hebrewNiqqud: "יֵשׁ וִי כָּחֹל כְּבָר יוֹמַיִם וְהוּא לֹא עוֹנֶה.",
+    english: "There's been a blue check for two days already and he isn't answering.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["וי כחול", "וִי כָּחֹל"], ["כבר", "כְּבָר"], ["יומיים", "יוֹמַיִם"], ["והוא", "וְהוּא"], ["לא", "לֹא"], ["עונה", "עוֹנֶה"]],
+    englishTokens: ["There's been", "a blue check", "for two days", "already", "and he", "isn't answering"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["וי אחד", "וִי אֶחָד"], ["שבוע", "שָׁבוּעַ"], ["והיא", "וְהִיא"], ["כותבת", "כּוֹתֶבֶת"]],
+    englishDistractors: ["There was", "one gray check", "for a week", "and she", "stopped typing"],
+    notes: "וי כחול — the WhatsApp blue check. Being left on read (נקרא ולא נענה) is prime gossip material; כבר יומיים = 'two days already'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_109", emoji: "🎙️", category: "colloquial", difficulty: 2,
+    hebrew: "היא שלחה הודעה קולית של שלוש דקות, מי מקשיב לזה?",
+    hebrewNiqqud: "הִיא שָׁלְחָה הוֹדָעָה קוֹלִית שֶׁל שָׁלוֹשׁ דַּקּוֹת, מִי מַקְשִׁיב לָזֶה?",
+    english: "She sent a voice note three minutes long, who listens to that?",
+    hebrewTokenPairs: [["היא", "הִיא"], ["שלחה", "שָׁלְחָה"], ["הודעה קולית", "הוֹדָעָה קוֹלִית"], ["של", "שֶׁל"], ["שלוש", "שָׁלוֹשׁ"], ["דקות", "דַּקּוֹת"], ["מי", "מִי"], ["מקשיב", "מַקְשִׁיב"], ["לזה", "לָזֶה"]],
+    englishTokens: ["She sent", "a voice note", "three", "minutes", "long", "who", "listens", "to that"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["שלח", "שָׁלַח"], ["הודעת טקסט", "הוֹדַעַת טֶקְסְט"], ["שניות", "שְׁנִיּוֹת"], ["עונה", "עוֹנֶה"]],
+    englishDistractors: ["He sent", "a text message", "seconds", "short", "nobody", "replies"],
+    notes: "הודעה קולית = a voice note; the three-minute voice note is a beloved Israeli group-chat crime. מי מקשיב לזה? = 'who listens to that?' — a rhetorical eye-roll."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_110", emoji: "🔌", category: "colloquial", difficulty: 1, style: "whatsapp",
+    hebrew: "מישהו לקח לי את המטען? תחזירו, זה לא מצחיק.",
+    hebrewNiqqud: "מִישֶׁהוּ לָקַח לִי אֶת הַמַּטְעֵן? תַּחְזִירוּ, זֶה לֹא מַצְחִיק.",
+    english: "Did someone take my charger? Give it back, it's not funny.",
+    hebrewTokenPairs: [["מישהו", "מִישֶׁהוּ"], ["לקח", "לָקַח"], ["לי", "לִי"], ["את", "אֶת"], ["המטען", "הַמַּטְעֵן"], ["תחזירו", "תַּחְזִירוּ"], ["זה", "זֶה"], ["לא", "לֹא"], ["מצחיק", "מַצְחִיק"]],
+    englishTokens: ["Did someone", "take", "my charger", "Give it back", "it's", "not", "funny"],
+    hebrewDistractorPairs: [["מישהי", "מִישֶׁהִי"], ["גנב", "גָּנַב"], ["הכבל", "הַכֶּבֶל"], ["תביאו", "תָּבִיאוּ"], ["מגניב", "מַגְנִיב"]],
+    englishDistractors: ["Did anyone", "borrow", "my cable", "Bring it here", "so", "weird"],
+    notes: "Classic roommate-group message. תחזירו is plural — you're scolding the whole group at once. לקח לי = 'took (from) me'; the לי marks the injured party."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_111", emoji: "🎒", category: "colloquial", difficulty: 1, style: "whatsapp",
+    hebrew: "שכחתי מה צריך להביא מחר לגן, מישהי זוכרת?",
+    hebrewNiqqud: "שָׁכַחְתִּי מָה צָרִיךְ לְהָבִיא מָחָר לַגַּן, מִישֶׁהִי זוֹכֶרֶת?",
+    english: "I forgot what we need to bring to kindergarten tomorrow, does anyone remember?",
+    hebrewTokenPairs: [["שכחתי", "שָׁכַחְתִּי"], ["מה", "מָה"], ["צריך", "צָרִיךְ"], ["להביא", "לְהָבִיא"], ["מחר", "מָחָר"], ["לגן", "לַגַּן"], ["מישהי", "מִישֶׁהִי"], ["זוכרת", "זוֹכֶרֶת"]],
+    englishTokens: ["I forgot", "what", "we need", "to bring", "to kindergarten", "tomorrow", "does anyone", "remember"],
+    hebrewDistractorPairs: [["זכרתי", "זָכַרְתִּי"], ["למה", "לָמָּה"], ["לקנות", "לִקְנוֹת"], ["אתמול", "אֶתְמוֹל"], ["לבית הספר", "לְבֵית הַסֵּפֶר"]],
+    englishDistractors: ["I remembered", "when", "we want", "to buy", "to school", "yesterday"],
+    notes: "The kindergarten parents' WhatsApp group (קבוצת ההורים) runs Israeli family life. מישהי זוכרת? uses the feminine — the unspoken assumption about who answers. גן = kindergarten."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_112", emoji: "🚪", category: "colloquial", difficulty: 2, style: "whatsapp",
+    hebrew: "שמתם לב שדנה עזבה את הקבוצה באמצע הוויכוח?",
+    hebrewNiqqud: "שַׂמְתֶּם לֵב שֶׁדָּנָה עָזְבָה אֶת הַקְּבוּצָה בְּאֶמְצַע הַוִּכּוּחַ?",
+    english: "Did you notice Dana left the group in the middle of the argument?",
+    hebrewTokenPairs: [["שמתם", "שַׂמְתֶּם"], ["לב", "לֵב"], ["שדנה", "שֶׁדָּנָה"], ["עזבה", "עָזְבָה"], ["את", "אֶת"], ["הקבוצה", "הַקְּבוּצָה"], ["באמצע", "בְּאֶמְצַע"], ["הוויכוח", "הַוִּכּוּחַ"]],
+    englishTokens: ["Did you notice", "Dana", "left", "the group", "in the middle", "of the argument"],
+    hebrewDistractorPairs: [["שמעתם", "שְׁמַעְתֶּם"], ["שרונית", "שֶׁרוֹנִית"], ["הצטרפה", "הִצְטָרְפָה"], ["הצ'אט", "הַצַּ'אט"], ["בסוף", "בְּסוֹף"]],
+    englishDistractors: ["Did you see", "Ronit", "joined", "the chat", "at the end", "of the meeting"],
+    notes: "עזבה את הקבוצה — 'left the group', the nuclear option of Israeli WhatsApp drama. שמתם לב = 'did you (pl.) notice', literally 'did you put heart'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_113", emoji: "💬", category: "colloquial", difficulty: 1, style: "whatsapp",
+    hebrew: "יש מאתיים הודעות חדשות בקבוצה, מה פספסתי?",
+    hebrewNiqqud: "יֵשׁ מָאתַיִם הוֹדָעוֹת חֲדָשׁוֹת בַּקְּבוּצָה, מָה פִּסְפַסְתִּי?",
+    english: "There are two hundred new messages in the group, what did I miss?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["מאתיים", "מָאתַיִם"], ["הודעות", "הוֹדָעוֹת"], ["חדשות", "חֲדָשׁוֹת"], ["בקבוצה", "בַּקְּבוּצָה"], ["מה", "מָה"], ["פספסתי", "פִּסְפַסְתִּי"]],
+    englishTokens: ["There are", "two hundred", "new messages", "in the group", "what did", "I miss"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["אלפיים", "אַלְפַּיִם"], ["תמונות", "תְּמוּנוֹת"], ["ישנות", "יְשָׁנוֹת"], ["שכחתי", "שָׁכַחְתִּי"]],
+    englishDistractors: ["There were", "two thousand", "old photos", "in the story", "who did"],
+    notes: "פספסתי = 'I missed (it)' — from לפספס, one of Hebrew's favorite slang verbs. Coming back to two hundred unread messages is the Israeli group-chat default."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_114", emoji: "📺", category: "colloquial", difficulty: 2,
+    hebrew: "אני לא מאמינה שהוא הודח דווקא לפני הגמר.",
+    hebrewNiqqud: "אֲנִי לֹא מַאֲמִינָה שֶׁהוּא הוּדַח דַּוְקָא לִפְנֵי הַגְּמָר.",
+    english: "I can't believe he was eliminated right before the finale.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["לא", "לֹא"], ["מאמינה", "מַאֲמִינָה"], ["שהוא", "שֶׁהוּא"], ["הודח", "הוּדַח"], ["דווקא", "דַּוְקָא"], ["לפני", "לִפְנֵי"], ["הגמר", "הַגְּמָר"]],
+    englishTokens: ["I", "can't", "believe", "he was eliminated", "right before", "the finale"],
+    hebrewDistractorPairs: [["מאמין", "מַאֲמִין"], ["שהיא", "שֶׁהִיא"], ["נבחר", "נִבְחַר"], ["אחרי", "אַחֲרֵי"], ["הפרק", "הַפֶּרֶק"]],
+    englishDistractors: ["We", "can't wait", "she was chosen", "right after", "the premiere"],
+    notes: "הודח = 'was eliminated/voted off' — reality-TV Hebrew. דווקא adds 'of all times, right (before)'. מאמינה marks a female speaker; the masculine מאמין is accepted as an alternate.",
+    hebrewAlternates: [{
+      text: "אני לא מאמין שהוא הודח דווקא לפני הגמר.", textNiqqud: "אֲנִי לֹא מַאֲמִין שֶׁהוּא הוּדַח דַּוְקָא לִפְנֵי הַגְּמָר.",
+      tokenPairs: [["אני", "אֲנִי"], ["לא", "לֹא"], ["מאמין", "מַאֲמִין"], ["שהוא", "שֶׁהוּא"], ["הודח", "הוּדַח"], ["דווקא", "דַּוְקָא"], ["לפני", "לִפְנֵי"], ["הגמר", "הַגְּמָר"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_115", emoji: "🤐", category: "colloquial", difficulty: 2,
+    hebrew: "אל תעשה לי ספוילר, עוד לא ראיתי את הפרק האחרון!",
+    hebrewNiqqud: "אַל תַּעֲשֶׂה לִי סְפּוֹיְלֶר, עוֹד לֹא רָאִיתִי אֶת הַפֶּרֶק הָאַחֲרוֹן!",
+    english: "Don't give me a spoiler, I haven't seen the last episode yet!",
+    hebrewTokenPairs: [["אל", "אַל"], ["תעשה", "תַּעֲשֶׂה"], ["לי", "לִי"], ["ספוילר", "סְפּוֹיְלֶר"], ["עוד לא", "עוֹד לֹא"], ["ראיתי", "רָאִיתִי"], ["את", "אֶת"], ["הפרק", "הַפֶּרֶק"], ["האחרון", "הָאַחֲרוֹן"]],
+    englishTokens: ["Don't", "give me", "a spoiler", "I haven't seen", "the last", "episode", "yet"],
+    hebrewDistractorPairs: [["תעשי", "תַּעֲשִׂי"], ["לנו", "לָנוּ"], ["טריילר", "טְרֵיילֶר"], ["כבר לא", "כְּבָר לֹא"], ["הסרט", "הַסֶּרֶט"]],
+    englishDistractors: ["Please", "send me", "a summary", "I've watched", "the first", "season"],
+    notes: "ספוילר came into Hebrew intact; אל תעשה לי ספוילר = 'don't spoil it for me' (lit. 'don't make me a spoiler'). עוד לא = 'not yet'. Feminine-addressed אל תעשי is accepted as an alternate.",
+    hebrewAlternates: [{
+      text: "אל תעשי לי ספוילר, עוד לא ראיתי את הפרק האחרון!", textNiqqud: "אַל תַּעֲשִׂי לִי סְפּוֹיְלֶר, עוֹד לֹא רָאִיתִי אֶת הַפֶּרֶק הָאַחֲרוֹן!",
+      tokenPairs: [["אל", "אַל"], ["תעשי", "תַּעֲשִׂי"], ["לי", "לִי"], ["ספוילר", "סְפּוֹיְלֶר"], ["עוד לא", "עוֹד לֹא"], ["ראיתי", "רָאִיתִי"], ["את", "אֶת"], ["הפרק", "הַפֶּרֶק"], ["האחרון", "הָאַחֲרוֹן"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_116", emoji: "🌟", category: "colloquial", difficulty: 1,
+    hebrew: "ראינו סלב מהריאליטי יושב בבית קפה ברוטשילד.",
+    hebrewNiqqud: "רָאִינוּ סֶלֶבּ מֵהָרִיאָלִיטִי יוֹשֵׁב בְּבֵית קָפֶה בְּרוֹטְשִׁילְד.",
+    english: "We saw a celeb from the reality show sitting at a café on Rothschild.",
+    hebrewTokenPairs: [["ראינו", "רָאִינוּ"], ["סלב", "סֶלֶבּ"], ["מהריאליטי", "מֵהָרִיאָלִיטִי"], ["יושב", "יוֹשֵׁב"], ["בבית קפה", "בְּבֵית קָפֶה"], ["ברוטשילד", "בְּרוֹטְשִׁילְד"]],
+    englishTokens: ["We saw", "a celeb", "from the reality show", "sitting", "at a café", "on Rothschild"],
+    hebrewDistractorPairs: [["שמענו", "שָׁמַעְנוּ"], ["שופט", "שׁוֹפֵט"], ["מהחדשות", "מֵהַחֲדָשׁוֹת"], ["עומד", "עוֹמֵד"], ["על הטיילת", "עַל הַטַּיֶּלֶת"]],
+    englishDistractors: ["We heard", "a judge", "from the news", "standing", "at a bar", "on Dizengoff"],
+    notes: "סלב = celeb; הריאליטי = the reality show — Hebrew keeps the English words and adds ה־. Spotting reality-TV faces at Rothschild cafés is a Tel Aviv sport."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_117", emoji: "🍿", category: "colloquial", difficulty: 2,
+    hebrew: "כולן באות אליי לראות את הגמר, תביאו חטיפים.",
+    hebrewNiqqud: "כֻּלָּן בָּאוֹת אֵלַי לִרְאוֹת אֶת הַגְּמָר, תָּבִיאוּ חֲטִיפִים.",
+    english: "Everyone's coming to my place to watch the finale, bring snacks.",
+    hebrewTokenPairs: [["כולן", "כֻּלָּן"], ["באות", "בָּאוֹת"], ["אליי", "אֵלַי"], ["לראות", "לִרְאוֹת"], ["את", "אֶת"], ["הגמר", "הַגְּמָר"], ["תביאו", "תָּבִיאוּ"], ["חטיפים", "חֲטִיפִים"]],
+    englishTokens: ["Everyone's", "coming", "to my place", "to watch", "the finale", "bring", "snacks"],
+    hebrewDistractorPairs: [["כולם", "כֻּלָּם"], ["באים", "בָּאִים"], ["אליה", "אֵלֶיהָ"], ["לצלם", "לְצַלֵּם"], ["תקנו", "תִּקְנוּ"]],
+    englishDistractors: ["Nobody's", "driving", "to her place", "to film", "the premiere", "buy"],
+    notes: "כולן באות is feminine plural — a girls'-night finale party; the masculine כולם באים is accepted too. תביאו חטיפים = 'bring snacks' (plural imperative).",
+    hebrewAlternates: [{
+      text: "כולם באים אליי לראות את הגמר, תביאו חטיפים.", textNiqqud: "כֻּלָּם בָּאִים אֵלַי לִרְאוֹת אֶת הַגְּמָר, תָּבִיאוּ חֲטִיפִים.",
+      tokenPairs: [["כולם", "כֻּלָּם"], ["באים", "בָּאִים"], ["אליי", "אֵלַי"], ["לראות", "לִרְאוֹת"], ["את", "אֶת"], ["הגמר", "הַגְּמָר"], ["תביאו", "תָּבִיאוּ"], ["חטיפים", "חֲטִיפִים"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_118", emoji: "💄", category: "colloquial", difficulty: 3,
+    hebrew: "המשפיענית הזאת עושה פרסומת סמויה לכל מוצר שני.",
+    hebrewNiqqud: "הַמַּשְׁפִּיעָנִית הַזֹּאת עוֹשָׂה פִּרְסֹמֶת סְמוּיָה לְכָל מוּצָר שֵׁנִי.",
+    english: "That influencer does hidden advertising for every other product.",
+    hebrewTokenPairs: [["המשפיענית", "הַמַּשְׁפִּיעָנִית"], ["הזאת", "הַזֹּאת"], ["עושה", "עוֹשָׂה"], ["פרסומת", "פִּרְסֹמֶת"], ["סמויה", "סְמוּיָה"], ["לכל", "לְכָל"], ["מוצר", "מוּצָר"], ["שני", "שֵׁנִי"]],
+    englishTokens: ["That influencer", "does", "hidden advertising", "for every", "other", "product"],
+    hebrewDistractorPairs: [["הדוגמנית", "הַדֻּגְמָנִית"], ["הזה", "הַזֶּה"], ["מקבלת", "מְקַבֶּלֶת"], ["גלויה", "גְּלוּיָה"], ["מותג", "מוּתָג"]],
+    englishDistractors: ["This model", "makes", "open sponsorship", "for some", "new", "brand"],
+    notes: "משפיענית = (female) influencer — Hebrew coined its own word from להשפיע, 'to influence'. פרסומת סמויה = undisclosed sponsored content, a running Israeli media scandal. כל מוצר שני = 'every other product'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_119", emoji: "😬", category: "colloquial", difficulty: 2,
+    hebrew: "הסרטון הזה קרינג' ברמות, לא הצלחתי לצפות עד הסוף.",
+    hebrewNiqqud: "הַסִּרְטוֹן הַזֶּה קְרִינְג' בְּרָמוֹת, לֹא הִצְלַחְתִּי לִצְפּוֹת עַד הַסּוֹף.",
+    english: "That video is next-level cringe, I couldn't watch to the end.",
+    hebrewTokenPairs: [["הסרטון", "הַסִּרְטוֹן"], ["הזה", "הַזֶּה"], ["קרינג'", "קְרִינְג'"], ["ברמות", "בְּרָמוֹת"], ["לא", "לֹא"], ["הצלחתי", "הִצְלַחְתִּי"], ["לצפות", "לִצְפּוֹת"], ["עד", "עַד"], ["הסוף", "הַסּוֹף"]],
+    englishTokens: ["That video", "is", "next-level", "cringe", "I couldn't", "watch", "to the end"],
+    hebrewDistractorPairs: [["התמונה", "הַתְּמוּנָה"], ["הזאת", "הַזֹּאת"], ["מצחיק", "מַצְחִיק"], ["הצלחנו", "הִצְלַחְנוּ"], ["עד האמצע", "עַד הָאֶמְצַע"]],
+    englishDistractors: ["That photo", "was", "kind of", "funny", "I managed", "to the middle"],
+    notes: "קרינג' is borrowed wholesale; ברמות ('on levels') intensifies any adjective — קרינג' ברמות = cringe on another level. לצפות עד הסוף = to watch to the end."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_120", emoji: "🎪", category: "colloquial", difficulty: 2,
+    hebrew: "יש לי פומו רציני, כל הפיד מלא בתמונות מהפסטיבל.",
+    hebrewNiqqud: "יֵשׁ לִי פוֹמוֹ רְצִינִי, כָּל הַפִּיד מָלֵא בִּתְמוּנוֹת מֵהַפֶּסְטִיבָל.",
+    english: "I have serious FOMO, the whole feed is full of photos from the festival.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["לי", "לִי"], ["פומו", "פוֹמוֹ"], ["רציני", "רְצִינִי"], ["כל", "כָּל"], ["הפיד", "הַפִּיד"], ["מלא", "מָלֵא"], ["בתמונות", "בִּתְמוּנוֹת"], ["מהפסטיבל", "מֵהַפֶּסְטִיבָל"]],
+    englishTokens: ["I have", "serious", "FOMO", "the whole", "feed", "is full", "of photos", "from the festival"],
+    hebrewDistractorPairs: [["יש לה", "יֵשׁ לָהּ"], ["קל", "קַל"], ["הסטורי", "הַסְּטוֹרִי"], ["ריק", "רֵיק"], ["בסרטונים", "בְּסִרְטוֹנִים"]],
+    englishDistractors: ["She has", "mild", "jealousy", "the entire", "story", "of videos"],
+    notes: "פומו (FOMO) and פיד (feed) live comfortably inside Hebrew sentences now. מלא ב־ = 'full of'. רציני after a noun = 'serious/major'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_121", emoji: "❤️", category: "colloquial", difficulty: 1,
+    hebrew: "התמונה שלה קיבלה אלף לייקים תוך שעה.",
+    hebrewNiqqud: "הַתְּמוּנָה שֶׁלָּהּ קִבְּלָה אֶלֶף לַיְיקִים תּוֹךְ שָׁעָה.",
+    english: "Her photo got a thousand likes within an hour.",
+    hebrewTokenPairs: [["התמונה", "הַתְּמוּנָה"], ["שלה", "שֶׁלָּהּ"], ["קיבלה", "קִבְּלָה"], ["אלף", "אֶלֶף"], ["לייקים", "לַיְיקִים"], ["תוך", "תּוֹךְ"], ["שעה", "שָׁעָה"]],
+    englishTokens: ["Her photo", "got", "a thousand", "likes", "within", "an hour"],
+    hebrewDistractorPairs: [["הסרטון", "הַסִּרְטוֹן"], ["שלו", "שֶׁלּוֹ"], ["איבדה", "אִבְּדָה"], ["מאה", "מֵאָה"], ["עוקבים", "עוֹקְבִים"]],
+    englishDistractors: ["His video", "lost", "a hundred", "followers", "after", "a day"],
+    notes: "לייקים and עוקבים (followers) — one borrowed, one native — headline Israeli Instagram talk. תוך שעה = within an hour."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_122", emoji: "🎧", category: "colloquial", difficulty: 2,
+    hebrew: "אני לא מבינה את ההייפ סביב הפודקאסט הזה.",
+    hebrewNiqqud: "אֲנִי לֹא מְבִינָה אֶת הַהַייפּ סְבִיב הַפּוֹדְקָאסְט הַזֶּה.",
+    english: "I don't get the hype around this podcast.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["לא", "לֹא"], ["מבינה", "מְבִינָה"], ["את", "אֶת"], ["ההייפ", "הַהַייפּ"], ["סביב", "סְבִיב"], ["הפודקאסט", "הַפּוֹדְקָאסְט"], ["הזה", "הַזֶּה"]],
+    englishTokens: ["I", "don't", "get the hype", "around", "this podcast"],
+    hebrewDistractorPairs: [["מבין", "מֵבִין"], ["שומעת", "שׁוֹמַעַת"], ["מאחורי", "מֵאֲחוֹרֵי"], ["הפלייליסט", "הַפְּלֵיילִיסְט"], ["הזאת", "הַזֹּאת"]],
+    englishDistractors: ["We", "can't", "hear the buzz", "behind", "this playlist"],
+    notes: "הייפ = hype, fully naturalized. סביב = 'around/surrounding'. מבינה marks a female speaker — the masculine מבין is accepted as an alternate.",
+    hebrewAlternates: [{
+      text: "אני לא מבין את ההייפ סביב הפודקאסט הזה.", textNiqqud: "אֲנִי לֹא מֵבִין אֶת הַהַייפּ סְבִיב הַפּוֹדְקָאסְט הַזֶּה.",
+      tokenPairs: [["אני", "אֲנִי"], ["לא", "לֹא"], ["מבין", "מֵבִין"], ["את", "אֶת"], ["ההייפ", "הַהַייפּ"], ["סביב", "סְבִיב"], ["הפודקאסט", "הַפּוֹדְקָאסְט"], ["הזה", "הַזֶּה"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_123", emoji: "📱", category: "colloquial", difficulty: 2,
+    hebrew: "נתקעתי שעה על רילס במקום ללכת לישון.",
+    hebrewNiqqud: "נִתְקַעְתִּי שָׁעָה עַל רִילְס בִּמְקוֹם לָלֶכֶת לִישֹׁן.",
+    english: "I got stuck on Reels for an hour instead of going to sleep.",
+    hebrewTokenPairs: [["נתקעתי", "נִתְקַעְתִּי"], ["שעה", "שָׁעָה"], ["על", "עַל"], ["רילס", "רִילְס"], ["במקום", "בִּמְקוֹם"], ["ללכת", "לָלֶכֶת"], ["לישון", "לִישֹׁן"]],
+    englishTokens: ["I got stuck", "on Reels", "for an hour", "instead of", "going", "to sleep"],
+    hebrewDistractorPairs: [["ויתרתי", "וִתַּרְתִּי"], ["דקה", "דַּקָּה"], ["בגלל", "בִּגְלַל"], ["לקום", "לָקוּם"], ["מוקדם", "מֻקְדָּם"]],
+    englishDistractors: ["I gave up", "on the news", "for a minute", "because of", "waking up"],
+    notes: "נתקעתי = 'I got stuck' — the verb Israelis use for scroll paralysis. במקום + infinitive = 'instead of doing'. רילס needs no translation."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_124", emoji: "🎟️", category: "colloquial", difficulty: 3,
+    hebrew: "הוא השיג כרטיסים להופעה בקומבינה, אל תשאלי איך.",
+    hebrewNiqqud: "הוּא הִשִּׂיג כַּרְטִיסִים לַהוֹפָעָה בְּקוֹמְבִּינָה, אַל תִּשְׁאֲלִי אֵיךְ.",
+    english: "He scored tickets to the show through some scheme, don't ask how.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["השיג", "הִשִּׂיג"], ["כרטיסים", "כַּרְטִיסִים"], ["להופעה", "לַהוֹפָעָה"], ["בקומבינה", "בְּקוֹמְבִּינָה"], ["אל", "אַל"], ["תשאלי", "תִּשְׁאֲלִי"], ["איך", "אֵיךְ"]],
+    englishTokens: ["He scored", "tickets", "to the show", "through some scheme", "don't ask", "how"],
+    hebrewDistractorPairs: [["תשאל", "תִּשְׁאַל"], ["איבד", "אִבֵּד"], ["מקומות", "מְקוֹמוֹת"], ["למשחק", "לַמִּשְׂחָק"], ["מתי", "מָתַי"]],
+    englishDistractors: ["He lost", "passes", "to the game", "at full price", "don't tell", "when"],
+    notes: "קומבינה — a workaround or scheme that bends the rules; getting things done בקומבינה is a national art form. אל תשאלי addresses a woman; the masculine אל תשאל is accepted.",
+    hebrewAlternates: [{
+      text: "הוא השיג כרטיסים להופעה בקומבינה, אל תשאל איך.", textNiqqud: "הוּא הִשִּׂיג כַּרְטִיסִים לַהוֹפָעָה בְּקוֹמְבִּינָה, אַל תִּשְׁאַל אֵיךְ.",
+      tokenPairs: [["הוא", "הוּא"], ["השיג", "הִשִּׂיג"], ["כרטיסים", "כַּרְטִיסִים"], ["להופעה", "לַהוֹפָעָה"], ["בקומבינה", "בְּקוֹמְבִּינָה"], ["אל", "אַל"], ["תשאל", "תִּשְׁאַל"], ["איך", "אֵיךְ"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_125", emoji: "🏷️", category: "colloquial", difficulty: 3,
+    hebrew: "שילמת מחיר מלא? יצאת פראייר, היה קוד הנחה.",
+    hebrewNiqqud: "שִׁלַּמְתָּ מְחִיר מָלֵא? יָצָאתָ פְרָאיֶיר, הָיָה קוֹד הֲנָחָה.",
+    english: "You paid full price? You came out a sucker, there was a discount code.",
+    hebrewTokenPairs: [["שילמת", "שִׁלַּמְתָּ"], ["מחיר", "מְחִיר"], ["מלא", "מָלֵא"], ["יצאת", "יָצָאתָ"], ["פראייר", "פְרָאיֶיר"], ["היה", "הָיָה"], ["קוד", "קוֹד"], ["הנחה", "הֲנָחָה"]],
+    englishTokens: ["You paid", "full price", "You came out", "a sucker", "there was", "a discount code"],
+    hebrewDistractorPairs: [["ביקשת", "בִּקַּשְׁתָּ"], ["חצי", "חֲצִי"], ["גאון", "גָּאוֹן"], ["לא היה", "לֹא הָיָה"], ["מבצע", "מִבְצָע"]],
+    englishDistractors: ["You asked for", "half price", "You looked like", "a genius", "there wasn't", "a secret sale"],
+    notes: "פראייר — a sucker; the deepest Israeli fear is לצאת פראייר, to come out the sucker. The plain spelling שילמת reads as either gender; only the vowels change."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_126", emoji: "🍽️", category: "colloquial", difficulty: 3,
+    hebrew: "היא קיבלה שולחן בלי תור כי יש לה פרוטקציה במסעדה.",
+    hebrewNiqqud: "הִיא קִבְּלָה שֻׁלְחָן בְּלִי תּוֹר כִּי יֵשׁ לָהּ פְּרוֹטֶקְצְיָה בַּמִּסְעָדָה.",
+    english: "She got a table without waiting because she has connections at the restaurant.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["קיבלה", "קִבְּלָה"], ["שולחן", "שֻׁלְחָן"], ["בלי", "בְּלִי"], ["תור", "תּוֹר"], ["כי", "כִּי"], ["יש לה", "יֵשׁ לָהּ"], ["פרוטקציה", "פְּרוֹטֶקְצְיָה"], ["במסעדה", "בַּמִּסְעָדָה"]],
+    englishTokens: ["She got", "a table", "without", "waiting", "because", "she has", "connections", "at the restaurant"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["קיבל", "קִבֵּל"], ["כיסא", "כִּסֵּא"], ["עם", "עִם"], ["יש לו", "יֵשׁ לוֹ"], ["סבלנות", "סַבְלָנוּת"]],
+    englishDistractors: ["He got", "a seat", "with", "a reservation", "he needs", "patience"],
+    notes: "פרוטקציה = pull/connections (from Russian protektsia) — the unofficial Israeli fast lane. בלי תור = without (waiting in) line."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_127", emoji: "👏", category: "colloquial", difficulty: 2,
+    hebrew: "תפרגני לה, היא עבדה על הפרויקט הזה חודשים.",
+    hebrewNiqqud: "תְּפַרְגְּנִי לָהּ, הִיא עָבְדָה עַל הַפְּרוֹיֶקְט הַזֶּה חֳדָשִׁים.",
+    english: "Give her some credit, she worked on that project for months.",
+    hebrewTokenPairs: [["תפרגני", "תְּפַרְגְּנִי"], ["לה", "לָהּ"], ["היא", "הִיא"], ["עבדה", "עָבְדָה"], ["על", "עַל"], ["הפרויקט", "הַפְּרוֹיֶקְט"], ["הזה", "הַזֶּה"], ["חודשים", "חֳדָשִׁים"]],
+    englishTokens: ["Give her some credit", "she", "worked", "on that project", "for months"],
+    hebrewDistractorPairs: [["תפרגן", "תְּפַרְגֵּן"], ["לו", "לוֹ"], ["הוא", "הוּא"], ["עבד", "עָבַד"], ["שבועות", "שָׁבוּעוֹת"]],
+    englishDistractors: ["Give him a break", "he", "slept", "on this idea", "for weeks"],
+    notes: "לפרגן (from Yiddish farginen) = to be generous with praise, not begrudge — a word Israelis insist has no English equivalent. תפרגני addresses a woman; masculine תפרגן is accepted.",
+    hebrewAlternates: [{
+      text: "תפרגן לה, היא עבדה על הפרויקט הזה חודשים.", textNiqqud: "תְּפַרְגֵּן לָהּ, הִיא עָבְדָה עַל הַפְּרוֹיֶקְט הַזֶּה חֳדָשִׁים.",
+      tokenPairs: [["תפרגן", "תְּפַרְגֵּן"], ["לה", "לָהּ"], ["היא", "הִיא"], ["עבדה", "עָבְדָה"], ["על", "עַל"], ["הפרויקט", "הַפְּרוֹיֶקְט"], ["הזה", "הַזֶּה"], ["חודשים", "חֳדָשִׁים"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_128", emoji: "🚈", category: "colloquial", difficulty: 2,
+    hebrew: "אין חנייה בעיר? אשכרה יותר מהיר ברכבת הקלה.",
+    hebrewNiqqud: "אֵין חֲנָיָה בָּעִיר? אַשְׁכָּרָה יוֹתֵר מָהִיר בָּרַכֶּבֶת הַקַּלָּה.",
+    english: "No parking in the city? It's actually faster on the light rail.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["חנייה", "חֲנָיָה"], ["בעיר", "בָּעִיר"], ["אשכרה", "אַשְׁכָּרָה"], ["יותר", "יוֹתֵר"], ["מהיר", "מָהִיר"], ["ברכבת הקלה", "בָּרַכֶּבֶת הַקַּלָּה"]],
+    englishTokens: ["No parking", "in the city", "It's actually", "faster", "on the light rail"],
+    hebrewDistractorPairs: [["יש", "יֵשׁ"], ["תנועה", "תְּנוּעָה"], ["בצפון", "בַּצָּפוֹן"], ["איטי", "אִטִּי"], ["באופניים חשמליים", "בְּאוֹפַנַּיִם חַשְׁמַלִּיִּים"]],
+    englishDistractors: ["No traffic", "in the north", "It's barely", "slower", "on the electric bike"],
+    notes: "אשכרה (from Arabic) = 'literally/actually, no kidding'. הרכבת הקלה — Tel Aviv's long-awaited light rail. Complaining about חנייה (parking) is the city's official pastime."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_129", emoji: "🛴", category: "colloquial", difficulty: 2,
+    hebrew: "עוד קורקינט כמעט דרס אותי על המדרכה בדיזנגוף.",
+    hebrewNiqqud: "עוֹד קוֹרְקִינֵט כִּמְעַט דָּרַס אוֹתִי עַל הַמִּדְרָכָה בְּדִיזֶנְגוֹף.",
+    english: "Another scooter almost ran me over on the sidewalk on Dizengoff.",
+    hebrewTokenPairs: [["עוד", "עוֹד"], ["קורקינט", "קוֹרְקִינֵט"], ["כמעט", "כִּמְעַט"], ["דרס", "דָּרַס"], ["אותי", "אוֹתִי"], ["על", "עַל"], ["המדרכה", "הַמִּדְרָכָה"], ["בדיזנגוף", "בְּדִיזֶנְגוֹף"]],
+    englishTokens: ["Another scooter", "almost", "ran me over", "on the sidewalk", "on Dizengoff"],
+    hebrewDistractorPairs: [["אופניים", "אוֹפַנַּיִם"], ["בקושי", "בְּקֹשִׁי"], ["עקף", "עָקַף"], ["על הכביש", "עַל הַכְּבִישׁ"], ["באלנבי", "בְּאַלֶנְבִּי"]],
+    englishDistractors: ["Another bike", "barely", "passed me", "on the road", "on Allenby"],
+    notes: "קורקינט = the electric scooter, apex predator of Tel Aviv sidewalks. דרס = ran over; כמעט דרס אותי = almost flattened me. עוד here = 'yet another', the sigh built into the sentence."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_130", emoji: "🌳", category: "colloquial", difficulty: 1,
+    hebrew: "שישי בפארק הירקון: פיקניק, גיטרה, וכל תל אביב שם.",
+    hebrewNiqqud: "שִׁישִׁי בְּפַארְק הַיַּרְקוֹן: פִּיקְנִיק, גִּיטָרָה, וְכָל תֵּל אָבִיב שָׁם.",
+    english: "Friday at Yarkon Park: a picnic, a guitar, and all of Tel Aviv is there.",
+    hebrewTokenPairs: [["שישי", "שִׁישִׁי"], ["בפארק הירקון", "בְּפַארְק הַיַּרְקוֹן"], ["פיקניק", "פִּיקְנִיק"], ["גיטרה", "גִּיטָרָה"], ["וכל", "וְכָל"], ["תל אביב", "תֵּל אָבִיב"], ["שם", "שָׁם"]],
+    englishTokens: ["Friday", "at Yarkon Park", "a picnic", "a guitar", "and all", "of Tel Aviv", "is there"],
+    hebrewDistractorPairs: [["שבת", "שַׁבָּת"], ["בנמל", "בַּנָּמֵל"], ["מנגל", "מַנְגָּל"], ["רמקול", "רַמְקוֹל"], ["רמת גן", "רָמַת גַּן"]],
+    englishDistractors: ["Saturday", "at the harbor", "a barbecue", "a speaker", "and half", "of Ramat Gan"],
+    notes: "פארק הירקון is Tel Aviv's Central Park; on Friday afternoons the whole city migrates there. וכל תל אביב שם = 'and all of Tel Aviv is there' — barely an exaggeration."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_131", emoji: "🚗", category: "colloquial", difficulty: 3,
+    hebrew: "יש מצב שאני פשוט מוכר את האוטו, נמאס לי מהחניות.",
+    hebrewNiqqud: "יֵשׁ מַצָּב שֶׁאֲנִי פָּשׁוּט מוֹכֵר אֶת הָאוֹטוֹ, נִמְאַס לִי מֵהַחֲנָיוֹת.",
+    english: "There's a chance I just sell the car, I'm sick of the parking.",
+    hebrewTokenPairs: [["יש מצב", "יֵשׁ מַצָּב"], ["שאני", "שֶׁאֲנִי"], ["פשוט", "פָּשׁוּט"], ["מוכר", "מוֹכֵר"], ["את", "אֶת"], ["האוטו", "הָאוֹטוֹ"], ["נמאס", "נִמְאַס"], ["לי", "לִי"], ["מהחניות", "מֵהַחֲנָיוֹת"]],
+    englishTokens: ["There's a chance", "I", "just", "sell the car", "I'm sick of", "the parking"],
+    hebrewDistractorPairs: [["אין מצב", "אֵין מַצָּב"], ["שאת", "שֶׁאַתְּ"], ["קונה", "קוֹנֶה"], ["מוכרת", "מוֹכֶרֶת"], ["האופנוע", "הָאוֹפָנוֹעַ"], ["מהפקקים", "מֵהַפְּקָקִים"]],
+    englishDistractors: ["There's no way", "we", "finally", "fix the bike", "I'm proud of", "the traffic"],
+    notes: "יש מצב = 'there's a chance / could be' — the exact opposite of אין מצב (no way), which sits in the distractors. נמאס לי מ־ = 'I'm fed up with'. מוכרת is the female speaker's form, accepted as an alternate.",
+    hebrewAlternates: [{
+      text: "יש מצב שאני פשוט מוכרת את האוטו, נמאס לי מהחניות.", textNiqqud: "יֵשׁ מַצָּב שֶׁאֲנִי פָּשׁוּט מוֹכֶרֶת אֶת הָאוֹטוֹ, נִמְאַס לִי מֵהַחֲנָיוֹת.",
+      tokenPairs: [["יש מצב", "יֵשׁ מַצָּב"], ["שאני", "שֶׁאֲנִי"], ["פשוט", "פָּשׁוּט"], ["מוכרת", "מוֹכֶרֶת"], ["את", "אֶת"], ["האוטו", "הָאוֹטוֹ"], ["נמאס", "נִמְאַס"], ["לי", "לִי"], ["מהחניות", "מֵהַחֲנָיוֹת"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_132", emoji: "🏓", category: "colloquial", difficulty: 1,
+    hebrew: "אי אפשר לישון על החוף, המטקות האלה בכל מקום.",
+    hebrewNiqqud: "אִי אֶפְשָׁר לִישֹׁן עַל הַחוֹף, הַמַּטְקוֹת הָאֵלֶּה בְּכָל מָקוֹם.",
+    english: "It's impossible to sleep on the beach, the matkot are everywhere.",
+    hebrewTokenPairs: [["אי אפשר", "אִי אֶפְשָׁר"], ["לישון", "לִישֹׁן"], ["על", "עַל"], ["החוף", "הַחוֹף"], ["המטקות", "הַמַּטְקוֹת"], ["האלה", "הָאֵלֶּה"], ["בכל", "בְּכָל"], ["מקום", "מָקוֹם"]],
+    englishTokens: ["It's impossible", "to sleep", "on", "the beach", "the matkot", "are everywhere"],
+    hebrewDistractorPairs: [["קל", "קַל"], ["לקרוא", "לִקְרֹא"], ["מתחת", "מִתַּחַת"], ["השמשייה", "הַשִּׁמְשִׁיָּה"], ["בשום מקום", "בְּשׁוּם מָקוֹם"]],
+    englishDistractors: ["It's easy", "to read", "under", "the umbrella", "the waves", "are quiet"],
+    notes: "מטקות — beach paddleball, Israel's unofficial national sport; the thwack is the soundtrack of every Tel Aviv beach. אי אפשר = 'it's impossible'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_133", emoji: "🪼", category: "colloquial", difficulty: 2,
+    hebrew: "לא נכנסים לים החודש, זאת עונת המדוזות.",
+    hebrewNiqqud: "לֹא נִכְנָסִים לַיָּם הַחֹדֶשׁ, זֹאת עוֹנַת הַמֶּדוּזוֹת.",
+    english: "Nobody's going in the water this month, it's jellyfish season.",
+    hebrewTokenPairs: [["לא", "לֹא"], ["נכנסים", "נִכְנָסִים"], ["לים", "לַיָּם"], ["החודש", "הַחֹדֶשׁ"], ["זאת", "זֹאת"], ["עונת", "עוֹנַת"], ["המדוזות", "הַמֶּדוּזוֹת"]],
+    englishTokens: ["Nobody's", "going in", "the water", "this month", "it's", "jellyfish", "season"],
+    hebrewDistractorPairs: [["כולם", "כֻּלָּם"], ["יוצאים", "יוֹצְאִים"], ["מהים", "מֵהַיָּם"], ["השבוע", "הַשָּׁבוּעַ"], ["הגלים", "הַגַּלִּים"]],
+    englishDistractors: ["Everyone's", "staying out of", "the sand", "this week", "surfing", "weather"],
+    notes: "עונת המדוזות — jellyfish season, the midsummer stretch when the Mediterranean empties out. The impersonal plural לא נכנסים = 'one doesn't go in'."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_134", emoji: "🌇", category: "colloquial", difficulty: 1, style: "whatsapp",
+    hebrew: "שקיעה מהממת בטיילת עכשיו, בואו מהר!",
+    hebrewNiqqud: "שְׁקִיעָה מְהַמֶּמֶת בַּטַּיֶּלֶת עַכְשָׁו, בּוֹאוּ מַהֵר!",
+    english: "Stunning sunset on the boardwalk right now, come quick!",
+    hebrewTokenPairs: [["שקיעה", "שְׁקִיעָה"], ["מהממת", "מְהַמֶּמֶת"], ["בטיילת", "בַּטַּיֶּלֶת"], ["עכשיו", "עַכְשָׁו"], ["בואו", "בּוֹאוּ"], ["מהר", "מַהֵר"]],
+    englishTokens: ["Stunning", "sunset", "on the boardwalk", "right now", "come", "quick"],
+    hebrewDistractorPairs: [["זריחה", "זְרִיחָה"], ["מעוננת", "מְעֻנֶּנֶת"], ["בחוף", "בַּחוֹף"], ["הערב", "הָעֶרֶב"], ["רוצו", "רוּצוּ"]],
+    englishDistractors: ["Cloudy", "sunrise", "on the beach", "tonight", "run", "slowly"],
+    notes: "מהממת = stunning — the go-to superlative for Tel Aviv sunsets. הטיילת is the beachfront promenade. בואו מהר = 'come (pl.) quick', the message that empties offices at 7 pm."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_135", emoji: "🏄", category: "colloquial", difficulty: 2,
+    hebrew: "הגולשים תופסים גלים בחוף גורדון מחמש בבוקר.",
+    hebrewNiqqud: "הַגּוֹלְשִׁים תּוֹפְסִים גַּלִּים בְּחוֹף גּוֹרְדוֹן מֵחָמֵשׁ בַּבֹּקֶר.",
+    english: "The surfers catch waves at Gordon Beach from five in the morning.",
+    hebrewTokenPairs: [["הגולשים", "הַגּוֹלְשִׁים"], ["תופסים", "תּוֹפְסִים"], ["גלים", "גַּלִּים"], ["בחוף גורדון", "בְּחוֹף גּוֹרְדוֹן"], ["מחמש", "מֵחָמֵשׁ"], ["בבוקר", "בַּבֹּקֶר"]],
+    englishTokens: ["The surfers", "catch", "waves", "at Gordon Beach", "from five", "in the morning"],
+    hebrewDistractorPairs: [["השחיינים", "הַשַּׂחְיָנִים"], ["מפספסים", "מְפַסְפְּסִים"], ["סירות", "סִירוֹת"], ["בחוף הילטון", "בְּחוֹף הִילְטוֹן"], ["בערב", "בָּעֶרֶב"]],
+    englishDistractors: ["The swimmers", "miss", "boats", "at Hilton Beach", "until six", "in the evening"],
+    notes: "חוף גורדון and חוף הילטון are Tel Aviv's classic beaches — Hilton is the surfers' turf. תופסים גלים = catching waves; מחמש בבוקר = from 5 a.m."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_136", emoji: "☕", category: "colloquial", difficulty: 1,
+    hebrew: "בשבילי הפוך גדול על סויה, בלי סוכר.",
+    hebrewNiqqud: "בִּשְׁבִילִי הָפוּךְ גָּדוֹל עַל סוֹיָה, בְּלִי סֻכָּר.",
+    english: "For me a large latte with soy, no sugar.",
+    hebrewTokenPairs: [["בשבילי", "בִּשְׁבִילִי"], ["הפוך", "הָפוּךְ"], ["גדול", "גָּדוֹל"], ["על", "עַל"], ["סויה", "סוֹיָה"], ["בלי", "בְּלִי"], ["סוכר", "סֻכָּר"]],
+    englishTokens: ["For me", "a large", "latte", "with", "soy", "no sugar"],
+    hebrewDistractorPairs: [["בשבילה", "בִּשְׁבִילָהּ"], ["אספרסו", "אֶסְפְּרֶסוֹ"], ["קטן", "קָטָן"], ["שיבולת שועל", "שִׁבֹּלֶת שׁוּעָל"], ["עם", "עִם"]],
+    englishDistractors: ["For her", "a small", "espresso", "without", "oat milk", "extra hot"],
+    notes: "הפוך ('upside-down') is Israel's latte. Barista Hebrew puts the milk choice after על: הפוך על סויה = latte with soy; שיבולת שועל (oat) is the other option on every menu."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_137", emoji: "🪙", category: "colloquial", difficulty: 2,
+    hebrew: "זוכרת שהכול בקופיקס עלה חמישה שקלים? תקופה יפה.",
+    hebrewNiqqud: "זוֹכֶרֶת שֶׁהַכֹּל בְּקוֹפִיקְס עָלָה חֲמִשָּׁה שְׁקָלִים? תְּקוּפָה יָפָה.",
+    english: "Remember when everything at Cofix cost five shekels? Good times.",
+    hebrewTokenPairs: [["זוכרת", "זוֹכֶרֶת"], ["שהכול", "שֶׁהַכֹּל"], ["בקופיקס", "בְּקוֹפִיקְס"], ["עלה", "עָלָה"], ["חמישה", "חֲמִשָּׁה"], ["שקלים", "שְׁקָלִים"], ["תקופה", "תְּקוּפָה"], ["יפה", "יָפָה"]],
+    englishTokens: ["Remember", "when everything", "at Cofix", "cost", "five shekels", "Good times"],
+    hebrewDistractorPairs: [["זוכר", "זוֹכֵר"], ["בקיוסק", "בַּקִּיוֹסְק"], ["ירד", "יָרַד"], ["עשרה", "עֲשָׂרָה"], ["קשה", "קָשָׁה"]],
+    englishDistractors: ["Forget", "when nothing", "at the kiosk", "was worth", "ten shekels", "Hard years"],
+    notes: "קופיקס launched the five-shekel-everything craze in 2013; prices crept up and the nostalgia stayed. זוכרת addresses a woman (masculine זוכר accepted). תקופה יפה = 'those were the days'.",
+    hebrewAlternates: [{
+      text: "זוכר שהכול בקופיקס עלה חמישה שקלים? תקופה יפה.", textNiqqud: "זוֹכֵר שֶׁהַכֹּל בְּקוֹפִיקְס עָלָה חֲמִשָּׁה שְׁקָלִים? תְּקוּפָה יָפָה.",
+      tokenPairs: [["זוכר", "זוֹכֵר"], ["שהכול", "שֶׁהַכֹּל"], ["בקופיקס", "בְּקוֹפִיקְס"], ["עלה", "עָלָה"], ["חמישה", "חֲמִשָּׁה"], ["שקלים", "שְׁקָלִים"], ["תקופה", "תְּקוּפָה"], ["יפה", "יָפָה"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_138", emoji: "🧆", category: "colloquial", difficulty: 2,
+    hebrew: "בואי נלך לנגב חומוס ביפו לפני שייגמר.",
+    hebrewNiqqud: "בּוֹאִי נֵלֵךְ לְנַגֵּב חֻמּוּס בְּיָפוֹ לִפְנֵי שֶׁיִּגָּמֵר.",
+    english: "Come on, let's go wipe up hummus in Jaffa before it runs out.",
+    hebrewTokenPairs: [["בואי", "בּוֹאִי"], ["נלך", "נֵלֵךְ"], ["לנגב", "לְנַגֵּב"], ["חומוס", "חֻמּוּס"], ["ביפו", "בְּיָפוֹ"], ["לפני", "לִפְנֵי"], ["שייגמר", "שֶׁיִּגָּמֵר"]],
+    englishTokens: ["Come on", "let's go", "wipe up", "hummus", "in Jaffa", "before it", "runs out"],
+    hebrewDistractorPairs: [["בוא", "בּוֹא"], ["נרוץ", "נָרוּץ"], ["לבשל", "לְבַשֵּׁל"], ["פלאפל", "פָלָאפֶל"], ["באבו גוש", "בְּאַבּוּ גוֹשׁ"]],
+    englishDistractors: ["Come here", "let's run", "cook", "falafel", "in Abu Ghosh", "after it"],
+    notes: "לנגב חומוס — literally 'to wipe hummus' — is the only correct verb for eating it with pita. Jaffa's hummus joints famously sell out by early afternoon. בואי addresses a woman; בוא (masculine) is accepted.",
+    hebrewAlternates: [{
+      text: "בוא נלך לנגב חומוס ביפו לפני שייגמר.", textNiqqud: "בּוֹא נֵלֵךְ לְנַגֵּב חֻמּוּס בְּיָפוֹ לִפְנֵי שֶׁיִּגָּמֵר.",
+      tokenPairs: [["בוא", "בּוֹא"], ["נלך", "נֵלֵךְ"], ["לנגב", "לְנַגֵּב"], ["חומוס", "חֻמּוּס"], ["ביפו", "בְּיָפוֹ"], ["לפני", "לִפְנֵי"], ["שייגמר", "שֶׁיִּגָּמֵר"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "colloquial_139", emoji: "🥞", category: "colloquial", difficulty: 3,
+    hebrew: "חיכינו שעה לברנץ' אבל האוכל היה סוף הדרך.",
+    hebrewNiqqud: "חִכִּינוּ שָׁעָה לַבְּרַנְץ' אֲבָל הָאֹכֶל הָיָה סוֹף הַדֶּרֶךְ.",
+    english: "We waited an hour for brunch but the food was out of this world.",
+    hebrewTokenPairs: [["חיכינו", "חִכִּינוּ"], ["שעה", "שָׁעָה"], ["לברנץ'", "לַבְּרַנְץ'"], ["אבל", "אֲבָל"], ["האוכל", "הָאֹכֶל"], ["היה", "הָיָה"], ["סוף הדרך", "סוֹף הַדֶּרֶךְ"]],
+    englishTokens: ["We waited", "an hour", "for brunch", "but the food", "was", "out of this world"],
+    hebrewDistractorPairs: [["נסענו", "נָסַעְנוּ"], ["לארוחת ערב", "לַאֲרוּחַת עֶרֶב"], ["התור", "הַתּוֹר"], ["היה בסדר", "הָיָה בְּסֵדֶר"], ["בקושי", "בְּקֹשִׁי"]],
+    englishDistractors: ["We drove", "a while", "for dinner", "but the line", "wasn't", "worth the wait"],
+    notes: "סוף הדרך — literally 'the end of the road' — means 'as good as it gets'. Waiting an hour for weekend brunch is a Tel Aviv rite; ברנץ' is the borrowed word."
+  }),
+  buildExpandedSentence({
+    id: "everyday_107", emoji: "🚉", category: "everyday", difficulty: 1,
+    hebrew: "ירדתי בתחנת השלום והלכתי ברגל לעזריאלי.",
+    hebrewNiqqud: "יָרַדְתִּי בְּתַחֲנַת הַשָּׁלוֹם וְהָלַכְתִּי בָּרֶגֶל לָעַזְרִיאֵלִי.",
+    english: "I got off at HaShalom station and walked to Azrieli.",
+    hebrewTokenPairs: [["ירדתי", "יָרַדְתִּי"], ["בתחנת השלום", "בְּתַחֲנַת הַשָּׁלוֹם"], ["והלכתי", "וְהָלַכְתִּי"], ["ברגל", "בָּרֶגֶל"], ["לעזריאלי", "לָעַזְרִיאֵלִי"]],
+    englishTokens: ["I got off", "at HaShalom station", "and walked", "to Azrieli"],
+    hebrewDistractorPairs: [["עליתי", "עָלִיתִי"], ["בתחנת האוניברסיטה", "בְּתַחֲנַת הָאוּנִיבֶרְסִיטָה"], ["ונסעתי", "וְנָסַעְתִּי"], ["לשרונה", "לְשָׂרוֹנָה"], ["באוטובוס", "בָּאוֹטוֹבּוּס"]],
+    englishDistractors: ["I got on", "at the University station", "and drove", "to Sarona", "by mistake"],
+    notes: "תחנת השלום is the train station under the Azrieli towers — the landmark every Tel Aviv meeting is measured from. ירדתי ב־ = 'I got off at'; ברגל = on foot."
+  }),
+  buildExpandedSentence({
+    id: "everyday_108", emoji: "🍅", category: "everyday", difficulty: 2,
+    hebrew: "בשוק הכרמל הירקות טריים ובחצי מחיר מהסופר.",
+    hebrewNiqqud: "בְּשׁוּק הַכַּרְמֶל הַיְּרָקוֹת טְרִיִּים וּבַחֲצִי מְחִיר מֵהַסּוּפֶּר.",
+    english: "At the Carmel Market the vegetables are fresh and half the price of the supermarket.",
+    hebrewTokenPairs: [["בשוק הכרמל", "בְּשׁוּק הַכַּרְמֶל"], ["הירקות", "הַיְּרָקוֹת"], ["טריים", "טְרִיִּים"], ["ובחצי", "וּבַחֲצִי"], ["מחיר", "מְחִיר"], ["מהסופר", "מֵהַסּוּפֶּר"]],
+    englishTokens: ["At the Carmel Market", "the vegetables", "are fresh", "and half", "the price", "of the supermarket"],
+    hebrewDistractorPairs: [["בשוק הפשפשים", "בְּשׁוּק הַפִּשְׁפְּשִׁים"], ["הפירות", "הַפֵּרוֹת"], ["יקרים", "יְקָרִים"], ["כפול", "כָּפוּל"], ["מהמכולת", "מֵהַמַּכֹּלֶת"]],
+    englishDistractors: ["At the flea market", "the fruit", "expensive", "double", "of the corner store"],
+    notes: "שוק הכרמל is Tel Aviv's main open-air market; שוק הפשפשים (the Jaffa flea market) is the shape-matched distractor. Comparative מ־ = 'than': בחצי מחיר מהסופר = half the supermarket's price."
+  }),
+  buildExpandedSentence({
+    id: "everyday_109", emoji: "🚲", category: "everyday", difficulty: 2,
+    hebrew: "אני עושה את כל הדרך לעבודה בשביל האופניים לאורך הירקון.",
+    hebrewNiqqud: "אֲנִי עוֹשֶׂה אֶת כָּל הַדֶּרֶךְ לָעֲבוֹדָה בִּשְׁבִיל הָאוֹפַנַּיִם לְאֹרֶךְ הַיַּרְקוֹן.",
+    english: "I do the whole way to work on the bike path along the Yarkon.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["עושה", "עוֹשֶׂה"], ["את", "אֶת"], ["כל", "כָּל"], ["הדרך", "הַדֶּרֶךְ"], ["לעבודה", "לָעֲבוֹדָה"], ["בשביל האופניים", "בִּשְׁבִיל הָאוֹפַנַּיִם"], ["לאורך", "לְאֹרֶךְ"], ["הירקון", "הַיַּרְקוֹן"]],
+    englishTokens: ["I do", "the whole way", "to work", "on the bike path", "along", "the Yarkon"],
+    hebrewDistractorPairs: [["רצה", "רָצָה"], ["חצי", "חֲצִי"], ["לחדר כושר", "לַחֲדַר כֹּשֶׁר"], ["בכביש הראשי", "בַּכְּבִישׁ הָרָאשִׁי"], ["החוף", "הַחוֹף"]],
+    englishDistractors: ["I run", "half the way", "to the gym", "on the main road", "along the beach"],
+    notes: "שביל אופניים = bike path; the Yarkon riverside route is Tel Aviv's cycling highway. עושה את כל הדרך = 'do the whole way' — עושה works hard in spoken Hebrew."
+  }),
+  buildExpandedSentence({
+    id: "everyday_110", emoji: "🚋", category: "everyday", difficulty: 2,
+    hebrew: "הרכבת הקלה מלאה בשמונה בבוקר, אין איפה לעמוד.",
+    hebrewNiqqud: "הָרַכֶּבֶת הַקַּלָּה מְלֵאָה בִּשְׁמוֹנֶה בַּבֹּקֶר, אֵין אֵיפֹה לַעֲמֹד.",
+    english: "The light rail is packed at eight in the morning, there's nowhere to stand.",
+    hebrewTokenPairs: [["הרכבת הקלה", "הָרַכֶּבֶת הַקַּלָּה"], ["מלאה", "מְלֵאָה"], ["בשמונה", "בִּשְׁמוֹנֶה"], ["בבוקר", "בַּבֹּקֶר"], ["אין", "אֵין"], ["איפה", "אֵיפֹה"], ["לעמוד", "לַעֲמֹד"]],
+    englishTokens: ["The light rail", "is packed", "at eight", "in the morning", "there's nowhere", "to stand"],
+    hebrewDistractorPairs: [["האוטובוס האחרון", "הָאוֹטוֹבּוּס הָאַחֲרוֹן"], ["ריקה", "רֵיקָה"], ["בעשר", "בְּעֶשֶׂר"], ["בלילה", "בַּלַּיְלָה"], ["לשבת", "לָשֶׁבֶת"]],
+    englishDistractors: ["The last bus", "is empty", "at ten", "at night", "there's plenty of room", "to sit"],
+    notes: "אין איפה לעמוד = 'there's nowhere (even) to stand'. The light rail filled up the moment it finally opened. מלאה agrees with the feminine רכבת."
+  }),
+  buildExpandedSentence({
+    id: "everyday_111", emoji: "🐕", category: "everyday", difficulty: 1,
+    hebrew: "בשבת בבוקר כל העיר על החוף עם קפה וכלב.",
+    hebrewNiqqud: "בְּשַׁבָּת בַּבֹּקֶר כָּל הָעִיר עַל הַחוֹף עִם קָפֶה וְכֶלֶב.",
+    english: "On Saturday morning the whole city is at the beach with coffee and a dog.",
+    hebrewTokenPairs: [["בשבת", "בְּשַׁבָּת"], ["בבוקר", "בַּבֹּקֶר"], ["כל", "כָּל"], ["העיר", "הָעִיר"], ["על", "עַל"], ["החוף", "הַחוֹף"], ["עם", "עִם"], ["קפה", "קָפֶה"], ["וכלב", "וְכֶלֶב"]],
+    englishTokens: ["On Saturday", "morning", "the whole city", "is at the beach", "with coffee", "and a dog"],
+    hebrewDistractorPairs: [["בשישי", "בְּשִׁישִׁי"], ["בערב", "בָּעֶרֶב"], ["חצי", "חֲצִי"], ["הרחוב", "הָרְחוֹב"], ["וחתול", "וְחָתוּל"]],
+    englishDistractors: ["On Friday", "evening", "half the street", "is at the market", "with beer", "and a cat"],
+    notes: "Tel Aviv's Shabbat-morning liturgy: espresso, dog, sea. The dog is practically mandatory — the city claims more dogs per capita than almost anywhere on earth."
+  }),
+  buildExpandedSentence({
+    id: "everyday_112", emoji: "🍅", category: "everyday", difficulty: 2,
+    hebrew: "שכחנו קרם הגנה ועכשיו שנינו אדומים כמו עגבנייה.",
+    hebrewNiqqud: "שָׁכַחְנוּ קְרֶם הֲגָנָה וְעַכְשָׁו שְׁנֵינוּ אֲדֻמִּים כְּמוֹ עַגְבָנִיָּה.",
+    english: "We forgot sunscreen and now we're both red as a tomato.",
+    hebrewTokenPairs: [["שכחנו", "שָׁכַחְנוּ"], ["קרם הגנה", "קְרֶם הֲגָנָה"], ["ועכשיו", "וְעַכְשָׁו"], ["שנינו", "שְׁנֵינוּ"], ["אדומים", "אֲדֻמִּים"], ["כמו", "כְּמוֹ"], ["עגבנייה", "עַגְבָנִיָּה"]],
+    englishTokens: ["We forgot", "sunscreen", "and now", "we're both", "red", "as a tomato"],
+    hebrewDistractorPairs: [["הבאנו", "הֵבֵאנוּ"], ["מגבות", "מַגָּבוֹת"], ["כולם", "כֻּלָּם"], ["חיוורים", "חִוְּרִים"], ["כמו קיר", "כְּמוֹ קִיר"]],
+    englishDistractors: ["We brought", "towels", "and then", "they're all", "pale", "as a wall"],
+    notes: "קרם הגנה = sunscreen (lit. 'protection cream'). שנינו = 'the two of us'. The Mediterranean sun takes no prisoners — כמו עגבנייה, like a tomato."
+  }),
+  buildExpandedSentence({
+    id: "everyday_113", emoji: "🌱", category: "everyday", difficulty: 1,
+    hebrew: "חצי מהתפריט כאן טבעוני, אפילו השניצל.",
+    hebrewNiqqud: "חֲצִי מֵהַתַּפְרִיט כָּאן טִבְעוֹנִי, אֲפִלּוּ הַשְּׁנִיצֶל.",
+    english: "Half the menu here is vegan, even the schnitzel.",
+    hebrewTokenPairs: [["חצי", "חֲצִי"], ["מהתפריט", "מֵהַתַּפְרִיט"], ["כאן", "כָּאן"], ["טבעוני", "טִבְעוֹנִי"], ["אפילו", "אֲפִלּוּ"], ["השניצל", "הַשְּׁנִיצֶל"]],
+    englishTokens: ["Half", "the menu here", "is vegan", "even", "the schnitzel"],
+    hebrewDistractorPairs: [["רוב", "רֹב"], ["מהקינוחים", "מֵהַקִּנּוּחִים"], ["שם", "שָׁם"], ["חריף", "חָרִיף"], ["הסלט", "הַסָּלָט"]],
+    englishDistractors: ["Most of", "the desserts there", "is spicy", "especially", "the salad"],
+    notes: "Tel Aviv is routinely ranked the world's most vegan-friendly city — even the שניצל, the national comfort food, has a טבעוני version. אפילו = even."
+  }),
+  buildExpandedSentence({
+    id: "everyday_114", emoji: "🥐", category: "everyday", difficulty: 2,
+    hebrew: "עמדנו ארבעים דקות בתור למאפייה החדשה בפלורנטין.",
+    hebrewNiqqud: "עָמַדְנוּ אַרְבָּעִים דַּקּוֹת בַּתּוֹר לַמַּאֲפִיָּה הַחֲדָשָׁה בִּפְלוֹרֶנְטִין.",
+    english: "We stood forty minutes in line for the new bakery in Florentin.",
+    hebrewTokenPairs: [["עמדנו", "עָמַדְנוּ"], ["ארבעים", "אַרְבָּעִים"], ["דקות", "דַּקּוֹת"], ["בתור", "בַּתּוֹר"], ["למאפייה", "לַמַּאֲפִיָּה"], ["החדשה", "הַחֲדָשָׁה"], ["בפלורנטין", "בִּפְלוֹרֶנְטִין"]],
+    englishTokens: ["We stood", "forty", "minutes", "in line", "for the new bakery", "in Florentin"],
+    hebrewDistractorPairs: [["ישבנו", "יָשַׁבְנוּ"], ["עשרים", "עֶשְׂרִים"], ["בכניסה", "בַּכְּנִיסָה"], ["לבית הקפה", "לְבֵית הַקָּפֶה"], ["בנווה צדק", "בִּנְוֵה צֶדֶק"]],
+    englishDistractors: ["We sat", "twenty", "hours", "at the entrance", "for the old café", "in Neve Tzedek"],
+    notes: "The pastry-hype cycle — a bakery opens, Instagram erupts, the line wraps the block — is a Florentin specialty. עמדנו בתור = we stood in line."
+  }),
+  buildExpandedSentence({
+    id: "everyday_115", emoji: "🍳", category: "everyday", difficulty: 1,
+    hebrew: "אין כמו שקשוקה של יום שישי אחרי הים.",
+    hebrewNiqqud: "אֵין כְּמוֹ שַׁקְשׁוּקָה שֶׁל יוֹם שִׁישִׁי אַחֲרֵי הַיָּם.",
+    english: "There's nothing like a Friday shakshuka after the beach.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["כמו", "כְּמוֹ"], ["שקשוקה", "שַׁקְשׁוּקָה"], ["של", "שֶׁל"], ["יום שישי", "יוֹם שִׁישִׁי"], ["אחרי", "אַחֲרֵי"], ["הים", "הַיָּם"]],
+    englishTokens: ["There's nothing like", "a Friday", "shakshuka", "after the beach"],
+    hebrewDistractorPairs: [["יש", "יֵשׁ"], ["ג'חנון", "גַּ'חְנוּן"], ["יום שבת", "יוֹם שַׁבָּת"], ["לפני", "לִפְנֵי"], ["המקלחת", "הַמִּקְלַחַת"]],
+    englishDistractors: ["There's more than", "a Saturday", "jachnun", "before the shower", "with bread"],
+    notes: "אין כמו... = 'there's nothing like...'. Post-beach Friday shakshuka is a sacred sequence; ג'חנון (the distractor) is its slow-cooked Yemenite Saturday cousin. הים = the sea — in Tel Aviv, 'the beach'."
+  }),
+  buildExpandedSentence({
+    id: "everyday_116", emoji: "🥟", category: "everyday", difficulty: 2,
+    hebrew: "קניתי בורקס חם ומיץ רימונים בשוק לפני העבודה.",
+    hebrewNiqqud: "קָנִיתִי בּוּרֶקָס חַם וּמִיץ רִמּוֹנִים בַּשּׁוּק לִפְנֵי הָעֲבוֹדָה.",
+    english: "I bought a hot bourekas and pomegranate juice at the market before work.",
+    hebrewTokenPairs: [["קניתי", "קָנִיתִי"], ["בורקס", "בּוּרֶקָס"], ["חם", "חַם"], ["ומיץ", "וּמִיץ"], ["רימונים", "רִמּוֹנִים"], ["בשוק", "בַּשּׁוּק"], ["לפני", "לִפְנֵי"], ["העבודה", "הָעֲבוֹדָה"]],
+    englishTokens: ["I bought", "a hot bourekas", "and pomegranate", "juice", "at the market", "before work"],
+    hebrewDistractorPairs: [["מכרתי", "מָכַרְתִּי"], ["כריך", "כָּרִיךְ"], ["קר", "קַר"], ["תפוזים", "תַּפּוּזִים"], ["בקיוסק", "בַּקִּיוֹסְק"]],
+    englishDistractors: ["I sold", "a cold sandwich", "and orange", "tea", "at the kiosk", "after class"],
+    notes: "בורקס — the flaky filled pastry that fuels Israeli mornings; fresh מיץ רימונים (pomegranate juice) is the shuk's other currency. לפני העבודה = before work."
+  }),
+  buildExpandedSentence({
+    id: "everyday_117", emoji: "📈", category: "everyday", difficulty: 2,
+    hebrew: "בעל הבית העלה את השכירות בעוד אלף שקל.",
+    hebrewNiqqud: "בַּעַל הַבַּיִת הֶעֱלָה אֶת הַשְּׂכִירוּת בְּעוֹד אֶלֶף שֶׁקֶל.",
+    english: "The landlord raised the rent by another thousand shekels.",
+    hebrewTokenPairs: [["בעל הבית", "בַּעַל הַבַּיִת"], ["העלה", "הֶעֱלָה"], ["את", "אֶת"], ["השכירות", "הַשְּׂכִירוּת"], ["בעוד", "בְּעוֹד"], ["אלף", "אֶלֶף"], ["שקל", "שֶׁקֶל"]],
+    englishTokens: ["The landlord", "raised", "the rent", "by another", "thousand", "shekels"],
+    hebrewDistractorPairs: [["השכן", "הַשָּׁכֵן"], ["הוריד", "הוֹרִיד"], ["הפיקדון", "הַפִּקָּדוֹן"], ["ועד הבית", "וַעַד הַבַּיִת"], ["מאה", "מֵאָה"]],
+    englishDistractors: ["The neighbor", "lowered", "the deposit", "by only", "a hundred", "agorot"],
+    notes: "בעל הבית = the landlord (lit. 'owner of the house'); השכירות = the rent. בעוד אלף שקל = 'by another thousand shekels' — the annual Tel Aviv ritual."
+  }),
+  buildExpandedSentence({
+    id: "everyday_118", emoji: "🪟", category: "everyday", difficulty: 3,
+    hebrew: "במודעה כתבו 'שני חדרים מוארים', בפועל זה מחסן עם חלון.",
+    hebrewNiqqud: "בַּמּוֹדָעָה כָּתְבוּ 'שְׁנֵי חֲדָרִים מוּאָרִים', בְּפֹעַל זֶה מַחְסָן עִם חַלּוֹן.",
+    english: "The ad said 'two sunny rooms'; in practice it's a storage room with a window.",
+    hebrewTokenPairs: [["במודעה", "בַּמּוֹדָעָה"], ["כתבו", "כָּתְבוּ"], ["שני חדרים", "שְׁנֵי חֲדָרִים"], ["מוארים", "מוּאָרִים"], ["בפועל", "בְּפֹעַל"], ["זה", "זֶה"], ["מחסן", "מַחְסָן"], ["עם חלון", "עִם חַלּוֹן"]],
+    englishTokens: ["The ad said", "two sunny rooms", "in practice", "it's", "a storage room", "with a window"],
+    hebrewDistractorPairs: [["בחוזה", "בַּחוֹזֶה"], ["הבטיחו", "הִבְטִיחוּ"], ["שלושה חדרים", "שְׁלוֹשָׁה חֲדָרִים"], ["ארמון", "אַרְמוֹן"], ["עם מרפסת", "עִם מִרְפֶּסֶת"]],
+    englishDistractors: ["The listing promised", "three tiny rooms", "in theory", "a palace", "with a balcony"],
+    notes: "Apartment-ad Hebrew is its own dialect: מוארים ('full of light') can mean one bulb works. בפועל = 'in practice' — the word that deflates every listing. מחסן = storage room."
+  }),
+  buildExpandedSentence({
+    id: "everyday_119", emoji: "🏃", category: "everyday", difficulty: 3,
+    hebrew: "הגענו לראות את הדירה ועוד שלושים איש חיכו במדרגות.",
+    hebrewNiqqud: "הִגַּעְנוּ לִרְאוֹת אֶת הַדִּירָה וְעוֹד שְׁלוֹשִׁים אִישׁ חִכּוּ בַּמַּדְרֵגוֹת.",
+    english: "We came to see the apartment and another thirty people were waiting on the stairs.",
+    hebrewTokenPairs: [["הגענו", "הִגַּעְנוּ"], ["לראות", "לִרְאוֹת"], ["את", "אֶת"], ["הדירה", "הַדִּירָה"], ["ועוד", "וְעוֹד"], ["שלושים", "שְׁלוֹשִׁים"], ["איש", "אִישׁ"], ["חיכו", "חִכּוּ"], ["במדרגות", "בַּמַּדְרֵגוֹת"]],
+    englishTokens: ["We came", "to see", "the apartment", "and another", "thirty people", "were waiting", "on the stairs"],
+    hebrewDistractorPairs: [["שכחנו", "שָׁכַחְנוּ"], ["לשכור", "לִשְׂכֹּר"], ["הסטודיו", "הַסְּטוּדְיוֹ"], ["מתווכים", "מְתַוְּכִים"], ["בלובי", "בַּלּוֹבִּי"]],
+    englishDistractors: ["We forgot", "to rent", "the studio", "and only", "three brokers", "in the lobby"],
+    notes: "The open-house stampede: one listing, thirty hopefuls in the stairwell. עוד שלושים איש = 'another thirty people' — איש serves as the counting word for people."
+  }),
+  buildExpandedSentence({
+    id: "everyday_120", emoji: "🔑", category: "everyday", difficulty: 3,
+    hebrew: "שילמנו דמי תיווך של חודש שלם בשביל דירה בלי מעלית.",
+    hebrewNiqqud: "שִׁלַּמְנוּ דְּמֵי תִּוּוּךְ שֶׁל חֹדֶשׁ שָׁלֵם בִּשְׁבִיל דִּירָה בְּלִי מַעֲלִית.",
+    english: "We paid a whole month's broker fee for an apartment with no elevator.",
+    hebrewTokenPairs: [["שילמנו", "שִׁלַּמְנוּ"], ["דמי תיווך", "דְּמֵי תִּוּוּךְ"], ["של", "שֶׁל"], ["חודש", "חֹדֶשׁ"], ["שלם", "שָׁלֵם"], ["בשביל", "בִּשְׁבִיל"], ["דירה", "דִּירָה"], ["בלי", "בְּלִי"], ["מעלית", "מַעֲלִית"]],
+    englishTokens: ["We paid", "a whole month's", "broker fee", "for an apartment", "with no elevator"],
+    hebrewDistractorPairs: [["חסכנו", "חָסַכְנוּ"], ["פיקדון", "פִּקָּדוֹן"], ["חצי", "חֲצִי"], ["בשביל פנטהאוז", "בִּשְׁבִיל פֶּנְטְהָאוּז"], ["עם", "עִם"]],
+    englishDistractors: ["We saved", "half a year's", "deposit", "for a penthouse", "with two balconies"],
+    notes: "דמי תיווך — the broker's fee, traditionally a full month's rent for opening a door. בלי מעלית = no elevator, said while eyeing a fourth-floor walk-up."
+  }),
+  buildExpandedSentence({
+    id: "everyday_121", emoji: "🛋️", category: "everyday", difficulty: 2,
+    hebrew: "מחפשים שותף שלישי לדירה ליד השוק, בלי אגו ובלי דרמות.",
+    hebrewNiqqud: "מְחַפְּשִׂים שֻׁתָּף שְׁלִישִׁי לְדִירָה לְיַד הַשּׁוּק, בְּלִי אֶגוֹ וּבְלִי דְּרָמוֹת.",
+    english: "Looking for a third roommate for an apartment by the market, no ego and no drama.",
+    hebrewTokenPairs: [["מחפשים", "מְחַפְּשִׂים"], ["שותף", "שֻׁתָּף"], ["שלישי", "שְׁלִישִׁי"], ["לדירה", "לְדִירָה"], ["ליד השוק", "לְיַד הַשּׁוּק"], ["בלי", "בְּלִי"], ["אגו", "אֶגוֹ"], ["ובלי", "וּבְלִי"], ["דרמות", "דְּרָמוֹת"]],
+    englishTokens: ["Looking for", "a third roommate", "for an apartment", "by the market", "no ego", "and no drama"],
+    hebrewDistractorPairs: [["מציעים", "מַצִּיעִים"], ["שותפה", "שֻׁתָּפָה"], ["רביעי", "רְבִיעִי"], ["ליד הים", "לְיַד הַיָּם"], ["חיות", "חַיּוֹת"]],
+    englishDistractors: ["Offering", "a second bedroom", "for a couple", "by the beach", "no pets", "and no smoking"],
+    notes: "Roommate-ad Hebrew: בלי אגו ובלי דרמות ('no ego, no drama') promises a harmony no Tel Aviv flatshare has ever achieved. שותף/שותפה = roommate (m/f)."
+  }),
+  buildExpandedSentence({
+    id: "everyday_122", emoji: "🏢", category: "everyday", difficulty: 3,
+    hebrew: "ישיבת ועד הבית נגמרה בצעקות בגלל האופניים בחניה.",
+    hebrewNiqqud: "יְשִׁיבַת וַעַד הַבַּיִת נִגְמְרָה בִּצְעָקוֹת בִּגְלַל הָאוֹפַנַּיִם בַּחֲנָיָה.",
+    english: "The building committee meeting ended in shouting because of the bikes in the parking area.",
+    hebrewTokenPairs: [["ישיבת", "יְשִׁיבַת"], ["ועד הבית", "וַעַד הַבַּיִת"], ["נגמרה", "נִגְמְרָה"], ["בצעקות", "בִּצְעָקוֹת"], ["בגלל", "בִּגְלַל"], ["האופניים", "הָאוֹפַנַּיִם"], ["בחניה", "בַּחֲנָיָה"]],
+    englishTokens: ["The building committee", "meeting", "ended in shouting", "because of", "the bikes", "in the parking area"],
+    hebrewDistractorPairs: [["מסיבת", "מְסִבַּת"], ["השכנים", "הַשְּׁכֵנִים"], ["התחילה", "הִתְחִילָה"], ["בעוגה", "בְּעוּגָה"], ["על הגג", "עַל הַגַּג"]],
+    englishDistractors: ["The tenants'", "party", "started with cake", "instead of", "the strollers", "on the roof"],
+    notes: "ועד הבית — the building committee that collects dues and hosts Israel's fiercest micro-politics. נגמרה בצעקות = 'ended in shouting', the standard adjournment."
+  }),
+  buildExpandedSentence({
+    id: "everyday_123", emoji: "📦", category: "everyday", difficulty: 2,
+    hebrew: "עברנו דירה שלישית בשלוש שנים, כבר לא פותחים את הקרטונים.",
+    hebrewNiqqud: "עָבַרְנוּ דִּירָה שְׁלִישִׁית בְּשָׁלוֹשׁ שָׁנִים, כְּבָר לֹא פּוֹתְחִים אֶת הַקַּרְטוֹנִים.",
+    english: "We've moved to a third apartment in three years, we don't open the boxes anymore.",
+    hebrewTokenPairs: [["עברנו", "עָבַרְנוּ"], ["דירה", "דִּירָה"], ["שלישית", "שְׁלִישִׁית"], ["בשלוש", "בְּשָׁלוֹשׁ"], ["שנים", "שָׁנִים"], ["כבר לא", "כְּבָר לֹא"], ["פותחים", "פּוֹתְחִים"], ["את", "אֶת"], ["הקרטונים", "הַקַּרְטוֹנִים"]],
+    englishTokens: ["We've moved", "to a third apartment", "in three years", "we don't open", "the boxes", "anymore"],
+    hebrewDistractorPairs: [["נשארנו", "נִשְׁאַרְנוּ"], ["באותה דירה", "בְּאוֹתָהּ דִּירָה"], ["בעשר", "בְּעֶשֶׂר"], ["סופרים", "סוֹפְרִים"], ["המפתחות", "הַמַּפְתְּחוֹת"]],
+    englishDistractors: ["We've stayed", "in the same studio", "for ten months", "we don't count", "the keys", "yet"],
+    notes: "כבר לא = 'not anymore' — after enough moves you already leave the boxes taped. עברנו דירה = 'we moved (apartments)'; the verb לעבור covers all relocation."
+  }),
+  buildExpandedSentence({
+    id: "everyday_124", emoji: "🛋️", category: "everyday", difficulty: 2,
+    hebrew: "מצאתי ספה כמעט חדשה ביד שנייה בפחות מחצי מחיר.",
+    hebrewNiqqud: "מָצָאתִי סַפָּה כִּמְעַט חֲדָשָׁה בְּיָד שְׁנִיָּה בְּפָחוֹת מֵחֲצִי מְחִיר.",
+    english: "I found an almost-new sofa second-hand for less than half price.",
+    hebrewTokenPairs: [["מצאתי", "מָצָאתִי"], ["ספה", "סַפָּה"], ["כמעט", "כִּמְעַט"], ["חדשה", "חֲדָשָׁה"], ["ביד שנייה", "בְּיָד שְׁנִיָּה"], ["בפחות", "בְּפָחוֹת"], ["מחצי", "מֵחֲצִי"], ["מחיר", "מְחִיר"]],
+    englishTokens: ["I found", "an almost-new sofa", "second-hand", "for less than", "half price"],
+    hebrewDistractorPairs: [["מכרתי", "מָכַרְתִּי"], ["שולחן שבור", "שֻׁלְחָן שָׁבוּר"], ["בחנות", "בַּחֲנוּת"], ["ביותר", "בְּיוֹתֵר"], ["מהשכירות", "מֵהַשְּׂכִירוּת"]],
+    englishDistractors: ["I sold", "a broken table", "brand-new", "for more than", "double the rent"],
+    notes: "יד שנייה = second-hand; furnishing a Tel Aviv flat from the online listings and street finds is standard practice. בפחות מחצי מחיר = for under half price."
+  }),
+  buildExpandedSentence({
+    id: "professional_66", emoji: "💸", category: "professional", difficulty: 2,
+    hebrew: "החברה שלהם עשתה אקזיט, וכל המשרד מדבר רק על זה.",
+    hebrewNiqqud: "הַחֶבְרָה שֶׁלָּהֶם עָשְׂתָה אֶקְזִיט, וְכָל הַמִּשְׂרָד מְדַבֵּר רַק עַל זֶה.",
+    english: "Their company made an exit, and the whole office is talking only about it.",
+    hebrewTokenPairs: [["החברה שלהם", "הַחֶבְרָה שֶׁלָּהֶם"], ["עשתה", "עָשְׂתָה"], ["אקזיט", "אֶקְזִיט"], ["וכל", "וְכָל"], ["המשרד", "הַמִּשְׂרָד"], ["מדבר", "מְדַבֵּר"], ["רק על זה", "רַק עַל זֶה"]],
+    englishTokens: ["Their company", "made", "an exit", "and the whole", "office", "is talking", "only about it"],
+    hebrewDistractorPairs: [["הסטארטאפ שלה", "הַסְּטַארְטַאפּ שֶׁלָּהּ"], ["גייסה", "גִּיְּסָה"], ["סבב", "סֶבֶב"], ["שותק", "שׁוֹתֵק"], ["רק על העסקה", "רַק עַל הָעִסְקָה"]],
+    englishDistractors: ["Her startup", "raised", "a funding round", "is silent", "only about the deal"],
+    notes: "אקזיט (exit — a startup being sold) came into everyday Hebrew straight from high-tech English; עשתה אקזיט is the standard collocation. גייסה סבב (raised a round) is the neighboring buzz-phrase trap."
+  }),
+  buildExpandedSentence({
+    id: "professional_67", emoji: "💰", category: "professional", difficulty: 2,
+    hebrew: "הסטארטאפ גייס עשרים מיליון דולר בסבב השני.",
+    hebrewNiqqud: "הַסְּטַארְטַאפּ גִּיֵּס עֶשְׂרִים מִילְיוֹן דּוֹלָר בַּסֶּבֶב הַשֵּׁנִי.",
+    english: "The startup raised twenty million dollars in its second round.",
+    hebrewTokenPairs: [["הסטארטאפ", "הַסְּטַארְטַאפּ"], ["גייס", "גִּיֵּס"], ["עשרים", "עֶשְׂרִים"], ["מיליון", "מִילְיוֹן"], ["דולר", "דּוֹלָר"], ["בסבב", "בַּסֶּבֶב"], ["השני", "הַשֵּׁנִי"]],
+    englishTokens: ["The startup", "raised", "twenty million", "dollars", "in its second", "round"],
+    hebrewDistractorPairs: [["היוניקורן", "הַיּוּנִיקוֹרְן"], ["בזבז", "בִּזְבֵּז"], ["מאתיים", "מָאתַיִם"], ["שקל", "שֶׁקֶל"], ["הראשון", "הָרִאשׁוֹן"]],
+    englishDistractors: ["The unicorn", "spent", "two hundred", "shekels", "in its first", "quarter"],
+    notes: "Startup Hebrew: גייס = raised (funding), סבב = a round. יוניקורן (the distractor) needs no translation on Rothschild Boulevard."
+  }),
+  buildExpandedSentence({
+    id: "professional_68", emoji: "🎧", category: "professional", difficulty: 2,
+    hebrew: "אי אפשר להתרכז באופן ספייס כשכולם בשיחות זום.",
+    hebrewNiqqud: "אִי אֶפְשָׁר לְהִתְרַכֵּז בָּאוֹפֶן סְפֵּייס כְּשֶׁכֻּלָּם בְּשִׂיחוֹת זוּם.",
+    english: "It's impossible to concentrate in the open space when everyone is on Zoom calls.",
+    hebrewTokenPairs: [["אי אפשר", "אִי אֶפְשָׁר"], ["להתרכז", "לְהִתְרַכֵּז"], ["באופן ספייס", "בָּאוֹפֶן סְפֵּייס"], ["כשכולם", "כְּשֶׁכֻּלָּם"], ["בשיחות", "בְּשִׂיחוֹת"], ["זום", "זוּם"]],
+    englishTokens: ["It's impossible", "to concentrate", "in the open space", "when everyone", "is on Zoom calls"],
+    hebrewDistractorPairs: [["קל", "קַל"], ["לנמנם", "לְנַמְנֵם"], ["במטבחון", "בַּמִּטְבָּחוֹן"], ["כשאף אחד", "כְּשֶׁאַף אֶחָד"], ["במשרד", "בַּמִּשְׂרָד"]],
+    englishDistractors: ["It's easy", "to nap", "in the kitchen", "when nobody", "is at the office"],
+    notes: "אופן ספייס — the open-plan office, imported with its noise. מטבחון (the distractor) is the office kitchenette where the actual decisions happen. כש־ = when."
+  }),
+  buildExpandedSentence({
+    id: "professional_69", emoji: "🐶", category: "professional", difficulty: 1,
+    hebrew: "יש שלושה כלבים במשרד ורק מנהלת אחת.",
+    hebrewNiqqud: "יֵשׁ שְׁלוֹשָׁה כְּלָבִים בַּמִּשְׂרָד וְרַק מְנַהֶלֶת אַחַת.",
+    english: "There are three dogs at the office and only one manager.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["שלושה", "שְׁלוֹשָׁה"], ["כלבים", "כְּלָבִים"], ["במשרד", "בַּמִּשְׂרָד"], ["ורק", "וְרַק"], ["מנהלת", "מְנַהֶלֶת"], ["אחת", "אַחַת"]],
+    englishTokens: ["There are", "three dogs", "at the office", "and only", "one manager"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["חתולים", "חֲתוּלִים"], ["שני", "שְׁנֵי"], ["בישיבה", "בַּיְשִׁיבָה"], ["מתמחה", "מִתְמַחֶה"]],
+    englishDistractors: ["There is", "two cats", "at the meeting", "and also", "one intern"],
+    notes: "The office dog (כלב משרד) outranks everyone at a Tel Aviv startup. מנהלת = a (female) manager; אחת agrees in the feminine."
+  }),
+  buildExpandedSentence({
+    id: "professional_70", emoji: "⏰", category: "professional", difficulty: 2,
+    hebrew: "הדדליין של הספרינט הוקדם, אז כולם נשארים עד מאוחר.",
+    hebrewNiqqud: "הַדֶּדְלַיְן שֶׁל הַסְּפְּרִינְט הֻקְדַּם, אָז כֻּלָּם נִשְׁאָרִים עַד מְאֻחָר.",
+    english: "The deadline for the sprint was moved up, so everyone is staying late.",
+    hebrewTokenPairs: [["הדדליין", "הַדֶּדְלַיְן"], ["של", "שֶׁל"], ["הספרינט", "הַסְּפְּרִינְט"], ["הוקדם", "הֻקְדַּם"], ["אז", "אָז"], ["כולם", "כֻּלָּם"], ["נשארים", "נִשְׁאָרִים"], ["עד", "עַד"], ["מאוחר", "מְאֻחָר"]],
+    englishTokens: ["The deadline", "for the sprint", "was moved up", "so", "everyone", "is staying", "late"],
+    hebrewDistractorPairs: [["הדמו", "הַדֶּמוֹ"], ["ההשקה", "הַהַשָּׁקָה"], ["נדחה", "נִדְחָה"], ["הולכים", "הוֹלְכִים"], ["הביתה", "הַבַּיְתָה"]],
+    englishDistractors: ["The demo", "for the launch", "was pushed back", "because", "nobody", "is going home"],
+    notes: "דדליין and ספרינט arrived untranslated with the tech industry. הוקדם = 'was moved earlier' — the passive that ruins evenings; its opposite נדחה (postponed) is the tile everyone wishes were true."
+  }),
+  buildExpandedSentence({
+    id: "professional_71", emoji: "🏠", category: "professional", difficulty: 3,
+    hebrew: "המנכ\"ל רוצה את כולם במשרד, אבל הצוות מתעקש על היברידי.",
+    hebrewNiqqud: "הַמַּנְכָּ\"ל רוֹצֶה אֶת כֻּלָּם בַּמִּשְׂרָד, אֲבָל הַצֶּוֶת מִתְעַקֵּשׁ עַל הִיבְּרִידִי.",
+    english: "The CEO wants everyone at the office, but the team insists on hybrid.",
+    hebrewTokenPairs: [["המנכ\"ל", "הַמַּנְכָּ\"ל"], ["רוצה", "רוֹצֶה"], ["את כולם", "אֶת כֻּלָּם"], ["במשרד", "בַּמִּשְׂרָד"], ["אבל", "אֲבָל"], ["הצוות", "הַצֶּוֶת"], ["מתעקש", "מִתְעַקֵּשׁ"], ["על", "עַל"], ["היברידי", "הִיבְּרִידִי"]],
+    englishTokens: ["The CEO", "wants", "everyone", "at the office", "but the team", "insists", "on hybrid"],
+    hebrewDistractorPairs: [["הסמנכ\"ל", "הַסְּמַנְכָּ\"ל"], ["מבטיח", "מַבְטִיחַ"], ["אף אחד", "אַף אֶחָד"], ["בבית", "בַּבַּיִת"], ["מוותר", "מְוַתֵּר"]],
+    englishDistractors: ["The VP", "promises", "nobody", "at home", "but the board", "gives up"],
+    notes: "מנכ\"ל (CEO) and סמנכ\"ל (VP) are acronyms so common they behave like ordinary words. מתעקש על = insists on; היברידי — the post-2020 word no Israeli office meeting escapes."
+  }),
+  buildExpandedSentence({
+    id: "professional_72", emoji: "🐛", category: "professional", difficulty: 3,
+    hebrew: "זה לא באג, זה פיצ'ר — ככה אמרו לי בפיתוח.",
+    hebrewNiqqud: "זֶה לֹא בַּאג, זֶה פִיצֶ'ר — כָּכָה אָמְרוּ לִי בְּפִתּוּחַ.",
+    english: "It's not a bug, it's a feature — that's what they told me in development.",
+    hebrewTokenPairs: [["זה", "זֶה"], ["לא", "לֹא"], ["באג", "בַּאג"], ["זה", "זֶה"], ["פיצ'ר", "פִיצֶ'ר"], ["ככה", "כָּכָה"], ["אמרו", "אָמְרוּ"], ["לי", "לִי"], ["בפיתוח", "בְּפִתּוּחַ"]],
+    englishTokens: ["It's not", "a bug", "it's", "a feature", "that's what", "they told me", "in development"],
+    hebrewDistractorPairs: [["רק", "רַק"], ["תקלה", "תַּקָּלָה"], ["דמו", "דֶּמוֹ"], ["כך", "כָּךְ"], ["בתמיכה", "בַּתְּמִיכָה"]],
+    englishDistractors: ["It's only", "a glitch", "a demo", "that's how", "they warned us", "in QA"],
+    notes: "The universal engineering excuse, fully naturalized: באג and פיצ'ר. ככה = 'that's how' (casual); its formal twin כך sits in the distractors. בפיתוח = in the dev department."
+  }),
+  buildExpandedSentence({
+    id: "formal_61", emoji: "🛴", category: "formal", difficulty: 3,
+    hebrew: "עיריית תל אביב מזכירה לתושבים כי אין לנסוע בקורקינט על המדרכה.",
+    hebrewNiqqud: "עִירִיַּת תֵּל אָבִיב מַזְכִּירָה לַתּוֹשָׁבִים כִּי אֵין לִנְסֹעַ בְּקוֹרְקִינֵט עַל הַמִּדְרָכָה.",
+    english: "The Tel Aviv municipality reminds residents that riding a scooter on the sidewalk is not allowed.",
+    hebrewTokenPairs: [["עיריית תל אביב", "עִירִיַּת תֵּל אָבִיב"], ["מזכירה", "מַזְכִּירָה"], ["לתושבים", "לַתּוֹשָׁבִים"], ["כי", "כִּי"], ["אין לנסוע", "אֵין לִנְסֹעַ"], ["בקורקינט", "בְּקוֹרְקִינֵט"], ["על המדרכה", "עַל הַמִּדְרָכָה"]],
+    englishTokens: ["The Tel Aviv municipality", "reminds", "residents", "that riding", "a scooter", "on the sidewalk", "is not allowed"],
+    hebrewDistractorPairs: [["מודיעה", "מוֹדִיעָה"], ["לנהגים", "לַנֶּהָגִים"], ["מותר לנסוע", "מֻתָּר לִנְסֹעַ"], ["באופניים", "בְּאוֹפַנַּיִם"], ["בשביל האופניים", "בִּשְׁבִיל הָאוֹפַנַּיִם"]],
+    englishDistractors: ["announces to", "drivers", "that parking", "a bicycle", "in the bike lane", "is permitted"],
+    notes: "Municipal-notice register: כי replaces ש, and אין + infinitive = 'one must not' — the exact pattern on Israeli public signage. עיריית is the construct form of עירייה; the city scolding scooter riders is a running Tel Aviv joke."
+  }),
+  buildExpandedSentence({
+    id: "formal_62", emoji: "🏖️", category: "formal", difficulty: 2,
+    hebrew: "העירייה מבקשת מהמתרחצים שלא להשאיר זבל על החוף.",
+    hebrewNiqqud: "הָעִירִיָּה מְבַקֶּשֶׁת מֵהַמִּתְרַחֲצִים שֶׁלֹּא לְהַשְׁאִיר זֶבֶל עַל הַחוֹף.",
+    english: "The municipality asks bathers not to leave trash on the beach.",
+    hebrewTokenPairs: [["העירייה", "הָעִירִיָּה"], ["מבקשת", "מְבַקֶּשֶׁת"], ["מהמתרחצים", "מֵהַמִּתְרַחֲצִים"], ["שלא", "שֶׁלֹּא"], ["להשאיר", "לְהַשְׁאִיר"], ["זבל", "זֶבֶל"], ["על", "עַל"], ["החוף", "הַחוֹף"]],
+    englishTokens: ["The municipality", "asks", "bathers", "not to leave", "trash", "on the beach"],
+    hebrewDistractorPairs: [["המציל", "הַמַּצִּיל"], ["דורשת", "דּוֹרֶשֶׁת"], ["מהגולשים", "מֵהַגּוֹלְשִׁים"], ["להביא", "לְהָבִיא"], ["כיסאות", "כִּסְּאוֹת"]],
+    englishDistractors: ["The lifeguard", "orders", "surfers", "not to bring", "chairs", "on the boardwalk"],
+    notes: "Municipal-request register: מבקשת מ־... שלא + infinitive = 'requests that (people) not...'. מתרחצים ('bathers') is a word that exists only on signs and in municipal announcements."
+  }),
+  buildExpandedSentence({
+    id: "formal_63", emoji: "🚧", category: "formal", difficulty: 3,
+    hebrew: "אנו מתנצלים על אי הנוחות הזמנית בעקבות עבודות הרכבת הקלה.",
+    hebrewNiqqud: "אָנוּ מִתְנַצְּלִים עַל אִי הַנּוֹחוּת הַזְּמַנִּית בְּעִקְבוֹת עֲבוֹדוֹת הָרַכֶּבֶת הַקַּלָּה.",
+    english: "We apologize for the temporary inconvenience due to the light rail works.",
+    hebrewTokenPairs: [["אנו", "אָנוּ"], ["מתנצלים", "מִתְנַצְּלִים"], ["על", "עַל"], ["אי הנוחות", "אִי הַנּוֹחוּת"], ["הזמנית", "הַזְּמַנִּית"], ["בעקבות", "בְּעִקְבוֹת"], ["עבודות", "עֲבוֹדוֹת"], ["הרכבת הקלה", "הָרַכֶּבֶת הַקַּלָּה"]],
+    englishTokens: ["We apologize", "for the temporary", "inconvenience", "due to", "the light rail", "works"],
+    hebrewDistractorPairs: [["אנו מודים", "אָנוּ מוֹדִים"], ["הקבועה", "הַקְּבוּעָה"], ["בזכות", "בִּזְכוּת"], ["המנהרה", "הַמִּנְהָרָה"], ["סגירת", "סְגִירַת"]],
+    englishDistractors: ["We thank you", "for the permanent", "delay", "thanks to", "the new tunnel", "closures"],
+    notes: "The sign every Tel Avivian read for a decade. אי־ prefixed to a noun negates it: אי הנוחות = 'the inconvenience'. אנו is the formal 'we'; בעקבות = 'following/due to'."
+  }),
+];
+
+SENTENCE_BANK.push(...SENTENCE_EXPANSION_ROUND4);
+
 function cloneSentence(item) {
   return {
     ...item,
@@ -10395,6 +11210,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260712b",
+  __build: "20260712c",
 };
 })(typeof window !== "undefined" ? window : globalThis);
