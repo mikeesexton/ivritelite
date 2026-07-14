@@ -11195,6 +11195,565 @@ const SENTENCE_EXPANSION_ROUND4 = [
 
 SENTENCE_BANK.push(...SENTENCE_EXPANSION_ROUND4);
 
+const SENTENCE_EXPANSION_POLITICS = [
+  buildExpandedSentence({
+    id: "colloquial_140", emoji: "🗳️", category: "colloquial", difficulty: 2,
+    hebrew: "עוד בחירות? אין מצב שהקואליציה הזאת מחזיקה עד הקיץ.",
+    hebrewNiqqud: "עוֹד בְּחִירוֹת? אֵין מַצָּב שֶׁהַקּוֹאָלִיצְיָה הַזֹּאת מַחֲזִיקָה עַד הַקַּיִץ.",
+    english: "Another election? No way this coalition lasts until the summer.",
+    hebrewTokenPairs: [["עוד בחירות", "עוֹד בְּחִירוֹת"], ["אין מצב", "אֵין מַצָּב"], ["שהקואליציה הזאת", "שֶׁהַקּוֹאָלִיצְיָה הַזֹּאת"], ["מחזיקה", "מַחֲזִיקָה"], ["עד הקיץ", "עַד הַקַּיִץ"]],
+    englishTokens: ["Another election", "No way", "this coalition", "lasts", "until the summer"],
+    hebrewDistractorPairs: [["עוד סיבוב", "עוֹד סִיבּוּב"], ["יש סיכוי", "יֵשׁ סִכּוּי"], ["שהאופוזיציה", "שֶׁהָאוֹפּוֹזִיצְיָה"], ["נופלת", "נוֹפֶלֶת"], ["עד החורף", "עַד הַחֹרֶף"]],
+    englishDistractors: ["One more round", "There is a chance", "that the opposition", "falls apart", "until winter"],
+    notes: "In Israeli political talk בחירות is conventionally plural even for one election. אין מצב is a strongly colloquial 'no way,' while קואליציה is the governing coalition."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_141", emoji: "↔️", category: "colloquial", difficulty: 2,
+    hebrew: "כולם רבים על ימין ושמאל, ובינתיים יוקר המחיה רק עולה.",
+    hebrewNiqqud: "כֻּלָּם רָבִים עַל יָמִין וּשְׂמֹאל, וּבֵינְתַיִם יֹקֶר הַמִּחְיָה רַק עוֹלֶה.",
+    english: "Everyone argues about right and left, while the cost of living just keeps rising.",
+    hebrewTokenPairs: [["כולם", "כֻּלָּם"], ["רבים על", "רָבִים עַל"], ["ימין ושמאל", "יָמִין וּשְׂמֹאל"], ["ובינתיים", "וּבֵינְתַיִם"], ["יוקר המחיה", "יֹקֶר הַמִּחְיָה"], ["רק", "רַק"], ["עולה", "עוֹלֶה"]],
+    englishTokens: ["Everyone", "argues about", "right and left", "while", "the cost of living", "just keeps", "rising"],
+    hebrewDistractorPairs: [["רוב האנשים", "רֹב הָאֲנָשִׁים"], ["מסכימים על", "מַסְכִּימִים עַל"], ["המרכז הפוליטי", "הַמֶּרְכָּז הַפּוֹלִיטִי"], ["באותו זמן", "בְּאוֹתוֹ זְמַן"], ["מחירי היצוא", "מְחִירֵי הַיְצוּא"], ["סוף סוף יורדים", "סוֹף סוֹף יוֹרְדִים"]],
+    englishDistractors: ["Most people", "agree on", "the political center", "at that moment", "export prices", "finally fall"],
+    notes: "ימין ושמאל are the everyday labels for the political right and left. יוקר המחיה, literally 'the costliness of living,' is the standard phrase for cost-of-living debates."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_142", emoji: "📣", category: "colloquial", difficulty: 1,
+    hebrew: "ההפגנה מתחילה בשבע, ניפגש ליד האנדרטה?",
+    hebrewNiqqud: "הַהַפְגָּנָה מַתְחִילָה בְּשֶׁבַע, נִפָּגֵשׁ לְיַד הָאַנְדַּרְטָה?",
+    english: "The protest starts at seven—should we meet by the monument?",
+    hebrewTokenPairs: [["ההפגנה", "הַהַפְגָּנָה"], ["מתחילה", "מַתְחִילָה"], ["בשבע", "בְּשֶׁבַע"], ["ניפגש", "נִפָּגֵשׁ"], ["ליד", "לְיַד"], ["האנדרטה", "הָאַנְדַּרְטָה"]],
+    englishTokens: ["The protest", "starts", "at seven", "should we meet", "by", "the monument"],
+    hebrewDistractorPairs: [["העצרת", "הָעֲצֶרֶת"], ["מסתיימת", "מִסְתַּיֶּמֶת"], ["בתשע", "בְּתֵשַׁע"], ["מתפזרים", "מִתְפַּזְּרִים"], ["מול", "מוּל"], ["התחנה", "הַתַּחֲנָה"]],
+    englishDistractors: ["The rally", "ends", "at nine", "should we disperse", "opposite", "the station"],
+    notes: "הפגנה is a demonstration or protest; עצרת is a rally or assembly. אנדרטה is a memorial monument and a natural landmark for arranging where to meet."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_143", emoji: "📱", category: "colloquial", difficulty: 3,
+    hebrew: "הסרטון הצית ויכוח על אלימות משטרתית, אבל אף אחד לא בדק את ההקשר.",
+    hebrewNiqqud: "הַסִּרְטוֹן הִצִּית וִכּוּחַ עַל אַלִּימוּת מִשְׁטַרְתִּית, אֲבָל אַף אֶחָד לֹא בָּדַק אֶת הַהֶקְשֵׁר.",
+    english: "The video sparked an argument about police brutality, but no one checked the context.",
+    hebrewTokenPairs: [["הסרטון", "הַסִּרְטוֹן"], ["הצית", "הִצִּית"], ["ויכוח", "וִכּוּחַ"], ["על", "עַל"], ["אלימות משטרתית", "אַלִּימוּת מִשְׁטַרְתִּית"], ["אבל", "אֲבָל"], ["אף אחד לא", "אַף אֶחָד לֹא"], ["בדק", "בָּדַק"], ["את ההקשר", "אֶת הַהֶקְשֵׁר"]],
+    englishTokens: ["The video", "sparked", "an argument", "about", "police brutality", "but", "no one", "checked", "the context"],
+    hebrewDistractorPairs: [["הדיווח", "הַדִּוּוּחַ"], ["סיים", "סִיֵּם"], ["מריבה", "מְרִיבָה"], ["בלי", "בְּלִי"], ["אדישות", "אֲדִישׁוּת"], ["כולם", "כֻּלָּם"]],
+    englishDistractors: ["The report", "settled", "a quarrel", "without", "indifference", "everyone"],
+    notes: "אלימות משטרתית is the common activist and media phrase for police brutality or police violence. ההקשר means 'the context'; the sentence describes a media argument without deciding its facts."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_144", emoji: "🗯️", category: "colloquial", difficulty: 3,
+    hebrew: "הוא אומר כיבוש, היא אומרת שליטה צבאית; פה אפילו המילים פוליטיות.",
+    hebrewNiqqud: "הוּא אוֹמֵר כִּבּוּשׁ, הִיא אוֹמֶרֶת שְׁלִיטָה צְבָאִית; פֹּה אֲפִלּוּ הַמִּלִּים פּוֹלִיטִיּוֹת.",
+    english: "He says occupation, she says military control; here even the words are political.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["אומר", "אוֹמֵר"], ["כיבוש", "כִּבּוּשׁ"], ["היא", "הִיא"], ["אומרת", "אוֹמֶרֶת"], ["שליטה צבאית", "שְׁלִיטָה צְבָאִית"], ["פה", "פֹּה"], ["אפילו", "אֲפִלּוּ"], ["המילים", "הַמִּלִּים"], ["פוליטיות", "פּוֹלִיטִיּוֹת"]],
+    englishTokens: ["He", "says", "occupation", "she", "says", "military control", "here", "even", "the words", "are political"],
+    hebrewDistractorPairs: [["טוען", "טוֹעֵן"], ["סיפוח", "סִפּוּחַ"], ["ממשל אזרחי", "מִמְשָׁל אֶזְרָחִי"], ["שם", "שָׁם"], ["רק המספרים", "רַק הַמִּסְפָּרִים"], ["ניטרליים", "נֵיטְרָלִיִּים"]],
+    englishDistractors: ["argues", "annexation", "civilian government", "there", "only the numbers", "are neutral"],
+    notes: "כיבוש is the usual Hebrew word for occupation; שליטה צבאית is the more descriptive 'military control.' The paired wording highlights how speakers' term choice can signal framing."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_145", emoji: "🏳️‍🌈", category: "colloquial", difficulty: 2,
+    hebrew: "עברנו לתל אביב כי רצינו קהילה גאה ויותר פתיחות.",
+    hebrewNiqqud: "עָבַרְנוּ לְתֵל אָבִיב כִּי רָצִינוּ קְהִלָּה גֵּאָה וְיוֹתֵר פְּתִיחוּת.",
+    english: "We moved to Tel Aviv because we wanted an LGBTQ community and greater openness.",
+    hebrewTokenPairs: [["עברנו", "עָבַרְנוּ"], ["לתל אביב", "לְתֵל אָבִיב"], ["כי", "כִּי"], ["רצינו", "רָצִינוּ"], ["קהילה גאה", "קְהִלָּה גֵּאָה"], ["ויותר", "וְיוֹתֵר"], ["פתיחות", "פְּתִיחוּת"]],
+    englishTokens: ["We moved", "to Tel Aviv", "because", "we wanted", "an LGBTQ community", "and greater", "openness"],
+    hebrewDistractorPairs: [["חזרנו", "חָזַרְנוּ"], ["לחיפה", "לְחֵיפָה"], ["עזבנו", "עָזַבְנוּ"], ["בדידות", "בְּדִידוּת"], ["ועבודה", "וַעֲבוֹדָה"], ["שקטה יותר", "שְׁקֵטָה יוֹתֵר"]],
+    englishDistractors: ["We returned", "to Haifa", "we left", "solitude", "and a job", "that was quieter"],
+    notes: "קהילה גאה, literally 'proud community,' is a common warm term for the LGBTQ community. The more institutional abbreviation is להט״ב."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_146", emoji: "🏠", category: "colloquial", difficulty: 2,
+    hebrew: "עם המשכורת הזאת, צעירים וצעירות יכולים רק לחלום על דירה במרכז הארץ.",
+    hebrewNiqqud: "עִם הַמַּשְׂכֹּרֶת הַזֹּאת, צְעִירִים וּצְעִירוֹת יְכוֹלִים רַק לַחֲלֹם עַל דִּירָה בְּמֶרְכַּז הָאָרֶץ.",
+    english: "On this salary, young adults can only dream of an apartment in central Israel.",
+    hebrewTokenPairs: [["עם המשכורת הזאת", "עִם הַמַּשְׂכֹּרֶת הַזֹּאת"], ["צעירים וצעירות", "צְעִירִים וּצְעִירוֹת"], ["יכולים רק לחלום", "יְכוֹלִים רַק לַחֲלֹם"], ["על דירה", "עַל דִּירָה"], ["במרכז הארץ", "בְּמֶרְכַּז הָאָרֶץ"]],
+    englishTokens: ["On this salary", "young adults", "can only dream", "of an apartment", "in central Israel"],
+    hebrewDistractorPairs: [["עם החיסכון ההוא", "עִם הַחִסָּכוֹן הַהוּא"], ["גמלאים", "גִּמְלָאִים"], ["חייבים כבר לקנות", "חַיָּבִים כְּבָר לִקְנוֹת"], ["משרד", "מִשְׂרָד"], ["בפריפריה", "בַּפֶּרִיפֶרְיָה"]],
+    englishDistractors: ["With those savings", "retirees", "must already buy", "an office", "on the outskirts"],
+    notes: "צעירים וצעירות explicitly includes young men and women; mixed groups take the masculine-plural יכולים. המרכז often means Israel's expensive central region, not merely a city center."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_147", emoji: "🧳", category: "colloquial", difficulty: 3,
+    hebrew: "העולים החדשים בקושי מבינים את אחוז החסימה, וכבר מפציצים אותם בסקרי בחירות.",
+    hebrewNiqqud: "הָעוֹלִים הַחֲדָשִׁים בְּקֹשִׁי מְבִינִים אֶת אֲחוּז הַחֲסִימָה, וּכְבָר מַפְצִיצִים אוֹתָם בְּסִקְרֵי בְּחִירוֹת.",
+    english: "The new immigrants barely understand the electoral threshold, and they are already being bombarded with election polls.",
+    hebrewTokenPairs: [["העולים החדשים", "הָעוֹלִים הַחֲדָשִׁים"], ["בקושי", "בְּקֹשִׁי"], ["מבינים", "מְבִינִים"], ["את אחוז החסימה", "אֶת אֲחוּז הַחֲסִימָה"], ["וכבר", "וּכְבָר"], ["מפציצים אותם", "מַפְצִיצִים אוֹתָם"], ["בסקרי בחירות", "בְּסִקְרֵי בְּחִירוֹת"]],
+    englishTokens: ["The new immigrants", "barely", "understand", "the electoral threshold", "and", "they are already being bombarded", "with election polls"],
+    hebrewDistractorPairs: [["התושבים הוותיקים", "הַתּוֹשָׁבִים הַוָּתִיקִים"], ["בקלות", "בְּקַלּוּת"], ["שוכחים", "שׁוֹכְחִים"], ["מנדט", "מַנְדָּט"], ["והשאלונים", "וְהַשְּׁאֵלוֹנִים"], ["עדיין", "עֲדַיִן"]],
+    englishDistractors: ["Longtime residents", "easily", "forget", "a seat", "and questionnaires", "still"],
+    notes: "עולים חדשים are new immigrants under the idea of aliyah. אחוז החסימה is the electoral threshold a party must cross to enter the Knesset; מפציצים אותם is the colloquial 'bombarding them.'"
+  }),
+  buildExpandedSentence({
+    id: "colloquial_148", emoji: "📺", category: "colloquial", difficulty: 2,
+    hebrew: "כל פעם שביבי עולה לשידור, הקבוצה המשפחתית מתפוצצת מהודעות.",
+    hebrewNiqqud: "כָּל פַּעַם שֶׁבִּיבִּי עוֹלֶה לְשִׁדּוּר, הַקְּבוּצָה הַמִּשְׁפַּחְתִּית מִתְפּוֹצֶצֶת מֵהוֹדָעוֹת.",
+    english: "Every time Bibi goes on air, the family group chat blows up with messages.",
+    hebrewTokenPairs: [["כל פעם", "כָּל פַּעַם"], ["שביבי", "שֶׁבִּיבִּי"], ["עולה לשידור", "עוֹלֶה לְשִׁדּוּר"], ["הקבוצה המשפחתית", "הַקְּבוּצָה הַמִּשְׁפַּחְתִּית"], ["מתפוצצת", "מִתְפּוֹצֶצֶת"], ["מהודעות", "מֵהוֹדָעוֹת"]],
+    englishTokens: ["Every time", "Bibi", "goes on air", "the family group chat", "blows up", "with messages"],
+    hebrewDistractorPairs: [["לעיתים רחוקות", "לְעִתִּים רְחוֹקוֹת"], ["שהפרשן", "שֶׁהַפַּרְשָׁן"], ["יורד מהמסך", "יוֹרֵד מֵהַמָּסָךְ"], ["צוות העבודה", "צֶוֶת הָעֲבוֹדָה"], ["נרגע", "נִרְגָּע"], ["מתמונות", "מִתְּמוּנוֹת"]],
+    englishDistractors: ["Once in a while", "the commentator", "leaves the screen", "the work team", "calms down", "with pictures"],
+    notes: "עולה לשידור means 'goes on air.' ביבי is Benjamin Netanyahu's universally recognized nickname; the joke is about family-chat polarization, not a political judgment."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_149", emoji: "🧾", category: "colloquial", difficulty: 2,
+    hebrew: "מעמד הביניים משלם יותר ומרגיש שהוא מקבל פחות.",
+    hebrewNiqqud: "מַעֲמַד הַבֵּינַיִם מְשַׁלֵּם יוֹתֵר וּמַרְגִּישׁ שֶׁהוּא מְקַבֵּל פָּחוֹת.",
+    english: "The middle class pays more and feels like it gets less.",
+    hebrewTokenPairs: [["מעמד הביניים", "מַעֲמַד הַבֵּינַיִם"], ["משלם", "מְשַׁלֵּם"], ["יותר", "יוֹתֵר"], ["ומרגיש", "וּמַרְגִּישׁ"], ["שהוא", "שֶׁהוּא"], ["מקבל", "מְקַבֵּל"], ["פחות", "פָּחוֹת"]],
+    englishTokens: ["The middle class", "pays", "more", "and feels", "like it", "gets", "less"],
+    hebrewDistractorPairs: [["המעמד הגבוה", "הַמַּעֲמָד הַגָּבוֹהַּ"], ["חוסך", "חוֹסֵךְ"], ["מעט", "מְעַט"], ["ויודע", "וְיוֹדֵעַ"], ["שהמעמד", "שֶׁהַמַּעֲמָד"], ["דורש", "דּוֹרֵשׁ"]],
+    englishDistractors: ["The upper class", "saves", "a little", "and knows", "that group", "demands"],
+    notes: "מעמד הביניים is the standard socioeconomic phrase 'the middle class.' Hebrew treats the collective phrase as masculine singular here, hence משלם and שהוא."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_150", emoji: "🚌", category: "colloquial", difficulty: 2,
+    hebrew: "תחבורה ציבורית בשבת? בתל אביב זה נשמע מובן מאליו, ובערים אחרות ממש לא.",
+    hebrewNiqqud: "תַּחְבּוּרָה צִבּוּרִית בְּשַׁבָּת? בְּתֵל אָבִיב זֶה נִשְׁמָע מוּבָן מֵאֵלָיו, וּבְעָרִים אֲחֵרוֹת מַמָּשׁ לֹא.",
+    english: "Public transportation on Shabbat? In Tel Aviv it seems like a given; in other cities, definitely not.",
+    hebrewTokenPairs: [["תחבורה ציבורית", "תַּחְבּוּרָה צִבּוּרִית"], ["בשבת", "בְּשַׁבָּת"], ["בתל אביב", "בְּתֵל אָבִיב"], ["זה", "זֶה"], ["נשמע", "נִשְׁמָע"], ["מובן מאליו", "מוּבָן מֵאֵלָיו"], ["ובערים", "וּבְעָרִים"], ["אחרות", "אֲחֵרוֹת"], ["ממש לא", "מַמָּשׁ לֹא"]],
+    englishTokens: ["Public transportation", "on Shabbat", "In Tel Aviv", "it", "seems", "like a given", "in", "other cities", "definitely not"],
+    hebrewDistractorPairs: [["רכב", "רֶכֶב"], ["ביום ראשון", "בְּיוֹם רִאשׁוֹן"], ["בירושלים", "בִּירוּשָׁלַיִם"], ["מרגיש", "מַרְגִּישׁ"], ["שנוי במחלוקת", "שָׁנוּי בְּמַחֲלֹקֶת"], ["ובכפרים", "וּבִכְפָרִים"]],
+    englishDistractors: ["Cars", "on Sunday", "In Jerusalem", "feels", "controversial", "and in villages"],
+    notes: "תחבורה ציבורית בשבת is a recurring religion-and-state debate. מובן מאליו means 'self-evident' or obvious; ממש לא gives the emphatic colloquial contrast 'not at all.'"
+  }),
+  buildExpandedSentence({
+    id: "colloquial_151", emoji: "📰", category: "colloquial", difficulty: 3,
+    hebrew: "כשאומרים אלימות מתנחלים, צריך לברר על איזה אירוע מדברים.",
+    hebrewNiqqud: "כְּשֶׁאוֹמְרִים אַלִּימוּת מִתְנַחֲלִים, צָרִיךְ לְבָרֵר עַל אֵיזֶה אֵירוּעַ מְדַבְּרִים.",
+    english: "When people say ‘settler violence,’ you need to check which incident they’re talking about.",
+    hebrewTokenPairs: [["כשאומרים", "כְּשֶׁאוֹמְרִים"], ["אלימות מתנחלים", "אַלִּימוּת מִתְנַחֲלִים"], ["צריך", "צָרִיךְ"], ["לברר", "לְבָרֵר"], ["על איזה אירוע", "עַל אֵיזֶה אֵירוּעַ"], ["מדברים", "מְדַבְּרִים"]],
+    englishTokens: ["When people say", "settler violence", "you need to", "check", "which incident", "they’re talking about"],
+    hebrewDistractorPairs: [["כשכותבים", "כְּשֶׁכּוֹתְבִים"], ["מחאה", "מְחָאָה"], ["אפשר להניח", "אֶפְשָׁר לְהַנִּיחַ"], ["על איזו תקופה", "עַל אֵיזוֹ תְּקוּפָה"], ["מתווכחים", "מִתְוַכְּחִים"]],
+    englishDistractors: ["When people write", "a protest", "you can assume", "which period", "they dispute"],
+    notes: "אלימות מתנחלים is the compact media phrase 'settler violence.' The impersonal plural אומרים and מדברים avoids naming a speaker and keeps the sentence focused on careful reference."
+  }),
+  buildExpandedSentence({
+    id: "everyday_125", emoji: "🗿", category: "everyday", difficulty: 2,
+    hebrew: "המדריכה הסבירה שהאנדרטה מנציחה מאבק למען זכויות אזרח.",
+    hebrewNiqqud: "הַמַּדְרִיכָה הִסְבִּירָה שֶׁהָאַנְדַּרְטָה מַנְצִיחָה מַאֲבָק לְמַעַן זְכֻיּוֹת אֶזְרָח.",
+    english: "The guide explained that the monument commemorates a struggle for civil rights.",
+    hebrewTokenPairs: [["המדריכה", "הַמַּדְרִיכָה"], ["הסבירה", "הִסְבִּירָה"], ["שהאנדרטה", "שֶׁהָאַנְדַּרְטָה"], ["מנציחה", "מַנְצִיחָה"], ["מאבק", "מַאֲבָק"], ["למען", "לְמַעַן"], ["זכויות אזרח", "זְכֻיּוֹת אֶזְרָח"]],
+    englishTokens: ["The guide", "explained", "that the monument", "commemorates", "a struggle", "for", "civil rights"],
+    hebrewDistractorPairs: [["העיתונאית", "הָעִתּוֹנָאִית"], ["טענה", "טָעֲנָה"], ["שהכיכר", "שֶׁהַכִּכָּר"], ["מסתירה", "מַסְתִּירָה"], ["זכויות עובדים", "זְכֻיּוֹת עוֹבְדִים"]],
+    englishDistractors: ["The journalist", "claimed", "that the square", "conceals", "workers' rights"],
+    notes: "אנדרטה is a memorial monument; מנציחה means 'commemorates' and agrees with the feminine noun אנדרטה. The primary guide is female; a masculine guide alternative is accepted.",
+    hebrewAlternates: [{
+      text: "המדריך הסביר שהאנדרטה מנציחה מאבק למען זכויות אזרח.", textNiqqud: "הַמַּדְרִיךְ הִסְבִּיר שֶׁהָאַנְדַּרְטָה מַנְצִיחָה מַאֲבָק לְמַעַן זְכֻיּוֹת אֶזְרָח.",
+      tokenPairs: [["המדריך", "הַמַּדְרִיךְ"], ["הסביר", "הִסְבִּיר"], ["שהאנדרטה", "שֶׁהָאַנְדַּרְטָה"], ["מנציחה", "מַנְצִיחָה"], ["מאבק", "מַאֲבָק"], ["למען", "לְמַעַן"], ["זכויות אזרח", "זְכֻיּוֹת אֶזְרָח"]]
+    }]
+  }),
+  buildExpandedSentence({
+    id: "everyday_126", emoji: "📍", category: "everyday", difficulty: 1,
+    hebrew: "בדקתי איפה הקלפי שלי לפני יום הבחירות.",
+    hebrewNiqqud: "בָּדַקְתִּי אֵיפֹה הַקַּלְפִּי שֶׁלִּי לִפְנֵי יוֹם הַבְּחִירוֹת.",
+    english: "I checked where my polling station is before election day.",
+    hebrewTokenPairs: [["בדקתי", "בָּדַקְתִּי"], ["איפה", "אֵיפֹה"], ["הקלפי שלי", "הַקַּלְפִּי שֶׁלִּי"], ["לפני", "לִפְנֵי"], ["יום הבחירות", "יוֹם הַבְּחִירוֹת"]],
+    englishTokens: ["I checked", "where", "my polling station is", "before", "election day"],
+    hebrewDistractorPairs: [["שכחתי", "שָׁכַחְתִּי"], ["מתי", "מָתַי"], ["מטה המפלגה", "מַטֵּה הַמִּפְלָגָה"], ["נפתח", "נִפְתָּח"], ["אחרי", "אַחֲרֵי"], ["יום הזיכרון", "יוֹם הַזִּכָּרוֹן"]],
+    englishDistractors: ["I forgot", "when", "the party office", "opens", "after", "memorial day"],
+    notes: "קלפי can mean the ballot box or, in ordinary election-day speech, the polling station. יום הבחירות is election day."
+  }),
+  buildExpandedSentence({
+    id: "everyday_127", emoji: "🧩", category: "everyday", difficulty: 2,
+    hebrew: "אחרי שהממשלה הוקמה ניסינו להבין אילו מפלגות השתייכו לקואליציה ואילו לאופוזיציה.",
+    hebrewNiqqud: "אַחֲרֵי שֶׁהַמֶּמְשָׁלָה הוּקְמָה נִיסִּינוּ לְהָבִין אֵילוּ מִפְלָגוֹת הִשְׁתַּיְּכוּ לַקּוֹאָלִיצְיָה וְאֵילוּ לָאוֹפּוֹזִיצְיָה.",
+    english: "After the government was formed, we tried to understand which parties belonged to the coalition and which to the opposition.",
+    hebrewTokenPairs: [["אחרי", "אַחֲרֵי"], ["שהממשלה", "שֶׁהַמֶּמְשָׁלָה"], ["הוקמה", "הוּקְמָה"], ["ניסינו", "נִיסִּינוּ"], ["להבין", "לְהָבִין"], ["אילו מפלגות", "אֵילוּ מִפְלָגוֹת"], ["השתייכו", "הִשְׁתַּיְּכוּ"], ["לקואליציה", "לַקּוֹאָלִיצְיָה"], ["ואילו", "וְאֵילוּ"], ["לאופוזיציה", "לָאוֹפּוֹזִיצְיָה"]],
+    englishTokens: ["After", "the government", "was formed", "we tried", "to understand", "which parties", "belonged", "to the coalition", "and which", "to the opposition"],
+    hebrewDistractorPairs: [["לפני", "לִפְנֵי"], ["הסקרים", "הַסְּקָרִים"], ["הצלחנו", "הִצְלַחְנוּ"], ["להחליט", "לְהַחְלִיט"], ["אילו נציגים", "אֵילוּ נְצִיגִים"], ["בוועדה", "בַּוַּעֲדָה"]],
+    englishDistractors: ["Before", "the polls", "we managed", "to decide", "which representatives", "were on the committee"],
+    notes: "The קואליציה supports and forms the government; the אופוזיציה consists of parties outside it. Both are everyday loanwords in Israeli news."
+  }),
+  buildExpandedSentence({
+    id: "everyday_128", emoji: "⚖️", category: "everyday", difficulty: 2,
+    hebrew: "היא הגישה תלונה על אפליה בעבודה וקיבלה ייעוץ משפטי.",
+    hebrewNiqqud: "הִיא הִגִּישָׁה תְּלוּנָה עַל אַפְלָיָה בָּעֲבוֹדָה וְקִבְּלָה יִעוּץ מִשְׁפָּטִי.",
+    english: "She filed a complaint about discrimination at work and received legal advice.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["הגישה", "הִגִּישָׁה"], ["תלונה", "תְּלוּנָה"], ["על אפליה", "עַל אַפְלָיָה"], ["בעבודה", "בָּעֲבוֹדָה"], ["וקיבלה", "וְקִבְּלָה"], ["ייעוץ משפטי", "יִעוּץ מִשְׁפָּטִי"]],
+    englishTokens: ["She", "filed", "a complaint", "about discrimination", "at work", "and received", "legal advice"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["ביטל", "בִּטֵּל"], ["בקשה", "בַּקָּשָׁה"], ["על איחור", "עַל אִחוּר"], ["ודחה", "וְדָחָה"], ["סיוע רפואי", "סִיּוּעַ רְפוּאִי"]],
+    englishDistractors: ["He", "withdrew", "an application", "about a delay", "and refused", "medical assistance"],
+    notes: "להגיש תלונה is the fixed phrase 'to file a complaint.' אפליה is discrimination, and ייעוץ משפטי is legal advice."
+  }),
+  buildExpandedSentence({
+    id: "everyday_129", emoji: "🔎", category: "everyday", difficulty: 3,
+    hebrew: "בהפגנה שמעתי אנשים קוראים לוועדת בדיקה שתחקור אלימות משטרתית.",
+    hebrewNiqqud: "בַּהַפְגָּנָה שָׁמַעְתִּי אֲנָשִׁים קוֹרְאִים לְוַעֲדַת בְּדִיקָה שֶׁתַּחֲקוֹר אַלִּימוּת מִשְׁטַרְתִּית.",
+    english: "At the protest, I heard people calling for a committee to investigate police brutality.",
+    hebrewTokenPairs: [["בהפגנה", "בַּהַפְגָּנָה"], ["שמעתי", "שָׁמַעְתִּי"], ["אנשים", "אֲנָשִׁים"], ["קוראים", "קוֹרְאִים"], ["לוועדת בדיקה", "לְוַעֲדַת בְּדִיקָה"], ["שתחקור", "שֶׁתַּחֲקוֹר"], ["אלימות משטרתית", "אַלִּימוּת מִשְׁטַרְתִּית"]],
+    englishTokens: ["At the protest", "I heard", "people", "calling", "for a committee", "to investigate", "police brutality"],
+    hebrewDistractorPairs: [["בכנס", "בַּכֶּנֶס"], ["ראיתי", "רָאִיתִי"], ["שוטרים", "שׁוֹטְרִים"], ["מסרבים", "מְסָרְבִים"], ["לפרק", "לְפָרֵק"], ["צוות הסברה", "צֶוֶת הַסְבָּרָה"]],
+    englishDistractors: ["At the conference", "I saw", "officers", "refusing", "to disband", "an outreach team"],
+    notes: "קוראים לוועדת בדיקה means 'call for an inquiry or review committee.' The sentence reports a demand heard at a protest without presenting the allegation as a finding."
+  }),
+  buildExpandedSentence({
+    id: "everyday_130", emoji: "🚌", category: "everyday", difficulty: 2,
+    hebrew: "בנסיעה עברנו ליד התנחלות ושמענו הסבר על המחלוקת סביבה.",
+    hebrewNiqqud: "בַּנְּסִיעָה עָבַרְנוּ לְיַד הִתְנַחֲלוּת וְשָׁמַעְנוּ הֶסְבֵּר עַל הַמַּחֲלֹקֶת סְבִיבָהּ.",
+    english: "During the trip, we passed by a settlement and heard an explanation of the controversy surrounding it.",
+    hebrewTokenPairs: [["בנסיעה", "בַּנְּסִיעָה"], ["עברנו ליד", "עָבַרְנוּ לְיַד"], ["התנחלות", "הִתְנַחֲלוּת"], ["ושמענו", "וְשָׁמַעְנוּ"], ["הסבר", "הֶסְבֵּר"], ["על המחלוקת", "עַל הַמַּחֲלֹקֶת"], ["סביבה", "סְבִיבָהּ"]],
+    englishTokens: ["During the trip", "we passed by", "a settlement", "and heard", "an explanation", "of the controversy", "surrounding it"],
+    hebrewDistractorPairs: [["בטיול הרגלי", "בַּטִּיּוּל הָרַגְלִי"], ["עצרנו", "עָצַרְנוּ"], ["ליד מחסום", "לְיַד מַחְסוֹם"], ["וצילמנו", "וְצִלַּמְנוּ"], ["נאום", "נְאוּם"], ["על ההסכמה לגביו", "עַל הַהַסְכָּמָה לְגַבָּיו"]],
+    englishDistractors: ["On the walking tour", "we stopped", "at a checkpoint", "and photographed", "a speech", "about the agreement over it"],
+    notes: "התנחלות is the standard word for a settlement in this political context. סביבה, 'around it,' agrees with the feminine noun and makes the referent explicit."
+  }),
+  buildExpandedSentence({
+    id: "everyday_131", emoji: "🎓", category: "everyday", difficulty: 3,
+    hebrew: "בשיעור דיברנו על הכיבוש ועל הדרכים השונות שבהן מציגים אותו.",
+    hebrewNiqqud: "בַּשִּׁעוּר דִּבַּרְנוּ עַל הַכִּבּוּשׁ וְעַל הַדְּרָכִים הַשּׁוֹנוֹת שֶׁבָּהֶן מַצִּיגִים אוֹתוֹ.",
+    english: "In class we discussed the occupation and the different ways in which it is portrayed.",
+    hebrewTokenPairs: [["בשיעור", "בַּשִּׁעוּר"], ["דיברנו", "דִּבַּרְנוּ"], ["על הכיבוש", "עַל הַכִּבּוּשׁ"], ["ועל", "וְעַל"], ["הדרכים", "הַדְּרָכִים"], ["השונות", "הַשּׁוֹנוֹת"], ["שבהן", "שֶׁבָּהֶן"], ["מציגים אותו", "מַצִּיגִים אוֹתוֹ"]],
+    englishTokens: ["In class", "we discussed", "the occupation", "and", "the different", "ways", "in which", "it is portrayed"],
+    hebrewDistractorPairs: [["בהפסקה", "בַּהַפְסָקָה"], ["קראנו", "קָרָאנוּ"], ["על הסיפוח", "עַל הַסִּפּוּחַ"], ["ועל גישה", "וְעַל גִּישָׁה"], ["שדרכה", "שֶׁדַּרְכָּהּ"], ["מסתירים אותו", "מַסְתִּירִים אוֹתוֹ"]],
+    englishDistractors: ["During the break", "we read about", "annexation", "and an approach", "through which", "it is concealed"],
+    notes: "הכיבוש is 'the occupation.' דרכים שונות שבהן מציגים אותו teaches the feminine plural connector שבהן and explicitly refers back with אותו."
+  }),
+  buildExpandedSentence({
+    id: "everyday_132", emoji: "🏳️‍🌈", category: "everyday", difficulty: 2,
+    hebrew: "המרכז הקהילתי מציע ייעוץ לנוער להט״בי ולמשפחות.",
+    hebrewNiqqud: "הַמֶּרְכָּז הַקְּהִלָּתִי מַצִּיעַ יִעוּץ לְנוֹעַר לַהַטָ״בִי וְלַמִּשְׁפָּחוֹת.",
+    english: "The community center offers counseling to LGBTQ youth and families.",
+    hebrewTokenPairs: [["המרכז הקהילתי", "הַמֶּרְכָּז הַקְּהִלָּתִי"], ["מציע", "מַצִּיעַ"], ["ייעוץ", "יִעוּץ"], ["לנוער להט״בי", "לְנוֹעַר לַהַטָ״בִי"], ["ולמשפחות", "וְלַמִּשְׁפָּחוֹת"]],
+    englishTokens: ["The community center", "offers", "counseling", "to LGBTQ youth", "and families"],
+    hebrewDistractorPairs: [["בית הספר", "בֵּית הַסֵּפֶר"], ["מבקש", "מְבַקֵּשׁ"], ["תרומות", "תְּרוּמוֹת"], ["מפעילים", "מִפְּעִילִים"], ["ולמורים", "וְלַמּוֹרִים"]],
+    englishDistractors: ["The school", "requests", "donations", "from activists", "and teachers"],
+    notes: "להט״ב is the Hebrew abbreviation for lesbian, gay, transgender, and bisexual; להט״בי is its adjectival form. נוער is grammatically masculine singular."
+  }),
+  buildExpandedSentence({
+    id: "everyday_133", emoji: "🛂", category: "everyday", difficulty: 2,
+    hebrew: "העולה החדשה ביקשה הסבר פשוט על זכויות ההצבעה שלה.",
+    hebrewNiqqud: "הָעוֹלָה הַחֲדָשָׁה בִּקְּשָׁה הֶסְבֵּר פָּשׁוּט עַל זְכֻיּוֹת הַהַצְבָּעָה שֶׁלָּהּ.",
+    english: "The new immigrant asked for a simple explanation of her voting rights.",
+    hebrewTokenPairs: [["העולה החדשה", "הָעוֹלָה הַחֲדָשָׁה"], ["ביקשה", "בִּקְּשָׁה"], ["הסבר", "הֶסְבֵּר"], ["פשוט", "פָּשׁוּט"], ["על", "עַל"], ["זכויות ההצבעה שלה", "זְכֻיּוֹת הַהַצְבָּעָה שֶׁלָּהּ"]],
+    englishTokens: ["The new immigrant", "asked for", "a simple", "explanation", "of", "her voting rights"],
+    hebrewDistractorPairs: [["התושבת הוותיקה", "הַתּוֹשֶׁבֶת הַוָּתִיקָה"], ["נתנה", "נָתְנָה"], ["טופס", "טֹפֶס"], ["מפורט", "מְפֹרָט"], ["לגבי", "לְגַבֵּי"], ["חובות המס שלה", "חוֹבוֹת הַמַּס שֶׁלָּהּ"]],
+    englishDistractors: ["The longtime resident", "provided", "a detailed", "form", "regarding", "her tax obligations"],
+    notes: "עולה חדשה is a female new immigrant; the masculine is עולה חדש. זכויות הצבעה are voting rights, with שלה explicitly marking 'her.'"
+  }),
+  buildExpandedSentence({
+    id: "everyday_134", emoji: "🔑", category: "everyday", difficulty: 1,
+    hebrew: "הזוג הצעיר חיפש דירה זולה יותר מחוץ לתל אביב.",
+    hebrewNiqqud: "הַזּוּג הַצָּעִיר חִפֵּשׂ דִּירָה זוֹלָה יוֹתֵר מִחוּץ לְתֵל אָבִיב.",
+    english: "The young couple looked for a cheaper apartment outside Tel Aviv.",
+    hebrewTokenPairs: [["הזוג", "הַזּוּג"], ["הצעיר", "הַצָּעִיר"], ["חיפש", "חִפֵּשׂ"], ["דירה", "דִּירָה"], ["זולה יותר", "זוֹלָה יוֹתֵר"], ["מחוץ", "מִחוּץ"], ["לתל אביב", "לְתֵל אָבִיב"]],
+    englishTokens: ["The young", "couple", "looked for", "a cheaper", "apartment", "outside", "Tel Aviv"],
+    hebrewDistractorPairs: [["השותף", "הַשּׁוּתָף"], ["הוותיק", "הַוָּתִיק"], ["מצא", "מָצָא"], ["משרד", "מִשְׂרָד"], ["יקר יותר", "יָקָר יוֹתֵר"], ["בירושלים", "בִּירוּשָׁלַיִם"]],
+    englishDistractors: ["The longtime", "roommate", "found", "a more expensive", "office", "in Jerusalem"],
+    notes: "זוג is grammatically masculine singular regardless of the partners' genders, so חיפש agrees with זוג. מחוץ ל־ means 'outside of.'"
+  }),
+  buildExpandedSentence({
+    id: "everyday_135", emoji: "💍", category: "everyday", difficulty: 2,
+    hebrew: "שאלנו למה זוגות מסוימים בוחרים בנישואים אזרחיים בחו״ל.",
+    hebrewNiqqud: "שָׁאַלְנוּ לָמָּה זוּגוֹת מְסֻיָּמִים בּוֹחֲרִים בְּנִישּׂוּאִים אֶזְרָחִיִּים בְּחוּ״ל.",
+    english: "We asked why some couples opt for a civil marriage abroad.",
+    hebrewTokenPairs: [["שאלנו", "שָׁאַלְנוּ"], ["למה", "לָמָּה"], ["זוגות מסוימים", "זוּגוֹת מְסֻיָּמִים"], ["בוחרים", "בּוֹחֲרִים"], ["בנישואים אזרחיים", "בְּנִישּׂוּאִים אֶזְרָחִיִּים"], ["בחו״ל", "בְּחוּ״ל"]],
+    englishTokens: ["We asked", "why", "some couples", "opt for", "a civil marriage", "abroad"],
+    hebrewDistractorPairs: [["הן", "הֵן"], ["הסבירו", "הִסְבִּירוּ"], ["מתי", "מָתַי"], ["יחידים", "יְחִידִים"], ["נמנעים", "נִמְנָעִים"], ["מטקס", "מִטֶּקֶס"]],
+    englishDistractors: ["They", "explained", "when", "individuals", "avoid", "a ceremony"],
+    notes: "נישואים אזרחיים means civil marriage, a central term in religion-and-state discussions. בחו״ל is the ubiquitous abbreviation for 'abroad.'"
+  }),
+  buildExpandedSentence({
+    id: "everyday_136", emoji: "🎧", category: "everyday", difficulty: 3,
+    hebrew: "בפודקאסט דיברו על התנקשות בדמות ציבורית ועל ההשלכות הפוליטיות שלה.",
+    hebrewNiqqud: "בַּפּוֹדְקָאסְט דִּבְּרוּ עַל הִתְנַקְּשׁוּת בִּדְמוּת צִבּוּרִית וְעַל הַהַשְׁלָכוֹת הַפּוֹלִיטִיּוֹת שֶׁלָּהּ.",
+    english: "On the podcast, they discussed the assassination of a public figure and its political consequences.",
+    hebrewTokenPairs: [["בפודקאסט", "בַּפּוֹדְקָאסְט"], ["דיברו", "דִּבְּרוּ"], ["על התנקשות", "עַל הִתְנַקְּשׁוּת"], ["בדמות ציבורית", "בִּדְמוּת צִבּוּרִית"], ["ועל", "וְעַל"], ["ההשלכות", "הַהַשְׁלָכוֹת"], ["הפוליטיות שלה", "הַפּוֹלִיטִיּוֹת שֶׁלָּהּ"]],
+    englishTokens: ["On the podcast", "they discussed", "the assassination", "of a public figure", "and", "its political", "consequences"],
+    hebrewDistractorPairs: [["במהדורה", "בַּמַּהֲדוּרָה"], ["טענו", "טָעֲנוּ"], ["שמחאה", "שֶׁמְּחָאָה"], ["היא", "הִיא"], ["מקרית", "מִקְרִית"], ["וחסרת השפעה", "וַחֲסַרַת הַשְׁפָּעָה"]],
+    englishDistractors: ["On the broadcast", "they claimed", "that a protest", "was", "accidental", "and inconsequential"],
+    notes: "התנקשות can refer to an assassination or an assassination attempt, usually involving a public figure; the verb is להתנקש ב־. The sentence keeps the reference abstract and non-graphic."
+  }),
+  buildExpandedSentence({
+    id: "professional_73", emoji: "🏗️", category: "professional", difficulty: 3,
+    hebrew: "הרשות המקומית פרסמה תוכנית להגדלת מלאי הדיור בר־השגה.",
+    hebrewNiqqud: "הָרָשׁוּת הַמְּקוֹמִית פִּרְסְמָה תָּכְנִית לְהַגְדָּלַת מְלַאי הַדִּיּוּר בַּר־הַשָּׂגָה.",
+    english: "The local authority published a plan to increase the stock of affordable housing.",
+    hebrewTokenPairs: [["הרשות המקומית", "הָרָשׁוּת הַמְּקוֹמִית"], ["פרסמה", "פִּרְסְמָה"], ["תוכנית", "תָּכְנִית"], ["להגדלת", "לְהַגְדָּלַת"], ["מלאי", "מְלַאי"], ["הדיור בר־השגה", "הַדִּיּוּר בַּר־הַשָּׂגָה"]],
+    englishTokens: ["The local authority", "published", "a plan", "to increase", "the stock", "of affordable housing"],
+    hebrewDistractorPairs: [["הממשלה המרכזית", "הַמֶּמְשָׁלָה הַמֶּרְכָּזִית"], ["גנזה", "גָּנְזָה"], ["הודעה", "הוֹדָעָה"], ["לצמצום", "לְצִמְצוּם"], ["המחסור", "הַמַּחְסוֹר"], ["בשטחי מסחר", "בְּשִׁטְחֵי מִסְחָר"]],
+    englishDistractors: ["The central government", "shelved", "a notice", "to reduce", "the shortage", "of commercial space"],
+    notes: "דיור בר־השגה is the policy term 'affordable housing.' מלאי, literally inventory or stock, is common in planning and economic writing."
+  }),
+  buildExpandedSentence({
+    id: "professional_74", emoji: "✍️", category: "professional", difficulty: 3,
+    hebrew: "העורכת ביקשה שנציין אם המקור משתמש במילה כיבוש או במונח שליטה צבאית.",
+    hebrewNiqqud: "הָעוֹרֶכֶת בִּקְּשָׁה שֶׁנְּצַיֵּן אִם הַמָּקוֹר מִשְׁתַּמֵּשׁ בַּמִּלָּה כִּבּוּשׁ אוֹ בַּמּוּנָח שְׁלִיטָה צְבָאִית.",
+    english: "The editor asked us to note whether the source uses the word occupation or the term military control.",
+    hebrewTokenPairs: [["העורכת", "הָעוֹרֶכֶת"], ["ביקשה", "בִּקְּשָׁה"], ["שנציין", "שֶׁנְּצַיֵּן"], ["אם המקור", "אִם הַמָּקוֹר"], ["משתמש", "מִשְׁתַּמֵּשׁ"], ["במילה", "בַּמִּלָּה"], ["כיבוש", "כִּבּוּשׁ"], ["או", "אוֹ"], ["במונח", "בַּמּוּנָח"], ["שליטה צבאית", "שְׁלִיטָה צְבָאִית"]],
+    englishTokens: ["The editor", "asked us", "to note", "whether the source", "uses", "the word", "occupation", "or", "the term", "military control"],
+    hebrewDistractorPairs: [["הכתבת", "הַכַּתֶּבֶת"], ["השמיטה", "הִשְׁמִיטָה"], ["כינוי", "כִּנּוּי"], ["סיפוח", "סִפּוּחַ"], ["ואת הביטוי", "וְאֶת הַבִּטּוּי"], ["ממשל אזרחי", "מִמְשָׁל אֶזְרָחִי"]],
+    englishDistractors: ["The reporter", "omitted", "a label", "annexation", "and the phrase", "civilian government"],
+    notes: "Professional editing often attributes loaded wording to its source. מילה is an ordinary word; מונח is a defined term, a useful register distinction."
+  }),
+  buildExpandedSentence({
+    id: "professional_75", emoji: "📄", category: "professional", difficulty: 3,
+    hebrew: "הצוות המשפטי הכין עתירה נגד מדיניות שלפי הטענה מפלה קבוצות מסוימות.",
+    hebrewNiqqud: "הַצֶּוֶת הַמִּשְׁפָּטִי הֵכִין עֲתִירָה נֶגֶד מְדִינִיּוּת שֶׁלְּפִי הַטַּעֲנָה מַפְלָה קְבוּצוֹת מְסֻיָּמוֹת.",
+    english: "The legal team prepared a petition against a policy alleged to discriminate against certain groups.",
+    hebrewTokenPairs: [["הצוות המשפטי", "הַצֶּוֶת הַמִּשְׁפָּטִי"], ["הכין", "הֵכִין"], ["עתירה", "עֲתִירָה"], ["נגד מדיניות", "נֶגֶד מְדִינִיּוּת"], ["שלפי הטענה", "שֶׁלְּפִי הַטַּעֲנָה"], ["מפלה", "מַפְלָה"], ["קבוצות", "קְבוּצוֹת"], ["מסוימות", "מְסֻיָּמוֹת"]],
+    englishTokens: ["The legal team", "prepared", "a petition", "against a policy", "alleged to", "discriminate against", "certain", "groups"],
+    hebrewDistractorPairs: [["הצוות הכלכלי", "הַצֶּוֶת הַכַּלְכָּלִי"], ["דחה", "דָּחָה"], ["חוזה", "חוֹזֶה"], ["תקנה", "תַּקָּנָה"], ["מחקר", "מֶחְקָר"], ["ארגונים", "אִרְגּוּנִים"]],
+    englishDistractors: ["The economic team", "rejected", "a contract", "a regulation", "research", "organizations"],
+    notes: "עתירה is a legal petition, often to a court. שלפי הטענה ('which, according to the allegation') preserves the distinction between an allegation and a finding."
+  }),
+  buildExpandedSentence({
+    id: "professional_76", emoji: "🗂️", category: "professional", difficulty: 3,
+    hebrew: "הארגון תיעד טענות לאלימות משטרתית והעביר את הממצאים לבדיקה עצמאית.",
+    hebrewNiqqud: "הָאִרְגּוּן תִּעֵד טַעֲנוֹת לְאַלִּימוּת מִשְׁטַרְתִּית וְהֶעֱבִיר אֶת הַמִּמְצָאִים לִבְדִיקָה עַצְמָאִית.",
+    english: "The organization documented allegations of police brutality and submitted the findings for independent review.",
+    hebrewTokenPairs: [["הארגון", "הָאִרְגּוּן"], ["תיעד", "תִּעֵד"], ["טענות", "טַעֲנוֹת"], ["לאלימות משטרתית", "לְאַלִּימוּת מִשְׁטַרְתִּית"], ["והעביר", "וְהֶעֱבִיר"], ["את הממצאים", "אֶת הַמִּמְצָאִים"], ["לבדיקה עצמאית", "לִבְדִיקָה עַצְמָאִית"]],
+    englishTokens: ["The organization", "documented", "allegations", "of police brutality", "and submitted", "the findings", "for independent review"],
+    hebrewDistractorPairs: [["המשרד", "הַמִּשְׂרָד"], ["הכחיש", "הִכְחִישׁ"], ["דיווחים", "דִּוּוּחִים"], ["על הפרות משמעת", "עַל הֲפָרוֹת מִשְׁמַעַת"], ["וגנז", "וְגָנַז"], ["את ההמלצות", "אֶת הַהַמְלָצוֹת"]],
+    englishDistractors: ["The ministry", "denied", "reports", "of disciplinary violations", "and shelved", "the recommendations"],
+    notes: "תיעד means documented; ממצאים are findings. The noun טענות marks the reports as allegations pending the independent review described here."
+  }),
+  buildExpandedSentence({
+    id: "professional_77", emoji: "🤝", category: "professional", difficulty: 2,
+    hebrew: "מדיניות הקבלה לעבודה אוסרת אפליה על רקע נטייה מינית או זהות מגדרית.",
+    hebrewNiqqud: "מְדִינִיּוּת הַקַּבָּלָה לַעֲבוֹדָה אוֹסֶרֶת אַפְלָיָה עַל רֶקַע נְטִיָּה מִינִית אוֹ זֶהוּת מִגְדָּרִית.",
+    english: "The hiring policy prohibits discrimination based on sexual orientation or gender identity.",
+    hebrewTokenPairs: [["מדיניות הקבלה לעבודה", "מְדִינִיּוּת הַקַּבָּלָה לַעֲבוֹדָה"], ["אוסרת", "אוֹסֶרֶת"], ["אפליה", "אַפְלָיָה"], ["על רקע", "עַל רֶקַע"], ["נטייה מינית", "נְטִיָּה מִינִית"], ["או", "אוֹ"], ["זהות מגדרית", "זֶהוּת מִגְדָּרִית"]],
+    englishTokens: ["The hiring policy", "prohibits", "discrimination", "based on", "sexual orientation", "or", "gender identity"],
+    hebrewDistractorPairs: [["נוהל הקידום", "נֹהַל הַקִּדּוּם"], ["מאפשר", "מְאַפְשֵׁר"], ["העדפה", "הַעֲדָפָה"], ["בלי קשר ל", "בְּלִי קֶשֶׁר לְ"], ["מצב משפחתי", "מַצָּב מִשְׁפַּחְתִּי"], ["מקום מגורים", "מְקוֹם מְגוּרִים"]],
+    englishDistractors: ["The promotion procedure", "allows", "preference", "regardless of", "marital status", "place of residence"],
+    notes: "על רקע means 'on the basis of' in anti-discrimination language. נטייה מינית and זהות מגדרית are the standard professional terms for sexual orientation and gender identity."
+  }),
+  buildExpandedSentence({
+    id: "professional_78", emoji: "📊", category: "professional", difficulty: 2,
+    hebrew: "לפי הסקר, אף גוש אינו יכול להשיג רוב בלי תמיכת מפלגות המרכז.",
+    hebrewNiqqud: "לְפִי הַסֶּקֶר, אַף גּוּשׁ אֵינוֹ יָכוֹל לְהַשִּׂיג רֹב בְּלִי תְּמִיכַת מִפְלְגוֹת הַמֶּרְכָּז.",
+    english: "According to the poll, no bloc can secure a majority without support from the centrist parties.",
+    hebrewTokenPairs: [["לפי הסקר", "לְפִי הַסֶּקֶר"], ["אף גוש", "אַף גּוּשׁ"], ["אינו יכול להשיג", "אֵינוֹ יָכוֹל לְהַשִּׂיג"], ["רוב", "רֹב"], ["בלי תמיכת", "בְּלִי תְּמִיכַת"], ["מפלגות המרכז", "מִפְלְגוֹת הַמֶּרְכָּז"]],
+    englishTokens: ["According to the poll", "no bloc", "can secure", "a majority", "without support from", "the centrist parties"],
+    hebrewDistractorPairs: [["לפי המדגם", "לְפִי הַמִּדְגָּם"], ["כל מחנה", "כָּל מַחֲנֶה"], ["מבטיח", "מַבְטִיחַ"], ["מיעוט", "מִעוּט"], ["בעזרת קולות", "בְּעֶזְרַת קוֹלוֹת"], ["של הרשימות המקומיות", "שֶׁל הָרְשִׁימוֹת הַמְּקוֹמִיּוֹת"]],
+    englishDistractors: ["According to the sample", "every camp", "promises", "a minority", "with votes", "from local lists"],
+    notes: "גוש is a political bloc, and רוב is a majority. אינו יכול is a more professional written alternative to לא יכול."
+  }),
+  buildExpandedSentence({
+    id: "professional_79", emoji: "💼", category: "professional", difficulty: 2,
+    hebrew: "ניתוח התקציב בוחן את השפעת המסים על מעמד הביניים ועל צעירים עובדים.",
+    hebrewNiqqud: "נִתּוּחַ הַתַּקְצִיב בּוֹחֵן אֶת הַשְּׁפָּעַת הַמִּסִּים עַל מַעֲמַד הַבֵּינַיִם וְעַל צְעִירִים עוֹבְדִים.",
+    english: "The budget analysis examines the effect of taxes on the middle class and young workers.",
+    hebrewTokenPairs: [["ניתוח התקציב", "נִתּוּחַ הַתַּקְצִיב"], ["בוחן", "בּוֹחֵן"], ["את השפעת", "אֶת הַשְּׁפָּעַת"], ["המסים", "הַמִּסִּים"], ["על מעמד הביניים", "עַל מַעֲמַד הַבֵּינַיִם"], ["ועל צעירים", "וְעַל צְעִירִים"], ["עובדים", "עוֹבְדִים"]],
+    englishTokens: ["The budget analysis", "examines", "the effect of", "taxes", "on the middle class", "and young", "workers"],
+    hebrewDistractorPairs: [["סיכום הישיבה", "סִכּוּם הַיְּשִׁיבָה"], ["מתעלם", "מִתְעַלֵּם"], ["מהשפעת", "מֵהַשְּׁפָּעַת"], ["הסובסידיות", "הַסּוּבְּסִידְיוֹת"], ["על בעלי הון", "עַל בַּעֲלֵי הוֹן"], ["ועל גמלאים עצמאיים", "וְעַל גִּמְלָאִים עַצְמָאִים"]],
+    englishDistractors: ["The meeting summary", "ignores", "the impact of", "subsidies", "on wealthy owners", "and self-employed retirees"],
+    notes: "השפעת המסים is the construct phrase 'the effect of taxes.' צעירים עובדים means working young adults, a frequent policy demographic."
+  }),
+  buildExpandedSentence({
+    id: "professional_80", emoji: "🗺️", category: "professional", difficulty: 3,
+    hebrew: "בדוח חשוב להבחין בין התנחלות, מאחז ושכונה מעבר לקו הירוק.",
+    hebrewNiqqud: "בַּדּוּחַ חָשׁוּב לְהַבְחִין בֵּין הִתְנַחֲלוּת, מַאֲחָז וּשְׁכוּנָה מֵעֵבֶר לַקַּו הַיָּרֹק.",
+    english: "In the report, it is important to distinguish among a settlement, an outpost, and a neighborhood beyond the Green Line.",
+    hebrewTokenPairs: [["בדוח", "בַּדּוּחַ"], ["חשוב", "חָשׁוּב"], ["להבחין בין", "לְהַבְחִין בֵּין"], ["התנחלות", "הִתְנַחֲלוּת"], ["מאחז", "מַאֲחָז"], ["ושכונה", "וּשְׁכוּנָה"], ["מעבר לקו הירוק", "מֵעֵבֶר לַקַּו הַיָּרֹק"]],
+    englishTokens: ["In the report", "it is important", "to distinguish among", "a settlement", "an outpost", "and a neighborhood", "beyond the Green Line"],
+    hebrewDistractorPairs: [["במצגת", "בַּמַּצֶּגֶת"], ["מיותר", "מְיֻתָּר"], ["לשלב", "לְשַׁלֵּב"], ["בין כפר", "בֵּין כְּפָר"], ["בסיס", "בָּסִיס"], ["ובתוך תחומי העיר", "וּבְתוֹךְ תְּחוּמֵי הָעִיר"]],
+    englishDistractors: ["In the presentation", "it is unnecessary", "to combine", "a village", "a base", "within city limits"],
+    notes: "התנחלות is settlement; מאחז is outpost. מעבר לקו הירוק ('beyond the Green Line') is geographic-political terminology, and the sentence teaches careful category distinctions."
+  }),
+  buildExpandedSentence({
+    id: "professional_81", emoji: "✅", category: "professional", difficulty: 3,
+    hebrew: "צוות המעקב אימת דיווחים על אלימות מתנחלים לפני פרסום הנתונים.",
+    hebrewNiqqud: "צֶוֶת הַמַּעֲקָב אִמֵּת דִּוּוּחִים עַל אַלִּימוּת מִתְנַחֲלִים לִפְנֵי פִּרְסוּם הַנְּתוּנִים.",
+    english: "The monitoring team verified reports of settler violence before publishing the data.",
+    hebrewTokenPairs: [["צוות המעקב", "צֶוֶת הַמַּעֲקָב"], ["אימת", "אִמֵּת"], ["דיווחים", "דִּוּוּחִים"], ["על אלימות מתנחלים", "עַל אַלִּימוּת מִתְנַחֲלִים"], ["לפני", "לִפְנֵי"], ["פרסום", "פִּרְסוּם"], ["הנתונים", "הַנְּתוּנִים"]],
+    englishTokens: ["The monitoring team", "verified", "reports", "of settler violence", "before", "publishing", "the data"],
+    hebrewDistractorPairs: [["צוות המחקר", "צֶוֶת הַמֶּחְקָר"], ["אסף", "אָסַף"], ["שמועות", "שְׁמוּעוֹת"], ["על מחאה", "עַל מְחָאָה"], ["ואז", "וְאָז"], ["סיים", "סִיֵּם"]],
+    englishDistractors: ["The research team", "collected", "rumors", "about a protest", "then", "finished"],
+    notes: "אימת means verified or corroborated, not merely collected. The sequence emphasizes professional verification before publishing politically sensitive reports."
+  }),
+  buildExpandedSentence({
+    id: "professional_82", emoji: "⚖️", category: "professional", difficulty: 3,
+    hebrew: "החוקרים חלוקים בשאלת היקף הסמכויות של המנהל האזרחי במסגרת הכיבוש.",
+    hebrewNiqqud: "הַחוֹקְרִים חֲלוּקִים בִּשְׁאֵלַת הֶקֵּף הַסַּמְכֻיּוֹת שֶׁל הַמִּנְהָל הָאֶזְרָחִי בְּמִסְגֶּרֶת הַכִּבּוּשׁ.",
+    english: "The researchers disagree over the scope of the powers of the Civil Administration under the occupation.",
+    hebrewTokenPairs: [["החוקרים", "הַחוֹקְרִים"], ["חלוקים", "חֲלוּקִים"], ["בשאלת", "בִּשְׁאֵלַת"], ["היקף", "הֶקֵּף"], ["הסמכויות", "הַסַּמְכֻיּוֹת"], ["של המנהל האזרחי", "שֶׁל הַמִּנְהָל הָאֶזְרָחִי"], ["במסגרת", "בְּמִסְגֶּרֶת"], ["הכיבוש", "הַכִּבּוּשׁ"]],
+    englishTokens: ["The researchers", "disagree", "over", "the scope", "of the powers", "of the Civil Administration", "under", "the occupation"],
+    hebrewDistractorPairs: [["היועצים", "הַיּוֹעֲצִים"], ["מסכימים", "מַסְכִּימִים"], ["לגבי", "לְגַבֵּי"], ["תחום", "תְּחוּם"], ["תפקידיה", "תַּפְקִידֶיהָ"], ["של הרשות המקומית", "שֶׁל הָרָשׁוּת הַמְּקוֹמִית"]],
+    englishDistractors: ["The advisers", "agree", "regarding", "the field", "of the duties", "of local government"],
+    notes: "חלוקים בשאלה is a professional way to say 'disagree over the question.' המנהל האזרחי is the formal name Civil Administration in this context."
+  }),
+  buildExpandedSentence({
+    id: "professional_83", emoji: "🧭", category: "professional", difficulty: 2,
+    hebrew: "התוכנית מסייעת לעולים להכיר את שוק העבודה ואת מוסדות השלטון.",
+    hebrewNiqqud: "הַתָּכְנִית מְסַיַּעַת לָעוֹלִים לְהַכִּיר אֶת שׁוּק הָעֲבוֹדָה וְאֶת מוֹסְדוֹת הַשִּׁלְטוֹן.",
+    english: "The program helps immigrants learn about the labor market and government institutions.",
+    hebrewTokenPairs: [["התוכנית", "הַתָּכְנִית"], ["מסייעת", "מְסַיַּעַת"], ["לעולים", "לָעוֹלִים"], ["להכיר", "לְהַכִּיר"], ["את שוק העבודה", "אֶת שׁוּק הָעֲבוֹדָה"], ["ואת מוסדות השלטון", "וְאֶת מוֹסְדוֹת הַשִּׁלְטוֹן"]],
+    englishTokens: ["The program", "helps", "immigrants", "learn about", "the labor market", "and government institutions"],
+    hebrewDistractorPairs: [["הסדנה", "הַסַּדְנָה"], ["מקשה", "מַקְשָׁה"], ["על תיירים", "עַל תַּיָּרִים"], ["לשכוח", "לִשְׁכֹּחַ"], ["את מערכת החינוך", "אֶת מַעֲרֶכֶת הַחִנּוּךְ"], ["ואת ארגוני העובדים", "וְאֶת אִרְגּוּנֵי הָעוֹבְדִים"]],
+    englishDistractors: ["The workshop", "makes it harder", "for tourists", "to forget", "the education system", "and labor organizations"],
+    notes: "Here עולים means immigrants who made aliyah. להכיר can mean to become familiar with, not only to meet a person; מוסדות השלטון are institutions of government."
+  }),
+  buildExpandedSentence({
+    id: "professional_84", emoji: "🤝", category: "professional", difficulty: 3,
+    hebrew: "המשא ומתן הקואליציוני עוסק בגיוס, בתחבורה ציבורית בשבת ובנישואים אזרחיים.",
+    hebrewNiqqud: "הַמַּשָּׂא וּמַתָּן הַקּוֹאָלִיצְיוֹנִי עוֹסֵק בְּגִיּוּס, בִּתְחָבוּרָה צִבּוּרִית בְּשַׁבָּת וּבְנִשּׂוּאִים אֶזְרָחִיִּים.",
+    english: "The coalition negotiations cover conscription, public transportation on Shabbat, and civil marriage.",
+    hebrewTokenPairs: [["המשא ומתן הקואליציוני", "הַמַּשָּׂא וּמַתָּן הַקּוֹאָלִיצְיוֹנִי"], ["עוסק", "עוֹסֵק"], ["בגיוס", "בְּגִיּוּס"], ["בתחבורה ציבורית", "בִּתְחָבוּרָה צִבּוּרִית"], ["בשבת", "בְּשַׁבָּת"], ["ובנישואים אזרחיים", "וּבְנִשּׂוּאִים אֶזְרָחִיִּים"]],
+    englishTokens: ["The coalition negotiations", "cover", "conscription", "public transportation", "on Shabbat", "and civil marriage"],
+    hebrewDistractorPairs: [["הדיון", "הַדִּיּוּן"], ["מתעלם", "מִתְעַלֵּם"], ["מחינוך", "מֵחִנּוּךְ"], ["ממסחר", "מִמִּסְחָר"], ["ביום ראשון", "בְּיוֹם רִאשׁוֹן"], ["ומטקסים", "וּמִטְּקָסִים"]],
+    englishDistractors: ["The discussion", "ignores", "education", "commerce", "on Sunday", "and ceremonies"],
+    notes: "משא ומתן קואליציוני is coalition negotiation. גיוס, Shabbat transportation, and civil marriage are recurring religion-and-state bargaining topics."
+  }),
+  buildExpandedSentence({
+    id: "formal_64", emoji: "🏛️", category: "formal", difficulty: 3,
+    hebrew: "לאחר פרישת הסיעה, הממשלה תידרש להוכיח כי עומד לרשותה רוב בכנסת.",
+    hebrewNiqqud: "לְאַחַר פְּרִישַׁת הַסִּיעָה, הַמֶּמְשָׁלָה תִּדָּרֵשׁ לְהוֹכִיחַ כִּי עוֹמֵד לִרְשׁוּתָהּ רֹב בַּכְּנֶסֶת.",
+    english: "Following the faction's withdrawal, the government will be required to prove that it commands a majority in the Knesset.",
+    hebrewTokenPairs: [["לאחר", "לְאַחַר"], ["פרישת", "פְּרִישַׁת"], ["הסיעה", "הַסִּיעָה"], ["הממשלה", "הַמֶּמְשָׁלָה"], ["תידרש", "תִּדָּרֵשׁ"], ["להוכיח", "לְהוֹכִיחַ"], ["כי", "כִּי"], ["עומד לרשותה", "עוֹמֵד לִרְשׁוּתָהּ"], ["רוב", "רֹב"], ["בכנסת", "בַּכְּנֶסֶת"]],
+    englishTokens: ["Following", "the faction's", "withdrawal", "the government", "will be required", "to prove", "that", "it commands", "a majority", "in the Knesset"],
+    hebrewDistractorPairs: [["לפני", "לִפְנֵי"], ["הצטרפות", "הִצְטָרְפוּת"], ["המפלגה", "הַמִּפְלָגָה"], ["הוועדה", "הַוַּעֲדָה"], ["תוכל", "תּוּכַל"], ["להניח", "לְהַנִּיחַ"]],
+    englishDistractors: ["Before", "the party", "joined", "the committee", "will be able", "to assume"],
+    notes: "סיעה is a parliamentary faction. עומד לרשותה literally means 'stands at its disposal' and is a formal way to say the government commands a majority."
+  }),
+  buildExpandedSentence({
+    id: "formal_65", emoji: "📜", category: "formal", difficulty: 2,
+    hebrew: "הצעת החוק מטעם האופוזיציה הועברה לדיון בוועדה לאחר שאושרה בקריאה טרומית.",
+    hebrewNiqqud: "הַצָּעַת הַחֹק מִטַּעַם הָאוֹפּוֹזִיצְיָה הוּעֲבְרָה לְדִיּוּן בַּוַּעֲדָה לְאַחַר שֶׁאֻשְּׁרָה בִּקְרִיאָה טְרוֹמִית.",
+    english: "The bill from the opposition was referred to a committee after it passed a preliminary reading.",
+    hebrewTokenPairs: [["הצעת החוק", "הַצָּעַת הַחֹק"], ["מטעם האופוזיציה", "מִטַּעַם הָאוֹפּוֹזִיצְיָה"], ["הועברה", "הוּעֲבְרָה"], ["לדיון בוועדה", "לְדִיּוּן בַּוַּעֲדָה"], ["לאחר שאושרה", "לְאַחַר שֶׁאֻשְּׁרָה"], ["בקריאה טרומית", "בִּקְרִיאָה טְרוֹמִית"]],
+    englishTokens: ["The bill", "from the opposition", "was referred", "to a committee", "after it passed", "a preliminary reading"],
+    hebrewDistractorPairs: [["החלטת הממשלה", "הַחְלָטַת הַמֶּמְשָׁלָה"], ["מטעם הקואליציה", "מִטַּעַם הַקּוֹאָלִיצְיָה"], ["נדחתה", "נִדְחֲתָה"], ["להצבעה סופית", "לְהַצְבָּעָה סוֹפִית"], ["במליאה", "בַּמְּלִיאָה"]],
+    englishDistractors: ["The government decision", "from the coalition", "was rejected", "for a final vote", "in the plenary"],
+    notes: "מטעם means 'sponsored by' or 'on behalf of.' A bill that passes קריאה טרומית, its preliminary reading, is referred to a committee before its first reading; מליאה is the Knesset plenary."
+  }),
+  buildExpandedSentence({
+    id: "formal_66", emoji: "⚖️", category: "formal", difficulty: 3,
+    hebrew: "בית המשפט העליון יבחן אם התיקון עולה בקנה אחד עם חוקי היסוד.",
+    hebrewNiqqud: "בֵּית הַמִּשְׁפָּט הָעֶלְיוֹן יִבְחַן אִם הַתִּקּוּן עוֹלֶה בְּקָנֶה אֶחָד עִם חֻקֵּי הַיְסוֹד.",
+    english: "The Supreme Court will examine whether the amendment is consistent with the Basic Laws.",
+    hebrewTokenPairs: [["בית המשפט העליון", "בֵּית הַמִּשְׁפָּט הָעֶלְיוֹן"], ["יבחן", "יִבְחַן"], ["אם התיקון", "אִם הַתִּקּוּן"], ["עולה בקנה אחד", "עוֹלֶה בְּקָנֶה אֶחָד"], ["עם חוקי היסוד", "עִם חֻקֵּי הַיְסוֹד"]],
+    englishTokens: ["The Supreme Court", "will examine", "whether the amendment", "is consistent", "with the Basic Laws"],
+    hebrewDistractorPairs: [["בית הדין האזורי", "בֵּית הַדִּין הָאֵזוֹרִי"], ["יקבע", "יִקְבַּע"], ["כי התקנה", "כִּי הַתַּקָּנָה"], ["סותרת לחלוטין", "סוֹתֶרֶת לַחֲלוּטִין"], ["את חוקי העזר", "אֶת חֻקֵּי הָעֵזֶר"]],
+    englishDistractors: ["The regional tribunal", "will determine", "that the regulation", "fully contradicts", "the municipal bylaws"],
+    notes: "עולה בקנה אחד עם is the formal idiom 'is consistent with.' חוקי היסוד are Israel's Basic Laws; the sentence leaves the court's conclusion open."
+  }),
+  buildExpandedSentence({
+    id: "formal_67", emoji: "📣", category: "formal", difficulty: 3,
+    hebrew: "הזכות להפגין מוגנת, בכפוף למגבלות שנועדו לשמור על הסדר הציבורי.",
+    hebrewNiqqud: "הַזְּכוּת לְהַפְגִּין מוּגֶנֶת, בִּכְפוּף לְמִגְבָּלוֹת שֶׁנּוֹעֲדוּ לִשְׁמֹר עַל הַסֵּדֶר הַצִּבּוּרִי.",
+    english: "The right to demonstrate is protected, subject to restrictions intended to preserve public order.",
+    hebrewTokenPairs: [["הזכות", "הַזְּכוּת"], ["להפגין", "לְהַפְגִּין"], ["מוגנת", "מוּגֶנֶת"], ["בכפוף", "בִּכְפוּף"], ["למגבלות", "לְמִגְבָּלוֹת"], ["שנועדו", "שֶׁנּוֹעֲדוּ"], ["לשמור", "לִשְׁמֹר"], ["על הסדר הציבורי", "עַל הַסֵּדֶר הַצִּבּוּרִי"]],
+    englishTokens: ["The right", "to demonstrate", "is protected", "subject to", "restrictions", "intended", "to preserve", "public order"],
+    hebrewDistractorPairs: [["החובה", "הַחוֹבָה"], ["להתפזר", "לְהִתְפַּזֵּר"], ["מוגבלת", "מֻגְבֶּלֶת"], ["ללא תנאים", "לְלֹא תְּנָאִים"], ["להפר", "לְהָפֵר"], ["את חופש הביטוי", "אֶת חֹפֶשׁ הַבִּטּוּי"]],
+    englishDistractors: ["The duty", "to disperse", "is limited", "without conditions", "to violate", "freedom of expression"],
+    notes: "בכפוף ל־ is formal legal Hebrew for 'subject to.' The sentence presents both the protected right and the public-order qualification in neutral legal language."
+  }),
+  buildExpandedSentence({
+    id: "formal_68", emoji: "🔍", category: "formal", difficulty: 3,
+    hebrew: "המחלקה לחקירות שוטרים החלה לבדוק טענות בדבר אלימות משטרתית.",
+    hebrewNiqqud: "הַמַּחְלָקָה לַחֲקִירוֹת שׁוֹטְרִים הֵחֵלָּה לִבְדֹּק טַעֲנוֹת בִּדְבַר אַלִּימוּת מִשְׁטַרְתִּית.",
+    english: "The Department of Internal Police Investigations began to review allegations of police brutality.",
+    hebrewTokenPairs: [["המחלקה", "הַמַּחְלָקָה"], ["לחקירות שוטרים", "לַחֲקִירוֹת שׁוֹטְרִים"], ["החלה", "הֵחֵלָּה"], ["לבדוק", "לִבְדֹּק"], ["טענות", "טַעֲנוֹת"], ["בדבר", "בִּדְבַר"], ["אלימות משטרתית", "אַלִּימוּת מִשְׁטַרְתִּית"]],
+    englishTokens: ["The Department", "of Internal Police Investigations", "began", "to review", "allegations", "of", "police brutality"],
+    hebrewDistractorPairs: [["נציבות שירות המדינה", "נְצִיבוּת שֵׁרוּת הַמְּדִינָה"], ["סיימה", "סִיְּמָה"], ["לבחון", "לִבְחֹן"], ["מסקנות", "מַסְקָנוֹת"], ["לגבי", "לְגַבֵּי"], ["עבירות משמעת", "עֲבֵרוֹת מִשְׁמַעַת"]],
+    englishDistractors: ["The Civil Service Commission", "finished", "examining", "findings", "about", "disciplinary offenses"],
+    notes: "המחלקה לחקירות שוטרים is the department commonly known by the abbreviation מח״ש. בדיקת הטענות means reviewing the allegations, not presuming a finding."
+  }),
+  buildExpandedSentence({
+    id: "formal_69", emoji: "🟰", category: "formal", difficulty: 3,
+    hebrew: "אין להפלות אדם מחמת מוצא, דת, מין, נטייה מינית או מוגבלות.",
+    hebrewNiqqud: "אֵין לְהַפְלוֹת אָדָם מֵחֲמַת מוֹצָא, דָּת, מִין, נְטִיָּה מִינִית אוֹ מֻגְבָּלוּת.",
+    english: "It is forbidden to discriminate against a person because of origin, religion, sex, sexual orientation, or disability.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["להפלות", "לְהַפְלוֹת"], ["אדם", "אָדָם"], ["מחמת", "מֵחֲמַת"], ["מוצא", "מוֹצָא"], ["דת", "דָּת"], ["מין", "מִין"], ["נטייה מינית", "נְטִיָּה מִינִית"], ["או מוגבלות", "אוֹ מֻגְבָּלוּת"]],
+    englishTokens: ["It is forbidden", "to discriminate against", "a person", "because of", "origin", "religion", "sex", "sexual orientation", "or disability"],
+    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["להעדיף", "לְהַעֲדִיף"], ["מועמד", "מֻעֲמָד"], ["לנוכח", "לְנֹכַח"], ["השכלה גבוהה", "הַשְׂכָּלָה גְּבוֹהָה"], ["וניסיון", "וְנִסָּיוֹן"]],
+    englishDistractors: ["It is permitted", "to prefer", "an applicant", "in light of", "higher education", "and experience"],
+    notes: "אין + infinitive gives a formal prohibition. מחמת is a legal-register 'because of'; אפליה and להפלות are the noun and verb forms of discrimination."
+  }),
+  buildExpandedSentence({
+    id: "formal_70", emoji: "🏳️‍🌈", category: "formal", difficulty: 2,
+    hebrew: "הוועדה המליצה להרחיב את ההגנה על זכויות קהילת הלהט״ב.",
+    hebrewNiqqud: "הַוַּעֲדָה הִמְלִיצָה לְהַרְחִיב אֶת הַהֲגָנָה עַל זְכֻיּוֹת קְהִלַּת הַלַּהַטָ״ב.",
+    english: "The committee recommended expanding protection for the rights of the LGBTQ community.",
+    hebrewTokenPairs: [["הוועדה", "הַוַּעֲדָה"], ["המליצה", "הִמְלִיצָה"], ["להרחיב", "לְהַרְחִיב"], ["את ההגנה", "אֶת הַהֲגָנָה"], ["על זכויות", "עַל זְכֻיּוֹת"], ["קהילת הלהט״ב", "קְהִלַּת הַלַּהַטָ״ב"]],
+    englishTokens: ["The committee", "recommended", "expanding", "protection", "for the rights", "of the LGBTQ community"],
+    hebrewDistractorPairs: [["המועצה", "הַמּוֹעָצָה"], ["סירבה", "סֵרְבָה"], ["לצמצם", "לְצַמְצֵם"], ["את המימון", "אֶת הַמִּמּוּן"], ["של חובות", "שֶׁל חוֹבוֹת"], ["ארגוני הספורט", "אִרְגּוּנֵי הַסְּפּוֹרְט"]],
+    englishDistractors: ["The council", "refused", "to reduce", "funding", "for the obligations", "of sports organizations"],
+    notes: "קהילת הלהט״ב is the LGBTQ community in formal institutional wording. להרחיב את ההגנה means to broaden or expand protections."
+  }),
+  buildExpandedSentence({
+    id: "formal_71", emoji: "🏘️", category: "formal", difficulty: 3,
+    hebrew: "התוכנית להרחבת ההתנחלות פורסמה כדי שהציבור יוכל להגיש התנגדויות במסגרת הליך התכנון.",
+    hebrewNiqqud: "הַתָּכְנִית לְהַרְחָבַת הַהִתְנַחֲלוּת פֻּרְסְמָה כְּדֵי שֶׁהַצִּבּוּר יוּכַל לְהַגִּישׁ הִתְנַגְּדֻיּוֹת בְּמִסְגֶּרֶת הֲלִיךְ הַתִּכְנוּן.",
+    english: "The plan to expand the settlement was published so the public could submit objections as part of the planning process.",
+    hebrewTokenPairs: [["התוכנית", "הַתָּכְנִית"], ["להרחבת", "לְהַרְחָבַת"], ["ההתנחלות", "הַהִתְנַחֲלוּת"], ["פורסמה", "פֻּרְסְמָה"], ["כדי", "כְּדֵי"], ["שהציבור", "שֶׁהַצִּבּוּר"], ["יוכל להגיש", "יוּכַל לְהַגִּישׁ"], ["התנגדויות", "הִתְנַגְּדֻיּוֹת"], ["במסגרת", "בְּמִסְגֶּרֶת"], ["הליך התכנון", "הֲלִיךְ הַתִּכְנוּן"]],
+    englishTokens: ["The plan", "to expand", "the settlement", "was published", "so", "the public", "could submit", "objections", "as part of", "the planning process"],
+    hebrewDistractorPairs: [["בקשת הפינוי", "בַּקָּשַׁת הַפִּנּוּי"], ["אושרה", "אֻשְּׁרָה"], ["בלי", "בְּלִי"], ["שיתוף הציבור", "שִׁתּוּף הַצִּבּוּר"], ["בניגוד", "בְּנִגּוּד"], ["להחלטת הממשלה", "לְהַחְלָטַת הַמֶּמְשָׁלָה"]],
+    englishDistractors: ["The evacuation request", "was approved", "without", "public participation", "contrary to", "the government decision"],
+    notes: "Planning notices may use the technical verb הופקדה for this stage. The learner-facing sentence states its practical effect: publication so the public can submit objections."
+  }),
+  buildExpandedSentence({
+    id: "formal_72", emoji: "🧾", category: "formal", difficulty: 3,
+    hebrew: "הרשויות הודיעו שכל דיווח על אלימות מתנחלים ייחקר, ושהמסקנות ייקבעו על סמך הראיות.",
+    hebrewNiqqud: "הָרָשֻׁיּוֹת הוֹדִיעוּ שֶׁכָּל דִּוּוּחַ עַל אַלִּימוּת מִתְנַחֲלִים יֵחָקֵר, וְשֶׁהַמַּסְקָנוֹת יִקָּבְעוּ עַל סְמַךְ הָרְאָיוֹת.",
+    english: "The authorities announced that every report of settler violence would be investigated and that conclusions would be based on the evidence.",
+    hebrewTokenPairs: [["הרשויות", "הָרָשֻׁיּוֹת"], ["הודיעו", "הוֹדִיעוּ"], ["שכל דיווח", "שֶׁכָּל דִּוּוּחַ"], ["על אלימות מתנחלים", "עַל אַלִּימוּת מִתְנַחֲלִים"], ["ייחקר", "יֵחָקֵר"], ["ושהמסקנות", "וְשֶׁהַמַּסְקָנוֹת"], ["ייקבעו", "יִקָּבְעוּ"], ["על סמך הראיות", "עַל סְמַךְ הָרְאָיוֹת"]],
+    englishTokens: ["The authorities", "announced", "that every report", "of settler violence", "would be investigated", "and that conclusions", "would be based", "on the evidence"],
+    hebrewDistractorPairs: [["הארגונים", "הָאִרְגּוּנִים"], ["העריכו", "הֶעֱרִיכוּ"], ["שחלק מהשמועות", "שֶׁחֵלֶק מֵהַשְּׁמוּעוֹת"], ["על סכסוך שכנים", "עַל סִכְסוּךְ שְׁכֵנִים"], ["יוזנחו", "יֻזְנְחוּ"], ["ללא בדיקה", "לְלֹא בְּדִיקָה"]],
+    englishDistractors: ["The organizations", "estimated", "that some rumors", "of a neighbor dispute", "would be ignored", "without review"],
+    notes: "ייחקר is the formal passive future, 'will be investigated.' על סמך הראיות anchors the announcement in evidence rather than presuming any report true or false."
+  }),
+  buildExpandedSentence({
+    id: "formal_73", emoji: "🌐", category: "formal", difficulty: 3,
+    hebrew: "במשפט הבין־לאומי, השאלה אם שטח נתון תחת כיבוש נבחנת לפי מידת השליטה האפקטיבית בו.",
+    hebrewNiqqud: "בַּמִּשְׁפָּט הַבֵּין־לְאֻמִּי, הַשְּׁאֵלָה אִם שֶׁטַח נָתוּן תַּחַת כִּבּוּשׁ נִבְחֶנֶת לְפִי מִדַּת הַשְּׁלִיטָה הָאֶפֶקְטִיבִית בּוֹ.",
+    english: "In international law, the question of whether a territory is under occupation is assessed by the degree of effective control over it.",
+    hebrewTokenPairs: [["במשפט הבין־לאומי", "בַּמִּשְׁפָּט הַבֵּין־לְאֻמִּי"], ["השאלה", "הַשְּׁאֵלָה"], ["אם", "אִם"], ["שטח", "שֶׁטַח"], ["נתון תחת כיבוש", "נָתוּן תַּחַת כִּבּוּשׁ"], ["נבחנת", "נִבְחֶנֶת"], ["לפי מידת", "לְפִי מִדַּת"], ["השליטה האפקטיבית", "הַשְּׁלִיטָה הָאֶפֶקְטִיבִית"], ["בו", "בּוֹ"]],
+    englishTokens: ["In international law", "the question", "of whether", "a territory", "is under occupation", "is assessed", "by the degree", "of effective control", "over it"],
+    hebrewDistractorPairs: [["סיפוח", "סִפּוּחַ"], ["מוגדר", "מֻגְדָּר"], ["בדין המקומי", "בַּדִּין הַמְּקוֹמִי"], ["בלי קשר ל", "בְּלִי קֶשֶׁר לְ"], ["הנוכחות הזמנית", "הַנּוֹכְחוּת הַזְּמַנִּית"], ["בגבול", "בַּגְּבוּל"]],
+    englishDistractors: ["Annexation", "is defined", "in domestic law", "regardless of", "temporary presence", "at the border"],
+    notes: "משפט בין־לאומי is international law; שליטה אפקטיבית is effective control. The legal question is assessed here without applying the criterion to a particular territory."
+  }),
+  buildExpandedSentence({
+    id: "formal_74", emoji: "⚠️", category: "formal", difficulty: 3,
+    hebrew: "החלטה לבצע התנקשות בדמות ציבורית מעוררת שאלות משפטיות ומוסריות כבדות.",
+    hebrewNiqqud: "הַחְלָטָה לְבַצֵּעַ הִתְנַקְּשׁוּת בִּדְמוּת צִבּוּרִית מְעוֹרֶרֶת שְׁאֵלוֹת מִשְׁפָּטִיּוֹת וּמוּסָרִיּוֹת כְּבֵדוֹת.",
+    english: "A decision to assassinate a public figure raises serious legal and moral questions.",
+    hebrewTokenPairs: [["החלטה", "הַחְלָטָה"], ["לבצע התנקשות", "לְבַצֵּעַ הִתְנַקְּשׁוּת"], ["בדמות ציבורית", "בִּדְמוּת צִבּוּרִית"], ["מעוררת", "מְעוֹרֶרֶת"], ["שאלות", "שְׁאֵלוֹת"], ["משפטיות", "מִשְׁפָּטִיּוֹת"], ["ומוסריות", "וּמוּסָרִיּוֹת"], ["כבדות", "כְּבֵדוֹת"]],
+    englishTokens: ["A decision", "to assassinate", "a public figure", "raises", "serious", "legal", "and moral", "questions"],
+    hebrewDistractorPairs: [["המלצה", "הַמְלָצָה"], ["להגן", "לְהָגֵן"], ["על מוסד", "עַל מוֹסָד"], ["פותרת", "פּוֹתֶרֶת"], ["בעיות", "בְּעָיוֹת"], ["עלויות", "עָלֻיּוֹת"]],
+    englishDistractors: ["A recommendation", "to protect", "an institution", "resolves", "problems", "costs"],
+    notes: "לבצע means 'to carry out.' התנקשות ב־ is assassination of or an attempt on a public figure. This abstract sentence teaches the term while foregrounding legal and moral scrutiny."
+  }),
+  buildExpandedSentence({
+    id: "formal_75", emoji: "📚", category: "formal", difficulty: 3,
+    hebrew: "המאמר הבחין בין המונחים רצח, הרג והשמדה והסביר את השימוש בכל אחד מהם.",
+    hebrewNiqqud: "הַמַּאֲמָר הִבְחִין בֵּין הַמֻּנָּחִים רֶצַח, הֶרֶג וְהַשְׁמָדָה וְהִסְבִּיר אֶת הַשִּׁמּוּשׁ בְּכָל אֶחָד מֵהֶם.",
+    english: "The article distinguished between the terms murder, killing, and annihilation and explained the use of each one.",
+    hebrewTokenPairs: [["המאמר", "הַמַּאֲמָר"], ["הבחין בין", "הִבְחִין בֵּין"], ["המונחים", "הַמֻּנָּחִים"], ["רצח", "רֶצַח"], ["הרג", "הֶרֶג"], ["והשמדה", "וְהַשְׁמָדָה"], ["והסביר", "וְהִסְבִּיר"], ["את השימוש", "אֶת הַשִּׁמּוּשׁ"], ["בכל אחד מהם", "בְּכָל אֶחָד מֵהֶם"]],
+    englishTokens: ["The article", "distinguished between", "the terms", "murder", "killing", "and annihilation", "and explained", "the use", "of each one"],
+    hebrewDistractorPairs: [["הדיון", "הַדִּיּוּן"], ["ערבב", "עִרְבֵּב"], ["בין פשע", "בֵּין פֶּשַׁע"], ["פגיעה", "פְּגִיעָה"], ["ושיקום", "וְשִׁקּוּם"], ["כדי לקבוע", "כְּדֵי לִקְבֹּעַ"]],
+    englishDistractors: ["The debate", "mixed together", "crime", "injury", "and reconstruction", "in order to rank"],
+    notes: "רצח is murder, הרג is killing, and השמדה is annihilation or destruction. The sentence is explicitly about how the three terms are used."
+  }),
+  buildExpandedSentence({
+    id: "formal_76", emoji: "🕊️", category: "formal", difficulty: 3,
+    hebrew: "ההסדר המוצע מבקש לאזן בין חופש הדת, חופש מדת ואופייה של השבת במרחב הציבורי.",
+    hebrewNiqqud: "הַהֶסְדֵּר הַמֻּצָּע מְבַקֵּשׁ לְאַזֵּן בֵּין חֹפֶשׁ הַדָּת, חֹפֶשׁ מִדָּת וְאֹפְיָהּ שֶׁל הַשַּׁבָּת בַּמֶּרְחָב הַצִּבּוּרִי.",
+    english: "The proposed arrangement seeks to balance freedom of religion, freedom from religion, and the character of Shabbat in the public sphere.",
+    hebrewTokenPairs: [["ההסדר", "הַהֶסְדֵּר"], ["המוצע", "הַמֻּצָּע"], ["מבקש", "מְבַקֵּשׁ"], ["לאזן בין", "לְאַזֵּן בֵּין"], ["חופש הדת", "חֹפֶשׁ הַדָּת"], ["חופש מדת", "חֹפֶשׁ מִדָּת"], ["ואופייה", "וְאֹפְיָהּ"], ["של השבת", "שֶׁל הַשַּׁבָּת"], ["במרחב הציבורי", "בַּמֶּרְחָב הַצִּבּוּרִי"]],
+    englishTokens: ["The proposed", "arrangement", "seeks", "to balance", "freedom of religion", "freedom from religion", "and the character", "of Shabbat", "in the public sphere"],
+    hebrewDistractorPairs: [["החוק הקיים", "הַחֹק הַקַּיָּם"], ["מסרב", "מְסָרֵב"], ["להעדיף", "לְהַעֲדִיף"], ["בין חובת הציות", "בֵּין חוֹבַת הַצִּיּוּת"], ["ופרטיות", "וּפְרָטִיּוּת"], ["של החג", "שֶׁל הֶחָג"]],
+    englishDistractors: ["The existing law", "refuses", "to favor", "the duty to obey", "and privacy", "of a holiday"],
+    notes: "חופש הדת is freedom of religion; חופש מדת is freedom from religion. אופי means character, and אופייה של השבת means 'the character of Shabbat.'"
+  }),
+  buildExpandedSentence({
+    id: "formal_77", emoji: "📈", category: "formal", difficulty: 3,
+    hebrew: "המדיניות תיבחן לפי האופן שבו היא משפיעה על יוקר המחיה, מחירי הדיור ואי־השוויון.",
+    hebrewNiqqud: "הַמְּדִינִיּוּת תִּבָּחֵן לְפִי הָאֹפֶן שֶׁבּוֹ הִיא מַשְׁפִּיעָה עַל יֹקֶר הַמִּחְיָה, מְחִירֵי הַדִּיּוּר וְאִי־הַשִּׁוְיוֹן.",
+    english: "The policy will be evaluated based on how it affects the cost of living, housing prices, and inequality.",
+    hebrewTokenPairs: [["המדיניות", "הַמְּדִינִיּוּת"], ["תיבחן", "תִּבָּחֵן"], ["לפי האופן שבו", "לְפִי הָאֹפֶן שֶׁבּוֹ"], ["היא משפיעה", "הִיא מַשְׁפִּיעָה"], ["על יוקר המחיה", "עַל יֹקֶר הַמִּחְיָה"], ["מחירי הדיור", "מְחִירֵי הַדִּיּוּר"], ["ואי־השוויון", "וְאִי־הַשִּׁוְיוֹן"]],
+    englishTokens: ["The policy", "will be evaluated", "based on how", "it affects", "the cost of living", "housing prices", "and inequality"],
+    hebrewDistractorPairs: [["התוכנית", "הַתָּכְנִית"], ["תאושר", "תְּאֻשַּׁר"], ["בלי קשר להשפעתה", "בְּלִי קֶשֶׁר לְהַשְׁפָּעָתָהּ"], ["על היצוא התעשייתי", "עַל הַיְּצוּא הַתַּעֲשִׂיָּתִי"], ["הכנסות המדינה", "הַכְנָסוֹת הַמְּדִינָה"], ["והצמיחה השנתית", "וְהַצְּמִיחָה הַשְּׁנָתִית"]],
+    englishDistractors: ["The program", "will be approved", "regardless of its effect", "on industrial exports", "state revenue", "and annual growth"],
+    notes: "תיבחן is the formal passive 'will be evaluated.' יוקר המחיה, מחירי הדיור, and אי־השוויון are core policy terms: cost of living, housing prices, and inequality."
+  }),
+];
+
+SENTENCE_BANK.push(...SENTENCE_EXPANSION_POLITICS);
+
 function cloneSentence(item) {
   return {
     ...item,
@@ -11214,6 +11773,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260712c",
+  __build: "20260713d",
 };
 })(typeof window !== "undefined" ? window : globalThis);

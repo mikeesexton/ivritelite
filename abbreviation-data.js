@@ -2059,6 +2059,186 @@ const ABBREVIATIONS = [
     ],
     "notes": "Common shorthand for electronic mail / email.",
     "source": "manual"
+  },
+  {
+    "id": "abbr-210",
+    "abbr": "להט״ב",
+    "expansionHe": "לסביות, הומואים, טרנסג'נדרים וביסקסואלים",
+    "english": "LGBT",
+    "bucket": "People, Health & Culture",
+    "notes": "The standard Hebrew initialism for the LGBT community; its letter order differs from English.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-211",
+    "abbr": "להטב״ק+",
+    "expansionHe": "לסביות, הומואים, טרנסג'נדרים, ביסקסואלים וקווירים",
+    "english": "LGBTQ+",
+    "bucket": "People, Health & Culture",
+    "notes": "The final ק stands for קווירים; + includes additional sexual and gender identities.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-212",
+    "abbr": "רש״פ",
+    "expansionHe": "הרשות הפלסטינית",
+    "english": "Palestinian Authority",
+    "bucket": "Civics, Law & Work",
+    "notes": "Common in Israeli news and policy discussion.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-213",
+    "abbr": "אש״ף",
+    "expansionHe": "הארגון לשחרור פלסטין",
+    "english": "PLO",
+    "bucket": "Civics, Law & Work",
+    "notes": "The Hebrew initialism for the Palestine Liberation Organization.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-214",
+    "abbr": "מח״ש",
+    "expansionHe": "המחלקה לחקירות שוטרים",
+    "english": "Police Internal Investigation Department",
+    "bucket": "Civics, Law & Work",
+    "notes": "The Justice Ministry department that investigates alleged criminal conduct by police officers.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-215",
+    "abbr": "דו״צ",
+    "expansionHe": "דובר צה״ל",
+    "english": "IDF Spokesperson",
+    "bucket": "Civics, Law & Work",
+    "notes": "Frequent shorthand in news reports and official statements.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-216",
+    "abbr": "מתפ״ש",
+    "expansionHe": "מתאם פעולות הממשלה בשטחים",
+    "english": "COGAT (territories coordinator)",
+    "bucket": "Civics, Law & Work",
+    "notes": "The defense body known in English as the Coordinator of Government Activities in the Territories (COGAT).",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-217",
+    "abbr": "שב״חים",
+    "expansionHe": "שוהים בלתי חוקיים",
+    "english": "people present without permits",
+    "bucket": "Civics, Law & Work",
+    "notes": "A legal and policing term; the plural suffix is attached to the initialism in everyday usage. The label can be stigmatizing, so context matters.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-218",
+    "abbr": "מו״מ",
+    "expansionHe": "משא ומתן",
+    "english": "negotiations",
+    "bucket": "Civics, Law & Work",
+    "notes": "Very common shorthand in political, diplomatic, and business reporting.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-219",
+    "abbr": "חל״ת",
+    "expansionHe": "חופשה ללא תשלום",
+    "english": "unpaid leave",
+    "bucket": "Civics, Law & Work",
+    "notes": "Common in employment policy and cost-of-living discussions.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-220",
+    "abbr": "מל״ג",
+    "expansionHe": "המועצה להשכלה גבוהה",
+    "english": "Council for Higher Education",
+    "bucket": "Civics, Law & Work",
+    "notes": "The national body overseeing higher education in Israel.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-221",
+    "abbr": "רה״ע",
+    "expansionHe": "ראש העיר",
+    "english": "mayor",
+    "bucket": "Civics, Law & Work",
+    "notes": "Written shorthand used in municipal politics and local news.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-222",
+    "abbr": "דתל״ש",
+    "expansionHe": "דתי לשעבר",
+    "english": "formerly religious Jew",
+    "bucket": "People, Health & Culture",
+    "notes": "A common identity label in Israeli religion-and-society discourse.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-223",
+    "abbr": "חרד״ל",
+    "expansionHe": "חרדי לאומי",
+    "english": "national-Haredi",
+    "bucket": "People, Health & Culture",
+    "notes": "An identity term within the religious-Zionist spectrum.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-224",
+    "abbr": "חד״ש",
+    "expansionHe": "החזית הדמוקרטית לשלום ולשוויון",
+    "english": "Hadash (Democratic Front)",
+    "bucket": "Civics, Law & Work",
+    "notes": "A political party initialism; the full name translates as Democratic Front for Peace and Equality.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-225",
+    "abbr": "רע״ם",
+    "expansionHe": "הרשימה הערבית המאוחדת",
+    "english": "United Arab List",
+    "bucket": "Civics, Law & Work",
+    "notes": "A political party initialism used throughout Israeli election coverage.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-226",
+    "abbr": "בל״ד",
+    "expansionHe": "ברית לאומית דמוקרטית",
+    "english": "National Democratic Assembly (Balad)",
+    "bucket": "Civics, Law & Work",
+    "notes": "A political party initialism commonly used as the party's Hebrew name.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-227",
+    "abbr": "תע״ל",
+    "expansionHe": "התנועה הערבית להתחדשות",
+    "english": "Arab Movement for Renewal (Ta'al)",
+    "bucket": "Civics, Law & Work",
+    "notes": "A political party initialism found in election lists and coalition reporting.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-228",
+    "abbr": "ש״ס",
+    "expansionHe": "התאחדות הספרדים העולמית שומרי תורה",
+    "english": "Shas",
+    "bucket": "Civics, Law & Work",
+    "notes": "The party's registered full name; ש״ס functions as its everyday name.",
+    "source": "manual"
+  },
+  {
+    "id": "abbr-229",
+    "abbr": "רל״ב",
+    "expansionHe": "רק לא ביבי",
+    "english": "Anyone but Bibi",
+    "bucket": "Civics, Law & Work",
+    "notes": "Informal, often pejorative label for the anti-Netanyahu camp; it is sometimes also used self-descriptively.",
+    "source": "manual"
   }
 ];
 

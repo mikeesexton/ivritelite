@@ -24,6 +24,29 @@ Do not skip the log entry even for small or documentation-only tasks.
 - Do not add comments or docstrings to code you did not write.
 - Run `npm test` before and after non-trivial code changes and record the result in the log.
 
+## Sentence-bank authoring (required)
+
+Before adding or rechunking sentence-bank content, read
+[`docs/sentence-bank-authoring.md`](docs/sentence-bank-authoring.md).
+
+- A chip tests one compact translation unit, not a convenient stretch of sentence.
+- Default to roughly one lexical item per chip on both sides. Hebrew and English
+  target-chip counts should match in newly authored rows unless an exact,
+  documented exception is unavoidable.
+- Keep established terms, fixed expressions, proper names, and irreducible
+  grammatical constructions together; otherwise split independent nouns,
+  modifiers, complements, actions, and clauses.
+- Treat a failing compact-chip test as an authoring prompt: split first. Add a
+  reusable glossary unit or exact grammar exception only when the expression
+  meets the documented exception rule.
+- Apply the same granularity rule to distractors and alternate answers.
+- Learner-facing English must be natural standalone English. Put literal or
+  specialist terminology in `notes` instead of exposing an opaque calque.
+
+Some older sentence tests preserve historical phrase-chip choices. Those are
+legacy snapshots, not authoring precedent; the linked guide is authoritative for
+new or revised rows.
+
 ## Project structure
 
 - `index.html` — app entry point (no build step; open directly or via local HTTP server). Loads every module/data file as a `<script defer>`.
