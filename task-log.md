@@ -4137,3 +4137,15 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 243/243 pass. Focused final `node --test tests/sentence-bank-data.test.js` — 24/24 pass. Final `npm test` — 245/245 pass. `git diff --check` — pass. The focused suite also verifies all 50 new rows reconstruct both full sentences, have aligned pointed/plain Hebrew, contain 4–6 non-reused distractors per side, keep equal target-chip counts, and use every multiword-glossary or exact-grammar exception without stale entries.
 
 **Risks / regressions to check:** (1) Automated content-word counting is deliberately conservative for English, but no test can reliably infer Hebrew semantic boundaries or contested termhood; the documented bilingual read-through remains mandatory. (2) The reusable multiword glossary contains only reviewed current terms; future additions should split first and extend it only for independently learnable vocabulary. (3) Older rows remain grandfathered under legacy compaction tests and were not migrated in this task. (4) No commit or push was performed.
+
+### 2026-07-13 21:43 EDT — Publish and merge political language expansion
+
+**Requested:** Push the completed political vocabulary, sentence, abbreviation, and QC work to GitHub and merge it into `main`.
+
+**Files changed:** `task-log.md` — recorded the publication. The merged change set itself contains `AGENTS.md`, `abbreviation-data.js`, `docs/sentence-bank-authoring.md`, `index.html`, `sentence-bank-data.js`, `task-log.md`, the three related data tests, and `vocab-data.js`.
+
+**Behavior changed:** The political language expansion and compact-chip QC rules are now published on GitHub `main` through pull request #37.
+
+**Tests run:** `npm test` immediately before push — 245/245 pass. `git diff --check` before publication — pass. GitHub reported PR #37 clean and mergeable; merge commit `59a5045` was created successfully.
+
+**Risks / regressions to check:** None specific to publication. The feature branch was deleted after merge; local and remote `main` were synchronized at the merge commit before this log-only follow-up.
