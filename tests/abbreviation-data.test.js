@@ -235,3 +235,35 @@ test("דוא״ל is available as a playable shorthand for דואר אלקטרו�
   assert.equal(byId.get("abbr-209")?.english, "email");
   assert.equal(deckIds.has("abbr-209"), true);
 });
+
+test("political and identity expansion adds the high-value modern abbreviation set", () => {
+  const context = loadAbbreviationContext();
+  const rows = context.IvriQuestAbbreviations.getAbbreviations();
+  const byId = new Map(rows.map((entry) => [entry.id, entry]));
+  const deckIds = new Set(context.IvriQuestApp.abbreviation.prepareAbbreviationDeck(rows).map((entry) => entry.id));
+  const expansion = Array.from({ length: 20 }, (_, index) => byId.get(`abbr-${210 + index}`));
+
+  assert.equal(rows.length, 228);
+  assert.equal(expansion.length, 20);
+  assert.ok(expansion.every(Boolean));
+  assert.ok(expansion.every((entry) => deckIds.has(entry.id)));
+  assert.ok(expansion.every((entry) => entry.english.length <= 40), "new abbreviations must remain eligible for Abbreviation Match");
+  assert.ok(expansion.every((entry) => entry.bucket === "Civics, Law & Work" || entry.bucket === "People, Health & Culture"));
+  assert.ok(expansion.every((entry) => String(entry.notes || "").trim()));
+
+  assert.equal(byId.get("abbr-210")?.abbr, "להט״ב");
+  assert.equal(byId.get("abbr-210")?.expansionHe, "לסביות, הומואים, טרנסג'נדרים וביסקסואלים");
+  assert.equal(byId.get("abbr-210")?.english, "LGBT");
+  assert.match(byId.get("abbr-211")?.notes || "", /\+ includes additional sexual and gender identities/);
+  assert.equal(byId.get("abbr-212")?.expansionHe, "הרשות הפלסטינית");
+  assert.equal(byId.get("abbr-214")?.expansionHe, "המחלקה לחקירות שוטרים");
+  assert.equal(byId.get("abbr-214")?.english, "Police Internal Investigation Department");
+  assert.equal(byId.get("abbr-216")?.expansionHe, "מתאם פעולות הממשלה בשטחים");
+  assert.match(byId.get("abbr-217")?.notes || "", /stigmatizing/i);
+  assert.equal(byId.get("abbr-218")?.expansionHe, "משא ומתן");
+  assert.equal(byId.get("abbr-223")?.english, "national-Haredi");
+  assert.equal(byId.get("abbr-224")?.expansionHe, "החזית הדמוקרטית לשלום ולשוויון");
+  assert.match(byId.get("abbr-224")?.english || "", /Hadash/);
+  assert.equal(byId.get("abbr-228")?.expansionHe, "התאחדות הספרדים העולמית שומרי תורה");
+  assert.equal(byId.get("abbr-229")?.expansionHe, "רק לא ביבי");
+});

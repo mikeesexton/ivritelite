@@ -135,8 +135,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1354);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1300);
+  assert.equal(vocabulary.length, 1504);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1450);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -169,6 +169,106 @@ test("planned Translation Match cards have niqqud and no gloss collisions", () =
     assert.match(word.heNiqqud, /[\u05B0-\u05BC\u05C1\u05C2\u05C7]/, `expected niqqud for ${word.he}`);
     assert.equal(hebrewCounts.get(word.he), 1, `duplicate Hebrew card: ${word.he}`);
     assert.equal(englishCounts.get(word.en), 1, `duplicate English card: ${word.en}`);
+  });
+});
+
+test("politics and society tranche adds 150 safe, pointed, globally unique cards", () => {
+  const vocabulary = loadVocabulary();
+  const politics = vocabulary.filter((word) => word.category === "politics_society_expanded");
+  const tranche = politics.slice(18);
+  const expectedNumbers = Array.from({ length: 150 }, (_, index) => String(index + 19).padStart(3, "0"));
+  const actualNumbers = Array.from(tranche, (word) => word.id.match(/^politics_society_expanded-(\d{3})-/)?.[1]);
+
+  assert.equal(politics.length, 168);
+  assert.equal(tranche.length, 150);
+  assert.deepEqual(actualNumbers, expectedNumbers);
+  assert.equal(tranche[0].id, "politics_society_expanded-019-memorial");
+  assert.equal(tranche.at(-1).id, "politics_society_expanded-168-center-periphery-gap");
+
+  const requiredTerms = new Map([
+    ["אנדרטה", "memorial"],
+    ["כיבוש", "occupation"],
+    ["אלימות משטרתית", "police brutality"],
+    ["אפליה", "discrimination"],
+    ["התנקשות", "assassination"],
+    ["רצח", "murder"],
+    ["השמדה", "annihilation"],
+    ["התנחלות", "settlement"],
+    ["מתנחל", "settler"],
+    ["אלימות מתנחלים", "settler violence"],
+    ["דמוקרטיה", "democracy"],
+    ["שלטון החוק", "rule of law"],
+    ["ממשלה", "government"],
+    ["ראש הממשלה", "prime minister"],
+    ["שר", "minister"],
+    ["מפלגה", "political party"],
+    ["בחירות", "election"],
+    ["הצבעה", "vote"],
+    ["בוחר", "voter"],
+    ["ימין", "right wing"],
+    ["שמאל", "left wing"],
+    ["מרכז פוליטי", "political center"],
+    ["מצע", "political platform"],
+    ["דעת קהל", "public opinion"],
+    ["סקר דעת קהל", "opinion poll"],
+    ["שחיתות", "corruption"],
+    ["שוחד", "bribery"],
+    ["שקיפות", "transparency"],
+    ["הסתה", "incitement"],
+    ["תעמולה", "propaganda"],
+    ["משטרה", "police"],
+    ["זכויות אדם", "human rights"],
+    ["שוויון", "equality"],
+    ["גזענות", "racism"],
+    ["הומופוביה", "homophobia"],
+    ["טרנספוביה", "transphobia"],
+    ["הדרה", "exclusion"],
+    ["העדפה מתקנת", "affirmative action"],
+    ["פליט", "refugee"],
+    ["חופש התנועה", "freedom of movement"],
+    ["הרפורמה המשפטית", "judicial reform (supporters' term)"],
+    ["הפיכה משטרית", "regime coup (opponents' term)"],
+    ["משבר יוקר המחיה", "cost-of-living crisis"],
+    ["מעמד הביניים", "middle class"],
+    ["שוויון בנטל", "equal sharing of the burden"],
+    ["חוק הגיוס", "conscription law"],
+    ["קליטת עלייה", "immigrant absorption"],
+    ["הכרה בתארים מחו״ל", "foreign degree recognition"],
+    ["קהילת הלהט״ב", "LGBT community"],
+    ["נישואים אזרחיים", "civil marriage"],
+    ["הבועה התל־אביבית", "Tel Aviv bubble"],
+  ]);
+  const trancheByHebrew = new Map(tranche.map((word) => [word.he, word]));
+
+  requiredTerms.forEach((english, hebrew) => {
+    assert.equal(trancheByHebrew.get(hebrew)?.en, english, `expected ${hebrew} to mean ${english}`);
+  });
+  assert.equal(trancheByHebrew.get("אנדרטה")?.heNiqqud, "אַנְדַּרְטָה");
+
+  const englishCounts = new Map();
+  const hebrewCounts = new Map();
+  vocabulary.forEach((word) => {
+    englishCounts.set(word.en, (englishCounts.get(word.en) || 0) + 1);
+    hebrewCounts.set(word.he, (hebrewCounts.get(word.he) || 0) + 1);
+  });
+
+  const stripNiqqud = (text) => text.normalize("NFD").replace(/\p{M}/gu, "").normalize("NFC");
+  const hasNiqqud = /[\u05B0-\u05BC\u05C1\u05C2\u05C7]/;
+
+  tranche.forEach((word) => {
+    assert.equal(englishCounts.get(word.en), 1, `duplicate English card: ${word.en}`);
+    assert.equal(hebrewCounts.get(word.he), 1, `duplicate Hebrew card: ${word.he}`);
+    assert.equal(word.en.includes("/"), false, `multi-gloss English card: ${word.en}`);
+    assert.ok(word.en.length <= 40, `English card is too wide for the game: ${word.en}`);
+    assert.ok(word.he.length <= 30, `Hebrew card is too wide for the game: ${word.he}`);
+    assert.match(word.heNiqqud, hasNiqqud, `expected actual niqqud for ${word.he}`);
+    assert.equal(stripNiqqud(word.heNiqqud), word.he, `plain/pointed mismatch for ${word.he}`);
+    word.heNiqqud.split(/[\s־-]+/u).filter((token) => /[א-ת]/u.test(token)).forEach((token) => {
+      assert.match(token, hasNiqqud, `expected each Hebrew form to be pointed in ${word.he}`);
+    });
+
+    assert.doesNotMatch(word.en.toLowerCase(), /massacre|genocide/);
+    assert.doesNotMatch(word.he, /טבח|רצח עם/);
   });
 });
 

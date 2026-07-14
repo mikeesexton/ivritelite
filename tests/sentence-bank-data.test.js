@@ -24,6 +24,14 @@ function sanitizeTokenList(list) {
     : [];
 }
 
+function hebrewConsonantalSkeleton(text) {
+  return String(text || "")
+    .normalize("NFD")
+    .replace(/[\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7]/g, "")
+    .replace(/[וי]/g, "")
+    .normalize("NFC");
+}
+
 function isAttachableSentenceSuffix(text) {
   const trimmed = String(text || "").trim();
   return Boolean(trimmed) && /^[,.;:!?…)\]"'׳״-]+$/.test(trimmed);
@@ -227,6 +235,8 @@ function hasExplicitHebrewItCue(tokens) {
   });
 }
 
+// Legacy snapshots only. New authoring follows docs/sentence-bank-authoring.md
+// and the compact-token policy enforced for the current append-only ranges.
 const PHRASE_COMPACTED_ENTRY_IDS = [
   "colloquial_02",
   "colloquial_01",
@@ -392,6 +402,194 @@ const ROUND4_ENTRY_IDS = [
   ...sentenceIdRange("formal", 61, 63),
 ];
 
+const POLITICAL_ENTRY_IDS = [
+  ...sentenceIdRange("colloquial", 140, 151),
+  ...sentenceIdRange("everyday", 125, 136),
+  ...sentenceIdRange("professional", 73, 84),
+  ...sentenceIdRange("formal", 64, 77),
+];
+
+const COMPACT_TOKEN_POLICY_START = Object.freeze({
+  colloquial: 140,
+  everyday: 125,
+  professional: 73,
+  formal: 64,
+});
+
+const ENGLISH_FUNCTION_WORDS = new Set(`
+  a an the and or but nor for so yet as at by from in into of on onto to under over
+  with within without about after before during through while because although if when
+  whether that this these those my your his her its our their i me we us you he him she
+  it they them one ones is am are was were be been being do does did have has had
+  can could may might must shall should will would not no than then there here up out off
+  just only more most less least very already still every each all any some another other
+  which who whom whose what where why how according following based due like outside beyond
+  until finally fully against regardless theyre
+`.trim().split(/\s+/));
+
+function compactTokenExceptionKey(id, bank, token) {
+  return `${id}\u0000${bank}\u0000${token}`;
+}
+
+function compactUnitMap(values, reason) {
+  return values.trim().split("\n").map((value) => [value.trim(), reason]);
+}
+
+// This is a reusable glossary, not a waiver for convenient phrase grouping.
+// Add an item only when the whole string is itself vocabulary a learner should
+// recognize as a term, category, fixed expression, or name.
+const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
+  ...compactUnitMap(`
+    affordable housing
+    annual growth
+    budget analysis
+    central government
+    centrist parties
+    city limits
+    civil marriage
+    civil rights
+    civilian government
+    coalition negotiations
+    commercial space
+    community center
+    cost living
+    disciplinary offenses
+    disciplinary violations
+    domestic law
+    duty obey
+    economic team
+    education system
+    effective control
+    election day
+    election polls
+    electoral threshold
+    evacuation request
+    existing law
+    export prices
+    family group chat
+    final vote
+    freedom expression
+    freedom religion
+    gender identity
+    government decision
+    government institutions
+    higher education
+    hiring policy
+    housing prices
+    independent review
+    industrial exports
+    international law
+    labor market
+    labor organizations
+    legal advice
+    legal team
+    lgbtq community
+    lgbtq youth
+    local authority
+    local government
+    local lists
+    longtime resident
+    longtime residents
+    marital status
+    medical assistance
+    meeting summary
+    memorial day
+    middle class
+    military control
+    monitoring team
+    municipal bylaws
+    neighbor dispute
+    new immigrant
+    new immigrants
+    outreach team
+    party office
+    place residence
+    planning process
+    police brutality
+    political center
+    polling station
+    preliminary reading
+    promotion procedure
+    public figure
+    public order
+    public participation
+    public sphere
+    public transportation
+    regional tribunal
+    research team
+    self employed retirees
+    settler violence
+    sexual orientation
+    sports organizations
+    state revenue
+    tax obligations
+    temporary presence
+    upper class
+    voting rights
+    walking tour
+    wealthy owners
+    work team
+    workers rights
+    young adults
+  `, "term: recognized multiword vocabulary unit"),
+  ...compactUnitMap(`
+    calms down
+    distinguish among
+    distinguished between
+    falls apart
+    goes air
+    leaves screen
+    mixed together
+    right left
+  `, "fixed-expression: lexicalized verb or paired expression"),
+  ...compactUnitMap(`
+    basic laws
+    central israel
+    civil administration
+    civil service commission
+    green line
+    internal police investigations
+    supreme court
+    tel aviv
+  `, "proper-name: geographic, legal, or institutional name"),
+]);
+
+const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
+  [compactTokenExceptionKey("colloquial_151", "target", "When people say"), "grammar: impersonal Hebrew verb needs a generic English subject"],
+  [compactTokenExceptionKey("colloquial_151", "distractor", "When people write"), "grammar: impersonal Hebrew verb needs a generic English subject"],
+  [compactTokenExceptionKey("professional_83", "distractor", "makes it harder"), "grammar: natural analytic rendering of one Hebrew verb"],
+]);
+
+// Keep empty unless Hebrew and English genuinely cannot express a natural row
+// with comparable target counts. Future entries require an exact id + reason.
+const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map();
+
+function isCompactTokenPolicyEntry(entry) {
+  const match = /^(colloquial|everyday|professional|formal)_(\d+)$/.exec(String(entry?.id || ""));
+  return Boolean(match) && Number(match[2]) >= COMPACT_TOKEN_POLICY_START[match[1]];
+}
+
+function englishWordParts(token) {
+  return String(token || "")
+    .toLowerCase()
+    .replace(/\bin order to\b/g, "to")
+    .replace(/[’']/g, "")
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+function englishContentWords(token) {
+  return englishWordParts(token).filter((word) => !ENGLISH_FUNCTION_WORDS.has(word));
+}
+
+function canonicalEnglishContentKey(token) {
+  return englishContentWords(token).join(" ");
+}
+
+function whitespaceWordCount(token) {
+  return String(token || "").trim().split(/\s+/u).filter(Boolean).length;
+}
+
 const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
   "everyday_39", "everyday_40", "everyday_43", "everyday_49", "everyday_52", "everyday_55",
   "everyday_57", "everyday_59", "everyday_60", "everyday_61", "colloquial_39", "colloquial_40",
@@ -440,17 +638,18 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "colloquial_131",
   "colloquial_137",
   "colloquial_138",
+  "everyday_125",
 ];
 
-test("sentence bank data exposes 398 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 448 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 398);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 398);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 398);
+  assert.equal(entries.length, 448);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 448);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 448);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -478,10 +677,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 139,
-    everyday: 124,
-    professional: 72,
-    formal: 63,
+    colloquial: 151,
+    everyday: 136,
+    professional: 84,
+    formal: 77,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -527,13 +726,24 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
     }, {}),
     { 1: 15, 2: 37, 3: 18 }
   );
+
+  const political = POLITICAL_ENTRY_IDS.map((id) => byId.get(id));
+  assert.equal(political.length, 50);
+  assert.ok(political.every(Boolean));
+  assert.deepEqual(
+    political.reduce((counts, entry) => {
+      counts[entry.category] = (counts[entry.category] || 0) + 1;
+      return counts;
+    }, {}),
+    { colloquial: 12, everyday: 12, professional: 12, formal: 14 }
+  );
 });
 
 test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
 
-  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS].forEach((id) => {
+  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
@@ -560,6 +770,213 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   EXPANSION_GENDER_ALTERNATE_IDS.forEach((id) => {
     assert.ok(byId.get(id).hebrew_alternates.length > 0, `${id} needs a feminine Hebrew alternative`);
   });
+});
+
+test("political sentence expansion has 50 aligned, broad, non-graphic learning rows", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const political = POLITICAL_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(POLITICAL_ENTRY_IDS.length, 50);
+  assert.equal(new Set(POLITICAL_ENTRY_IDS).size, 50);
+  assert.ok(political.every(Boolean));
+
+  political.forEach((entry) => {
+    assert.equal(
+      hebrewConsonantalSkeleton(entry.hebrew_niqqud),
+      hebrewConsonantalSkeleton(entry.hebrew),
+      `${entry.id} full pointed/plain consonantal alignment`
+    );
+    entry.hebrew_tokens.forEach((token, index) => {
+      assert.match(entry.hebrew_tokens_niqqud[index], /[\u0591-\u05C7]/, `${entry.id} target ${index} needs niqqud`);
+      assert.equal(
+        hebrewConsonantalSkeleton(entry.hebrew_tokens_niqqud[index]),
+        hebrewConsonantalSkeleton(token),
+        `${entry.id} target ${index} pointed/plain consonantal alignment`
+      );
+    });
+    entry.hebrew_distractors.forEach((token, index) => {
+      assert.match(entry.hebrew_distractors_niqqud[index], /[\u0591-\u05C7]/, `${entry.id} distractor ${index} needs niqqud`);
+      assert.equal(
+        hebrewConsonantalSkeleton(entry.hebrew_distractors_niqqud[index]),
+        hebrewConsonantalSkeleton(token),
+        `${entry.id} distractor ${index} pointed/plain consonantal alignment`
+      );
+    });
+  });
+
+  const combinedHebrew = political.map((entry) => `${entry.hebrew} ${entry.notes}`).join("\n");
+  [
+    "אנדרטה", "בחירות", "קואליציה", "אופוזיציה", "כיבוש", "התנחלות",
+    "אלימות מתנחלים", "אלימות משטרתית", "אפליה", "התנקשות", "להט״ב",
+    "עולים", "תל אביב", "יוקר המחיה", "נישואים אזרחיים", "מעמד הביניים",
+    "בית המשפט העליון", "הפגנה",
+  ].forEach((anchor) => {
+    assert.ok(combinedHebrew.includes(anchor), `political expansion needs scope anchor ${anchor}`);
+  });
+
+  const combinedContent = political
+    .map((entry) => `${entry.hebrew} ${entry.english} ${entry.notes}`)
+    .join("\n");
+  assert.doesNotMatch(combinedContent, /\b(?:massacre|genocide)\b|טבח|רצח\s+עם/iu);
+
+  const namedRows = political.filter((entry) =>
+    /\b(?:Bibi|Trump)\b|ביבי|טראמפ/iu.test(`${entry.hebrew} ${entry.english}`)
+  );
+  assert.ok(namedRows.length <= 2, `expected at most two Bibi/Trump rows, found ${namedRows.length}`);
+});
+
+test("current and future sentence rows keep bilingual chips compact and comparable", () => {
+  const entries = loadSentenceBankApi().getSentenceBank().filter(isCompactTokenPolicyEntry);
+  const usedLexicalUnits = new Set();
+  const usedContextExceptions = new Set();
+  const usedCountExceptions = new Set();
+  const forbiddenClauseChips = [
+    "before publishing the data",
+    "of the police-brutality allegations",
+    "to allow the public",
+    "to submit objections",
+    "was formally deposited",
+  ];
+  const forbiddenHebrewChips = new Set([
+    "לפני פרסום הנתונים",
+    "במונח שליטה צבאית",
+    "בתחבורה ציבורית בשבת",
+    "ואופייה של השבת",
+    "ביקשה שנציין",
+    "לאחר פרישת הסיעה",
+  ]);
+
+  assert.ok(entries.length >= POLITICAL_ENTRY_IDS.length);
+
+  COMPACT_ENGLISH_MULTIWORD_UNITS.forEach((reason, key) => {
+    assert.match(reason, /^(?:term|fixed-expression|proper-name): \S/);
+    assert.match(key, /\S+ \S+/);
+  });
+  COMPACT_ENGLISH_CONTEXT_EXCEPTIONS.forEach((reason, key) => {
+    assert.match(reason, /^grammar: \S/);
+    assert.match(key, /\S/);
+  });
+  COMPACT_TARGET_COUNT_EXCEPTIONS.forEach((reason, id) => {
+    assert.match(reason, /\S/);
+    assert.match(id, /^(?:colloquial|everyday|professional|formal)_\d+$/);
+  });
+
+  entries.forEach((entry) => {
+    if (entry.hebrew_tokens.length !== entry.english_tokens.length) {
+      assert.ok(
+        COMPACT_TARGET_COUNT_EXCEPTIONS.has(entry.id),
+        `${entry.id} target chips should have comparable bilingual boundaries`
+      );
+      usedCountExceptions.add(entry.id);
+    }
+
+    entry.hebrew_tokens.forEach((token) => {
+      assert.ok(
+        whitespaceWordCount(token) <= 3,
+        `${entry.id} Hebrew target chip is too broad: "${token}"`
+      );
+      assert.equal(
+        forbiddenHebrewChips.has(token),
+        false,
+        `${entry.id} still uses the over-broad Hebrew chip "${token}"`
+      );
+    });
+    entry.hebrew_distractors.forEach((token) => {
+      assert.ok(
+        whitespaceWordCount(token) <= 3,
+        `${entry.id} Hebrew distractor chip is too broad: "${token}"`
+      );
+      assert.equal(
+        forbiddenHebrewChips.has(token),
+        false,
+        `${entry.id} still uses the over-broad Hebrew distractor "${token}"`
+      );
+    });
+    (entry.hebrew_alternates || []).forEach((alternate) => {
+      alternate.tokens.forEach((token) => {
+        assert.ok(
+          whitespaceWordCount(token) <= 3,
+          `${entry.id} Hebrew alternate chip is too broad: "${token}"`
+        );
+      });
+    });
+
+    [
+      ["target", entry.english_tokens],
+      ["distractor", entry.english_distractors],
+    ].forEach(([bank, tokens]) => {
+      tokens.forEach((token) => {
+        assert.ok(
+          englishWordParts(token).length <= 5,
+          `${entry.id} English ${bank} chip exceeds the hard five-word limit: "${token}"`
+        );
+
+        const contentKey = canonicalEnglishContentKey(token);
+        if (englishContentWords(token).length > 1) {
+          if (COMPACT_ENGLISH_MULTIWORD_UNITS.has(contentKey)) {
+            usedLexicalUnits.add(contentKey);
+          } else {
+            const contextKey = compactTokenExceptionKey(entry.id, bank, token);
+            assert.ok(
+              COMPACT_ENGLISH_CONTEXT_EXCEPTIONS.has(contextKey),
+              `${entry.id} English ${bank} chip carries multiple content ideas without a glossary term or exact grammar exception: "${token}"`
+            );
+            usedContextExceptions.add(contextKey);
+          }
+        }
+
+        forbiddenClauseChips.forEach((forbidden) => {
+          assert.notEqual(
+            token.toLowerCase(),
+            forbidden,
+            `${entry.id} still uses the over-broad chip "${token}"`
+          );
+        });
+      });
+    });
+  });
+
+  assert.deepEqual(
+    [...usedLexicalUnits].sort(),
+    [...COMPACT_ENGLISH_MULTIWORD_UNITS.keys()].sort(),
+    "multiword glossary units must be used and non-stale"
+  );
+  assert.deepEqual(
+    [...usedContextExceptions].sort(),
+    [...COMPACT_ENGLISH_CONTEXT_EXCEPTIONS.keys()].sort(),
+    "compact-token grammar exceptions must be exact, used, and non-stale"
+  );
+  assert.deepEqual(
+    [...usedCountExceptions].sort(),
+    [...COMPACT_TARGET_COUNT_EXCEPTIONS.keys()].sort(),
+    "target-count exceptions must be exact, used, and non-stale"
+  );
+});
+
+test("reported political rows keep legible English and fine-grained chips", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const formal68 = byId.get("formal_68");
+  const formal71 = byId.get("formal_71");
+  const professional81 = byId.get("professional_81");
+
+  assert.doesNotMatch(formal71.english, /\bdeposited\b/i);
+  assert.deepEqual(Array.from(formal71.english_tokens), [
+    "The plan", "to expand", "the settlement", "was published", "so", "the public", "could submit", "objections", "as part of", "the planning process",
+  ]);
+  assert.deepEqual(Array.from(formal71.hebrew_tokens), [
+    "התוכנית", "להרחבת", "ההתנחלות", "פורסמה", "כדי", "שהציבור", "יוכל להגיש", "התנגדויות", "במסגרת", "הליך התכנון",
+  ]);
+
+  assert.deepEqual(Array.from(formal68.english_tokens), [
+    "The Department", "of Internal Police Investigations", "began", "to review", "allegations", "of", "police brutality",
+  ]);
+  assert.deepEqual(Array.from(professional81.english_tokens), [
+    "The monitoring team", "verified", "reports", "of settler violence", "before", "publishing", "the data",
+  ]);
+  assert.deepEqual(Array.from(professional81.hebrew_tokens), [
+    "צוות המעקב", "אימת", "דיווחים", "על אלימות מתנחלים", "לפני", "פרסום", "הנתונים",
+  ]);
 });
 
 test("new sentence-bank rows accept authored natural Hebrew word orders", () => {
@@ -851,7 +1268,7 @@ test("sentence bank data gives phrase-sized distractors to the compacted english
   });
 });
 
-test("sentence bank data shape-matches Hebrew multiword compounds with multiword distractors", () => {
+test("legacy sentence rows shape-match Hebrew multiword compounds with multiword distractors", () => {
   const entries = loadSentenceBankApi().getSentenceBank();
 
   entries.forEach((entry) => {
@@ -862,6 +1279,10 @@ test("sentence bank data shape-matches Hebrew multiword compounds with multiword
       `${entry.id} still uses underscore placeholder formatting in Hebrew chips`
     );
 
+    // New rows follow the compact-unit policy above. Requiring a multiword
+    // distractor merely because a genuine term is multiword would reward the
+    // same artificial phrase packing that policy is designed to prevent.
+    if (isCompactTokenPolicyEntry(entry)) return;
     if (!entry.hebrew_tokens.some((token) => /\s/.test(String(token || "")))) return;
     assert.ok(
       entry.hebrew_distractors.some((token) => /\s/.test(String(token || ""))),
