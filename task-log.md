@@ -4149,3 +4149,25 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** `npm test` immediately before push — 245/245 pass. `git diff --check` before publication — pass. GitHub reported PR #37 clean and mergeable; merge commit `59a5045` was created successfully.
 
 **Risks / regressions to check:** None specific to publication. The feature branch was deleted after merge; local and remote `main` were synchronized at the merge commit before this log-only follow-up.
+### 2026-07-14 21:34 EDT — Vocabulary, sentence, and practical conjugation expansion
+
+**Requested:** Add השבעה (incantation), סחרחורת (dizziness), and גאון (genius) to Vocabulary; choose a small related vocabulary batch; add a decently sized verb batch to Conjugation; and add one sentence using שפתיים plus one using שתי שפות.
+
+**Change:**
+- `vocab-data.js` — added seven playable Core Advanced cards: השבעה, גאון, לחש, כישוף, כישרון, הברקה, and תעלומה. Reused the existing playable Health card for סחרחורת instead of creating a duplicate. Bumped the data build to `20260714a`.
+- `hebrew-verbs.js` — added 12 curated practical verbs (לעדכן, לוותר, לאשר, לבטל, לצרף, לברר, להסכים, להספיק, להזכיר, להמליץ, להשפיע, להבהיר), each with authoritative pointed infinitive and all 21 modern present/past/future drill forms. Verb seeds grow 124 → 136 and study items grow 138 → 150. Bumped the data build to `20260714a`.
+- `sentence-bank-data.js` — appended `everyday_137` ("היא הזיזה את השפתיים אבל לא אמרה כלום.") and `everyday_138` ("היא מדברת שתי שפות בעבודה בכל יום.") with pointed Hebrew, compact bilingual chips, shape-matched distractors, and learner notes. Sentence bank grows 448 → 450. Bumped the data build to `20260714a`.
+- `tests/vocab-data.test.js` — added coverage for the three requested cards, updated vocabulary totals, and bounded the older 144-card expansion test to its original append-only ranges.
+- `tests/hebrew-verbs.test.js` — added coverage for all 12 new verb entries, 21 forms per verb, niqqud on every visible form, and representative English/Hebrew forms.
+- `tests/sentence-bank-data.test.js` — updated totals/category counts, included the two new rows in alignment validation, and asserted the requested terms appear.
+- `index.html` — bumped cache versions for all three changed data files.
+
+**Files changed:** `vocab-data.js`, `hebrew-verbs.js`, `sentence-bank-data.js`, `tests/vocab-data.test.js`, `tests/hebrew-verbs.test.js`, `tests/sentence-bank-data.test.js`, `index.html`, `task-log.md`.
+
+**Behavior changed:** Vocabulary gains 7 new playable cards while preserving the existing dizziness card; Conjugation gains 12 verbs and 252 new tense/person form prompts; Sentences/Shema gains 2 everyday rows using the requested expressions.
+
+**Tests run:** `npm test` before: 245 pass, 0 fail. `node --test tests/vocab-data.test.js tests/sentence-bank-data.test.js`: initially 36 pass, 2 fail (new test helper name and stale exact vocabulary count), then fixed. `node --test tests/hebrew-verbs.test.js tests/vocab-data.test.js tests/sentence-bank-data.test.js`: initially 67 pass, 1 fail (new test looked up a non-existent deck-level `lemma` field), then fixed. Final `npm test`: 248 pass, 0 fail. `git diff --check`: pass. Standalone data audit: 1,511 vocab cards / 1,457 playable, 450 sentences, 136 verb seeds / 150 verb study items; all 12 new verbs expose 21 forms.
+
+**Risks / regressions to check:** (1) The new verbs intentionally omit imperative drills, so each contributes 21 present/past/future forms rather than 24 forms. (2) Pointed paradigms were hand-authored and cross-checked against standard conjugation patterns/Pealim; the highest-value read-aloud checks are the quadriliteral לעדכן, pe-aleph לאשר, guttural pi'el לצרף/לברר, and final-guttural להשפיע. (3) השבעה can also be read differently without context; the card's niqqud הַשְׁבָּעָה disambiguates the intended “incantation/adjuration” sense.
+
+---

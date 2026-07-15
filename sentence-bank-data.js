@@ -11754,6 +11754,33 @@ const SENTENCE_EXPANSION_POLITICS = [
 
 SENTENCE_BANK.push(...SENTENCE_EXPANSION_POLITICS);
 
+const SENTENCE_EXPANSION_REQUESTED = [
+  buildExpandedSentence({
+    id: "everyday_137", emoji: "👄", category: "everyday", difficulty: 1,
+    hebrew: "היא הזיזה את השפתיים אבל לא אמרה כלום.",
+    hebrewNiqqud: "הִיא הֵזִיזָה אֶת הַשְּׂפָתַיִם אֲבָל לֹא אָמְרָה כְּלוּם.",
+    english: "She moved her lips but said nothing.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["הזיזה", "הֵזִיזָה"], ["את השפתיים", "אֶת הַשְּׂפָתַיִם"], ["אבל", "אֲבָל"], ["לא אמרה", "לֹא אָמְרָה"], ["כלום", "כְּלוּם"]],
+    englishTokens: ["She", "moved", "her lips", "but", "said", "nothing"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["סגר", "סָגַר"], ["את העיניים", "אֶת הָעֵינַיִם"], ["ואז", "וְאָז"], ["חייך", "חִיֵּךְ"]],
+    englishDistractors: ["He", "closed", "his eyes", "and then", "smiled"],
+    notes: "שפתיים means 'lips.' It is grammatically dual in form, so the definite plural phrase is השפתיים."
+  }),
+  buildExpandedSentence({
+    id: "everyday_138", emoji: "🗣️", category: "everyday", difficulty: 1,
+    hebrew: "היא מדברת שתי שפות בעבודה בכל יום.",
+    hebrewNiqqud: "הִיא מְדַבֶּרֶת שְׁתֵּי שָׂפוֹת בָּעֲבוֹדָה בְּכָל יוֹם.",
+    english: "She speaks two languages at work every day.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["מדברת", "מְדַבֶּרֶת"], ["שתי", "שְׁתֵּי"], ["שפות", "שָׂפוֹת"], ["בעבודה", "בָּעֲבוֹדָה"], ["בכל יום", "בְּכָל יוֹם"]],
+    englishTokens: ["She", "speaks", "two", "languages", "at work", "every day"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["לומד", "לוֹמֵד"], ["שלוש", "שָׁלוֹשׁ"], ["מיומנויות", "מְיֻמָּנוּיוֹת"], ["בבית", "בַּבַּיִת"]],
+    englishDistractors: ["He", "studies", "three", "skills", "at home"],
+    notes: "שתי is the feminine construct form of 'two,' used before the feminine plural noun שפות: שתי שפות, 'two languages.'"
+  }),
+];
+
+SENTENCE_BANK.push(...SENTENCE_EXPANSION_REQUESTED);
+
 function cloneSentence(item) {
   return {
     ...item,
@@ -11773,6 +11800,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260713d",
+  __build: "20260714a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

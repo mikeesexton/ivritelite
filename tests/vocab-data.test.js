@@ -82,6 +82,18 @@ test("requested existential and event vocabulary is available for translation", 
   assert.equal(entriesByHebrew.get("קיימות")?.en, "sustainability");
 });
 
+test("requested incantation, dizziness, and genius vocabulary is available for translation", () => {
+  const words = loadVocabulary();
+  const byHebrew = new Map(words.map((word) => [word.he, word]));
+
+  assert.equal(byHebrew.get("השבעה")?.en, "incantation");
+  assert.equal(byHebrew.get("סחרחורת")?.en, "dizziness");
+  assert.equal(byHebrew.get("גאון")?.en, "genius");
+  ["השבעה", "סחרחורת", "גאון"].forEach((hebrew) => {
+    assert.equal(byHebrew.get(hebrew)?.availability?.translationQuiz, true);
+  });
+});
+
 test("logical and researcher vocabulary is available for translation", () => {
   const entriesByHebrew = new Map(loadVocabulary().map((word) => [word.he, word]));
 
@@ -118,12 +130,19 @@ function getPlannedExpansion(vocabulary) {
     ["conversation_glue", 24],
     ["scientific_analytical", 17],
   ]);
+  const plannedCategorySizes = new Map([
+    ["core_advanced", 36],
+    ["conversation_glue", 72],
+    ["scientific_analytical", 36],
+  ]);
 
   return vocabulary.filter((word) => {
     const originalSize = originalCategorySizes.get(word.category);
     if (!originalSize) return false;
     const idMatch = word.id.match(/^[a-z_]+-(\d{3})-/);
-    return idMatch && Number(idMatch[1]) > originalSize;
+    return idMatch
+      && Number(idMatch[1]) > originalSize
+      && Number(idMatch[1]) <= originalSize + plannedCategorySizes.get(word.category);
   });
 }
 
@@ -135,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1504);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1450);
+  assert.equal(vocabulary.length, 1511);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1457);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,

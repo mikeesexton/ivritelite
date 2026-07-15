@@ -529,6 +529,13 @@ const RAW = {
     ["to clarify", "להבהיר", "לְהַבְהִיר"],
     ["to hold up", "לעכב", "לְעַכֵּב"],
     ["to report", "לדווח", "לְדַוֵּחַ"],
+    ["incantation", "השבעה", "הַשְׁבָּעָה"],
+    ["genius", "גאון", "גָּאוֹן"],
+    ["spell (magic)", "לחש", "לַחַשׁ"],
+    ["sorcery", "כישוף", "כִּשּׁוּף"],
+    ["talent", "כישרון", "כִּשָּׁרוֹן"],
+    ["flash of inspiration", "הברקה", "הַבְרָקָה"],
+    ["mystery", "תעלומה", "תַּעֲלוּמָה"],
   ],
   cooking_utensils: [
     ["knife", "סכין", "סַכִּין"],
@@ -2066,6 +2073,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260713a",
+  __build: "20260714a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

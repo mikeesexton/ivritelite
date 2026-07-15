@@ -542,6 +542,33 @@ test("warn appears in conjugation with authoritative hifil forms", () => {
   assert.equal(warn.forms.find((form) => form.id === "future_first_person_singular")?.valuePlain, "אזהיר");
 });
 
+test("practical verb expansion adds 12 fully pointed conjugation entries", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  const requestedLemmas = [
+    "לעדכן", "לוותר", "לאשר", "לבטל", "לצרף", "לברר",
+    "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
+  ];
+
+  assert.equal(entries.length, 136);
+  requestedLemmas.forEach((lemma) => {
+    const seed = entries.find((entry) => entry.lemma === lemma);
+    const item = deck.find((entry) => entry.word.he === lemma);
+    assert.ok(seed, `missing seed entry for ${lemma}`);
+    assert.ok(item, `missing conjugation item for ${lemma}`);
+    assert.equal(item.formSource, "authoritative");
+    assert.equal(item.forms.length, 21);
+    assert.ok(item.forms.every((form) => /[\u0591-\u05c7]/.test(form.valueNiqqud)));
+  });
+
+  const agree = deck.find((entry) => entry.word.he === "להסכים");
+  assert.equal(agree.forms.find((form) => form.id === "past_first_person_singular")?.valuePlain, "הסכמתי");
+  assert.equal(agree.forms.find((form) => form.id === "future_first_person_singular")?.englishText, "I will agree");
+
+  const giveUp = deck.find((entry) => entry.word.he === "לוותר");
+  assert.equal(giveUp.forms.find((form) => form.id === "past_first_person_singular")?.englishText, "I gave up");
+});
+
 test("starter run verb appears in conjugation with the expected English labels", () => {
   const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
   const item = deck.find((entry) => entry.id === "starter-verb-larutz--sense-1");

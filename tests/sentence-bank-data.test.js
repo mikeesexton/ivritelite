@@ -409,6 +409,8 @@ const POLITICAL_ENTRY_IDS = [
   ...sentenceIdRange("formal", 64, 77),
 ];
 
+const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
+
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
   everyday: 125,
@@ -641,15 +643,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 448 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 450 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 448);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 448);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 448);
+  assert.equal(entries.length, 450);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 450);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 450);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -678,7 +680,7 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
 
   assert.deepEqual(categoryCounts, {
     colloquial: 151,
-    everyday: 136,
+    everyday: 138,
     professional: 84,
     formal: 77,
   });
@@ -743,7 +745,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
 
-  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS].forEach((id) => {
+  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS, ...REQUESTED_ENTRY_IDS].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
@@ -770,6 +772,12 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   EXPANSION_GENDER_ALTERNATE_IDS.forEach((id) => {
     assert.ok(byId.get(id).hebrew_alternates.length > 0, `${id} needs a feminine Hebrew alternative`);
   });
+});
+
+test("sentence bank includes requested lips and two-languages examples", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  assert.match(byId.get("everyday_137")?.hebrew || "", /שפתיים/);
+  assert.match(byId.get("everyday_138")?.hebrew || "", /שתי שפות/);
 });
 
 test("political sentence expansion has 50 aligned, broad, non-graphic learning rows", () => {
