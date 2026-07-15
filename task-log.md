@@ -4171,3 +4171,15 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Risks / regressions to check:** (1) The new verbs intentionally omit imperative drills, so each contributes 21 present/past/future forms rather than 24 forms. (2) Pointed paradigms were hand-authored and cross-checked against standard conjugation patterns/Pealim; the highest-value read-aloud checks are the quadriliteral לעדכן, pe-aleph לאשר, guttural pi'el לצרף/לברר, and final-guttural להשפיע. (3) השבעה can also be read differently without context; the card's niqqud הַשְׁבָּעָה disambiguates the intended “incantation/adjuration” sense.
 
 ---
+
+### 2026-07-14 22:19 EDT — Publish and merge vocabulary/conjugation/sentence expansion
+
+**Requested:** Push the completed vocabulary, practical conjugation, and requested sentence additions to GitHub and merge them into `main`.
+
+**Files changed:** `task-log.md` — recorded publication. The merged content commit contains `hebrew-verbs.js`, `index.html`, `sentence-bank-data.js`, `vocab-data.js`, the three related data tests, and the preceding task-log entry.
+
+**Behavior changed:** The seven vocabulary cards, 12 conjugation verbs, and two sentence rows are now published on GitHub `main` through pull request #38.
+
+**Tests run:** `npm test` immediately before publication — 248 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. GitHub reported PR #38 clean and mergeable with no required remote checks; squash merge commit `baf6c5fe1ca617c5a8a73628a951fe79bcbb8149` was created successfully.
+
+**Risks / regressions to check:** None specific to publication. The feature branch was deleted locally and remotely after the merge; local `main` was fast-forwarded to the GitHub merge commit before this log-only follow-up.
