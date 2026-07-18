@@ -855,8 +855,8 @@ test("sentence builder renders english answer lines left-to-right, keeps punctua
   assert.equal(document.querySelector("#stickyLessonActions").textContent.includes("Clear"), false);
   assert.equal(document.querySelector("#promptHint").classList.contains("hidden"), true);
   assert.equal(
-    document.querySelector("#choiceContainer").querySelector(".sentence-drag-tip").textContent,
-    "Tip: drag answer blocks to any slot in the sentence."
+    document.querySelector("#choiceContainer").querySelectorAll(".sentence-drag-tip").length,
+    0
   );
   assert.equal(document.querySelector("#promptLabel").classList.contains("hidden"), true);
   assert.equal(getSentenceSlots(document)[0].getAttribute("dir"), undefined);
@@ -980,6 +980,42 @@ test("shema requires the exact spoken word order and rejects written alternates"
   assert.equal(state.sentenceBank.reviewQueue[0].direction, "listen");
 });
 
+test("sentence builder accepts an alternate Hebrew word order for en2he questions", () => {
+  const sentenceBank = [
+    {
+      id: "sb-order",
+      category: "colloquial",
+      difficulty: 2,
+      english: "We haven't seen each other in ages; dying to see you!",
+      hebrew: "מזמן לא התראינו, מת לראות אותך!",
+      english_tokens: ["We haven't seen each other", "in ages", "dying", "to see you"],
+      hebrew_tokens: ["מזמן", "לא", "התראינו", "מת", "לראות", "אותך"],
+      hebrew_alternates: [
+        {
+          text: "לא התראינו מזמן, מת לראות אותך!",
+          tokens: ["לא", "התראינו", "מזמן", "מת", "לראות", "אותך"],
+        },
+      ],
+      english_distractors: ["We haven't talked", "not yet", "excited"],
+      hebrew_distractors: ["עוד לא", "דיברנו", "לשמוע"],
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { document, state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  assert.equal(state.sentenceBank.currentQuestion.direction, "en2he");
+  fillSentenceAnswerByTap(document, ["לא", "התראינו", "מזמן", "מת", "לראות", "אותך"]);
+  document.querySelector("#nextBtn").click();
+
+  assert.equal(state.sentenceBank.currentQuestion.wasLastAnswerCorrect, true);
+  assert.ok(state.sessionScore > 0, "reordered Hebrew answer is scored as correct");
+});
+
 test("shema home tile is only shown when a Hebrew voice is available", () => {
   const withVoice = loadAppHarness([], [], [], {});
   withVoice.app.ui.renderHomeState();
@@ -1049,8 +1085,9 @@ test("binyanim answers update simple game mode analytics", () => {
   const homeCards = document.querySelector("#homeModePerformance").children;
   const binyanCard = homeCards.find((card) => card.children[1]?.children[0]?.textContent === "Binyanim");
   assert.ok(binyanCard);
-  assert.equal(binyanCard.children[0]?.children[0]?.textContent, "🌳");
-  assert.equal(binyanCard.children[1].children[1].textContent, "✅ 1  ❌ 1");
+  assert.equal(binyanCard.children[0]?.children[0]?.textContent, "ח");
+  assert.equal(binyanCard.children[1].children[1].children[0]?.textContent, "✓ 1");
+  assert.equal(binyanCard.children[1].children[1].children[2]?.textContent, "✗ 1");
 });
 
 test("preposition answers update simple game mode analytics", () => {
@@ -1124,8 +1161,9 @@ test("preposition answers update simple game mode analytics", () => {
   const homeCards = document.querySelector("#homeModePerformance").children;
   const prepCard = homeCards.find((card) => card.children[1]?.children[0]?.textContent === "Prepositions");
   assert.ok(prepCard);
-  assert.equal(prepCard.children[0]?.children[0]?.textContent, "🔗");
-  assert.equal(prepCard.children[1].children[1].textContent, "✅ 1  ❌ 1");
+  assert.equal(prepCard.children[0]?.children[0]?.textContent, "ז");
+  assert.equal(prepCard.children[1].children[1].children[0]?.textContent, "✓ 1");
+  assert.equal(prepCard.children[1].children[1].children[2]?.textContent, "✗ 1");
 });
 
 test("verb match session picks the weakest verb using conjugation history", () => {
@@ -1321,19 +1359,20 @@ test("sentence builder rewrites formal notes into short learner-facing tips", ()
   );
 });
 
-test("sentence builder prompt styles keep the prompt, answer rows, and count centered", () => {
+test("sentence builder prompt styles keep the prompt, answer rows, and count edge-aligned", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
-  assert.match(styles, /\.home-lessons-card \.section-head\s*\{[^}]*align-items:\s*center;[^}]*justify-content:\s*center;[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.home-lessons-card \.section-head h2\s*\{[^}]*width:\s*100%;[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*justify-content:\s*center;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*text-align:\s*center;/s);
+  assert.match(styles, /\.home-lessons-card \.section-head\s*\{[^}]*align-items:\s*start;/s);
+  assert.match(styles, /\.home-lessons-card \.section-head h2\s*\{[^}]*width:\s*100%;[^}]*text-align:\s*left;/s);
+  assert.match(styles, /body\[data-ui-lang="he"\] \.home-lessons-card \.section-head h2\s*\{[^}]*text-align:\s*right;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*justify-content:\s*flex-start;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*text-align:\s*start;/s);
   assert.match(styles, /\.prompt-text\.english-prompt\s*\{[^}]*direction:\s*ltr;[^}]*unicode-bidi:\s*isolate;/s);
   assert.match(styles, /\.prompt-text\.hebrew\s*\{[^}]*font-family:\s*"Assistant",\s*sans-serif;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.sentence-answer-line\.english\s*\{[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.sentence-answer-line\.hebrew\s*\{[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*text-align:\s*center;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*text-align:\s*start;/s);
+  assert.match(styles, /\.sentence-answer-line\.english\s*\{[^}]*text-align:\s*start;/s);
+  assert.match(styles, /\.sentence-answer-line\.hebrew\s*\{[^}]*text-align:\s*start;/s);
+  assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*text-align:\s*start;/s);
 });
 
 test("game start intro bubbles use the same yalla message", async () => {
@@ -1449,9 +1488,9 @@ test("sentence builder gives English prompts explicit LTR prompt styling in Hebr
 test("sentence builder base layout trims prompt, board, and feedback spacing without changing alignment", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\s*\{[^}]*padding:\s*0\.18rem 0\.58rem 0\.24rem;[^}]*gap:\s*0\.2rem;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\s*\{[^}]*padding:\s*0\.7rem 0\.8rem;[^}]*border:\s*1px solid var\(--line\);[^}]*background:\s*var\(--prompt-bg\);[^}]*gap:\s*0\.2rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*clamp\(3\.35rem,\s*5\.8vw,\s*4rem\);[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*0\.16rem;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*2\.72rem;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*0\.16rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*min\(100%,\s*36ch\);[^}]*font-size:\s*clamp\(1\.36rem,\s*3\.7vw,\s*1\.86rem\);[^}]*line-height:\s*1\.18;/s);
   assert.match(styles, /\.sentence-builder\s*\{[^}]*gap:\s*0\.68rem;/s);
   assert.match(styles, /\.sentence-answer-line\s*\{[^}]*min-height:\s*2\.9rem;[^}]*line-height:\s*1\.68;/s);
@@ -1471,14 +1510,13 @@ test("binyanim function hint fits long revealed labels", () => {
 test("sentence builder mobile breakpoint uses smaller sentence tokens and a tighter footer stack", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const mobileChoiceBtn = styles.match(/@media \(max-width: 767px\)\s*\{[\s\S]*?\.choice-btn\s*\{[^}]*min-height:\s*(\d+)px;/s);
-  const mobileSentenceToken = styles.match(/@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*(\d+)px;[^}]*padding:\s*0\.32rem 0\.6rem;[^}]*border-radius:\s*12px;[^}]*font-size:\s*0\.9rem;/s);
+  const mobileSentenceToken = styles.match(/@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*(\d+)px;[^}]*padding:\s*0\.32rem 0\.6rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.9rem;/s);
 
   assert.ok(mobileChoiceBtn);
   assert.ok(mobileSentenceToken);
   assert.ok(Number(mobileSentenceToken[1]) < Number(mobileChoiceBtn[1]));
-  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.progress-strip\s*\{[^}]*height:\s*11px;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*3\.08rem;[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*2\.04rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*min\(100%,\s*34ch\);[^}]*font-size:\s*clamp\(1\.34rem,\s*5\.9vw,\s*1\.66rem\);/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.lesson-footer\s*\{[^}]*bottom:\s*calc\(4\.05rem \+ env\(safe-area-inset-bottom\)\);[^}]*gap:\s*0\.34rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.52rem 0\.66rem 0\.58rem;/s);
@@ -1489,14 +1527,14 @@ test("sentence builder short mobile breakpoint adds an extra compaction step", (
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*2\.9rem;[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*1\.9rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*min\(100%,\s*32ch\);[^}]*font-size:\s*clamp\(1\.24rem,\s*5\.3vw,\s*1\.48rem\);/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*36px;[^}]*padding:\s*0\.28rem 0\.56rem;[^}]*border-radius:\s*11px;[^}]*font-size:\s*0\.86rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*36px;[^}]*padding:\s*0\.28rem 0\.56rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.86rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.46rem 0\.6rem 0\.5rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*46px;[^}]*font-size:\s*0\.92rem;/s);
 });
 
-test("gameplay header styling uses a warm progress bar and a top-right status pill", () => {
+test("gameplay header styling uses a flat accent progress bar and a top-right status pill", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
@@ -1505,10 +1543,10 @@ test("gameplay header styling uses a warm progress bar and a top-right status pi
   assert.match(styles, /\.shell-topbar-home\s*\{[^}]*min-width:\s*2\.62rem;[^}]*min-height:\s*2\.62rem;[^}]*font-size:\s*1\.05rem;/s);
   assert.match(styles, /body\[data-ui-lang="he"\] \.shell-topbar-actions\s*\{[^}]*flex-direction:\s*row-reverse;/s);
   assert.match(styles, /\.shell-gameplay-pill\s*\{[^}]*padding:\s*0\.46rem 0\.78rem;[^}]*border-radius:\s*999px;/s);
-  assert.match(styles, /\.progress-strip\s*\{[^}]*height:\s*13px;[^}]*border:\s*1px solid rgba\(240,\s*171,\s*49,\s*0\.2\);/s);
-  assert.match(styles, /\.progress-fill\s*\{[^}]*background:\s*linear-gradient\(90deg,\s*#7d1812 0%,\s*#b72a14 34%,\s*#e05a18 68%,\s*#f2a22d 88%,\s*#f6d15d 100%\);/s);
-  assert.match(styles, /\.progress-fill::after\s*\{[^}]*background:\s*radial-gradient\(circle at 28% 50%,[^}]*#f8d35d 40%/s);
-  assert.match(styles, /\.progress-strip\[data-streak-tier="4"\] \.progress-fill,\s*\.progress-fill\[data-streak-tier="4"\]\s*\{[^}]*brightness\(1\.21\)[^}]*0 0 42px rgba\(248,\s*211,\s*93,\s*0\.3\);/s);
+  assert.match(styles, /\.progress-strip\s*\{[^}]*height:\s*8px;[^}]*background:\s*var\(--line\);/s);
+  assert.match(styles, /\.progress-fill\s*\{[^}]*background:\s*var\(--brand\);/s);
+  assert.doesNotMatch(styles, /\.progress-fill::after/);
+  assert.match(styles, /\.progress-strip\[data-streak-tier="4"\] \.progress-fill,\s*\.progress-fill\[data-streak-tier="4"\]\s*\{[^}]*brightness\(1\.28\)/s);
 });
 
 test("all viewports share the single-page layout with the bottom nav", () => {
@@ -1547,7 +1585,7 @@ test("home route uses safe vertical centering and leave warning text stays cente
   assert.match(styles, /body\[data-ui-lang="he"\] \.session-leave-dialog\s*\{[^}]*text-align:\s*center;/s);
 });
 
-test("desktop review and settings cards use centered collapsible headers", () => {
+test("desktop review and settings cards use start-aligned collapsible headers", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
 
@@ -1557,15 +1595,14 @@ test("desktop review and settings cards use centered collapsible headers", () =>
   assert.match(markup, /id="settingsToggle"[\s\S]*aria-controls="settingsPanel"/s);
   assert.match(markup, /class="review-section-title"[^>]*data-i18n="missed.title"/s);
   assert.match(markup, /class="review-section-title"[^>]*data-i18n="review.analyticsEyebrow"/s);
-  assert.match(styles, /\.collapsible-toggle\s*\{[^}]*width:\s*100%;[^}]*text-align:\s*center;/s);
-  assert.match(styles, /\.review-section-title\s*\{[^}]*text-align:\s*center;/s);
+  assert.match(styles, /\.collapsible-toggle\s*\{[^}]*width:\s*100%;[^}]*text-align:\s*start;/s);
+  assert.match(styles, /\.review-section-title\s*\{[^}]*text-align:\s*start;/s);
 });
 
 test("Hebrew progress bars fill from right to left", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
-  assert.match(styles, /body\[data-ui-lang="he"\] \.progress-fill\s*\{[^}]*margin-left:\s*auto;[^}]*margin-right:\s*0;[^}]*background:\s*linear-gradient\(270deg,\s*#7d1812 0%,\s*#b72a14 34%,\s*#e05a18 68%,\s*#f2a22d 88%,\s*#f6d15d 100%\);/s);
-  assert.match(styles, /body\[data-ui-lang="he"\] \.progress-fill::after\s*\{[^}]*left:\s*-1px;[^}]*circle at 72% 50%/s);
+  assert.match(styles, /body\[data-ui-lang="he"\] \.progress-fill\s*\{[^}]*margin-left:\s*auto;[^}]*margin-right:\s*0;/s);
 });
 
 test("sentence builder uses compact phrase chips instead of prefilled english glue", () => {
@@ -3171,7 +3208,9 @@ test("active gameplay shows the top-right time and combo pill and hides it outsi
   harness.app.ui.updateLessonShellModeState();
 
   assert.equal(harness.document.body.getAttribute("data-gameplay-active"), "true");
-  assert.equal(harness.document.querySelector("#shellTopTitle").textContent, "IvritElite");
+  const gameplayModeTitle = harness.document.querySelector("#modeTitle").textContent;
+  assert.notEqual(gameplayModeTitle, "IvritElite");
+  assert.equal(harness.document.querySelector("#shellTopTitle").textContent, gameplayModeTitle);
   assert.equal(harness.document.querySelector("#shellGameplayPill").classList.contains("hidden"), false);
   assert.equal(harness.document.querySelector("#shellHomeBtn").classList.contains("hidden"), false);
   assert.equal(harness.document.querySelector("#shellGameplayTime").textContent, "298s");
@@ -3191,10 +3230,12 @@ test("active gameplay shows the top-right time and combo pill and hides it outsi
 
   harness.state.route = "results";
   harness.state.summary.active = true;
+  harness.state.summary.game = "sentenceBank";
   harness.app.ui.renderShellChrome();
 
   assert.equal(harness.document.querySelector("#shellGameplayPill").classList.contains("hidden"), true);
   assert.equal(harness.document.querySelector("#shellHomeBtn").classList.contains("hidden"), false);
+  assert.equal(harness.document.querySelector("#shellTopTitle").textContent, "Sentences");
 });
 
 test("second-chance rounds reset the progress bar and track review progress specifically", () => {

@@ -48,7 +48,6 @@ i18n.applyLanguage = i18n.applyLanguage || function applyLanguage() {
 
   if (runtime.el?.langToggle) {
     const toggleLabel = i18n.getLanguageToggleLabel();
-    runtime.el.langToggle.textContent = toggleLabel;
     runtime.el.langToggle.setAttribute("aria-label", toggleLabel);
   }
 

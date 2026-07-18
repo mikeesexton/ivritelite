@@ -34,6 +34,8 @@ function isWordMatchMode(mode = getRuntime().state?.mode) {
 
 const PROMPT_SPEAKER_ICON = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false"><path d="M5 9v6h4l5 4V5L9 9H5Z" fill="currentColor"></path><path d="M16.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path><path d="M18.75 6.25a8 8 0 0 1 0 11.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>';
 
+const HOME_BUTTON_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 10.8L12 3l9 7.8"></path><path d="M5.5 9.5V21h5v-5.6h3V21h5V9.5"></path></svg>';
+
 ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
   const runtime = getRuntime();
   return Boolean(
@@ -105,12 +107,12 @@ ui.renderHomeButton = ui.renderHomeButton || function renderHomeButton() {
   const runtime = getRuntime();
   const label = translate("session.backHome");
   if (runtime.el?.homeBtn) {
-    runtime.el.homeBtn.textContent = "🏠";
+    runtime.el.homeBtn.innerHTML = HOME_BUTTON_ICON;
     runtime.el.homeBtn.setAttribute("aria-label", label);
     runtime.el.homeBtn.setAttribute("title", label);
   }
   if (runtime.el?.shellHomeBtn) {
-    runtime.el.shellHomeBtn.textContent = "🏠";
+    runtime.el.shellHomeBtn.innerHTML = HOME_BUTTON_ICON;
     runtime.el.shellHomeBtn.setAttribute("aria-label", label);
     runtime.el.shellHomeBtn.setAttribute("title", label);
   }
@@ -119,16 +121,17 @@ ui.renderHomeButton = ui.renderHomeButton || function renderHomeButton() {
 ui.renderNiqqudToggle = ui.renderNiqqudToggle || function renderNiqqudToggle() {
   const runtime = getRuntime();
   if (!runtime.el?.niqqudToggle) return;
-  runtime.el.niqqudToggle.textContent = runtime.state.showNiqqudInline
+  const niqqudLabel = runtime.state.showNiqqudInline
     ? translate("prompt.hideNiqqud")
     : translate("prompt.showNiqqud");
+  runtime.el.niqqudToggle.setAttribute("aria-label", niqqudLabel);
+  runtime.el.niqqudToggle.setAttribute("aria-pressed", String(Boolean(runtime.state.showNiqqudInline)));
 };
 
 ui.renderSoundToggle = ui.renderSoundToggle || function renderSoundToggle() {
   const runtime = getRuntime();
   if (!runtime.el?.soundToggle) return;
   const soundLabel = `${translate("audio.label")}: ${runtime.state.audio.enabled ? translate("audio.on") : translate("audio.off")}`;
-  runtime.el.soundToggle.textContent = soundLabel;
   runtime.el.soundToggle.setAttribute("aria-label", soundLabel);
   runtime.el.soundToggle.setAttribute("aria-pressed", String(runtime.state.audio.enabled));
 };
@@ -141,7 +144,6 @@ ui.renderSpeechToggle = ui.renderSpeechToggle || function renderSpeechToggle() {
     : `${translate("speech.label")}: ${translate("speech.unavailable")}`;
 
   if (runtime.el?.speechToggle) {
-    runtime.el.speechToggle.textContent = speechText;
     runtime.el.speechToggle.setAttribute("aria-label", speechText);
     runtime.el.speechToggle.setAttribute("aria-pressed", String(supported && runtime.state.speech.enabled));
     runtime.el.speechToggle.disabled = !supported;
@@ -152,7 +154,6 @@ ui.renderThemeToggle = ui.renderThemeToggle || function renderThemeToggle() {
   const runtime = getRuntime();
   if (!runtime.el?.themeToggle) return;
   const nextThemeLabel = runtime.state.theme === "light" ? translate("controls.darkMode") : translate("controls.lightMode");
-  runtime.el.themeToggle.textContent = nextThemeLabel;
   runtime.el.themeToggle.setAttribute("aria-label", nextThemeLabel);
   runtime.el.themeToggle.setAttribute("aria-pressed", String(runtime.state.theme === "dark"));
 };
@@ -329,19 +330,42 @@ ui.renderGameplayPill = ui.renderGameplayPill || function renderGameplayPill() {
   runtime.el.shellGameplayPill.setAttribute("aria-label", `${meta.timeAriaText} • ${meta.comboAriaText}`);
 };
 
+const SUMMARY_GAME_NAME_KEYS = {
+  lesson: "game.translationName",
+  lessonMatch: "game.translationName",
+  sentenceBank: "game.sentenceBankName",
+  shema: "game.shemaName",
+  verbMatch: "game.conjugationName",
+  abbreviation: "game.abbreviationName",
+  abbrMatch: "game.abbreviationName",
+  advConj: "game.advConjName",
+  prepositions: "game.prepositionsName",
+  binyanBoard: "game.binyanName",
+  handwriting: "game.handwritingName",
+};
+
 ui.renderShellChrome = ui.renderShellChrome || function renderShellChrome() {
   const runtime = getRuntime();
   const { gameplayActive } = ui.getGameplayHeaderMeta();
   const viewportWidth = Math.max(0, Number(runtime.global?.innerWidth || 0));
-  const showShellHomeButton = gameplayActive || (viewportWidth >= 1024 && runtime.state.route === "results" && runtime.state.summary.active);
+  const summaryActive = Boolean(runtime.state.summary?.active);
+  const showShellHomeButton = gameplayActive || (viewportWidth >= 1024 && runtime.state.route === "results" && summaryActive);
   runtime.global.document.body?.setAttribute("data-gameplay-active", gameplayActive ? "true" : "false");
   if (runtime.el?.shellTopbar) {
     runtime.el.shellTopbar.classList.toggle("gameplay-active", gameplayActive);
   }
   if (runtime.el?.shellTopTitle) {
     const appTitleText = translate("app.name");
-    runtime.el.shellTopTitle.textContent = appTitleText;
-    runtime.el.shellTopTitle.setAttribute("aria-label", appTitleText);
+    const modeTitleText = runtime.el?.modeTitle?.textContent?.trim();
+    const summaryNameKey = summaryActive ? SUMMARY_GAME_NAME_KEYS[runtime.state.summary?.game] : null;
+    let topTitleText = appTitleText;
+    if (gameplayActive && modeTitleText) {
+      topTitleText = modeTitleText;
+    } else if (summaryNameKey) {
+      topTitleText = translate(summaryNameKey);
+    }
+    runtime.el.shellTopTitle.textContent = topTitleText;
+    runtime.el.shellTopTitle.setAttribute("aria-label", topTitleText);
   }
   ui.renderHomeButton();
   ui.renderGameplayPill();
@@ -459,14 +483,17 @@ ui.updateLessonShellModeState = ui.updateLessonShellModeState || function update
       : "idle";
 
   const isBinyanBoard = runtime.state.mode === "binyanBoard";
+  const isWordMatch = isWordMatchMode();
   shell.dataset.gameLayout = layoutMode;
   promptCard.dataset.gameLayout = layoutMode;
   shell.classList.toggle("mode-standard", layoutMode === "standard");
   shell.classList.toggle("mode-verb-match", layoutMode === "verb-match");
+  shell.classList.toggle("mode-word-match", isWordMatch);
   shell.classList.toggle("mode-sentence-bank", runtime.state.mode === "sentenceBank");
   shell.classList.toggle("mode-binyan-board", isBinyanBoard);
   promptCard.classList.toggle("mode-standard", layoutMode === "standard");
   promptCard.classList.toggle("mode-verb-match", layoutMode === "verb-match");
+  promptCard.classList.toggle("mode-word-match", isWordMatch);
   promptCard.classList.toggle("mode-sentence-bank", runtime.state.mode === "sentenceBank");
   promptCard.classList.toggle("mode-binyan-board", isBinyanBoard);
   if (lessonTitleRow) {
@@ -1048,35 +1075,40 @@ ui.renderGameModePerformance = ui.renderGameModePerformance || function renderGa
   };
   const cards = [
     {
-      emoji: "🧩",
+      emoji: "ב",
+      letter: true,
       title: translate("game.sentenceBankName"),
       attempts: stats.sentenceBank.attempts,
       correct: stats.sentenceBank.correct,
       wrong: stats.sentenceBank.wrong,
     },
     {
-      emoji: "🏃",
+      emoji: "ד",
+      letter: true,
       title: translate("game.conjugationName"),
       attempts: stats.conjugation.attempts,
       correct: stats.conjugation.correct,
       wrong: stats.conjugation.wrong,
     },
     {
-      emoji: "✂️",
+      emoji: "ה",
+      letter: true,
       title: translate("game.abbreviationName"),
       attempts: stats.abbreviation.attempts,
       correct: stats.abbreviation.correct,
       wrong: stats.abbreviation.wrong,
     },
     {
-      emoji: "🔗",
+      emoji: "ז",
+      letter: true,
       title: translate("game.prepositionsName"),
       attempts: stats.prepositions.attempts,
       correct: stats.prepositions.correct,
       wrong: stats.prepositions.wrong,
     },
     {
-      emoji: "🌳",
+      emoji: "ח",
+      letter: true,
       title: translate("game.binyanName"),
       attempts: stats.binyanBoard.attempts,
       correct: stats.binyanBoard.correct,
@@ -1094,6 +1126,7 @@ ui.renderPerformanceCardsInto = ui.renderPerformanceCardsInto || function render
   cards.forEach((card) => {
     ui.appendPerformanceCard(container, {
       emoji: card.emoji,
+      letter: card.letter,
       title: card.title || translate(`domain.${card.id}`),
       attempts: card.attempts,
       correct: card.correct,
@@ -1122,7 +1155,7 @@ ui.appendPerformanceCard = ui.appendPerformanceCard || function appendPerformanc
   ring.classList.toggle("empty", attempts === 0);
 
   const emoji = global.document.createElement("span");
-  emoji.className = "domain-emoji";
+  emoji.className = stats?.letter ? "domain-emoji domain-letter" : "domain-emoji";
   emoji.textContent = String(stats?.emoji || "•");
   ring.append(emoji);
 
@@ -1135,7 +1168,13 @@ ui.appendPerformanceCard = ui.appendPerformanceCard || function appendPerformanc
 
   const score = global.document.createElement("p");
   score.className = "domain-score";
-  score.textContent = `✅ ${correct}  ❌ ${wrong}`;
+  const good = global.document.createElement("span");
+  good.className = "score-good";
+  good.textContent = `✓ ${correct}`;
+  const bad = global.document.createElement("span");
+  bad.className = "score-bad";
+  bad.textContent = `✗ ${wrong}`;
+  score.append(good, "  ", bad);
 
   meta.append(title, score);
   card.append(ring, meta);
@@ -1277,7 +1316,7 @@ ui.renderTroubleSpots = ui.renderTroubleSpots || function renderTroubleSpots() {
       runtime.el.worstSentencesList.append(
         ui.createCompactRow({
           title: entry.sentence.hebrew,
-          note: `${entry.sentence.english} · ${directionLabel} · ❌ ${entry.misses}/${entry.attempts}`,
+          note: `${entry.sentence.english} · ${directionLabel} · ✗ ${entry.misses}/${entry.attempts}`,
           variant: "wrong",
         })
       );

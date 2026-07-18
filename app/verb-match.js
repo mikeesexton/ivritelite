@@ -30,13 +30,33 @@ function sanitizeEnglishText(text) {
     : String(text || "").trim();
 }
 
+// Conjugation drills quiz the forms, not preposition government, so the
+// usage pattern baked into the study word (e.g. "to invite (את־ ל־)") is
+// stripped from the prompt and its speech. Vocab and other games keep it.
+function stripUsagePattern(word) {
+  const usagePattern = String(word?.usagePattern || "").trim();
+  if (!usagePattern) {
+    return { en: word?.en, he: word?.he, heNiqqud: word?.heNiqqud };
+  }
+  const dropSuffix = (text, suffix) => {
+    const value = String(text || "");
+    return value.endsWith(suffix) ? value.slice(0, -suffix.length) : value;
+  };
+  return {
+    en: dropSuffix(word?.en, ` (${usagePattern})`),
+    he: dropSuffix(word?.he, ` ${usagePattern}`),
+    heNiqqud: dropSuffix(word?.heNiqqud, ` ${usagePattern}`),
+  };
+}
+
 verbMatch.getVerbMatchPromptSpeechPayload = verbMatch.getVerbMatchPromptSpeechPayload || function getVerbMatchPromptSpeechPayload() {
   const runtime = getRuntime();
   const current = runtime.state.match.currentVerb?.word;
   if (!current) return null;
+  const stripped = stripUsagePattern(current);
   return app.speech?.buildSpeechPayload?.({
-    plain: current.he,
-    niqqud: current.heNiqqud,
+    plain: stripped.he,
+    niqqud: stripped.heNiqqud,
     speechOverridePlain: current.speechHe,
     speechOverrideNiqqud: current.speechHeNiqqud,
     source: "prompt",
@@ -427,7 +447,7 @@ verbMatch.renderVerbMatchPrompt = verbMatch.renderVerbMatchPrompt || function re
     return;
   }
 
-  const current = runtime.state.match.currentVerb.word;
+  const current = stripUsagePattern(runtime.state.match.currentVerb.word);
   const heText = runtime.state.showNiqqudInline ? current.heNiqqud : current.he;
   runtime.el.promptText.classList.remove("hebrew");
   runtime.el.promptText.classList.add("english-prompt");

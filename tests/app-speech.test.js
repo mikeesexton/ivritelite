@@ -164,3 +164,49 @@ test("forced speech can play on explicit prompt requests even when automatic spe
   assert.equal(speakLog.length, 1);
   assert.equal(speakLog[0].text, "שָׁלוֹם");
 });
+
+test("applyTtsRespellings respells kamatz-katan words the he-IL voices misread", () => {
+  const { speech } = loadSpeechHarness();
+  const respell = (text) => speech.applyTtsRespellings(text).normalize("NFC");
+  const nfc = (text) => text.normalize("NFC");
+
+  // standalone כל with common attached prefixes → cholam
+  assert.equal(respell("וְכָל תֵּל אָבִיב שָׁם"), nfc("וְכֹל תֵּל אָבִיב שָׁם"));
+  assert.equal(respell("בְּכָל יוֹם"), nfc("בְּכֹל יוֹם"));
+  assert.equal(respell("כָּל־הַכָּבוֹד"), nfc("כֹּל־הַכָּבוֹד"));
+  assert.equal(respell("הַכָּל בְּסֵדֶר"), nfc("הַכֹּל בְּסֵדֶר"));
+
+  // תכנית family → cholam male
+  assert.equal(respell("הַתָּכְנִית הַזֹּאת"), nfc("הַתּוֹכְנִית הַזֹּאת"));
+  assert.equal(respell("תָּכְנִיּוֹת רַבּוֹת"), nfc("תּוֹכְנִיּוֹת רַבּוֹת"));
+
+  // ozen family and kamatz before chataf-kamatz
+  assert.equal(respell("אָזְנַיִם"), nfc("אוֹזְנַיִם"));
+  assert.equal(respell("צָהֳרַיִם"), nfc("צֹהֳרַיִם"));
+  assert.equal(respell("בַּצָּהֳרַיִם"), nfc("בַּצֹּהֳרַיִם"));
+
+  // words that merely contain the letters must stay untouched
+  assert.equal(respell("כַּלְכָּלָה"), nfc("כַּלְכָּלָה"));
+  assert.equal(respell("מִיכָל בָּאָה"), nfc("מִיכָל בָּאָה"));
+  assert.equal(respell("הֵיכָל גָּדוֹל"), nfc("הֵיכָל גָּדוֹל"));
+
+  // plain (unpointed) text has no kamatz to respell
+  assert.equal(respell("וכל תל אביב"), "וכל תל אביב");
+});
+
+test("buildHebrewSpeechText applies TTS respellings to every text source", () => {
+  const { speech } = loadSpeechHarness();
+  const nfc = (text) => text.normalize("NFC");
+
+  assert.equal(
+    speech.buildHebrewSpeechText({ niqqud: "וְכָל תֵּל אָבִיב" }).normalize("NFC"),
+    nfc("וְכֹל תֵּל אָבִיב")
+  );
+  assert.equal(
+    speech.buildHebrewSpeechText({
+      niqqud: "וְכָל תֵּל אָבִיב",
+      speechOverrideNiqqud: "הַתָּכְנִית",
+    }).normalize("NFC"),
+    nfc("הַתּוֹכְנִית")
+  );
+});
