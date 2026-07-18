@@ -7,6 +7,39 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-18 14:21 EDT — Implement Priority 1 Hebrew word-order alternates and future authoring rule
+
+**Requested:** Implement the audit's approved Priority 1 Hebrew reorderings; accept sentence-final `כבר` in `colloquial_96`; conservatively add other clearly neutral third orders; and make word-order review a required part of constructing future sentence-bank rows.
+
+**Files changed:**
+- `sentence-bank-data.js` — added 25 fully pointed, same-tile Hebrew alternate variants across the 19 approved Priority 1 sentences. This includes all 19 audited suggestions plus six conservative third placements in `professional_06`, `professional_51`, `professional_57`, `everyday_105`, `colloquial_96`, and `colloquial_133`; bumped the sentence-bank build marker to `20260718c`.
+- `tests/sentence-bank-data.test.js` — added an exact regression registry and test covering all 25 approved variants, including pointed/plain alignment, token-count and token-multiset parity, and sentence-frame buildability.
+- `docs/sentence-bank-authoring.md` — made construction-time word-order review mandatory, with specific checks for adverbials, negation, movable clauses, third placements, focus/scope exclusions, distractor implications, and word-order × gender combinations.
+- `AGENTS.md` — surfaced the same mandatory word-order rule in the repository instructions every future agent reads before sentence authoring.
+- `index.html` — cache-busted `sentence-bank-data.js` to `?v=20260718c`.
+- `generated/sentence-word-order-audit-2026-07-18.md` — marked Priority 1 implemented, recorded the six third placements, and refreshed coverage counts.
+- `task-log.md` — recorded this implementation.
+
+**Behavior changed:** English-to-Hebrew Sentence Builder now accepts the 25 newly authored neutral orders. In particular, `colloquial_96` accepts all three reviewed placements: `האוכל כבר היה קר`, `האוכל היה כבר קר`, and `האוכל היה קר כבר`. Shema/listen continues to exclude authored alternates. No scoring or general comparator logic changed.
+
+**Tests run:** Baseline `npm test` — 254 pass, 0 fail. Focused `node --test tests/sentence-bank-data.test.js` after data changes — 28 pass, then 29 pass after adding the new regression. Final `npm test` — 255 pass, 0 fail. Runtime audit — 450 entries, 115 sentences with Hebrew alternates, 130 Hebrew variants total, including 72 pure reorder variants across 65 sentences. `git diff --check` — pass.
+
+**Risks / regressions to check:** The six extra orders were intentionally limited to neutral, common placements; more marked topicalization, scope-changing orders, and merely grammatical permutations remain rejected. Future authors still need human Hebrew judgment—the mandatory checklist prevents omission but cannot automate equivalence. No general flexible-modifier expansion was made, so its existing neighbor-blind and Shema behavior is unchanged.
+
+### 2026-07-18 13:39 EDT — Hebrew sentence word-order acceptance audit
+
+**Requested:** Verify the current sentence-translation acceptance path and Claude's notes, scan all 450 sentence-bank rows for legitimate Hebrew reorderings that are currently false-rejected, produce a conservative prioritized human-review list, and recommend whether to broaden automatic word-order tolerance. Report only; do not change gameplay or sentence content and do not bulk-author alternates.
+
+**Files changed:**
+- `generated/sentence-word-order-audit-2026-07-18.md` — added the read-only audit report: current coverage counts, exact grading-path map, 28 token-compatible proposed reorderings in two priority tiers, deliberately deferred focus-sensitive cases, risks in the current flexible-modifier rule, and a conservative authoring recommendation.
+- `task-log.md` — recorded this report-only session as required by the repository instructions.
+
+**Behavior changed:** None. No gameplay, sentence-bank data, tests, styles, cache versions, or runtime files changed.
+
+**Tests run:** `npm test` — 254 pass, 0 fail. Programmatic audit — loaded 450 runtime entries; confirmed 96 sentences / 105 Hebrew variants with any Hebrew alternate, 47 pure reorder variants across 46 sentences, and all 28 report suggestions currently rejected while preserving the primary token multiset, token count, and sentence-frame order. `git diff --check` — pass.
+
+**Risks / regressions to check:** The 28 suggestions are unpointed review proposals, not approved content; each still needs human Hebrew review and pointed alternate authoring. The scan intentionally favors precision over recall, so additional valid scope- or focus-sensitive orders remain outside this first tranche. The audit also found that the global adjacent-swap tolerance is neighbor-agnostic and applies in Shema/listen; broadening it would increase over-acceptance risk.
+
 ### 2026-07-18 — Sentences round 6: speaker/prompt overlap fix + מזמן word-order acceptance
 
 **Requested:** (1) The Sentences speaker button still overlapped the prompt text (the flush-right Hebrew first line ran under the top-right speaker). (2) User flagged that the sentence "מזמן לא התראינו, מת לראות אותך!" should accept the equally-idiomatic order "לא התראינו מזמן, …" (temporal adverb מזמן may sit before or after the verb phrase) — their valid answer was marked wrong.
@@ -4351,3 +4384,40 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** `npm test` immediately before publication — 248 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. GitHub reported PR #38 clean and mergeable with no required remote checks; squash merge commit `baf6c5fe1ca617c5a8a73628a951fe79bcbb8149` was created successfully.
 
 **Risks / regressions to check:** None specific to publication. The feature branch was deleted locally and remotely after the merge; local `main` was fast-forwarded to the GitHub merge commit before this log-only follow-up.
+
+---
+
+### 2026-07-18 14:53 EDT — Responsive gameplay width, centering, navigation, and handwriting sizing
+
+**Requested:** Make non-Sentences/Shema gameplay content horizontally centered and full-width; keep Conjugation+ answers in one or two even columns; make Sentences and Shema use the full gameplay width without changing Hebrew/English edge alignment; show the homepage bottom navigation during every game; vertically center gameplay except on widescreen/landscape displays; reduce the handwriting entry box; identify other visible layout problems; and provide the local port.
+
+**Files changed:**
+- `styles.css` — removed the shell and tablet gameplay width caps; widened prompts/boards to the full lesson shell; added an even two-column answer grid from 600px upward (one column below it); centered gameplay vertically with safe overflow fallback; top-aligned gameplay at the 768px + 4:3 widescreen threshold; kept the bottom nav visible during mobile gameplay and restored its reserved space; made Sentences/Shema prompts full-width while preserving directional edge alignment; made their action footer static so it cannot cover answer chips; and reduced/centered the handwriting canvas with viewport-aware limits.
+- `app/ui.js` — added an explicit `mode-handwriting` shell/prompt class so the handwriting stage stays one column while other standard quiz modes use the even two-column answer layout.
+- `index.html` — cache-busted the changed stylesheet and UI module. The pre-existing sentence-bank cache bump remains untouched.
+- `tests/app-progress.test.js` — updated sentence-width and persistent-navigation assertions and added responsive layout regressions for full-width boards, centering/top-alignment, even answer columns, non-overlapping sentence actions, and handwriting sizing.
+- `task-log.md` — recorded this task.
+
+**Behavior changed:** Gameplay now fills the available shell width. On tablet/desktop, four-option modes such as Conjugation+ render as a balanced 2×2 grid; narrow phones use one column. Sentences and Shema retain left-aligned English/right-aligned Hebrew but use the whole board, and Check no longer overlays the last word-bank row. Active games keep Home/Review/Settings visible at the bottom. Gameplay is vertically centered in portrait/tall layouts and top-aligned on landscape/widescreen layouts. The handwriting canvas is smaller and centered while retaining a practical tracing area.
+
+**Tests run:** Baseline `npm test` — 255 pass, 0 fail. Final `npm test` — 256 pass, 0 fail. `git diff --check` — pass. Live browser verification on `http://127.0.0.1:4173/` covered 1024×1366, 768×1024, 1024×768, and 390×844: portrait gameplay centered; landscape gameplay top-aligned; Conjugation+ formed equal 2×2/one-column grids as intended; Sentences/Shema spanned the board with directional alignment intact and no footer overlap; handwriting measured 471px square at 768×1024; bottom navigation stayed visible at every tested size.
+
+**Risks / regressions to check:** The top-alignment switch uses a 768px minimum width and a 4:3-or-wider aspect ratio, so landscape phones wider than 768px also top-align, which is desirable for their limited vertical space. Very long sentence banks may require scrolling because their action is intentionally non-sticky to prevent chip overlap. No unrelated pre-existing working-tree changes were modified or reverted.
+
+---
+
+### 2026-07-18 15:08 EDT — Widescreen sentence centering and combined GitHub publication
+
+**Requested:** Center all Sentences and Shema board content only on widescreen displays; on phone and portrait layouts keep the existing directional alignment and center only the word counter; then publish the responsive display work together with the completed Hebrew word-order work and merge it into `main`.
+
+**Files changed:**
+- `styles.css` — centered the sentence word counter at every width and added widescreen-only centering for the Sentences/Shema prompt, answer line, and token bank at the existing 768px + 4:3 aspect-ratio breakpoint.
+- `index.html` — cache-busted `styles.css` to `20260718d`.
+- `tests/app-progress.test.js` — updated the counter-alignment regression and added explicit widescreen-only centering coverage for Sentences and Shema.
+- `task-log.md` — recorded the alignment follow-up and publication workflow.
+
+**Behavior changed:** On phone and portrait layouts, English and Hebrew sentence content stays on its directional edge while `Words: n/n` is centered. On landscape/widescreen layouts, the prompt, answer slots, word counter, and word bank all center. The full combined change set also includes the previously completed 25 reviewed Hebrew word-order variants and responsive gameplay/navigation/handwriting improvements.
+
+**Tests run:** Baseline `npm test` — 256 pass, 0 fail. Final `npm test` — 257 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Live browser checks at 768×1024 confirmed edge-aligned content plus a centered counter; 1024×768 confirmed the entire board centers. `git fetch origin --prune` confirmed local `main` and `origin/main` were synchronized before branching. GitHub branch `agent/responsive-sentence-alignment-and-word-orders` was pushed and ready pull request #40 was opened against `main`; this log commit is the final branch update before the requested immediate squash merge.
+
+**Risks / regressions to check:** The widescreen definition intentionally matches the gameplay top-alignment threshold, so both layout changes switch together at 768px and a 4:3-or-wider aspect ratio. No scoring, sentence grading, or Shema alternate-acceptance behavior changed in this follow-up.

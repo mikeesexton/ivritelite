@@ -42,6 +42,12 @@ Before adding or rechunking sentence-bank content, read
 - Apply the same granularity rule to distractors and alternate answers.
 - Learner-facing English must be natural standalone English. Put literal or
   specialist terminology in `notes` instead of exposing an opaque calque.
+- Before completing any new or revised sentence, review neutral Hebrew word
+  orders during construction and author every clearly idiomatic equivalent as
+  a pointed alternate. Check initial, medial, and final adverbial placement,
+  negation, and movable clauses; do not stop at two orders when a third is
+  independently common. Exclude merely grammatical orders that change focus,
+  scope, register, or meaning, and review word-order × gender combinations.
 
 Some older sentence tests preserve historical phrase-chip choices. Those are
 legacy snapshots, not authoring precedent; the linked guide is authoritative for
