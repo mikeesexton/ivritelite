@@ -1696,12 +1696,6 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
   });
 
   board.append(answerRow);
-  if (!question.locked) {
-    const dragTip = global.document.createElement("p");
-    dragTip.className = "sentence-drag-tip";
-    dragTip.textContent = translate("prompt.sentenceBankDragTip");
-    board.append(dragTip);
-  }
   board.append(answerMeta, bankGrid);
   runtime.el.choiceContainer.append(board);
 };

@@ -7,10 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260705a" />
+    <link rel="stylesheet" href="./styles.css?v=20260718b" />
   </head>
   <body data-theme="dark">
     <div class="ambient ambient-a" aria-hidden="true"></div>
@@ -30,14 +30,14 @@
           <div id="shellGameplayPill" class="shell-gameplay-pill hidden" aria-hidden="true" role="status" aria-live="polite">
             <span class="shell-gameplay-stat">
               <span class="shell-gameplay-icon" aria-hidden="true">
-                ⏱️
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7"/><path d="M12 10.5v3.2l2.2 2"/><path d="M9.8 3h4.4"/><path d="M12 3v3"/></svg>
               </span>
               <span id="shellGameplayTime">0s</span>
             </span>
             <span class="shell-gameplay-divider" aria-hidden="true"></span>
             <span class="shell-gameplay-stat">
               <span class="shell-gameplay-icon flame" aria-hidden="true">
-                🔥
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.6 2.8-.6 4.4-1.9 6-1.3 1.7-2.1 3-2.1 5a6 6 0 0 0 12 0c0-2.6-1.3-4.3-2.6-6-.6.9-1.1 1.9-1.1 3.2C14.9 8.9 13.4 6 12 3z"/></svg>
               </span>
               <span id="shellGameplayCombo">x0</span>
             </span>
@@ -49,7 +49,7 @@
             aria-label="Back to Home"
             title="Back to Home"
           >
-            🏠
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.8L12 3l9 7.8"/><path d="M5.5 9.5V21h5v-5.6h3V21h5V9.5"/></svg>
           </button>
         </div>
       </header>
@@ -66,47 +66,38 @@
                     </div>
                     <div class="home-lesson-grid">
                       <button type="button" id="homeLessonBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🔁</span>
                         <span class="game-tile-title" data-i18n="game.translationName">Translation</span>
                         <span class="game-tile-note" data-i18n="game.translationNote">Match Hebrew words to their English meanings.</span>
                       </button>
                       <button type="button" id="homeSentenceBankBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🧩</span>
                         <span class="game-tile-title" data-i18n="game.sentenceBankName">Sentences</span>
                         <span class="game-tile-note" data-i18n="game.sentenceBankNote">Build full translations from a shuffled word bank.</span>
                       </button>
                       <button type="button" id="homeShemaBtn" class="game-tile home-game-tile hidden">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">👂</span>
                         <span class="game-tile-title" data-i18n="game.shemaName">Shema</span>
                         <span class="game-tile-note" data-i18n="game.shemaNote">Listen to a Hebrew sentence and build what you hear.</span>
                       </button>
                       <button type="button" id="homeVerbMatchBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🏃</span>
                         <span class="game-tile-title" data-i18n="game.conjugationName">Conjugation</span>
                         <span class="game-tile-note" data-i18n="game.conjugationNote">Match English forms to Hebrew conjugations.</span>
                       </button>
                       <button type="button" id="homeAbbreviationBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">✂️</span>
                         <span class="game-tile-title" data-i18n="game.abbreviationName">Abbreviation</span>
                         <span class="game-tile-note" data-i18n="game.abbreviationNote">Match Hebrew abbreviations to their English meanings.</span>
                       </button>
                       <button type="button" id="homeAdvConjBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🚀</span>
                         <span class="game-tile-title" data-i18n="game.advConjName">Conjugation+</span>
                         <span class="game-tile-note" data-i18n="game.advConjNote">Conjugate both subject and object of Hebrew verbal idioms.</span>
                       </button>
                       <button type="button" id="homePrepositionsBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🔗</span>
                         <span class="game-tile-title" data-i18n="game.prepositionsName">Prepositions</span>
                         <span class="game-tile-note" data-i18n="game.prepositionsNote">Pick the preposition each verb or expression governs, inflected for its object.</span>
                       </button>
                       <button type="button" id="homeBinyanBoardBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">🌳</span>
                         <span class="game-tile-title" data-i18n="game.binyanName">Binyanim</span>
                         <span class="game-tile-note" data-i18n="game.binyanNote">Pick a root, then guess what each of its binyanim means.</span>
                       </button>
                       <button type="button" id="homeHandwritingBtn" class="game-tile home-game-tile">
-                        <span class="game-tile-icon game-tile-emoji" aria-hidden="true">✍️</span>
                         <span class="game-tile-title" data-i18n="game.handwritingName">Handwriting</span>
                         <span class="game-tile-note" data-i18n="game.handwritingNote">Trace cursive Hebrew letters by hand.</span>
                       </button>
@@ -121,7 +112,7 @@
                         <div>
                           <h2 id="modeTitle">10-Round Mixed Lesson</h2>
                         </div>
-                        <button type="button" id="homeBtn" class="quiet lesson-home-btn" aria-label="Back to Home">🏠</button>
+                        <button type="button" id="homeBtn" class="quiet lesson-home-btn" aria-label="Back to Home"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.8L12 3l9 7.8"/><path d="M5.5 9.5V21h5v-5.6h3V21h5V9.5"/></svg></button>
                       </div>
 
                       <div id="lessonProgressBar" class="progress-strip" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Lesson progress">
@@ -158,37 +149,30 @@
 
                   <section id="gamePicker" class="game-picker">
                     <button type="button" id="lessonBtn" class="game-tile">
-                      <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-translation.png?v=20260309b" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.translationName">Translation</span>
                       <span class="game-tile-note" data-i18n="game.translationNote">Match Hebrew words to their English meanings.</span>
                     </button>
                     <button type="button" id="sentenceBankBtn" class="game-tile">
-                      <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-sentence-builder.png?v=20260324a" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.sentenceBankName">Sentences</span>
                       <span class="game-tile-note" data-i18n="game.sentenceBankNote">Build full translations from a shuffled word bank.</span>
                     </button>
                     <button type="button" id="verbMatchBtn" class="game-tile">
-                      <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-conjugation.png?v=20260309b" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.conjugationName">Conjugation</span>
                       <span class="game-tile-note" data-i18n="game.conjugationNote">Match English forms to Hebrew conjugations.</span>
                     </button>
                     <button type="button" id="abbreviationBtn" class="game-tile">
-                      <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-abbreviation.png?v=20260309b" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.abbreviationName">Abbreviation</span>
                       <span class="game-tile-note" data-i18n="game.abbreviationNote">Match Hebrew abbreviations to their English meanings.</span>
                     </button>
                     <button type="button" id="advConjBtn" class="game-tile">
-                      <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-adv-conjugation.png?v=20260309b" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.advConjName">Conjugation+</span>
                       <span class="game-tile-note" data-i18n="game.advConjNote">Conjugate both subject and object of Hebrew verbal idioms.</span>
                     </button>
                     <button type="button" id="binyanBoardBtn" class="game-tile">
-                      <span class="game-tile-icon" aria-hidden="true"><img src="./assets/icon-binyanim.png?v=20260619c" alt=""></span>
                       <span class="game-tile-title" data-i18n="game.binyanName">Binyanim</span>
                       <span class="game-tile-note" data-i18n="game.binyanNote">Pick a root, then guess what each of its binyanim means.</span>
                     </button>
                     <button type="button" id="handwritingBtn" class="game-tile">
-                      <span class="game-tile-icon game-tile-emoji" aria-hidden="true">✍️</span>
                       <span class="game-tile-title" data-i18n="game.handwritingName">Handwriting</span>
                       <span class="game-tile-note" data-i18n="game.handwritingNote">Trace cursive Hebrew letters by hand.</span>
                     </button>
@@ -359,33 +343,77 @@
               </div>
 
               <div id="settingsPanel" class="collapsible-content">
-                <div class="settings-list">
-                  <section class="settings-block">
-                    <button id="langToggle" type="button" class="quiet">עברית</button>
+                <div class="settings-groups">
+                  <section class="settings-group">
+                    <p class="settings-eyebrow" data-i18n="settings.groupLanguage">Language &amp; content</p>
+                    <div class="settings-list">
+                      <section class="settings-block">
+                        <button id="langToggle" type="button" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.3 3.9 5.2 3.9 8.5s-1.3 6.2-3.9 8.5c-2.6-2.3-3.9-5.2-3.9-8.5s1.3-6.2 3.9-8.5z"/></svg></span>
+                          <span class="settings-row-label" data-i18n="settings.language">Language</span>
+                          <span class="settings-seg" aria-hidden="true"><span class="settings-seg-opt" data-seg="en">EN</span><span class="settings-seg-opt" data-seg="he" dir="rtl">עב</span></span>
+                        </button>
+                      </section>
+                      <section class="settings-block">
+                        <button type="button" id="niqqudToggle" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.5L18.5 18.5"/><path d="M18.5 4.5c.3 4.6-1.9 6.9-5.5 8.1"/><path d="M5.5 18.5c-.3-4.6 1.9-6.9 5.5-8.1"/><circle cx="12" cy="21.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+                          <span class="settings-row-label" data-i18n="settings.niqqud">Inline Nikud</span>
+                          <span class="settings-switch" aria-hidden="true"></span>
+                        </button>
+                      </section>
+                    </div>
                   </section>
 
-                  <section class="settings-block">
-                    <button type="button" id="niqqudToggle" class="quiet" data-i18n="prompt.showNiqqud">Show Nikud</button>
+                  <section class="settings-group">
+                    <p class="settings-eyebrow" data-i18n="settings.groupAudio">Audio</p>
+                    <div class="settings-list">
+                      <section class="settings-block">
+                        <button id="soundToggle" type="button" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 5L6.8 9H3v6h3.8l4.7 4V5z"/><path d="M15.5 8.7a4.7 4.7 0 0 1 0 6.6"/><path d="M18.2 6a8.4 8.4 0 0 1 0 12"/></svg></span>
+                          <span class="settings-row-label" data-i18n="audio.label">Sound Effects</span>
+                          <span class="settings-switch" aria-hidden="true"></span>
+                        </button>
+                      </section>
+                      <section class="settings-block">
+                        <button id="speechToggle" type="button" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="11.5" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0"/><path d="M12 17.5V21"/></svg></span>
+                          <span class="settings-row-label" data-i18n="speech.label">Speech</span>
+                          <span class="settings-switch" aria-hidden="true"></span>
+                        </button>
+                      </section>
+                    </div>
                   </section>
 
-                  <section class="settings-block">
-                    <button id="soundToggle" type="button" class="quiet">Sound Effects: On</button>
+                  <section class="settings-group">
+                    <p class="settings-eyebrow" data-i18n="settings.groupAppearance">Appearance</p>
+                    <div class="settings-list">
+                      <section class="settings-block">
+                        <button id="themeToggle" type="button" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a6.8 6.8 0 0 0 10 10z"/></svg></span>
+                          <span class="settings-row-label" data-i18n="settings.theme">Theme</span>
+                          <span class="settings-seg" aria-hidden="true"><span class="settings-seg-opt" data-seg="dark" data-i18n="controls.darkModeShort">Dark</span><span class="settings-seg-opt" data-seg="light" data-i18n="controls.lightModeShort">Light</span></span>
+                        </button>
+                      </section>
+                    </div>
                   </section>
 
-                  <section class="settings-block">
-                    <button id="speechToggle" type="button" class="quiet">Speech: Off</button>
-                  </section>
-
-                  <section class="settings-block">
-                    <button id="themeToggle" type="button" class="quiet">Light Mode</button>
-                  </section>
-
-                  <section class="settings-block">
-                    <a id="feedbackSurveyLink" class="settings-link-btn" data-i18n="settings.feedbackSurvey">Feedback survey</a>
-                  </section>
-
-                  <section class="settings-block danger-block">
-                    <button id="resetProgress" type="button" class="quiet" data-i18n="controls.reset">Reset Progress</button>
+                  <section class="settings-group">
+                    <p class="settings-eyebrow" data-i18n="settings.groupMore">More</p>
+                    <div class="settings-list">
+                      <section class="settings-block">
+                        <a id="feedbackSurveyLink" class="settings-link-btn settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7.5L3 21V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z"/></svg></span>
+                          <span class="settings-row-label" data-i18n="settings.feedbackSurvey">Feedback survey</span>
+                          <span class="settings-chevron" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5l7 7-7 7"/></svg></span>
+                        </a>
+                      </section>
+                      <section class="settings-block danger-block">
+                        <button id="resetProgress" type="button" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.5h17"/><path d="M8.5 6.5v-2h7v2"/><path d="M6 6.5l1 14h10l1-14"/></svg></span>
+                          <span class="settings-row-label" data-i18n="controls.reset">Reset Progress</span>
+                        </button>
+                      </section>
+                    </div>
                   </section>
                 </div>
               </div>
@@ -509,8 +537,8 @@
         <h3 id="leaveSessionTitle" data-i18n="session.leaveTitle">Leave this game?</h3>
         <p class="small-note" data-i18n="session.leaveBody">If you leave this game now, you'll lose your progress so far.</p>
         <div class="session-leave-actions">
-          <button id="leaveSessionStayBtn" type="button" class="quiet" data-i18n="session.keepPlaying">Keep Playing</button>
-          <button id="leaveSessionConfirmBtn" type="button" class="accent" data-i18n="session.leaveGame">Lose Progress</button>
+          <button id="leaveSessionStayBtn" type="button" class="accent" data-i18n="session.keepPlaying">Keep Playing</button>
+          <button id="leaveSessionConfirmBtn" type="button" class="quiet danger-quiet" data-i18n="session.leaveGame">Lose Progress</button>
         </div>
       </section>
     </div>
@@ -549,9 +577,9 @@
         });
       })();
     </script>
-    <script defer src="./vocab-data.js?v=20260714a"></script>
+    <script defer src="./vocab-data.js?v=20260717b"></script>
     <script defer src="./abbreviation-data.js?v=20260713a"></script>
-    <script defer src="./sentence-bank-data.js?v=20260714a"></script>
+    <script defer src="./sentence-bank-data.js?v=20260718b"></script>
     <script defer src="./hebrew-verbs.js?v=20260714a"></script>
     <script defer src="./hebrew-idioms.js?v=20260712a"></script>
     <script defer src="./preposition-data.js?v=20260712a"></script>
@@ -562,22 +590,22 @@
     <script defer src="./app/utils.js?v=20260713a"></script>
     <script defer src="./app/hebrew.js?v=20260315o"></script>
     <script defer src="./app/handwriting-core.js?v=20260705a"></script>
-    <script defer src="./app/bootstrap-data.js?v=20260713a"></script>
+    <script defer src="./app/bootstrap-data.js?v=20260717b"></script>
     <script defer src="./app/content-sources.js?v=20260324a"></script>
     <script defer src="./app/bootstrap-runtime.js?v=20260711a"></script>
     <script defer src="./app/audio.js?v=20260315o"></script>
-    <script defer src="./app/speech.js?v=20260702a"></script>
+    <script defer src="./app/speech.js?v=20260717a"></script>
     <script defer src="./app/persistence.js?v=20260705a"></script>
     <script defer src="./app/session.js?v=20260705a"></script>
-    <script defer src="./app/i18n.js?v=20260315o"></script>
-    <script defer src="./app/ui.js?v=20260711a"></script>
+    <script defer src="./app/i18n.js?v=20260717b"></script>
+    <script defer src="./app/ui.js?v=20260718a"></script>
     <script defer src="./app/data.js?v=20260705a"></script>
     <script defer src="./app/lesson.js?v=20260315o"></script>
-    <script defer src="./app/sentence-bank.js?v=20260705a"></script>
+    <script defer src="./app/sentence-bank.js?v=20260717d"></script>
     <script defer src="./app/abbreviation.js?v=20260315o"></script>
     <script defer src="./app/adv-conj.js?v=20260713b"></script>
     <script defer src="./app/prepositions.js?v=20260713a"></script>
-    <script defer src="./app/verb-match.js?v=20260713a"></script>
+    <script defer src="./app/verb-match.js?v=20260717a"></script>
     <script defer src="./app/match-engine.js?v=20260620b"></script>
     <script defer src="./app/word-match.js?v=20260702b"></script>
     <script defer src="./app/binyan-board.js?v=20260713a"></script>

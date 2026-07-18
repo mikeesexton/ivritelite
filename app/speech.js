@@ -20,6 +20,39 @@ function cleanText(text) {
   return String(text || "").replace(/\s+/g, " ").trim();
 }
 
+// Speech-only respellings for correctly pointed words that the he-IL voices
+// still misread (kamatz katan spoken as /a/). Applied to the text sent to the
+// synthesizer only — displayed niqqud is never changed. Input is normalized to
+// NFC first, so the patterns below are written in NFC mark order (vowel before
+// dagesh) with escapes: ְ-ּׁׂ = points/dagesh/shin dots,
+// ָ = kamatz, ֹ = cholam, ּ = dagesh.
+const TTS_RESPELLINGS = [
+  // Standalone כָּל/כָל (kol), with optional attached prefixes (וְ, בְּ, לְ,
+  // כְּ, שֶׁ, מִ, הַ and combinations): kamatz katan → cholam, e.g. וְכָל → וְכֹל.
+  // The lookahead keeps longer words such as כָּלָה or מִיכָל untouched.
+  {
+    pattern: /(^|[\s־("'])((?:[ובלכשמה][ְ-ּׁׂ]{0,2}){0,3})כָ(ּ?)ל(?=$|[\s־.,:;!?)"'])/g,
+    replacement: "$1$2כֹ$3ל",
+  },
+  // תָּכְנִית family (tokhnit): kamatz katan → cholam male, e.g. תָּכְנִית → תּוֹכְנִית.
+  {
+    pattern: /תָ(ּ?)כְנִ/g,
+    replacement: "ת$1וֹכְנִ",
+  },
+  // Word-initial אָזְנ (ozen family): kamatz katan → cholam male,
+  // e.g. אָזְנַיִם → אוֹזְנַיִם.
+  {
+    pattern: /(^|[\s־("'])אָזְנ/g,
+    replacement: "$1אוֹזְנ",
+  },
+  // Kamatz directly before a chataf-kamatz syllable is always kamatz katan
+  // (e.g. צָהֳרַיִם → צֹהֳרַיִם); the lookahead skips an intervening dagesh.
+  {
+    pattern: /ָ(?=ּ?[א-ת]ֳ)/g,
+    replacement: "ֹ",
+  },
+];
+
 function containsHebrew(text) {
   return /[\u0590-\u05FF]/.test(String(text || ""));
 }
@@ -46,17 +79,24 @@ function loadVoices() {
   }
 }
 
+speech.applyTtsRespellings = speech.applyTtsRespellings || function applyTtsRespellings(text) {
+  return TTS_RESPELLINGS.reduce(
+    (result, rule) => result.replace(rule.pattern, rule.replacement),
+    String(text || "").normalize("NFC")
+  );
+};
+
 speech.buildHebrewSpeechText = speech.buildHebrewSpeechText || function buildHebrewSpeechText(options = {}) {
   const overrideNiqqud = cleanText(options.speechOverrideNiqqud);
-  if (overrideNiqqud) return overrideNiqqud;
+  if (overrideNiqqud) return speech.applyTtsRespellings(overrideNiqqud);
 
   const overridePlain = cleanText(options.speechOverridePlain);
-  if (overridePlain) return overridePlain;
+  if (overridePlain) return speech.applyTtsRespellings(overridePlain);
 
   const niqqud = cleanText(options.niqqud);
-  if (niqqud) return niqqud;
+  if (niqqud) return speech.applyTtsRespellings(niqqud);
 
-  return cleanText(options.plain);
+  return speech.applyTtsRespellings(cleanText(options.plain));
 };
 
 speech.buildSpeechPayload = speech.buildSpeechPayload || function buildSpeechPayload(options = {}) {

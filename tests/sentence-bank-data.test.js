@@ -1319,3 +1319,40 @@ test("sentence bank data exposes the flexible modifier tokens used for adjacent-
   tokens.push("mutated");
   assert.ok(!api.getFlexibleModifierTokens().includes("mutated"));
 });
+
+test("everyday_85 accepts the alternate order with a fronted time adverb", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "everyday_85");
+  assert.ok(entry, "everyday_85 exists");
+  const alternate = entry.hebrew_alternates.find(
+    (variant) => variant.tokens.join("|") === "השיעור|מתחיל|בדיוק|בשמונה|וחצי"
+  );
+  assert.ok(alternate, "everyday_85 has the reordered בדיוק alternate");
+  assert.equal(alternate.tokens.length, entry.hebrew_tokens.length);
+  assert.equal(alternate.tokens_niqqud.length, alternate.tokens.length);
+});
+
+test("formal_32 accepts the alternate English order for the generalization warning", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "formal_32");
+  assert.ok(entry, "formal_32 exists");
+  assert.ok(Array.isArray(entry.english_alternates));
+  assert.equal(entry.english_alternates.length, 1);
+  const alternate = entry.english_alternates[0];
+  assert.equal(
+    alternate.text,
+    "Findings should not be generalized from this sample to the entire population."
+  );
+  assert.equal(alternate.tokens.length, entry.english_tokens.length);
+  assert.deepEqual([...alternate.tokens].sort(), [...entry.english_tokens].sort());
+});
+
+test("colloquial_130 points the loanword פארק with dagesh so TTS says park, not fark", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "colloquial_130");
+  assert.ok(entry, "colloquial_130 exists");
+  const pointedPark = "פַּארְק".normalize("NFC");
+  assert.ok(entry.hebrew_niqqud.normalize("NFC").includes(pointedPark), "sentence niqqud has dagesh in פארק");
+  const parkToken = entry.hebrew_tokens_niqqud.find((token) => token.includes("פ"));
+  assert.ok(parkToken.normalize("NFC").includes(pointedPark), "token niqqud has dagesh in פארק");
+});

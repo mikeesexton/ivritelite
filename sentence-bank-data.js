@@ -19,6 +19,7 @@ function buildExpandedSentence({
   englishDistractors,
   notes,
   hebrewAlternates = [],
+  englishAlternates = [],
   style = null,
 }) {
   return {
@@ -41,6 +42,10 @@ function buildExpandedSentence({
       text_niqqud: alternate.textNiqqud,
       tokens: alternate.tokenPairs.map(([plain]) => plain),
       tokens_niqqud: alternate.tokenPairs.map(([, marked]) => marked),
+    })),
+    english_alternates: englishAlternates.map((alternate) => ({
+      text: alternate.text,
+      tokens: alternate.tokens,
     })),
     notes,
   };
@@ -8767,6 +8772,10 @@ const SENTENCE_EXPANSION = [
     englishTokens: ["Findings", "from this sample", "should not be generalized", "to", "the entire population"],
     hebrewDistractorPairs: [["יש", "יֵשׁ"], ["להסיק", "לְהַסִּיק"], ["מתוך", "מִתּוֹךְ"], ["המחקר", "הַמֶּחְקָר"], ["ההוא", "הַהוּא"], ["חלק מהאוכלוסייה", "חֵלֶק מֵהָאֻכְלוּסִיָּה"]],
     englishDistractors: ["Conclusions", "from that study", "should be drawn", "about", "part of the population"],
+    englishAlternates: [{
+      text: "Findings should not be generalized from this sample to the entire population.",
+      tokens: ["Findings", "should not be generalized", "from this sample", "to", "the entire population"],
+    }],
     notes: "אין להכליל is a formal warning not to generalize. כלל האוכלוסייה means the population as a whole."
   }),
   buildExpandedSentence({
@@ -9616,6 +9625,7 @@ SENTENCE_BANK.find((sentence) => sentence.id === "formal_31").hebrew_alternates.
 addReorderedHebrewAlternate("formal_32", "מן המדגם הזה אין להכליל על כלל האוכלוסייה.", "מִן הַמִּדְגָּם הַזֶּה אֵין לְהַכְלִיל עַל כְּלַל הָאֻכְלוּסִיָּה.", [2, 3, 4, 0, 1, 5, 6]);
 addReorderedHebrewAlternate("everyday_61", "לשלם מחיר מלא על מוצר פגום זה לא הגיוני.", "לְשַׁלֵּם מְחִיר מָלֵא עַל מוּצָר פָּגוּם זֶה לֹא הֶגְיוֹנִי.", [3, 4, 5, 6, 7, 8, 0, 1, 2]);
 addReorderedHebrewAlternate("colloquial_53", "אבל אני רוצה לבדוק את הפרטים; זה נשמע הגיוני.", "אֲבָל אֲנִי רוֹצֶה לִבְדֹּק אֶת הַפְּרָטִים; זֶה נִשְׁמָע הֶגְיוֹנִי.", [3, 4, 5, 6, 7, 8, 0, 1, 2]);
+addReorderedHebrewAlternate("everyday_85", "השיעור מתחיל בדיוק בשמונה וחצי.", "הַשִּׁעוּר מַתְחִיל בְּדִיּוּק בִּשְׁמוֹנֶה וָחֵצִי.", [0, 1, 4, 2, 3]);
 
 // Round-3 expansion: tech & social media, social plans & banter (tranche 1).
 const SENTENCE_EXPANSION_ROUND3 = [
@@ -9889,6 +9899,12 @@ const SENTENCE_EXPANSION_ROUND3 = [
     hebrewAlternates: [{
       text: "מזמן לא התראינו, מתה לראות אותך!", textNiqqud: "מִזְּמַן לֹא הִתְרָאִינוּ, מֵתָה לִרְאוֹת אוֹתְךָ!",
       tokenPairs: [["מזמן", "מִזְּמַן"], ["לא", "לֹא"], ["התראינו", "הִתְרָאִינוּ"], ["מתה", "מֵתָה"], ["לראות", "לִרְאוֹת"], ["אותך", "אוֹתְךָ"]]
+    }, {
+      text: "לא התראינו מזמן, מת לראות אותך!", textNiqqud: "לֹא הִתְרָאִינוּ מִזְּמַן, מֵת לִרְאוֹת אוֹתְךָ!",
+      tokenPairs: [["לא", "לֹא"], ["התראינו", "הִתְרָאִינוּ"], ["מזמן", "מִזְּמַן"], ["מת", "מֵת"], ["לראות", "לִרְאוֹת"], ["אותך", "אוֹתְךָ"]]
+    }, {
+      text: "לא התראינו מזמן, מתה לראות אותך!", textNiqqud: "לֹא הִתְרָאִינוּ מִזְּמַן, מֵתָה לִרְאוֹת אוֹתְךָ!",
+      tokenPairs: [["לא", "לֹא"], ["התראינו", "הִתְרָאִינוּ"], ["מזמן", "מִזְּמַן"], ["מתה", "מֵתָה"], ["לראות", "לִרְאוֹת"], ["אותך", "אוֹתְךָ"]]
     }]
   }),
   buildExpandedSentence({
@@ -10764,9 +10780,9 @@ const SENTENCE_EXPANSION_ROUND4 = [
   buildExpandedSentence({
     id: "colloquial_130", emoji: "🌳", category: "colloquial", difficulty: 1,
     hebrew: "שישי בפארק הירקון: פיקניק, גיטרה, וכל תל אביב שם.",
-    hebrewNiqqud: "שִׁישִׁי בְּפַארְק הַיַּרְקוֹן: פִּיקְנִיק, גִּיטָרָה, וְכָל תֵּל אָבִיב שָׁם.",
+    hebrewNiqqud: "שִׁישִׁי בְּפַּארְק הַיַּרְקוֹן: פִּיקְנִיק, גִּיטָרָה, וְכָל תֵּל אָבִיב שָׁם.",
     english: "Friday at Yarkon Park: a picnic, a guitar, and all of Tel Aviv is there.",
-    hebrewTokenPairs: [["שישי", "שִׁישִׁי"], ["בפארק הירקון", "בְּפַארְק הַיַּרְקוֹן"], ["פיקניק", "פִּיקְנִיק"], ["גיטרה", "גִּיטָרָה"], ["וכל", "וְכָל"], ["תל אביב", "תֵּל אָבִיב"], ["שם", "שָׁם"]],
+    hebrewTokenPairs: [["שישי", "שִׁישִׁי"], ["בפארק הירקון", "בְּפַּארְק הַיַּרְקוֹן"], ["פיקניק", "פִּיקְנִיק"], ["גיטרה", "גִּיטָרָה"], ["וכל", "וְכָל"], ["תל אביב", "תֵּל אָבִיב"], ["שם", "שָׁם"]],
     englishTokens: ["Friday", "at Yarkon Park", "a picnic", "a guitar", "and all", "of Tel Aviv", "is there"],
     hebrewDistractorPairs: [["שבת", "שַׁבָּת"], ["בנמל", "בַּנָּמֵל"], ["מנגל", "מַנְגָּל"], ["רמקול", "רַמְקוֹל"], ["רמת גן", "רָמַת גַּן"]],
     englishDistractors: ["Saturday", "at the harbor", "a barbecue", "a speaker", "and half", "of Ramat Gan"],
@@ -11189,7 +11205,7 @@ const SENTENCE_EXPANSION_ROUND4 = [
     englishTokens: ["We apologize", "for the temporary", "inconvenience", "due to", "the light rail", "works"],
     hebrewDistractorPairs: [["אנו מודים", "אָנוּ מוֹדִים"], ["הקבועה", "הַקְּבוּעָה"], ["בזכות", "בִּזְכוּת"], ["המנהרה", "הַמִּנְהָרָה"], ["סגירת", "סְגִירַת"]],
     englishDistractors: ["We thank you", "for the permanent", "delay", "thanks to", "the new tunnel", "closures"],
-    notes: "The sign every Tel Avivian read for a decade. אי־ prefixed to a noun negates it: אי הנוחות = 'the inconvenience'. אנו is the formal 'we'; בעקבות = 'following/due to'."
+    notes: "The sign every Tel Avivian read for a decade. אי־ prefixed to a noun negates it: אי הנוחות = 'the inconvenience'. אנו is the formal 'we'; בעקבות = 'following/due to'. 'Works' is signage English (as in 'roadworks') — its stiffness matches the register of אנו and אי הנוחות."
   }),
 ];
 
