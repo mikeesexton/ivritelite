@@ -3303,6 +3303,20 @@ const SENTENCE_BANK = [
       "full report",
       "by tomorrow"
     ],
+    "hebrew_alternates": [
+      {
+        "text": "כרגע אנחנו עובדים על זה, נעדכן כשיהיו תוצאות.",
+        "text_niqqud": "כָּרֶגַע אֲנַחְנוּ עוֹבְדִים עַל זֶה, נְעַדְכֵּן כְּשֶׁיִּהְיוּ תּוֹצָאוֹת.",
+        "tokens": ["כרגע", "אנחנו", "עובדים", "על", "זה", "נעדכן", "כשיהיו", "תוצאות"],
+        "tokens_niqqud": ["כָּרֶגַע", "אֲנַחְנוּ", "עוֹבְדִים", "עַל", "זֶה", "נְעַדְכֵּן", "כְּשֶׁיִּהְיוּ", "תּוֹצָאוֹת"]
+      },
+      {
+        "text": "אנחנו כרגע עובדים על זה, נעדכן כשיהיו תוצאות.",
+        "text_niqqud": "אֲנַחְנוּ כָּרֶגַע עוֹבְדִים עַל זֶה, נְעַדְכֵּן כְּשֶׁיִּהְיוּ תּוֹצָאוֹת.",
+        "tokens": ["אנחנו", "כרגע", "עובדים", "על", "זה", "נעדכן", "כשיהיו", "תוצאות"],
+        "tokens_niqqud": ["אֲנַחְנוּ", "כָּרֶגַע", "עוֹבְדִים", "עַל", "זֶה", "נְעַדְכֵּן", "כְּשֶׁיִּהְיוּ", "תּוֹצָאוֹת"]
+      }
+    ],
     "notes": "כשיהיו is a contraction of כש+יהיו (when there will be) — tests understanding of Hebrew future tense embedding."
   },
   {
@@ -3494,6 +3508,14 @@ const SENTENCE_BANK = [
       "before",
       "those",
       "changes"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "בהמשך היום נשלח גרסה מעודכנת, אחרי שנבצע תיקונים.",
+        "text_niqqud": "בְּהֶמְשֵׁךְ הַיּוֹם נִשְׁלַח גִּרְסָה מְעֻדְכֶּנֶת, אַחֲרֵי שֶׁנְּבַצֵּעַ תִּקּוּנִים.",
+        "tokens": ["בהמשך", "היום", "נשלח", "גרסה", "מעודכנת", "אחרי", "שנבצע", "תיקונים"],
+        "tokens_niqqud": ["בְּהֶמְשֵׁךְ", "הַיּוֹם", "נִשְׁלַח", "גִּרְסָה", "מְעֻדְכֶּנֶת", "אַחֲרֵי", "שֶׁנְּבַצֵּעַ", "תִּקּוּנִים"]
+      }
     ],
     "notes": "מעודכנת (updated, fem.) agrees with גרסה (version, fem.). נשלח here means 'we'll send' (future first person plural)."
   },
@@ -4551,6 +4573,14 @@ const SENTENCE_BANK = [
       "because of",
       "the problems"
     ],
+    "hebrew_alternates": [
+      {
+        "text": "ההסכם קיים עדיין למרות השינויים.",
+        "text_niqqud": "הַהֶסְכֵּם קַיָּם עֲדַיִן לַמְרוֹת הַשִּׁנּוּיִים.",
+        "tokens": ["ההסכם", "קיים", "עדיין", "למרות", "השינויים"],
+        "tokens_niqqud": ["הַהֶסְכֵּם", "קַיָּם", "עֲדַיִן", "לַמְרוֹת", "הַשִּׁנּוּיִים"]
+      }
+    ],
     "notes": "קיים can also mean 'still exists' or 'remains in force', especially for agreements and arrangements."
   },
   {
@@ -4691,6 +4721,14 @@ const SENTENCE_BANK = [
       "was",
       "already",
       "approved"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "קיום חיים מחוץ לכדור הארץ לא הוכח עדיין.",
+        "text_niqqud": "קִיּוּם חַיִּים מִחוּץ לְכַדּוּר הָאָרֶץ לֹא הוּכַח עֲדַיִן.",
+        "tokens": ["קיום", "חיים", "מחוץ", "לכדור", "הארץ", "לא", "הוכח", "עדיין"],
+        "tokens_niqqud": ["קִיּוּם", "חַיִּים", "מִחוּץ", "לְכַדּוּר", "הָאָרֶץ", "לֹא", "הוּכַח", "עֲדַיִן"]
+      }
     ],
     "notes": "קיום is the noun 'existence' here, not the verb לקיים."
   },
@@ -5219,6 +5257,14 @@ const SENTENCE_BANK = [
       "for a minute",
       "I left",
       "at the desk"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "לקחתי מספר ואני מחכה כבר שעה בתור.",
+        "text_niqqud": "לָקַחְתִּי מִסְפָּר וַאֲנִי מְחַכֶּה כְּבָר שָׁעָה בַּתּוֹר.",
+        "tokens": ["לקחתי", "מספר", "ואני", "מחכה", "כבר", "שעה", "בתור"],
+        "tokens_niqqud": ["לָקַחְתִּי", "מִסְפָּר", "וַאֲנִי", "מְחַכֶּה", "כְּבָר", "שָׁעָה", "בַּתּוֹר"]
+      }
     ],
     "notes": "Standing בתור (in line) and taking a מספר (number) is a rite of passage at any Israeli office or clinic. כבר here adds the 'already' impatience."
   },
@@ -5896,6 +5942,14 @@ const SENTENCE_BANK = [
       "tonight",
       "by email"
     ],
+    "hebrew_alternates": [
+      {
+        "text": "מחר בבוקר בוא נסגור את הפרטים בשיחה קצרה.",
+        "text_niqqud": "מָחָר בַּבֹּקֶר בּוֹא נִסְגֹּר אֶת הַפְּרָטִים בְּשִׂיחָה קְצָרָה.",
+        "tokens": ["מחר", "בבוקר", "בוא", "נסגור", "את", "הפרטים", "בשיחה", "קצרה"],
+        "tokens_niqqud": ["מָחָר", "בַּבֹּקֶר", "בּוֹא", "נִסְגֹּר", "אֶת", "הַפְּרָטִים", "בְּשִׂיחָה", "קְצָרָה"]
+      }
+    ],
     "notes": "נסגור פרטים (literally 'close details') = finalize/nail down the details; בשיחה = in a call."
   },
   {
@@ -6254,6 +6308,14 @@ const SENTENCE_BANK = [
       "I'll send",
       "old",
       "a place"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "הישיבה נדחתה, בהמשך אעדכן אותך לגבי מועד חדש.",
+        "text_niqqud": "הַיְּשִׁיבָה נִדְחֲתָה, בַּהֶמְשֵׁךְ אֲעַדְכֵּן אוֹתְךָ לְגַבֵּי מוֹעֵד חָדָשׁ.",
+        "tokens": ["הישיבה", "נדחתה", "בהמשך", "אעדכן", "אותך", "לגבי", "מועד", "חדש"],
+        "tokens_niqqud": ["הַיְּשִׁיבָה", "נִדְחֲתָה", "בַּהֶמְשֵׁךְ", "אֲעַדְכֵּן", "אוֹתְךָ", "לְגַבֵּי", "מוֹעֵד", "חָדָשׁ"]
+      }
     ],
     "notes": "הישיבה נדחתה = the meeting was postponed; מועד = appointed time/date; בהמשך = later on."
   },
@@ -7107,6 +7169,14 @@ const SENTENCE_BANK = [
       "the cause",
       "already",
       "agreed"
+    ],
+    "hebrew_alternates": [
+      {
+        "text": "השפעת הגורם הזה על התוצאה שנויה עדיין במחלוקת.",
+        "text_niqqud": "הַשְׁפָּעַת הַגּוֹרֵם הַזֶּה עַל הַתּוֹצָאָה שְׁנוּיָה עֲדַיִן בְּמַחְלֹקֶת.",
+        "tokens": ["השפעת", "הגורם", "הזה", "על", "התוצאה", "שנויה", "עדיין", "במחלוקת"],
+        "tokens_niqqud": ["הַשְׁפָּעַת", "הַגּוֹרֵם", "הַזֶּה", "עַל", "הַתּוֹצָאָה", "שְׁנוּיָה", "עֲדַיִן", "בְּמַחְלֹקֶת"]
+      }
     ],
     "notes": "השפעת הגורם = the effect of the factor; שנוי/שנויה במחלוקת = (a matter that is) disputed/controversial."
   },
@@ -9397,6 +9467,10 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["The budget", "for the next", "quarter", "hasn't been", "approved", "yet"],
     hebrewDistractorPairs: [["הדוח", "הַדּוּחַ"], ["הקודם", "הַקּוֹדֵם"], ["נדחה", "נִדְחָה"], ["מזמן", "מִזְּמַן"], ["הוגש", "הֻגַּשׁ"]],
     englishDistractors: ["The report", "for the previous", "was rejected", "long ago", "submitted"],
+    hebrewAlternates: [{
+      text: "התקציב לרבעון הבא לא אושר עדיין.", textNiqqud: "הַתַּקְצִיב לָרִבְעוֹן הַבָּא לֹא אֻשַּׁר עֲדַיִן.",
+      tokenPairs: [["התקציב", "הַתַּקְצִיב"], ["לרבעון", "לָרִבְעוֹן"], ["הבא", "הַבָּא"], ["לא", "לֹא"], ["אושר", "אֻשַּׁר"], ["עדיין", "עֲדַיִן"]]
+    }],
     notes: "אושר is the passive 'was approved'; נדחה (was rejected) is the opposite passive. עדיין לא = not yet."
   }),
   buildExpandedSentence({
@@ -9447,6 +9521,16 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["If", "we don't", "receive", "approval", "today", "we'll postpone", "the publication", "to next", "week"],
     hebrewDistractorPairs: [["כאשר", "כַּאֲשֶׁר"], ["נשלח", "נִשְׁלַח"], ["סירוב", "סֵרוּב"], ["נקדים", "נַקְדִּים"], ["אתמול", "אֶתְמוֹל"]],
     englishDistractors: ["When", "we'll send", "a refusal", "we'll move up", "yesterday"],
+    hebrewAlternates: [
+      {
+        text: "אם לא נקבל היום אישור, נדחה את הפרסום לשבוע הבא.", textNiqqud: "אִם לֹא נְקַבֵּל הַיּוֹם אִשּׁוּר, נִדְחֶה אֶת הַפִּרְסוּם לַשָּׁבוּעַ הַבָּא.",
+        tokenPairs: [["אם", "אִם"], ["לא", "לֹא"], ["נקבל", "נְקַבֵּל"], ["היום", "הַיּוֹם"], ["אישור", "אִשּׁוּר"], ["נדחה", "נִדְחֶה"], ["את", "אֶת"], ["הפרסום", "הַפִּרְסוּם"], ["לשבוע", "לַשָּׁבוּעַ"], ["הבא", "הַבָּא"]]
+      },
+      {
+        text: "אם היום לא נקבל אישור, נדחה את הפרסום לשבוע הבא.", textNiqqud: "אִם הַיּוֹם לֹא נְקַבֵּל אִשּׁוּר, נִדְחֶה אֶת הַפִּרְסוּם לַשָּׁבוּעַ הַבָּא.",
+        tokenPairs: [["אם", "אִם"], ["היום", "הַיּוֹם"], ["לא", "לֹא"], ["נקבל", "נְקַבֵּל"], ["אישור", "אִשּׁוּר"], ["נדחה", "נִדְחֶה"], ["את", "אֶת"], ["הפרסום", "הַפִּרְסוּם"], ["לשבוע", "לַשָּׁבוּעַ"], ["הבא", "הַבָּא"]]
+      }
+    ],
     notes: "Real conditional: אם + future in both clauses. נדחה (we'll postpone) vs נקדים (we'll move up) is the opposite trap; אישור vs סירוב (approval vs refusal)."
   }),
   buildExpandedSentence({
@@ -10052,6 +10136,16 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["According to", "the report", "prices", "rose", "by ten", "percent", "this year"],
     hebrewDistractorPairs: [["למרות", "לַמְרוֹת"], ["הסקר", "הַסֶּקֶר"], ["ירדו", "יָרְדוּ"], ["בחמישה", "בַּחֲמִשָּׁה"], ["החודש", "הַחֹדֶשׁ"]],
     englishDistractors: ["Despite", "the survey", "fell", "by five", "this month"],
+    hebrewAlternates: [
+      {
+        text: "לפי הדוח, השנה המחירים עלו בעשרה אחוזים.", textNiqqud: "לְפִי הַדּוֹחַ, הַשָּׁנָה הַמְּחִירִים עָלוּ בַּעֲשָׂרָה אֲחוּזִים.",
+        tokenPairs: [["לפי", "לְפִי"], ["הדוח", "הַדּוֹחַ"], ["השנה", "הַשָּׁנָה"], ["המחירים", "הַמְּחִירִים"], ["עלו", "עָלוּ"], ["בעשרה", "בַּעֲשָׂרָה"], ["אחוזים", "אֲחוּזִים"]]
+      },
+      {
+        text: "לפי הדוח, המחירים השנה עלו בעשרה אחוזים.", textNiqqud: "לְפִי הַדּוֹחַ, הַמְּחִירִים הַשָּׁנָה עָלוּ בַּעֲשָׂרָה אֲחוּזִים.",
+        tokenPairs: [["לפי", "לְפִי"], ["הדוח", "הַדּוֹחַ"], ["המחירים", "הַמְּחִירִים"], ["השנה", "הַשָּׁנָה"], ["עלו", "עָלוּ"], ["בעשרה", "בַּעֲשָׂרָה"], ["אחוזים", "אֲחוּזִים"]]
+      }
+    ],
     notes: "לפי = according to. עלו ב… — rose BY; the ב marks the amount of change. עשרה אחוזים = ten percent (אחוז is masculine, so עשרה)."
   }),
   buildExpandedSentence({
@@ -10162,6 +10256,10 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["According to", "the reports", "the agreement", "will be signed", "soon"],
     hebrewDistractorPairs: [["למרות", "לַמְרוֹת"], ["השמועות", "הַשְּׁמוּעוֹת"], ["החוזה", "הַחוֹזֶה"], ["יבוטל", "יְבֻטַּל"], ["בעוד שנה", "בְּעוֹד שָׁנָה"]],
     englishDistractors: ["Despite", "the rumors", "the contract", "will be canceled", "in a year"],
+    hebrewAlternates: [{
+      text: "על פי הפרסומים, בקרוב ייחתם ההסכם.", textNiqqud: "עַל פִּי הַפִּרְסוּמִים, בְּקָרוֹב יֵחָתֵם הַהֶסְכֵּם.",
+      tokenPairs: [["על פי", "עַל פִּי"], ["הפרסומים", "הַפִּרְסוּמִים"], ["בקרוב", "בְּקָרוֹב"], ["ייחתם", "יֵחָתֵם"], ["ההסכם", "הַהֶסְכֵּם"]]
+    }],
     notes: "ייחתם — nif'al future passive, 'will be signed'. על פי = according to (higher register than לפי). בקרוב = soon."
   }),
   buildExpandedSentence({
@@ -10242,6 +10340,10 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["If", "the budget", "is approved", "the project", "will get under way", "immediately"],
     hebrewDistractorPairs: [["יבוטל", "יְבֻטַּל"], ["ההסכם", "הַהֶסְכֵּם"], ["ייעצר", "יֵעָצֵר"], ["בהמשך", "בַּהֶמְשֵׁךְ"], ["יעלה לדיון", "יַעֲלֶה לְדִיּוּן"]],
     englishDistractors: ["is canceled", "the agreement", "will be stopped", "later on", "will come up for discussion"],
+    hebrewAlternates: [{
+      text: "אם יאושר התקציב, הפרויקט מיד יצא לדרך.", textNiqqud: "אִם יְאֻשַּׁר הַתַּקְצִיב, הַפְּרוֹיֶקְט מִיָּד יֵצֵא לַדֶּרֶךְ.",
+      tokenPairs: [["אם", "אִם"], ["יאושר", "יְאֻשַּׁר"], ["התקציב", "הַתַּקְצִיב"], ["הפרויקט", "הַפְּרוֹיֶקְט"], ["מיד", "מִיָּד"], ["יצא לדרך", "יֵצֵא לַדֶּרֶךְ"]]
+    }],
     notes: "אם + future in both clauses = the real conditional. יאושר — pu'al future passive, 'will be approved'. יצא לדרך — lit. 'set out on the road' = get under way / launch."
   }),
   buildExpandedSentence({
@@ -10312,6 +10414,16 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["We've", "already", "been waiting", "for almost", "half an hour"],
     hebrewDistractorPairs: [["הם", "הֵם"], ["יושבים", "יוֹשְׁבִים"], ["בקושי", "בְּקֹשִׁי"], ["שעה שלמה", "שָׁעָה שְׁלֵמָה"], ["מחכות", "מְחַכּוֹת"]],
     englishDistractors: ["They've", "been sitting", "for barely", "a whole hour", "just now"],
+    hebrewAlternates: [
+      {
+        text: "אנחנו כבר מחכים כמעט חצי שעה.", textNiqqud: "אֲנַחְנוּ כְּבָר מְחַכִּים כִּמְעַט חֲצִי שָׁעָה.",
+        tokenPairs: [["אנחנו", "אֲנַחְנוּ"], ["כבר", "כְּבָר"], ["מחכים", "מְחַכִּים"], ["כמעט", "כִּמְעַט"], ["חצי שעה", "חֲצִי שָׁעָה"]]
+      },
+      {
+        text: "אנחנו מחכים כמעט חצי שעה כבר.", textNiqqud: "אֲנַחְנוּ מְחַכִּים כִּמְעַט חֲצִי שָׁעָה כְּבָר.",
+        tokenPairs: [["אנחנו", "אֲנַחְנוּ"], ["מחכים", "מְחַכִּים"], ["כמעט", "כִּמְעַט"], ["חצי שעה", "חֲצִי שָׁעָה"], ["כבר", "כְּבָר"]]
+      }
+    ],
     notes: "Present tense מחכים + כבר + a duration covers the English perfect: 'have been waiting'. חצי שעה = half an hour."
   }),
   buildExpandedSentence({
@@ -10376,6 +10488,16 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["By the time", "we arrived", "the food", "was already", "cold"],
     hebrewDistractorPairs: [["עד שיצאנו", "עַד שֶׁיָּצָאנוּ"], ["הקפה", "הַקָּפֶה"], ["חם", "חַם"], ["יהיה", "יִהְיֶה"], ["השולחן", "הַשֻּׁלְחָן"]],
     englishDistractors: ["By the time we left", "the coffee", "hot", "will be", "the table"],
+    hebrewAlternates: [
+      {
+        text: "עד שהגענו, האוכל היה כבר קר.", textNiqqud: "עַד שֶׁהִגַּעְנוּ, הָאֹכֶל הָיָה כְּבָר קַר.",
+        tokenPairs: [["עד שהגענו", "עַד שֶׁהִגַּעְנוּ"], ["האוכל", "הָאֹכֶל"], ["היה", "הָיָה"], ["כבר", "כְּבָר"], ["קר", "קַר"]]
+      },
+      {
+        text: "עד שהגענו, האוכל היה קר כבר.", textNiqqud: "עַד שֶׁהִגַּעְנוּ, הָאֹכֶל הָיָה קַר כְּבָר.",
+        tokenPairs: [["עד שהגענו", "עַד שֶׁהִגַּעְנוּ"], ["האוכל", "הָאֹכֶל"], ["היה", "הָיָה"], ["קר", "קַר"], ["כבר", "כְּבָר"]]
+      }
+    ],
     notes: "עד ש + past = 'by the time…'. כבר marks 'already'. Present-tense adjectives need no 'to be', but the past needs היה."
   }),
   buildExpandedSentence({
@@ -10472,6 +10594,10 @@ const SENTENCE_EXPANSION_ROUND4 = [
     englishTokens: ["Suddenly", "the penny dropped", "for me", "they're", "back together"],
     hebrewDistractorPairs: [["לאט לאט", "לְאַט לְאַט"], ["עלה", "עָלָה"], ["לה", "לָהּ"], ["הרעיון", "הָרַעְיוֹן"], ["להיפרד", "לְהִפָּרֵד"]],
     englishDistractors: ["Finally", "the coin fell", "for us", "she's", "broken up"],
+    hebrewAlternates: [{
+      text: "נפל לי פתאום האסימון: הם חזרו להיות זוג.", textNiqqud: "נָפַל לִי פִּתְאוֹם הָאֲסִימוֹן: הֵם חָזְרוּ לִהְיוֹת זוּג.",
+      tokenPairs: [["נפל", "נָפַל"], ["לי", "לִי"], ["פתאום", "פִּתְאוֹם"], ["האסימון", "הָאֲסִימוֹן"], ["הם", "הֵם"], ["חזרו", "חָזְרוּ"], ["להיות", "לִהְיוֹת"], ["זוג", "זוּג"]]
+    }],
     notes: "נפל האסימון — literally 'the token dropped' (old payphone tokens) = the penny dropped, it finally clicked. נפל לי האסימון puts the person realizing it in לי."
   }),
   buildExpandedSentence({
@@ -10520,6 +10646,10 @@ const SENTENCE_EXPANSION_ROUND4 = [
     englishTokens: ["There's been", "a blue check", "for two days", "already", "and he", "isn't answering"],
     hebrewDistractorPairs: [["אין", "אֵין"], ["וי אחד", "וִי אֶחָד"], ["שבוע", "שָׁבוּעַ"], ["והיא", "וְהִיא"], ["כותבת", "כּוֹתֶבֶת"]],
     englishDistractors: ["There was", "one gray check", "for a week", "and she", "stopped typing"],
+    hebrewAlternates: [{
+      text: "כבר יומיים יש וי כחול והוא לא עונה.", textNiqqud: "כְּבָר יוֹמַיִם יֵשׁ וִי כָּחֹל וְהוּא לֹא עוֹנֶה.",
+      tokenPairs: [["כבר", "כְּבָר"], ["יומיים", "יוֹמַיִם"], ["יש", "יֵשׁ"], ["וי כחול", "וִי כָּחֹל"], ["והוא", "וְהוּא"], ["לא", "לֹא"], ["עונה", "עוֹנֶה"]]
+    }],
     notes: "וי כחול — the WhatsApp blue check. Being left on read (נקרא ולא נענה) is prime gossip material; כבר יומיים = 'two days already'."
   }),
   buildExpandedSentence({
@@ -10823,6 +10953,16 @@ const SENTENCE_EXPANSION_ROUND4 = [
     englishTokens: ["Nobody's", "going in", "the water", "this month", "it's", "jellyfish", "season"],
     hebrewDistractorPairs: [["כולם", "כֻּלָּם"], ["יוצאים", "יוֹצְאִים"], ["מהים", "מֵהַיָּם"], ["השבוע", "הַשָּׁבוּעַ"], ["הגלים", "הַגַּלִּים"]],
     englishDistractors: ["Everyone's", "staying out of", "the sand", "this week", "surfing", "weather"],
+    hebrewAlternates: [
+      {
+        text: "החודש לא נכנסים לים, זאת עונת המדוזות.", textNiqqud: "הַחֹדֶשׁ לֹא נִכְנָסִים לַיָּם, זֹאת עוֹנַת הַמֶּדוּזוֹת.",
+        tokenPairs: [["החודש", "הַחֹדֶשׁ"], ["לא", "לֹא"], ["נכנסים", "נִכְנָסִים"], ["לים", "לַיָּם"], ["זאת", "זֹאת"], ["עונת", "עוֹנַת"], ["המדוזות", "הַמֶּדוּזוֹת"]]
+      },
+      {
+        text: "לא נכנסים החודש לים, זאת עונת המדוזות.", textNiqqud: "לֹא נִכְנָסִים הַחֹדֶשׁ לַיָּם, זֹאת עוֹנַת הַמֶּדוּזוֹת.",
+        tokenPairs: [["לא", "לֹא"], ["נכנסים", "נִכְנָסִים"], ["החודש", "הַחֹדֶשׁ"], ["לים", "לַיָּם"], ["זאת", "זֹאת"], ["עונת", "עוֹנַת"], ["המדוזות", "הַמֶּדוּזוֹת"]]
+      }
+    ],
     notes: "עונת המדוזות — jellyfish season, the midsummer stretch when the Mediterranean empties out. The impersonal plural לא נכנסים = 'one doesn't go in'."
   }),
   buildExpandedSentence({
@@ -11791,6 +11931,10 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["She", "speaks", "two", "languages", "at work", "every day"],
     hebrewDistractorPairs: [["הוא", "הוּא"], ["לומד", "לוֹמֵד"], ["שלוש", "שָׁלוֹשׁ"], ["מיומנויות", "מְיֻמָּנוּיוֹת"], ["בבית", "בַּבַּיִת"]],
     englishDistractors: ["He", "studies", "three", "skills", "at home"],
+    hebrewAlternates: [{
+      text: "בכל יום היא מדברת שתי שפות בעבודה.", textNiqqud: "בְּכָל יוֹם הִיא מְדַבֶּרֶת שְׁתֵּי שָׂפוֹת בָּעֲבוֹדָה.",
+      tokenPairs: [["בכל יום", "בְּכָל יוֹם"], ["היא", "הִיא"], ["מדברת", "מְדַבֶּרֶת"], ["שתי", "שְׁתֵּי"], ["שפות", "שָׂפוֹת"], ["בעבודה", "בָּעֲבוֹדָה"]]
+    }],
     notes: "שתי is the feminine construct form of 'two,' used before the feminine plural noun שפות: שתי שפות, 'two languages.'"
   }),
 ];
@@ -11816,6 +11960,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260714a",
+  __build: "20260718c",
 };
 })(typeof window !== "undefined" ? window : globalThis);

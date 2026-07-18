@@ -600,6 +600,46 @@ const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
   "professional_35", "professional_36", "professional_37", "formal_29", "formal_30", "formal_31", "formal_32",
 ];
 
+const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
+  colloquial_26: ["לקחתי מספר ואני מחכה כבר שעה בתור."],
+  professional_06: [
+    "כרגע אנחנו עובדים על זה, נעדכן כשיהיו תוצאות.",
+    "אנחנו כרגע עובדים על זה, נעדכן כשיהיו תוצאות.",
+  ],
+  professional_09: ["בהמשך היום נשלח גרסה מעודכנת, אחרי שנבצע תיקונים."],
+  professional_13: ["מחר בבוקר בוא נסגור את הפרטים בשיחה קצרה."],
+  professional_19: ["הישיבה נדחתה, בהמשך אעדכן אותך לגבי מועד חדש."],
+  formal_15: ["ההסכם קיים עדיין למרות השינויים."],
+  formal_17: ["קיום חיים מחוץ לכדור הארץ לא הוכח עדיין."],
+  formal_27: ["השפעת הגורם הזה על התוצאה שנויה עדיין במחלוקת."],
+  professional_46: ["התקציב לרבעון הבא לא אושר עדיין."],
+  professional_51: [
+    "אם לא נקבל היום אישור, נדחה את הפרסום לשבוע הבא.",
+    "אם היום לא נקבל אישור, נדחה את הפרסום לשבוע הבא.",
+  ],
+  professional_57: [
+    "לפי הדוח, השנה המחירים עלו בעשרה אחוזים.",
+    "לפי הדוח, המחירים השנה עלו בעשרה אחוזים.",
+  ],
+  formal_51: ["על פי הפרסומים, בקרוב ייחתם ההסכם."],
+  formal_59: ["אם יאושר התקציב, הפרויקט מיד יצא לדרך."],
+  everyday_105: [
+    "אנחנו כבר מחכים כמעט חצי שעה.",
+    "אנחנו מחכים כמעט חצי שעה כבר.",
+  ],
+  colloquial_96: [
+    "עד שהגענו, האוכל היה כבר קר.",
+    "עד שהגענו, האוכל היה קר כבר.",
+  ],
+  colloquial_104: ["נפל לי פתאום האסימון: הם חזרו להיות זוג."],
+  colloquial_108: ["כבר יומיים יש וי כחול והוא לא עונה."],
+  colloquial_133: [
+    "החודש לא נכנסים לים, זאת עונת המדוזות.",
+    "לא נכנסים החודש לים, זאת עונת המדוזות.",
+  ],
+  everyday_138: ["בכל יום היא מדברת שתי שפות בעבודה."],
+};
+
 const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_48",
   "everyday_50",
@@ -1003,6 +1043,39 @@ test("new sentence-bank rows accept authored natural Hebrew word orders", () => 
     byId.get("colloquial_39").hebrew_alternates.some((alternate) => alternate.text === "מה בדיוק זה אומר?"),
     true
   );
+});
+
+test("approved word-order audit rows keep every reviewed Hebrew order buildable", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const niqqudPattern = /[\u0591-\u05c7]/;
+  let reviewedVariantCount = 0;
+
+  Object.entries(WORD_ORDER_AUDIT_ALTERNATE_TEXTS).forEach(([id, expectedTexts]) => {
+    const entry = byId.get(id);
+    assert.ok(entry, `missing audited sentence ${id}`);
+
+    expectedTexts.forEach((expectedText) => {
+      const alternate = entry.hebrew_alternates.find((variant) => variant.text === expectedText);
+      assert.ok(alternate, `${id} needs reviewed order: ${expectedText}`);
+      assert.equal(alternate.tokens.length, entry.hebrew_tokens.length, `${id} alternate target length`);
+      assert.deepEqual(
+        [...alternate.tokens].sort(),
+        [...entry.hebrew_tokens].sort(),
+        `${id} reviewed order must reuse the primary tiles`
+      );
+      assert.equal(alternate.tokens_niqqud.length, alternate.tokens.length, `${id} alternate niqqud alignment`);
+      assert.match(alternate.text_niqqud, niqqudPattern, `${id} alternate needs pointed Hebrew`);
+      assert.equal(
+        hebrewConsonantalSkeleton(alternate.text_niqqud),
+        hebrewConsonantalSkeleton(alternate.text),
+        `${id} alternate pointed/plain consonantal alignment`
+      );
+      assert.equal(buildSentenceFrame(alternate.text, alternate.tokens).failed, false, `${id} alternate frame`);
+      reviewedVariantCount += 1;
+    });
+  });
+
+  assert.equal(reviewedVariantCount, 25);
 });
 
 test("sentence bank data avoids exact-synonym distractors for curated formal entries", () => {

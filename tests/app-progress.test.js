@@ -1359,7 +1359,7 @@ test("sentence builder rewrites formal notes into short learner-facing tips", ()
   );
 });
 
-test("sentence builder prompt styles keep the prompt, answer rows, and count edge-aligned", () => {
+test("sentence builder keeps directional content edge-aligned and centers the word counter", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
   assert.match(styles, /\.home-lessons-card \.section-head\s*\{[^}]*align-items:\s*start;/s);
@@ -1372,7 +1372,7 @@ test("sentence builder prompt styles keep the prompt, answer rows, and count edg
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*text-align:\s*start;/s);
   assert.match(styles, /\.sentence-answer-line\.english\s*\{[^}]*text-align:\s*start;/s);
   assert.match(styles, /\.sentence-answer-line\.hebrew\s*\{[^}]*text-align:\s*start;/s);
-  assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*text-align:\s*start;/s);
+  assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*text-align:\s*center;/s);
 });
 
 test("game start intro bubbles use the same yalla message", async () => {
@@ -1491,7 +1491,7 @@ test("sentence builder base layout trims prompt, board, and feedback spacing wit
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\s*\{[^}]*padding:\s*0\.7rem 0\.8rem;[^}]*border:\s*1px solid var\(--line\);[^}]*background:\s*var\(--prompt-bg\);[^}]*gap:\s*0\.2rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*clamp\(3\.35rem,\s*5\.8vw,\s*4rem\);[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*0\.16rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*0\.16rem;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*min\(100%,\s*36ch\);[^}]*font-size:\s*clamp\(1\.36rem,\s*3\.7vw,\s*1\.86rem\);[^}]*line-height:\s*1\.18;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.36rem,\s*3\.7vw,\s*1\.86rem\);[^}]*line-height:\s*1\.18;/s);
   assert.match(styles, /\.sentence-builder\s*\{[^}]*gap:\s*0\.68rem;/s);
   assert.match(styles, /\.sentence-answer-line\s*\{[^}]*min-height:\s*2\.9rem;[^}]*line-height:\s*1\.68;/s);
   assert.match(styles, /\.sentence-token-bank\s*\{[^}]*gap:\s*0\.44rem 0\.34rem;/s);
@@ -1517,7 +1517,7 @@ test("sentence builder mobile breakpoint uses smaller sentence tokens and a tigh
   assert.ok(Number(mobileSentenceToken[1]) < Number(mobileChoiceBtn[1]));
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*3\.08rem;[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*min\(100%,\s*34ch\);[^}]*font-size:\s*clamp\(1\.34rem,\s*5\.9vw,\s*1\.66rem\);/s);
+  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.34rem,\s*5\.9vw,\s*1\.66rem\);/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.lesson-footer\s*\{[^}]*bottom:\s*calc\(4\.05rem \+ env\(safe-area-inset-bottom\)\);[^}]*gap:\s*0\.34rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.52rem 0\.66rem 0\.58rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*50px;[^}]*font-size:\s*0\.96rem;/s);
@@ -1528,7 +1528,7 @@ test("sentence builder short mobile breakpoint adds an extra compaction step", (
 
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*2\.9rem;[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*min\(100%,\s*32ch\);[^}]*font-size:\s*clamp\(1\.24rem,\s*5\.3vw,\s*1\.48rem\);/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.24rem,\s*5\.3vw,\s*1\.48rem\);/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*36px;[^}]*padding:\s*0\.28rem 0\.56rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.86rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.46rem 0\.6rem 0\.5rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*46px;[^}]*font-size:\s*0\.92rem;/s);
@@ -1558,15 +1558,33 @@ test("all viewports share the single-page layout with the bottom nav", () => {
   assert.match(markup, /id="mobileBottomNav"[\s\S]*data-route="home"[\s\S]*data-route="review"[\s\S]*data-route="settings"/s);
   // The old desktop "hub" layout is gone entirely.
   assert.doesNotMatch(styles, /data-desktop-hub-layout="true"/);
-  // The bottom nav is never hidden by viewport width (it was previously
-  // display:none at >=1024); the only hide rules are scoped to active gameplay.
+  // The bottom nav stays available on the home page and during gameplay at every width.
   const navHideRules = styles.match(/[^{}]*\.mobile-bottom-nav[^{}]*\{[^}]*display:\s*none[^}]*\}/g) || [];
-  assert.ok(navHideRules.length > 0);
-  for (const rule of navHideRules) {
-    assert.match(rule, /body\[data-gameplay-active="true"\]/);
-  }
+  assert.equal(navHideRules.length, 0);
   // On wide screens the bottom nav is centered rather than stretched edge-to-edge.
   assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.mobile-bottom-nav\s*\{[^}]*left:\s*50%;[^}]*transform:\s*translateX\(-50%\);/s);
+});
+
+test("gameplay boards use the full shell width and center safely outside widescreen layouts", () => {
+  const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(styles, /\.app-shell\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*none;/s);
+  assert.match(styles, /body\[data-gameplay-active="true"\] #homeView\.active\s*\{[^}]*width:\s*100%;[^}]*margin-block:\s*auto;/s);
+  assert.match(styles, /@media \(min-width: 768px\) and \(min-aspect-ratio: 4 \/ 3\)\s*\{[\s\S]*?body\[data-gameplay-active="true"\] #homeView\.active\s*\{[^}]*margin-block:\s*0;/s);
+  assert.match(styles, /@media \(min-width: 768px\) and \(max-width: 1023px\)\s*\{[\s\S]*?\.prompt-card\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*none;/s);
+  assert.match(styles, /@media \(min-width: 768px\) and \(max-width: 1023px\)\s*\{[\s\S]*?\.choices\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*none;/s);
+  assert.match(styles, /@media \(min-width: 600px\)\s*\{[\s\S]*?\.lesson-shell\.mode-standard:not\(\.mode-sentence-bank\):not\(\.mode-binyan-board\):not\(\.mode-handwriting\) > \.choices:not\(\.match-grid\):not\(\.summary-grid\)\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);[^}]*grid-auto-rows:\s*1fr;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.lesson-footer\s*\{[^}]*position:\s*static;/s);
+  assert.match(styles, /\.handwriting-canvas\s*\{[^}]*width:\s*min\(100%,\s*88vw,\s*46vh,\s*30rem\);[^}]*max-width:\s*none;/s);
+});
+
+test("Sentences and Shema center their full board only on widescreen layouts", () => {
+  const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(styles, /@media \(min-width: 768px\) and \(min-aspect-ratio: 4 \/ 3\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*justify-content:\s*center;/s);
+  assert.match(styles, /@media \(min-width: 768px\) and \(min-aspect-ratio: 4 \/ 3\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text,[\s\S]*?\.prompt-text\.english-prompt\s*\{[^}]*margin-inline:\s*auto;[^}]*text-align:\s*center;/s);
+  assert.match(styles, /@media \(min-width: 768px\) and \(min-aspect-ratio: 4 \/ 3\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-answer-line\s*\{[^}]*text-align:\s*center;/s);
+  assert.match(styles, /@media \(min-width: 768px\) and \(min-aspect-ratio: 4 \/ 3\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token-bank\s*\{[^}]*justify-content:\s*center;/s);
 });
 
 test("home route uses safe vertical centering and leave warning text stays centered", () => {

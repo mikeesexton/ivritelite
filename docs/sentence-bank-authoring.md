@@ -92,18 +92,48 @@ wording in an otherwise American-English set.
 - Alternate-answer token lists must use the same granularity as the primary
   answer and retain their existing token-count requirement.
 
+## Word-order alternates (required)
+
+Review natural Hebrew word order while constructing each new or revised row,
+not only after a learner reports a rejected answer. Before the row is complete,
+check whether the same English prompt has more than one neutral, idiomatic
+Hebrew order using the authored chips. Pay particular attention to:
+
+- temporal, locative, frequency, and aspectual adverbials in initial, medial,
+  and final position;
+- negation combined with words such as `כבר` and `עדיין`;
+- subordinate clauses that can naturally precede or follow the main clause;
+- predicate, subject, or object placement when the alternative remains neutral;
+  and
+- sentences that have three or more independently common placements, rather
+  than stopping after the first alternate is found.
+
+Author every clearly neutral equivalent under `hebrewAlternates`, with fully
+pointed text and token pairs. Do not enumerate every grammatically possible
+permutation. Exclude orders that introduce contrastive focus, correction,
+scope ambiguity, a different register, or a meaning not cued by the English.
+When the prompt also permits multiple speaker genders, review the full
+word-order × gender combination so every intended answer is buildable.
+
+Do this review before finalizing distractors. A wording alternate that adds a
+new token needs that token, with matching niqqud, in the distractor bank. A
+pure reordering reuses the primary tiles and needs no new distractor.
+
 ## Authoring and review checklist
 
 For every changed row:
 
 1. Read both full sentences aloud for naturalness and faithful meaning.
-2. Compare the target arrays in order and make their counts match by default.
-3. Ask of every chip: “Could a learner translate this without also recalling a
+2. Enumerate the clearly neutral Hebrew word orders, including a third order
+   when an adverbial has three independently common placements; author them as
+   pointed alternates and reject merely possible but focus-shifting orders.
+3. Compare the target arrays in order and make their counts match by default.
+4. Ask of every chip: “Could a learner translate this without also recalling a
    second independent idea?”
-4. Review every distractor in the same way and check gender, number,
+5. Review every distractor in the same way and check gender, number,
    prepositions, and omitted or invented words.
-5. Keep technical literal detail and contested terminology framing in `notes`.
-6. Run `node --test tests/sentence-bank-data.test.js`, then `npm test`.
+6. Keep technical literal detail and contested terminology framing in `notes`.
+7. Run `node --test tests/sentence-bank-data.test.js`, then `npm test`.
 
 ## Automated policy
 
