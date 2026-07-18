@@ -4403,3 +4403,21 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 255 pass, 0 fail. Final `npm test` — 256 pass, 0 fail. `git diff --check` — pass. Live browser verification on `http://127.0.0.1:4173/` covered 1024×1366, 768×1024, 1024×768, and 390×844: portrait gameplay centered; landscape gameplay top-aligned; Conjugation+ formed equal 2×2/one-column grids as intended; Sentences/Shema spanned the board with directional alignment intact and no footer overlap; handwriting measured 471px square at 768×1024; bottom navigation stayed visible at every tested size.
 
 **Risks / regressions to check:** The top-alignment switch uses a 768px minimum width and a 4:3-or-wider aspect ratio, so landscape phones wider than 768px also top-align, which is desirable for their limited vertical space. Very long sentence banks may require scrolling because their action is intentionally non-sticky to prevent chip overlap. No unrelated pre-existing working-tree changes were modified or reverted.
+
+---
+
+### 2026-07-18 15:08 EDT — Widescreen sentence centering and combined GitHub publication
+
+**Requested:** Center all Sentences and Shema board content only on widescreen displays; on phone and portrait layouts keep the existing directional alignment and center only the word counter; then publish the responsive display work together with the completed Hebrew word-order work and merge it into `main`.
+
+**Files changed:**
+- `styles.css` — centered the sentence word counter at every width and added widescreen-only centering for the Sentences/Shema prompt, answer line, and token bank at the existing 768px + 4:3 aspect-ratio breakpoint.
+- `index.html` — cache-busted `styles.css` to `20260718d`.
+- `tests/app-progress.test.js` — updated the counter-alignment regression and added explicit widescreen-only centering coverage for Sentences and Shema.
+- `task-log.md` — recorded the alignment follow-up and publication workflow.
+
+**Behavior changed:** On phone and portrait layouts, English and Hebrew sentence content stays on its directional edge while `Words: n/n` is centered. On landscape/widescreen layouts, the prompt, answer slots, word counter, and word bank all center. The full combined change set also includes the previously completed 25 reviewed Hebrew word-order variants and responsive gameplay/navigation/handwriting improvements.
+
+**Tests run:** Baseline `npm test` — 256 pass, 0 fail. Final `npm test` — 257 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Live browser checks at 768×1024 confirmed edge-aligned content plus a centered counter; 1024×768 confirmed the entire board centers. `git fetch origin --prune` confirmed local `main` and `origin/main` were synchronized before branching. GitHub branch `agent/responsive-sentence-alignment-and-word-orders` was pushed and ready pull request #40 was opened against `main`; this log commit is the final branch update before the requested immediate squash merge.
+
+**Risks / regressions to check:** The widescreen definition intentionally matches the gameplay top-alignment threshold, so both layout changes switch together at 768px and a 4:3-or-wider aspect ratio. No scoring, sentence grading, or Shema alternate-acceptance behavior changed in this follow-up.
