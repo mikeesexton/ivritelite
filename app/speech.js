@@ -20,6 +20,17 @@ function cleanText(text) {
   return String(text || "").replace(/\s+/g, " ").trim();
 }
 
+// Carmit, Apple's he-IL voice, can speak a closing ASCII quotation apostrophe
+// as its UTF-8 byte escape ("XD7XB3"). Remove paired quotation apostrophes
+// from speech text while leaving word-internal loanword marks such as קרינג'
+// and פיצ'ר untouched. Displayed text is never changed.
+function stripTtsQuotationApostrophes(text) {
+  return text.replace(
+    /(^|[\s([{\"“])'([^'\n]+)'(?=$|[\s)\]}.,:;!?\"”])/g,
+    "$1$2"
+  );
+}
+
 // Speech-only respellings for correctly pointed words that the he-IL voices
 // still misread (kamatz katan spoken as /a/). Applied to the text sent to the
 // synthesizer only — displayed niqqud is never changed. Input is normalized to
@@ -80,9 +91,10 @@ function loadVoices() {
 }
 
 speech.applyTtsRespellings = speech.applyTtsRespellings || function applyTtsRespellings(text) {
+  const speechText = stripTtsQuotationApostrophes(String(text || "").normalize("NFC"));
   return TTS_RESPELLINGS.reduce(
     (result, rule) => result.replace(rule.pattern, rule.replacement),
-    String(text || "").normalize("NFC")
+    speechText
   );
 };
 

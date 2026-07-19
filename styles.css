@@ -3797,6 +3797,8 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
   direction: rtl;
 }
 
+.lesson-shell.mode-adv-conj .lesson-footer,
+.lesson-shell.mode-prepositions .lesson-footer,
 .lesson-shell.mode-binyan-board .lesson-footer,
 .lesson-shell.mode-handwriting .lesson-footer {
   position: static;

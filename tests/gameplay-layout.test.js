@@ -143,6 +143,7 @@ const GAMEPLAY_GEOMETRY = `(() => {
     body: { clientHeight: body.clientHeight, scrollHeight: body.scrollHeight },
     choices: rect(choices),
     footer: rect(footer),
+    footerPosition: footer ? getComputedStyle(footer).position : "",
   };
 })()`;
 
@@ -158,6 +159,14 @@ function assertChoicesClearFooter(geometry, label) {
   assert.ok(
     geometry.choices.bottom <= geometry.footer.top + 0.5,
     `${label} choices overlap the footer`,
+  );
+}
+
+function assertFeedbackFooterInFlow(geometry, label) {
+  assert.equal(geometry.footerPosition, "static", `${label} footer must stay in normal flow`);
+  assert.ok(
+    geometry.footer.top - geometry.choices.bottom >= 6,
+    `${label} needs visible space between the answers and feedback controls`,
   );
 }
 
@@ -269,6 +278,30 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     const feedbackGeometry = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
     assertNoGameplayScroll(feedbackGeometry, "Binyanim feedback");
     assertChoicesClearFooter(feedbackGeometry, "Binyanim feedback");
+
+    await evaluate(pageCdp, `(() => {
+      IvriQuestApp.advConj.startAdvConj();
+      IvriQuestApp.advConj.beginAdvConjFromIntro();
+      const question = IvriQuestApp.runtime.state.advConj.currentQuestion;
+      question.selectedOptionId = question.options[0].id;
+      IvriQuestApp.advConj.applyAdvConjAnswer();
+    })()`);
+    const advConjFeedback = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    assertNoGameplayScroll(advConjFeedback, "Conjugation+ feedback");
+    assertChoicesClearFooter(advConjFeedback, "Conjugation+ feedback");
+    assertFeedbackFooterInFlow(advConjFeedback, "Conjugation+ feedback");
+
+    await evaluate(pageCdp, `(() => {
+      IvriQuestApp.prepositions.startPrepositions();
+      IvriQuestApp.prepositions.beginPrepositionsFromIntro();
+      const question = IvriQuestApp.runtime.state.prepositions.currentQuestion;
+      question.selectedOptionId = question.options[0].id;
+      IvriQuestApp.prepositions.applyPrepositionsAnswer();
+    })()`);
+    const prepositionsFeedback = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    assertNoGameplayScroll(prepositionsFeedback, "Prepositions feedback");
+    assertChoicesClearFooter(prepositionsFeedback, "Prepositions feedback");
+    assertFeedbackFooterInFlow(prepositionsFeedback, "Prepositions feedback");
 
     await evaluate(pageCdp, `(() => {
       IvriQuestApp.handwriting.startHandwriting();
