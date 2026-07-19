@@ -4421,3 +4421,101 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 256 pass, 0 fail. Final `npm test` — 257 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Live browser checks at 768×1024 confirmed edge-aligned content plus a centered counter; 1024×768 confirmed the entire board centers. `git fetch origin --prune` confirmed local `main` and `origin/main` were synchronized before branching. GitHub branch `agent/responsive-sentence-alignment-and-word-orders` was pushed and ready pull request #40 was opened against `main`; this log commit is the final branch update before the requested immediate squash merge.
 
 **Risks / regressions to check:** The widescreen definition intentionally matches the gameplay top-alignment threshold, so both layout changes switch together at 768px and a 4:3-or-wider aspect ratio. No scoring, sentence grading, or Shema alternate-acceptance behavior changed in this follow-up.
+
+---
+
+### 2026-07-18 23:06 EDT — Display-font preference and compact mobile gameplay
+
+**Requested:** Add a persistent Heebo/Frank Ruhl Libre display-font setting with Heebo as the default; apply it to every existing Frank Ruhl Libre surface and the specified Sentences, Conjugation, Binyanim, and Handwriting prompts; improve Hebrew readability where space permits; compact Binyanim and Handwriting so gameplay does not scroll at 360×640; restore vertical centering on landscape/widescreen displays and Settings; and add durable regression coverage and design constraints.
+
+**Files changed:**
+- `app/constants.js`, `app/persistence.js`, `app/bootstrap-runtime.js`, `app.js` — added the `ivriquest-font-v1` preference, default/validation logic, runtime state, startup restoration, and body attribute application.
+- `app/i18n.js`, `app/ui.js`, `app/controller.js`, `app/bootstrap-data.js` — added immediate font toggling, selector rendering/accessibility, click wiring, and English/Hebrew Settings labels.
+- `app/verb-match.js` — split Conjugation's English gloss and Hebrew infinitive into dedicated spans so only the infinitive uses the selected display font.
+- `index.html` — imported Heebo, added the two-glyph Font segmented setting with Heebo first, set the pre-start default body attribute, and cache-busted every changed stylesheet/module.
+- `styles.css` — introduced the shared display-font variable; migrated all former Frank surfaces; applied the requested prompt typography and safe font-size increases; compacted Binyanim's prompt, roots, choices, and footer; compacted Handwriting's prompt, canvas, feedback state, and one-row 44px toolbar; and removed the landscape top-alignment rule while preserving safe centering/overflow.
+- `tests/app-progress.test.js` — added font default, toggle, persistence, restoration, body attribute, preview glyph, prompt-structure, font-coverage, and centering regressions.
+- `tests/gameplay-layout.test.js` — added a rendered headless-Chrome regression covering Binyanim board/question/feedback and Handwriting initial/feedback states at 360×640, footer separation, toolbar geometry, widescreen gameplay centering, Settings centering, and short-screen Settings access.
+- `AGENTS.md` — added the required 360×640 no-scroll/no-overlap viewport floor and related touch-target/safe-centering rules for future gameplay UI work.
+- `task-log.md` — recorded this implementation.
+
+**Behavior changed:** Heebo is now the default managed display font, while Settings can persistently switch all managed display surfaces to Frank Ruhl Libre. Hebrew Sentences prompts, Conjugation infinitives, Binyanim roots/forms, and Handwriting prompts now use that preference. Binyanim shows emoji, unchanged Assistant-styled formation, and Hebrew form on one compact line; Handwriting uses a smaller responsive canvas and a single-row toolbar. Both games fit without gameplay scrolling at 360×640, including feedback, and answer choices remain clear of the footer. Gameplay and fitting Settings content are vertically centered at landscape/widescreen sizes; oversized Settings remains top-reachable and scrollable.
+
+**Tests run:** Baseline `npm test` — 257 pass, 0 fail. Focused `node --test tests/app-progress.test.js` — 123 pass, 0 fail. Rendered `node --test tests/gameplay-layout.test.js` — 1 pass, 0 fail. Final `npm test` — 261 pass, 0 fail. `git diff --check` — pass. Live in-app Chrome verification covered 360×640 Binyanim and Handwriting geometry, 1366×1000 Settings centering, both font options, dark/light themes, and English/Hebrew UI.
+
+**Risks / regressions to check:** The compact layout guarantee is intentionally bounded at 360×640 CSS pixels; smaller screens are best-effort. Handwriting's feedback-state canvas reduction uses `:has()`, matching the project's Chrome/browser target. The Chrome regression skips only when no supported Chrome executable is installed. Long localized feedback remains the highest-value state to recheck when copy changes, and future display surfaces must use `var(--display-font)` to participate in the preference.
+
+---
+
+### 2026-07-18 23:20 EDT — Symmetric Binyanim prompt alignment
+
+**Requested:** Keep the new tight, centered Binyanim prompt while placing the `פָּעַל` formation label on one side, the emoji on the other, and the conjugated Hebrew form exactly in the center.
+
+**Files changed:**
+- `styles.css` — changed the Binyanim prompt line to a centered three-column grid with equal, tightly capped side tracks; pinned the formation label left, conjugated form center, and emoji right while preserving Hebrew direction and the existing hint/speech controls.
+- `index.html` — cache-busted the updated stylesheet to `20260718g`.
+- `tests/app-progress.test.js` — added structural coverage for the three-column prompt arrangement.
+- `tests/gameplay-layout.test.js` — added rendered geometry assertions that the conjugated form sits on the card centerline and the two side items have equal offsets.
+- `task-log.md` — recorded this follow-up.
+
+**Behavior changed:** The Binyanim prompt now reads as a compact symmetric cluster: formation label on the left, conjugated Hebrew form on the true centerline, and emoji on the right. The side tracks remain equal at every width and stop expanding on wide screens, so the grouping stays tight rather than spreading across the card.
+
+**Tests run:** Baseline `npm test` — 261 pass, 0 fail. Focused `node --test tests/app-progress.test.js tests/gameplay-layout.test.js` — 124 pass, 0 fail. Live Hebrew-interface check at 848×1008 measured the centered form at 0px offset, equal side spacing within 0.004px, a compact 144px side-to-side cluster, and no gameplay scrolling. Final `npm test` — 261 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** Very unusually long future Binyanim forms may cause the capped side tracks to shrink toward their 2.8rem minimum, but the center remains fixed and the 360×640 rendered regression guards against overflow and footer overlap.
+
+---
+
+### 2026-07-18 23:24 EDT — Restore Binyanim prompt to one horizontal line
+
+**Requested:** Correct the prior symmetry follow-up: retain the original single horizontal prompt line and change only the left/center/right order, without moving the emoji vertically.
+
+**Files changed:**
+- `styles.css` — pinned the formation label, conjugated form, and emoji to the same grid row while retaining their symmetric columns.
+- `index.html` — cache-busted the corrected stylesheet to `20260718h`.
+- `tests/app-progress.test.js` — added a structural assertion that all three prompt items occupy row 1.
+- `tests/gameplay-layout.test.js` — extended the rendered symmetry test to require matching vertical centers in addition to horizontal centering and equal side spacing.
+- `task-log.md` — recorded the correction.
+
+**Behavior changed:** The compact Binyanim prompt is once again one horizontal line: formation label on the left, conjugated form centered, emoji on the right. No item moves above or below another.
+
+**Tests run:** Focused `node --test tests/app-progress.test.js tests/gameplay-layout.test.js` — 124 pass, 0 fail. Live Hebrew-interface check at 848×1008 measured vertical centers within 0.004px, horizontal symmetry within 0.004px, the conjugated form within 0.004px of the card center, and no gameplay scrolling. Final `npm test` — 261 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** The regression now checks both axes, preventing a future change from preserving horizontal coordinates while silently auto-placing one item on another row.
+
+---
+
+### 2026-07-18 23:30 EDT — Keep top-bar titles in Frank Ruhl Libre
+
+**Requested:** Make the top-bar header the single exception to the display-font preference so it always keeps its serif font in both Hebrew and English.
+
+**Files changed:**
+- `styles.css` — fixed the top-bar title to Frank Ruhl Libre instead of the user-selectable display-font variable.
+- `index.html` — cache-busted the stylesheet to `20260718i`.
+- `tests/app-progress.test.js` — added regression coverage for the permanent top-bar font exception.
+- `task-log.md` — recorded the change.
+
+**Behavior changed:** The app name and in-game title shown in the top bar always use Frank Ruhl Libre, regardless of whether the rest of the app is set to Heebo or Frank Ruhl Libre. English top-bar titles retain the same serif treatment.
+
+**Tests run:** `npm test` — 261 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** This exception is intentionally scoped to `.shell-brand-title h1`; other headings continue to follow the selected display font.
+
+---
+
+### 2026-07-18 23:38 EDT — Remove Binyanim root arrows and compact the board
+
+**Requested:** Remove the navigation arrows from the Binyanim root tiles and compact the board vertically to conserve gameplay space.
+
+**Files changed:**
+- `styles.css` — suppressed the higher-specificity Hebrew arrow pseudo-element and made Binyanim grid rows content-sized and vertically centered instead of stretching to fill the lesson shell.
+- `index.html` — cache-busted the stylesheet to `20260718k`.
+- `tests/app-progress.test.js` — added structural regressions for arrow removal and content-sized grid rows.
+- `tests/gameplay-layout.test.js` — now runs the Binyanim board check in Hebrew, verifies the arrow pseudo-element is absent, and confirms the rendered grid uses centered `max-content` rows.
+- `task-log.md` — recorded the change.
+
+**Behavior changed:** Binyanim root cards no longer show arrows in either language. The six-card board uses the cards' natural content height rather than stretching rows, reducing vertical space while retaining equal card heights within each row and keeping the board centered.
+
+**Tests run:** Initial focused `node --test tests/app-progress.test.js tests/gameplay-layout.test.js` exposed a deliberately over-tight randomized pixel threshold; the source/layout assertion was corrected to test content sizing directly. Final `node --test tests/gameplay-layout.test.js` — 1 pass, 0 fail. Final `npm test` — 261 pass, 0 fail. `git diff --check` — pass. Live Hebrew 360×640 verification confirmed no arrows, no scrolling, and a compact centered six-card board.
+
+**Risks / regressions to check:** Card height remains content-driven, so roots with longer wrapped meanings may produce a taller row than shorter roots; paired cards stay equal and the board remains within the supported viewport floor.

@@ -73,6 +73,30 @@ persistence.saveThemePreference = persistence.saveThemePreference || function sa
   }
 };
 
+persistence.loadDisplayFontPreference = persistence.loadDisplayFontPreference || function loadDisplayFontPreference() {
+  const runtime = getRuntime();
+  const storage = getStorage();
+  if (!storage) return "heebo";
+
+  try {
+    return storage.getItem(runtime.constants.STORAGE_KEYS.displayFont) === "frank" ? "frank" : "heebo";
+  } catch {
+    return "heebo";
+  }
+};
+
+persistence.saveDisplayFontPreference = persistence.saveDisplayFontPreference || function saveDisplayFontPreference(value) {
+  const runtime = getRuntime();
+  const storage = getStorage();
+  if (!storage) return;
+
+  try {
+    storage.setItem(runtime.constants.STORAGE_KEYS.displayFont, value === "frank" ? "frank" : "heebo");
+  } catch {
+    // Ignore write failures.
+  }
+};
+
 persistence.loadSoundPreference = persistence.loadSoundPreference || function loadSoundPreference() {
   const runtime = getRuntime();
   const raw = runtime.storageApi.loadJson(runtime.constants.STORAGE_KEYS.sound, null);

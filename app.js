@@ -108,6 +108,8 @@ const loadLanguagePreference = persistenceModule.loadLanguagePreference;
 const saveLanguagePreference = persistenceModule.saveLanguagePreference;
 const loadThemePreference = persistenceModule.loadThemePreference;
 const saveThemePreference = persistenceModule.saveThemePreference;
+const loadDisplayFontPreference = persistenceModule.loadDisplayFontPreference;
+const saveDisplayFontPreference = persistenceModule.saveDisplayFontPreference;
 const loadSoundPreference = persistenceModule.loadSoundPreference;
 const saveSoundPreference = persistenceModule.saveSoundPreference;
 const loadSpeechPreference = persistenceModule.loadSpeechPreference;
@@ -122,8 +124,10 @@ const persistSessionState = persistenceModule.persistSessionState;
 
 const applyLanguage = i18nModule.applyLanguage;
 const applyTheme = i18nModule.applyTheme;
+const applyDisplayFont = i18nModule.applyDisplayFont;
 const toggleLanguage = i18nModule.toggleLanguage;
 const toggleTheme = i18nModule.toggleTheme;
+const toggleDisplayFont = i18nModule.toggleDisplayFont;
 const toggleNiqqudPreference = i18nModule.toggleNiqqudPreference;
 const toggleSoundPreference = i18nModule.toggleSoundPreference;
 const toggleSpeechPreference = i18nModule.toggleSpeechPreference;
@@ -369,6 +373,8 @@ if (
   !saveLanguagePreference ||
   !loadThemePreference ||
   !saveThemePreference ||
+  !loadDisplayFontPreference ||
+  !saveDisplayFontPreference ||
   !loadSoundPreference ||
   !saveSoundPreference ||
   !loadSpeechPreference ||
@@ -382,8 +388,10 @@ if (
   !persistSessionState ||
   !applyLanguage ||
   !applyTheme ||
+  !applyDisplayFont ||
   !toggleLanguage ||
   !toggleTheme ||
+  !toggleDisplayFont ||
   !toggleNiqqudPreference ||
   !toggleSoundPreference ||
   !toggleSpeechPreference ||
@@ -638,6 +646,7 @@ const state = createInitialState({
   restoredUi,
   language: loadLanguagePreference(),
   theme: loadThemePreference(),
+  displayFont: loadDisplayFontPreference(),
   audio: loadSoundPreference(),
   speech: loadSpeechPreference(),
   welcomeModalSeen: hasSeenWelcomeModal(),
@@ -755,6 +764,7 @@ sanitizeState();
 restoreSessionState(restoredSession);
 state.route = resolveInitialRoute(state.route, { initializing: true });
 applyTheme();
+applyDisplayFont();
 applyLanguage();
 bindUi();
 resumeActiveTimers();

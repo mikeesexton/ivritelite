@@ -24,6 +24,14 @@ Do not skip the log entry even for small or documentation-only tasks.
 - Do not add comments or docstrings to code you did not write.
 - Run `npm test` before and after non-trivial code changes and record the result in the log.
 
+## Gameplay viewport floor (required)
+
+- Gameplay UI changes must keep all active, answer, and feedback states usable without vertical scrolling or footer overlap at 360×640 CSS pixels.
+- Keep action toolbars on one row with touch targets at least 44px high where the mode calls for a compact toolbar.
+- When space is tight, compact redundant whitespace, gaps, and flexible media/canvas areas before reducing Hebrew display text or touch-target size.
+- Preserve safe vertical centering: center gameplay when it fits, but keep the top reachable for content that genuinely exceeds the viewport.
+- Run the rendered layout regression in `tests/gameplay-layout.test.js` after gameplay layout changes.
+
 ## Sentence-bank authoring (required)
 
 Before adding or rechunking sentence-bank content, read

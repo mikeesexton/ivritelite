@@ -158,6 +158,14 @@ ui.renderThemeToggle = ui.renderThemeToggle || function renderThemeToggle() {
   runtime.el.themeToggle.setAttribute("aria-pressed", String(runtime.state.theme === "dark"));
 };
 
+ui.renderDisplayFontToggle = ui.renderDisplayFontToggle || function renderDisplayFontToggle() {
+  const runtime = getRuntime();
+  if (!runtime.el?.displayFontToggle) return;
+  const fontName = runtime.state.displayFont === "frank" ? "Frank Ruhl Libre" : "Heebo";
+  runtime.el.displayFontToggle.setAttribute("aria-label", `${translate("settings.font")}: ${fontName}`);
+  runtime.el.displayFontToggle.setAttribute("aria-description", translate("settings.fontDescription"));
+};
+
 ui.setGamePickerVisibility = ui.setGamePickerVisibility || function setGamePickerVisibility(visible) {
   getRuntime().el?.gamePicker?.classList.toggle("hidden", !visible);
 };
@@ -1422,6 +1430,7 @@ ui.createResultsPerformanceGraphic = ui.createResultsPerformanceGraphic || funct
 ui.renderSettingsState = ui.renderSettingsState || function renderSettingsState() {
   app.persistence?.applySurveyLinks?.();
   ui.renderThemeToggle();
+  ui.renderDisplayFontToggle();
   ui.renderNiqqudToggle();
   ui.renderSoundToggle();
   ui.renderSpeechToggle();
