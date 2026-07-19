@@ -4519,3 +4519,18 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Initial focused `node --test tests/app-progress.test.js tests/gameplay-layout.test.js` exposed a deliberately over-tight randomized pixel threshold; the source/layout assertion was corrected to test content sizing directly. Final `node --test tests/gameplay-layout.test.js` — 1 pass, 0 fail. Final `npm test` — 261 pass, 0 fail. `git diff --check` — pass. Live Hebrew 360×640 verification confirmed no arrows, no scrolling, and a compact centered six-card board.
 
 **Risks / regressions to check:** Card height remains content-driven, so roots with longer wrapped meanings may produce a taller row than shorter roots; paired cards stay equal and the board remains within the supported viewport floor.
+
+---
+
+### 2026-07-18 23:40 EDT — Publish typography and responsive gameplay polish
+
+**Requested:** Push the completed typography, Settings, Binyanim, Handwriting, and responsive-layout work to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded publication. The published implementation includes the display-font preference and localization/runtime wiring, responsive gameplay CSS, Binyanim refinements, cache busts, viewport design constraints, unit coverage, and rendered Chrome regression from the preceding task entries.
+
+**Behavior changed:** The completed typography and responsive gameplay polish is published through pull request #41 for immediate merge into GitHub `main`.
+
+**Tests run:** Final pre-publication `npm test` — 261 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. GitHub reported pull request #41 clean and mergeable with no required status checks.
+
+**Risks / regressions to check:** None specific to publication. After merge, synchronize local `main` and remove the publication branch locally and remotely.
