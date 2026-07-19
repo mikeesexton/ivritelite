@@ -3458,6 +3458,29 @@ test("all game summaries now use only score accuracy and time metrics", () => {
   });
 });
 
+test("handwriting summaries arrange per-letter results in three columns", () => {
+  const harness = loadAppHarness([]);
+  const { app, document, state } = harness;
+  Object.assign(state.summary, {
+    active: true,
+    game: "handwriting",
+    correctCount: 2,
+    incorrectCount: 1,
+    elapsedSeconds: 10,
+    mistakes: [{ primary: "כ", secondary: "kaf" }],
+    corrects: [
+      { primary: "ל", secondary: "lamed" },
+      { primary: "מ", secondary: "mem" },
+    ],
+  });
+
+  app.ui.renderSummaryState();
+
+  const letterGrid = document.querySelector("#resultsSummary").children[2];
+  assert.equal(letterGrid.classList.contains("results-mistakes--letter-grid"), true);
+  assert.equal(letterGrid.querySelectorAll(".compact-row").length, 3);
+});
+
 test("results promote structured mistake notes into a mistake clinic", () => {
   const harness = loadAppHarness([]);
   const { app, document, state } = harness;

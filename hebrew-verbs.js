@@ -243,6 +243,10 @@ const TRANSLATION_HIDDEN_STARTER_VERB_IDS = new Set([
   "advanced-verb-lehishtamesh",
 ]);
 
+const CONJUGATION_HIDDEN_VERB_IDS = new Set([
+  "advanced-verb-lehitkayem",
+]);
+
 function normalizeAvailability(availability) {
   return {
     translationQuiz: availability?.translationQuiz !== false,
@@ -6720,6 +6724,7 @@ function buildVerbConjugationDeck(config) {
 function expandEntryToStudyItems(entry) {
   const senses = Array.isArray(entry?.senses) ? entry.senses.filter((sense) => sense && String(sense.gloss || "").trim()) : [];
   if (!senses.length) return [];
+  if (CONJUGATION_HIDDEN_VERB_IDS.has(entry.id)) return [];
 
   if (!isConjugationCandidate(entry) && !hasAuthoritativeForms(entry)) {
     return [];
@@ -7579,6 +7584,6 @@ return {
   buildGeneratedForms,
   resolveLearnerFacingForms,
   normalizeAndValidateFormSet,
-  __build: "20260714a",
+  __build: "20260718a",
 };
 });

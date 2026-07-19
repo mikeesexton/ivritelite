@@ -1236,6 +1236,9 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
   if (gridSummaryGames.has(runtime.state.summary.game)) {
     mistakesWrap.classList.add("results-mistakes--grid");
   }
+  if (runtime.state.summary.game === "handwriting") {
+    mistakesWrap.classList.add("results-mistakes--letter-grid");
+  }
   const heading = global.document.createElement("h3");
   heading.className = "results-section-title";
   const hasClinicNotes = runtime.state.summary.mistakes.some((item) => ui.getMistakeClinicText(item));
