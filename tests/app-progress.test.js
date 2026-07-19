@@ -1368,7 +1368,7 @@ test("sentence builder keeps directional content edge-aligned and centers the wo
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*justify-content:\s*flex-start;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*text-align:\s*start;/s);
   assert.match(styles, /\.prompt-text\.english-prompt\s*\{[^}]*direction:\s*ltr;[^}]*unicode-bidi:\s*isolate;/s);
-  assert.match(styles, /\.prompt-text\.hebrew\s*\{[^}]*font-family:\s*"Assistant",\s*sans-serif;/s);
+  assert.match(styles, /\.prompt-text\.hebrew\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*text-align:\s*start;/s);
   assert.match(styles, /\.sentence-answer-line\.english\s*\{[^}]*text-align:\s*start;/s);
   assert.match(styles, /\.sentence-answer-line\.hebrew\s*\{[^}]*text-align:\s*start;/s);
@@ -1570,7 +1570,7 @@ test("gameplay boards use the full shell width and center safely outside widescr
 
   assert.match(styles, /\.app-shell\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*none;/s);
   assert.match(styles, /body\[data-gameplay-active="true"\] #homeView\.active\s*\{[^}]*width:\s*100%;[^}]*margin-block:\s*auto;/s);
-  assert.match(styles, /@media \(min-width: 768px\) and \(min-aspect-ratio: 4 \/ 3\)\s*\{[\s\S]*?body\[data-gameplay-active="true"\] #homeView\.active\s*\{[^}]*margin-block:\s*0;/s);
+  assert.doesNotMatch(styles, /body\[data-gameplay-active="true"\] #homeView\.active\s*\{[^}]*margin-block:\s*0;/s);
   assert.match(styles, /@media \(min-width: 768px\) and \(max-width: 1023px\)\s*\{[\s\S]*?\.prompt-card\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*none;/s);
   assert.match(styles, /@media \(min-width: 768px\) and \(max-width: 1023px\)\s*\{[\s\S]*?\.choices\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*none;/s);
   assert.match(styles, /@media \(min-width: 600px\)\s*\{[\s\S]*?\.lesson-shell\.mode-standard:not\(\.mode-sentence-bank\):not\(\.mode-binyan-board\):not\(\.mode-handwriting\) > \.choices:not\(\.match-grid\):not\(\.summary-grid\)\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);[^}]*grid-auto-rows:\s*1fr;/s);
@@ -1599,6 +1599,7 @@ test("home route uses safe vertical centering and leave warning text stays cente
   assert.match(styles, /\.shell-body\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*0;[^}]*overflow-y:\s*auto;/s);
   assert.match(styles, /\.page-stack\s*\{[^}]*display:\s*grid;[^}]*min-height:\s*100%;[^}]*grid-template-rows:\s*minmax\(0,\s*1fr\);[^}]*align-items:\s*start;/s);
   assert.match(styles, /#homeView\.active\s*\{[^}]*margin-block:\s*auto;/s);
+  assert.match(styles, /#settingsView\.active\s*\{[^}]*margin-block:\s*auto;/s);
   assert.match(styles, /@media \(min-width: 1024px\)\s*\{[\s\S]*?\.shell-body\s*\{[^}]*display:\s*grid;/s);
   assert.match(styles, /body\[data-ui-lang="he"\] \.session-leave-dialog\s*\{[^}]*text-align:\s*center;/s);
 });
@@ -3097,6 +3098,72 @@ test("sound preference defaults to disabled and toggle persists to localStorage"
   assert.equal(localStorage.getItem("ivriquest-sound-v1"), JSON.stringify({ enabled: true }));
 });
 
+test("display font defaults to Heebo and persists Frank Ruhl Libre as the alternative", () => {
+  const firstHarness = loadAppHarness([], [], [], {
+    localStorageData: {
+      "ivriquest-welcome-seen-v1": "1",
+    },
+  });
+
+  assert.equal(firstHarness.state.displayFont, "heebo");
+  assert.equal(firstHarness.document.body.getAttribute("data-display-font"), "heebo");
+  assert.equal(firstHarness.document.querySelector("#displayFontToggle").getAttribute("aria-label"), "Font: Heebo");
+
+  firstHarness.document.querySelector("#displayFontToggle").click();
+  assert.equal(firstHarness.state.displayFont, "frank");
+  assert.equal(firstHarness.document.body.getAttribute("data-display-font"), "frank");
+  assert.equal(firstHarness.localStorage.getItem("ivriquest-font-v1"), "frank");
+  assert.equal(firstHarness.document.querySelector("#displayFontToggle").getAttribute("aria-label"), "Font: Frank Ruhl Libre");
+
+  const restoredHarness = loadAppHarness([], [], [], {
+    localStorageData: firstHarness.localStorage.__dump(),
+  });
+  assert.equal(restoredHarness.state.displayFont, "frank");
+  assert.equal(restoredHarness.document.body.getAttribute("data-display-font"), "frank");
+
+  const invalidHarness = loadAppHarness([], [], [], {
+    localStorageData: {
+      "ivriquest-font-v1": "unsupported-font",
+      "ivriquest-welcome-seen-v1": "1",
+    },
+  });
+  assert.equal(invalidHarness.state.displayFont, "heebo");
+  assert.equal(invalidHarness.document.body.getAttribute("data-display-font"), "heebo");
+
+  assert.equal(
+    firstHarness.document.querySelector("#displayFontToggle").getAttribute("aria-description"),
+    "Switch between Heebo and Frank Ruhl Libre. Each preview shows the Hebrew letter ayin."
+  );
+  firstHarness.app.i18n.toggleLanguage();
+  assert.equal(
+    firstHarness.document.querySelector("#displayFontToggle").getAttribute("aria-description"),
+    "החלפה בין Heebo לבין Frank Ruhl Libre. כל תצוגה מקדימה מציגה את האות עי״ן."
+  );
+});
+
+test("font selector previews both faces and requested Hebrew surfaces use the shared display font", () => {
+  const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
+
+  assert.match(markup, /family=Heebo:wght@400;500;600;700;900/);
+  assert.match(markup, /id="displayFontToggle"[\s\S]*data-seg="heebo">ע<[\s\S]*data-seg="frank">ע</s);
+  assert.match(styles, /:root\s*\{[^}]*--display-font:\s*"Heebo",\s*"Assistant",\s*sans-serif;/s);
+  assert.match(styles, /body\[data-display-font="frank"\]\s*\{[^}]*--display-font:\s*"Frank Ruhl Libre",\s*serif;/s);
+  assert.match(styles, /\.shell-brand-title h1\s*\{[^}]*font-family:\s*"Frank Ruhl Libre",\s*serif;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
+  assert.match(styles, /\.binyan-root-letters\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
+  assert.match(styles, /body\[data-ui-lang="he"\] \.game-tile\.binyan-root-tile::after\s*\{[^}]*content:\s*none;/s);
+  assert.match(styles, /\.choices\.binyan-board-grid\s*\{[^}]*grid-auto-rows:\s*max-content;[^}]*align-self:\s*center;[^}]*align-content:\s*center;/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-text\.hebrew\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-label\s*\{[^}]*font-family:\s*"Assistant",\s*sans-serif;/s);
+  assert.match(styles, /\.handwriting-line\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-card\s*\{[^}]*display:\s*grid;[^}]*grid-template-columns:\s*minmax\(2\.8rem,\s*4\.8rem\)\s+minmax\(0,\s*max-content\)\s+minmax\(2\.8rem,\s*4\.8rem\);[^}]*justify-content:\s*center;/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-root-emoji,[\s\S]*?\.lesson-shell\.mode-binyan-board \.prompt-text\s*\{[^}]*grid-row:\s*1;/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-label\s*\{[^}]*grid-column:\s*1;/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-text\s*\{[^}]*grid-column:\s*2;/s);
+  assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-root-emoji\s*\{[^}]*grid-column:\s*3;/s);
+});
+
 test("speech preference defaults to disabled and toggle persists separately", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
@@ -4132,6 +4199,30 @@ test("starting conjugation immediately swaps out the home picker and shows five 
   assert.equal(harness.state.match.leftCards.length, 5);
   assert.equal(harness.state.match.rightCards.length, 5);
   harness.goHome();
+});
+
+test("conjugation prompt keeps the English gloss separate from the display-font Hebrew infinitive", () => {
+  const verbDeck = [{
+    word: { id: "verb-open", en: "to open", he: "לפתוח", heNiqqud: "לִפְתֹּחַ" },
+    forms: [],
+  }];
+  const harness = loadAppHarness([], [], verbDeck);
+  harness.state.mode = "verbMatch";
+  harness.state.match.active = true;
+  harness.state.match.currentVerb = verbDeck[0];
+  harness.state.showNiqqudInline = true;
+
+  harness.app.verbMatch.renderVerbMatchPrompt();
+
+  const prompt = harness.document.querySelector("#promptText");
+  assert.equal(prompt.classList.contains("verb-match-prompt"), true);
+  assert.equal(prompt.children.length, 3);
+  assert.equal(prompt.children[0].classList.contains("verb-prompt-english"), true);
+  assert.equal(prompt.children[0].textContent, "to open");
+  assert.equal(prompt.children[1].textContent, "|");
+  assert.equal(prompt.children[2].classList.contains("verb-prompt-hebrew"), true);
+  assert.equal(prompt.children[2].getAttribute("lang"), "he");
+  assert.equal(prompt.children[2].textContent, "לִפְתֹּחַ");
 });
 
 test("conjugation keeps English on the left and Hebrew on the right in Hebrew UI", async () => {

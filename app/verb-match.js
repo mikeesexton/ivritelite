@@ -410,8 +410,11 @@ verbMatch.renderVerbMatchIdleState = verbMatch.renderVerbMatchIdleState || funct
   runtime.el.choiceContainer.classList.remove("summary-grid");
   h.renderSessionHeader?.();
   app.ui?.renderPromptLabel?.("", false);
+  runtime.el.promptText.innerHTML = "";
   runtime.el.promptText.classList.remove("hebrew");
+  runtime.el.promptText.classList.remove("verb-match-prompt");
   runtime.el.promptText.classList.add("english-prompt");
+  runtime.el.promptText.removeAttribute("aria-label");
   runtime.el.promptText.textContent = translate("prompt.verbMatchStart");
   runtime.el.choiceContainer.innerHTML = "";
   runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
@@ -440,8 +443,11 @@ verbMatch.renderVerbMatchPrompt = verbMatch.renderVerbMatchPrompt || function re
   const runtime = getRuntime();
   const h = getHelpers();
   if (!runtime.state.match.active || !runtime.state.match.currentVerb) {
+    runtime.el.promptText.innerHTML = "";
     runtime.el.promptText.classList.remove("hebrew");
+    runtime.el.promptText.classList.remove("verb-match-prompt");
     runtime.el.promptText.classList.add("english-prompt");
+    runtime.el.promptText.removeAttribute("aria-label");
     runtime.el.promptText.textContent = translate("prompt.verbMatchStart");
     h.renderNiqqudToggle?.();
     return;
@@ -449,9 +455,28 @@ verbMatch.renderVerbMatchPrompt = verbMatch.renderVerbMatchPrompt || function re
 
   const current = stripUsagePattern(runtime.state.match.currentVerb.word);
   const heText = runtime.state.showNiqqudInline ? current.heNiqqud : current.he;
+  runtime.el.promptText.innerHTML = "";
   runtime.el.promptText.classList.remove("hebrew");
   runtime.el.promptText.classList.add("english-prompt");
-  runtime.el.promptText.textContent = `${current.en} | ${heText}`;
+  runtime.el.promptText.classList.add("verb-match-prompt");
+  runtime.el.promptText.setAttribute("aria-label", `${current.en} | ${heText}`);
+
+  const english = global.document.createElement("span");
+  english.className = "verb-prompt-english";
+  english.textContent = current.en;
+
+  const separator = global.document.createElement("span");
+  separator.className = "verb-prompt-separator";
+  separator.setAttribute("aria-hidden", "true");
+  separator.textContent = "|";
+
+  const hebrew = global.document.createElement("span");
+  hebrew.className = "verb-prompt-hebrew";
+  hebrew.dir = "rtl";
+  hebrew.setAttribute("lang", "he");
+  hebrew.textContent = heText;
+
+  runtime.el.promptText.append(english, separator, hebrew);
   h.renderNiqqudToggle?.();
 };
 

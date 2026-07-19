@@ -75,6 +75,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.homeSpeechToggle?.addEventListener("click", () => app.i18n?.toggleSpeechPreference?.());
   runtime.el.langToggle?.addEventListener("click", () => app.i18n?.toggleLanguage?.());
   runtime.el.themeToggle?.addEventListener("click", () => app.i18n?.toggleTheme?.());
+  runtime.el.displayFontToggle?.addEventListener("click", () => app.i18n?.toggleDisplayFont?.());
   runtime.el.soundToggle?.addEventListener("click", () => app.i18n?.toggleSoundPreference?.());
   runtime.el.speechToggle?.addEventListener("click", () => app.i18n?.toggleSpeechPreference?.());
   getDesktopHubPanels(runtime).forEach(({ card, toggle }) => {

@@ -68,6 +68,13 @@ i18n.applyTheme = i18n.applyTheme || function applyTheme() {
   app.ui?.renderThemeToggle?.();
 };
 
+i18n.applyDisplayFont = i18n.applyDisplayFont || function applyDisplayFont() {
+  const runtime = getRuntime();
+  const displayFont = runtime.state.displayFont === "frank" ? "frank" : "heebo";
+  global.document.body?.setAttribute("data-display-font", displayFont);
+  app.ui?.renderDisplayFontToggle?.();
+};
+
 i18n.toggleLanguage = i18n.toggleLanguage || function toggleLanguage() {
   const runtime = getRuntime();
   runtime.state.language = runtime.state.language === "en" ? "he" : "en";
@@ -81,6 +88,14 @@ i18n.toggleTheme = i18n.toggleTheme || function toggleTheme() {
   runtime.state.theme = runtime.state.theme === "light" ? "dark" : "light";
   app.persistence?.saveThemePreference?.(runtime.state.theme);
   i18n.applyTheme();
+  getHelpers().renderAll?.();
+};
+
+i18n.toggleDisplayFont = i18n.toggleDisplayFont || function toggleDisplayFont() {
+  const runtime = getRuntime();
+  runtime.state.displayFont = runtime.state.displayFont === "frank" ? "heebo" : "frank";
+  app.persistence?.saveDisplayFontPreference?.(runtime.state.displayFont);
+  i18n.applyDisplayFont();
   getHelpers().renderAll?.();
 };
 

@@ -2,6 +2,7 @@
    parchment ink, gilt gold as the working accent. */
 :root {
   color-scheme: dark;
+  --display-font: "Heebo", "Assistant", sans-serif;
   --ink: #EAE3D3;
   --ink-soft: #A29880;
   --paper: #16130D;
@@ -50,6 +51,10 @@
   --bubble-ink: #1D1B16;
   --bubble-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
   --sticky-actions-bg: linear-gradient(to bottom, rgba(22, 19, 13, 0) 0%, rgba(22, 19, 13, 0.95) 30%, #16130D 60%);
+}
+
+body[data-display-font="frank"] {
+  --display-font: "Frank Ruhl Libre", serif;
 }
 
 /* Hebrew Editorial — paper edition: barely-warm white, ink text, deep indigo
@@ -177,7 +182,7 @@ h2,
 .review-section-title,
 .session-leave-dialog h3,
 .welcome-head h3 {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -458,6 +463,10 @@ body[data-gameplay-active="true"] {
 }
 
 #homeView.active {
+  margin-block: auto;
+}
+
+#settingsView.active {
   margin-block: auto;
 }
 
@@ -776,7 +785,7 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
 }
 
 .domain-emoji.domain-letter {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 700;
   font-size: 1.05rem;
   color: var(--gold);
@@ -829,7 +838,7 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
 }
 
 #modeTitle {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 700;
   font-size: 1.05rem;
   line-height: 1.2;
@@ -1078,7 +1087,7 @@ body[data-ui-lang="he"] .prompt-function-hint {
 .prompt-text.hebrew {
   direction: rtl;
   unicode-bidi: isolate;
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 500;
   text-align: center;
 }
@@ -1109,6 +1118,27 @@ body[data-ui-lang="he"] .prompt-function-hint {
   font-size: clamp(1.22rem, 3.1vw, 1.66rem);
   line-height: 1.2;
   text-align: center;
+}
+
+.lesson-shell.mode-verb-match .prompt-text.verb-match-prompt {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.14em 0.38em;
+}
+
+.verb-prompt-separator {
+  color: var(--ink-soft);
+}
+
+.verb-prompt-hebrew {
+  direction: rtl;
+  unicode-bidi: isolate;
+  font-family: var(--display-font);
+  font-size: clamp(1.5rem, 3.6vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1;
 }
 
 .lesson-shell.mode-verb-match .prompt-hint-note {
@@ -1159,7 +1189,7 @@ body[data-ui-lang="he"] .prompt-function-hint {
 }
 
 .lesson-shell.mode-sentence-bank .prompt-text.hebrew {
-  font-family: "Assistant", sans-serif;
+  font-family: var(--display-font);
   text-align: start;
   margin-left: auto;
   margin-right: 0;
@@ -1215,7 +1245,7 @@ body[data-ui-lang="he"] .prompt-function-hint {
 .game-tile::before {
   counter-increment: lesson;
   content: counter(lesson, hebrew);
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 700;
   font-size: 1.3rem;
   line-height: 1;
@@ -1247,7 +1277,7 @@ body[data-ui-lang="he"] .prompt-function-hint {
 }
 
 .game-tile-title {
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-size: 1.2rem;
   font-weight: 500;
   letter-spacing: 0;
@@ -1313,7 +1343,7 @@ body[data-ui-lang="he"] .prompt-function-hint {
 .choice-btn.hebrew {
   direction: rtl;
   text-align: center;
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 500;
   font-size: 1.2rem;
 }
@@ -1525,7 +1555,7 @@ body[data-theme="light"] .sentence-answer-line {
 
 .sentence-drag-ghost.hebrew {
   direction: rtl;
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 500;
   font-size: 1.14rem;
 }
@@ -1613,7 +1643,7 @@ body[data-theme="light"] .sentence-answer-line {
 
 .match-card.hebrew {
   direction: rtl;
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-weight: 500;
   font-size: clamp(1.1rem, 3vw, 1.2rem);
 }
@@ -1755,7 +1785,7 @@ body[data-theme="light"] .sentence-answer-line {
 .results-praise {
   margin: 0;
   max-width: 12ch;
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 700;
   line-height: 0.95;
@@ -2366,10 +2396,38 @@ body[data-ui-lang="he"] .settings-row-label {
   color: var(--ink-soft);
 }
 
+.font-setting-icon {
+  font-family: var(--display-font);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.settings-font-seg .font-preview {
+  min-width: 2.1rem;
+  padding-block: 0;
+  font-size: 1.28rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.font-preview-heebo {
+  font-family: "Heebo", "Assistant", sans-serif;
+}
+
+.font-preview-frank {
+  font-family: "Frank Ruhl Libre", serif;
+}
+
 body[data-ui-lang="en"] .settings-seg-opt[data-seg="en"],
 body[data-ui-lang="he"] .settings-seg-opt[data-seg="he"],
 body[data-theme="dark"] .settings-seg-opt[data-seg="dark"],
 body[data-theme="light"] .settings-seg-opt[data-seg="light"] {
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+body[data-display-font="heebo"] .settings-seg-opt[data-seg="heebo"],
+body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   background: var(--paper-2);
   color: var(--ink);
 }
@@ -2455,7 +2513,7 @@ body[data-ui-locked="true"] .app-shell {
   border: 2px solid var(--bubble-border);
   background: var(--bubble-bg);
   color: var(--bubble-ink);
-  font-family: "Frank Ruhl Libre", serif;
+  font-family: var(--display-font);
   font-size: clamp(1.35rem, 3.5vw, 2rem);
   font-weight: 800;
   line-height: 1.1;
@@ -3595,6 +3653,9 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
 /* Binyanim paradigm board */
 .choices.binyan-board-grid {
   grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: max-content;
+  align-self: center;
+  align-content: center;
   gap: 0.6rem;
 }
 
@@ -3624,6 +3685,10 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
   content: none;
 }
 
+body[data-ui-lang="he"] .game-tile.binyan-root-tile::after {
+  content: none;
+}
+
 .binyan-root-tile:hover {
   border-color: rgba(201, 165, 77, 0.5);
 }
@@ -3638,9 +3703,9 @@ body[data-theme="light"] .binyan-root-tile:hover {
 }
 
 .binyan-root-letters {
-  font-family: "Assistant", sans-serif;
-  font-size: 1.7rem;
-  font-weight: 700;
+  font-family: var(--display-font);
+  font-size: 1.85rem;
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 
@@ -3679,9 +3744,57 @@ body[data-theme="light"] .binyan-root-tile:hover {
 }
 
 .lesson-shell.mode-binyan-board .prompt-text.hebrew {
+  font-family: var(--display-font);
+  font-size: 2.15rem;
+  font-weight: 600;
+}
+
+.lesson-shell.mode-binyan-board .prompt-card {
+  display: grid;
+  grid-template-columns: minmax(2.8rem, 4.8rem) minmax(0, max-content) minmax(2.8rem, 4.8rem);
+  align-items: center;
+  justify-content: center;
+  gap: 0.46rem;
+  min-height: 0;
+  padding: 3.15rem 0.78rem 0.58rem;
+  direction: ltr;
+}
+
+.lesson-shell.mode-binyan-board .prompt-label-row,
+.lesson-shell.mode-binyan-board .prompt-content-row {
+  display: contents;
+}
+
+.lesson-shell.mode-binyan-board .prompt-root-emoji,
+.lesson-shell.mode-binyan-board .prompt-label,
+.lesson-shell.mode-binyan-board .prompt-text {
+  grid-row: 1;
+  justify-self: center;
+}
+
+.lesson-shell.mode-binyan-board .prompt-label {
+  grid-column: 1;
   font-family: "Assistant", sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
+  direction: rtl;
+}
+
+.lesson-shell.mode-binyan-board .prompt-text {
+  grid-column: 2;
+}
+
+.lesson-shell.mode-binyan-board .prompt-root-emoji {
+  grid-column: 3;
+}
+
+body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
+  direction: rtl;
+}
+
+.lesson-shell.mode-binyan-board .lesson-footer,
+.lesson-shell.mode-handwriting .lesson-footer {
+  position: static;
+  bottom: auto;
+  background: transparent;
 }
 
 .lesson-shell.mode-sentence-bank .prompt-card.prompt-card--audio {
@@ -3708,10 +3821,10 @@ body[data-theme="light"] .binyan-root-tile:hover {
 
 .handwriting-line {
   direction: rtl;
-  font-family: "Assistant", sans-serif;
-  font-size: clamp(1.3rem, 4.2vw, 1.9rem);
-  line-height: 1.5;
-  font-weight: 700;
+  font-family: var(--display-font);
+  font-size: clamp(1.45rem, 4.4vw, 2rem);
+  line-height: 1.28;
+  font-weight: 600;
 }
 
 .handwriting-line .hw-cell {
@@ -3740,7 +3853,7 @@ body[data-theme="light"] .binyan-root-tile:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 0.48rem;
   width: 100%;
 }
 
@@ -3756,14 +3869,16 @@ body[data-theme="light"] .binyan-root-tile:hover {
 }
 
 .handwriting-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.38rem;
+  width: 100%;
 }
 
 .handwriting-tool-btn {
-  min-width: 76px;
+  min-width: 0;
+  min-height: 44px;
+  padding-inline: 0.3rem;
 }
 
 @media (min-width: 600px) {
@@ -3774,10 +3889,6 @@ body[data-theme="light"] .binyan-root-tile:hover {
 }
 
 @media (min-width: 768px) and (min-aspect-ratio: 4 / 3) {
-  body[data-gameplay-active="true"] #homeView.active {
-    margin-block: 0;
-  }
-
   .lesson-shell.mode-sentence-bank .prompt-content-row {
     justify-content: center;
   }
@@ -3795,5 +3906,115 @@ body[data-theme="light"] .binyan-root-tile:hover {
 
   .lesson-shell.mode-sentence-bank .sentence-token-bank {
     justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .choice-btn.hebrew {
+    font-size: 1.1rem;
+  }
+
+  .match-card.hebrew {
+    font-size: clamp(1.02rem, 3.7vw, 1.1rem);
+  }
+
+  .lesson-shell.mode-binyan-board .prompt-card {
+    gap: 0.34rem;
+    padding: 2.85rem 0.55rem 0.42rem;
+  }
+
+  .lesson-shell.mode-binyan-board .prompt-root-emoji {
+    font-size: 1.42rem;
+  }
+
+  .lesson-shell.mode-binyan-board .prompt-label {
+    font-size: 1.14rem;
+  }
+
+  .lesson-shell.mode-binyan-board .prompt-text.hebrew {
+    font-size: 2rem;
+  }
+
+  .lesson-shell.mode-handwriting .prompt-card {
+    padding: 0.54rem 0.62rem;
+  }
+
+  .prompt-text.handwriting-prompt {
+    gap: 0.2rem;
+  }
+}
+
+@media (max-width: 767px) and (max-height: 700px) {
+  .lesson-shell.mode-binyan-board,
+  .lesson-shell.mode-handwriting {
+    gap: 0.32rem;
+    padding: 0.52rem;
+  }
+
+  .lesson-shell.mode-binyan-board .prompt-card {
+    padding-top: 2.7rem;
+  }
+
+  .choices.binyan-board-grid {
+    gap: 0.38rem;
+  }
+
+  .binyan-root-tile {
+    min-height: 112px;
+    gap: 0.22rem;
+    padding: 0.58rem 0.54rem;
+  }
+
+  .binyan-root-emoji {
+    font-size: 1.55rem;
+  }
+
+  .binyan-root-letters {
+    font-size: 1.65rem;
+  }
+
+  .binyan-root-meaning {
+    font-size: 0.82rem;
+    line-height: 1.16;
+  }
+
+  .lesson-shell.mode-binyan-board .choice-btn {
+    min-height: 44px;
+    padding-block: 0.48rem;
+  }
+
+  .lesson-shell.mode-binyan-board .next-btn {
+    min-height: 44px;
+  }
+
+  .lesson-shell.mode-binyan-board .feedback-tray,
+  .lesson-shell.mode-handwriting .feedback-tray {
+    padding: 0.42rem 0.56rem;
+  }
+
+  .lesson-shell.mode-handwriting .prompt-card {
+    padding: 0.38rem 0.5rem;
+  }
+
+  .handwriting-line {
+    font-size: 1.32rem;
+    line-height: 1.16;
+  }
+
+  .handwriting-en {
+    font-size: 0.82rem;
+    line-height: 1.12;
+  }
+
+  .handwriting-canvas {
+    width: min(100%, 84vw, 39svh, 25rem);
+  }
+
+  .handwriting-tool-btn {
+    font-size: 0.84rem;
+  }
+
+  .lesson-shell.mode-handwriting:has(.feedback-tray:not(.hidden)) .handwriting-canvas {
+    width: min(100%, 84vw, 29svh, 25rem);
   }
 }
