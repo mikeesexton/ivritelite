@@ -478,7 +478,6 @@ test("starter plan verb keeps quadriliteral metadata and formal future plural fo
 });
 
 test("requested advanced verbs appear in conjugation with curated forms", () => {
-  const seedEntries = verbApi.getSeedVerbEntries();
   const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
 
   const analyze = deck.find((entry) => entry.id === "advanced-verb-lenateach--sense-1");
@@ -508,24 +507,27 @@ test("requested advanced verbs appear in conjugation with curated forms", () => 
     discuss.forms.find((form) => form.id === "future_first_person_singular")?.englishText,
     "I will discuss"
   );
+});
 
-  const takePlaceSeed = seedEntries.find((entry) => entry.id === "advanced-verb-lehitkayem");
-  const takePlace = deck.find((entry) => entry.id === "advanced-verb-lehitkayem--sense-1");
+test("להתקיים stays in source data but is excluded from the conjugation game", () => {
+  const takePlaceSeed = verbApi.getSeedVerbEntries()
+    .find((entry) => entry.id === "advanced-verb-lehitkayem");
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+
   assert.ok(takePlaceSeed);
-  assert.ok(takePlace);
-  assert.equal(takePlace.formSource, "authoritative");
-  assert.equal(takePlace.word.he, "להתקיים");
-  assert.equal(takePlace.word.en, "to take place");
-  assert.doesNotMatch(takePlace.word.en, /\bexist\b/i);
+  assert.equal(takePlaceSeed.lemma, "להתקיים");
+  assert.equal(takePlaceSeed.conjugation_mode, "curated");
+  assert.equal(takePlaceSeed.availability.translationQuiz, true);
   assert.match(takePlaceSeed.notes, /be held/i);
   assert.equal(
-    takePlace.forms.find((form) => form.id === "past_third_person_masculine_singular")?.valuePlain,
+    takePlaceSeed.forms.past.third_person_masculine_singular.plain,
     "התקיים"
   );
   assert.equal(
-    takePlace.forms.find((form) => form.id === "future_third_person_masculine_singular")?.valuePlain,
+    takePlaceSeed.forms.future.third_person_masculine_singular.plain,
     "יתקיים"
   );
+  assert.equal(deck.some((entry) => entry.id.startsWith("advanced-verb-lehitkayem--")), false);
 });
 
 test("warn appears in conjugation with authoritative hifil forms", () => {

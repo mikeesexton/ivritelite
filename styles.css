@@ -1873,7 +1873,14 @@ body[data-theme="light"] .sentence-answer-line {
   align-items: start;
 }
 
+.results-mistakes--letter-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+}
+
 .results-mistakes--grid .results-section-title,
+.results-mistakes--letter-grid .results-section-title,
+.results-mistakes--letter-grid .small-note,
 .results-mistakes--grid .small-note {
   grid-column: 1 / -1;
 }
@@ -4012,9 +4019,5 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
 
   .handwriting-tool-btn {
     font-size: 0.84rem;
-  }
-
-  .lesson-shell.mode-handwriting:has(.feedback-tray:not(.hidden)) .handwriting-canvas {
-    width: min(100%, 84vw, 29svh, 25rem);
   }
 }

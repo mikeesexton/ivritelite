@@ -7,6 +7,56 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-19 00:01 EDT — Stabilize handwriting canvas during feedback
+
+**Requested:** Diagnose the iPhone Safari recording in which the handwriting box shrank after an answer was processed, determine whether GitHub Pages was serving an earlier branch, and fix the jump if appropriate.
+
+**Files changed:**
+- `styles.css` — removed the short-screen `:has(.feedback-tray:not(.hidden))` rule that changed the canvas from `39svh` to `29svh` only while feedback was visible; the existing stable short-screen canvas size remains.
+- `tests/gameplay-layout.test.js` — captures the rendered canvas dimensions before and during visible error feedback at 360×640, asserts they remain identical, and retains the existing no-scroll and toolbar checks.
+- `index.html` — cache-busts the updated stylesheet to `20260718m`.
+- `task-log.md` — records the diagnosis and fix.
+
+**Behavior changed:** On short iPhone/Safari viewports, processing a handwriting answer no longer shrinks and then re-expands the drawing box. Feedback still appears normally, and the complete feedback state remains usable without gameplay scrolling at the 360×640 viewport floor. Other modes and larger viewports are unchanged.
+
+**Tests run:** Baseline from the immediately preceding completed change: `npm test` — 263 pass, 0 fail. First rendered check after removing the rule completed all geometry assertions but hit the intermittent Chrome profile cleanup race (`ENOTEMPTY`); immediate `node --test tests/gameplay-layout.test.js` rerun — 1 pass, 0 fail. After adding the stable-size regression, rendered check — 1 pass, 0 fail. Full `npm test` — 263 pass, 0 fail. Final rendered check with an explicit visible-feedback precondition — 1 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** The deterministic rule seen in the recording is removed and the exact short-screen state is rendered in Chrome, but physical iOS Safari was not available in the local test environment; recheck once deployed. Very unusually long localized feedback remains the main short-screen stress case, though the current Hebrew retry feedback fits the no-scroll regression.
+
+### 2026-07-18 23:50 EDT — Remove להתקיים from Conjugation
+
+**Requested:** Remove להתקיים from the Conjugation game.
+
+**Files changed:**
+- `hebrew-verbs.js` — added the stable `advanced-verb-lehitkayem` source ID to a Conjugation-only exclusion set, applied that gate before study-item expansion, and bumped the data build marker. The curated source forms and general availability remain intact.
+- `tests/hebrew-verbs.test.js` — replaced the old expectation that להתקיים appears in the Conjugation deck with a regression proving the source record/forms remain available while no matching Conjugation study item is produced.
+- `index.html` — cache-busts the updated Hebrew verb data module.
+- `task-log.md` — records this follow-up.
+
+**Behavior changed:** Conjugation no longer asks any להתקיים / “to take place” forms. Translation Match, sentence content, and the separate Binyanim ק־י־ם material are unchanged.
+
+**Tests run:** Baseline `npm test` — 262 pass, 0 fail. First focused `node --test tests/hebrew-verbs.test.js` — 31 pass, 1 fail; it exposed that authoritative forms bypass the generic blocked-mode check. After moving the exclusion to the stable-ID study-item gate, focused rerun — 32 pass, 0 fail. Full live-data audit — 157 Conjugation study items and zero להתקיים matches. Final `npm test` — 263 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** The exclusion is deliberately keyed to the stable verb source ID, so future renaming of that ID must update the set and its test. The actual app vocabulary was included in the live-data audit to confirm no migrated duplicate reintroduces the verb.
+
+### 2026-07-18 23:47 EDT — Three-column handwriting letter results
+
+**Requested:** At the end of the handwriting game, display the per-letter mistake and correct-answer results in three columns instead of one, without making longer result types unsafe.
+
+**Files changed:**
+- `app/ui.js` — applies a handwriting-only `results-mistakes--letter-grid` modifier to the combined per-letter results container; other game summaries retain their existing layouts.
+- `styles.css` — defines the handwriting results as three equal, shrink-safe columns and keeps section headings/empty notes spanning the full grid width.
+- `tests/app-progress.test.js` — adds a summary-rendering regression proving handwriting receives the letter-grid modifier and retains every result row.
+- `tests/gameplay-layout.test.js` — renders a representative handwriting summary at 360×640 and verifies three computed columns, no horizontal overflow, usable row widths, and full-width section headings.
+- `index.html` — cache-busts the updated stylesheet and UI module.
+- `task-log.md` — records this task.
+
+**Behavior changed:** Handwriting results now show mistake and correct-answer letter cards in three columns at every supported width, including narrow mobile. Results for translation, abbreviation, sentences, conjugation, and other games are unchanged.
+
+**Tests run:** Baseline `npm test` — 261 pass, 0 fail. Focused `node --test tests/app-progress.test.js` — 124 pass, 0 fail. First standalone `node --test tests/gameplay-layout.test.js` run completed the layout assertions but failed during the pre-existing Chrome profile cleanup race (`ENOTEMPTY`); immediate rerun — 1 pass, 0 fail. Final `npm test` — 262 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** Three columns intentionally remain fixed for handwriting even on 360px screens because letter names are short; the rendered check measured at least 85px per card with no overflow. If letter result rows later gain longer explanatory content, revisit the handwriting-only column rule rather than changing other summaries.
+
 ### 2026-07-18 14:21 EDT — Implement Priority 1 Hebrew word-order alternates and future authoring rule
 
 **Requested:** Implement the audit's approved Priority 1 Hebrew reorderings; accept sentence-final `כבר` in `colloquial_96`; conservatively add other clearly neutral third orders; and make word-order review a required part of constructing future sentence-bank rows.

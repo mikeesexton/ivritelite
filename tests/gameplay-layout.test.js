@@ -276,12 +276,14 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     })()`);
     const handwritingInitial = await evaluate(pageCdp, `(() => {
       const body = document.querySelector('.shell-body');
+      const canvasBox = document.querySelector('.handwriting-canvas').getBoundingClientRect();
       const buttons = [...document.querySelectorAll('.handwriting-tool-btn')].map((button) => {
         const box = button.getBoundingClientRect();
         return { top: box.top, height: box.height };
       });
       return {
         body: { clientHeight: body.clientHeight, scrollHeight: body.scrollHeight },
+        canvas: { width: canvasBox.width, height: canvasBox.height },
         buttons,
       };
     })()`);
@@ -298,6 +300,58 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     })()`);
     const handwritingFeedback = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
     assertNoGameplayScroll(handwritingFeedback, "Handwriting feedback");
+    const handwritingFeedbackCanvas = await evaluate(pageCdp, `(() => {
+      const box = document.querySelector('.handwriting-canvas').getBoundingClientRect();
+      return {
+        width: box.width,
+        height: box.height,
+        feedbackVisible: !document.querySelector('.feedback-tray').classList.contains('hidden'),
+      };
+    })()`);
+    assert.equal(handwritingFeedbackCanvas.feedbackVisible, true);
+    assert.ok(Math.abs(handwritingFeedbackCanvas.width - handwritingInitial.canvas.width) <= 0.5);
+    assert.ok(Math.abs(handwritingFeedbackCanvas.height - handwritingInitial.canvas.height) <= 0.5);
+
+    await evaluate(pageCdp, `(() => {
+      IvriQuestApp.session.showSessionSummary({
+        game: 'handwriting',
+        correctCount: 6,
+        incorrectCount: 3,
+        elapsedSeconds: 42,
+        mistakes: [
+          { primary: 'כ', secondary: 'kaf' },
+          { primary: 'ה', secondary: 'he' },
+          { primary: 'ר', secondary: 'resh' },
+        ],
+        corrects: [
+          { primary: 'ל', secondary: 'lamed' },
+          { primary: 'ק', secondary: 'qof' },
+          { primary: 'מ', secondary: 'mem' },
+          { primary: 'נ', secondary: 'nun' },
+          { primary: 'ס', secondary: 'samekh' },
+          { primary: 'ע', secondary: 'ayin' },
+        ],
+      });
+    })()`);
+    const handwritingResultsGrid = await evaluate(pageCdp, `(() => {
+      const grid = document.querySelector('.results-mistakes--letter-grid');
+      const style = getComputedStyle(grid);
+      const rows = [...grid.querySelectorAll('.compact-row')];
+      const headings = [...grid.querySelectorAll('.results-section-title')];
+      return {
+        columns: style.gridTemplateColumns.split(' ').filter(Boolean).length,
+        overflowsHorizontally: grid.scrollWidth > grid.clientWidth + 1,
+        minimumRowWidth: Math.min(...rows.map((row) => row.getBoundingClientRect().width)),
+        headingsSpanGrid: headings.every((heading) => {
+          const headingStyle = getComputedStyle(heading);
+          return headingStyle.gridColumnStart === '1' && headingStyle.gridColumnEnd === '-1';
+        }),
+      };
+    })()`);
+    assert.equal(handwritingResultsGrid.columns, 3);
+    assert.equal(handwritingResultsGrid.overflowsHorizontally, false);
+    assert.ok(handwritingResultsGrid.minimumRowWidth >= 85);
+    assert.equal(handwritingResultsGrid.headingsSpanGrid, true);
 
     await pageCdp.send("Emulation.setDeviceMetricsOverride", {
       width: 1366,
