@@ -4597,3 +4597,40 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Final pre-publication `npm test` — 261 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. GitHub reported pull request #41 clean and mergeable with no required status checks.
 
 **Risks / regressions to check:** None specific to publication. After merge, synchronize local `main` and remove the publication branch locally and remotely.
+
+---
+
+### 2026-07-19 08:20 EDT — Stop Apple Hebrew TTS from speaking quote bytes
+
+**Requested:** Diagnose the strange pronunciation in the supplied iPhone recording of the Shema sentence `במודעה כתבו 'שני חדרים מוארים', בפועל זה מחסן עם חלון.` and fix it.
+
+**Files changed:**
+- `app/speech.js` — strips paired ASCII quotation apostrophes from speech-only text before applying the existing Hebrew TTS respellings; word-internal loanword apostrophes remain untouched.
+- `tests/app-speech.test.js` — added exact coverage for the recorded sentence and regressions preserving apostrophes in `קרינג'` and `פיצ'ר`.
+- `index.html` — cache-busted the updated speech module to `20260719a`.
+- `task-log.md` — records the diagnosis, fix, and verification.
+
+**Behavior changed:** The displayed sentence still includes its quotation marks, but Apple’s Hebrew voice no longer vocalizes the closing apostrophe as the UTF-8 byte escape “X-D-7-X-B-3.” Other quoted Hebrew phrases receive the same speech-only cleanup, while apostrophes used inside Hebrew loanwords continue to reach the voice unchanged.
+
+**Tests run:** Baseline `npm test` — 263 pass, 0 fail. Audio reproduction with Apple’s local Carmit `he-IL` voice plus Whisper transcription reproduced `XD7XB3`; the identical sentence without speech-level quotation apostrophes removed 1.54 seconds of erroneous output and transcribed without the escape. Focused `node --test tests/app-speech.test.js` — 8 pass, 0 fail. Final `npm test` — all 263 non-rendered checks passed; the rendered Chrome check completed its assertions but failed during the project’s known temporary-profile cleanup race (`ENOTEMPTY`). Two isolated `node --test tests/gameplay-layout.test.js` reruns reproduced only the same post-assertion cleanup error. `git diff --check` — pass.
+
+**Risks / regressions to check:** Physical iPhone/Safari should be rechecked after deployment because the original recording came from iOS. The punctuation sanitizer deliberately targets only paired ASCII quotation apostrophes with quotation-like boundaries; unmatched and word-internal apostrophes are unchanged.
+
+---
+
+### 2026-07-19 08:30 EDT — Keep Conjugation+ and Prepositions feedback in flow
+
+**Requested:** Safely fix the answered state in Conjugation+ and Prepositions where the Next button and feedback crowded or overlapped the final answer on iPhone despite unused space below the feedback.
+
+**Files changed:**
+- `app/ui.js` — adds dedicated lesson-shell mode classes for Conjugation+ and Prepositions and clears them when another mode is active.
+- `styles.css` — keeps the footer for those two modes in normal document flow instead of using the shared sticky offset that caused the iOS displacement.
+- `tests/gameplay-layout.test.js` — renders answered Conjugation+ and Prepositions questions at 360×640 and verifies no scrolling, no answer/footer overlap, a visible gap, and a static in-flow footer.
+- `index.html` — cache-busts the updated stylesheet and UI module to `20260719a`.
+- `task-log.md` — records the diagnosis, implementation, and verification.
+
+**Behavior changed:** After an answer in Conjugation+ or Prepositions, the final answer, Next button, and feedback now stack with normal spacing. The footer consumes the previously unused space below it instead of being lifted toward the answers. Footer behavior in other games is unchanged.
+
+**Tests run:** Baseline `npm test` — 264 pass, 0 fail. Focused `node --test tests/gameplay-layout.test.js` after the fix — 1 pass, 0 fail, including both new 360×640 answered-state checks. Final `npm test` — 264 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** The exact original devices used iPhone Safari, while automated geometry verification uses rendered Chrome at the stricter 360×640 viewport floor. Recheck both screenshots after deployment; unusually long future feedback remains protected by the no-scroll regression at that viewport.

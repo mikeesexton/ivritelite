@@ -492,6 +492,8 @@ ui.updateLessonShellModeState = ui.updateLessonShellModeState || function update
 
   const isBinyanBoard = runtime.state.mode === "binyanBoard";
   const isHandwriting = runtime.state.mode === "handwriting";
+  const isAdvConj = runtime.state.mode === "advConj";
+  const isPrepositions = runtime.state.mode === "prepositions";
   const isWordMatch = isWordMatchMode();
   shell.dataset.gameLayout = layoutMode;
   promptCard.dataset.gameLayout = layoutMode;
@@ -499,12 +501,16 @@ ui.updateLessonShellModeState = ui.updateLessonShellModeState || function update
   shell.classList.toggle("mode-verb-match", layoutMode === "verb-match");
   shell.classList.toggle("mode-word-match", isWordMatch);
   shell.classList.toggle("mode-sentence-bank", runtime.state.mode === "sentenceBank");
+  shell.classList.toggle("mode-adv-conj", isAdvConj);
+  shell.classList.toggle("mode-prepositions", isPrepositions);
   shell.classList.toggle("mode-binyan-board", isBinyanBoard);
   shell.classList.toggle("mode-handwriting", isHandwriting);
   promptCard.classList.toggle("mode-standard", layoutMode === "standard");
   promptCard.classList.toggle("mode-verb-match", layoutMode === "verb-match");
   promptCard.classList.toggle("mode-word-match", isWordMatch);
   promptCard.classList.toggle("mode-sentence-bank", runtime.state.mode === "sentenceBank");
+  promptCard.classList.toggle("mode-adv-conj", isAdvConj);
+  promptCard.classList.toggle("mode-prepositions", isPrepositions);
   promptCard.classList.toggle("mode-binyan-board", isBinyanBoard);
   promptCard.classList.toggle("mode-handwriting", isHandwriting);
   if (lessonTitleRow) {

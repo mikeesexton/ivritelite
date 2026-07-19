@@ -194,6 +194,20 @@ test("applyTtsRespellings respells kamatz-katan words the he-IL voices misread",
   assert.equal(respell("וכל תל אביב"), "וכל תל אביב");
 });
 
+test("applyTtsRespellings removes quotation apostrophes without changing Hebrew loanwords", () => {
+  const { speech } = loadSpeechHarness();
+  const sentence = "בַּמּוֹדָעָה כָּתְבוּ 'שְׁנֵי חֲדָרִים מוּאָרִים', בְּפֹעַל זֶה מַחְסָן עִם חַלּוֹן.";
+
+  assert.equal(
+    speech.applyTtsRespellings(sentence),
+    "בַּמּוֹדָעָה כָּתְבוּ שְׁנֵי חֲדָרִים מוּאָרִים, בְּפֹעַל זֶה מַחְסָן עִם חַלּוֹן."
+  );
+  assert.equal(
+    speech.applyTtsRespellings("קְרִינְג' בְּרָמוֹת; זֶה פִיצֶ'ר."),
+    "קְרִינְג' בְּרָמוֹת; זֶה פִיצֶ'ר."
+  );
+});
+
 test("buildHebrewSpeechText applies TTS respellings to every text source", () => {
   const { speech } = loadSpeechHarness();
   const nfc = (text) => text.normalize("NFC");
