@@ -4634,3 +4634,18 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 264 pass, 0 fail. Focused `node --test tests/gameplay-layout.test.js` after the fix — 1 pass, 0 fail, including both new 360×640 answered-state checks. Final `npm test` — 264 pass, 0 fail. `git diff --check` — pass.
 
 **Risks / regressions to check:** The exact original devices used iPhone Safari, while automated geometry verification uses rendered Chrome at the stricter 360×640 viewport floor. Recheck both screenshots after deployment; unusually long future feedback remains protected by the no-scroll regression at that viewport.
+
+---
+
+### 2026-07-19 08:34 EDT — Publish Hebrew speech and mobile feedback fixes
+
+**Requested:** Push the completed Hebrew pronunciation and Conjugation+/Prepositions feedback-layout fixes to GitHub and merge them into `main`.
+
+**Files changed:**
+- `task-log.md` — records publication of the implementation and regression coverage from the two preceding entries through pull request #43.
+
+**Behavior changed:** The completed fixes are published for `main`: quoted Hebrew speech no longer vocalizes the closing quotation byte escape, and answered Conjugation+/Prepositions screens keep answers, controls, and feedback separated in normal flow.
+
+**Tests run:** Pre-push `npm test` — 264 pass, 0 fail. `git diff --cached --check` — pass. Commit `c3aab3f` was pushed on `agent/hebrew-speech-and-mobile-feedback`; GitHub pull request #43 targets `main` and was reported clean and mergeable with no required status checks.
+
+**Risks / regressions to check:** Recheck the original physical iPhone/Safari speech and answered-state recordings after GitHub Pages finishes deploying the merged change.
