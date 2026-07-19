@@ -7,6 +7,19 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-19 00:05 EDT — Publish handwriting results and iPhone feedback fixes
+
+**Requested:** Commit and deploy the completed handwriting results, Conjugation exclusion, and iPhone feedback fixes.
+
+**Files changed:**
+- `task-log.md` — records publication. The deployed feature commit contains `app/ui.js`, `hebrew-verbs.js`, `index.html`, `styles.css`, the three related regression files, and the preceding task-log entries.
+
+**Behavior changed:** The three-column handwriting results, Conjugation exclusion for להתקיים, and stable short-screen handwriting canvas are now published on GitHub `main` through pull request #42 and deployed to GitHub Pages.
+
+**Tests run:** Pre-push `npm test` — 263 pass, 0 fail. `git diff --cached --check` — pass. GitHub reported PR #42 clean and mergeable; squash merge commit `692be890c0bfaea67ad274564ba538e8f215a483` was created successfully. Pages workflow run `29672763169` completed successfully. Live-site verification confirmed `styles.css?v=20260718m`, `hebrew-verbs.js?v=20260718a`, and `app/ui.js?v=20260718g`; the served stylesheet contains the three-column letter grid and no longer contains the feedback-dependent handwriting shrink selector.
+
+**Risks / regressions to check:** Recheck the handwriting feedback transition on the original physical iPhone/Safari device after refreshing past the old cached stylesheet. No publication blockers remain.
+
 ### 2026-07-19 00:01 EDT — Stabilize handwriting canvas during feedback
 
 **Requested:** Diagnose the iPhone Safari recording in which the handwriting box shrank after an answer was processed, determine whether GitHub Pages was serving an earlier branch, and fix the jump if appropriate.
