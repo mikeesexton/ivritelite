@@ -7,6 +7,44 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-20 EDT — Add Tel Aviv gay-slang terms across sentences, conjugation, and translation
+
+**Requested:** Follow-up to the וודג' batch — add more authentic Tel Aviv gay-slang terms not already in the app. User selected (with per-term instructions): פאלש, אוחצ'ה, הורס (×2 sentences, + Conjugation + Translation Match), דוב (×2 sentences, explicitly NOT Translation Match), קוקיצה, מלרלר (+ Conjugation), פאטוץ'.
+
+**Research:** Terms and glosses drawn from Hebrew LGBTQ slang lexicons (Wikipedia סלנג להט"בי, Ruvik Rosenthal, Mako gay dictionary): פאלש = fake/phony (Yiddish falsch); אוחצ'ה = camp "girl!/queen" (Arabic "sister"); הורס = "killing it" (lit. "destroys"); דוב = "bear"; קוקיצה = "twink" (from "cookie"); מלרלר = to chatter/gossip nonstop. Skipped explicit/crude terms (בור, חור, קרוזינג, שטריך). להרוס conjugation verified against Pealim (pealim.com/dict/477-laharos); מלרלר derived from the regular quadriliteral-piel template (לעדכן/לתכנן).
+
+**Files changed:**
+- `sentence-bank-data.js` — added 9 `buildExpandedSentence(...)` entries to `SENTENCE_EXPANSION_REQUESTED` (`colloquial_falsh_01`, `colloquial_ochtcha_01`, `colloquial_hores_01/02`, `colloquial_dov_01/02`, `colloquial_kukitza_01`, `colloquial_melarler_01`, `colloquial_patutch_01`), full niqqud/tokens/distractors/notes. (`__build` already `20260720a` from the וודג' batch, same day.)
+- `hebrew-verbs.js` — added 2 curated verbs to the `buildRequestedVerbEntries` batch: `advanced-verb-laharos` (להרוס, paal, irregular pe-guttural, "to destroy") and `advanced-verb-lelarler` (ללרלר, piel quadriliteral ל-ר-ל-ר, regular, "to chatter nonstop"), each with authoritative present/past/future (21 forms). Bumped `__build` → `20260720a`.
+- `vocab-data.js` — appended one Translation Match card at the end of `conversation_glue` (id `conversation_glue-097-killing-it-destroys-slang`): `["killing it", "הורס", "הוֹרֵס", { idEnglish, translationQuizDistractors }]`. Gloss kept single/slash-free and globally unique to satisfy uniqueness guardrails. Bumped `__build` → `20260720a`.
+- `index.html` — cache-busted `hebrew-verbs.js` and `vocab-data.js` → `?v=20260720a` (sentence-bank already bumped).
+- `tests/sentence-bank-data.test.js` — count guardrails: total 453→462, colloquial 154→163.
+- `tests/hebrew-verbs.test.js` — seed verb count 136→138.
+- `tests/vocab-data.test.js` — vocabulary length 1511→1512, translationQuiz-available 1457→1458.
+
+**Behavior changed:** 9 new slang sentences appear in Sentences, Shema, and Handwriting (letter counts 18–31, all within the 6–34 gate; apostrophes in אוחצ'ה/פאטוץ' skipped in handwriting). להרוס and ללרלר are now conjugatable in the Conjugation game (21 forms each, authoritative). הורס ("killing it") is now a Translation Match card. דוב was deliberately kept out of Translation Match (sentences only).
+
+**Tests run:** `npm test` — 264 pass, 0 fail (after updating the count guardrails above; one nuance-audit test also required adding "already" to the מלרלר English to surface the כבר nuance). Browser verification on the dev server: builds all `20260720a`; sentence bank 462 (9 new), vocab 1512 (הורס card present), conjugation deck seedCount 138 with להרוס and ללרלר each exposing 21 authoritative pointed forms; Handwriting renders a דוב sentence correctly; no console errors.
+
+**Risks / regressions to check:** (1) Shema TTS pronunciation of slang loanwords (פאלש, אוחצ'ה, קוקיצה, מלרלר, פאטוץ') — verify by ear on the deployed site. (2) Adult slang appropriateness for the audience. (3) מלרלר is a slang/reduplicated verb; its conjugation follows the regular quadriliteral-piel pattern but is not dictionary-attested — confirm the forms read naturally to a native speaker. (4) הורס appears both as a Translation Match card ("killing it") and as a conjugatable verb להרוս ("to destroy"); the surface forms differ, but confirm this dual presence is desired.
+
+### 2026-07-20 EDT — Add three וודג' slang sentences
+
+**Requested:** Add three fun, authentic-sounding practice sentences using the LGBTQ+ Hebrew slang term וודג' so it appears in the Sentences, Shema (listening), and Handwriting modes. Confirm the meaning/gloss (deferred to Claude), and assess whether the handwriting game could trace the geresh (apostrophe) in ג'.
+
+**Research:** וודג' / ودج' is gay slang for "face / looks," borrowed from Arabic *wajh* (وجه, "face"). Confirmed via Ruvik Rosenthal's LGBTQ lexicon ("וֶודג'. פנים. בעקבות ערבית") and the Mako gay-slang glossary. Masculine noun, used campily to admire or shade someone's looks. (One machine gloss said "behind" — an error; etymology and every dedicated glossary say *face*.) Spelling chosen with the user: double-vav וודג' with a plain ASCII apostrophe (matches the app's existing convention for ג'/צ' words). Geresh tracing deliberately skipped per user.
+
+**Files changed:**
+- `sentence-bank-data.js` — appended three `buildExpandedSentence(...)` entries to `SENTENCE_EXPANSION_REQUESTED` (`colloquial_vodge_01/02/03`, category `colloquial`, difficulty 2), each with full niqqud, token pairs, distractors, and a slang note. Bumped internal `__build` to `20260720a`.
+- `index.html` — cache-busted `sentence-bank-data.js?v=20260718c` → `?v=20260720a`.
+- `tests/sentence-bank-data.test.js` — updated the two intentional count guardrails for the three new colloquial entries: total 450→453 (and the matching id-uniqueness / notes-present assertions) and category `colloquial` 151→154.
+
+**Behavior changed:** Three new וודג' sentences are now in the sentence bank. They appear automatically in Sentences and Shema (same deck), and in Handwriting (letter counts 15/25/27, within the 6–34 gate). In handwriting the ASCII apostrophe renders inline but is not traceable (no stroke data) and is skipped cleanly, so ו‑ו‑ד‑ג of הוודג' are traced.
+
+**Tests run:** Baseline `npm test` — 264 pass, 0 fail. After adding entries, two count-guardrail tests failed as expected (453 vs 450; colloquial 154 vs 151); updated those expectations. Final `npm test` — 264 pass, 0 fail. Browser verification on the local dev server: build stamp `20260720a`, 453 sentences, all three entries loaded; Sentences mode renders working token-build questions; Handwriting round for "יש לו וודג' של דוגמן" renders correctly and traces 25 letters (apostrophe skipped, `letterformId: null`); no console errors.
+
+**Risks / regressions to check:** Shema TTS *pronunciation quality* of the loanword וודג' was not verifiable programmatically — confirm by ear on the deployed site that the listening audio pronounces it acceptably (Hebrew TTS on slang loanwords is a known soft spot). Content is adult slang; confirm it's appropriate for the app's audience. If the single-vav spelling ودג' is ever preferred, it would need to be changed in all three entries.
+
 ### 2026-07-19 00:05 EDT — Publish handwriting results and iPhone feedback fixes
 
 **Requested:** Commit and deploy the completed handwriting results, Conjugation exclusion, and iPhone feedback fixes.

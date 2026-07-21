@@ -11937,6 +11937,138 @@ const SENTENCE_EXPANSION_REQUESTED = [
     }],
     notes: "שתי is the feminine construct form of 'two,' used before the feminine plural noun שפות: שתי שפות, 'two languages.'"
   }),
+  buildExpandedSentence({
+    id: "colloquial_vodge_01", emoji: "😍", category: "colloquial", difficulty: 2,
+    hebrew: "יש לו וודג' של דוגמן.",
+    hebrewNiqqud: "יֵשׁ לוֹ ווֹדְג' שֶׁל דֻּגְמָן.",
+    english: "He has the face of a model.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["לו", "לוֹ"], ["וודג'", "ווֹדְג'"], ["של", "שֶׁל"], ["דוגמן", "דֻּגְמָן"]],
+    englishTokens: ["He", "has", "the face", "of", "a model"],
+    hebrewDistractorPairs: [["פרצוף", "פַּרְצוּף"], ["גוף", "גּוּף"], ["חיוך", "חִיּוּךְ"], ["קול", "קוֹל"]],
+    englishDistractors: ["the body", "a smile", "the voice", "a star"],
+    notes: "וודג' is LGBTQ+ slang for one's face or looks, borrowed from Arabic wajh ('face'). It is masculine; the single-vav spelling ودج' is also seen."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_vodge_02", emoji: "💄", category: "colloquial", difficulty: 2,
+    hebrew: "בלי איפור הוודג' שלי הרוס בבוקר.",
+    hebrewNiqqud: "בְּלִי אִיפּוּר הַווֹדְג' שֶׁלִּי הָרוּס בַּבֹּקֶר.",
+    english: "Without makeup my face is a wreck in the morning.",
+    hebrewTokenPairs: [["בלי", "בְּלִי"], ["איפור", "אִיפּוּר"], ["הוודג'", "הַווֹדְג'"], ["שלי", "שֶׁלִּי"], ["הרוס", "הָרוּס"], ["בבוקר", "בַּבֹּקֶר"]],
+    englishTokens: ["Without", "makeup", "my face", "is a wreck", "in the morning"],
+    hebrewDistractorPairs: [["נראה", "נִרְאֶה"], ["עייף", "עָיֵף"], ["בלילה", "בַּלַּיְלָה"], ["הכל", "הַכֹּל"]],
+    englishDistractors: ["looks", "tired", "at night", "everything"],
+    notes: "וודג' here is slang for one's face/looks; הוודג' שלי = 'my face.' The word comes from Arabic wajh ('face')."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_vodge_03", emoji: "💅", category: "colloquial", difficulty: 2,
+    hebrew: "תסדר את הוודג' לפני שיוצאים מהבית.",
+    hebrewNiqqud: "תְּסַדֵּר אֶת הַווֹדְג' לִפְנֵי שֶׁיּוֹצְאִים מֵהַבַּיִת.",
+    english: "Fix your face before we leave the house.",
+    hebrewTokenPairs: [["תסדר", "תְּסַדֵּר"], ["את", "אֶת"], ["הוודג'", "הַווֹדְג'"], ["לפני", "לִפְנֵי"], ["שיוצאים", "שֶׁיּוֹצְאִים"], ["מהבית", "מֵהַבַּיִת"]],
+    englishTokens: ["Fix", "your face", "before", "we leave", "the house"],
+    hebrewDistractorPairs: [["תלבש", "תִּלְבַּשׁ"], ["אחרי", "אַחֲרֵי"], ["נשארים", "נִשְׁאָרִים"], ["בבית", "בַּבַּיִת"]],
+    englishDistractors: ["get dressed", "after", "we stay", "at home"],
+    notes: "תסדר את הוודג' is a campy way to say 'fix your face/look.' וודג' is slang for face/looks, from Arabic wajh ('face')."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_falsh_01", emoji: "🙄", category: "colloquial", difficulty: 2,
+    hebrew: "אל תהיה פאלש, תגיד מה שאתה באמת חושב.",
+    hebrewNiqqud: "אַל תִּהְיֶה פָאלְשׁ, תַּגִּיד מַה שֶּׁאַתָּה בֶּאֱמֶת חוֹשֵׁב.",
+    english: "Don't be fake, say what you really think.",
+    hebrewTokenPairs: [["אל", "אַל"], ["תהיה", "תִּהְיֶה"], ["פאלש", "פָאלְשׁ"], ["תגיד", "תַּגִּיד"], ["מה", "מַה"], ["שאתה", "שֶּׁאַתָּה"], ["באמת", "בֶּאֱמֶת"], ["חושב", "חוֹשֵׁב"]],
+    englishTokens: ["Don't", "be", "fake", "say", "what you", "really", "think"],
+    hebrewDistractorPairs: [["ישר", "יָשָׁר"], ["תשתוק", "תִּשְׁתֹּק"], ["שקר", "שֶׁקֶר"], ["נחמד", "נֶחְמָד"]],
+    englishDistractors: ["honest", "be quiet", "a lie", "nice"],
+    notes: "פאלש (from Yiddish/German 'falsch') is slang for fake, phony, or two-faced — used about people or vibes."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_ochtcha_01", emoji: "💁", category: "colloquial", difficulty: 2,
+    hebrew: "אוחצ'ה, ראית מה היא לבשה אתמול?!",
+    hebrewNiqqud: "אוֹחְצָ'ה, רָאִית מָה הִיא לָבְשָׁה אֶתְמוֹל?!",
+    english: "Girl, did you see what she wore yesterday?!",
+    hebrewTokenPairs: [["אוחצ'ה", "אוֹחְצָ'ה"], ["ראית", "רָאִית"], ["מה", "מָה"], ["היא", "הִיא"], ["לבשה", "לָבְשָׁה"], ["אתמול", "אֶתְמוֹל"]],
+    englishTokens: ["Girl", "did you see", "what", "she", "wore", "yesterday"],
+    hebrewDistractorPairs: [["שמעת", "שָׁמַעְתְּ"], ["הוא", "הוּא"], ["קנה", "קָנָה"], ["היום", "הַיּוֹם"]],
+    englishDistractors: ["did you hear", "he", "bought", "today"],
+    notes: "אוחצ'ה (also אוחצ') is camp slang for a flamboyant gay man and a term of address like 'girl!' or 'queen.' From Arabic for 'sister.'"
+  }),
+  buildExpandedSentence({
+    id: "colloquial_hores_01", emoji: "🔥", category: "colloquial", difficulty: 2,
+    hebrew: "אחותי, את הורסת עם השמלה הזאת!",
+    hebrewNiqqud: "אָחוֹתִי, אַתְּ הוֹרֶסֶת עִם הַשִּׂמְלָה הַזֹּאת!",
+    english: "Girl, you're killing it in that dress!",
+    hebrewTokenPairs: [["אחותי", "אָחוֹתִי"], ["את", "אַתְּ"], ["הורסת", "הוֹרֶסֶת"], ["עם", "עִם"], ["השמלה", "הַשִּׂמְלָה"], ["הזאת", "הַזֹּאת"]],
+    englishTokens: ["Girl", "you're", "killing it", "in", "that dress"],
+    hebrewDistractorPairs: [["אחי", "אָחִי"], ["הוא", "הוּא"], ["נראה", "נִרְאֶה"], ["המעיל", "הַמְּעִיל"], ["ההוא", "הַהוּא"]],
+    englishDistractors: ["bro", "he", "looks", "the coat", "that one"],
+    notes: "הורס/הורסת literally 'destroys,' but as slang means 'killing it / looking amazing.' Common in gay and general Israeli slang."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_hores_02", emoji: "🤩", category: "colloquial", difficulty: 2,
+    hebrew: "הביצוע שלו אתמול פשוט הורס.",
+    hebrewNiqqud: "הַבִּיצּוּעַ שֶׁלּוֹ אֶתְמוֹל פָּשׁוּט הוֹרֵס.",
+    english: "His performance yesterday was just a knockout.",
+    hebrewTokenPairs: [["הביצוע", "הַבִּיצּוּעַ"], ["שלו", "שֶׁלּוֹ"], ["אתמול", "אֶתְמוֹל"], ["פשוט", "פָּשׁוּט"], ["הורס", "הוֹרֵס"]],
+    englishTokens: ["His", "performance", "yesterday", "was just", "a knockout"],
+    hebrewDistractorPairs: [["השיר", "הַשִּׁיר"], ["שלה", "שֶׁלָּהּ"], ["היום", "הַיּוֹם"], ["ממש", "מַמָּשׁ"], ["משעמם", "מְשַׁעֲמֵם"]],
+    englishDistractors: ["the song", "hers", "today", "really", "boring"],
+    notes: "הורס as slang = amazing, a knockout ('killing it'). Here it describes a performance rather than a person."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_dov_01", emoji: "🐻", category: "colloquial", difficulty: 2,
+    hebrew: "כל הדובים באים למסיבה ביום שישי.",
+    hebrewNiqqud: "כָּל הַדֻּבִּים בָּאִים לַמְּסִבָּה בְּיוֹם שִׁישִׁי.",
+    english: "All the bears come to the party on Friday.",
+    hebrewTokenPairs: [["כל", "כָּל"], ["הדובים", "הַדֻּבִּים"], ["באים", "בָּאִים"], ["למסיבה", "לַמְּסִבָּה"], ["ביום", "בְּיוֹם"], ["שישי", "שִׁישִׁי"]],
+    englishTokens: ["All", "the bears", "come", "to the party", "on", "Friday"],
+    hebrewDistractorPairs: [["כמה", "כַּמָּה"], ["החתולים", "הַחֲתוּלִים"], ["הולכים", "הוֹלְכִים"], ["לים", "לַיָּם"], ["ראשון", "רִאשׁוֹן"]],
+    englishDistractors: ["some", "the cats", "go", "to the beach", "Sunday"],
+    notes: "דוב ('bear') in gay slang is a large, hairy man — same as English 'bear.' Plural דובים."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_dov_02", emoji: "🧔", category: "colloquial", difficulty: 2,
+    hebrew: "הוא דוב חמוד עם זקן וחיוך גדול.",
+    hebrewNiqqud: "הוּא דֹּב חָמוּד עִם זָקָן וְחִיּוּךְ גָּדוֹל.",
+    english: "He's a cute bear with a beard and a big smile.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["דוב", "דֹּב"], ["חמוד", "חָמוּד"], ["עם", "עִם"], ["זקן", "זָקָן"], ["וחיוך", "וְחִיּוּךְ"], ["גדול", "גָּדוֹל"]],
+    englishTokens: ["He's", "a cute", "bear", "with", "a beard", "and a", "big smile"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["חתול", "חָתוּל"], ["רזה", "רָזֶה"], ["בלי", "בְּלִי"], ["שפם", "שָׂפָם"], ["קטן", "קָטָן"]],
+    englishDistractors: ["she's", "a cat", "skinny", "without", "a mustache", "small"],
+    notes: "דוב ('bear') = a big, hairy, often bearded gay man. Used affectionately."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_kukitza_01", emoji: "🍪", category: "colloquial", difficulty: 2,
+    hebrew: "הקוקיצה החדשה במשרד כבר מכירה את כולם.",
+    hebrewNiqqud: "הַקּוּקִיצָה הַחֲדָשָׁה בַּמִּשְׂרָד כְּבָר מַכִּירָה אֶת כֻּלָּם.",
+    english: "The new twink at the office already knows everyone.",
+    hebrewTokenPairs: [["הקוקיצה", "הַקּוּקִיצָה"], ["החדשה", "הַחֲדָשָׁה"], ["במשרד", "בַּמִּשְׂרָד"], ["כבר", "כְּבָר"], ["מכירה", "מַכִּירָה"], ["את", "אֶת"], ["כולם", "כֻּלָּם"]],
+    englishTokens: ["The new", "twink", "at the office", "already", "knows", "everyone"],
+    hebrewDistractorPairs: [["הבחור", "הַבָּחוּר"], ["הישן", "הַיָּשָׁן"], ["בבית", "בַּבַּיִת"], ["שכח", "שָׁכַח"], ["אף אחד", "אַף אֶחָד"]],
+    englishDistractors: ["the guy", "old", "at home", "forgot", "no one"],
+    notes: "קוקיצה (from English 'cookie') is playful slang for a young, cute, effeminate gay guy (like 'twink'). Grammatically feminine."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_melarler_01", emoji: "📞", category: "colloquial", difficulty: 2,
+    hebrew: "היא מלרלרת בטלפון כבר שעתיים.",
+    hebrewNiqqud: "הִיא מְלַרְלֶרֶת בַּטֶּלֶפוֹן כְּבָר שְׁעָתַיִם.",
+    english: "She's already been yakking on the phone for two hours.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["מלרלרת", "מְלַרְלֶרֶת"], ["בטלפון", "בַּטֶּלֶפוֹן"], ["כבר", "כְּבָר"], ["שעתיים", "שְׁעָתַיִם"]],
+    englishTokens: ["She's already", "been yakking", "on the phone", "for", "two hours"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["עובד", "עוֹבֵד"], ["במחשב", "בַּמַּחְשֵׁב"], ["רק", "רַק"], ["דקה", "דַּקָּה"]],
+    englishDistractors: ["he has been", "working", "on the computer", "only", "a minute"],
+    notes: "מלרלר/מלרלרת (to לרלר) is slang for chattering or gossiping nonstop — a reduplicated, onomatopoeic verb."
+  }),
+  buildExpandedSentence({
+    id: "colloquial_patutch_01", emoji: "👋", category: "colloquial", difficulty: 2,
+    hebrew: "טוב מותק, אני זזה, פאטוץ'!",
+    hebrewNiqqud: "טוֹב מוֹתֶק, אֲנִי זָזָה, פָּאטוּץ'!",
+    english: "Okay babe, I'm off, bye!",
+    hebrewTokenPairs: [["טוב", "טוֹב"], ["מותק", "מוֹתֶק"], ["אני", "אֲנִי"], ["זזה", "זָזָה"], ["פאטוץ'", "פָּאטוּץ'"]],
+    englishTokens: ["Okay", "babe", "I'm", "off", "bye"],
+    hebrewDistractorPairs: [["רגע", "רֶגַע"], ["יקירי", "יַקִּירִי"], ["הוא", "הוּא"], ["נשאר", "נִשְׁאָר"], ["שלום", "שָׁלוֹם"]],
+    englishDistractors: ["wait", "dear", "he", "stays", "hello"],
+    notes: "פאטוץ' is a light, campy way to say 'bye!' זזה = 'I'm off/moving along' (feminine)."
+  }),
 ];
 
 SENTENCE_BANK.push(...SENTENCE_EXPANSION_REQUESTED);
@@ -11960,6 +12092,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260718c",
+  __build: "20260720a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
