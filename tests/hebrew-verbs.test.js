@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 136);
+  assert.equal(entries.length, 138);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);

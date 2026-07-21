@@ -1197,6 +1197,13 @@ const RAW = {
     ["to take your time", "לקחת את הזמן", "לָקַחַת אֶת הַזְּמַן"],
     ["to give it time", "לתת לזה זמן", "לָתֵת לָזֶה זְמַן"],
     ["to impress", "לעשות רושם", "לַעֲשׂוֹת רֹשֶׁם"],
+    ["killing it", "הורס", "הוֹרֵס", {
+      idEnglish: "killing it / destroys (slang)",
+      translationQuizDistractors: {
+        english: ["boring", "a failure", "exhausted"],
+        hebrew: ["משעמם", "כישלון", "עייף"],
+      },
+    }],
   ],
   legal_civic: [
     ["constitution", "חוקה", "חֻקָּה"],
@@ -2073,6 +2080,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260714a",
+  __build: "20260720a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

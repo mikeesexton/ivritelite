@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1511);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1457);
+  assert.equal(vocabulary.length, 1512);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1458);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,

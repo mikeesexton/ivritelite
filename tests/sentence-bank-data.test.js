@@ -683,15 +683,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 450 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 462 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 450);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 450);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 450);
+  assert.equal(entries.length, 462);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 462);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 462);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -719,7 +719,7 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 151,
+    colloquial: 163,
     everyday: 138,
     professional: 84,
     formal: 77,
