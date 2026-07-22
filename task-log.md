@@ -4710,3 +4710,18 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 264 pass, 0 fail. Focused `node --test tests/sentence-bank-data.test.js tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 77 pass, 0 fail. Final `npm test` — 267 pass, 0 fail. `git diff --check` — pass.
 
 **Risks / regressions to check:** The new content is structurally and mechanically verified, but a native-speaker editorial pass remains valuable for register and niqqud nuance. The Herzl line uses its conventional English “dream” rendering while noting that `אגדה` literally means “legend.” Character ownership currently lives in category names, explicit sentence IDs, verb IDs, and the strategy ledger; runtime multi-owner routing will be implemented later with the character system.
+
+---
+
+### 2026-07-21 21:14 EDT — Publish the Inbal and Inat content expansion
+
+**Requested:** Push the completed Inbal/Inat content expansion to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — records publication of the vocabulary, sentence, conjugation, test, cache-bust, and live-strategy changes through pull request #45.
+
+**Behavior changed:** None beyond the content expansion recorded immediately above; this entry records its GitHub publication and merge workflow.
+
+**Tests run:** Pre-publication `npm test` — 267 pass, 0 fail. Focused content suite — 77 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Commit `551af9f` was pushed on `agent/inbal-inat-content-expansion`; pull request #45 targets `main`.
+
+**Risks / regressions to check:** After merge, synchronize local `main` and verify GitHub reports the PR merged at the expected head commit.
