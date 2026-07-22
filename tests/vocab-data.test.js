@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1512);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1458);
+  assert.equal(vocabulary.length, 1572);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1518);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -288,6 +288,35 @@ test("politics and society tranche adds 150 safe, pointed, globally unique cards
 
     assert.doesNotMatch(word.en.toLowerCase(), /massacre|genocide/);
     assert.doesNotMatch(word.he, /טבח|רצח עם/);
+  });
+});
+
+test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", () => {
+  const vocabulary = loadVocabulary();
+  const expected = new Map([
+    ["religion_magic_spirituality", ["קערת השבעה", "קמיע", "עין הרע", "דיבוק", "חוזר בשאלה", "ארמית"]],
+    ["literature_arts_cultural_history", ["ביקורת ספרות", "קריאה צמודה", "שיר מחאה", "זיכרון קולקטיבי", "תנועת הפועלים", "סאטירה"]],
+  ]);
+
+  expected.forEach((requiredHebrew, category) => {
+    const tranche = vocabulary.filter((word) => word.category === category);
+    assert.equal(tranche.length, 30, `${category} should contain 30 cards`);
+    assert.ok(tranche.every((word) => word.availability?.translationQuiz), `${category} should be playable`);
+    assert.ok(tranche.every((word) => /[\u05B0-\u05BC\u05C1\u05C2\u05C7]/.test(word.heNiqqud)), `${category} needs niqqud`);
+    requiredHebrew.forEach((hebrew) => {
+      assert.ok(tranche.some((word) => word.he === hebrew), `${category} is missing ${hebrew}`);
+    });
+  });
+
+  const hebrewCounts = new Map();
+  const englishCounts = new Map();
+  vocabulary.forEach((word) => {
+    hebrewCounts.set(word.he, (hebrewCounts.get(word.he) || 0) + 1);
+    englishCounts.set(word.en, (englishCounts.get(word.en) || 0) + 1);
+  });
+  [...expected.keys()].flatMap((category) => vocabulary.filter((word) => word.category === category)).forEach((word) => {
+    assert.equal(hebrewCounts.get(word.he), 1, `duplicate Hebrew card: ${word.he}`);
+    assert.equal(englishCounts.get(word.en), 1, `duplicate English card: ${word.en}`);
   });
 });
 

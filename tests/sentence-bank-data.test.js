@@ -410,6 +410,8 @@ const POLITICAL_ENTRY_IDS = [
 ];
 
 const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
+const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 16).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 24).map((id) => id.replace(/_(\d)$/, "_0$1"));
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -453,6 +455,9 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     civilian government
     coalition negotiations
     commercial space
+    collective memory
+    civil disobedience
+    close reading
     community center
     cost living
     disciplinary offenses
@@ -471,6 +476,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     family group chat
     final vote
     freedom expression
+    freedom movement
     freedom religion
     gender identity
     government decision
@@ -480,6 +486,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     housing prices
     independent review
     industrial exports
+    incantation bowl
     international law
     labor market
     labor organizations
@@ -508,6 +515,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     place residence
     planning process
     police brutality
+    protective formula
     political center
     polling station
     preliminary reading
@@ -519,11 +527,13 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     public transportation
     regional tribunal
     research team
+    ritual bath
     self employed retirees
     settler violence
     sexual orientation
     sports organizations
     state revenue
+    street art
     tax obligations
     temporary presence
     upper class
@@ -533,6 +543,11 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     work team
     workers rights
     young adults
+    counter narrative
+    education ministry
+    evil eye
+    oral history
+    protest song
   `, "term: recognized multiword vocabulary unit"),
   ...compactUnitMap(`
     calms down
@@ -543,6 +558,8 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     leaves screen
     mixed together
     right left
+    present day
+    upside down
   `, "fixed-expression: lexicalized verb or paired expression"),
   ...compactUnitMap(`
     basic laws
@@ -567,6 +584,7 @@ const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
 const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map();
 
 function isCompactTokenPolicyEntry(entry) {
+  if (/^(?:inbal|inat)_\d+$/.test(String(entry?.id || ""))) return true;
   const match = /^(colloquial|everyday|professional|formal)_(\d+)$/.exec(String(entry?.id || ""));
   return Boolean(match) && Number(match[2]) >= COMPACT_TOKEN_POLICY_START[match[1]];
 }
@@ -683,15 +701,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 462 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 502 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 462);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 462);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 462);
+  assert.equal(entries.length, 502);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 502);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 502);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -720,9 +738,9 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
 
   assert.deepEqual(categoryCounts, {
     colloquial: 163,
-    everyday: 138,
-    professional: 84,
-    formal: 77,
+    everyday: 150,
+    professional: 98,
+    formal: 91,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -785,7 +803,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
 
-  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS, ...REQUESTED_ENTRY_IDS].forEach((id) => {
+  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS, ...REQUESTED_ENTRY_IDS, ...INBAL_ENTRY_IDS, ...INAT_ENTRY_IDS].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
@@ -812,6 +830,30 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   EXPANSION_GENDER_ALTERNATE_IDS.forEach((id) => {
     assert.ok(byId.get(id).hebrew_alternates.length > 0, `${id} needs a feminine Hebrew alternative`);
   });
+});
+
+test("Inbal and Inat sentence tranches stay aligned and exercise their conjugation verbs", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const inbal = INBAL_ENTRY_IDS.map((id) => byId.get(id));
+  const inat = INAT_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(inbal.length, 16);
+  assert.equal(inat.length, 24);
+  assert.ok([...inbal, ...inat].every(Boolean));
+  [...inbal, ...inat].forEach((entry) => {
+    assert.equal(entry.hebrew_tokens.length, entry.english_tokens.length, `${entry.id} bilingual target count`);
+    assert.equal(buildSentenceFrame(entry.hebrew, entry.hebrew_tokens).failed, false, `${entry.id} Hebrew chips`);
+    assert.equal(buildSentenceFrame(entry.english, entry.english_tokens).failed, false, `${entry.id} English chips`);
+    assert.deepEqual(getStaticEnglishWordChunks(entry), [], `${entry.id} leaves English outside chips`);
+  });
+
+  const inbalHebrew = inbal.map((entry) => entry.hebrew).join("\n");
+  assert.match(inbalHebrew, /קערת השבעה/);
+  assert.match(inbalHebrew, /בירכנו|מברכים/);
+  const inatHebrew = inat.map((entry) => entry.hebrew).join("\n");
+  assert.match(inatHebrew, /פירשה/);
+  assert.match(inatHebrew, /מחו|מחינו|נמחה/);
 });
 
 test("sentence bank includes requested lips and two-languages examples", () => {

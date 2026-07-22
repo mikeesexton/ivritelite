@@ -4687,3 +4687,26 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Pre-push `npm test` — 264 pass, 0 fail. `git diff --cached --check` — pass. Commit `c3aab3f` was pushed on `agent/hebrew-speech-and-mobile-feedback`; GitHub pull request #43 targets `main` and was reported clean and mergeable with no required status checks.
 
 **Risks / regressions to check:** Recheck the original physical iPhone/Safari speech and answered-state recordings after GitHub Pages finishes deploying the merged change.
+
+---
+
+### 2026-07-21 16:57 EDT — Expand Inbal and Inat content and preserve the character strategy
+
+**Requested:** Implement the planned content expansion before beginning character art: add vocabulary, sentences, and safe conjugation verbs for Inbal and Inat; preserve the strategic and visual plan as a live document; do not begin Ido visual work until the remaining reference pictures are supplied.
+
+**Files changed:**
+- `vocab-data.js` — adds the 30-card `religion_magic_spirituality` tranche for Inbal and the 30-card `literature_arts_cultural_history` tranche for Inat, with pointed Hebrew and category metadata; updates the data build marker.
+- `sentence-bank-data.js` — adds 16 `inbal_*` and 24 `inat_*` entries covering incantation bowls, ritual and folklore, literature, art, cultural memory, public-domain cultural texts, and activism; updates the data build marker.
+- `hebrew-verbs.js` — adds stored present, past, and future paradigms for `לברך`, `להתפלל`, `לפרש`, and `למחות`; updates the data build marker.
+- `tests/vocab-data.test.js` — updates totals and verifies both new 30-card vocabulary tranches are pointed, playable, complete, and globally unique.
+- `tests/sentence-bank-data.test.js` — updates totals/category counts, subjects the new character rows to the compact-chip policy, and verifies complete aligned Inbal/Inat sentence ranges and the intended conjugated forms.
+- `tests/hebrew-verbs.test.js` — updates the seed count and verifies all four new character verbs expose complete, pointed, authoritative 21-form paradigms.
+- `docs/character-gameplay-strategy.md` — records the live cast model, copy, routing boundaries, abbreviation ownership, implemented-content ledger, and visual-production handoff; explicitly pauses Ido art pending all reference images.
+- `index.html` — cache-busts the three changed data sources to `20260721a`.
+- `task-log.md` — records this implementation and verification.
+
+**Behavior changed:** Translation Match gains 60 playable cards, Sentences/Shema gain 40 fully authored rows, and Conjugation gains four complete verbs. The app now contains 1,572 vocabulary entries, 502 sentence entries, and 142 seed verbs. No character picker, routing behavior, sprites, animation, or other visual integration was added.
+
+**Tests run:** Baseline `npm test` — 264 pass, 0 fail. Focused `node --test tests/sentence-bank-data.test.js tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 77 pass, 0 fail. Final `npm test` — 267 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** The new content is structurally and mechanically verified, but a native-speaker editorial pass remains valuable for register and niqqud nuance. The Herzl line uses its conventional English “dream” rendering while noting that `אגדה` literally means “legend.” Character ownership currently lives in category names, explicit sentence IDs, verb IDs, and the strategy ledger; runtime multi-owner routing will be implemented later with the character system.

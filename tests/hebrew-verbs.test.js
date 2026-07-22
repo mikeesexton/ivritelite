@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 138);
+  assert.equal(entries.length, 142);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -569,6 +569,29 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
 
   const giveUp = deck.find((entry) => entry.word.he === "לוותר");
   assert.equal(giveUp.forms.find((form) => form.id === "past_first_person_singular")?.englishText, "I gave up");
+});
+
+test("Inbal and Inat verbs expose verified pointed paradigms in conjugation", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  const expected = new Map([
+    ["לברך", ["בירכנו", "נברך"]],
+    ["להתפלל", ["התפללנו", "נתפלל"]],
+    ["לפרש", ["פירשה", "נפרש"]],
+    ["למחות", ["מחינו", "נמחה"]],
+  ]);
+
+  expected.forEach(([pastForm, futureForm], lemma) => {
+    const seed = entries.find((entry) => entry.lemma === lemma);
+    const item = deck.find((entry) => entry.word.he === lemma);
+    assert.ok(seed, `missing seed entry for ${lemma}`);
+    assert.ok(item, `missing conjugation item for ${lemma}`);
+    assert.equal(item.formSource, "authoritative");
+    assert.equal(item.forms.length, 21);
+    assert.ok(item.forms.every((form) => /[\u0591-\u05c7]/.test(form.valueNiqqud)));
+    assert.ok(item.forms.some((form) => form.valuePlain === pastForm), `${lemma} missing ${pastForm}`);
+    assert.ok(item.forms.some((form) => form.valuePlain === futureForm), `${lemma} missing ${futureForm}`);
+  });
 });
 
 test("starter run verb appears in conjugation with the expected English labels", () => {
