@@ -656,6 +656,44 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
     "לא נכנסים החודש לים, זאת עונת המדוזות.",
   ],
   everyday_138: ["בכל יום היא מדברת שתי שפות בעבודה."],
+  colloquial_vodge_02: [
+    "בבוקר הוודג' שלי הרוס בלי איפור.",
+    "הוודג' שלי הרוס בבוקר בלי איפור.",
+    "בלי איפור בבוקר הוודג' שלי הרוס.",
+  ],
+  colloquial_vodge_03: ["לפני שיוצאים מהבית, תסדר את הוודג'."],
+  colloquial_falsh_01: ["אל תהיה פאלש, תגיד מה שאתה חושב באמת."],
+  colloquial_dov_01: [
+    "ביום שישי כל הדובים באים למסיבה.",
+    "כל הדובים ביום שישי באים למסיבה.",
+  ],
+  colloquial_kukitza_01: ["הקוקיצה החדשה במשרד מכירה כבר את כולם."],
+  colloquial_melarler_01: [
+    "היא כבר מלרלרת בטלפון שעתיים.",
+    "היא כבר שעתיים מלרלרת בטלפון.",
+    "כבר שעתיים היא מלרלרת בטלפון.",
+    "היא מלרלרת כבר שעתיים בטלפון.",
+    "היא כבר מלרלרת שעתיים בטלפון.",
+  ],
+  inbal_07: ["לפני הטקס היא הדליקה נר ושרפה קטורת."],
+  inbal_08: ["לפני ששותים אותו, מברכים על היין."],
+  inbal_09: ["לפני השקיעה היא חזרה מהמקווה."],
+  inbal_10: ["היא משלבת טקסט קדוש ואמנות רחוב כאומנית שחזרה בשאלה."],
+  inbal_15: ["בסיפור לכל קללה יש פרצה שמבטלת אותה."],
+  inat_14: [
+    "לפעמים צנזורה הופכת ספר אסור לספר מבוקש.",
+    "צנזורה הופכת לפעמים ספר אסור לספר מבוקש.",
+  ],
+  inat_18: ["מול משרד החינוך מחו הסטודנטים."],
+  inat_19: ["לאחר שהכביש נחסם, המשטרה פיזרה את ההפגנה."],
+  inat_22: ["החוקרת מתעדת כיצד עם הזמן זיכרון קולקטיבי משתנה."],
+  inat_23: [
+    "מחינו אתמול בכיכר, ומחר נמחה שוב.",
+    "מחינו בכיכר אתמול, ומחר נמחה שוב.",
+    "אתמול מחינו בכיכר, ומחר שוב נמחה.",
+    "מחינו אתמול בכיכר, ומחר שוב נמחה.",
+    "מחינו בכיכר אתמול, ומחר שוב נמחה.",
+  ],
 };
 
 const EXPANSION_GENDER_ALTERNATE_IDS = [
@@ -1087,6 +1125,41 @@ test("new sentence-bank rows accept authored natural Hebrew word orders", () => 
   );
 });
 
+test("append-only sentence authoring cannot bypass an explicit Hebrew word-order review", () => {
+  const sourcePath = path.join(__dirname, "..", "sentence-bank-data.js");
+  const source = fs.readFileSync(sourcePath, "utf8");
+  const marker = "// APPEND_ONLY_REVIEWED_SENTENCES_START";
+  const markerIndex = source.indexOf(marker);
+  assert.notEqual(markerIndex, -1, "reviewed-sentence source marker is missing");
+  assert.doesNotMatch(
+    source.slice(markerIndex),
+    /\bbuildExpandedSentence\s*\(\s*\{/,
+    "append-only sentences must use buildReviewedSentence"
+  );
+
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const reviewedStart = entries.findIndex((entry) => entry.id === "colloquial_vodge_01");
+  assert.notEqual(reviewedStart, -1, "reviewed sentence tranche is missing");
+  const reviewedEntries = entries.slice(reviewedStart);
+  assert.ok(reviewedEntries.length >= 52);
+
+  reviewedEntries.forEach((entry) => {
+    assert.ok(
+      ["fixed", "alternates"].includes(entry.hebrew_order_review),
+      `${entry.id} needs an explicit fixed-vs-alternates word-order decision`
+    );
+    const primaryOrder = entry.hebrew_tokens.join("|");
+    const reorderedAlternates = (entry.hebrew_alternates || []).filter(
+      (alternate) => alternate.tokens.join("|") !== primaryOrder
+    );
+    assert.equal(
+      reorderedAlternates.length > 0,
+      entry.hebrew_order_review === "alternates",
+      `${entry.id} word-order decision does not match its authored alternates`
+    );
+  });
+});
+
 test("approved word-order audit rows keep every reviewed Hebrew order buildable", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
@@ -1117,7 +1190,10 @@ test("approved word-order audit rows keep every reviewed Hebrew order buildable"
     });
   });
 
-  assert.equal(reviewedVariantCount, 25);
+  assert.equal(
+    reviewedVariantCount,
+    Object.values(WORD_ORDER_AUDIT_ALTERNATE_TEXTS).flat().length
+  );
 });
 
 test("sentence bank data avoids exact-synonym distractors for curated formal entries", () => {
