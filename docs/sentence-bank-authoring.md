@@ -119,6 +119,20 @@ Do this review before finalizing distractors. A wording alternate that adds a
 new token needs that token, with matching niqqud, in the distractor bank. A
 pure reordering reuses the primary tiles and needs no new distractor.
 
+For append-only rows after `APPEND_ONLY_REVIEWED_SENTENCES_START`, use
+`buildReviewedSentence` and make the review outcome explicit:
+
+- `wordOrderDecision: "fixed"` means the review found no other neutral order;
+- `wordOrderDecision: "alternates"` requires at least one reordered answer in
+  `hebrewOrderAlternates`; and
+- each `hebrewOrderAlternates` item supplies the plain sentence, pointed
+  sentence, and a complete zero-based permutation of the primary Hebrew token
+  pairs.
+
+Do not add new rows above the marker. The builder rejects a missing or
+contradictory decision, validates every permutation, and derives the alternate
+plain/pointed token arrays from the primary tokens so they cannot drift.
+
 ## Authoring and review checklist
 
 For every changed row:
@@ -154,6 +168,13 @@ two or more must be either:
 Adding a glossary item is a content decision, not a way to make a failing test
 green. Split the chip first unless the whole expression is independently worth
 learning as vocabulary. Both registries are checked for stale entries.
+
+The same test file treats the append-only review marker as a ratchet: all rows
+from the first reviewed sentence onward must expose a fixed-vs-alternates
+decision, and the source below the marker may not call the legacy builder.
+Every accepted order from a completed audit is also listed in
+`WORD_ORDER_AUDIT_ALTERNATE_TEXTS`, which prevents a later edit from silently
+dropping a reviewed answer.
 
 Automation cannot reliably infer Hebrew morphology, contested termhood, or
 whether two individually short chips are the best translation counterparts.

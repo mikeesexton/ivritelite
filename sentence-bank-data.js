@@ -51,6 +51,51 @@ function buildExpandedSentence({
   };
 }
 
+function buildReviewedSentence({
+  wordOrderDecision,
+  hebrewOrderAlternates = [],
+  hebrewTokenPairs,
+  hebrewAlternates = [],
+  ...sentence
+}) {
+  if (!["fixed", "alternates"].includes(wordOrderDecision)) {
+    throw new Error(`${sentence.id || "New sentence"} needs wordOrderDecision: "fixed" or "alternates"`);
+  }
+
+  const expectedOrder = hebrewTokenPairs.map((_, index) => index).join(",");
+  const reorderedAlternates = hebrewOrderAlternates.map(({ text, textNiqqud, order }) => {
+    if (!Array.isArray(order) || [...order].sort((a, b) => a - b).join(",") !== expectedOrder) {
+      throw new Error(`${sentence.id} has an invalid Hebrew token-order permutation`);
+    }
+    return {
+      text,
+      textNiqqud,
+      tokenPairs: order.map((index) => hebrewTokenPairs[index]),
+    };
+  });
+  const entry = buildExpandedSentence({
+    ...sentence,
+    hebrewTokenPairs,
+    hebrewAlternates: [...hebrewAlternates, ...reorderedAlternates],
+  });
+  const primaryOrder = entry.hebrew_tokens.join("\u001f");
+  const hasReorderedAlternate = entry.hebrew_alternates.some(
+    (alternate) => alternate.tokens.join("\u001f") !== primaryOrder
+  );
+
+  if (wordOrderDecision === "alternates" && !hasReorderedAlternate) {
+    throw new Error(`${entry.id} is marked flexible but has no reordered Hebrew alternate`);
+  }
+  if (wordOrderDecision === "fixed" && hasReorderedAlternate) {
+    throw new Error(`${entry.id} has a reordered Hebrew alternate but is marked fixed`);
+  }
+
+  return {
+    ...entry,
+    hebrew_order_review: wordOrderDecision,
+  };
+}
+
 const SENTENCE_BANK = [
   {
     "id": "colloquial_01",
@@ -11937,8 +11982,12 @@ const SENTENCE_EXPANSION_REQUESTED = [
     }],
     notes: "שתי is the feminine construct form of 'two,' used before the feminine plural noun שפות: שתי שפות, 'two languages.'"
   }),
-  buildExpandedSentence({
+  // APPEND_ONLY_REVIEWED_SENTENCES_START
+  // Every sentence from this marker onward must use buildReviewedSentence and
+  // record whether neutral Hebrew order is fixed or represented by alternates.
+  buildReviewedSentence({
     id: "colloquial_vodge_01", emoji: "😍", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "יש לו וודג' של דוגמן.",
     hebrewNiqqud: "יֵשׁ לוֹ ווֹדְג' שֶׁל דֻּגְמָן.",
     english: "He has the face of a model.",
@@ -11948,8 +11997,9 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishDistractors: ["the body", "a smile", "the voice", "a star"],
     notes: "וודג' is LGBTQ+ slang for one's face or looks, borrowed from Arabic wajh ('face'). It is masculine; the single-vav spelling ودج' is also seen."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_vodge_02", emoji: "💄", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "בלי איפור הוודג' שלי הרוס בבוקר.",
     hebrewNiqqud: "בְּלִי אִיפּוּר הַווֹדְג' שֶׁלִּי הָרוּס בַּבֹּקֶר.",
     english: "Without makeup my face is a wreck in the morning.",
@@ -11957,10 +12007,28 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["Without", "makeup", "my face", "is a wreck", "in the morning"],
     hebrewDistractorPairs: [["נראה", "נִרְאֶה"], ["עייף", "עָיֵף"], ["בלילה", "בַּלַּיְלָה"], ["הכל", "הַכֹּל"]],
     englishDistractors: ["looks", "tired", "at night", "everything"],
+    hebrewOrderAlternates: [
+      {
+        text: "בבוקר הוודג' שלי הרוס בלי איפור.",
+        textNiqqud: "בַּבֹּקֶר הַווֹדְג' שֶׁלִּי הָרוּס בְּלִי אִיפּוּר.",
+        order: [5, 2, 3, 4, 0, 1],
+      },
+      {
+        text: "הוודג' שלי הרוס בבוקר בלי איפור.",
+        textNiqqud: "הַווֹדְג' שֶׁלִּי הָרוּס בַּבֹּקֶר בְּלִי אִיפּוּר.",
+        order: [2, 3, 4, 5, 0, 1],
+      },
+      {
+        text: "בלי איפור בבוקר הוודג' שלי הרוס.",
+        textNiqqud: "בְּלִי אִיפּוּר בַּבֹּקֶר הַווֹדְג' שֶׁלִּי הָרוּס.",
+        order: [0, 1, 5, 2, 3, 4],
+      },
+    ],
     notes: "וודג' here is slang for one's face/looks; הוודג' שלי = 'my face.' The word comes from Arabic wajh ('face')."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_vodge_03", emoji: "💅", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "תסדר את הוודג' לפני שיוצאים מהבית.",
     hebrewNiqqud: "תְּסַדֵּר אֶת הַווֹדְג' לִפְנֵי שֶׁיּוֹצְאִים מֵהַבַּיִת.",
     english: "Fix your face before we leave the house.",
@@ -11968,10 +12036,16 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["Fix", "your face", "before", "we leave", "the house"],
     hebrewDistractorPairs: [["תלבש", "תִּלְבַּשׁ"], ["אחרי", "אַחֲרֵי"], ["נשארים", "נִשְׁאָרִים"], ["בבית", "בַּבַּיִת"]],
     englishDistractors: ["get dressed", "after", "we stay", "at home"],
+    hebrewOrderAlternates: [{
+      text: "לפני שיוצאים מהבית, תסדר את הוודג'.",
+      textNiqqud: "לִפְנֵי שֶׁיּוֹצְאִים מֵהַבַּיִת, תְּסַדֵּר אֶת הַווֹדְג'.",
+      order: [3, 4, 5, 0, 1, 2],
+    }],
     notes: "תסדר את הוודג' is a campy way to say 'fix your face/look.' וודג' is slang for face/looks, from Arabic wajh ('face')."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_falsh_01", emoji: "🙄", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "אל תהיה פאלש, תגיד מה שאתה באמת חושב.",
     hebrewNiqqud: "אַל תִּהְיֶה פָאלְשׁ, תַּגִּיד מַה שֶּׁאַתָּה בֶּאֱמֶת חוֹשֵׁב.",
     english: "Don't be fake, say what you really think.",
@@ -11979,10 +12053,16 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["Don't", "be", "fake", "say", "what you", "really", "think"],
     hebrewDistractorPairs: [["ישר", "יָשָׁר"], ["תשתוק", "תִּשְׁתֹּק"], ["שקר", "שֶׁקֶר"], ["נחמד", "נֶחְמָד"]],
     englishDistractors: ["honest", "be quiet", "a lie", "nice"],
+    hebrewOrderAlternates: [{
+      text: "אל תהיה פאלש, תגיד מה שאתה חושב באמת.",
+      textNiqqud: "אַל תִּהְיֶה פָאלְשׁ, תַּגִּיד מַה שֶּׁאַתָּה חוֹשֵׁב בֶּאֱמֶת.",
+      order: [0, 1, 2, 3, 4, 5, 7, 6],
+    }],
     notes: "פאלש (from Yiddish/German 'falsch') is slang for fake, phony, or two-faced — used about people or vibes."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_ochtcha_01", emoji: "💁", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "אוחצ'ה, ראית מה היא לבשה אתמול?!",
     hebrewNiqqud: "אוֹחְצָ'ה, רָאִית מָה הִיא לָבְשָׁה אֶתְמוֹל?!",
     english: "Girl, did you see what she wore yesterday?!",
@@ -11992,8 +12072,9 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishDistractors: ["did you hear", "he", "bought", "today"],
     notes: "אוחצ'ה (also אוחצ') is camp slang for a flamboyant gay man and a term of address like 'girl!' or 'queen.' From Arabic for 'sister.'"
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_hores_01", emoji: "🔥", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "אחותי, את הורסת עם השמלה הזאת!",
     hebrewNiqqud: "אָחוֹתִי, אַתְּ הוֹרֶסֶת עִם הַשִּׂמְלָה הַזֹּאת!",
     english: "Girl, you're killing it in that dress!",
@@ -12003,8 +12084,9 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishDistractors: ["bro", "he", "looks", "the coat", "that one"],
     notes: "הורס/הורסת literally 'destroys,' but as slang means 'killing it / looking amazing.' Common in gay and general Israeli slang."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_hores_02", emoji: "🤩", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הביצוע שלו אתמול פשוט הורס.",
     hebrewNiqqud: "הַבִּיצּוּעַ שֶׁלּוֹ אֶתְמוֹל פָּשׁוּט הוֹרֵס.",
     english: "His performance yesterday was just a knockout.",
@@ -12014,8 +12096,9 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishDistractors: ["the song", "hers", "today", "really", "boring"],
     notes: "הורס as slang = amazing, a knockout ('killing it'). Here it describes a performance rather than a person."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_dov_01", emoji: "🐻", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "כל הדובים באים למסיבה ביום שישי.",
     hebrewNiqqud: "כָּל הַדֻּבִּים בָּאִים לַמְּסִבָּה בְּיוֹם שִׁישִׁי.",
     english: "All the bears come to the party on Friday.",
@@ -12023,10 +12106,23 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["All", "the bears", "come", "to the party", "on", "Friday"],
     hebrewDistractorPairs: [["כמה", "כַּמָּה"], ["החתולים", "הַחֲתוּלִים"], ["הולכים", "הוֹלְכִים"], ["לים", "לַיָּם"], ["ראשון", "רִאשׁוֹן"]],
     englishDistractors: ["some", "the cats", "go", "to the beach", "Sunday"],
+    hebrewOrderAlternates: [
+      {
+        text: "ביום שישי כל הדובים באים למסיבה.",
+        textNiqqud: "בְּיוֹם שִׁישִׁי כָּל הַדֻּבִּים בָּאִים לַמְּסִבָּה.",
+        order: [4, 5, 0, 1, 2, 3],
+      },
+      {
+        text: "כל הדובים ביום שישי באים למסיבה.",
+        textNiqqud: "כָּל הַדֻּבִּים בְּיוֹם שִׁישִׁי בָּאִים לַמְּסִבָּה.",
+        order: [0, 1, 4, 5, 2, 3],
+      },
+    ],
     notes: "דוב ('bear') in gay slang is a large, hairy man — same as English 'bear.' Plural דובים."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_dov_02", emoji: "🧔", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הוא דוב חמוד עם זקן וחיוך גדול.",
     hebrewNiqqud: "הוּא דֹּב חָמוּד עִם זָקָן וְחִיּוּךְ גָּדוֹל.",
     english: "He's a cute bear with a beard and a big smile.",
@@ -12036,8 +12132,9 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishDistractors: ["she's", "a cat", "skinny", "without", "a mustache", "small"],
     notes: "דוב ('bear') = a big, hairy, often bearded gay man. Used affectionately."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_kukitza_01", emoji: "🍪", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "הקוקיצה החדשה במשרד כבר מכירה את כולם.",
     hebrewNiqqud: "הַקּוּקִיצָה הַחֲדָשָׁה בַּמִּשְׂרָד כְּבָר מַכִּירָה אֶת כֻּלָּם.",
     english: "The new twink at the office already knows everyone.",
@@ -12045,10 +12142,16 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["The new", "twink", "at the office", "already", "knows", "everyone"],
     hebrewDistractorPairs: [["הבחור", "הַבָּחוּר"], ["הישן", "הַיָּשָׁן"], ["בבית", "בַּבַּיִת"], ["שכח", "שָׁכַח"], ["אף אחד", "אַף אֶחָד"]],
     englishDistractors: ["the guy", "old", "at home", "forgot", "no one"],
+    hebrewOrderAlternates: [{
+      text: "הקוקיצה החדשה במשרד מכירה כבר את כולם.",
+      textNiqqud: "הַקּוּקִיצָה הַחֲדָשָׁה בַּמִּשְׂרָד מַכִּירָה כְּבָר אֶת כֻּלָּם.",
+      order: [0, 1, 2, 4, 3, 5, 6],
+    }],
     notes: "קוקיצה (from English 'cookie') is playful slang for a young, cute, effeminate gay guy (like 'twink'). Grammatically feminine."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_melarler_01", emoji: "📞", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "היא מלרלרת בטלפון כבר שעתיים.",
     hebrewNiqqud: "הִיא מְלַרְלֶרֶת בַּטֶּלֶפוֹן כְּבָר שְׁעָתַיִם.",
     english: "She's already been yakking on the phone for two hours.",
@@ -12056,10 +12159,38 @@ const SENTENCE_EXPANSION_REQUESTED = [
     englishTokens: ["She's already", "been yakking", "on the phone", "for", "two hours"],
     hebrewDistractorPairs: [["הוא", "הוּא"], ["עובד", "עוֹבֵד"], ["במחשב", "בַּמַּחְשֵׁב"], ["רק", "רַק"], ["דקה", "דַּקָּה"]],
     englishDistractors: ["he has been", "working", "on the computer", "only", "a minute"],
+    hebrewOrderAlternates: [
+      {
+        text: "היא כבר מלרלרת בטלפון שעתיים.",
+        textNiqqud: "הִיא כְּבָר מְלַרְלֶרֶת בַּטֶּלֶפוֹן שְׁעָתַיִם.",
+        order: [0, 3, 1, 2, 4],
+      },
+      {
+        text: "היא כבר שעתיים מלרלרת בטלפון.",
+        textNiqqud: "הִיא כְּבָר שְׁעָתַיִם מְלַרְלֶרֶת בַּטֶּלֶפוֹן.",
+        order: [0, 3, 4, 1, 2],
+      },
+      {
+        text: "כבר שעתיים היא מלרלרת בטלפון.",
+        textNiqqud: "כְּבָר שְׁעָתַיִם הִיא מְלַרְלֶרֶת בַּטֶּלֶפוֹן.",
+        order: [3, 4, 0, 1, 2],
+      },
+      {
+        text: "היא מלרלרת כבר שעתיים בטלפון.",
+        textNiqqud: "הִיא מְלַרְלֶרֶת כְּבָר שְׁעָתַיִם בַּטֶּלֶפוֹן.",
+        order: [0, 1, 3, 4, 2],
+      },
+      {
+        text: "היא כבר מלרלרת שעתיים בטלפון.",
+        textNiqqud: "הִיא כְּבָר מְלַרְלֶרֶת שְׁעָתַיִם בַּטֶּלֶפוֹן.",
+        order: [0, 3, 1, 4, 2],
+      },
+    ],
     notes: "מלרלר/מלרלרת (to לרלר) is slang for chattering or gossiping nonstop — a reduplicated, onomatopoeic verb."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "colloquial_patutch_01", emoji: "👋", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "טוב מותק, אני זזה, פאטוץ'!",
     hebrewNiqqud: "טוֹב מוֹתֶק, אֲנִי זָזָה, פָּאטוּץ'!",
     english: "Okay babe, I'm off, bye!",
@@ -12074,8 +12205,9 @@ const SENTENCE_EXPANSION_REQUESTED = [
 SENTENCE_BANK.push(...SENTENCE_EXPANSION_REQUESTED);
 
 const INBAL_SENTENCES = [
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_01", emoji: "🏺", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הארכאולוגים מצאו קערת השבעה ועליה טקסט בארמית.",
     hebrewNiqqud: "הָאַרְכֵאוֹלוֹגִים מָצְאוּ קְעָרַת הַשְׁבָּעָה וְעָלֶיהָ טֶקְסְט בַּאֲרָמִית.",
     english: "The archaeologists found an incantation bowl with Aramaic text.",
@@ -12085,8 +12217,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["The artists", "broke", "a statue", "Latin"],
     notes: "קערת השבעה is an incantation bowl. Late-antique examples commonly carry protective texts written in spirals, often in Aramaic."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_02", emoji: "🌀", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הכתב מסתובב פנימה משפתה.",
     hebrewNiqqud: "הַכְּתָב מִסְתּוֹבֵב פְּנִימָה מִשְּׂפָתָהּ.",
     english: "The writing spirals inward from its rim.",
@@ -12096,8 +12229,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["The drawing", "disappears", "under", "the corner"],
     notes: "שפה can mean an edge or rim as well as a language or lip. משפתה means 'from its rim.'"
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_03", emoji: "🚪", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "הם קברו את הקערה הפוכה מתחת לסף הבית.",
     hebrewNiqqud: "הֵם קָבְרוּ אֶת הַקְּעָרָה הֲפוּכָה מִתַּחַת לְסַף הַבַּיִת.",
     english: "They buried the bowl upside down beneath the threshold of the house.",
@@ -12107,8 +12241,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["We", "lifted", "the amulet", "in the attic"],
     notes: "Incantation bowls were often buried upside down beneath floors or thresholds. סף is a threshold."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_04", emoji: "✍️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "ענבל מעתיקה נוסחת הגנה על החרס.",
     hebrewNiqqud: "עִנְבָּל מַעְתִּיקָה נֻסְחַת הֲגָנָה עַל הַחֶרֶס.",
     english: "Inbal copies a protective formula onto the pottery.",
@@ -12118,8 +12253,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["Itamar", "erases", "a song", "the paper"],
     notes: "נוסחה is a formula; in a construct phrase it becomes נוסחת. חרס is pottery or fired clay."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_05", emoji: "🧿", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הקמיע אמור להגן על הבית מעין הרע.",
     hebrewNiqqud: "הַקָּמֵעַ אָמוּר לְהָגֵן עַל הַבַּיִת מֵעַיִן הָרַע.",
     english: "The amulet is supposed to protect the house from the evil eye.",
@@ -12129,8 +12265,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["The painting", "might", "to open", "the shop"],
     notes: "אמור + infinitive expresses 'is supposed to.' עין הרע is the evil eye."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_06", emoji: "🌙", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "סבתא שלה פותרת חלומות, אבל מזהירה שסמל אינו נבואה.",
     hebrewNiqqud: "סָבְתָא שֶׁלָּהּ פּוֹתֶרֶת חֲלוֹמוֹת, אֲבָל מַזְהִירָה שֶׁסֵּמֶל אֵינוֹ נְבוּאָה.",
     english: "Her grandmother interprets dreams but warns that a symbol is not a prophecy.",
@@ -12140,8 +12277,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["His sister", "forgets", "stories", "promises"],
     notes: "פתרון חלומות is dream interpretation; the traditional verb is לפתור חלום, literally 'to solve a dream.'"
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_07", emoji: "🕯️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "היא הדליקה נר ושרפה קטורת לפני הטקס.",
     hebrewNiqqud: "הִיא הִדְלִיקָה נֵר וְשָׂרְפָה קְטֹרֶת לִפְנֵי הַטֶּקֶס.",
     english: "She lit a candle and burned incense before the ritual.",
@@ -12149,10 +12287,16 @@ const INBAL_SENTENCES = [
     englishTokens: ["She", "lit", "a candle", "and burned", "incense", "before", "the ritual"],
     hebrewDistractorPairs: [["הוא", "הוּא"], ["כיבה", "כִּבָּה"], ["מנורה", "מְנוֹרָה"], ["אחרי", "אַחֲרֵי"]],
     englishDistractors: ["He", "extinguished", "a lamp", "after"],
+    hebrewOrderAlternates: [{
+      text: "לפני הטקס היא הדליקה נר ושרפה קטורת.",
+      textNiqqud: "לִפְנֵי הַטֶּקֶס הִיא הִדְלִיקָה נֵר וְשָׂרְפָה קְטֹרֶת.",
+      order: [5, 6, 0, 1, 2, 3, 4],
+    }],
     notes: "קטורת is incense, especially in ritual or biblical contexts."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_08", emoji: "🍷", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "מברכים על היין לפני ששותים אותו.",
     hebrewNiqqud: "מְבָרְכִים עַל הַיַּיִן לִפְנֵי שֶׁשּׁוֹתִים אוֹתוֹ.",
     english: "They recite a blessing over the wine before drinking it.",
@@ -12160,10 +12304,16 @@ const INBAL_SENTENCES = [
     englishTokens: ["They recite", "a blessing", "over", "the wine", "before", "drinking it"],
     hebrewDistractorPairs: [["מקללים", "מְקַלְּלִים"], ["את", "אֶת"], ["המים", "הַמַּיִם"], ["אחרי", "אַחֲרֵי"]],
     englishDistractors: ["They curse", "a warning", "the water", "after"],
+    hebrewOrderAlternates: [{
+      text: "לפני ששותים אותו, מברכים על היין.",
+      textNiqqud: "לִפְנֵי שֶׁשּׁוֹתִים אוֹתוֹ, מְבָרְכִים עַל הַיַּיִן.",
+      order: [3, 4, 5, 0, 1, 2],
+    }],
     notes: "לברך על means to recite a blessing over something. מברכים is the present masculine plural form."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_09", emoji: "🌅", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "היא חזרה מהמקווה לפני השקיעה.",
     hebrewNiqqud: "הִיא חָזְרָה מֵהַמִּקְוֶה לִפְנֵי הַשְּׁקִיעָה.",
     english: "She returned from the ritual bath before sunset.",
@@ -12171,10 +12321,16 @@ const INBAL_SENTENCES = [
     englishTokens: ["She", "returned", "from the ritual bath", "before", "sunset"],
     hebrewDistractorPairs: [["הוא", "הוּא"], ["יצא", "יָצָא"], ["מהספרייה", "מֵהַסִּפְרִיָּה"], ["בזריחה", "בַּזְּרִיחָה"]],
     englishDistractors: ["He", "left", "from the library", "at sunrise"],
+    hebrewOrderAlternates: [{
+      text: "לפני השקיעה היא חזרה מהמקווה.",
+      textNiqqud: "לִפְנֵי הַשְּׁקִיעָה הִיא חָזְרָה מֵהַמִּקְוֶה.",
+      order: [3, 4, 0, 1, 2],
+    }],
     notes: "מקווה is a ritual bath. מהמקווה combines מן + המקווה."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_10", emoji: "🎨", category: "professional", difficulty: 3,
+    wordOrderDecision: "alternates",
     hebrew: "כאומנית שחזרה בשאלה, היא משלבת טקסט קדוש ואמנות רחוב.",
     hebrewNiqqud: "כְּאָמָּנִית שֶׁחָזְרָה בִּשְׁאֵלָה, הִיא מְשַׁלֶּבֶת טֶקְסְט קָדוֹשׁ וְאָמָּנוּת רְחוֹב.",
     english: "As an artist who left religion, she combines sacred text and street art.",
@@ -12182,10 +12338,16 @@ const INBAL_SENTENCES = [
     englishTokens: ["As an artist", "who left", "religion", "she", "combines", "sacred", "text", "and street art"],
     hebrewDistractorPairs: [["כמרצה", "כְּמַרְצָה"], ["דתייה", "דָּתִיָּה"], ["הוא", "הוּא"], ["מפרידה", "מַפְרִידָה"]],
     englishDistractors: ["As a lecturer", "religious", "he", "separates"],
+    hebrewOrderAlternates: [{
+      text: "היא משלבת טקסט קדוש ואמנות רחוב כאומנית שחזרה בשאלה.",
+      textNiqqud: "הִיא מְשַׁלֶּבֶת טֶקְסְט קָדוֹשׁ וְאָמָּנוּת רְחוֹב כְּאָמָּנִית שֶׁחָזְרָה בִּשְׁאֵלָה.",
+      order: [3, 4, 5, 6, 7, 0, 1, 2],
+    }],
     notes: "חוזרת בשאלה is the feminine form for someone who has left an Orthodox religious way of life; חוזר בשאלה is masculine."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_11", emoji: "👻", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "האגדה מספרת על דיבוק שנצמד לנשמה.",
     hebrewNiqqud: "הָאַגָּדָה מְסַפֶּרֶת עַל דִּיבּוּק שֶׁנִּצְמַד לַנְּשָׁמָה.",
     english: "The legend tells of a dybbuk that clung to a soul.",
@@ -12195,8 +12357,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["The study", "proves", "an angel", "that fled"],
     notes: "In Jewish folklore, a דיבוק is a possessing spirit. The sentence presents the idea as legend, not fact."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_12", emoji: "🎲", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הם מתווכחים אם זה צירוף מקרים או אות מבשר.",
     hebrewNiqqud: "הֵם מִתְוַכְּחִים אִם זֶה צֵרוּף מִקְרִים אוֹ אוֹת מְבַשֵּׂר.",
     english: "They debate whether this is a coincidence or an omen.",
@@ -12206,8 +12369,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["We", "agree", "why", "proof"],
     notes: "צירוף מקרים is a coincidence; אות מבשר is an omen or portent."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_13", emoji: "🧠", category: "formal", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "האינטואיציה שלה אומרת לחכות, אבל הראיות מצביעות על פעולה.",
     hebrewNiqqud: "הָאִינְטוּאִיצְיָה שֶׁלָּהּ אוֹמֶרֶת לְחַכּוֹת, אֲבָל הָרְאָיוֹת מַצְבִּיעוֹת עַל פְּעֻלָּה.",
     english: "Her intuition says to wait but the evidence points toward action.",
@@ -12217,8 +12381,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["His fear", "asks", "to flee", "the rumor"],
     notes: "This sentence deliberately contrasts intuition with evidence without dismissing either vocabulary domain."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_14", emoji: "🎶", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "אפשר ללחוש תפילה ואפשר גם לשיר אותה.",
     hebrewNiqqud: "אֶפְשָׁר לִלְחֹשׁ תְּפִלָּה וְאֶפְשָׁר גַּם לָשִׁיר אוֹתָהּ.",
     english: "A prayer can be whispered and it can also be sung.",
@@ -12228,8 +12393,9 @@ const INBAL_SENTENCES = [
     englishDistractors: ["A curse", "must", "be shouted", "him"],
     notes: "אותה refers back to the feminine noun תפילה."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_15", emoji: "🗝️", category: "formal", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "לכל קללה בסיפור יש פרצה שמבטלת אותה.",
     hebrewNiqqud: "לְכָל קְלָלָה בַּסִּפּוּר יֵשׁ פִּרְצָה שֶׁמְּבַטֶּלֶת אוֹתָהּ.",
     english: "Every curse in the story has a loophole that cancels it.",
@@ -12237,10 +12403,16 @@ const INBAL_SENTENCES = [
     englishTokens: ["Every", "curse", "in the story", "has", "a loophole", "that cancels", "it"],
     hebrewDistractorPairs: [["לאף", "לְאַף"], ["ברכה", "בְּרָכָה"], ["במחקר", "בַּמֶּחְקָר"], ["מחזקת", "מְחַזֶּקֶת"]],
     englishDistractors: ["No", "blessing", "in the study", "strengthens"],
+    hebrewOrderAlternates: [{
+      text: "בסיפור לכל קללה יש פרצה שמבטלת אותה.",
+      textNiqqud: "בַּסִּפּוּר לְכָל קְלָלָה יֵשׁ פִּרְצָה שֶׁמְּבַטֶּלֶת אוֹתָהּ.",
+      order: [2, 0, 1, 3, 4, 5, 6],
+    }],
     notes: "פרצה is a gap or loophole. The sentence refers to story logic, not a real supernatural claim."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inbal_16", emoji: "🏠", category: "formal", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "בירכנו את הסטודיו החדש ותלינו קמיע ליד הדלת.",
     hebrewNiqqud: "בֵּרַכְנוּ אֶת הַסְטוּדְיוֹ הֶחָדָשׁ וְתָלִינוּ קָמֵעַ לְיַד הַדֶּלֶת.",
     english: "We blessed the new studio and hung an amulet beside the door.",
@@ -12253,8 +12425,9 @@ const INBAL_SENTENCES = [
 ];
 
 const INAT_SENTENCES = [
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_01", emoji: "💭", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "אם תרצו, אין זו אגדה.", hebrewNiqqud: "אִם תִּרְצוּ, אֵין זוֹ אַגָּדָה.",
     english: "If you will it, this is not a dream.",
     hebrewTokenPairs: [["אם", "אִם"], ["תרצו", "תִּרְצוּ"], ["אין זו", "אֵין זוֹ"], ["אגדה", "אַגָּדָה"]],
@@ -12263,8 +12436,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["When", "you forget it", "this is", "a fact"],
     notes: "A famous Hebrew rendering of Theodor Herzl's motto. אגדה literally means 'legend'; 'dream' is the conventional English rendering."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_02", emoji: "🎼", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
     hebrew: "עוד לא אבדה תקוותנו.", hebrewNiqqud: "עוֹד לֹא אָבְדָה תִּקְוָתֵנוּ.",
     english: "Our hope is not yet lost.",
     hebrewTokenPairs: [["עוד", "עוֹד"], ["לא", "לֹא"], ["אבדה", "אָבְדָה"], ["תקוותנו", "תִּקְוָתֵנוּ"]],
@@ -12273,8 +12447,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["Our path", "was", "already", "found"],
     notes: "A line from Hatikvah, based on Naftali Herz Imber's poem Tikvatenu."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_03", emoji: "🏞️", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "האדם אינו אלא תבנית נוף מולדתו.", hebrewNiqqud: "הָאָדָם אֵינוֹ אֶלָּא תַּבְנִית נוֹף מוֹלַדְתּוֹ.",
     english: "A person is nothing but the shape of their homeland's landscape.",
     hebrewTokenPairs: [["האדם", "הָאָדָם"], ["אינו", "אֵינוֹ"], ["אלא", "אֶלָּא"], ["תבנית", "תַּבְנִית"], ["נוף", "נוֹף"], ["מולדתו", "מוֹלַדְתּוֹ"]],
@@ -12283,8 +12458,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["A poet", "is also", "a picture", "their future"],
     notes: "The opening line of Shaul Tchernichovsky's poem האדם אינו אלא. מולדתו means 'his homeland'; the English uses singular 'their.'"
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_04", emoji: "⚖️", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
     hebrew: "צדק צדק תרדוף.", hebrewNiqqud: "צֶדֶק צֶדֶק תִּרְדֹּף.",
     english: "Justice, justice shall you pursue.",
     hebrewTokenPairs: [["צדק", "צֶדֶק"], ["צדק", "צֶדֶק"], ["תרדוף", "תִּרְדֹּף"]],
@@ -12293,8 +12469,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["Law", "peace", "shall you leave", "shall you forget"],
     notes: "A short biblical line from Deuteronomy 16:20. The repeated צדק is part of the source text."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_05", emoji: "🔎", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "קריאה צמודה חושפת מוטיב שחוזר לאורך הרומן.",
     hebrewNiqqud: "קְרִיאָה צְמוּדָה חוֹשֶׂפֶת מוֹטִיב שֶׁחוֹזֵר לְאֹרֶךְ הָרוֹמָן.",
     english: "Close reading reveals a motif that recurs throughout the novel.",
@@ -12304,8 +12481,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["Quick", "reading", "hides", "a detail", "the article"],
     notes: "קריאה צמודה is close reading: sustained attention to the language and structure of a text."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_06", emoji: "🗣️", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "השיר משנה משמעות כשהמספר משתנה.",
     hebrewNiqqud: "הַשִּׁיר מְשַׁנֶּה מַשְׁמָעוּת כְּשֶׁהַמְּסַפֵּר מִשְׁתַּנֶּה.",
     english: "The poem changes meaning when the narrator changes.",
@@ -12315,8 +12493,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The story", "keeps", "form", "when the reader"],
     notes: "מספר means narrator here; context distinguishes it from the identically spelled word for number."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_07", emoji: "🌐", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "המרצה ביקשה מהסטודנטים להשוות שלושה תרגומים.",
     hebrewNiqqud: "הַמַּרְצָה בִּקְּשָׁה מֵהַסְטוּדֶנְטִים לְהַשְׁווֹת שְׁלוֹשָׁה תַּרְגּוּמִים.",
     english: "The lecturer asked the students to compare three translations.",
@@ -12326,8 +12505,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The editor", "forbade", "the readers", "to erase"],
     notes: "להשוות means to compare. תרגום is translation; the plural is תרגומים."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_08", emoji: "🗄️", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הארכיון שומר מכתבים, כרזות והקלטות מן התקופה.",
     hebrewNiqqud: "הָאַרְכִיּוֹן שׁוֹמֵר מִכְתָּבִים, כְּרָזוֹת וְהַקְלָטוֹת מִן הַתְּקוּפָה.",
     english: "The archive preserves letters, posters, and recordings from the period.",
@@ -12337,8 +12517,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The museum", "sells", "books", "from the future"],
     notes: "ארכיון is an archive; כרזות are posters or placards; הקלטות are recordings."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_09", emoji: "🎙️", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "היסטוריה שבעל פה משמרת קולות שלא נכנסו לארכיון.",
     hebrewNiqqud: "הִיסְטוֹרְיָה שֶׁבְּעַל פֶּה מְשַׁמֶּרֶת קוֹלוֹת שֶׁלֹּא נִכְנְסוּ לָאַרְכִיּוֹן.",
     english: "Oral history preserves voices that never entered the archive.",
@@ -12348,8 +12529,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["Official", "history", "erases", "pictures", "left"],
     notes: "היסטוריה שבעל פה is oral history: recorded memories and testimony, especially from people underrepresented in written archives."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_10", emoji: "🎸", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "שיר מחאה הופך כאב פרטי לציבורי.",
     hebrewNiqqud: "שִׁיר מְחָאָה הוֹפֵךְ כְּאֵב פְּרָטִי לְצִבּוּרִי.",
     english: "A protest song makes private pain public.",
@@ -12359,8 +12541,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["A love", "song", "leaves", "joy", "hidden"],
     notes: "שיר מחאה is a protest song. The adjective order differs between Hebrew and the deliberately fine-grained English chips."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_11", emoji: "🎭", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "סאטירה תוקפת כוח פוליטי באמצעות הומור.",
     hebrewNiqqud: "סָטִירָה תּוֹקֶפֶת כֹּחַ פּוֹלִיטִי בְּאֶמְצָעוּת הוּמוֹר.",
     english: "Satire attacks political power through humor.",
@@ -12370,8 +12553,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["Melodrama", "strengthens", "emotional", "through anger"],
     notes: "באמצעות is a formal 'by means of' or 'through.'"
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_12", emoji: "🏙️", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "ההפקה העבירה את העלילה לתל אביב של ימינו.",
     hebrewNiqqud: "הַהֲפָקָה הֶעֱבִירָה אֶת הָעֲלִילָה לְתֵל אָבִיב שֶׁל יָמֵינוּ.",
     english: "The production moved the plot to present-day Tel Aviv.",
@@ -12381,8 +12565,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The review", "kept", "the character", "to Jerusalem"],
     notes: "של ימינו means 'of our day' or present-day. הפקה is a stage or screen production."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_13", emoji: "🖼️", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "האוצרת הסבירה מדוע החלל הריק הוא חלק מהיצירה.",
     hebrewNiqqud: "הָאוֹצֶרֶת הִסְבִּירָה מַדּוּעַ הֶחָלָל הָרֵיק הוּא חֵלֶק מֵהַיְּצִירָה.",
     english: "The curator explained why the empty space is part of the artwork.",
@@ -12392,8 +12577,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The critic", "asked", "when", "full"],
     notes: "אוצרת is a female curator. חלל can mean space or void; here it refers to empty visual or gallery space."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_14", emoji: "🚫", category: "professional", difficulty: 3,
+    wordOrderDecision: "alternates",
     hebrew: "צנזורה לפעמים הופכת ספר אסור לספר מבוקש.",
     hebrewNiqqud: "צֶנְזוּרָה לִפְעָמִים הוֹפֶכֶת סֵפֶר אָסוּר לְסֵפֶר מְבֻקָּשׁ.",
     english: "Censorship sometimes turns a forbidden book into a sought-after book.",
@@ -12401,10 +12587,23 @@ const INAT_SENTENCES = [
     englishTokens: ["Censorship", "sometimes", "turns", "a forbidden", "book", "into a sought-after", "book"],
     hebrewDistractorPairs: [["פרסום", "פִּרְסוּם"], ["תמיד", "תָּמִיד"], ["משאיר", "מַשְׁאִיר"], ["נשכח", "נִשְׁכָּח"]],
     englishDistractors: ["Publicity", "always", "leaves", "forgotten"],
+    hebrewOrderAlternates: [
+      {
+        text: "לפעמים צנזורה הופכת ספר אסור לספר מבוקש.",
+        textNiqqud: "לִפְעָמִים צֶנְזוּרָה הוֹפֶכֶת סֵפֶר אָסוּר לְסֵפֶר מְבֻקָּשׁ.",
+        order: [1, 0, 2, 3, 4, 5, 6],
+      },
+      {
+        text: "צנזורה הופכת לפעמים ספר אסור לספר מבוקש.",
+        textNiqqud: "צֶנְזוּרָה הוֹפֶכֶת לִפְעָמִים סֵפֶר אָסוּר לְסֵפֶר מְבֻקָּשׁ.",
+        order: [0, 2, 1, 3, 4, 5, 6],
+      },
+    ],
     notes: "מבוקש can mean wanted, desired, or sought-after."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_15", emoji: "🗯️", category: "formal", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "חופש הביטוי אינו פוטר אמירה מביקורת.",
     hebrewNiqqud: "חוֹפֶשׁ הַבִּטּוּי אֵינוֹ פּוֹטֵר אֲמִירָה מִבִּקֹּרֶת.",
     english: "Freedom of expression does not exempt a statement from criticism.",
@@ -12414,8 +12613,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["Freedom of movement", "always", "requires", "a decision"],
     notes: "פוטר את... מ־ means exempts someone or something from. The sentence distinguishes legal freedom from freedom from criticism."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_16", emoji: "📣", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הפעילים ארגנו צעדה וחילקו עלונים.",
     hebrewNiqqud: "הַפְּעִילִים אִרְגְּנוּ צְעָדָה וְחִלְּקוּ עֲלוֹנִים.",
     english: "The activists organized a march and distributed leaflets.",
@@ -12425,8 +12625,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The officials", "canceled", "a meeting", "tickets"],
     notes: "צעדה is an organized march; עלונים are leaflets or flyers."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_17", emoji: "✊", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "העובדים הכריזו על שביתה כללית.",
     hebrewNiqqud: "הָעוֹבְדִים הִכְרִיזוּ עַל שְׁבִיתָה כְּלָלִית.",
     english: "The workers declared a general strike.",
@@ -12436,8 +12637,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The managers", "abandoned", "a meeting", "private"],
     notes: "להכריז על is to declare or announce. שביתה כללית is a general strike."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_18", emoji: "🏫", category: "formal", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "הסטודנטים מחו מול משרד החינוך.",
     hebrewNiqqud: "הַסְטוּדֶנְטִים מָחוּ מוּל מִשְׂרַד הַחִנּוּךְ.",
     english: "The students protested outside the Education Ministry.",
@@ -12445,10 +12647,16 @@ const INAT_SENTENCES = [
     englishTokens: ["The students", "protested", "outside", "the Education Ministry"],
     hebrewDistractorPairs: [["המורים", "הַמּוֹרִים"], ["חגגו", "חָגְגוּ"], ["בתוך", "בְּתוֹךְ"], ["הספרייה", "הַסִּפְרִיָּה"]],
     englishDistractors: ["The teachers", "celebrated", "inside", "the library"],
+    hebrewOrderAlternates: [{
+      text: "מול משרד החינוך מחו הסטודנטים.",
+      textNiqqud: "מוּל מִשְׂרַד הַחִנּוּךְ מָחוּ הַסְטוּדֶנְטִים.",
+      order: [2, 3, 1, 0],
+    }],
     notes: "מחו is 'they protested,' the past plural form of למחות. מול means opposite, facing, or outside a site."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_19", emoji: "🚓", category: "formal", difficulty: 3,
+    wordOrderDecision: "alternates",
     hebrew: "המשטרה פיזרה את ההפגנה לאחר שהכביש נחסם.",
     hebrewNiqqud: "הַמִּשְׁטָרָה פִּזְּרָה אֶת הַהַפְגָּנָה לְאַחַר שֶׁהַכְּבִישׁ נֶחְסַם.",
     english: "The police dispersed the demonstration after the road was blocked.",
@@ -12456,10 +12664,16 @@ const INAT_SENTENCES = [
     englishTokens: ["The police", "dispersed", "the", "demonstration", "after", "the road", "was blocked"],
     hebrewDistractorPairs: [["העירייה", "הָעִירִיָּה"], ["אישרה", "אִשְּׁרָה"], ["הצעדה", "הַצְּעָדָה"], ["לפני", "לִפְנֵי"]],
     englishDistractors: ["The municipality", "approved", "the march", "before"],
+    hebrewOrderAlternates: [{
+      text: "לאחר שהכביש נחסם, המשטרה פיזרה את ההפגנה.",
+      textNiqqud: "לְאַחַר שֶׁהַכְּבִישׁ נֶחְסַם, הַמִּשְׁטָרָה פִּזְּרָה אֶת הַהַפְגָּנָה.",
+      order: [4, 5, 6, 0, 1, 2, 3],
+    }],
     notes: "פיזרה את ההפגנה means dispersed the demonstration. The sentence reports a sequence without evaluating the police action."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_20", emoji: "📢", category: "formal", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "היא פירשה את הנאום כקריאה לאי־ציות אזרחי.",
     hebrewNiqqud: "הִיא פֵּרְשָׁה אֶת הַנְּאוּם כִּקְרִיאָה לְאִי־צִיּוּת אֶזְרָחִי.",
     english: "She interpreted the speech as a call for civil disobedience.",
@@ -12469,8 +12683,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["He", "summarized", "the article", "as an invitation"],
     notes: "פירשה is the feminine past form of לפרש. אי־ציות אזרחי is civil disobedience."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_21", emoji: "🏛️", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
     hebrew: "הוועדה התעלמה מעדות התושבים.",
     hebrewNiqqud: "הַוַּעֲדָה הִתְעַלְּמָה מֵעֵדוּת הַתּוֹשָׁבִים.",
     english: "The committee ignored the testimony of the residents.",
@@ -12480,8 +12695,9 @@ const INAT_SENTENCES = [
     englishDistractors: ["The council", "heard", "the proposal", "of the experts"],
     notes: "להתעלם מ־ means to ignore. עדות can mean testimony or evidence depending on context."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_22", emoji: "🧠", category: "formal", difficulty: 3,
+    wordOrderDecision: "alternates",
     hebrew: "החוקרת מתעדת כיצד זיכרון קולקטיבי משתנה עם הזמן.",
     hebrewNiqqud: "הַחוֹקֶרֶת מְתַעֶדֶת כֵּיצַד זִכָּרוֹן קוֹלֶקְטִיבִי מִשְׁתַּנֶּה עִם הַזְּמַן.",
     english: "The researcher documents how collective memory changes over time.",
@@ -12489,10 +12705,16 @@ const INAT_SENTENCES = [
     englishTokens: ["The researcher", "documents", "how", "collective memory", "changes", "over time"],
     hebrewDistractorPairs: [["העיתונאית", "הָעִתּוֹנָאִית"], ["מנחשת", "מְנַחֶשֶׁת"], ["מדוע", "מַדּוּעַ"], ["זיכרון אישי", "זִכָּרוֹן אִישִׁי"]],
     englishDistractors: ["The journalist", "guesses", "why", "personal", "memory"],
+    hebrewOrderAlternates: [{
+      text: "החוקרת מתעדת כיצד עם הזמן זיכרון קולקטיבי משתנה.",
+      textNiqqud: "הַחוֹקֶרֶת מְתַעֶדֶת כֵּיצַד עִם הַזְּמַן זִכָּרוֹן קוֹלֶקְטִיבִי מִשְׁתַּנֶּה.",
+      order: [0, 1, 2, 5, 3, 4],
+    }],
     notes: "זיכרון קולקטיבי is collective memory: the shared, changing remembrance of a group."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_23", emoji: "📅", category: "formal", difficulty: 2,
+    wordOrderDecision: "alternates",
     hebrew: "אתמול מחינו בכיכר, ומחר נמחה שוב.",
     hebrewNiqqud: "אֶתְמוֹל מָחִינוּ בַּכִּכָּר, וּמָחָר נִמְחֶה שׁוּב.",
     english: "Yesterday we protested in the square and tomorrow we will protest again.",
@@ -12500,10 +12722,38 @@ const INAT_SENTENCES = [
     englishTokens: ["Yesterday", "we protested", "in the square", "and tomorrow", "we will protest", "again"],
     hebrewDistractorPairs: [["היום", "הַיּוֹם"], ["חגגנו", "חָגַגְנוּ"], ["בפארק", "בַּפַּארְק"], ["ננוח", "נָנוּחַ"]],
     englishDistractors: ["Today", "we celebrated", "in the park", "we will rest"],
+    hebrewOrderAlternates: [
+      {
+        text: "מחינו אתמול בכיכר, ומחר נמחה שוב.",
+        textNiqqud: "מָחִינוּ אֶתְמוֹל בַּכִּכָּר, וּמָחָר נִמְחֶה שׁוּב.",
+        order: [1, 0, 2, 3, 4, 5],
+      },
+      {
+        text: "מחינו בכיכר אתמול, ומחר נמחה שוב.",
+        textNiqqud: "מָחִינוּ בַּכִּכָּר אֶתְמוֹל, וּמָחָר נִמְחֶה שׁוּב.",
+        order: [1, 2, 0, 3, 4, 5],
+      },
+      {
+        text: "אתמול מחינו בכיכר, ומחר שוב נמחה.",
+        textNiqqud: "אֶתְמוֹל מָחִינוּ בַּכִּכָּר, וּמָחָר שׁוּב נִמְחֶה.",
+        order: [0, 1, 2, 3, 5, 4],
+      },
+      {
+        text: "מחינו אתמול בכיכר, ומחר שוב נמחה.",
+        textNiqqud: "מָחִינוּ אֶתְמוֹל בַּכִּכָּר, וּמָחָר שׁוּב נִמְחֶה.",
+        order: [1, 0, 2, 3, 5, 4],
+      },
+      {
+        text: "מחינו בכיכר אתמול, ומחר שוב נמחה.",
+        textNiqqud: "מָחִינוּ בַּכִּכָּר אֶתְמוֹל, וּמָחָר שׁוּב נִמְחֶה.",
+        order: [1, 2, 0, 3, 5, 4],
+      },
+    ],
     notes: "מחינו is past 'we protested'; נמחה is future 'we will protest.' Both come from למחות."
   }),
-  buildExpandedSentence({
+  buildReviewedSentence({
     id: "inat_24", emoji: "↔️", category: "formal", difficulty: 3,
+    wordOrderDecision: "fixed",
     hebrew: "המאמר מציב נרטיב נגדי מול הסיפור ההגמוני.",
     hebrewNiqqud: "הַמַּאֲמָר מַצִּיב נָרָטִיב נֶגְדִּי מוּל הַסִּפּוּר הַהֶגְמוֹנִי.",
     english: "The article sets a counter-narrative against the hegemonic story.",
@@ -12536,6 +12786,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260721a",
+  __build: "20260722a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

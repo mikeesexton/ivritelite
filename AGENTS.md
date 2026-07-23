@@ -56,6 +56,12 @@ Before adding or rechunking sentence-bank content, read
   negation, and movable clauses; do not stop at two orders when a third is
   independently common. Exclude merely grammatical orders that change focus,
   scope, register, or meaning, and review word-order × gender combinations.
+- Every sentence appended after `APPEND_ONLY_REVIEWED_SENTENCES_START` must use
+  `buildReviewedSentence`, set `wordOrderDecision` to `fixed` or `alternates`,
+  and use `hebrewOrderAlternates` for every accepted reordering. Never add a
+  new sentence above the marker to evade this requirement. The data loader and
+  sentence-bank tests intentionally fail if this review path is bypassed or if
+  the decision disagrees with the authored alternates.
 
 Some older sentence tests preserve historical phrase-chip choices. Those are
 legacy snapshots, not authoring precedent; the linked guide is authoritative for

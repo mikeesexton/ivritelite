@@ -4725,3 +4725,38 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Pre-publication `npm test` — 267 pass, 0 fail. Focused content suite — 77 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Commit `551af9f` was pushed on `agent/inbal-inat-content-expansion`; pull request #45 targets `main`.
 
 **Risks / regressions to check:** After merge, synchronize local `main` and verify GitHub reports the PR merged at the expected head commit.
+
+---
+
+### 2026-07-22 22:54 EDT — Enforce and repair Hebrew word-order alternates
+
+**Requested:** Diagnose why the natural answer `היא כבר מלרלרת בטלפון שעתיים.` was rejected despite the sentence-authoring word-order rule; repair the most recent sentence batches; and make future batches fail automatically when agents skip the review.
+
+**Files changed:**
+- `sentence-bank-data.js` — audited all 52 sentences added after the word-order rule, classified 36 as fixed and 16 as flexible, and added 28 fully pointed, exact-token reorderings. Added a reviewed-sentence builder that requires an explicit `fixed` or `alternates` decision, validates complete token permutations, derives aligned alternate token arrays, and exposes the review result in the sentence data. Added an append-only review marker and updated the data build.
+- `tests/sentence-bank-data.test.js` — locks all 28 newly accepted orders, including the reported `מלרלרת` order; checks their text, niqqud, token reuse, and buildability; and adds a ratchet that rejects the legacy builder or a missing/contradictory decision for every sentence from the review marker onward.
+- `AGENTS.md` — makes the reviewed builder, explicit decision, append marker, and no-bypass rule mandatory for all future sentence additions.
+- `docs/sentence-bank-authoring.md` — documents the reviewed authoring schema, validated permutation format, source ratchet, and regression ledger.
+- `index.html` — cache-busts the corrected sentence data to `20260722a`.
+- `task-log.md` — records the diagnosis, repair, enforcement, and verification.
+
+**Behavior changed:** The reported answer and 27 other neutral Hebrew reorderings across the Tel Aviv slang and Inbal/Inat batches are now accepted in English-to-Hebrew sentence play. Future appended sentences cannot load or pass tests unless the author explicitly records whether their neutral word order is fixed or flexible and supplies a valid reordering when flexible.
+
+**Tests run:** Baseline `npm test` — 267 pass, 0 fail. Focused `node --test tests/sentence-bank-data.test.js` — 31 pass, 0 fail. Final `npm test` — 268 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** Static automation can force an explicit review and preserve every accepted result, but no deterministic source test can independently prove that a human or model recognized every semantically valid Hebrew order. The new fail-closed workflow removes silent omission as an acceptable authoring state; future audits should still distinguish neutral equivalents from grammatical but focus-shifting permutations.
+
+---
+
+### 2026-07-22 22:57 EDT — Publish Hebrew word-order enforcement
+
+**Requested:** Push the completed recent-batch word-order repair and permanent authoring enforcement to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — records publication of the audited sentence data, reviewed-sentence builder, append-only ratchet, regression coverage, documentation, and cache bust through pull request #46.
+
+**Behavior changed:** None beyond the word-order correction and enforcement recorded immediately above; this entry records its GitHub publication and merge workflow.
+
+**Tests run:** Pre-publication `npm test` — 268 pass, 0 fail. Focused sentence-bank suite — 31 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Commit `d103eaf` was pushed on `agent/hebrew-word-order-enforcement`; pull request #46 targets `main`.
+
+**Risks / regressions to check:** After merge, synchronize local `main` and verify GitHub reports pull request #46 merged at the expected head commit.
