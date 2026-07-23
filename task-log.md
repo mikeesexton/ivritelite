@@ -4745,3 +4745,18 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 267 pass, 0 fail. Focused `node --test tests/sentence-bank-data.test.js` — 31 pass, 0 fail. Final `npm test` — 268 pass, 0 fail. `git diff --check` — pass.
 
 **Risks / regressions to check:** Static automation can force an explicit review and preserve every accepted result, but no deterministic source test can independently prove that a human or model recognized every semantically valid Hebrew order. The new fail-closed workflow removes silent omission as an acceptable authoring state; future audits should still distinguish neutral equivalents from grammatical but focus-shifting permutations.
+
+---
+
+### 2026-07-22 22:57 EDT — Publish Hebrew word-order enforcement
+
+**Requested:** Push the completed recent-batch word-order repair and permanent authoring enforcement to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — records publication of the audited sentence data, reviewed-sentence builder, append-only ratchet, regression coverage, documentation, and cache bust through pull request #46.
+
+**Behavior changed:** None beyond the word-order correction and enforcement recorded immediately above; this entry records its GitHub publication and merge workflow.
+
+**Tests run:** Pre-publication `npm test` — 268 pass, 0 fail. Focused sentence-bank suite — 31 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Commit `d103eaf` was pushed on `agent/hebrew-word-order-enforcement`; pull request #46 targets `main`.
+
+**Risks / regressions to check:** After merge, synchronize local `main` and verify GitHub reports pull request #46 merged at the expected head commit.
