@@ -4803,3 +4803,18 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Baseline `npm test` — 270 pass, 0 fail. Focused `node --test tests/app-progress.test.js` — 124 pass, 0 fail. First extended `node --test tests/gameplay-layout.test.js` — 0 pass, 1 fail because the longest Shema feedback scrolled at 360×640; after compacting redundant post-answer content, rerun — 1 pass, 0 fail. Final `npm test` — 270 pass, 0 fail. `git diff --check` — pass.
 
 **Risks / regressions to check:** Very long answers can wrap to additional lines, though the rendered short-mobile suite confirms the current feedback states remain usable without scrolling or footer overlap at 360×640. Physical Safari should still be checked after deployment because its bidirectional text and font rendering can differ slightly from Chrome.
+
+---
+
+### 2026-07-24 17:29 EDT — Publish sentence feedback, sentence variants, and TTS fixes
+
+**Requested:** Push both completed change sets to GitHub and merge them into `main`: the bilingual Sentences/Shema feedback redesign and the preceding sentence-variant and Hebrew TTS corrections.
+
+**Files changed:**
+- `task-log.md` — records publication of the combined application, data, speech, styling, cache-bust, and regression changes through pull request #47.
+
+**Behavior changed:** None beyond the two implementation entries immediately above; this entry records their GitHub publication and merge.
+
+**Tests run:** Pre-publication `npm test` — 270 pass, 0 fail. `git diff --cached --check` — pass. GitHub reported pull request #47 clean and mergeable; squash merge commit `810807f13c02d79d0520bd9073588470cdc52bd6` was created successfully.
+
+**Risks / regressions to check:** Recheck the new separated feedback and the two corrected speech pronunciations on the original physical iPad/Safari device after the deployed site refreshes past the `20260724b` asset versions.
