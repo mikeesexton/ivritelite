@@ -920,6 +920,7 @@ test("shema round speaks the sentence, hides the Hebrew prompt, and tracks liste
   playButtons[0].click();
   assert.equal(harness.speechSpeakLog.length, 2);
 
+  state.language = "he";
   fillSentenceAnswerByTap(document, ["הוא", "סתם", "מדבר", "שטויות", "אל", "תיקח", "אותו", "ברצינות"]);
   assert.equal(document.querySelector("#nextBtn").disabled, false);
   document.querySelector("#nextBtn").click();
@@ -927,10 +928,25 @@ test("shema round speaks the sentence, hides the Hebrew prompt, and tracks liste
   assert.equal(state.sessionScore, 3);
   assert.equal(
     getFeedbackText(document),
-    "Correct. You heard הוא סתם מדבר שטויות, אל תיקח אותו ברצינות. "
-      + "Meaning: He's just talking nonsense, don't take him seriously. "
-      + "Tip: Watch the gender match here."
+    "נכון. שמעת הוא סתם מדבר שטויות, אל תיקח אותו ברצינות. "
+      + "משמעות: He's just talking nonsense, don't take him seriously. "
+      + "טיפ: Watch the gender match here."
   );
+  const feedbackItems = document.querySelector("#feedbackItems");
+  assert.equal(document.querySelector("#feedbackSentence").classList.contains("hidden"), true);
+  assert.equal(document.querySelector("#feedbackDetail").classList.contains("hidden"), true);
+  assert.equal(feedbackItems.classList.contains("hidden"), false);
+  assert.equal(feedbackItems.children[0].textContent, "נכון");
+  assert.equal(feedbackItems.children[1].children[0].textContent, "שמעת");
+  assert.equal(feedbackItems.children[1].children[1].children[0].textContent, "הוא סתם מדבר שטויות, אל תיקח אותו ברצינות.");
+  assert.equal(feedbackItems.children[1].children[1].children[0].getAttribute("dir"), "rtl");
+  assert.equal(feedbackItems.children[1].children[1].children[0].getAttribute("lang"), "he");
+  assert.equal(feedbackItems.children[2].children[0].textContent, "משמעות");
+  assert.equal(feedbackItems.children[2].children[1].children[0].textContent, "He's just talking nonsense, don't take him seriously.");
+  assert.equal(feedbackItems.children[2].children[1].children[0].getAttribute("dir"), "ltr");
+  assert.equal(feedbackItems.children[2].children[1].children[0].getAttribute("lang"), "en");
+  assert.equal(feedbackItems.children[3].children[0].textContent, "טיפ");
+  assert.equal(feedbackItems.children[3].children[1].children[0].getAttribute("dir"), "ltr");
   assert.equal(state.sentenceProgress["sb-1::listen"].attempts, 1);
   assert.equal(state.sentenceProgress["sb-1::listen"].correct, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"], undefined);

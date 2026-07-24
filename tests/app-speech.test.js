@@ -208,6 +208,16 @@ test("applyTtsRespellings removes quotation apostrophes without changing Hebrew 
   );
 });
 
+test("applyTtsRespellings gives brunch and שולם stable phonetic speech forms", () => {
+  const { speech } = loadSpeechHarness();
+
+  assert.equal(
+    speech.applyTtsRespellings("חִכִּינוּ שָׁעָה לַבְּרַנְץ' אֲבָל הָאֹכֶל הָיָה סוֹף הַדֶּרֶךְ."),
+    "חִכִּינוּ שָׁעָה לַבְּרַנְטְשׁ אֲבָל הָאֹכֶל הָיָה סוֹף הַדֶּרֶךְ."
+  );
+  assert.equal(speech.applyTtsRespellings("שֻׁלַּם"), "שׁוּלַּם");
+});
+
 test("buildHebrewSpeechText applies TTS respellings to every text source", () => {
   const { speech } = loadSpeechHarness();
   const nfc = (text) => text.normalize("NFC");

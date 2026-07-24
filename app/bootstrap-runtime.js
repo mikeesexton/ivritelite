@@ -65,6 +65,7 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     feedbackTray: document.querySelector("#feedbackTray"),
     feedbackSentence: document.querySelector("#feedbackSentence"),
     feedbackDetail: document.querySelector("#feedbackDetail"),
+    feedbackItems: document.querySelector("#feedbackItems"),
     stickyLessonActions: document.querySelector("#stickyLessonActions"),
     nextBtn: document.querySelector("#nextBtn"),
     masterVerbBtn: document.querySelector("#masterVerbBtn"),

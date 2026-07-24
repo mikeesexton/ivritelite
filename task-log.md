@@ -4760,3 +4760,46 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Pre-publication `npm test` — 268 pass, 0 fail. Focused sentence-bank suite — 31 pass, 0 fail. `git diff --check` and `git diff --cached --check` — pass. Commit `d103eaf` was pushed on `agent/hebrew-word-order-enforcement`; pull request #46 targets `main`.
 
 **Risks / regressions to check:** After merge, synchronize local `main` and verify GitHub reports pull request #46 merged at the expected head commit.
+
+---
+
+### 2026-07-24 17:10 EDT — Accept reported sentence variants and stabilize two TTS pronunciations
+
+**Requested:** Review four iPad reports: accept both placements of “from this sample” in the generalization sentence; stop Hebrew TTS from breaking on the apostrophe in ברנץ'; accept feminine מעדיפה for “I prefer to settle this…”; and correct the Pu'al שֻׁלַּם pronunciation to “shulam.”
+
+**Files changed:**
+- `sentence-bank-data.js` — expanded `formal_32` to accept both `Findings` and `Conclusions` with either reported placement of “from this sample”; added the fully pointed feminine `מעדיפה` alternate to `professional_21`; bumped the sentence-data build to `20260724a`.
+- `app/speech.js` — added exact speech-only respellings that send ברנץ' without the troublesome punctuation and send שֻׁלַּם with an equivalent shuruk spelling. Displayed Hebrew remains unchanged.
+- `tests/sentence-bank-data.test.js` — locks all four accepted `formal_32` combinations and the full feminine `professional_21` answer.
+- `tests/app-speech.test.js` — locks the punctuation-free brunch speech text and the `shulam` speech form.
+- `index.html` — cache-busts the updated sentence data and speech logic to `20260724a`.
+- `task-log.md` — records the review, fixes, and verification.
+
+**Behavior changed:** The exact generalization answer shown in the screenshot (`Conclusions should not be generalized from this sample…`) is now accepted, as are the other noun/order combinations. “I prefer…” accepts either masculine מעדיף or feminine מעדיפה. Speech no longer sends the final apostrophe in ברנץ' to Apple's Hebrew voice, and the Binyanim prompt שֻׁלַּם is forced to the intended “shulam” pronunciation without altering its correct displayed kubutz spelling.
+
+**Tests run:** Baseline `npm test` — 268 pass, 0 fail. Focused `node --test tests/app-speech.test.js tests/sentence-bank-data.test.js tests/verb-game-data.test.js` — 55 pass, 0 fail. Final focused `node --test tests/sentence-bank-data.test.js tests/app-speech.test.js` — 41 pass, 0 fail. Final `npm test` — 270 pass, 0 fail. `git diff --check` — pass. Local browser smoke check loaded the `20260724a` sentence/speech assets and reported no app console warnings or errors.
+
+**Risks / regressions to check:** The two audio changes are deliberately exact-word speech overrides, so other loanwords and Pu'al forms are unaffected. Programmatic checks verify the text sent to speech synthesis, but the final acoustic result should still be checked by ear on the original iPad/Safari Hebrew voice after deployment.
+
+---
+
+### 2026-07-24 17:23 EDT — Separate bilingual sentence feedback by language direction
+
+**Requested:** Improve the unnatural mixed Hebrew/English feedback shown in the sentence-translation and Shema games, especially in the Hebrew UI where labels, answers, meanings, tips, and punctuation were woven together by bidirectional text layout.
+
+**Files changed:**
+- `app/sentence-bank.js` — builds structured feedback for Sentences and Shema with separate result, answer, meaning, correction, and tip fields; marks every learner-language value with its explicit language and LTR/RTL direction.
+- `app/ui.js` — renders the optional structured feedback as isolated rows while preserving the existing plain feedback path for every other game.
+- `app/bootstrap-data.js` — adds localized English and Hebrew result and row labels.
+- `app/bootstrap-runtime.js` — registers the structured feedback container.
+- `index.html` — adds the container and cache-busts the updated stylesheet and application modules to `20260724b`.
+- `styles.css` — adds compact feedback-row styling with isolated direction, wrapping, and alignment.
+- `tests/app-progress.test.js` — verifies the Hebrew-UI Shema result keeps the Hebrew answer RTL and the English meaning/tip LTR in separate elements.
+- `tests/gameplay-layout.test.js` — renders the longest Shema feedback case at 360×640 and verifies direction metadata, no scrolling, no footer overlap, and normal-flow spacing.
+- `task-log.md` — records the change and verification.
+
+**Behavior changed:** Sentence translation feedback now shows a short success/error result followed by labeled rows instead of a mixed-language paragraph. Shema displays “שמעת,” “משמעות,” and “טיפ” as distinct Hebrew labels, with the heard sentence isolated RTL and the English meaning and tip isolated LTR. Single-word corrections also separate the answer word from its English gloss. Once an answer is checked, the redundant prompt, Shema replay controls, word counter, and unused distractor bank collapse so the marked answer and feedback remain usable on short phones. Other game feedback remains unchanged.
+
+**Tests run:** Baseline `npm test` — 270 pass, 0 fail. Focused `node --test tests/app-progress.test.js` — 124 pass, 0 fail. First extended `node --test tests/gameplay-layout.test.js` — 0 pass, 1 fail because the longest Shema feedback scrolled at 360×640; after compacting redundant post-answer content, rerun — 1 pass, 0 fail. Final `npm test` — 270 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** Very long answers can wrap to additional lines, though the rendered short-mobile suite confirms the current feedback states remain usable without scrolling or footer overlap at 360×640. Physical Safari should still be checked after deployment because its bidirectional text and font rendering can differ slightly from Chrome.
