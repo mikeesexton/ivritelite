@@ -495,6 +495,39 @@ function buildSingleWordMeaningTip(question) {
   });
 }
 
+function buildSingleWordMeaningFeedbackItems(question) {
+  const difference = buildSingleWordDifference(question);
+  if (!difference) return [];
+
+  const correctMeaning = resolveSentenceTokenMeaning(difference.correctWord);
+  const chosenMeaning = resolveSentenceTokenMeaning(difference.chosenWord);
+  if (!correctMeaning || !chosenMeaning) return [];
+
+  const answerIsHebrew = Boolean(question?.answerIsHebrew);
+  const answerLanguage = answerIsHebrew ? "he" : "en";
+  const answerDirection = answerIsHebrew ? "rtl" : "ltr";
+  return [
+    {
+      label: translate("feedback.correctWordLabel"),
+      value: difference.correctWord,
+      dir: answerDirection,
+      lang: answerLanguage,
+      meta: correctMeaning,
+      metaDir: "ltr",
+      metaLang: "en",
+    },
+    {
+      label: translate("feedback.chosenWordLabel"),
+      value: difference.chosenWord,
+      dir: answerDirection,
+      lang: answerLanguage,
+      meta: chosenMeaning,
+      metaDir: "ltr",
+      metaLang: "en",
+    },
+  ];
+}
+
 function setSentenceDragPayload(payload) {
   activeSentenceDrag = payload && typeof payload === "object" ? { ...payload } : null;
 }
@@ -790,6 +823,52 @@ function buildSentenceFeedbackDetail(question, isCorrect) {
   }
 
   return details.join(" ").trim();
+}
+
+function buildStructuredSentenceFeedback(question, isCorrect, correctAnswer) {
+  const answerIsHebrew = question?.direction !== "he2en";
+  const items = [
+    {
+      label: translate(
+        question?.direction === "listen"
+          ? "feedback.heardLabel"
+          : answerIsHebrew
+            ? "feedback.hebrewSentenceLabel"
+            : "feedback.englishSentenceLabel"
+      ),
+      value: correctAnswer,
+      dir: answerIsHebrew ? "rtl" : "ltr",
+      lang: answerIsHebrew ? "he" : "en",
+    },
+  ];
+
+  if (question?.direction === "listen") {
+    items.push({
+      label: translate("feedback.meaningLabel"),
+      value: question?.sentence?.english,
+      dir: "ltr",
+      lang: "en",
+    });
+  }
+
+  if (!isCorrect) {
+    items.push(...buildSingleWordMeaningFeedbackItems(question));
+  }
+
+  const tip = rewriteSentenceNoteForGame(question?.sentence?.notes);
+  if (tip) {
+    items.push({
+      label: translate("feedback.tipLabel"),
+      value: tip,
+      dir: "ltr",
+      lang: "en",
+    });
+  }
+
+  return {
+    result: translate(isCorrect ? "feedback.correctResult" : "feedback.wrongResult"),
+    items,
+  };
 }
 
 function normalizeSentenceDirection(direction) {
@@ -1469,7 +1548,7 @@ sentenceBank.renderSentenceBankQuestion = sentenceBank.renderSentenceBankQuestio
   const h = getHelpers();
   const question = normalizeQuestionState(runtime.state.sentenceBank.currentQuestion);
   h.setGamePickerVisibility?.(false);
-  h.setPromptCardVisibility?.(true);
+  h.setPromptCardVisibility?.(!question?.locked);
   runtime.el.choiceContainer.classList.remove("summary-grid", "match-grid");
   runtime.el.choiceContainer.classList.add("sentence-bank-board");
   h.renderSessionHeader?.();
@@ -1502,7 +1581,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
   const slottedTokens = getSlottedTokens(question);
 
   const board = global.document.createElement("div");
-  board.className = "sentence-builder";
+  board.className = `sentence-builder ${question.locked ? "is-feedback" : ""}`.trim();
 
   if (question.direction === "listen") {
     const controls = global.document.createElement("div");
@@ -1979,6 +2058,7 @@ sentenceBank.applySentenceBankAnswer = sentenceBank.applySentenceBankAnswer || f
             translate("feedback.shemaMeaning", { english: question.sentence.english }),
             buildSentenceFeedbackDetail(question, isCorrect),
           ].filter(Boolean).join(" "),
+          structured: buildStructuredSentenceFeedback(question, isCorrect, correctAnswer),
         }
       : question.direction === "he2en"
         ? {
@@ -1988,6 +2068,7 @@ sentenceBank.applySentenceBankAnswer = sentenceBank.applySentenceBankAnswer || f
               { answer: correctAnswer }
             ),
             detail: buildSentenceFeedbackDetail(question, isCorrect),
+            structured: buildStructuredSentenceFeedback(question, isCorrect, correctAnswer),
           }
         : {
             tone: isCorrect ? "success" : "error",
@@ -1996,6 +2077,7 @@ sentenceBank.applySentenceBankAnswer = sentenceBank.applySentenceBankAnswer || f
               { answer: correctAnswer }
             ),
             detail: buildSentenceFeedbackDetail(question, isCorrect),
+            structured: buildStructuredSentenceFeedback(question, isCorrect, correctAnswer),
           }
   );
   h.playAnswerFeedbackSound?.(isCorrect);

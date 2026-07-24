@@ -1528,14 +1528,32 @@ test("formal_32 accepts the alternate English order for the generalization warni
   const entry = api.getSentenceBank().find((sentence) => sentence.id === "formal_32");
   assert.ok(entry, "formal_32 exists");
   assert.ok(Array.isArray(entry.english_alternates));
-  assert.equal(entry.english_alternates.length, 1);
-  const alternate = entry.english_alternates[0];
-  assert.equal(
-    alternate.text,
-    "Findings should not be generalized from this sample to the entire population."
+  const expectedAlternates = [
+    "Findings should not be generalized from this sample to the entire population.",
+    "Conclusions from this sample should not be generalized to the entire population.",
+    "Conclusions should not be generalized from this sample to the entire population.",
+  ];
+  assert.deepEqual(
+    Array.from(entry.english_alternates, (alternate) => alternate.text),
+    expectedAlternates
   );
-  assert.equal(alternate.tokens.length, entry.english_tokens.length);
-  assert.deepEqual([...alternate.tokens].sort(), [...entry.english_tokens].sort());
+  entry.english_alternates.forEach((alternate) => {
+    assert.equal(alternate.tokens.length, entry.english_tokens.length);
+  });
+});
+
+test("professional_21 accepts feminine מעדיפה when the English speaker gender is unspecified", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "professional_21");
+  assert.ok(entry, "professional_21 exists");
+  const alternate = entry.hebrew_alternates.find(
+    (variant) => variant.text === "אני מעדיפה לסגור את זה בכתב כדי שיהיה תיעוד."
+  );
+  assert.ok(alternate, "professional_21 has the feminine alternate");
+  assert.equal(alternate.tokens.length, entry.hebrew_tokens.length);
+  assert.equal(alternate.tokens_niqqud.length, alternate.tokens.length);
+  assert.equal(alternate.tokens[1], "מעדיפה");
+  assert.equal(alternate.tokens_niqqud[1], "מַעֲדִיפָה");
 });
 
 test("colloquial_130 points the loanword פארק with dagesh so TTS says park, not fark", () => {

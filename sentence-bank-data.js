@@ -6483,6 +6483,34 @@ const SENTENCE_BANK = [
       "an agreement",
       "a protocol"
     ],
+    "hebrew_alternates": [
+      {
+        "text": "אני מעדיפה לסגור את זה בכתב כדי שיהיה תיעוד.",
+        "text_niqqud": "אֲנִי מַעֲדִיפָה לִסְגֹּר אֶת זֶה בִּכְתָב כְּדֵי שֶׁיִּהְיֶה תִּעוּד.",
+        "tokens": [
+          "אני",
+          "מעדיפה",
+          "לסגור",
+          "את",
+          "זה",
+          "בכתב",
+          "כדי",
+          "שיהיה",
+          "תיעוד"
+        ],
+        "tokens_niqqud": [
+          "אֲנִי",
+          "מַעֲדִיפָה",
+          "לִסְגֹּר",
+          "אֶת",
+          "זֶה",
+          "בִּכְתָב",
+          "כְּדֵי",
+          "שֶׁיִּהְיֶה",
+          "תִּעוּד"
+        ]
+      }
+    ],
     "notes": "לסגור בכתב = settle in writing; כדי שיהיה תיעוד = so there will be documentation/a record."
   },
   {
@@ -8887,10 +8915,20 @@ const SENTENCE_EXPANSION = [
     englishTokens: ["Findings", "from this sample", "should not be generalized", "to", "the entire population"],
     hebrewDistractorPairs: [["יש", "יֵשׁ"], ["להסיק", "לְהַסִּיק"], ["מתוך", "מִתּוֹךְ"], ["המחקר", "הַמֶּחְקָר"], ["ההוא", "הַהוּא"], ["חלק מהאוכלוסייה", "חֵלֶק מֵהָאֻכְלוּסִיָּה"]],
     englishDistractors: ["Conclusions", "from that study", "should be drawn", "about", "part of the population"],
-    englishAlternates: [{
-      text: "Findings should not be generalized from this sample to the entire population.",
-      tokens: ["Findings", "should not be generalized", "from this sample", "to", "the entire population"],
-    }],
+    englishAlternates: [
+      {
+        text: "Findings should not be generalized from this sample to the entire population.",
+        tokens: ["Findings", "should not be generalized", "from this sample", "to", "the entire population"],
+      },
+      {
+        text: "Conclusions from this sample should not be generalized to the entire population.",
+        tokens: ["Conclusions", "from this sample", "should not be generalized", "to", "the entire population"],
+      },
+      {
+        text: "Conclusions should not be generalized from this sample to the entire population.",
+        tokens: ["Conclusions", "should not be generalized", "from this sample", "to", "the entire population"],
+      },
+    ],
     notes: "אין להכליל is a formal warning not to generalize. כלל האוכלוסייה means the population as a whole."
   }),
   buildExpandedSentence({
@@ -12786,6 +12824,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260722a",
+  __build: "20260724a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

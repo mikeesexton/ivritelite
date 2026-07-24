@@ -303,6 +303,52 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     assertChoicesClearFooter(prepositionsFeedback, "Prepositions feedback");
     assertFeedbackFooterInFlow(prepositionsFeedback, "Prepositions feedback");
 
+    const shemaFeedback = await evaluate(pageCdp, `(() => {
+      const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
+      IvriQuestApp.utils.weightedRandomWord = (items) => items.reduce((longest, item) => (
+        String(item.word?.sentence?.english || '').length > String(longest.word?.sentence?.english || '').length
+          ? item
+          : longest
+      ), items[0]).word;
+      IvriQuestApp.sentenceBank.startShema();
+      IvriQuestApp.sentenceBank.beginSentenceBankFromIntro();
+      IvriQuestApp.utils.weightedRandomWord = originalWeightedRandomWord;
+
+      const question = IvriQuestApp.runtime.state.sentenceBank.currentQuestion;
+      const usedTokenIds = new Set();
+      question.slotTokenIds = question.targetTokens.map((text) => {
+        const token = question.bankTokens.find((candidate) => (
+          candidate.text === text && !usedTokenIds.has(candidate.id)
+        ));
+        usedTokenIds.add(token.id);
+        return token.id;
+      });
+      question.placedBankTokenIds = [...question.slotTokenIds];
+      IvriQuestApp.sentenceBank.applySentenceBankAnswer();
+
+      const rows = [...document.querySelectorAll('#feedbackItems .feedback-item')];
+      return {
+        geometry: ${GAMEPLAY_GEOMETRY},
+        result: document.querySelector('#feedbackItems .feedback-result')?.textContent || '',
+        rows: rows.map((row) => ({
+          label: row.querySelector('.feedback-item-label')?.textContent || '',
+          dir: row.querySelector('.feedback-item-value')?.getAttribute('dir') || '',
+          lang: row.querySelector('.feedback-item-value')?.getAttribute('lang') || '',
+        })),
+      };
+    })()`);
+    assertNoGameplayScroll(shemaFeedback.geometry, "Shema structured feedback");
+    assertChoicesClearFooter(shemaFeedback.geometry, "Shema structured feedback");
+    assertFeedbackFooterInFlow(shemaFeedback.geometry, "Shema structured feedback");
+    assert.equal(shemaFeedback.result, "נכון");
+    assert.deepEqual(
+      shemaFeedback.rows.slice(0, 2),
+      [
+        { label: "שמעת", dir: "rtl", lang: "he" },
+        { label: "משמעות", dir: "ltr", lang: "en" },
+      ],
+    );
+
     await evaluate(pageCdp, `(() => {
       IvriQuestApp.handwriting.startHandwriting();
       IvriQuestApp.handwriting.beginHandwritingFromIntro();

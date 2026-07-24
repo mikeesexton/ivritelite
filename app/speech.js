@@ -38,6 +38,18 @@ function stripTtsQuotationApostrophes(text) {
 // dagesh) with escapes: ְ-ּׁׂ = points/dagesh/shin dots,
 // ָ = kamatz, ֹ = cholam, ּ = dagesh.
 const TTS_RESPELLINGS = [
+  // Word-final צ' marks /tsh/ in loanwords, but Apple's he-IL voice can read
+  // the punctuation itself. Spell brunch phonetically for speech only.
+  {
+    pattern: /בְּרַנְץ['׳](?=$|[\s־.,:;!?)"'])/g,
+    replacement: "בְּרַנְטְשׁ",
+  },
+  // Some he-IL voices misread the Pu'al kubutz in שֻׁלַּם. A speech-only
+  // shuruk preserves the intended shulam pronunciation.
+  {
+    pattern: /שֻׁלַּם(?=$|[\s־.,:;!?)"'])/g,
+    replacement: "שׁוּלַּם",
+  },
   // Standalone כָּל/כָל (kol), with optional attached prefixes (וְ, בְּ, לְ,
   // כְּ, שֶׁ, מִ, הַ and combinations): kamatz katan → cholam, e.g. וְכָל → וְכֹל.
   // The lookahead keeps longer words such as כָּלָה or מִיכָל untouched.

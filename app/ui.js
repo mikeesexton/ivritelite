@@ -452,16 +452,88 @@ ui.setFeedback = ui.setFeedback || function setFeedback(payload, success) {
         tone: String(payload.tone || "info"),
         sentence: String(payload.sentence || "").trim(),
         detail: String(payload.detail || "").trim(),
+        structured: payload.structured && typeof payload.structured === "object"
+          ? {
+              result: String(payload.structured.result || "").trim(),
+              items: Array.isArray(payload.structured.items)
+                ? payload.structured.items.map((item) => ({
+                    label: String(item?.label || "").trim(),
+                    value: String(item?.value || "").trim(),
+                    dir: item?.dir === "rtl" || item?.dir === "ltr" ? item.dir : "auto",
+                    lang: String(item?.lang || "").trim(),
+                    meta: String(item?.meta || "").trim(),
+                    metaDir: item?.metaDir === "rtl" || item?.metaDir === "ltr" ? item.metaDir : "auto",
+                    metaLang: String(item?.metaLang || "").trim(),
+                  })).filter((item) => item.label && (item.value || item.meta))
+                : [],
+            }
+          : null,
       }
     : {
         tone: success === false ? "error" : success ? "success" : "info",
         sentence: String(payload || "").trim(),
         detail: "",
+        structured: null,
       };
 
   runtime.el.feedbackSentence.textContent = normalized.sentence;
   runtime.el.feedbackDetail.textContent = normalized.detail;
-  runtime.el.feedbackDetail.classList.toggle("hidden", !normalized.detail);
+  const structuredTarget = runtime.el.feedbackItems;
+  const hasStructuredFeedback = Boolean(
+    structuredTarget &&
+    normalized.structured?.result &&
+    normalized.structured.items.length
+  );
+  runtime.el.feedbackSentence.classList.toggle("hidden", hasStructuredFeedback);
+  runtime.el.feedbackDetail.classList.toggle("hidden", hasStructuredFeedback || !normalized.detail);
+
+  if (structuredTarget) {
+    structuredTarget.innerHTML = "";
+    structuredTarget.classList.toggle("hidden", !hasStructuredFeedback);
+    if (hasStructuredFeedback) {
+      const doc = runtime.global?.document;
+      const result = doc.createElement("p");
+      result.className = "feedback-result";
+      result.setAttribute("dir", "auto");
+      result.textContent = normalized.structured.result;
+      structuredTarget.appendChild(result);
+
+      normalized.structured.items.forEach((item) => {
+        const row = doc.createElement("div");
+        row.className = "feedback-item";
+
+        const label = doc.createElement("span");
+        label.className = "feedback-item-label";
+        label.setAttribute("dir", "auto");
+        label.textContent = item.label;
+
+        const content = doc.createElement("span");
+        content.className = "feedback-item-content";
+
+        if (item.value) {
+          const value = doc.createElement("span");
+          value.className = "feedback-item-value";
+          value.setAttribute("dir", item.dir);
+          if (item.lang) value.setAttribute("lang", item.lang);
+          value.textContent = item.value;
+          content.appendChild(value);
+        }
+
+        if (item.meta) {
+          const meta = doc.createElement("span");
+          meta.className = "feedback-item-meta";
+          meta.setAttribute("dir", item.metaDir);
+          if (item.metaLang) meta.setAttribute("lang", item.metaLang);
+          meta.textContent = item.meta;
+          content.appendChild(meta);
+        }
+
+        row.append(label, content);
+        structuredTarget.appendChild(row);
+      });
+    }
+  }
+
   runtime.el.feedbackTray.classList.remove("success", "error", "info");
   runtime.el.feedbackTray.classList.add(normalized.tone);
   ui.updateStickyLessonActionsState();
@@ -472,7 +544,12 @@ ui.clearFeedback = ui.clearFeedback || function clearFeedback() {
   if (!runtime.el?.feedbackTray || !runtime.el?.feedbackSentence || !runtime.el?.feedbackDetail) return;
   runtime.el.feedbackSentence.textContent = "";
   runtime.el.feedbackDetail.textContent = "";
+  runtime.el.feedbackSentence.classList.remove("hidden");
   runtime.el.feedbackDetail.classList.add("hidden");
+  if (runtime.el.feedbackItems) {
+    runtime.el.feedbackItems.innerHTML = "";
+    runtime.el.feedbackItems.classList.add("hidden");
+  }
   runtime.el.feedbackTray.classList.remove("success", "error", "info");
   ui.updateStickyLessonActionsState();
 };
