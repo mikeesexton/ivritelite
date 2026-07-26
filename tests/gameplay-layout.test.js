@@ -132,8 +132,13 @@ async function evaluate(cdp, expression) {
 
 const GAMEPLAY_GEOMETRY = `(() => {
   const body = document.querySelector('.shell-body');
+  const shell = document.querySelector('.lesson-shell:not(.hidden)');
+  const header = shell?.querySelector('.lesson-header-main');
+  const prompt = shell?.querySelector('.prompt-card:not(.hidden)');
+  const builder = shell?.querySelector('.sentence-builder');
   const choices = document.querySelector('.lesson-shell:not(.hidden) .choices');
   const footer = document.querySelector('.lesson-shell:not(.hidden) .lesson-footer');
+  const feedback = shell?.querySelector('.feedback-tray:not(.hidden)');
   const rect = (element) => element ? ({
     top: element.getBoundingClientRect().top,
     bottom: element.getBoundingClientRect().bottom,
@@ -141,8 +146,17 @@ const GAMEPLAY_GEOMETRY = `(() => {
   }) : null;
   return {
     body: { clientHeight: body.clientHeight, scrollHeight: body.scrollHeight },
+    shell: rect(shell),
+    header: rect(header),
+    prompt: rect(prompt),
+    builder: rect(builder),
     choices: rect(choices),
     footer: rect(footer),
+    feedback: feedback ? {
+      ...rect(feedback),
+      clientHeight: feedback.clientHeight,
+      scrollHeight: feedback.scrollHeight,
+    } : null,
     footerPosition: footer ? getComputedStyle(footer).position : "",
   };
 })()`;
@@ -150,7 +164,7 @@ const GAMEPLAY_GEOMETRY = `(() => {
 function assertNoGameplayScroll(geometry, label) {
   assert.ok(
     geometry.body.scrollHeight <= geometry.body.clientHeight + 1,
-    `${label} scrolls (${geometry.body.scrollHeight}px > ${geometry.body.clientHeight}px)`,
+    `${label} scrolls (${geometry.body.scrollHeight}px > ${geometry.body.clientHeight}px): ${JSON.stringify(geometry)}`,
   );
 }
 
@@ -216,6 +230,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     await pageCdp.send("Page.navigate", { url: appUrl });
     await waitForPage(pageCdp);
     await evaluate(pageCdp, "document.fonts.ready");
+    await evaluate(pageCdp, "document.querySelector('[data-character-action=\"free\"]')?.click()");
     await evaluate(pageCdp, "document.querySelector('#welcomeModalCloseBtn')?.click()");
 
     await evaluate(pageCdp, `(() => {
@@ -340,7 +355,10 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     assertNoGameplayScroll(shemaFeedback.geometry, "Shema structured feedback");
     assertChoicesClearFooter(shemaFeedback.geometry, "Shema structured feedback");
     assertFeedbackFooterInFlow(shemaFeedback.geometry, "Shema structured feedback");
+    assert.ok(shemaFeedback.geometry.prompt?.height > 0, "Shema feedback keeps the prompt visible");
+    assert.ok(shemaFeedback.geometry.builder?.height > 0, "Shema feedback keeps the answer builder visible");
     assert.equal(shemaFeedback.result, "נכון");
+    assert.equal(shemaFeedback.rows.length, 2, "Shema feedback must not add a tip row");
     assert.deepEqual(
       shemaFeedback.rows.slice(0, 2),
       [
@@ -459,11 +477,26 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     });
     await evaluate(pageCdp, "IvriQuestApp.session.endSessionAndNavigate('settings')");
     const settingsCentering = await evaluate(pageCdp, `(() => {
-      const body = document.querySelector('.shell-body').getBoundingClientRect();
+      const body = document.querySelector('.shell-body');
+      const bodyRect = body.getBoundingClientRect();
       const settings = document.querySelector('#settingsView').getBoundingClientRect();
-      return { bodyMid: (body.top + body.bottom) / 2, settingsMid: (settings.top + settings.bottom) / 2 };
+      return {
+        bodyMid: (bodyRect.top + bodyRect.bottom) / 2,
+        settingsMid: (settings.top + settings.bottom) / 2,
+        fits: settings.height <= bodyRect.height,
+        scrollable: body.scrollHeight > body.clientHeight,
+        topIsReachable: settings.top >= bodyRect.top - 1,
+      };
     })()`);
-    assert.ok(Math.abs(settingsCentering.bodyMid - settingsCentering.settingsMid) <= 1);
+    // Settings grows as groups are added, so it is centered only while it fits.
+    // Once it is taller than the shell it must behave like the compact case:
+    // scrollable, with nothing clipped above the top edge.
+    if (settingsCentering.fits) {
+      assert.ok(Math.abs(settingsCentering.bodyMid - settingsCentering.settingsMid) <= 1);
+    } else {
+      assert.equal(settingsCentering.scrollable, true);
+      assert.equal(settingsCentering.topIsReachable, true);
+    }
 
     await pageCdp.send("Emulation.setDeviceMetricsOverride", {
       width: 360,

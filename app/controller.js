@@ -83,7 +83,10 @@ controller.bindUi = controller.bindUi || function bindUi() {
     toggle.addEventListener("click", () => controller.toggleDesktopHubPanel(card, toggle));
   });
   runtime.el.resultsContinueBtn?.addEventListener("click", () => controller.continueFromResults());
-  runtime.el.resultsReviewBtn?.addEventListener("click", () => controller.leaveSummaryAndNavigate("review"));
+  runtime.el.resultsReviewBtn?.addEventListener("click", () => {
+    if (app.character?.handleResultsReview?.()) return;
+    controller.leaveSummaryAndNavigate("review");
+  });
   runtime.el.resultsHomeBtn?.addEventListener("click", () => controller.leaveSummaryAndNavigate("home"));
   runtime.el.promptSpeechBtn?.addEventListener("click", () => app.ui?.playPromptSpeech?.());
   runtime.el.promptFunctionHint?.addEventListener("click", () => app.binyanBoard?.toggleBinyanFunctionHint?.());
@@ -95,7 +98,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   });
   (runtime.el.reviewTabButtons || []).forEach((button) => {
     button.addEventListener("click", () => {
-      runtime.state.reviewTab = button.dataset?.reviewTab || "overview";
+      runtime.state.reviewTab = button.dataset?.reviewTab || "characters";
       app.ui?.renderReviewState?.();
       app.persistence?.persistUiState?.();
     });
@@ -187,6 +190,9 @@ controller.syncDesktopHubPanels = controller.syncDesktopHubPanels || function sy
 controller.handleRouteButtonPress = controller.handleRouteButtonPress || function handleRouteButtonPress(route) {
   const runtime = getRuntime();
   const session = getSession();
+  if (app.character?.handleNavigation?.(route)) {
+    return;
+  }
   if (runtime.state.summary.active) {
     controller.leaveSummaryAndNavigate(route);
     return;
@@ -216,6 +222,7 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
     }
     runtime.state.lastPlayedMode = "shema";
     runtime.state.mode = "sentenceBank";
+    app.character?.resetFreePlayReaction?.();
     app.sentenceBank?.startShema?.();
     return;
   }
@@ -225,6 +232,8 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
     session.navigateTo?.("home");
     return;
   }
+
+  app.character?.resetFreePlayReaction?.();
 
   if (mode === "verbMatch") {
     runtime.state.lastPlayedMode = "verbMatch";
@@ -296,6 +305,10 @@ controller.openHomeLesson = controller.openHomeLesson || function openHomeLesson
 
 controller.continueFromResults = controller.continueFromResults || function continueFromResults() {
   const runtime = getRuntime();
+  if (app.character?.handleResultsContinue?.()) {
+    return;
+  }
+  app.character?.resetFreePlayReaction?.();
   if (runtime.state.summary.game === "verbMatch") {
     app.verbMatch?.startVerbMatch?.();
     return;

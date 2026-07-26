@@ -42,3 +42,20 @@ test("advanced conjugation builds a non-empty deck with the real idiom source fi
   const deck = context.IvriQuestApp.advConj.buildAdvConjDeck();
   assert.ok(deck.length > 0);
 });
+
+test("the literal translation for לדרוך על היבלות uses blisters", () => {
+  const idiomsPath = path.join(__dirname, "..", "hebrew-idioms.js");
+  const context = { console, Math };
+  context.window = context;
+  context.globalThis = context;
+  vm.createContext(context);
+
+  runScriptInContext(idiomsPath, context);
+
+  const idiom = context.HEBREW_IDIOMS.find((entry) => entry.id === "drichat_yabalot");
+  assert.ok(idiom);
+  assert.equal(idiom.literal_sg, "{s} steps on {p} blisters");
+  assert.equal(idiom.literal_pl, "{s} step on {p} blisters");
+  assert.equal(idiom.literal_past, "{s} stepped on {p} blisters");
+  assert.equal(idiom.literal_future, "{s} will step on {p} blisters");
+});

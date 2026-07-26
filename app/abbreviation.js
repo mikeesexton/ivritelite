@@ -37,7 +37,7 @@ abbreviation.getExpansionText = abbreviation.getExpansionText || function getExp
 };
 
 abbreviation.getAbbreviationPromptSpeechPayload = abbreviation.getAbbreviationPromptSpeechPayload || function getAbbreviationPromptSpeechPayload(question = getRuntime().state.abbreviation.currentQuestion) {
-  if (!question?.promptIsHebrew) return null;
+  if (!question?.promptIsHebrew || question.entry?.speechDisabled) return null;
   return app.speech?.buildSpeechPayload?.({
     plain: question.prompt,
     speechOverridePlain: question.entry?.speechHe,
@@ -71,6 +71,7 @@ abbreviation.prepareAbbreviationDeck = abbreviation.prepareAbbreviationDeck || f
     const expansionHeNiqqudSource = String(entry?.expansionHeNiqqudSource || entry?.expansion_he_niqqud_source || "").trim();
     const speechHe = String(entry?.speechHe || entry?.speech_he || "").trim();
     const speechHeNiqqud = String(entry?.speechHeNiqqud || entry?.speech_he_niqqud || "").trim();
+    const speechDisabled = entry?.speechDisabled === true || /['׳]$/.test(abbr);
     const english = sanitizeEnglishText(entry?.english);
     if (!abbr || !expansionHe || !english) return;
 
@@ -95,6 +96,7 @@ abbreviation.prepareAbbreviationDeck = abbreviation.prepareAbbreviationDeck || f
       expansionHeNiqqudSource,
       speechHe,
       speechHeNiqqud,
+      speechDisabled,
       english,
       bucket: String(entry?.bucket || "").trim(),
       abbreviationQuizDistractorIds: Array.isArray(entry?.abbreviationQuizDistractorIds)
@@ -156,6 +158,7 @@ abbreviation.pickBestAbbreviationEntry = abbreviation.pickBestAbbreviationEntry 
   const set = due.length ? due : freshPool;
   const maxLevel = runtime.constants.LEITNER_INTERVALS.length - 1;
 
+  const characterWeigher = app.character?.buildContentWeigher?.("abbreviation", set) || (() => 1);
   const weighted = set.map((entry) => {
     const rec = data.getProgressRecord?.(entry.id) || { attempts: 0, correct: 0, nextDue: 0, level: 0 };
     const accuracy = rec.attempts ? rec.correct / rec.attempts : 0;
@@ -166,11 +169,12 @@ abbreviation.pickBestAbbreviationEntry = abbreviation.pickBestAbbreviationEntry 
     const dueBoost = rec.attempts > 0 && rec.nextDue <= now ? 1 + Math.min(1.2, overdueHours / 12) : 1;
     const weaknessBoost = 1 + (1 - accuracy) * 0.85;
     const levelBoost = 1 + ((maxLevel - rec.level) / maxLevel) * 0.35;
+    const characterBoost = characterWeigher(entry);
     const jitter = 0.7 + Math.random() * 0.8;
 
     return {
       word: entry,
-      weight: newEntryBoost * dueBoost * weaknessBoost * levelBoost * jitter,
+      weight: newEntryBoost * dueBoost * weaknessBoost * levelBoost * characterBoost * jitter,
     };
   });
 

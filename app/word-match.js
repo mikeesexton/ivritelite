@@ -80,11 +80,16 @@ wordMatch.buildConfig = wordMatch.buildConfig || function buildConfig(game) {
       recordResult(ctx, rightId, false, mode);
     },
     onAllMatched: () => wordMatch.finishWordMatch(),
-    getCardSpeechPayload: (card) => app.speech?.buildSpeechPayload?.({
-      plain: card.hebrewPlain,
-      niqqud: isLesson ? card.hebrewNiqqud : undefined,
-      source: "answer",
-    }) || null,
+    getCardSpeechPayload: (card) => {
+      if (!isLesson && card.speechDisabled) return null;
+      return app.speech?.buildSpeechPayload?.({
+        plain: card.hebrewPlain,
+        niqqud: isLesson ? card.hebrewNiqqud : undefined,
+        speechOverridePlain: isLesson ? "" : card.speechHe,
+        speechOverrideNiqqud: isLesson ? "" : card.speechHeNiqqud,
+        source: "answer",
+      }) || null;
+    },
   };
 };
 
@@ -137,6 +142,9 @@ function pickPairs(game) {
     englishText: wordMatch.shortGloss(entry.english),
     valuePlain: entry.abbr,
     valueNiqqud: entry.abbr,
+    speechHe: entry.speechHe,
+    speechHeNiqqud: entry.speechHeNiqqud,
+    speechDisabled: entry.speechDisabled,
   }));
 }
 

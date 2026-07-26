@@ -38,6 +38,16 @@ function stripTtsQuotationApostrophes(text) {
 // dagesh) with escapes: ְ-ּׁׂ = points/dagesh/shin dots,
 // ָ = kamatz, ֹ = cholam, ּ = dagesh.
 const TTS_RESPELLINGS = [
+  // Final ץ׳ marks /tsh/ in the camp farewell פאטוץ׳. Spell the affricate
+  // phonetically so the Hebrew voice does not pronounce the punctuation.
+  {
+    pattern: /פָּאטוּץ['׳](?=$|[\s־.,:;!?)"'])/g,
+    replacement: "פָּאטוּטְשׁ",
+  },
+  {
+    pattern: /פאטוץ['׳](?=$|[\s־.,:;!?)"'])/g,
+    replacement: "פָּאטוּטְשׁ",
+  },
   // Word-final צ' marks /tsh/ in loanwords, but Apple's he-IL voice can read
   // the punctuation itself. Spell brunch phonetically for speech only.
   {
@@ -61,6 +71,23 @@ const TTS_RESPELLINGS = [
   {
     pattern: /תָ(ּ?)כְנִ/g,
     replacement: "ת$1וֹכְנִ",
+  },
+  // חָכְמָה (chokhmah): kamatz katan → cholam male. Without this the he-IL
+  // voices read the sefirah as chakhmah.
+  {
+    pattern: /חָכְמ/g,
+    replacement: "חוֹכְמ",
+  },
+  // Word-final vav after kamatz is consonantal /v/, but the he-IL voices read
+  // it as the vowel /u/ — עַכְשָׁו comes out "achshau". A final bet (rafe, as in
+  // רַב) spells the /v/ unambiguously for speech only.
+  {
+    pattern: /עַכְשָׁו(?=$|[\s־.,:;!?)"'])/g,
+    replacement: "עַכְשָׁב",
+  },
+  {
+    pattern: /(^|[\s־("'])עכשיו(?=$|[\s־.,:;!?)"'])/g,
+    replacement: "$1עַכְשָׁב",
   },
   // Word-initial אָזְנ (ozen family): kamatz katan → cholam male,
   // e.g. אָזְנַיִם → אוֹזְנַיִם.

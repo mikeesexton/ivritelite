@@ -14,6 +14,10 @@ constants.STORAGE_KEYS = constants.STORAGE_KEYS || Object.freeze({
   speech: "ivriquest-speech-v1",
   ui: "ivriquest-ui-v1",
   session: "ivriquest-session-v1",
+  character: "ivriquest-character-v1",
+  // Deliberately separate from `character`, which is day-keyed and rebuilt on
+  // every date change. Relationship progress has to outlive that reset.
+  characterBond: "ivriquest-character-bond-v1",
   welcomeSeen: "ivriquest-welcome-seen-v1",
   advConjStats: "advConjStats",
   prepositionsStats: "ivriquest-prepositions-stats-v1",

@@ -39,7 +39,8 @@ const HOME_BUTTON_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="
 ui.isUiLocked = ui.isUiLocked || function isUiLocked() {
   const runtime = getRuntime();
   return Boolean(
-    runtime.state?.welcomeModalOpen ||
+    app.character?.isBlocking?.() ||
+      runtime.state?.welcomeModalOpen ||
       runtime.state?.lesson?.lessonStartIntroActive ||
       runtime.state?.lesson?.secondChanceIntroActive ||
       runtime.state?.sentenceBank?.introActive ||
@@ -187,6 +188,7 @@ ui.renderResultsActionsVisibility = ui.renderResultsActionsVisibility || functio
     runtime.el.resultsReviewBtn.setAttribute("aria-hidden", desktopHubActive ? "true" : "false");
   }
   if (runtime.el?.resultsReviewBtn?.parentElement) {
+    runtime.el.resultsReviewBtn.parentElement.classList.remove("mission-results-actions");
     runtime.el.resultsReviewBtn.parentElement.setAttribute(
       "data-review-button-hidden",
       desktopHubActive ? "true" : "false"
@@ -213,7 +215,10 @@ ui.renderRouteVisibility = ui.renderRouteVisibility || function renderRouteVisib
 
 ui.isGameplayRouteActive = ui.isGameplayRouteActive || function isGameplayRouteActive() {
   const runtime = getRuntime();
-  return runtime.state.route === "home" && !runtime.state.summary.active && (app.session?.hasActiveLearnSession?.() || false);
+  return runtime.state.route === "home" &&
+    !runtime.state.summary.active &&
+    !app.character?.shouldShowMissionHub?.() &&
+    (app.session?.hasActiveLearnSession?.() || false);
 };
 
 ui.formatCompactElapsedSeconds = ui.formatCompactElapsedSeconds || function formatCompactElapsedSeconds(seconds) {
@@ -752,6 +757,7 @@ ui.renderAll = ui.renderAll || function renderAll() {
   ui.renderSummaryState();
   ui.renderLearnState();
   ui.renderRouteVisibility();
+  app.character?.render?.();
   ui.updateUiLockState();
   app.persistence?.persistUiState?.();
   app.persistence?.persistSessionState?.();
@@ -1277,9 +1283,11 @@ ui.appendPerformanceCard = ui.appendPerformanceCard || function appendPerformanc
 
 ui.renderHomeState = ui.renderHomeState || function renderHomeState() {
   const runtime = getRuntime();
-  const showLesson = app.session?.hasActiveLearnSession?.() || false;
-  runtime.el?.homeDashboard?.classList.toggle("hidden", showLesson);
+  const showMissionHub = app.character?.shouldShowMissionHub?.() || false;
+  const showLesson = !showMissionHub && (app.session?.hasActiveLearnSession?.() || false);
+  runtime.el?.homeDashboard?.classList.toggle("hidden", showLesson || showMissionHub);
   runtime.el?.homeLessonStage?.classList.toggle("hidden", !showLesson);
+  runtime.el?.characterMissionHub?.classList.toggle("hidden", !showMissionHub);
   ui.renderHomeLessonButtons();
   ui.renderHomeOptions();
 };
@@ -1287,6 +1295,9 @@ ui.renderHomeState = ui.renderHomeState || function renderHomeState() {
 ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
   const runtime = getRuntime();
   if (!runtime.el?.resultsSummary || !runtime.el?.resultsTitle || !runtime.el?.resultsNote) return;
+  const isMissionSummary = runtime.state.summary.game === "characterMission";
+  runtime.el.resultsSummary.classList.toggle("mission-results-summary", isMissionSummary);
+  runtime.el.resultsHomeBtn?.classList.toggle("hidden", isMissionSummary);
   const titleText = runtime.state.summary.titleKey
     ? translate(runtime.state.summary.titleKey, runtime.state.summary.titleVars)
     : translate("summary.resultsHeader");
@@ -1302,6 +1313,10 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
   runtime.el.resultsTitle.textContent = titleText;
   runtime.el.resultsNote.textContent = praise;
   runtime.el.resultsSummary.innerHTML = "";
+  app.character?.renderResultsSprite?.(runtime.el.resultsHead, {
+    accuracy,
+    perfect: ui.isPerfectSummary(),
+  });
 
   const performance = ui.createResultsPerformanceGraphic(accuracy);
 
@@ -1372,17 +1387,19 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
 
 ui.renderReviewState = ui.renderReviewState || function renderReviewState() {
   const runtime = getRuntime();
-  const tab = runtime.state.reviewTab || "overview";
+  const tab = runtime.state.reviewTab || "characters";
   (runtime.el?.reviewTabButtons || []).forEach((button) => {
-    const active = (button.dataset?.reviewTab || "overview") === tab;
+    const active = (button.dataset?.reviewTab || "characters") === tab;
     button.classList.toggle("active", active);
     button.setAttribute("aria-selected", String(active));
   });
   if (runtime.el?.reviewOverviewPanel) runtime.el.reviewOverviewPanel.hidden = tab !== "overview";
   if (runtime.el?.reviewTroublePanel) runtime.el.reviewTroublePanel.hidden = tab !== "trouble";
+  if (runtime.el?.reviewCharactersPanel) runtime.el.reviewCharactersPanel.hidden = tab !== "characters";
   if (runtime.state.route !== "review") return;
   if (tab === "overview") ui.renderReviewOverviewStats();
   if (tab === "trouble") ui.renderTroubleSpots();
+  if (tab === "characters") app.character?.renderBondPanel?.();
 };
 
 ui.renderReviewOverviewStats = ui.renderReviewOverviewStats || function renderReviewOverviewStats() {
@@ -1761,7 +1778,7 @@ ui.closeWelcomeModal = ui.closeWelcomeModal || function closeWelcomeModal() {
   const runtime = getRuntime();
   if (!runtime.state.welcomeModalOpen) return;
   runtime.state.welcomeModalOpen = false;
-  ui.renderWelcomeModal();
+  runtime.helpers?.renderAll?.();
 };
 
 ui.renderWelcomeModal = ui.renderWelcomeModal || function renderWelcomeModal() {

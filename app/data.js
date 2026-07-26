@@ -237,6 +237,7 @@ data.pickBestWord = data.pickBestWord || function pickBestWord(pool, usedWordIds
   const set = due.length ? due : freshPool;
   const maxLevel = runtime.constants.LEITNER_INTERVALS.length - 1;
 
+  const characterWeigher = app.character?.buildContentWeigher?.("vocab", set) || (() => 1);
   const weighted = set.map((word) => {
     const rec = data.getProgressRecord(word.id);
     const accuracy = rec.attempts ? rec.correct / rec.attempts : 0;
@@ -249,11 +250,12 @@ data.pickBestWord = data.pickBestWord || function pickBestWord(pool, usedWordIds
     const levelBoost = 1 + ((maxLevel - rec.level) / maxLevel) * 0.45;
     const missBiasBoost = data.getTranslationMissBiasMultiplier(rec, options);
     const utilityBoost = 0.7 + Math.min(1, (word.utility || 50) / 100) * 0.6;
+    const characterBoost = characterWeigher(word);
     const jitter = 0.7 + Math.random() * 0.8;
 
     return {
       word,
-      weight: newWordBoost * dueBoost * weaknessBoost * levelBoost * missBiasBoost * utilityBoost * jitter,
+      weight: newWordBoost * dueBoost * weaknessBoost * levelBoost * missBiasBoost * utilityBoost * characterBoost * jitter,
     };
   });
 

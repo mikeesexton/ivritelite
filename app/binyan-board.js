@@ -497,6 +497,7 @@ binyanBoard.loadRoundQuestion = binyanBoard.loadRoundQuestion || function loadRo
     return;
   }
   const form = board.roundForms[board.roundIndex];
+  app.character?.clearTransientReaction?.();
   board.currentQuestion = binyanBoard.buildBinyanBoardQuestion(form, rootEntry);
   h.clearFeedback?.();
   binyanBoard.renderBinyanBoard();
@@ -606,6 +607,7 @@ binyanBoard.loadBinyanBoardReviewQuestion = binyanBoard.loadBinyanBoardReviewQue
     board.secondChanceCurrent += 1;
     const question = binyanBoard.buildBinyanBoardQuestion(found.form, found.rootEntry);
     question.isReview = true;
+    app.character?.clearTransientReaction?.();
     board.currentQuestion = question;
     h.clearFeedback?.();
     binyanBoard.renderBinyanBoard();

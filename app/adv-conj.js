@@ -345,8 +345,7 @@ advConj.playAdvConjIntro = advConj.playAdvConjIntro || function playAdvConjIntro
   const runtime = getRuntime();
   runtime.state.advConj.introActive = true;
   if (runtime.el.advConjIntro) {
-    runtime.el.advConjIntro.classList.remove("hidden");
-    runtime.el.advConjIntro.setAttribute("aria-hidden", "false");
+    getHelpers().showBlockingOverlay?.(runtime.el.advConjIntro);
   }
   getSession().scheduleIntroAutoAdvance?.(() => advConj.beginAdvConjFromIntro());
 };
@@ -382,6 +381,7 @@ advConj.loadAdvConjQuestion = advConj.loadAdvConjQuestion || function loadAdvCon
     getSession().finishAdvConj?.();
     return;
   }
+  app.character?.clearTransientReaction?.();
   state.currentQuestion = state.questionQueue.shift();
   if (state.inReview) state.secondChanceCurrent += 1;
   else state.currentRound += 1;
