@@ -1,6 +1,6 @@
 (function initIvriQuestApp(global) {
 "use strict";
-const APP_BUILD = "20260329a";
+const APP_BUILD = "20260725a";
 
 if (global.__ivriquestAppInitialized === APP_BUILD) {
   return;
@@ -27,6 +27,7 @@ const sentenceBankModule = appFoundation.sentenceBank || {};
 const abbreviationModule = appFoundation.abbreviation || {};
 const advConjModule = appFoundation.advConj || {};
 const verbMatchModule = appFoundation.verbMatch || {};
+const characterModule = appFoundation.character || {};
 const controllerModule = appFoundation.controller || {};
 const appRuntime = appFoundation.runtime = appFoundation.runtime || {};
 
@@ -327,6 +328,8 @@ const leaveSummaryAndNavigate = controllerModule.leaveSummaryAndNavigate;
 const sanitizeState = controllerModule.sanitizeState;
 const getVisibleVerbMatchRows = controllerModule.getVisibleVerbMatchRows;
 const handleNextAction = controllerModule.handleNextAction;
+const initializeCharacter = characterModule.initialize;
+const bindCharacterUi = characterModule.bindUi;
 
 if (
   !STORAGE_KEYS ||
@@ -652,6 +655,7 @@ const state = createInitialState({
   welcomeModalSeen: hasSeenWelcomeModal(),
 });
 appRuntime.state = state;
+const shouldRestoreSession = initializeCharacter ? initializeCharacter() !== false : true;
 
 if (state.welcomeModalOpen) {
   markWelcomeModalSeen();
@@ -761,12 +765,15 @@ appRuntime.helpers = {
 };
 
 sanitizeState();
-restoreSessionState(restoredSession);
+if (shouldRestoreSession) {
+  restoreSessionState(restoredSession);
+}
 state.route = resolveInitialRoute(state.route, { initializing: true });
 applyTheme();
 applyDisplayFont();
 applyLanguage();
 bindUi();
+bindCharacterUi?.();
 resumeActiveTimers();
 renderAll();
 primeVoices();

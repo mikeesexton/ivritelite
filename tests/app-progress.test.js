@@ -826,7 +826,7 @@ test("translation selection weights previously missed words until their five-ans
   assert.equal(alphaRecoveredWeight, betaRecoveredWeight);
 });
 
-test("sentence builder renders english answer lines left-to-right, keeps punctuation visible, and shows post-answer game tips", () => {
+test("sentence builder renders english answer lines left-to-right and omits post-answer tips", () => {
   const sentenceBank = [
     {
       id: "sb-1",
@@ -868,9 +868,11 @@ test("sentence builder renders english answer lines left-to-right, keeps punctua
   assert.equal(state.sessionScore, 2);
   assert.equal(
     getFeedbackText(document),
-    "Correct. The English sentence is He's just talking nonsense, don't take him seriously. "
-      + "Tip: Watch the gender match here."
+    "Correct. The English sentence is He's just talking nonsense, don't take him seriously."
   );
+  assert.doesNotMatch(getFeedbackText(document), /Tip:/);
+  assert.equal(document.querySelector(".prompt-card").classList.contains("hidden"), false);
+  assert.equal(document.querySelector(".sentence-token-bank") !== null, true);
   assert.equal(state.sentenceProgress["sb-1::he2en"].attempts, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"].correct, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"].level, 1);
@@ -929,8 +931,7 @@ test("shema round speaks the sentence, hides the Hebrew prompt, and tracks liste
   assert.equal(
     getFeedbackText(document),
     "נכון. שמעת הוא סתם מדבר שטויות, אל תיקח אותו ברצינות. "
-      + "משמעות: He's just talking nonsense, don't take him seriously. "
-      + "טיפ: Watch the gender match here."
+      + "משמעות: He's just talking nonsense, don't take him seriously."
   );
   const feedbackItems = document.querySelector("#feedbackItems");
   assert.equal(document.querySelector("#feedbackSentence").classList.contains("hidden"), true);
@@ -943,10 +944,10 @@ test("shema round speaks the sentence, hides the Hebrew prompt, and tracks liste
   assert.equal(feedbackItems.children[1].children[1].children[0].getAttribute("lang"), "he");
   assert.equal(feedbackItems.children[2].children[0].textContent, "משמעות");
   assert.equal(feedbackItems.children[2].children[1].children[0].textContent, "He's just talking nonsense, don't take him seriously.");
+  assert.equal(feedbackItems.children.length, 3);
+  assert.equal(document.querySelector("#choiceContainer").querySelectorAll(".shema-play-btn").length, 2);
   assert.equal(feedbackItems.children[2].children[1].children[0].getAttribute("dir"), "ltr");
   assert.equal(feedbackItems.children[2].children[1].children[0].getAttribute("lang"), "en");
-  assert.equal(feedbackItems.children[3].children[0].textContent, "טיפ");
-  assert.equal(feedbackItems.children[3].children[1].children[0].getAttribute("dir"), "ltr");
   assert.equal(state.sentenceProgress["sb-1::listen"].attempts, 1);
   assert.equal(state.sentenceProgress["sb-1::listen"].correct, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"], undefined);
@@ -1342,7 +1343,7 @@ test("prepositions selection favors trigger-object pairs with weak history", () 
   assert.ok(weakWeight > strongWeight);
 });
 
-test("sentence builder rewrites formal notes into short learner-facing tips", () => {
+test("sentence builder omits authored notes from immediate feedback", () => {
   const sentenceBank = [
     {
       id: "sb-formal-tip",
@@ -1370,8 +1371,7 @@ test("sentence builder rewrites formal notes into short learner-facing tips", ()
 
   assert.equal(
     getFeedbackText(document),
-    "Correct. The English sentence is The central question is how to implement this in practice, not just in theory. "
-      + "Tip: This one uses a more formal tone. Pick the more polished wording."
+    "Correct. The English sentence is The central question is how to implement this in practice, not just in theory."
   );
 });
 
@@ -1393,10 +1393,10 @@ test("sentence builder keeps directional content edge-aligned and centers the wo
 
 test("game start intro bubbles use the same yalla message", async () => {
   const markup = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
-  ["lessonStartIntro", "sentenceBankIntro", "verbMatchIntro", "abbreviationIntro", "advConjIntro", "binyanBoardIntro"].forEach((id) => {
+  ["lessonStartIntro", "sentenceBankIntro", "verbMatchIntro", "abbreviationIntro", "advConjIntro", "prepositionsIntro", "binyanBoardIntro", "handwritingIntro"].forEach((id) => {
     assert.match(
       markup,
-      new RegExp(`id="${id}"[\\s\\S]*?<p class="second-chance-bubble"[^>]*>יאללה!<\\/p>`)
+      new RegExp(`id="${id}"[\\s\\S]*?<p class="second-chance-bubble"[^>]*>יאללה!<\\/p>[\\s\\S]*?intro-character-sprite`)
     );
   });
 
@@ -2866,7 +2866,7 @@ test("sentence builder explains the correct and chosen word when only one slotte
   );
 });
 
-test("sentence builder falls back to the generic game tip when the miss is not a single resolvable word swap", () => {
+test("sentence builder does not add a generic tip when a miss has no single-word correction", () => {
   const sentenceBank = [
     {
       id: "sb-generic-tip",
@@ -2894,7 +2894,8 @@ test("sentence builder falls back to the generic game tip when the miss is not a
   placeSentenceTokenByTap(document, "you", 2);
   document.querySelector("#nextBtn").click();
 
-  assert.match(getFeedbackText(document), /Tip: This one is casual Hebrew\./);
+  assert.equal(getFeedbackText(document), "Not quite. The English sentence is See you later.");
+  assert.doesNotMatch(getFeedbackText(document), /Tip:/);
   assert.doesNotMatch(getFeedbackText(document), /Correct word:/);
 });
 
@@ -2971,6 +2972,43 @@ test("Hebrew is stripped from English-facing text across data pools and advanced
     "present"
   );
   assert.equal(/[\u0590-\u05FF]/.test(advConjEnglish), false);
+});
+
+test("abbreviation speech keeps authored acronyms but disables written truncations", () => {
+  const vocabulary = Array.from({ length: 8 }, (_, index) => ({
+    id: `word-${index + 1}`,
+    category: "core_advanced",
+    en: `word ${index + 1}`,
+    he: `מילה${index + 1}`,
+    heNiqqud: `מִילָה${index + 1}`,
+    utility: 80 - index,
+    source: "test",
+  }));
+  const abbreviations = [
+    { id: "street", abbr: "רח׳", expansionHe: "רחוב", english: "street" },
+    {
+      id: "border-police",
+      abbr: "מג״ב",
+      expansionHe: "משמר הגבול",
+      english: "Border Police",
+      speechHe: "מגב",
+      speechHeNiqqud: "מַגָּב",
+    },
+  ];
+  const { app } = loadAppHarness(vocabulary, abbreviations);
+  const deck = app.abbreviation.prepareAbbreviationDeck(abbreviations);
+  const street = deck.find((entry) => entry.id === "street");
+  const borderPolice = deck.find((entry) => entry.id === "border-police");
+
+  assert.equal(street.speechDisabled, true);
+  assert.equal(borderPolice.speechDisabled, false);
+  assert.equal(borderPolice.speechHe, "מגב");
+  assert.equal(borderPolice.speechHeNiqqud, "מַגָּב");
+  assert.equal(app.abbreviation.getAbbreviationPromptSpeechPayload({
+    promptIsHebrew: true,
+    prompt: street.abbr,
+    entry: street,
+  }), null);
 });
 
 test("verb match rounds dedupe identical visible English cards", () => {

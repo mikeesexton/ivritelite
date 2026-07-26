@@ -218,8 +218,7 @@ prepositions.playPrepositionsIntro = prepositions.playPrepositionsIntro || funct
   const runtime = getRuntime();
   runtime.state.prepositions.introActive = true;
   if (runtime.el.prepositionsIntro) {
-    runtime.el.prepositionsIntro.classList.remove("hidden");
-    runtime.el.prepositionsIntro.setAttribute("aria-hidden", "false");
+    getHelpers().showBlockingOverlay?.(runtime.el.prepositionsIntro);
   }
   getSession().scheduleIntroAutoAdvance?.(() => prepositions.beginPrepositionsFromIntro());
 };
@@ -255,6 +254,7 @@ prepositions.loadPrepositionsQuestion = prepositions.loadPrepositionsQuestion ||
     getSession().finishPrepositions?.();
     return;
   }
+  app.character?.clearTransientReaction?.();
   state.currentQuestion = state.questionQueue.shift();
   if (state.inReview) state.secondChanceCurrent += 1;
   else state.currentRound += 1;

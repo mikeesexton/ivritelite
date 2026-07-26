@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260724b" />
+    <link rel="stylesheet" href="./styles.css?v=20260726f" />
   </head>
   <body data-theme="dark" data-display-font="heebo">
     <div class="ambient ambient-a" aria-hidden="true"></div>
@@ -105,7 +105,14 @@
                   </article>
                 </div>
 
+                <section id="characterMissionHub" class="character-mission-hub hidden" aria-live="polite"></section>
+
                 <article id="homeLessonStage" class="lesson-shell home-lesson-stage hidden">
+                  <aside id="characterCompanion" class="character-companion hidden" aria-label="Ido">
+                    <div id="characterCompanionBubble" class="character-companion-copy hidden" dir="rtl"></div>
+                    <div id="characterCompanionSprite" class="character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
+                    <button id="characterVisibilityToggle" type="button" class="quiet character-visibility-toggle" aria-pressed="false">hide</button>
+                  </aside>
                   <header class="lesson-header">
                     <div class="lesson-header-main">
                       <div id="lessonTitleRow" class="lesson-title-row">
@@ -240,7 +247,7 @@
 
           <section id="resultsView" class="page-view">
             <article class="page-card results-card">
-              <div class="results-head">
+              <div id="resultsHead" class="results-head">
                 <h2 id="resultsTitle">Translation Complete</h2>
                 <p id="resultsNote" class="results-praise">Nice job!</p>
               </div>
@@ -271,11 +278,19 @@
                 </div>
                 <div id="reviewPanel" class="collapsible-content review-panel-content">
                   <div id="reviewTabs" class="review-tabs" role="tablist">
-                    <button type="button" class="review-tab" role="tab" data-review-tab="overview" aria-selected="true" aria-controls="reviewOverviewPanel" data-i18n="review.tabOverview">Overview</button>
+                    <button type="button" class="review-tab" role="tab" data-review-tab="characters" aria-selected="true" aria-controls="reviewCharactersPanel" data-i18n="review.tabCharacters">Characters</button>
+                    <button type="button" class="review-tab" role="tab" data-review-tab="overview" aria-selected="false" aria-controls="reviewOverviewPanel" data-i18n="review.tabOverview">Overview</button>
                     <button type="button" class="review-tab" role="tab" data-review-tab="trouble" aria-selected="false" aria-controls="reviewTroublePanel" data-i18n="review.tabTrouble">Trouble Spots</button>
                   </div>
 
-                  <div id="reviewOverviewPanel" class="review-tab-panel" role="tabpanel">
+                  <div id="reviewCharactersPanel" class="review-tab-panel" role="tabpanel">
+                    <section class="review-section">
+                      <h3 class="review-section-title" data-i18n="review.charactersTitle">Your characters</h3>
+                      <div id="reviewCharacterBonds" class="character-bond-grid"></div>
+                    </section>
+                  </div>
+
+                  <div id="reviewOverviewPanel" class="review-tab-panel" role="tabpanel" hidden>
                     <p class="small-note review-tracking-note" data-i18n="review.trackingNote">IvritElite tracks your performance to personalize practice and speed up your progress.</p>
                     <section class="review-section">
                       <div class="review-stats-grid">
@@ -361,6 +376,30 @@
                           <span class="settings-row-label" data-i18n="settings.niqqud">Inline Nikud</span>
                           <span class="settings-switch" aria-hidden="true"></span>
                         </button>
+                      </section>
+                    </div>
+                  </section>
+
+                  <section class="settings-group">
+                    <p class="settings-eyebrow" data-i18n="settings.groupCharacters">Characters</p>
+                    <div class="settings-list">
+                      <section class="settings-block">
+                        <button type="button" id="characterGenderToggle" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true">א</span>
+                          <span id="characterGenderLabel" class="settings-row-label">Character address</span>
+                          <span class="settings-seg" aria-hidden="true">
+                            <span class="settings-seg-opt" data-character-gender="m">Male</span>
+                            <span class="settings-seg-opt" data-character-gender="f">Female</span>
+                          </span>
+                        </button>
+                      </section>
+                      <section class="settings-block">
+                        <div class="settings-row settings-row--static settings-row--stacked">
+                          <span class="settings-row-icon" aria-hidden="true">✦</span>
+                          <span id="characterLensLabel" class="settings-row-label">Free-play companion</span>
+                          <span id="characterLensOptions" class="settings-seg settings-seg--wrap" role="group"></span>
+                        </div>
+                        <p id="characterLensNote" class="small-note character-lens-note hidden"></p>
                       </section>
                     </div>
                   </section>
@@ -461,9 +500,16 @@
       </nav>
     </main>
 
+    <div id="characterScene" class="character-scene hidden" aria-hidden="true">
+      <section class="character-scene-card card" role="dialog" aria-modal="true" aria-labelledby="characterSceneTitle">
+        <div id="characterSceneContent"></div>
+      </section>
+    </div>
+
     <div id="lessonStartIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Lesson start intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -471,6 +517,7 @@
     <div id="sentenceBankIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Sentences intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -485,6 +532,7 @@
     <div id="verbMatchIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Verb match intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -492,6 +540,7 @@
     <div id="abbreviationIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Abbreviation intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -499,6 +548,7 @@
     <div id="advConjIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Advanced conjugation intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -506,6 +556,7 @@
     <div id="prepositionsIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Prepositions intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -513,6 +564,7 @@
     <div id="binyanBoardIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Binyanim intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -520,6 +572,7 @@
     <div id="handwritingIntro" class="second-chance-intro hidden" aria-hidden="true">
       <div class="second-chance-scene" role="dialog" aria-modal="true" aria-label="Handwriting intro">
         <p class="second-chance-bubble" dir="rtl">יאללה!</p>
+        <div class="character-sprite intro-character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
         <p class="second-chance-note" data-i18n="session.starting">Starting...</p>
       </div>
     </div>
@@ -585,40 +638,42 @@
         });
       })();
     </script>
-    <script defer src="./vocab-data.js?v=20260721a"></script>
-    <script defer src="./abbreviation-data.js?v=20260713a"></script>
-    <script defer src="./sentence-bank-data.js?v=20260724a"></script>
-    <script defer src="./hebrew-verbs.js?v=20260721a"></script>
-    <script defer src="./hebrew-idioms.js?v=20260712a"></script>
+    <script defer src="./vocab-data.js?v=20260726e"></script>
+    <script defer src="./abbreviation-data.js?v=20260726a"></script>
+    <script defer src="./sentence-bank-data.js?v=20260726d"></script>
+    <script defer src="./hebrew-verbs.js?v=20260726d"></script>
+    <script defer src="./hebrew-idioms.js?v=20260725d"></script>
     <script defer src="./preposition-data.js?v=20260712a"></script>
     <script defer src="./verb-game-data.js?v=20260712a"></script>
     <script defer src="./handwriting-data.js?v=20260702d"></script>
-    <script defer src="./app/constants.js?v=20260718e"></script>
+    <script defer src="./app/constants.js?v=20260726b"></script>
     <script defer src="./app/storage.js?v=20260315o"></script>
     <script defer src="./app/utils.js?v=20260713a"></script>
     <script defer src="./app/hebrew.js?v=20260315o"></script>
     <script defer src="./app/handwriting-core.js?v=20260705a"></script>
-    <script defer src="./app/bootstrap-data.js?v=20260724b"></script>
+    <script defer src="./app/bootstrap-data.js?v=20260726c"></script>
     <script defer src="./app/content-sources.js?v=20260324a"></script>
-    <script defer src="./app/bootstrap-runtime.js?v=20260724b"></script>
-    <script defer src="./app/audio.js?v=20260315o"></script>
-    <script defer src="./app/speech.js?v=20260724a"></script>
-    <script defer src="./app/persistence.js?v=20260718e"></script>
-    <script defer src="./app/session.js?v=20260705a"></script>
+    <script defer src="./app/bootstrap-runtime.js?v=20260726d"></script>
+    <script defer src="./app/audio.js?v=20260725a"></script>
+    <script defer src="./app/speech.js?v=20260726c"></script>
+    <script defer src="./app/persistence.js?v=20260725a"></script>
+    <script defer src="./app/session.js?v=20260725b"></script>
     <script defer src="./app/i18n.js?v=20260718e"></script>
-    <script defer src="./app/ui.js?v=20260724b"></script>
-    <script defer src="./app/data.js?v=20260705a"></script>
+    <script defer src="./app/ui.js?v=20260726d"></script>
+    <script defer src="./app/data.js?v=20260726a"></script>
     <script defer src="./app/lesson.js?v=20260315o"></script>
-    <script defer src="./app/sentence-bank.js?v=20260724b"></script>
-    <script defer src="./app/abbreviation.js?v=20260315o"></script>
-    <script defer src="./app/adv-conj.js?v=20260713b"></script>
-    <script defer src="./app/prepositions.js?v=20260713a"></script>
-    <script defer src="./app/verb-match.js?v=20260718e"></script>
-    <script defer src="./app/match-engine.js?v=20260620b"></script>
-    <script defer src="./app/word-match.js?v=20260702b"></script>
-    <script defer src="./app/binyan-board.js?v=20260713a"></script>
-    <script defer src="./app/handwriting.js?v=20260705a"></script>
-    <script defer src="./app/controller.js?v=20260718e"></script>
-    <script defer src="./app.js?v=20260718e"></script>
+    <script defer src="./app/sentence-bank.js?v=20260726a"></script>
+    <script defer src="./app/abbreviation.js?v=20260726a"></script>
+    <script defer src="./app/adv-conj.js?v=20260725d"></script>
+    <script defer src="./app/prepositions.js?v=20260725d"></script>
+    <script defer src="./app/verb-match.js?v=20260726a"></script>
+    <script defer src="./app/match-engine.js?v=20260725d"></script>
+    <script defer src="./app/word-match.js?v=20260725d"></script>
+    <script defer src="./app/binyan-board.js?v=20260725d"></script>
+    <script defer src="./app/handwriting.js?v=20260726a"></script>
+    <script defer src="./app/character-data.js?v=20260726f"></script>
+    <script defer src="./app/character.js?v=20260726g"></script>
+    <script defer src="./app/controller.js?v=20260726d"></script>
+    <script defer src="./app.js?v=20260725a"></script>
   </body>
 </html>

@@ -1499,6 +1499,8 @@ const ABBREVIATIONS = [
     "id": "abbr-150",
     "abbr": "מג״ב",
     "expansionHe": "משמר הגבול",
+    "speechHe": "מגב",
+    "speechHeNiqqud": "מַגָּב",
     "english": "Border Police (Israel)",
     "bucket": "Civics, Law & Work",
     "notes": "",

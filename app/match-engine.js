@@ -184,6 +184,7 @@ matchEngine.handleLeft = matchEngine.handleLeft || function handleLeft(config, c
   const card = ctx.leftCards.find((item) => item.id === cardId);
   if (!card) return;
 
+  app.character?.clearTransientReaction?.();
   ctx.selectedLeftId = ctx.selectedLeftId === cardId ? null : cardId;
   matchEngine.resolveSelection(config);
   matchEngine.renderRound(config);
@@ -195,6 +196,7 @@ matchEngine.handleRight = matchEngine.handleRight || function handleRight(config
   const card = ctx.rightCards.find((item) => item.id === cardId);
   if (!card) return;
 
+  app.character?.clearTransientReaction?.();
   const shouldSpeak = !ctx.selectedLeftId && ctx.selectedRightId !== cardId;
   ctx.selectedRightId = ctx.selectedRightId === cardId ? null : cardId;
   if (shouldSpeak && ctx.selectedRightId === cardId && config.getCardSpeechPayload) {

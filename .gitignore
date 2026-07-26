@@ -4,3 +4,9 @@ node_modules/
 
 # Unrelated local project was removed from the repo root.
 strike-timeline/
+
+__pycache__/
+
+# Sprite originals used by scripts/build-*-sprites.py. Only the generated
+# PNGs that styles.css loads are tracked; the source art stays local.
+assets/*/source/

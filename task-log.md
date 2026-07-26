@@ -4818,3 +4818,465 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** Pre-publication `npm test` — 270 pass, 0 fail. `git diff --cached --check` — pass. GitHub reported pull request #47 clean and mergeable; squash merge commit `810807f13c02d79d0520bd9073588470cdc52bd6` was created successfully.
 
 **Risks / regressions to check:** Recheck the new separated feedback and the two corrected speech pronunciations on the original physical iPad/Safari device after the deployed site refreshes past the `20260724b` asset versions.
+
+---
+
+### 2026-07-25 10:30 EDT — Add Ido daily character missions
+
+**Requested:** Implement the first IvritElite character, Ido, as an optional once-daily guided mission using full-length existing activities; preserve same-day resume but force a new daily choice after the local date changes; add Hebrew-only clickable dialogue, player gender selection, approved streak reactions, responsive in-game presentation, and a detailed final mission results screen.
+
+**Files changed:**
+- `app/character.js` — adds the daily picker, gender-aware Hebrew dialogue and single-word glosses, mission tiers and sequencing, approved sprite/streak state machine, same-day persistence, new-day reset, hide/show control, activity handoff, and aggregate mission results.
+- `assets/ido-sprites.png` — adds the supplied six-frame Ido sprite sheet; the unused top-center frame is never assigned.
+- `app/audio.js`, `app/session.js`, `app/controller.js`, `app/ui.js`, `app.js` — connect answer outcomes, full activity completion, results controls, rendering and app startup to the character mission.
+- `app/persistence.js`, `app/constants.js`, `app/bootstrap-runtime.js` — persist the daily character state and restore all nine underlying activity modes needed for same-day mission resume.
+- `index.html`, `styles.css` — add the full-screen character flow, gender setting, right-side layered companion, responsive layouts, one boolean visibility control, sprite mappings, and mission results presentation; cache-bust every edited application asset to `20260725a`.
+- `tests/character-mission.test.js`, `tests/gameplay-layout.test.js` — lock the approved copy and sprite assignments, streak/recovery behavior, nine-activity order, prior-day reset, activity aggregation, final mission state, same-day completion lock, and unblocked ordinary layout testing.
+- `task-log.md` — records the implementation and verification.
+
+**Behavior changed:** On the first visit of each local day, the app now requires a choice between Ido and Free Play. Ido requires `זכר` or `נקבה`, offers Short/Medium/Full missions of 3/5/9 unchanged full-length activities, and accompanies gameplay from the right with Hebrew-only clickable dialogue. Four correct answers select and retain the bottom-left frame until a miss; four wrong answers select and retain bottom-center until a correct answer; the first recovery answer uses bottom-left with `לא נפלת, סתם עשית ווגינג.` for one answer. The single control switches between Hide Ido and Show Ido. Completed activities feed a mission sequence instead of individual result screens, and the final screen keeps Ido on the right with bottom-right, overall metrics, per-activity results, expandable mistakes, and Continue to Free Play. An interrupted mission resumes only on the same day; a new local day discards any ordinary or character session before showing a fresh picker. A completed Ido choice remains locked after continuing to Free Play and reloading later that same day.
+
+**Tests run:** Baseline `npm test` — 269 pass, 1 fail because the local Chrome process did not expose DevTools. Focused `node --test tests/character-mission.test.js` — 9 pass, 0 fail. `node --check` for every edited JavaScript file and `git diff --check` — pass. Final `npm test` — 278 pass, 1 fail from the same environment-only Chrome DevTools startup condition. Manual local browser verification completed the full three-activity Short mission through results, exercised four-right persistence, four-wrong persistence and recovery, clickable glosses, the single hide/show control, same-day mid-mission resume, same-day post-completion reload, mistake review, and 360×640, 768×1024, 900×1000, and 1440×900 layouts without browser console warnings or errors.
+
+**Risks / regressions to check:** The Short/Medium/Full labels deliberately use 3/5/9 activities until human timings support honest five-minute estimates. If a usable Hebrew system voice is unavailable, Listening is recorded as skipped and the itinerary fills from the next playable activity. The supplied sprite sheet is a single large raster asset, so later production optimization may reduce its download size without changing the frame crop. Physical iPhone/iPad Safari should still verify safe-area spacing, the layered companion, and Hebrew voice availability.
+
+---
+
+### 2026-07-25 12:05 EDT — Refine Ido mission navigation, companion, glosses, and feedback
+
+**Requested:** Remove the picker lock note; make Hebrew word glosses toggle directly above each word; turn Home into a resumable mission-progress hub; use one `show/hide` control; keep Ido right of his fitted bubble and make the companion safely draggable; reset character-only streak reactions at activity and question boundaries; use the recovery line after any miss; preserve the full Sentences/Shema board during feedback; apply the selected Hebrew display font; remove tips; and repair the mission results/review presentation.
+
+**Files changed:**
+- `app/character.js` — adds the mission hub, current-activity start/resume behavior, fitted per-word gloss tooltips, fixed right-side companion ordering, viewport-bounded pointer dragging, persisted companion position, activity-level reaction resets, transient wrong-answer poses, recovery after any wrong streak, and corrected results composition.
+- `app/controller.js`, `app/session.js`, `app/ui.js` — route active missions through the progress hub, pause/resume underlying game timers, allow Review and Settings while a mission is paused, keep the ordinary Home dashboard outside active missions, and exclude the companion from non-game routes.
+- `app/sentence-bank.js` — keeps prompts, answer slots, word banks, and listening controls visible after submit; preserves red/green answer marking; emits feedback below the unchanged board; removes authored and generic tip rows.
+- `app/bootstrap-runtime.js`, `index.html`, `styles.css` — register and style the mission hub; use exact `show/hide` copy; position Ido to the right of a text-sized bubble; style draggable bounds, word glosses, `יאללה`, Hebrew answer feedback, and right-side results; add a short-phone contained feedback scroller; cache-bust every newly edited asset to `20260725b`.
+- `tests/character-mission.test.js`, `tests/app-progress.test.js`, `tests/gameplay-layout.test.js` — cover any-miss recovery, paused mission routes, hub handoff, companion/result direction, draggable/gloss CSS, no-tip static feedback, shared display fonts, and rendered 360×640 containment.
+- `task-log.md` — records the refinement and verification.
+
+**Behavior changed:** A live mission now pauses on Home and shows completion progress plus only the current Start/Resume action; Review and Settings remain usable without discarding the game. Ido and his bubble are one fixed draggable unit, initially on the right, constrained below the top bar, above the bottom navigation, and inside the viewport; results keep Ido on the right but are not draggable. Clicking a dialogue word toggles its English gloss directly above that word. The only visibility button always reads `show/hide`. Wrong and four-wrong poses disappear when the next question begins, positive poses may persist, every activity starts neutral, and the first correct answer after any miss says `לא נפלת, סתם עשית ווגינג.` Sentences and Shema retain their complete submitted board and red/green markings while feedback appears below in the selected display font with no Tip row. At 360×640 only, exceptionally long feedback scrolls inside its own bounded tray so the unchanged board and bottom navigation stay visible; at 400×876 and larger it expands normally.
+
+**Tests run:** Baseline `npm test` — 279 pass, 0 fail. Focused `node --test tests/character-mission.test.js tests/app-progress.test.js tests/gameplay-layout.test.js` — 138 pass, 0 fail. Final `npm test` — 283 pass, 0 fail. `node --check` for every edited JavaScript file and `git diff --check` — pass. Chrome checks at 400×876 verified gloss toggle/placement, fitted bubble left of right-side Ido, exact single visibility control, bounded dragging, transient wrong reset, mission Home/Resume, Review exclusion, display-font feedback, preserved sentence board, red wrong markings, and no tips. Chrome at 360×640 verified no page scroll or bottom-nav overlap and a contained long-feedback tray.
+
+**Risks / regressions to check:** The contained feedback tray is intentionally limited to phones 700 CSS pixels tall or shorter; physical iPhone Safari should confirm its momentum scrolling and safe-area behavior. Pointer dragging was verified in Chrome with mouse-style pointer events, so touch dragging should receive a final physical iPhone/iPad check. Mission results direction and clipping are regression-locked in CSS/tests but should still be revisited after the next complete real-device mission.
+
+---
+
+### 2026-07-25 12:07 EDT — Make Ido’s visibility label state-specific
+
+**Requested:** Keep one boolean visibility control, but label it `hide` while Ido is visible and `show` while he is hidden instead of displaying `show/hide`.
+
+**Files changed:**
+- `app/character.js`, `index.html` — switch the visible label with Ido’s state and cache-bust the character module to `20260725c`.
+- `tests/character-mission.test.js` — locks the state-specific label logic.
+- `task-log.md` — records the correction.
+
+**Behavior changed:** The same single button now says `hide` or `show`, accurately describing the action it will perform.
+
+**Tests run:** `node --test tests/character-mission.test.js` and final `npm test`.
+
+**Risks / regressions to check:** None beyond confirming the label changes immediately when the control is pressed.
+
+---
+
+### 2026-07-25 13:20 EDT — Finish Ido startup, reactions, speech, loading, and light-mode polish
+
+**Requested:** Put the one-time welcome prompt before the daily character picker; repair Ido’s transparent shirt in light mode; make Vocabulary misses trigger reliably; add a nervous-laugh one-wrong pose; reset wrong poses on the next turn in Sentences and Binyanim; repair פאטוץ׳ and מג״ב speech while preventing written truncations such as רח׳ from revealing their expansion; shorten “Perfect activity” to “Perfect”; prevent Home from flashing before Conjugation+ and Prepositions; change the literal translation of לדרוך על היבלות from corns to blisters; center the two mission-result actions; and add Ido to every יאללה loading scene.
+
+**Files changed:**
+- `app/character.js`, `app/ui.js`, `app/match-engine.js`, `app/sentence-bank.js`, `app/binyan-board.js`, `app/adv-conj.js`, `app/prepositions.js` — establish welcome-first scene priority, preserve match-game miss reactions until the next attempt, clear transient negative poses at question boundaries, render game starts immediately, use “Perfect,” and mark the mission result action group.
+- `app/speech.js`, `app/abbreviation.js`, `app/word-match.js`, `abbreviation-data.js`, `hebrew-idioms.js` — add the פאטוץ׳ TTS respelling, authored מג״ב pronunciation, audio suppression for single-geresh written truncations, and the requested “blisters” literal.
+- `assets/ido-sprites-clean.png` — repairs the transparent shirt areas in the supplied six-frame sheet while retaining the original file.
+- `assets/ido-nervous-laugh.png`, `assets/ido-nervous-laugh-source.png` — add the generated transparent nervous-laugh sprite and its chroma-key source.
+- `index.html`, `styles.css` — load the cleaned sprite sheet, map the new nervous pose, include top-left Ido in all eight יאללה overlays, center the mission actions, and cache-bust every edited asset to `20260725d`.
+- `tests/character-mission.test.js`, `tests/app-progress.test.js`, `tests/app-speech.test.js`, `tests/hebrew-idioms.test.js` — lock the new sprite, startup priority, reaction, loading, speech, result, and translation behavior.
+
+**Behavior changed:** A fresh installation now shows Welcome before the daily picker. A single wrong Vocabulary match uses the nervous-laugh sprite and remains visible after the mismatch animation, then resets to neutral as soon as the next attempt begins; Sentences, Binyanim, Conjugation+, and Prepositions likewise clear transient negative poses when they load a new question. Ido’s shirt stays opaque in light mode. The יאללה transition now includes top-left Ido, and Conjugation+ and Prepositions hide Home on their first paint. מג״ב is spoken as *magav*; single-geresh truncations such as רח׳ have no pronunciation button because expanding them aloud would give away the match.
+
+**Tests run:** Focused character, progress, speech, and idiom tests — 153 pass, 0 fail. Final `npm test` — 288 pass, 0 fail, including rendered Chrome at 360×640. `node --check` for every edited JavaScript/data file and `git diff --check` — pass. Manual Chrome checks at 360×640 verified Welcome-before-picker, persistent one-wrong Vocabulary reaction followed by next-attempt neutral reset, no page scroll, light-mode shirt opacity, and immediate Conjugation+/Prepositions יאללה overlays with Ido.
+
+**Risks / regressions to check:** The generated nervous pose is a standalone higher-resolution PNG rather than a seventh cell in the original sheet, so later asset optimization should preserve its transparent crop. Hebrew system voices still vary by device; the authored respellings should be checked once on the target iPhone/iPad voice after deployment.
+
+---
+
+### 2026-07-25 13:45 EDT — Remove Ido shirt glow and split reactions into semantic assets
+
+**Requested:** Fix the glowing/translucent shirt treatment and reorganize Ido’s reactions as separate, sensibly named sprite files instead of one positional sheet.
+
+**Files changed:**
+- `assets/ido/*.png` — adds seven separate transparent 512×512 reaction assets: neutral, nervous laugh, celebrating, struggling, mission complete, frustrated, and the intentionally unused surprised pose.
+- `assets/ido/source/*` — organizes the original sheet, intermediate alpha repair, image-edit references, and nervous-laugh chroma sources away from runtime assets.
+- `assets/ido/README.md` — documents the semantic purpose of every reaction.
+- `scripts/build-ido-sprites.py` — reproducibly repairs the shirt interiors, splits the original 3×2 source sheet, normalizes the standalone nervous pose, and exports fixed-size runtime PNGs.
+- `app/character.js`, `index.html`, `styles.css` — replace positional frame names with semantic reaction names, load each PNG directly, migrate same-day saved positional states, and cache-bust the sprite CSS and character module to `20260725e`.
+- `tests/character-mission.test.js` — locks semantic file mapping and legacy same-day migration.
+
+**Behavior changed:** Every shirt is now an opaque charcoal fill with preserved white Hebrew lettering and no bloom, pale center, or theme-colored transparency. Runtime code requests reactions by meaning rather than by sheet coordinates, and all reactions share the same transparent 512×512 canvas so expression changes do not shift the companion. Existing same-day saves using `top-left`, `bottom-left`, and the other former sheet positions migrate automatically.
+
+**Tests run:** Focused character mission tests — 16 pass, 0 fail. Final `npm test` — 289 pass, 0 fail, including rendered Chrome at 360×640. Python sprite builder compilation, JavaScript syntax check, light- and dark-background visual contact-sheet inspection, and `git diff --check` — pass.
+
+**Risks / regressions to check:** The original source sheet is preserved under `assets/ido/source/`; runtime no longer depends on it. Future reaction art should use the same 512×512 transparent canvas and semantic naming convention.
+
+---
+
+### 2026-07-25 14:07 EDT — Rebuild Ido’s reaction sprites individually
+
+**Requested:** Correct the opaque black shirt bleed and inconsistent transparency in every Ido reaction, working pose by pose and regenerating art where necessary; leave the approved nervous-laugh reaction unchanged.
+
+**Files changed:**
+- `assets/ido/neutral.png`, `frustrated.png`, `celebrating.png`, `struggling.png`, `mission-complete.png`, `surprised-unused.png` — replace the malformed sheet-derived cutouts with six individually regenerated, transparent 512×512 pixel-art sprites with natural shirt silhouettes and no background glow.
+- `assets/ido/source/*-regenerated-chroma.png`, `*-regenerated-transparent.png` — preserve each pose’s generated chroma source and transparency-cleaned master separately.
+- `assets/ido/README.md` — documents the per-reaction source workflow and that `nervous-laugh.png` is excluded from rebuilding.
+- `scripts/build-ido-sprites.py` — replaces the polygon shirt-mask repair with a deterministic per-reaction normalizer that rebuilds only the six regenerated sprites.
+- `styles.css`, `index.html` — cache-bust the corrected sprite assets and stylesheet to `20260725f`.
+- `tests/character-mission.test.js` — verifies that the builder uses regenerated transparent sources and cannot restore the obsolete shirt polygons or overwrite the nervous-laugh reaction.
+- `task-log.md` — records the sprite rebuild and verification.
+
+**Behavior changed:** Ido’s six formerly sheet-derived reactions now display as clean independent cutouts in both light and dark themes. The black tank top ends at a natural torso boundary instead of extending into an opaque lower-left wedge, and the old brown/yellow glow and edge contamination are gone. All seven runtime reactions remain on consistent transparent 512×512 canvases. `nervous-laugh.png` was not modified; its SHA-256 remained `8696ede5055978875972943c7d1a13e372f4f7911ba0aa727efdb6dcec17a94c`.
+
+**Tests run:** Baseline `npm test` — 289 pass, 0 fail. Python sprite builder compilation — pass. Focused `node --test tests/character-mission.test.js` — 16 pass, 0 fail. Final `npm test` — 289 pass, 0 fail, including rendered Chrome at 360×640. Automated PNG checks confirmed 512×512 dimensions, transparent corners, visible alpha bounds, and zero chroma-green pixels in all seven runtime files. Light- and dark-background contact-sheet inspection and `git diff --check` — pass.
+
+**Risks / regressions to check:** The approved nervous-laugh pose intentionally retains its slightly different drawing treatment. Generated reaction art should continue to be edited from the named per-pose masters rather than reconstructed from the obsolete shared sheet.
+
+---
+
+### 2026-07-25 14:27 EDT — Repair celebrating glove transparency
+
+**Requested:** Fix the celebrating sprite’s raised glove, which contained an unintended transparent gap, regenerating the reaction if necessary.
+
+**Files changed:**
+- `assets/ido/celebrating.png` — replaces the affected reaction with a transparent 512×512 sprite whose raised fingerless glove and wrist wrap form one continuous opaque silhouette.
+- `assets/ido/source/celebrating-regenerated-chroma.png`, `celebrating-regenerated-transparent.png` — update the reproducible chroma and transparent masters with the localized glove repair.
+- `styles.css`, `index.html` — cache-bust the corrected celebrating asset and stylesheet to `20260725g`.
+- `task-log.md` — records the repair and verification.
+
+**Behavior changed:** The celebrating reaction no longer lets the page background show through the inside of Ido’s raised glove. The pose, expression, shirt, `תודה` lettering, framing, and all other reactions remain unchanged.
+
+**Tests run:** Baseline `npm test` — 289 pass, 0 fail. Focused `node --test tests/character-mission.test.js` — 16 pass, 0 fail. Final `npm test` — 289 pass, 0 fail, including rendered Chrome at 360×640. Automated PNG checks confirmed a 512×512 canvas, transparent exterior corners, unchanged alpha bounds, and zero chroma-green pixels. Bright-magenta composite inspection confirmed that the glove interior is fully opaque. `git diff --check` — pass.
+
+**Risks / regressions to check:** None specific; browser caches must receive the new `20260725g` stylesheet query, which is already present in `index.html`.
+
+---
+
+### 2026-07-26 EDT — Add Inbal as the second character, generalize the character engine, route content
+
+**Requested:** Build the second IvritElite character (Inbal) from the user's `Character lines.xlsx` scratchpad (row 2 only), generalizing the Ido-specific character/mission code into a reusable engine, and add per-character content routing so choosing a character changes what you study. User decisions during planning: split the spreadsheet's slash forms into masculine/feminine variants (including feminizing `שמע` → `שמעי`); author per-word English glosses; keep reaction policy in the engine rather than per character; skip speech; gloss the ten sefirot with plain meanings; soft weighting rather than hard filtering. User selected `הקללה נשברה.` as the recovery line and the `קפיצת הדרך` abbreviations intro from options offered. Scoped as Task A of two — the lens/free-play/bond-XP/Review-tab layer is Task B.
+
+**Files changed:**
+- `app/character-data.js` — **new.** Registry exporting `IvriQuestApp.characterData`: Ido's dialogue table moved verbatim out of `character.js`, Inbal's 26 dialogue entries (18 spreadsheet columns + authored recovery/abbreviations lines + 7 m/f splits) with hand-authored gloss maps, `route` tables for both characters, and `DIALOGUE_FALLBACKS` so a character missing a key degrades to a sensible line.
+- `app/character.js` — engine generalization: `hasChosenIdo` boolean → `hasChosen` map with migration; new `pendingChoice` so the duration/greeting screens know which character was picked before `dailyChoice` is committed; `chooseIdo()` → `chooseCharacter(id)`; `createSprite` emits `data-character`/`data-reaction` instead of `.ido-sprite--*` classes; `renderPicker` loops the registry; hardcoded `"עידו"`/`"Ido"` replaced with registry lookups in five places; `getDialogue` generalized to an `M`/`F` suffix rule plus fallback chain; `"idoMission"` → `"characterMission"`; new `syncStaticSprites()` re-points the static markup; new `getContentWeight` and `buildContentWeigher` for routing.
+- `app/data.js`, `app/abbreviation.js`, `app/sentence-bank.js`, `app/verb-match.js` — routing wired as a multiplier alongside each picker's existing adaptive/SRS weights (`pickBestWord`, `pickBestAbbreviationEntry`, `pickWeightedPair`, `pickVerbMatchQueue`).
+- `app/handwriting.js` — `buildSentenceRounds` sorts rather than weights, so routing is applied as a preference within the existing letter-count shortlist.
+- `app/bootstrap-data.js` — new `religion_magic` ("Religion & Magic", 🕯️) and `arts_culture` ("Arts & Culture", 🎭) performance domains inserted **before** `formal`, plus `groceries_food`/`pharmacy_personal_care` added to `everyday`; English and Hebrew domain labels added to both i18n bundles.
+- `app/speech.js` — one `TTS_RESPELLINGS` rule for `חָכְמָה` → `חוֹכְמָה` (kamatz katan the existing rules did not cover).
+- `vocab-data.js` — 33 cards appended to `religion_magic_spirituality` (30 → 63): the ten sefirot plus `דעת` with plain glosses, and 22 register terms.
+- `sentence-bank-data.js` — 10 new rows `inbal_17`–`inbal_26` (512 total): the sefirot as the Tree of Life, `חסד`/`גבורה`, the Zohar, `אין סוף`, gematria, `תיקון עולם`, the Shekhinah, `כוונה`, `התבודדות`, and the `קליפות`.
+- `styles.css` — `.ido-sprite` → `.character-sprite` with `[data-character][data-reaction]` rules for both characters; `.mission-results-ido` → `.mission-results-character`; `.intro-ido-sprite` → `.intro-character-sprite`; `.character-choice-grid` changed from a hardcoded 2 columns to `auto-fit` so a third card does not dangle.
+- `index.html` — added the `character-data.js` script tag before `character.js`; converted the companion sprite and eight `יאללה` intro sprites to data attributes; cache-busted 13 touched `.js`/`.css` files to `?v=20260726a`.
+- `tests/character-mission.test.js` — loads `character-data.js` into the vm; replaced the raw-source-regex copy assertions with registry assertions (they would not scale to five characters); new tests for dialogue-key coverage per character, gendered vs shared lines, both-character sprite/asset contract, routing ownership, the weigher's solved share, and one-domain-per-category with `FALLBACK_DOMAIN_ID` pinned to `formal`.
+- `tests/vocab-data.test.js`, `tests/sentence-bank-data.test.js`, `tests/app-progress.test.js` — count guardrails (vocab 1572→1605, translationQuiz 1518→1551, tranche 30→63, sentences 502→512, category mix), two new glossary blocks for Kabbalistic terms and religious proper names, and the renamed intro sprite class.
+
+**Behavior changed:** The daily picker now offers Ido, Inbal, and Free Play; both character buttons stay disabled until זכר/נקבה is chosen. Inbal has her own sprites, 26 Hebrew lines with clickable per-word glosses, gendered variants driven by the stored gender, and her own greeting/intro/perfect/results screens. The static `יאללה` overlays and the draggable companion now show whichever character owns the day. **Ido's missions changed too:** his route ships populated (colloquial sentences, WhatsApp-style rows, six slang vocab categories, `להרוס`/`ללרלר`), so his content is now biased where before it was global — this was an intentional decision, flagged at planning time, not a regression. Category Analytics gains two domains and stops mis-filing Inbal's, Inat's, groceries, and pharmacy vocabulary as "Formal & Analytical".
+
+**Tests run:** `npm test` before: 289 pass, 0 fail. After: **294 pass, 0 fail** (net +5 tests). Browser verification on the dev server (`ulpango-dev`, port 3000): three picker cards render with the auto-fit grid and correct disabled state; Inbal's first-time/greeting/vocabulary-intro screens render her sprite and the **feminine** variants (`בואי נגלה`, `בקפה`, gloss tooltips resolving one at a time); reaction chain verified (4 wrong → `struggling` + `צריך לשבור את הקללה הזאת`, next correct → `celebrating` + `הקללה נשברה`, 4 correct → `fourRight` persisting); all 9 static sprites re-point to the active character and `assets/inbal/*.png` return 200; mission results show her `mission-complete` sprite and mission line; both new domains appear in `calculateDomainStats()`; `localStorage` round-trips the new `hasChosen` map; a hand-written pre-registry save (`hasChosenIdo: true`, sprite `bottom-left`) migrates correctly on reload with the mission intact; no console errors.
+
+**Routing measured empirically** (600 simulated draws through the real picker): Inbal 54.7% owned, Ido 67.3% owned, free play 1.5%, no-mission 2.3%, and 0% cross-contamination (no religion vocabulary on an Ido day).
+
+**Risks / regressions to check:**
+1. **The plan's original `OWNED_BOOST = 3` was wrong arithmetic** and produced 0% owned content in the first browser check — a 3× boost on a 63-of-1613 slice yields ~11%, not the ~65% the strategy doc targets. Replaced with `buildContentWeigher`, which solves the multiplier from each draw's actual composition so the share holds as content grows. Realized share is 54.7% for Inbal rather than 65% because the utility and SRS boosts still push back; that is the intended composition, but confirm the felt mix is right in real play.
+2. **Ido's newly-populated route is a live behavior change** — play a full Ido mission and confirm the narrower content still feels varied enough.
+3. Four content rows (`inbal_21`, `22`, `23`, `25`) were rewritten during verification because the repo's compact-chip policy correctly rejected glued-together English chips ("a numeric value", "a political slogan", "in feminine language", "alone in a field"). Nine genuine terms/names were added to the test glossary instead. Re-read those four rows for naturalness.
+4. `קבלה` and `תיקון` were **deliberately not added** as vocabulary cards — `vocab-data.js` already has them as "receipt" and "repair", and adding the mystical senses would create an unanswerable match card with two correct English answers. `תורת הקבלה` and `תיקון עולם` were used instead. Three further collisions were caught and swapped during authoring: `מקובל` (already "acceptable"), `השבעה` and `לחש` (already "incantation" / "spell (magic)").
+5. Niqqud on the 33 new vocabulary cards and 10 new sentences is hand-authored — worth a native-speaker pass, especially `תִּפְאֶרֶת`, `סְגוּלָּה`, `יִיחוּד`, and `תְּפִילִּין`.
+6. `שמע` is feminized to `שמעי` in Inbal's listening intro per the user's decision, which loses the echo of the Shema as a fixed invocation for female users.
+7. The `inbal_19` note carries the Zohar's traditional-vs-scholarly attribution distinction; the Hebrew says `ומיוחס` ("and is attributed"), not "wrote". Keep that wording if the row is edited.
+8. Task B (splitting mission from lens, character free play, bond XP, Review "Characters" tab) is **not** in this change. Note that `character.initialize()` returning `false` on a date change and `checkDayRollover()` calling `location.reload()` both still assume one irreversible choice per day.
+
+---
+
+### 2026-07-26 EDT — Character free play, relationship levels, content-volume report
+
+**Requested:** Three follow-ups to the Inbal work. (1) A way to track content volume per character, existing and future, without solving evenness yet. (2) Task B from the prior plan: break the one-character-per-day lock so a character can also be chosen in Settings for free play in their own content niche, and add a relationship/leveling layer as a new primary tab on the Review page. (3) Instructions for running the app locally, including from mobile devices. Mid-session the user also asked to delete the line `כל פעילות מתקיימת באורך המלא שלה.` from the mission-selection screen.
+
+**Files changed:**
+- `scripts/character-content-report.js` — **new.** Prints owned-content counts per character per pool (vocabulary / sentences / abbreviations / verbs) with each pool's share, plus unrouted and multi-owner totals and the spread across routed characters. Reads the route tables from `app/character-data.js`, so future characters appear without edits. Deliberately never fails — Itamar is specified to own no topic area and a half-authored character reads low.
+- `package.json` — added `npm run report:characters`.
+- `app/character.js` — split mission from lens: new `lensCharacter` state (persisted, survives day rollover), `getRoutingCharacterId()` so routing follows the mission when one runs and the Settings lens otherwise, and `getActiveCharacter()` resolving pending pick → mission → lens. Extracted `createReactionContainer()` and reused it for both the mission and a new `freePlay` container, so `recordAnswer`, `toggleVisibility`, `renderCompanion`, `observeQuestionChange`, and the drag handlers now operate on a `getReactionContext()` rather than requiring a mission. Added `setLensCharacter`/`canChangeLens` (refuses while a mission is active), the bond store (`loadBonds`/`addBondXp`/`getBondProgress`/`getAllBondProgress`), `getAnsweredRoutableItem()` to identify the item just answered, `renderBondPanel()`, and `renderLensPicker()`. `getQuestionStateKey()` now falls back to the running mode so transient reactions reset in free play. Deleted the mission-selection note per the user's request.
+- `app/constants.js` — new `characterBond: "ivriquest-character-bond-v1"` storage key, commented as intentionally separate from the day-keyed `character` key.
+- `index.html` — new "Free-play companion" settings row, third Review tab (`data-review-tab="characters"`) and its panel, cache-bust to `?v=20260726b` for the six touched files.
+- `app/bootstrap-runtime.js` — five new `el` entries; `reviewTab` whitelist widened to include `characters`.
+- `app/ui.js` — `renderReviewState` toggles the new panel and calls `character.renderBondPanel()`.
+- `app/bootstrap-data.js` — English and Hebrew strings for the tab title, heading, and explanation.
+- `styles.css` — bond card grid, progress bar, and companion badge; `button.settings-seg-opt` variants; `.settings-row--static` added to the existing `.settings-block > button` padding and RTL rules so the new row matches the other settings rows.
+- `tests/character-mission.test.js` — harness now provides a key-aware `storageApi` (so bond writes are separable) and `runtime.global`, which the transient-reaction timer needs. Seven new tests: free-play routing and reactions with no mission; a running mission owning the lens and rejecting Settings changes; bond XP accrual, owned-content doubling, and the level-1 threshold; bond survival across the rollover that wipes mission state; the mission-completion bonus; the static-sprite scoping regression; and Characters-tab registration across all four places tab state is read.
+
+**Behavior changed:** A character can now be chosen in Settings as a free-play companion, independent of the daily mission. With a lens set, that character's companion appears during ordinary play, reacts to streaks, and biases content — verified live: a Translation round under Inbal's lens drew נשמה, צדיק, and חילון. The lens control disables itself with an explanatory note while a mission is running, and the mission's own character always wins. Correct answers earn relationship XP for the active character, doubled on their own material, with a 40-XP bonus per completed mission; distinct days studied together are tracked separately. A new Review → Characters tab shows each character's level, XP progress, days together, and missions. The mission-selection screen no longer shows the activity-length note.
+
+**Tests run:** `npm test` before: 294 pass, 0 fail. After: **301 pass, 0 fail** (+7). Browser-verified on the dev server at desktop and 375×812 mobile: the Settings row renders inside the settings card, wraps cleanly on mobile, and shows None/עידו/ענבל; the companion and her reactions appear in a real Translation game with `mission === null`; the 4-wrong → recovery chain fires in free play with the correct bubble text; XP math confirmed through `recordAnswer` (45 owned answers → 90 XP → level 1, 30/120 into the next); bonds write to `ivriquest-character-bond-v1` and never into the day-keyed character key; the lens persists; the Characters tab renders both cards with no overflow and no horizontal scroll; mission-selection panel now contains only the heading and tier buttons; no console errors.
+
+**Content-volume baseline** (`npm run report:characters`, 2026-07-26):
+
+| Character | Vocabulary | Sentences | Abbreviations | Verbs | Total |
+| --- | --- | --- | --- | --- | --- |
+| Ido | 199 (12.4%) | 163 (31.8%) | 41 (18.0%) | 2 (1.4%) | 405 |
+| Inbal | 63 (3.9%) | 26 (5.1%) | 74 (32.5%) | 2 (1.4%) | 165 |
+
+Spread 165–405 (2.5x). Unrouted: 1343 vocabulary, 323 sentences, 113 abbreviations, 138 verbs.
+
+**Risks / regressions to check:**
+1. **A real bug was found and fixed during verification:** `syncStaticSprites()` used a broad `.character-sprite[data-character]` selector and so repointed *every* sprite on the page at the active character — the Review cards all showed one face. It is now scoped to `.intro-character-sprite`, with a regression test. Any future static sprite added to `index.html` must carry that class or it will not follow the active character.
+2. **The owned-content XP doubling depends on reading the answered item back out of mode state** (`getAnsweredRoutableItem`), because `recordAnswer` only receives a boolean. Verified for `sentenceBank`; `lessonMatch`/`abbrMatch` rely on the last entry of `matchedPairIds` and `verbMatch` on `state.match.currentVerb`, neither of which was exercised end to end. If the doubling looks wrong in those modes, that function is the place to look — a miss costs a multiplier, never the XP itself.
+3. **The 2.5x content spread is now measured but not fixed.** Ido's `sentenceCategories: ["colloquial"]` sweeps 163 sentences while Inbal's `inbal_` prefix catches 26, which is also why her realized owned share was 54.7% against Ido's 67.3%. Evening this out means either authoring more Inbal sentences or narrowing Ido's route.
+4. Level thresholds (`BOND_LEVEL_STEP = 60`, so level N costs 60·N(N+1)/2) and the 40-XP mission bonus are first-pass numbers with no play data behind them.
+5. `state.freePlay` lives inside the day-keyed character state, so free-play companion visibility and drag position reset daily, matching the mission's existing behavior. Relationship data is unaffected.
+6. The daily mission picker is still once per day and still reloads the page on date change; only the lens is separable now.
+
+**Follow-ups requested mid-session (same change set):**
+- Deleted `כל פעילות מתקיימת באורך המלא שלה.` from the mission-selection screen (`renderDuration` now appends only the heading and the tier buttons).
+- Deleted `הקשר עם דמות נבנה מלמידה משותפת. החומר שלה נחשב כפול.` from the Review → Characters tab, and removed the now-orphaned `review.charactersNote` key from both i18n bundles.
+- Moved "Character address" and "Free-play companion" out of **Language & content** into their own **Characters** settings group (`settings.groupCharacters`, English "Characters" / Hebrew "דמויות").
+
+**Layout consequence, and how it was resolved:** the extra settings group pushed `#settingsView` from ~770px to 801px against a 799px shell at 1366×1000, which tipped it from vertically centered to scrollable and broke an assertion in `tests/gameplay-layout.test.js`. Rather than shave whitespace to satisfy the test — settings will keep growing as characters are added — the assertion was generalized to match the contract the test already used for the compact viewport: centered **while it fits**, and otherwise scrollable with the top edge reachable. Verified in the browser that nothing is clipped and the last row is reachable at both 1366×1000 and 375×812.
+
+**Note on a flaky pre-existing test:** `compact gameplay and safe centering hold in rendered Chrome` also failed four consecutive times on the Binyanim feedback height (498px against a 488px body at 360px wide) and then passed repeatedly with no code change. Binyanim roots are drawn with `Math.random()` via `pickWeightedSubset`, and teaching-note lengths vary by root, so that assertion sits within ~10px of the limit for some roots. Unrelated to this change, but it will keep surfacing intermittently until either the roots are seeded for the test or the feedback panel gets more headroom. Final state: `npm test` run three consecutive times, **301 pass, 0 fail** each time.
+
+---
+
+### 2026-07-26 EDT — Gameplay polish, gender-ambiguous distractor fixes, light-mode gold
+
+**Requested:** A batch of fixes found in live play: (1) Review tabs and panel resized per tab — stabilize, and make Characters the first/default tab since relationship building is becoming the core gamification mechanic. (3) Make the recovery reaction persist until the four-in-a-row reaction replaces it. (4) `תיקח` graded wrong where `תיקחי` is correct although both are valid — accept both or drop alternative-gender distractors, and check for other cases. (5) Restore the listening game's name to שמע / Shema. (6) Light-mode highlighted gloss words render blue and illegible — use gold. (7) `עכשיו` pronounced "achshau". (8) Game name shown twice at activity start. (9) Sprite missing on the mission-complete screen. Plus, mid-session: make the "on" settings toggles gold in light mode; delete the mission-selection note and the Characters-tab explainer; give gender/character selection their own settings group; accept the trailing-`לגמרי` and trailing-`שעה` word orders; and make the companion sprite visible during free-play gameplay. Item (2), a second Inbal content expansion, is **not** in this change — see below.
+
+**Files changed:**
+- `app/character.js` — recovery now carries through `correctStreak` 1–3 and is replaced by `fourRight` at 4; `getActiveCharacter()` resolves a finished mission from `dailyChoice` before falling back to the lens, which is what left the results screen spriteless; activity-intro eyebrow reduced to the progress counter; `ACTIVITY_ORDER` shema entry restored to `שמע` / `Shema`; mission-selection note removed.
+- `styles.css` — new `--switch-on` and `--word-highlight` tokens (gold in both themes, because light-mode `--brand` is indigo and illegible on the indigo dialogue bubble); `.settings-row[aria-pressed="true"] .settings-switch` and `.character-word:hover/:focus-visible` now use them, with an explicit gold focus ring replacing the browser's blue one; `.review-panel-card` given `width: 100%` so it stops shrinking to each tab's content; `.review-tab` set to `white-space: nowrap`; companion sprite enlarged 96→132px desktop and 84→104px mobile.
+- `index.html` — Characters tab moved first and marked selected, Overview panel now starts hidden; gender and free-play-companion rows moved into a new **Characters** settings group; Characters-tab explainer paragraph removed.
+- `app/bootstrap-runtime.js`, `app/ui.js`, `app/controller.js` — review-tab whitelist reordered and the default/fallback changed from `overview` to `characters`.
+- `app/bootstrap-data.js` — added `settings.groupCharacters` (EN/HE); removed the orphaned `review.charactersNote` keys.
+- `app/speech.js` — two `TTS_RESPELLINGS` rules mapping `עַכְשָׁו` / `עכשיו` to `עַכְשָׁב` for speech only. Word-final vav after kamatz is consonantal /v/, but the he-IL voices read it as the vowel /u/; a final rafe bet (as in `רַב`) spells /v/ unambiguously. Verified `עַכְשָׁוִי` (contemporary) is left alone.
+- `sentence-bank-data.js` — 15 gender-ambiguous distractors replaced with gender-invariant adverbs in the 11 rows that had no accepted alternate; word-order alternates added to `colloquial_62` (trailing `לגמרי`), `colloquial_72` (trailing `שעה`), and a feminine alternate to `everyday_105` (`מחכות`).
+- `tests/sentence-bank-data.test.js` — new guard test encoding the bank's own rule: a gender-variant distractor is allowed **only** if the row also accepts that reading via `hebrewAlternates`. Four rows are exempt with reasons (English names he/she, the Hebrew supplies the referent, `את` as object marker, conventional masculine `יצא`).
+- `tests/character-mission.test.js` — recovery-persistence assertions rewritten for the new behavior; Characters-tab test now asserts the new tab order and default.
+
+**Behavior changed:** The Review card and tab strip keep one size across tabs and open on Characters. A recovery line and its celebrating pose now stay up for the whole run until the four-in-a-row reaction takes over. The mission-complete screen shows the character again. Activity intros show `3/9` rather than `3/9 · האזנה`, and the listening activity is `שמע` again. In light mode, "on" toggles and gloss highlights are gold instead of indigo. `עכשיו` is spoken correctly everywhere. The companion is noticeably larger during gameplay. Two sentences accept a trailing adverb order, one accepts the feminine plural, and 11 sentences no longer mark a valid other-gender form wrong.
+
+**Tests run:** `npm test` before: 301 pass. After: **302 pass, 0 fail** (verified on a final run). Browser-verified on the dev server: all three Review tabs measure 1334px wide with a 43px tab strip (previously 566/296/327px and 43/61/61px); Characters is first and default; light-mode Sound Effects toggle renders `rgb(168,132,44)` gold; `--word-highlight` resolves to `#D8B45A` in light mode; TTS respelling confirmed via `applyTtsRespellings`; free-play companion confirmed rendering with the correct sprite and background image.
+
+**Risks / regressions to check:**
+1. **My first pass at the distractor fix was wrong and was reverted.** 14 of the 25 flagged rows already accepted both genders through `hebrewAlternates`, so their distractors were intentional; my replacement removed intended content and corrupted `colloquial_117`'s target tokens. All 15 of those replacements were reverted and the row restored. The lesson is encoded in the new test: check for an accepted alternate before calling a gender distractor a bug.
+2. Two rows needed an index-based patch because the file's niqqud is stored in a different Unicode normalization than typed literals, so `re.sub` on a typed Hebrew string silently matched nothing. Any future scripted edit to Hebrew strings in this file must normalize or work by position.
+3. The 11 rows fixed by removing the distractor could instead accept both genders via an alternate, which teaches more. Removal was chosen as the lower-risk option; converting them is a reasonable follow-up.
+4. `עַכְשָׁב` is a speech-only respelling. If a future voice reads final bet as /b/, this would produce "achshab" — worth an ear check on the deployed site.
+5. The larger companion sprite was not re-checked against the narrow-mobile gameplay layout test beyond the suite passing; it is `position: fixed` so it should not affect document flow.
+6. **Not done in this change: the second Inbal content expansion.** Ido still owns 405 routed items against Inbal's 165 (`npm run report:characters`). Authoring another tranche properly means clearing the same four gates this session exercised — Hebrew and English gloss uniqueness, the compact-chip policy, niqqud accuracy, and now gender-ambiguity — and it deserves its own pass rather than being appended to a long fix batch.
+
+**Addendum — flaky Binyanim layout test fixed rather than left documented.** The `compact gameplay and safe centering hold in rendered Chrome` test failed intermittently on the Binyanim feedback panel (498px against a 488px body at 360×640) because roots are drawn with `Math.random()` and teaching-note lengths vary by root, leaving the tallest cases ~10px over. Tightened the feedback tray padding and line-height **only** for `.lesson-shell.mode-binyan-board` inside `@media (max-width: 767px) and (max-height: 760px)`, so other modes keep their spacing. The layout test then passed 5 consecutive isolated runs and the full suite passed 3 consecutive runs at **302 pass, 0 fail**. Since root selection is random this is strong evidence rather than proof; if it resurfaces, the remaining lever is seeding the roots for the test.
+
+---
+
+### 2026-07-26 EDT — Inbal content expansion, second tranche
+
+**Requested:** Move Inbal closer to content parity with Ido, quality over quantity. Approved scope: 45 vocabulary cards, 24 sentences, 8 curated verbs, all four thematic areas (ex-religious seam, folk magic, ritual objects and calendar, mysticism and the soul), and a mixed verb set pairing high-frequency verbs with in-register ones.
+
+**Files changed:**
+- `vocab-data.js` — 45 cards appended to `religion_magic_spirituality` (63 → 108), ~11 per theme. All 45 pre-verified collision-free on Hebrew, English, and the ≤20-char English / ≤12-char Hebrew envelope before insertion.
+- `sentence-bank-data.js` — 24 rows `inbal_27`–`inbal_50` (512 → 536), ~6 per theme, reusing the new vocabulary. `inbal_46` carries a word-order alternate for the movable attributing phrase; `inbal_35` is `colloquial`, making it a deliberate Inbal/Ido multi-owner row.
+- `hebrew-verbs.js` — 8 curated verbs in `buildRequestedVerbEntries` (142 → 150 seed entries, deck 155 → 163): `להאמין`, `לצום`, `לקדש`, `לטבול`, `לקלל`, `לנחש`, `להשביע`, `להתגייר`. Five binyanim, 21 fully pointed forms each, all reaching the deck as `authoritative`.
+- `app/character.js` — `ownsItem` gains a `vocabWords` clause so a character can own individual words outside their categories. Matched on `item.he`, not `item.id`, because vocabulary ids embed a positional index that shifts when rows are inserted into the same category.
+- `app/character-data.js` — Inbal's route gains the 8 new `verbIds` and 16 `vocabWords`.
+- `scripts/character-content-report.js` — counts the new `vocabWords` axis.
+- `tests/sentence-bank-data.test.js` — counts 512 → 536, category mix recomputed, and 13 new `COMPACT_ENGLISH_MULTIWORD_UNITS` entries in three reason-tagged blocks (two festival proper names, nine ritual terms that are themselves vocabulary-card glosses, one English idiom).
+- `tests/vocab-data.test.js` — 1605 → 1650, translationQuiz 1551 → 1596, tranche 63 → 108.
+- `tests/hebrew-verbs.test.js` — seed count 142 → 150, plus 8 entries in the Inbal/Inat paradigm map.
+- `tests/character-mission.test.js` — two new tests: `vocabWords` boosts a borrowed-category word while leaving an unlisted word in the same category neutral; and every routed verb id resolves to a real deck entry, so a malformed paradigm cannot silently make a route dead.
+- `index.html` — cache-bust to `?v=20260726d` for the five touched runtime files.
+
+**Behavior changed:** Inbal's routed pool goes 165 → 258 items and her per-session repetition roughly halves:
+
+| Activity | Draw | Before | After |
+| --- | --- | --- | --- |
+| Vocabulary | 20 | 63 (32%) | 124 (16%) |
+| Sentences | 10 | 26 (38%) | 50 (20%) |
+| Shema | 10 | 26 (38%) | 50 (20%) |
+| Conjugation | 1 | 2 (50%) | 10 (10%) |
+
+Spread against Ido narrows from 2.5x to 1.6x (258 vs 406; he gained one sentence from the shared `colloquial` row).
+
+**Tests run:** `npm test` before: 302 pass, 0 fail. After: **304 pass, 0 fail** (+2 new tests). Browser-verified on the dev server: a live Inbal Short mission drew `התגלות` and `העולם הזה` in the first five vocabulary pairs; the Sentences round drew `inbal_49` and rendered all ten chips correctly; measured over 400 simulated draws her owned vocabulary share is 51.2% with 56 new cards and 23 borrowed-category words appearing; the conjugation picker draws one of her verbs 58% of the time, 32 of 60 being the new ones; Ido measures 70.3% owned with no meaningful religion leakage.
+
+**Abbreviations deliberately unchanged.** I audited this expecting a mis-route and was wrong: **59 of her 74 owned abbreviations are genuinely religious** (בס״ד, תנ״ך, חז״ל, רש״י, רמב״ם, the tractates, the festival calendar), the `People, Health & Culture` bucket is well-targeted, and nearly every obvious religious abbreviation already exists. Only about four were missing, so expanding here would have been low-value.
+
+**Risks / regressions to check:**
+1. **Niqqud on 45 cards, 24 sentences, and 168 verb forms is hand-authored** and deserves a native-speaker pass. Highest-risk items: `הִתְגַּיַּירְתִּי` and the whole `להתגייר` paradigm (double-yod hitpael), `צַמְתִּי`/`אָצוּם` (hollow root), `קִידַּשְׁתִּי`, and `אֲחִיזַת עֵינַיִים`.
+2. TTS was scanned across the whole 108-card tranche: only two kamatz-katan candidates exist and both are pre-existing and already handled (`חָכְמָה` by rule, `מַלְאָךְ` correctly read as kamatz gadol). No new respelling was needed, so `app/speech.js` is untouched — but the new words have not been heard aloud on a real device yet.
+3. **`vocabWords` is a new routing axis.** It matches on the Hebrew surface form, so renaming or respelling a word in `vocab-data.js` silently drops it from the route. The new test only checks that verb ids resolve; there is no equivalent guard that every `vocabWords` entry still exists in the lexicon. Worth adding if the list grows.
+4. Three of the 16 `vocabWords` (`חילוני`, `דתי`, `חרדי`) sit in `social_cultural`, which Ido owns, so they are now genuinely multi-owner. The report shows `multi-owner: 7` for vocabulary and `1` for sentences — intended, and sanctioned by the strategy doc.
+5. `לנחש` is glossed "to guess" rather than "to divine" because that is its dominant modern sense; the divination reading is carried by `inbal_38` and by the existing `ניחוש עתידות` card instead.
+6. Still not parity: 258 vs 406. Closing the rest is roughly 100 more sentences, and Sentences/Shema remain her weakest ratio at 20%.
+
+---
+
+### 2026-07-26 16:26 EDT — Add Ivri sprite set and repair completed-mission free play
+
+**Requested:** Create Ivri’s six used reaction sprites in the same artistic style
+as Ido and Inbal (omitting the unused surprised pose), loosely based on the
+provided appearance references and dressed in a light-blue shirt and navy
+jacket. Diagnose and fix the completed-mission free-play bug where the loading
+screen showed Inbal after selecting Ido and no companion appeared in gameplay.
+Make local-network testing practical on laptop, iPad, and iPhone.
+
+**Files changed:**
+- `assets/ivri/` — added transparent 512×512 runtime PNGs for `neutral`,
+  `nervous-laugh`, `celebrating`, `struggling`, `mission-complete`, and
+  `frustrated`; retained chroma and transparent 1254×1254 masters plus a
+  three-character QA comparison in `source/`; added the asset README.
+- `scripts/build-ivri-sprites.py` — reproducibly rebuilds the six runtime PNGs
+  with nearest-neighbor scaling.
+- `app/character.js` — a completed mission now owns the displayed character
+  only while its results screen is actually active; leaving results clears the
+  stale character screen; reload also repairs a stale completed-results state
+  before syncing loading sprites and rendering the free-play companion.
+- `tests/character-mission.test.js` — added regressions for navigating away
+  from completed results and recovering the same stale state on reload.
+- `index.html` — cache-busted `app/character.js` to `20260726e`.
+- `package.json` — added `npm start`, serving on port 3000 and binding to
+  `0.0.0.0` for same-Wi-Fi device testing.
+
+**Behavior changed:** Ivri now has the complete six-pose sprite asset set with
+coarse pixels, simplified facial planes, heavy outlines, limited cel shading,
+and proportions checked alongside Ido and Inbal. After a mission, the selected
+free-play lens now controls both the loading overlay and gameplay companion;
+stale `screen: "results"` state no longer hides the companion. Reloading an
+already affected save repairs it automatically. `npm start` exposes the game at
+`http://192.168.86.22:3000/` while the Mac remains on that LAN address.
+
+**Tests run:** Baseline `npm test` — 303 pass, 1 pre-existing/intermittent
+rendered-layout failure (`Conjugation+ feedback scrolls`, 496px > 488px).
+`node --test tests/character-mission.test.js` — 32 pass, 0 fail. Final
+`npm test` — **306 pass, 0 fail**. `git diff --check` — pass. Browser verification
+against the network URL loaded `app/character.js?v=20260726e`, showed selected
+Ido during active gameplay with the correct background asset, and confirmed the
+companion is visible. Responsive checks at 390×844 and 768×1024 kept the Ido
+companion visible and inside the viewport with no horizontal overflow. HTTP
+checks returned 200 for the app and Ivri sprite asset.
+
+**Risks / regressions to check:** Ivri is assets-only for now: he is not in the
+character registry, has no dialogue or routing, and is not selectable. The
+reference-based art is intentionally only a loose resemblance. Physical
+iOS/iPadOS Safari was not automated; both responsive sizes passed in Chrome,
+but final touch/device verification is still worthwhile. The local server must
+remain running and all devices must be on the same Wi-Fi; macOS Firewall may
+prompt on the first connection. The Mac’s LAN address can change on a different
+network or after DHCP renewal.
+
+---
+
+### 2026-07-26 EDT — Implement Ivri character dialogue and routing
+
+**Requested:** Implement Ivri from the active top row of `Character lines.xlsx`
+with the same dialogue, expression, gender, and content-routing support as Ido
+and Inbal. Correct Ido’s description from `הוא גאי` to `הוא גיי`.
+
+**Files changed:**
+- `app/character-data.js` — added Ivri (`עברי`) as the third selectable
+  character; added all authored picker, streak, recovery, completion, and nine
+  activity-intro lines with complete clickable gloss maps and masculine/feminine
+  variants where the Hebrew addresses the learner; corrected Ido’s description
+  and gloss key to `גיי`; routed Ivri to work/business, finance, high-tech,
+  professional sentences, business/technology abbreviations, and eight matching
+  verbs.
+- `styles.css` — connected all six Ivri reaction states to the existing
+  transparent sprite assets.
+- `index.html` — cache-busted the character registry and stylesheet so devices
+  receive Ivri immediately rather than retaining the previous two-character
+  build.
+- `tests/character-mission.test.js` — added assertions for Ido’s corrected
+  spelling, Ivri’s approved copy and gender variants, all six sprite links, and
+  Ivri’s routed content.
+
+**Behavior changed:** Ivri is fully selectable and playable in daily missions
+and free play. He uses the same reaction state machine and relationship-level
+system as Ido and Inbal. His mission bias covers 397 existing items (176
+vocabulary, 100 sentences, 113 abbreviations, and 8 verbs), closely matching
+Ido’s 406-item route. The workbook’s clear typo `קיצורים יביאים` was corrected
+to `קיצורים יביאו`; its intentional English phrase in the four-correct line was
+preserved. Gender-aware variants were derived for every learner-addressed line,
+including `ברוך הבא`/`ברוכה הבאה`, `תקשיב`/`תקשיבי`, and
+`קח...ותכתוב`/`קחי...ותכתבי`.
+
+**Tests run:** Baseline `npm test` — 306 pass, 0 fail. Focused character suite
+after implementation — 32 pass, 0 fail. Character content report confirmed
+Ivri’s 397 routed items. The first full post-change run reported the known
+intermittent Conjugation+ rendered-layout check at 496px versus 488px; the
+isolated rendered-Chrome test then passed, and the final full `npm test` passed
+**306/306**. `git diff --check` passed.
+
+**Risks / follow-up:** Ivri’s workbook row is sufficient for complete current
+gameplay; no additional copy is required. Optional future decisions are whether
+his intentional Hebrew/English code-switching should become a broader voice
+rule, and whether he should receive dedicated Ivri-only sentences and vocabulary
+instead of drawing exclusively from the existing professional pools. Physical
+iPhone/iPad Safari remains a worthwhile final device check.
+
+---
+
+### 2026-07-26 EDT — Drop parenthetical from "regime coup" gloss; make Ivri's four-correct line Hebrew-only
+
+**Requested:** (1) Remove the parenthetical from the vocabulary gloss `regime coup (opponents' term)` — the user wants to avoid parentheses in glosses — and flag any cases where dropping parentheses would be a bad idea. (2) Change Ivri's `fourRight` line from mixed Hebrew/English to Hebrew only.
+
+**Files changed:**
+- `vocab-data.js` — `politics_society_expanded` card at line 1554: English gloss `"regime coup (opponents' term)"` → `"regime coup"`. Hebrew (`הפיכה משטרית`) and niqqud unchanged.
+- `app/character-data.js` — `IVRI_DIALOGUE.fourRight`: `"מצוין. That's what I call quality control—keep executing."` → `"מצוין. זה מה שאני קורא לו בקרת איכות. ממשיכים לבצע."`, with per-word glosses added for the new Hebrew words (זה, מה, שאני, קורא, לו, בקרת, איכות, ממשיכים, לבצע).
+- `index.html` — cache-busted `vocab-data.js` → `?v=20260726e`, `app/character-data.js` → `?v=20260726f`.
+- `tests/vocab-data.test.js` — required-term expectation updated to `"regime coup"`.
+- `tests/character-mission.test.js` — approved-copy assertion updated to Ivri's new Hebrew line.
+
+**Behavior changed:** The Translation Match card for `הפיכה משטרית` now shows the gloss "regime coup" with no parenthetical. Ivri's four-correct reaction is now entirely in Hebrew (previously code-switched to English mid-line) and every word is glossable on tap.
+
+**Parenthesis audit (answer to the "bad idea?" question):** 16 parenthetical glosses remain in `vocab-data.js`. Removing the parenthetical is safe for the framing/register tags (`judicial reform (supporters' term)`, `hilarious (slang)`, `like (filler)`, `paracetamol (Acamol)`, `killing (participle)`, `confidence (self-confidence)`). It is risky for the disambiguators, where the bare English word maps to a different Hebrew word than the card teaches: `blind (window)` → תריס (vs. עיוור), `spell (magic)` → לחש, `root (linguistic)` → שורש (vs. a plant root), `sample (statistics)` → מדגם (vs. דוגמית), `iron (mineral)` → ברזל (vs. the appliance/verb), `pepper (bell)` → פלפל (vs. ground pepper), `to fire (dismiss)` → לפטר (vs. shooting), `owner (of a task)` → אחראי (vs. בעלים), `in-laws (parents' relationship)` → מחותנים (the specific co-parents-in-law sense), `hallucination (AI)` → הזיה של מודל, `to have time (to)` → להספיק. Those parentheses are carrying the meaning, not just a footnote.
+
+**Tests run:** `npm test` — 306 pass, 0 fail (one intermediate run failed only on the two assertions updated above, then passed).
+
+**Risks / regressions to check:** None expected. The `regime coup` gloss stays globally unique, so the gloss-collision and uniqueness guardrails are unaffected. Its paired card `judicial reform (supporters' term)` still has a parenthetical — if the framing symmetry matters, the pair should be revisited together.
+
+---
+
+### 2026-07-26 EDT — Reset the free-play companion reaction per game; add the lens sprite to the results screen
+
+**Requested:** (1) In free play the four-correct (`fourRight`) reaction persisted from one game into the next — refresh the companion to neutral when a new game starts. (2) Show the character sprite on the end-of-game review/results screen, toward the top.
+
+**Cause of (1):** `reduceAnswerState` marks the `fourRight` and `recovery` reactions `reactionTransient: false` on purpose, so they hold for the rest of a streak instead of fading after one answer. Nothing cleared the free-play container between games, so the next game opened mid-celebration with `correctStreak` still at 4+.
+
+**Files changed:**
+- `app/character.js` — added `character.resetFreePlayReaction()` (clears sprite/dialogue/streaks/transient flag on `state.freePlay`, no-ops while a mission is active, since a mission owns its own container). Added `character.renderResultsSprite(target, { accuracy, perfect })`, which removes any prior `.character-results-sprite` and prepends a lens-character sprite: `celebrating` on a perfect run, `struggling` under 50% accuracy, otherwise `neutral`. It returns false (and leaves nothing behind) with no lens chosen, during a mission, or for a `characterMission` summary, which renders its own hero sprite in `renderMissionResults`.
+- `app/controller.js` — call `resetFreePlayReaction()` in `openHomeLesson` (both the `shema` branch and the generic path, after the `isModeSessionActive` resume checks so re-entering a running game keeps its reaction) and in `continueFromResults` (Play Again), after the mission handoff.
+- `app/ui.js` — `renderSummaryState` now calls `app.character?.renderResultsSprite?.(runtime.el.resultsHead, { accuracy, perfect })`.
+- `index.html` — added `id="resultsHead"` to the existing `.results-head` div.
+- `app/bootstrap-runtime.js` — registered `resultsHead` in the element map.
+- `styles.css` — added `.character-results-sprite { width: min(34vw, 132px); }`.
+- `index.html` — cache-busted `styles.css` → `?v=20260726e`, `app/bootstrap-runtime.js` → `?v=20260726d`, `app/ui.js` → `?v=20260726d`, `app/character.js` → `?v=20260726f`, `app/controller.js` → `?v=20260726d`.
+- `tests/character-mission.test.js` — `loadCharacterModule` now accepts an optional `options.document`; added a minimal `createStubElement`/`freePlayState` helper pair and two tests: the reset clears a persisted `fourRight` and no-ops during a mission; the results sprite picks its frame from the score, replaces rather than stacks on re-render, and stays absent with no lens and on mission summaries.
+
+**Behavior changed:** Starting any free-play game from Home, or pressing Play Again on the results screen, now opens with the companion neutral and its streak counters at zero. Navigating back into a game that is still running preserves the current reaction, as before. The results screen now shows the lens character above the praise line, reacting to the score. Nothing changes when no free-play lens is set in Settings, and mission results are untouched.
+
+**Tests run:** `npm test` — baseline 306 pass / 0 fail; after the change 308 pass / 0 fail (the two new tests). Verified live at `http://localhost:3242` with the Ivri lens: a seeded `fourRight` state reset to neutral on `openHomeLesson` and on `continueFromResults`; resuming an active `lessonMatch` session kept `celebrating`/`fourRight`; results rendered `celebrating` at 100%, `neutral` at 80%, `struggling` at 20%; three consecutive `renderAll` passes left exactly one sprite node; clearing the lens removed it. No console errors. Screenshots taken at 375×812 and 1600×900.
+
+**Risks / regressions to check:** `renderSummaryState` runs on every `renderAll`, so a sprite node sits in the hidden `#resultsView` during play — harmless, and it matches how the rest of the results content already behaves. The reset is wired to the two controller entry points rather than to each game module's own `start*` function; a future game started outside `openHomeLesson`/`continueFromResults` would need the same call. Worth a physical iPhone Safari check that the 132px sprite does not crowd the praise line at the largest Dynamic Type sizes.
+
+---
+
+### 2026-07-26 EDT — Localize character names and the address labels; fix the Settings companion row
+
+**Requested:** (1) Show character names in English when the UI language is English. (2) Localize the character-address male/female labels the same way. (3) On Settings, bold the "Free-play companion" label like the other rows, and give the companion chooser room for more than one row of characters.
+
+**Files changed:**
+- `app/character.js` — added a `characterName(entry)` helper (`isHebrewUi() ? nameHe : nameEn`, each falling back to the other) and routed the five hardcoded `nameHe` reads through it: the picker card heading, the greeting-scene title, the free-play lens option labels, the mission-hub eyebrow, and the Characters review-tab heading. Localized the picker's gender buttons (`Male`/`Female` ↔ `זכר`/`נקבה`) and the "Choose Male or Female to continue" hint. `renderSettings` now sets the text and `dir` on the two `[data-character-gender]` options instead of only toggling their selected state.
+- `index.html` — gender toggle spans now carry the English default (`Male`/`Female`) since English is the app's default language; `renderSettings` swaps in the Hebrew. Added `settings-row--stacked` to the companion row and `settings-seg--wrap` to `#characterLensOptions`.
+- `styles.css` — `.settings-row--static .settings-row-label` gets `font-weight: 600` (button rows inherited it from `button`; the static div did not, so it rendered at 400). Added `.settings-row--stacked` (a two-column grid that drops the chooser onto its own row under the label) and `.settings-seg--wrap` (`flex-wrap: wrap`), with `justify-self: start` flipped to `end` under `body[data-ui-lang="he"]`.
+- `index.html` — cache-busted `styles.css` → `?v=20260726f`, `app/character.js` → `?v=20260726g`.
+- `tests/character-mission.test.js` — extended `createStubElement` with `classList.toggle`, an `innerHTML` setter that clears children, and attribute-selector support in `querySelectorAll`. Updated the markup assertions in "approved character copy" to the new English defaults. Added a test that drives `renderSettings` in both languages and asserts the gender labels, the four lens option labels, and the row label.
+
+**Behavior changed:** In English the character names read Ido / Inbal / Ivri everywhere they appear (picker, greeting, mission hub, Settings companion chooser, Characters review tab) and the address toggle reads Male / Female; Hebrew is unchanged. On Settings, "Free-play companion" is now bold like every other row, and the chooser sits on its own full-width line beneath the label, wrapping to more rows as characters are added instead of squeezing the label onto two lines.
+
+**Tests run:** `npm test` — 309 pass, 0 fail (was 308). Verified live at `http://localhost:3242` at 375×812 in both languages: Settings shows `["None","Ido","Inbal","Ivri"]` / `["Male","Female"]` with the label at `font-weight: 600` in English, and `["ללא","עידו","ענבל","עברי"]` / `["זכר","נקבה"]` right-aligned in Hebrew; the picker scene shows the English names, buttons, and hint; the Characters review tab returns English names in EN and Hebrew names in HE. No console errors.
+
+**Risks / regressions to check:** `characterName` falls back across languages, so a character added with only one name still renders. The address toggle's pre-JS markup is now English, so a Hebrew-UI user may see a one-frame `Male`/`Female` before `renderSettings` runs — the same tradeoff the rest of the `data-i18n` markup already makes. Companion-row wrapping was checked at 375px with four options; worth re-checking once a fifth character lands.

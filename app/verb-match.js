@@ -103,17 +103,23 @@ verbMatch.pickVerbMatchQueue = verbMatch.pickVerbMatchQueue || function pickVerb
   }
 
   const masterStreak = Math.max(1, Number(runtime.constants?.CONJUGATION_MASTER_STREAK || 10));
+  const characterWeigher = app.character?.buildContentWeigher?.(
+    "verb",
+    deck,
+    (entry) => ({ id: entry?.id || entry?.word?.id || "" }),
+  ) || (() => 1);
   const weighted = deck.map((entry) => {
     const wordId = entry?.id || entry?.word?.id || "";
     const rec = data.getProgressRecord?.(wordId) || {};
     const streak = Math.max(0, Math.min(masterStreak, Number(rec.conjugationStreak || 0)));
     const streakDamp = Math.max(0.2, 1 - (streak / masterStreak) * 0.8);
     const masteredDamp = data.isWordMastered?.(wordId) ? 0.35 : 1;
+    const characterBoost = characterWeigher(entry);
     const weight = utils.getAdaptiveWeight({
       attempts: rec.conjugationAttempts,
       correct: rec.conjugationCorrect,
       lastSeen: rec.lastConjugationSeen,
-    }) * streakDamp * masteredDamp;
+    }) * streakDamp * masteredDamp * characterBoost;
     return { word: entry, weight };
   });
 

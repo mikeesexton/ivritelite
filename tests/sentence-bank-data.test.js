@@ -571,6 +571,38 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     supreme court
     tel aviv
   `, "proper-name: geographic, legal, or institutional name"),
+  ...compactUnitMap(`
+    baal shem tov
+    bar yochai
+    garden eden
+    rabbi nachman
+    rabbi shimon
+  `, "proper-name: religious figure or scriptural place"),
+  ...compactUnitMap(`
+    divine presence
+    ein sof
+    ten sefirot
+    tikkun olam
+    tree life
+  `, "term: named concept in Kabbalah a learner should recognize whole"),
+  ...compactUnitMap(`
+    rosh hashanah
+    yom kippur
+  `, "proper-name: festival on the Hebrew calendar"),
+  ...compactUnitMap(`
+    atonement rite
+    harmful spirits
+    memorial candle
+    palm frond
+    penitential prayers
+    prayer shawl
+    study hall
+    traveller prayer
+    ultra orthodox
+  `, "term: ritual object, practice, or category — each is a vocabulary card gloss"),
+  ...compactUnitMap(`
+    sleight hand
+  `, "fixed-expression: lexicalized English idiom"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -739,15 +771,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 502 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 536 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 502);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 502);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 502);
+  assert.equal(entries.length, 536);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 536);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 536);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -775,10 +807,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 163,
-    everyday: 150,
-    professional: 98,
-    formal: 91,
+    colloquial: 164,
+    everyday: 169,
+    professional: 100,
+    formal: 103,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1564,4 +1596,55 @@ test("colloquial_130 points the loanword פארק with dagesh so TTS says park, 
   assert.ok(entry.hebrew_niqqud.normalize("NFC").includes(pointedPark), "sentence niqqud has dagesh in פארק");
   const parkToken = entry.hebrew_tokens_niqqud.find((token) => token.includes("פ"));
   assert.ok(parkToken.normalize("NFC").includes(pointedPark), "token niqqud has dagesh in פארק");
+});
+
+// A distractor that is the same word inflected for the other gender is a valid
+// alternative translation whenever the English is gender-neutral ("you", "we").
+// The bank's own answer to this is hebrewAlternates: a row may offer the other
+// gender as a distractor only if it also accepts that reading. Rows where the
+// English names the subject (he said / she wrote) or where the Hebrew supplies
+// the referent are real contrasts and are listed as exempt.
+test("gender-variant distractors are either accepted as alternates or removed", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const SECOND_PERSON_PRONOUNS = [["אתה", "את"], ["אתם", "אתן"]];
+  const ENGLISH_DISAMBIGUATES = new Set([
+    "colloquial_01",   // שמעתי (I heard) vs שמעת (you heard) — person, not gender
+    "colloquial_92", "colloquial_98", "colloquial_109", "colloquial_126",
+    "colloquial_127", "professional_47",              // English names he or she
+    "everyday_11", "everyday_84", "professional_38",  // referent is in the Hebrew
+    "everyday_92",   // the target את is the object marker, not the pronoun
+    "colloquial_89", // "it came out" takes masculine \u05d9\u05e6\u05d0 by convention here
+  ]);
+
+  function genderPairKind(a, b) {
+    if (a === b) return "";
+    for (const [m, f] of SECOND_PERSON_PRONOUNS) {
+      if ((a === m && b === f) || (a === f && b === m)) return "2nd-person pronoun";
+    }
+    if (a === `${b}\u05d9` || b === `${a}\u05d9`) return "2nd-person m/f";
+    if (a === `${b}\u05d4` || b === `${a}\u05d4`) return "singular participle m/f";
+    const plural = (x, y) => x.endsWith("\u05d9\u05dd") && y.endsWith("\u05d5\u05ea")
+      && x.slice(0, -2) === y.slice(0, -2);
+    if (plural(a, b) || plural(b, a)) return "plural participle m/f";
+    return "";
+  }
+
+  const offenders = [];
+  entries.forEach((entry) => {
+    if (ENGLISH_DISAMBIGUATES.has(entry.id)) return;
+    const acceptedTokens = new Set(
+      (entry.hebrew_alternates || []).flatMap((alternate) => alternate.tokens || []),
+    );
+    (entry.hebrew_distractors || []).forEach((distractor) => {
+      if (acceptedTokens.has(distractor)) return;
+      entry.hebrew_tokens.forEach((token) => {
+        const kind = genderPairKind(distractor, token);
+        if (kind) {
+          offenders.push(`${entry.id}: "${distractor}" is the ${kind} counterpart of target "${token}" and is not an accepted alternate`);
+        }
+      });
+    });
+  });
+
+  assert.deepEqual(offenders, []);
 });

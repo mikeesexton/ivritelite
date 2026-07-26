@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 142);
+  assert.equal(entries.length, 150);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -579,6 +579,14 @@ test("Inbal and Inat verbs expose verified pointed paradigms in conjugation", ()
     ["להתפלל", ["התפללנו", "נתפלל"]],
     ["לפרש", ["פירשה", "נפרש"]],
     ["למחות", ["מחינו", "נמחה"]],
+    ["להאמין", ["האמנו", "נאמין"]],
+    ["לצום", ["צמנו", "נצום"]],
+    ["לקדש", ["קידשנו", "נקדש"]],
+    ["לטבול", ["טבלנו", "נטבול"]],
+    ["לקלל", ["קיללנו", "נקלל"]],
+    ["לנחש", ["ניחשנו", "ננחש"]],
+    ["להשביע", ["השבענו", "נשביע"]],
+    ["להתגייר", ["התגיירנו", "נתגייר"]],
   ]);
 
   expected.forEach(([pastForm, futureForm], lemma) => {

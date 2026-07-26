@@ -218,6 +218,12 @@ test("applyTtsRespellings gives brunch and שולם stable phonetic speech forms
   assert.equal(speech.applyTtsRespellings("שֻׁלַּם"), "שׁוּלַּם");
 });
 
+test("applyTtsRespellings gives פאטוץ׳ a stable patootsh ending", () => {
+  const { speech } = loadSpeechHarness();
+  assert.equal(speech.applyTtsRespellings("פָּאטוּץ'!"), "פָּאטוּטְשׁ!");
+  assert.equal(speech.applyTtsRespellings("פאטוץ׳"), "פָּאטוּטְשׁ");
+});
+
 test("buildHebrewSpeechText applies TTS respellings to every text source", () => {
   const { speech } = loadSpeechHarness();
   const nfc = (text) => text.normalize("NFC");

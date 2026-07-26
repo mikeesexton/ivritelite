@@ -809,20 +809,8 @@ function buildSentenceClinicNote(note) {
 }
 
 function buildSentenceFeedbackDetail(question, isCorrect) {
-  const details = [];
-  if (!isCorrect) {
-    const singleWordTip = buildSingleWordMeaningTip(question);
-    if (singleWordTip) {
-      details.push(singleWordTip);
-    }
-  }
-
-  const rewritten = rewriteSentenceNoteForGame(question?.sentence?.notes);
-  if (rewritten) {
-    details.push(translate("feedback.sentenceBankGameTip", { detail: rewritten }));
-  }
-
-  return details.join(" ").trim();
+  if (isCorrect) return "";
+  return buildSingleWordMeaningTip(question);
 }
 
 function buildStructuredSentenceFeedback(question, isCorrect, correctAnswer) {
@@ -853,16 +841,6 @@ function buildStructuredSentenceFeedback(question, isCorrect, correctAnswer) {
 
   if (!isCorrect) {
     items.push(...buildSingleWordMeaningFeedbackItems(question));
-  }
-
-  const tip = rewriteSentenceNoteForGame(question?.sentence?.notes);
-  if (tip) {
-    items.push({
-      label: translate("feedback.tipLabel"),
-      value: tip,
-      dir: "ltr",
-      lang: "en",
-    });
   }
 
   return {
@@ -1156,6 +1134,11 @@ function pickWeightedPair(pairs) {
   const now = Date.now();
   const duePairs = getDuePairs(pairs, now);
   const activePairs = duePairs.length ? duePairs : pairs;
+  const characterWeigher = app.character?.buildContentWeigher?.(
+    "sentence",
+    activePairs,
+    (pair) => pair.sentence,
+  ) || (() => 1);
   const weightedPairs = activePairs.map((pair) => {
     const record = getSentenceProgressRecord(pair.sentence.id, pair.direction);
     const accuracy = record.attempts ? record.correct / record.attempts : 0;
@@ -1168,11 +1151,12 @@ function pickWeightedPair(pairs) {
     const levelBoost = 1 + ((Math.max(0, getRuntime().constants.LEITNER_INTERVALS.length - 1) - record.level) / Math.max(1, getRuntime().constants.LEITNER_INTERVALS.length - 1)) * 0.4;
     const missBoost = 1 + Math.min(3, Math.max(0, Number(record.misses || 0))) * (pair.direction === "en2he" ? 0.65 : 0.5);
     const difficultyBoost = 1 + (pair.sentence.difficulty - 1) * 0.28;
+    const characterBoost = characterWeigher(pair);
     const jitter = 0.78 + Math.random() * 0.55;
 
     return {
       word: pair,
-      weight: newBoost * dueBoost * weaknessBoost * levelBoost * missBoost * difficultyBoost * directionBoost * jitter,
+      weight: newBoost * dueBoost * weaknessBoost * levelBoost * missBoost * difficultyBoost * directionBoost * characterBoost * jitter,
     };
   });
 
@@ -1531,6 +1515,7 @@ sentenceBank.nextSentenceBankQuestion = sentenceBank.nextSentenceBankQuestion ||
     runtime.state.sentenceBank.currentRound += 1;
     runtime.state.sentenceBank.availableScore += question.scoreValue;
   }
+  app.character?.clearTransientReaction?.();
   runtime.state.sentenceBank.currentQuestion = question;
   h.clearFeedback?.();
   sentenceBank.renderSentenceBankQuestion();
@@ -1548,7 +1533,7 @@ sentenceBank.renderSentenceBankQuestion = sentenceBank.renderSentenceBankQuestio
   const h = getHelpers();
   const question = normalizeQuestionState(runtime.state.sentenceBank.currentQuestion);
   h.setGamePickerVisibility?.(false);
-  h.setPromptCardVisibility?.(!question?.locked);
+  h.setPromptCardVisibility?.(true);
   runtime.el.choiceContainer.classList.remove("summary-grid", "match-grid");
   runtime.el.choiceContainer.classList.add("sentence-bank-board");
   h.renderSessionHeader?.();

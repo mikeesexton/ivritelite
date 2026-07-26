@@ -1,0 +1,1112 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const test = require("node:test");
+const vm = require("node:vm");
+
+const PROJECT_ROOT = path.resolve(__dirname, "..");
+
+function loadCharacterModule(options = {}) {
+  const saved = options.saved || {};
+  const savedBonds = options.savedBonds || {};
+  const savedWrites = [];
+  const bondWrites = [];
+  let clearedSessionCount = 0;
+  const context = {
+    console,
+    Date,
+    setTimeout,
+    clearTimeout,
+    document: options.document,
+    IvriQuestApp: {
+      runtime: {
+        constants: { STORAGE_KEYS: { character: "character", characterBond: "characterBond" } },
+        state: {
+          language: "en",
+          route: "home",
+          summary: { active: false, game: "" },
+        },
+        helpers: { renderAll: () => {} },
+        // character.js schedules transient-reaction checks through runtime.global,
+        // the way bootstrap-runtime wires it in the real app.
+        get global() { return context; },
+        storageApi: {
+          loadJson: (key) => (key === "characterBond" ? savedBonds : saved),
+          saveJson: (key, value) => {
+            if (key === "characterBond") bondWrites.push(structuredClone(value));
+            else savedWrites.push(structuredClone(value));
+          },
+        },
+      },
+      persistence: {
+        clearPersistedSession: () => {
+          clearedSessionCount += 1;
+        },
+      },
+    },
+  };
+  context.window = context;
+  context.globalThis = context;
+  vm.createContext(context);
+  ["app/character-data.js", "app/character.js"].forEach((modulePath) => {
+    vm.runInContext(
+      fs.readFileSync(path.join(PROJECT_ROOT, modulePath), "utf8"),
+      context,
+      { filename: modulePath },
+    );
+  });
+  return {
+    character: context.IvriQuestApp.character,
+    characterData: context.IvriQuestApp.characterData,
+    app: context.IvriQuestApp,
+    context,
+    getClearedSessionCount: () => clearedSessionCount,
+    savedWrites,
+    bondWrites,
+  };
+}
+
+test("Ido positive streak reaches celebrating at four and persists until a miss", () => {
+  const { character } = loadCharacterModule();
+  let state = { correctStreak: 0, wrongStreak: 0 };
+  state = character.reduceAnswerState(state, true);
+  state = character.reduceAnswerState(state, true);
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.sprite, "neutral");
+
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.sprite, "celebrating");
+  assert.equal(state.dialogueKey, "fourRight");
+
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.sprite, "celebrating");
+  assert.equal(state.correctStreak, 5);
+
+  state = character.reduceAnswerState(state, false);
+  assert.equal(state.sprite, "nervous-laugh");
+  assert.equal(state.correctStreak, 0);
+  assert.equal(state.wrongStreak, 1);
+});
+
+test("Ido negative streak persists and the first recovery answer is transient", () => {
+  const { character } = loadCharacterModule();
+  let state = { correctStreak: 0, wrongStreak: 0 };
+  for (let index = 0; index < 4; index += 1) {
+    state = character.reduceAnswerState(state, false);
+  }
+  assert.equal(state.sprite, "struggling");
+  assert.equal(state.dialogueKey, "fourWrong");
+
+  state = character.reduceAnswerState(state, false);
+  assert.equal(state.sprite, "struggling");
+  assert.equal(state.wrongStreak, 5);
+
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.sprite, "celebrating");
+  assert.equal(state.dialogueKey, "recovery");
+  assert.equal(state.correctStreak, 1);
+
+  // Recovery holds for the rest of the streak instead of fading after one
+  // answer, so the reward stays on screen while the run is still going.
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.sprite, "celebrating");
+  assert.equal(state.dialogueKey, "recovery");
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.dialogueKey, "recovery");
+  assert.equal(state.correctStreak, 3);
+
+  // The four-in-a-row reaction takes over from it.
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.correctStreak, 4);
+  assert.equal(state.sprite, "celebrating");
+  assert.equal(state.dialogueKey, "fourRight");
+
+  // A miss still clears it.
+  state = character.reduceAnswerState(state, false);
+  assert.equal(state.sprite, "nervous-laugh");
+  assert.equal(state.dialogueKey, "oneWrong");
+});
+
+test("Ido uses the recovery line after any wrong-answer streak", () => {
+  const { character } = loadCharacterModule();
+  let state = character.reduceAnswerState({ correctStreak: 3, wrongStreak: 0 }, false);
+  assert.equal(state.sprite, "nervous-laugh");
+  assert.equal(state.reactionTransient, true);
+
+  state = character.reduceAnswerState(state, true);
+  assert.equal(state.sprite, "celebrating");
+  assert.equal(state.dialogueKey, "recovery");
+  assert.equal(state.correctStreak, 1);
+  assert.equal(state.wrongStreak, 0);
+});
+
+test("Ido mission exposes all nine full activities in the intended order", () => {
+  const { character } = loadCharacterModule();
+  assert.deepEqual(
+    Array.from(character.getActivityOrder(), (activity) => activity.id),
+    [
+      "lessonMatch",
+      "sentenceBank",
+      "shema",
+      "verbMatch",
+      "abbrMatch",
+      "advConj",
+      "prepositions",
+      "binyanBoard",
+      "handwriting",
+    ],
+  );
+});
+
+test("approved character copy and gender labels come from the registry", () => {
+  const { characterData } = loadCharacterModule();
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  const ido = characterData.characters.ido.dialogue;
+  const inbal = characterData.characters.inbal.dialogue;
+  const ivri = characterData.characters.ivri.dialogue;
+
+  assert.equal(ido.description.text, "הוא גיי");
+  assert.equal(ido.description.glosses["גיי"], "gay");
+  assert.equal(ido.fourRight.text, "אוקיייי, עכשיו אנחנו מדברים.");
+  assert.equal(ido.recovery.text, "לא נפלת, סתם עשית ווגינג.");
+  assert.equal(ido.prepositions.glosses["מילת"], "preposition");
+  assert.equal(inbal.description.text, "מיסטית. רוחנית. דתית. אין הבדל.");
+  assert.equal(inbal.recovery.text, "הקללה נשברה.");
+  assert.equal(inbal.abbreviations.text, "קפיצת הדרך: מתחילת המילה לסופה, בלי לעבור באמצע.");
+  assert.equal(inbal.fourWrong.text, "צריך לשבור את הקללה הזאת. נשימה, ומתחילים מחדש.");
+  assert.equal(ivri.description.text, "הייטק. הון סיכון. אקזיט. הכל ביזנס.");
+  assert.equal(ivri.fourRight.text, "מצוין. זה מה שאני קורא לו בקרת איכות. ממשיכים לבצע.");
+  assert.equal(ivri.mission.text, "סגרנו את הסיבוב בהצלחה. מחר חוזרים לעבוד.");
+  assert.equal(ivri.abbreviationsM.text, "זמן זה משאב יקר. קיצורים יביאו אותנו לדדליין. בוא נתחיל.");
+
+  // The markup carries the English default (the app's default language);
+  // renderSettings swaps in זכר/נקבה when the UI language is Hebrew.
+  assert.match(markup, /data-character-gender="m">Male</);
+  assert.match(markup, /data-character-gender="f">Female</);
+});
+
+test("every character supplies a line for every key the engine can request", () => {
+  const { character, characterData } = loadCharacterModule();
+  const introKeys = character.getActivityOrder().map((activity) => activity.intro);
+  const requiredKeys = ["description", "first", "greeting", "fourRight", "oneWrong",
+    "fourWrong", "recovery", "perfect", "mission", ...introKeys];
+
+  Object.values(characterData.characters).forEach((entry) => {
+    requiredKeys.forEach((key) => {
+      const resolved = entry.dialogue[`${key}M`] || entry.dialogue[key] ||
+        entry.dialogue[characterData.DIALOGUE_FALLBACKS[key]];
+      assert.ok(resolved?.text, `${entry.id} cannot resolve dialogue key "${key}"`);
+    });
+  });
+});
+
+test("gendered lines resolve per character and ungendered lines are shared", () => {
+  const { characterData } = loadCharacterModule();
+  const inbal = characterData.characters.inbal.dialogue;
+  const ivri = characterData.characters.ivri.dialogue;
+
+  assert.equal(inbal.listeningM.text, "שמע. תקשיב. עצום עיניים.");
+  assert.equal(inbal.listeningF.text, "שמעי. תקשיבי. עצמי עיניים.");
+  assert.equal(inbal.vocabularyF.text, "כל מילה מסתירה סוד. בואי נגלה.");
+  assert.equal(inbal.handwritingF.text, "עכשיו את חורטת. ככה נכתבים לחשים.");
+  assert.equal(inbal.oneWrongF.text, "זה לא את—זה מזל רע רגעי.");
+  // Lines with no gender agreement stay single-variant rather than duplicated.
+  ["greeting", "fourRight", "fourWrong", "recovery", "perfect", "mission", "binyanim"]
+    .forEach((key) => {
+      assert.ok(inbal[key], `inbal ${key} should exist unsuffixed`);
+      assert.equal(inbal[`${key}M`], undefined, `inbal ${key} should not be gendered`);
+    });
+
+  assert.equal(ivri.firstM.text, "ברוך הבא לבורד. בוא נהפוך את העברית שלך ליוניקורן הבא.");
+  assert.equal(ivri.firstF.text, "ברוכה הבאה לבורד. בואי נהפוך את העברית שלך ליוניקורן הבא.");
+  assert.equal(ivri.listeningM.text, "המשקיעים מדברים. תקשיב טוב לפידבק.");
+  assert.equal(ivri.listeningF.text, "המשקיעים מדברים. תקשיבי טוב לפידבק.");
+  assert.equal(ivri.handwritingF.text, "הפגישה הזאת סודית, בלי מחשבים בחדר. קחי עט ותכתבי מהר.");
+  ["fourRight", "fourWrong", "recovery", "perfect", "mission", "vocabulary", "advConj", "binyanim"]
+    .forEach((key) => {
+      assert.ok(ivri[key], `ivri ${key} should exist unsuffixed`);
+      assert.equal(ivri[`${key}M`], undefined, `ivri ${key} should not be gendered`);
+    });
+});
+
+test("sprite CSS and assets exist for every character reaction", () => {
+  const { characterData } = loadCharacterModule();
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  const reactions = ["neutral", "frustrated", "celebrating", "struggling", "mission-complete", "nervous-laugh"];
+
+  Object.keys(characterData.characters).forEach((id) => {
+    reactions.forEach((reaction) => {
+      assert.match(css, new RegExp(
+        `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png`,
+        "s",
+      ));
+      assert.equal(
+        fs.existsSync(path.join(PROJECT_ROOT, `assets/${id}/${reaction}.png`)),
+        true,
+        `assets/${id}/${reaction}.png is missing`,
+      );
+    });
+  });
+  assert.doesNotMatch(css, /ido-sprite/);
+  assert.match(
+    fs.readFileSync(path.join(PROJECT_ROOT, "scripts/build-ido-sprites.py"), "utf8"),
+    /regenerated-transparent\.png/,
+  );
+});
+
+test("character routing boosts owned content and stays neutral otherwise", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dailyChoice: "inbal",
+    mission: { active: true },
+  };
+
+  assert.ok(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }) > 1);
+  assert.equal(character.getContentWeight("vocab", { category: "cooking_verbs" }), 1);
+  assert.ok(character.getContentWeight("sentence", { id: "inbal_04" }) > 1);
+  assert.equal(character.getContentWeight("sentence", { id: "colloquial_01", category: "colloquial" }), 1);
+  assert.ok(character.getContentWeight("verb", { id: "character-verb-levarech--sense-1" }) > 1);
+  assert.ok(character.getContentWeight("abbreviation", { bucket: "People, Health & Culture" }) > 1);
+  assert.equal(character.getContentWeight("abbreviation", { bucket: "Daily Life & Home" }), 1);
+
+  // Ido owns colloquial sentences and the slang verbs instead.
+  app.runtime.characterState.dailyChoice = "ido";
+  assert.ok(character.getContentWeight("sentence", { id: "colloquial_01", category: "colloquial" }) > 1);
+  assert.ok(character.getContentWeight("verb", { id: "advanced-verb-laharos--sense-1" }) > 1);
+  assert.equal(character.getContentWeight("sentence", { id: "inbal_04" }), 1);
+
+  // Ivri owns professional, business, finance, and high-tech content.
+  app.runtime.characterState.dailyChoice = "ivri";
+  assert.ok(character.getContentWeight("vocab", { category: "technology_ai_expanded" }) > 1);
+  assert.ok(character.getContentWeight("sentence", { id: "professional_01", category: "professional" }) > 1);
+  assert.ok(character.getContentWeight("verb", { id: "starter-verb-letachnen--sense-1" }) > 1);
+  assert.ok(character.getContentWeight("abbreviation", { bucket: "Ideas, Science & Tech" }) > 1);
+  assert.equal(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }), 1);
+
+  // Free play and no-mission states must never bias the pools.
+  app.runtime.characterState.dailyChoice = "free";
+  assert.equal(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }), 1);
+  app.runtime.characterState = { dailyChoice: "inbal", mission: null };
+  assert.equal(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }), 1);
+});
+
+test("the content weigher solves for the target owned share and stays neutral off-mission", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "inbal", mission: { active: true } };
+
+  // 20 owned of 1000 still has to reach the documented share, which a fixed
+  // multiplier could not do across differently sized content pools.
+  const items = [
+    ...Array.from({ length: 20 }, () => ({ category: "religion_magic_spirituality" })),
+    ...Array.from({ length: 980 }, () => ({ category: "core_advanced" })),
+  ];
+  const weigh = character.buildContentWeigher("vocab", items);
+  const ownedMass = 20 * weigh(items[0]);
+  const restMass = 980 * weigh(items[999]);
+  assert.equal(Math.round((ownedMass / (ownedMass + restMass)) * 100), 65);
+
+  // A pool with nothing owned, or entirely owned, must not be reweighted.
+  assert.equal(character.buildContentWeigher("vocab", [{ category: "core_advanced" }])({}), 1);
+  assert.equal(
+    character.buildContentWeigher("vocab", [{ category: "religion_magic_spirituality" }])({}),
+    1,
+  );
+
+  app.runtime.characterState.dailyChoice = "free";
+  assert.equal(character.buildContentWeigher("vocab", items)(items[0]), 1);
+  app.runtime.characterState = { dailyChoice: "inbal", mission: null };
+  assert.equal(character.buildContentWeigher("vocab", items)(items[0]), 1);
+});
+
+test("every vocabulary category belongs to exactly one performance domain", () => {
+  const vocabContext = { window: {}, globalThis: {} };
+  vocabContext.window = vocabContext;
+  vocabContext.globalThis = vocabContext;
+  vm.createContext(vocabContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "vocab-data.js"), "utf8"),
+    vocabContext,
+    { filename: "vocab-data.js" },
+  );
+  const bootstrapContext = { window: {}, globalThis: {} };
+  bootstrapContext.window = bootstrapContext;
+  bootstrapContext.globalThis = bootstrapContext;
+  vm.createContext(bootstrapContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "app/bootstrap-data.js"), "utf8"),
+    bootstrapContext,
+    { filename: "app/bootstrap-data.js" },
+  );
+
+  const bootstrapData = bootstrapContext.IvriQuestApp.bootstrapData;
+  const domains = bootstrapData.PERFORMANCE_DOMAINS;
+  const categories = new Set(
+    vocabContext.IvriQuestVocab.getBaseVocabulary().map((word) => word.category),
+  );
+
+  // FALLBACK_DOMAIN_ID is derived from the last domain, so appending a domain
+  // would silently turn it into the catch-all bucket.
+  assert.equal(bootstrapData.FALLBACK_DOMAIN_ID, "formal");
+  assert.equal(domains[domains.length - 1].id, "formal");
+
+  categories.forEach((category) => {
+    const owners = domains.filter((domain) => domain.categories.has(category)).map((domain) => domain.id);
+    assert.equal(owners.length, 1, `${category} maps to ${owners.length} domains: ${owners.join(", ") || "none"}`);
+  });
+
+  const i18n = bootstrapData.I18N;
+  domains.forEach((domain) => {
+    assert.ok(i18n.en.domain[domain.id], `missing English label for domain ${domain.id}`);
+    assert.ok(i18n.he.domain[domain.id], `missing Hebrew label for domain ${domain.id}`);
+  });
+});
+
+test("the welcome prompt takes visual precedence over the daily picker", () => {
+  const characterSource = fs.readFileSync(path.join(PROJECT_ROOT, "app/character.js"), "utf8");
+  const uiSource = fs.readFileSync(path.join(PROJECT_ROOT, "app/ui.js"), "utf8");
+  assert.match(characterSource, /character\.isBlocking\(\) && !runtime\.state\?\.welcomeModalOpen/);
+  assert.match(uiSource, /runtime\.state\.welcomeModalOpen = false;\s*runtime\.helpers\?\.renderAll\?\.\(\);/);
+  assert.doesNotMatch(uiSource, /renderWelcomeModal[\s\S]*character\?\.isBlocking/);
+});
+
+test("mission results use a centered two-button action group", () => {
+  const characterSource = fs.readFileSync(path.join(PROJECT_ROOT, "app/character.js"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  assert.match(characterSource, /classList\.add\("mission-results-actions"\)/);
+  assert.match(css, /\.results-actions\.mission-results-actions\s*\{[^}]*margin-inline:\s*auto;[^}]*repeat\(2,/s);
+});
+
+test("a saved mission from a prior day is discarded before ordinary session restore", () => {
+  const { character, app, getClearedSessionCount, savedWrites } = loadCharacterModule({
+    saved: {
+      dayKey: "2000-01-01",
+      gender: "f",
+      hasChosen: { ido: true },
+      dailyChoice: "ido",
+      screen: "none",
+      mission: {
+        active: true,
+        activities: ["lessonMatch"],
+        currentActivity: "lessonMatch",
+      },
+    },
+  });
+
+  assert.equal(character.initialize(), false);
+  assert.equal(getClearedSessionCount(), 1);
+  assert.equal(app.runtime.characterState.screen, "picker");
+  assert.equal(app.runtime.characterState.dailyChoice, "");
+  assert.equal(app.runtime.characterState.mission, null);
+  assert.equal(app.runtime.characterState.gender, "f");
+  assert.equal(savedWrites.at(-1).screen, "picker");
+});
+
+test("same-day missions migrate legacy sheet coordinates to semantic sprite names", () => {
+  const now = new Date();
+  const dayKey = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+  const { character, app } = loadCharacterModule({
+    saved: {
+      dayKey,
+      gender: "m",
+      hasChosen: { ido: true },
+      dailyChoice: "ido",
+      screen: "none",
+      mission: {
+        active: true,
+        activities: ["lessonMatch"],
+        currentActivity: "lessonMatch",
+        sprite: "bottom-left",
+      },
+    },
+  });
+
+  assert.equal(character.initialize(), true);
+  assert.equal(app.runtime.characterState.mission.sprite, "celebrating");
+});
+
+test("capturing a completed activity advances the mission without shortening the game", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true,
+      completed: false,
+      activities: ["lessonMatch", "sentenceBank"],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "lessonMatch",
+      results: [],
+      visible: true,
+    },
+  };
+
+  assert.equal(character.captureActivitySummary({
+    correctCount: 20,
+    incorrectCount: 2,
+    elapsedSeconds: 187,
+    mistakes: [{ primary: "test" }],
+  }), true);
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(app.runtime.characterState.mission.onHub, true);
+  assert.equal(app.runtime.characterState.mission.currentIndex, 1);
+  assert.equal(app.runtime.characterState.mission.currentActivity, "");
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(app.runtime.characterState.mission.results[0])),
+    {
+      id: "lessonMatch",
+      nameEn: "Vocabulary",
+      nameHe: "אוצר מילים",
+      correctCount: 20,
+      incorrectCount: 2,
+      elapsedSeconds: 187,
+      mistakes: [{ primary: "test" }],
+      skipped: false,
+    },
+  );
+});
+
+test("an active mission can pause on its home hub without discarding the current game", () => {
+  const { character, app } = loadCharacterModule();
+  app.session = {
+    hasActiveLearnSession: () => true,
+    stopVerbMatchTimer: () => {},
+    stopLessonTimer: () => {},
+    stopSentenceBankTimer: () => {},
+    stopAbbreviationTimer: () => {},
+    stopWordMatchTimer: () => {},
+  };
+  app.runtime.state.mode = "sentenceBank";
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    mission: {
+      active: true,
+      completed: false,
+      onHub: false,
+      activities: ["sentenceBank"],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "sentenceBank",
+      results: [],
+      visible: true,
+    },
+  };
+
+  assert.equal(character.showMissionHub(), true);
+  assert.equal(character.shouldShowMissionHub(), true);
+  assert.equal(app.runtime.characterState.mission.currentActivity, "sentenceBank");
+  assert.equal(app.runtime.state.mode, "home");
+  assert.equal(app.runtime.state.route, "home");
+});
+
+test("a paused mission hub may navigate to Review or Settings while its game remains active", () => {
+  const { character, app, context } = loadCharacterModule();
+  app.runtime.state.wordMatch = { active: true };
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    mission: {
+      active: true,
+      completed: false,
+      onHub: true,
+      activities: ["lessonMatch"],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "lessonMatch",
+      results: [],
+      visible: true,
+    },
+  };
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "app/session.js"), "utf8"),
+    context,
+    { filename: "app/session.js" },
+  );
+
+  assert.equal(app.session.resolveInitialRoute("review"), "review");
+  assert.equal(app.session.resolveInitialRoute("settings"), "settings");
+  app.runtime.characterState.mission.onHub = false;
+  assert.equal(app.session.resolveInitialRoute("review"), "home");
+});
+
+test("companion and result layout lock Ido to the right of his bubble", () => {
+  const source = fs.readFileSync(path.join(PROJECT_ROOT, "app/character.js"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  assert.match(source, /toggle\.textContent = visible \? "hide" : "show";/);
+  assert.match(css, /\.character-companion\s*\{[^}]*position:\s*fixed;[^}]*direction:\s*ltr;/s);
+  assert.match(css, /grid-template-areas:\s*"bubble sprite"/);
+  assert.match(css, /\.mission-results-hero\s*\{[^}]*direction:\s*ltr;/s);
+  assert.match(css, /\.character-word-gloss\s*\{[^}]*position:\s*absolute;[^}]*bottom:\s*calc\(100% \+ 0\.38rem\);/s);
+  assert.match(source, /clampCompanionPosition/);
+  assert.match(source, /setPointerCapture/);
+});
+
+test("the final activity produces one aggregate mission summary and the final sprite", () => {
+  const { character, app } = loadCharacterModule();
+  let summaryConfig = null;
+  app.session = {
+    showSessionSummary: (config) => {
+      summaryConfig = config;
+      app.runtime.state.summary.game = config.game;
+    },
+  };
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true,
+      completed: false,
+      activities: ["lessonMatch"],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "lessonMatch",
+      results: [],
+      visible: false,
+    },
+  };
+
+  assert.equal(character.captureActivitySummary({
+    correctCount: 18,
+    incorrectCount: 2,
+    elapsedSeconds: 205,
+    mistakes: [{ primary: "מילה" }],
+  }), true);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(summaryConfig)),
+    {
+      game: "characterMission",
+      correctCount: 18,
+      incorrectCount: 2,
+      elapsedSeconds: 205,
+      mistakes: [{ primary: "מילה" }],
+    },
+  );
+  assert.equal(app.runtime.characterState.screen, "results");
+  assert.equal(app.runtime.characterState.mission.active, false);
+  assert.equal(app.runtime.characterState.mission.completed, true);
+  assert.equal(app.runtime.characterState.mission.visible, true);
+  assert.equal(app.runtime.characterState.mission.sprite, "mission-complete");
+  assert.equal(app.runtime.characterState.mission.dialogueKey, "mission");
+  assert.equal(app.runtime.state.route, "results");
+});
+
+test("continuing to Free Play keeps the completed Ido choice locked for the same day", () => {
+  const { character, app, savedWrites } = loadCharacterModule();
+  app.session = {
+    clearSummaryState: () => {
+      app.runtime.state.summary.active = false;
+      app.runtime.state.summary.game = "";
+    },
+  };
+  app.runtime.state.summary = { active: true, game: "characterMission" };
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "f",
+    dailyChoice: "ido",
+    screen: "results",
+    reviewOpen: true,
+    mission: {
+      active: false,
+      completed: true,
+      activities: ["lessonMatch"],
+      skippedActivities: [],
+      currentIndex: 1,
+      currentActivity: "",
+      results: [],
+      visible: true,
+      sprite: "mission-complete",
+      dialogueKey: "mission",
+    },
+  };
+
+  assert.equal(character.handleResultsContinue(), true);
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(app.runtime.characterState.dailyChoice, "ido");
+  assert.equal(app.runtime.characterState.mission.completed, true);
+  assert.equal(savedWrites.at(-1).screen, "none");
+
+  const reloaded = loadCharacterModule({ saved: savedWrites.at(-1) });
+  assert.equal(reloaded.character.initialize(), true);
+  assert.equal(reloaded.app.runtime.characterState.screen, "none");
+  assert.equal(reloaded.app.runtime.characterState.dailyChoice, "ido");
+  assert.equal(reloaded.app.runtime.characterState.mission.completed, true);
+  assert.equal(reloaded.getClearedSessionCount(), 0);
+});
+
+test("the free-play lens routes content and reacts without a mission", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "f", hasChosen: {},
+    dailyChoice: "free", pendingChoice: "", lensCharacter: "inbal",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "none", reviewOpen: false, mission: null,
+  };
+
+  // Routing follows the lens even though no mission is running.
+  assert.ok(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }) > 1);
+  assert.ok(character.buildContentWeigher("vocab", [
+    { category: "religion_magic_spirituality" }, { category: "core_advanced" },
+  ])({ category: "religion_magic_spirituality" }) > 1);
+
+  // Reactions accumulate on the free-play container, not on a mission.
+  for (let index = 0; index < 4; index += 1) character.recordAnswer(false);
+  assert.equal(app.runtime.characterState.freePlay.sprite, "struggling");
+  assert.equal(app.runtime.characterState.mission, null);
+  character.recordAnswer(true);
+  assert.equal(app.runtime.characterState.freePlay.dialogueKey, "recovery");
+
+  // With no lens at all, nothing routes and nothing reacts.
+  app.runtime.characterState.lensCharacter = "";
+  app.runtime.characterState.freePlay.sprite = "neutral";
+  assert.equal(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }), 1);
+  character.recordAnswer(false);
+  assert.equal(app.runtime.characterState.freePlay.sprite, "neutral");
+});
+
+test("leaving completed results shows the newly selected free-play companion", () => {
+  const { character, app } = loadCharacterModule();
+  const companionClasses = {};
+  const spriteClasses = {};
+  const spriteAttributes = {};
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: { inbal: true },
+    dailyChoice: "inbal", pendingChoice: "", lensCharacter: "ido",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "results", reviewOpen: true,
+    mission: { active: false, completed: true, onHub: false, tier: "short",
+      activities: ["lessonMatch"], skippedActivities: [], currentIndex: 1,
+      currentActivity: "", results: [], correctStreak: 0, wrongStreak: 0,
+      sprite: "mission-complete", dialogueKey: "mission", reactionTransient: false,
+      reactionQuestionKey: "", visible: true, companionPosition: null, startedAt: Date.now() },
+  };
+  app.runtime.el = {
+    characterCompanion: {
+      classList: { toggle: (name, enabled) => { companionClasses[name] = enabled; } },
+      style: { removeProperty: () => {} },
+    },
+    characterCompanionSprite: {
+      dataset: {},
+      classList: { toggle: (name, enabled) => { spriteClasses[name] = enabled; } },
+      setAttribute: (name, value) => { spriteAttributes[name] = value; },
+    },
+  };
+  app.session = { hasActiveLearnSession: () => true };
+
+  assert.equal(character.handleNavigation("settings"), false);
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(app.runtime.characterState.reviewOpen, false);
+
+  character.renderCompanion();
+  assert.equal(companionClasses.hidden, false);
+  assert.equal(app.runtime.el.characterCompanionSprite.dataset.character, "ido");
+  assert.equal(app.runtime.el.characterCompanionSprite.dataset.reaction, "neutral");
+  assert.equal(spriteClasses.hidden, false);
+  assert.equal(spriteAttributes["aria-label"], "Ido");
+});
+
+test("reload repairs a stale completed-result screen before rendering free play", () => {
+  const { character, app } = loadCharacterModule();
+  const companionClasses = {};
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: { inbal: true },
+    dailyChoice: "inbal", pendingChoice: "", lensCharacter: "ido",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "results", reviewOpen: true,
+    mission: { active: false, completed: true, onHub: false, tier: "short",
+      activities: ["lessonMatch"], skippedActivities: [], currentIndex: 1,
+      currentActivity: "", results: [], correctStreak: 0, wrongStreak: 0,
+      sprite: "mission-complete", dialogueKey: "mission", reactionTransient: false,
+      reactionQuestionKey: "", visible: true, companionPosition: null, startedAt: Date.now() },
+  };
+  app.runtime.el = {
+    characterCompanion: {
+      classList: { toggle: (name, enabled) => { companionClasses[name] = enabled; } },
+      style: { removeProperty: () => {} },
+    },
+    characterCompanionSprite: {
+      dataset: {},
+      classList: { toggle: () => {} },
+      setAttribute: () => {},
+    },
+  };
+  app.session = { hasActiveLearnSession: () => true };
+
+  character.render();
+
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(app.runtime.characterState.reviewOpen, false);
+  assert.equal(companionClasses.hidden, false);
+  assert.equal(app.runtime.el.characterCompanionSprite.dataset.character, "ido");
+});
+
+test("a running mission owns the lens and blocks Settings from changing it", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: { ido: true },
+    dailyChoice: "ido", pendingChoice: "", lensCharacter: "ido",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "none", reviewOpen: false,
+    mission: { active: true, completed: false, onHub: false, tier: "short",
+      activities: ["lessonMatch"], skippedActivities: [], currentIndex: 0,
+      currentActivity: "lessonMatch", results: [], correctStreak: 0, wrongStreak: 0,
+      sprite: "neutral", dialogueKey: "", reactionTransient: false, reactionQuestionKey: "",
+      visible: true, companionPosition: null, startedAt: Date.now() },
+  };
+
+  assert.equal(character.canChangeLens(), false);
+  assert.equal(character.setLensCharacter("inbal"), false);
+  assert.equal(app.runtime.characterState.lensCharacter, "ido");
+  // The mission's own content bias must be unaffected by the attempt.
+  assert.ok(character.getContentWeight("sentence", { id: "colloquial_01", category: "colloquial" }) > 1);
+
+  // Reactions land on the mission while it runs, leaving free play untouched.
+  character.recordAnswer(false);
+  assert.equal(app.runtime.characterState.mission.sprite, "nervous-laugh");
+  assert.equal(app.runtime.characterState.freePlay.sprite, "neutral");
+
+  app.runtime.characterState.mission.active = false;
+  assert.equal(character.canChangeLens(), true);
+  assert.equal(character.setLensCharacter("inbal"), true);
+  assert.equal(app.runtime.characterState.lensCharacter, "inbal");
+});
+
+test("bond XP accrues per correct answer, doubles on owned content, and levels up", () => {
+  const { character, app, bondWrites } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "f", hasChosen: {},
+    dailyChoice: "free", pendingChoice: "", lensCharacter: "inbal",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "none", reviewOpen: false, mission: null,
+  };
+
+  const start = character.getBondProgress("inbal");
+  assert.deepEqual(
+    { xp: start.xp, level: start.level, days: start.daysInteracted, missions: start.missions },
+    { xp: 0, level: 0, days: 0, missions: 0 },
+  );
+
+  // No routable item resolvable -> single XP. Wrong answers earn nothing.
+  character.recordAnswer(true);
+  assert.equal(character.getBondProgress("inbal").xp, 1);
+  character.recordAnswer(false);
+  assert.equal(character.getBondProgress("inbal").xp, 1);
+
+  // A sentence Inbal owns is worth double.
+  app.runtime.state.mode = "sentenceBank";
+  app.runtime.state.sentenceBank = { currentQuestion: { sentence: { id: "inbal_04" } } };
+  character.recordAnswer(true);
+  assert.equal(character.getBondProgress("inbal").xp, 3);
+
+  // Someone else's material still counts, but only once.
+  app.runtime.state.sentenceBank = { currentQuestion: { sentence: { id: "colloquial_01", category: "colloquial" } } };
+  character.recordAnswer(true);
+  assert.equal(character.getBondProgress("inbal").xp, 4);
+
+  // Level 1 needs 60 XP; check the threshold rather than trusting the curve.
+  for (let index = 0; index < 56; index += 1) character.recordAnswer(true);
+  assert.equal(character.getBondProgress("inbal").xp, 60);
+  assert.equal(character.getBondProgress("inbal").level, 1);
+  assert.equal(character.getBondProgress("inbal").xpIntoLevel, 0);
+  assert.equal(character.getBondProgress("inbal").xpForNextLevel, 120);
+
+  // One day of play counts once, and Ido's bond is untouched throughout.
+  assert.equal(character.getBondProgress("inbal").daysInteracted, 1);
+  assert.equal(character.getBondProgress("ido").xp, 0);
+  assert.ok(bondWrites.length > 0, "bond writes go to their own storage key");
+  assert.equal(bondWrites.at(-1).inbal.xp, 60);
+});
+
+test("bond progress survives the day rollover that wipes mission state", () => {
+  const today = new Date();
+  const key = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const { character, app } = loadCharacterModule({
+    saved: { dayKey: "2000-01-01", gender: "f", hasChosen: { inbal: true }, lensCharacter: "inbal" },
+    savedBonds: { inbal: { xp: 250, missions: 3, days: ["2026-07-24", "2026-07-25"] } },
+  });
+
+  // A prior-day save is discarded, so the mission is gone...
+  assert.equal(character.initialize(), false);
+  assert.equal(app.runtime.characterState.mission, null);
+  assert.equal(app.runtime.characterState.dayKey, key);
+  // ...but the relationship and the lens preference both persist.
+  assert.equal(app.runtime.characterState.lensCharacter, "inbal");
+  const bond = character.getBondProgress("inbal");
+  assert.equal(bond.xp, 250);
+  assert.equal(bond.missions, 3);
+  assert.equal(bond.daysInteracted, 2);
+  assert.equal(bond.level, 2);
+});
+
+test("completing a mission awards the mission bond bonus once", () => {
+  const { character, app } = loadCharacterModule();
+  app.session = { showSessionSummary: () => {} };
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: { ido: true },
+    dailyChoice: "ido", pendingChoice: "", lensCharacter: "ido",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "none", reviewOpen: false,
+    mission: { active: true, completed: false, onHub: false, tier: "short",
+      activities: ["lessonMatch"], skippedActivities: [], currentIndex: 1,
+      currentActivity: "", results: [{ id: "lessonMatch", nameEn: "Vocabulary", nameHe: "אוצר מילים",
+        correctCount: 10, incorrectCount: 0, elapsedSeconds: 60, mistakes: [], skipped: false }],
+      correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true,
+      companionPosition: null, startedAt: Date.now() },
+  };
+
+  character.finishMission();
+  const bond = character.getBondProgress("ido");
+  assert.equal(bond.missions, 1);
+  assert.equal(bond.xp, 40);
+  assert.equal(character.getBondProgress("inbal").missions, 0);
+});
+
+test("static sprite syncing does not overwrite renderer-owned sprites", () => {
+  const source = fs.readFileSync(path.join(PROJECT_ROOT, "app/character.js"), "utf8");
+  // A broad `.character-sprite[data-character]` sweep repointed every sprite on
+  // the page at the active character, so the Review cards all showed one face.
+  assert.match(source, /querySelectorAll\?\.\(["']\.intro-character-sprite["']\)/);
+  assert.doesNotMatch(source, /querySelectorAll\?\.\(["']\.character-sprite\[data-character\]["']\)/);
+
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  // Every static sprite in the markup must be reachable by that narrower hook,
+  // except the companion, which renderCompanion sets directly.
+  const staticSprites = markup.match(/class="character-sprite[^"]*"/g) || [];
+  const introSprites = staticSprites.filter((cls) => cls.includes("intro-character-sprite"));
+  assert.equal(staticSprites.length - introSprites.length, 1, "only the companion is set by its renderer");
+});
+
+test("the Characters review tab is registered everywhere the tab state is read", () => {
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  const bootstrapRuntime = fs.readFileSync(path.join(PROJECT_ROOT, "app/bootstrap-runtime.js"), "utf8");
+  const uiSource = fs.readFileSync(path.join(PROJECT_ROOT, "app/ui.js"), "utf8");
+  const bootstrapData = fs.readFileSync(path.join(PROJECT_ROOT, "app/bootstrap-data.js"), "utf8");
+
+  assert.match(markup, /data-review-tab="characters"/);
+  assert.match(markup, /id="reviewCharactersPanel"/);
+  // Characters is the default tab: relationship building is the primary
+  // gamification surface, so it must lead and be the reload fallback.
+  assert.match(bootstrapRuntime, /\["characters", "overview", "trouble"\]/);
+  assert.match(bootstrapRuntime, /: "characters",/);
+  const tabOrder = [...markup.matchAll(/data-review-tab="([a-z]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(tabOrder, ["characters", "overview", "trouble"]);
+  assert.match(uiSource, /reviewCharactersPanel\.hidden = tab !== "characters"/);
+  assert.match(uiSource, /renderBondPanel/);
+  assert.match(bootstrapData, /tabCharacters: "Characters"/);
+  assert.match(bootstrapData, /tabCharacters: "דמויות"/);
+});
+
+test("vocabWords routes words that live outside the character's own category", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "inbal", mission: { active: true } };
+
+  // Her own category still routes.
+  assert.ok(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }) > 1);
+  // And so do individually listed words, even from a category Ido owns.
+  assert.ok(character.getContentWeight("vocab", { he: "חילוני", category: "social_cultural" }) > 1);
+  assert.ok(character.getContentWeight("vocab", { he: "חופש דת", category: "politics_society_expanded" }) > 1);
+  assert.ok(character.getContentWeight("vocab", { he: "אמונה", category: "abstract_philosophy" }) > 1);
+  // An unlisted word in the same borrowed category must stay neutral.
+  assert.equal(character.getContentWeight("vocab", { he: "הפגנה", category: "social_cultural" }), 1);
+  // Free play never biases.
+  app.runtime.characterState.dailyChoice = "free";
+  assert.equal(character.getContentWeight("vocab", { he: "חילוני", category: "social_cultural" }), 1);
+});
+
+test("every routed verb id resolves to a real conjugation deck entry", () => {
+  const { characterData } = loadCharacterModule();
+  const verbContext = { console };
+  verbContext.window = verbContext;
+  verbContext.globalThis = verbContext;
+  vm.createContext(verbContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "hebrew-verbs.js"), "utf8"),
+    verbContext,
+    { filename: "hebrew-verbs.js" },
+  );
+  const deck = verbContext.IvriQuestHebrewVerbs.buildVerbConjugationDeck({ vocabulary: [] });
+  const deckIds = new Set(deck.map((item) => item.id));
+
+  Object.values(characterData.characters).forEach((entry) => {
+    (entry.route.verbIds || []).forEach((verbId) => {
+      // A routed id that never reaches the deck is dead weight: the boost can
+      // never fire, and a malformed paradigm drops a verb silently.
+      assert.ok(
+        deckIds.has(`${verbId}--sense-1`),
+        `${entry.id} routes ${verbId} but it is not in the conjugation deck`,
+      );
+    });
+  });
+});
+
+function createStubElement(tag) {
+  const element = {
+    tagName: tag,
+    className: "",
+    textContent: "",
+    dataset: {},
+    children: [],
+    attributes: {},
+    parentNode: null,
+    classList: {
+      toggle(name, force) {
+        const classes = new Set(String(element.className).split(" ").filter(Boolean));
+        if (force === undefined ? classes.has(name) : !force) classes.delete(name);
+        else classes.add(name);
+        element.className = Array.from(classes).join(" ");
+      },
+    },
+    setAttribute(name, value) { this.attributes[name] = String(value); },
+    append(...nodes) { nodes.forEach((node) => { node.parentNode = this; }); this.children.push(...nodes); },
+    prepend(...nodes) { nodes.forEach((node) => { node.parentNode = this; }); this.children.unshift(...nodes); },
+    remove() {
+      if (!this.parentNode) return;
+      this.parentNode.children = this.parentNode.children.filter((child) => child !== this);
+      this.parentNode = null;
+    },
+    querySelectorAll(selector) {
+      const attribute = selector.match(/^\[data-([a-z-]+)\]$/i);
+      if (attribute) {
+        const key = attribute[1].replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+        return this.children.filter((child) => child.dataset[key] !== undefined);
+      }
+      const wanted = selector.replace(/^\./, "");
+      return this.children.filter((child) => String(child.className || "").split(" ").includes(wanted));
+    },
+  };
+  Object.defineProperty(element, "innerHTML", {
+    get() { return ""; },
+    set() { element.children = []; },
+  });
+  return element;
+}
+
+function freePlayState(character, lensCharacter, overrides = {}) {
+  return {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: {},
+    dailyChoice: "free", pendingChoice: "", lensCharacter,
+    freePlay: {
+      correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null,
+      ...overrides,
+    },
+    screen: "none", reviewOpen: false, mission: null,
+  };
+}
+
+test("a new free-play game clears the persisted four-in-a-row reaction", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = freePlayState(character, "ivri", {
+    correctStreak: 4, sprite: "celebrating", dialogueKey: "fourRight",
+  });
+
+  // `fourRight` is deliberately non-transient so it holds through a streak;
+  // without an explicit reset it would greet the next game mid-celebration.
+  assert.equal(character.resetFreePlayReaction(), true);
+  const context = app.runtime.characterState.freePlay;
+  assert.equal(context.sprite, "neutral");
+  assert.equal(context.dialogueKey, "");
+  assert.equal(context.correctStreak, 0);
+  assert.equal(context.wrongStreak, 0);
+  assert.equal(context.reactionTransient, false);
+
+  // A running mission owns its own container and must not be reset here.
+  app.runtime.characterState.mission = { active: true, sprite: "celebrating", dialogueKey: "fourRight" };
+  app.runtime.characterState.freePlay.sprite = "celebrating";
+  assert.equal(character.resetFreePlayReaction(), false);
+  assert.equal(app.runtime.characterState.freePlay.sprite, "celebrating");
+});
+
+test("free-play results show the lens character reacting to the score", () => {
+  const document = { createElement: createStubElement };
+  const { character, app } = loadCharacterModule({ document });
+  app.runtime.characterState = freePlayState(character, "ivri");
+
+  const head = createStubElement("div");
+  assert.equal(character.renderResultsSprite(head, { accuracy: 100, perfect: true }), true);
+  assert.equal(head.children.length, 1);
+  assert.equal(head.children[0].dataset.character, "ivri");
+  assert.equal(head.children[0].dataset.reaction, "celebrating");
+
+  // Re-rendering replaces the sprite instead of stacking a second one.
+  character.renderResultsSprite(head, { accuracy: 80 });
+  assert.equal(head.children.length, 1);
+  assert.equal(head.children[0].dataset.reaction, "neutral");
+
+  character.renderResultsSprite(head, { accuracy: 20 });
+  assert.equal(head.children[0].dataset.reaction, "struggling");
+
+  // No lens chosen, and mission summaries, get no free-play sprite.
+  app.runtime.characterState.lensCharacter = "";
+  assert.equal(character.renderResultsSprite(head, { accuracy: 80 }), false);
+  assert.equal(head.children.length, 0);
+
+  app.runtime.characterState.lensCharacter = "ivri";
+  app.runtime.state.summary.game = "characterMission";
+  assert.equal(character.renderResultsSprite(head, { accuracy: 80 }), false);
+  assert.equal(head.children.length, 0);
+});
+
+test("Settings character names and address labels follow the UI language", () => {
+  const document = { createElement: createStubElement };
+  const { character, app } = loadCharacterModule({ document });
+  app.runtime.characterState = freePlayState(character, "inbal");
+
+  const genderToggle = createStubElement("button");
+  ["m", "f"].forEach((value) => {
+    const option = createStubElement("span");
+    option.dataset.characterGender = value;
+    genderToggle.append(option);
+  });
+  const lensOptions = createStubElement("span");
+  app.runtime.el = {
+    characterGenderToggle: genderToggle,
+    characterGenderLabel: createStubElement("span"),
+    characterLensLabel: createStubElement("span"),
+    characterLensOptions: lensOptions,
+    characterLensNote: createStubElement("p"),
+  };
+
+  const read = () => ({
+    gender: genderToggle.children.map((option) => option.textContent),
+    lens: lensOptions.children.map((option) => option.textContent),
+    label: app.runtime.el.characterLensLabel.textContent,
+  });
+
+  app.runtime.state.language = "en";
+  character.renderSettings();
+  assert.deepEqual(read(), {
+    gender: ["Male", "Female"],
+    lens: ["None", "Ido", "Inbal", "Ivri"],
+    label: "Free-play companion",
+  });
+
+  app.runtime.state.language = "he";
+  character.renderSettings();
+  assert.deepEqual(read(), {
+    gender: ["זכר", "נקבה"],
+    lens: ["ללא", "עידו", "ענבל", "עברי"],
+    label: "דמות למשחק חופשי",
+  });
+});

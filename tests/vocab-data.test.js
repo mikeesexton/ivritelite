@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1572);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1518);
+  assert.equal(vocabulary.length, 1650);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1596);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -246,7 +246,7 @@ test("politics and society tranche adds 150 safe, pointed, globally unique cards
     ["פליט", "refugee"],
     ["חופש התנועה", "freedom of movement"],
     ["הרפורמה המשפטית", "judicial reform (supporters' term)"],
-    ["הפיכה משטרית", "regime coup (opponents' term)"],
+    ["הפיכה משטרית", "regime coup"],
     ["משבר יוקר המחיה", "cost-of-living crisis"],
     ["מעמד הביניים", "middle class"],
     ["שוויון בנטל", "equal sharing of the burden"],
@@ -294,13 +294,17 @@ test("politics and society tranche adds 150 safe, pointed, globally unique cards
 test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", () => {
   const vocabulary = loadVocabulary();
   const expected = new Map([
-    ["religion_magic_spirituality", ["קערת השבעה", "קמיע", "עין הרע", "דיבוק", "חוזר בשאלה", "ארמית"]],
+    ["religion_magic_spirituality", ["קערת השבעה", "קמיע", "עין הרע", "דיבוק", "חוזר בשאלה", "ארמית", "כתר", "מלכות", "תורת הקבלה", "תיקון עולם"]],
     ["literature_arts_cultural_history", ["ביקורת ספרות", "קריאה צמודה", "שיר מחאה", "זיכרון קולקטיבי", "תנועת הפועלים", "סאטירה"]],
+  ]);
+  const expectedCounts = new Map([
+    ["religion_magic_spirituality", 108],
+    ["literature_arts_cultural_history", 30],
   ]);
 
   expected.forEach((requiredHebrew, category) => {
     const tranche = vocabulary.filter((word) => word.category === category);
-    assert.equal(tranche.length, 30, `${category} should contain 30 cards`);
+    assert.equal(tranche.length, expectedCounts.get(category), `${category} card count changed`);
     assert.ok(tranche.every((word) => word.availability?.translationQuiz), `${category} should be playable`);
     assert.ok(tranche.every((word) => /[\u05B0-\u05BC\u05C1\u05C2\u05C7]/.test(word.heNiqqud)), `${category} needs niqqud`);
     requiredHebrew.forEach((hebrew) => {

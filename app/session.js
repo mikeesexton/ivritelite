@@ -169,7 +169,7 @@ session.resolveInitialRoute = session.resolveInitialRoute || function resolveIni
   if (runtime.state?.summary?.active) {
     return valid.has(candidate) ? candidate : "results";
   }
-  if (session.hasActiveLearnSession()) {
+  if (session.hasActiveLearnSession() && !app.character?.shouldShowMissionHub?.()) {
     return "home";
   }
   return valid.has(candidate) && candidate !== "results" ? candidate : "home";
@@ -211,6 +211,7 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       incorrectCount: Math.max(0, Number(snapshot.summary.incorrectCount || 0)),
       elapsedSeconds: Math.max(0, Number(snapshot.summary.elapsedSeconds || 0)),
       mistakes: Array.isArray(snapshot.summary.mistakes) ? snapshot.summary.mistakes : [],
+      corrects: Array.isArray(snapshot.summary.corrects) ? snapshot.summary.corrects : [],
     });
   }
 
@@ -322,6 +323,120 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
     });
   }
 
+  if (snapshot.wordMatch) {
+    Object.assign(runtime.state.wordMatch, {
+      active: Boolean(snapshot.wordMatch.active),
+      introActive: Boolean(snapshot.wordMatch.introActive),
+      game: String(snapshot.wordMatch.game || ""),
+      startMs: Math.max(0, Number(snapshot.wordMatch.startMs || 0)),
+      elapsedSeconds: Math.max(0, Number(snapshot.wordMatch.elapsedSeconds || 0)),
+      pairs: Array.isArray(snapshot.wordMatch.pairs) ? snapshot.wordMatch.pairs : [],
+      remainingPairs: Array.isArray(snapshot.wordMatch.remainingPairs) ? snapshot.wordMatch.remainingPairs : [],
+      leftCards: Array.isArray(snapshot.wordMatch.leftCards) ? snapshot.wordMatch.leftCards : [],
+      rightCards: Array.isArray(snapshot.wordMatch.rightCards) ? snapshot.wordMatch.rightCards : [],
+      selectedLeftId: snapshot.wordMatch.selectedLeftId || null,
+      selectedRightId: snapshot.wordMatch.selectedRightId || null,
+      mismatchedCardIds: Array.isArray(snapshot.wordMatch.mismatchedCardIds) ? snapshot.wordMatch.mismatchedCardIds : [],
+      matchedCardIds: Array.isArray(snapshot.wordMatch.matchedCardIds) ? snapshot.wordMatch.matchedCardIds : [],
+      matchedPairIds: Array.isArray(snapshot.wordMatch.matchedPairIds) ? snapshot.wordMatch.matchedPairIds : [],
+      isResolving: Boolean(snapshot.wordMatch.isResolving),
+      nextCardId: Math.max(1, Number(snapshot.wordMatch.nextCardId || 1)),
+      matchedCount: Math.max(0, Number(snapshot.wordMatch.matchedCount || 0)),
+      totalPairs: Math.max(0, Number(snapshot.wordMatch.totalPairs || 0)),
+      combo: Math.max(0, Number(snapshot.wordMatch.combo || 0)),
+      bestCombo: Math.max(0, Number(snapshot.wordMatch.bestCombo || 0)),
+      mismatchCount: Math.max(0, Number(snapshot.wordMatch.mismatchCount || 0)),
+      sessionMistakeIds: Array.isArray(snapshot.wordMatch.sessionMistakeIds) ? snapshot.wordMatch.sessionMistakeIds : [],
+      timerId: null,
+    });
+  }
+
+  if (snapshot.advConj) {
+    Object.assign(runtime.state.advConj, {
+      active: Boolean(snapshot.advConj.active),
+      introActive: Boolean(snapshot.advConj.introActive),
+      currentRound: Math.max(0, Number(snapshot.advConj.currentRound || 0)),
+      startMs: Math.max(0, Number(snapshot.advConj.startMs || 0)),
+      elapsedSeconds: Math.max(0, Number(snapshot.advConj.elapsedSeconds || 0)),
+      questionQueue: Array.isArray(snapshot.advConj.questionQueue) ? snapshot.advConj.questionQueue : [],
+      currentQuestion: snapshot.advConj.currentQuestion || null,
+      wrongAnswers: Math.max(0, Number(snapshot.advConj.wrongAnswers || 0)),
+      sessionMistakeIds: Array.isArray(snapshot.advConj.sessionMistakeIds) ? snapshot.advConj.sessionMistakeIds : [],
+      sessionMistakes: Array.isArray(snapshot.advConj.sessionMistakes) ? snapshot.advConj.sessionMistakes : [],
+      inReview: Boolean(snapshot.advConj.inReview),
+      reviewQueue: Array.isArray(snapshot.advConj.reviewQueue) ? snapshot.advConj.reviewQueue : [],
+      secondChanceCurrent: Math.max(0, Number(snapshot.advConj.secondChanceCurrent || 0)),
+      secondChanceTotal: Math.max(0, Number(snapshot.advConj.secondChanceTotal || 0)),
+      timerId: null,
+    });
+  }
+
+  if (snapshot.prepositions) {
+    Object.assign(runtime.state.prepositions, {
+      active: Boolean(snapshot.prepositions.active),
+      introActive: Boolean(snapshot.prepositions.introActive),
+      currentRound: Math.max(0, Number(snapshot.prepositions.currentRound || 0)),
+      startMs: Math.max(0, Number(snapshot.prepositions.startMs || 0)),
+      elapsedSeconds: Math.max(0, Number(snapshot.prepositions.elapsedSeconds || 0)),
+      questionQueue: Array.isArray(snapshot.prepositions.questionQueue) ? snapshot.prepositions.questionQueue : [],
+      currentQuestion: snapshot.prepositions.currentQuestion || null,
+      wrongAnswers: Math.max(0, Number(snapshot.prepositions.wrongAnswers || 0)),
+      sessionMistakes: Array.isArray(snapshot.prepositions.sessionMistakes) ? snapshot.prepositions.sessionMistakes : [],
+      inReview: Boolean(snapshot.prepositions.inReview),
+      reviewQueue: Array.isArray(snapshot.prepositions.reviewQueue) ? snapshot.prepositions.reviewQueue : [],
+      secondChanceCurrent: Math.max(0, Number(snapshot.prepositions.secondChanceCurrent || 0)),
+      secondChanceTotal: Math.max(0, Number(snapshot.prepositions.secondChanceTotal || 0)),
+      timerId: null,
+    });
+  }
+
+  if (snapshot.binyanBoard) {
+    Object.assign(runtime.state.binyanBoard, {
+      active: Boolean(snapshot.binyanBoard.active),
+      introActive: Boolean(snapshot.binyanBoard.introActive),
+      deck: Array.isArray(snapshot.binyanBoard.deck) ? snapshot.binyanBoard.deck : [],
+      distractorPool: Array.isArray(snapshot.binyanBoard.distractorPool) ? snapshot.binyanBoard.distractorPool : [],
+      totalRoots: Math.max(0, Number(snapshot.binyanBoard.totalRoots || 0)),
+      clearedCount: Math.max(0, Number(snapshot.binyanBoard.clearedCount || 0)),
+      activeRootId: String(snapshot.binyanBoard.activeRootId || ""),
+      roundForms: Array.isArray(snapshot.binyanBoard.roundForms) ? snapshot.binyanBoard.roundForms : [],
+      roundIndex: Math.max(0, Number(snapshot.binyanBoard.roundIndex || 0)),
+      currentQuestion: snapshot.binyanBoard.currentQuestion || null,
+      correctCount: Math.max(0, Number(snapshot.binyanBoard.correctCount || 0)),
+      wrongAnswers: Math.max(0, Number(snapshot.binyanBoard.wrongAnswers || 0)),
+      sessionMistakeIds: Array.isArray(snapshot.binyanBoard.sessionMistakeIds) ? snapshot.binyanBoard.sessionMistakeIds : [],
+      inReview: Boolean(snapshot.binyanBoard.inReview),
+      reviewQueue: Array.isArray(snapshot.binyanBoard.reviewQueue) ? snapshot.binyanBoard.reviewQueue : [],
+      secondChanceCurrent: Math.max(0, Number(snapshot.binyanBoard.secondChanceCurrent || 0)),
+      secondChanceTotal: Math.max(0, Number(snapshot.binyanBoard.secondChanceTotal || 0)),
+      startMs: Math.max(0, Number(snapshot.binyanBoard.startMs || 0)),
+      elapsedSeconds: Math.max(0, Number(snapshot.binyanBoard.elapsedSeconds || 0)),
+      timerId: null,
+    });
+  }
+
+  if (snapshot.handwriting) {
+    Object.assign(runtime.state.handwriting, {
+      active: Boolean(snapshot.handwriting.active),
+      introActive: Boolean(snapshot.handwriting.introActive),
+      startMs: Math.max(0, Number(snapshot.handwriting.startMs || 0)),
+      elapsedSeconds: Math.max(0, Number(snapshot.handwriting.elapsedSeconds || 0)),
+      rounds: Array.isArray(snapshot.handwriting.rounds) ? snapshot.handwriting.rounds : [],
+      roundIndex: Math.max(0, Number(snapshot.handwriting.roundIndex || 0)),
+      totalRounds: Math.max(0, Number(snapshot.handwriting.totalRounds || 0)),
+      cellIndex: Math.max(0, Number(snapshot.handwriting.cellIndex || 0)),
+      currentStrokes: Array.isArray(snapshot.handwriting.currentStrokes) ? snapshot.handwriting.currentStrokes : [],
+      attemptsThisCell: Math.max(0, Number(snapshot.handwriting.attemptsThisCell || 0)),
+      cellRecorded: Boolean(snapshot.handwriting.cellRecorded),
+      lastTone: String(snapshot.handwriting.lastTone || ""),
+      correctCount: Math.max(0, Number(snapshot.handwriting.correctCount || 0)),
+      mismatchCount: Math.max(0, Number(snapshot.handwriting.mismatchCount || 0)),
+      sessionMistakeIds: Array.isArray(snapshot.handwriting.sessionMistakeIds) ? snapshot.handwriting.sessionMistakeIds : [],
+      isResolving: Boolean(snapshot.handwriting.isResolving),
+      timerId: null,
+    });
+  }
+
   if (runtime.state.mode === "binyanBoard" && !runtime.state.binyanBoard?.active) {
     runtime.state.mode = "home";
   }
@@ -354,8 +469,14 @@ session.restorePendingOverlays = session.restorePendingOverlays || function rest
     h.playVerbMatchIntro?.();
   } else if (runtime.state?.wordMatch?.introActive) {
     app.wordMatch?.playWordMatchIntro?.();
+  } else if (runtime.state?.advConj?.introActive) {
+    app.advConj?.playAdvConjIntro?.();
+  } else if (runtime.state?.prepositions?.introActive) {
+    app.prepositions?.playPrepositionsIntro?.();
   } else if (runtime.state?.binyanBoard?.introActive) {
     app.binyanBoard?.playBinyanBoardIntro?.();
+  } else if (runtime.state?.handwriting?.introActive) {
+    app.handwriting?.playHandwritingIntro?.();
   }
 };
 
@@ -385,9 +506,27 @@ session.resumeActiveTimers = session.resumeActiveTimers || function resumeActive
     runtime.state.wordMatch.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.wordMatch.startMs) / 1000));
     session.startWordMatchTimer();
   }
+  if (runtime.state?.advConj?.active && runtime.state.advConj.startMs && !runtime.state.advConj.introActive) {
+    runtime.state.advConj.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.advConj.startMs) / 1000));
+    runtime.state.advConj.timerId = runtime.global.setInterval(() => {
+      runtime.state.advConj.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.advConj.startMs) / 1000));
+      h.renderAll?.();
+    }, 1000);
+  }
+  if (runtime.state?.prepositions?.active && runtime.state.prepositions.startMs && !runtime.state.prepositions.introActive) {
+    runtime.state.prepositions.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.prepositions.startMs) / 1000));
+    runtime.state.prepositions.timerId = runtime.global.setInterval(() => {
+      runtime.state.prepositions.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.prepositions.startMs) / 1000));
+      h.renderAll?.();
+    }, 1000);
+  }
   if (runtime.state?.binyanBoard?.active && runtime.state.binyanBoard.startMs && !runtime.state.binyanBoard.introActive) {
     runtime.state.binyanBoard.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.binyanBoard.startMs) / 1000));
     app.binyanBoard?.startBinyanBoardTimer?.();
+  }
+  if (runtime.state?.handwriting?.active && runtime.state.handwriting.startMs && !runtime.state.handwriting.introActive) {
+    runtime.state.handwriting.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.handwriting.startMs) / 1000));
+    app.handwriting?.startHandwritingTimer?.();
   }
 
   h.updateUiLockState?.();
@@ -461,6 +600,7 @@ session.requestLeaveSession = session.requestLeaveSession || function requestLea
 };
 
 session.requestGoHome = session.requestGoHome || function requestGoHome() {
+  if (app.character?.handleNavigation?.("home")) return;
   session.requestLeaveSession("home");
 };
 
@@ -551,6 +691,12 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   session.clearHandwritingIntro?.();
   app.handwriting?.stopHandwritingTimer?.();
   runtime.state.handwriting.active = false;
+  runtime.state.mode = "home";
+  runtime.state.route = "home";
+  h.clearFeedback?.();
+  if (app.character?.captureActivitySummary?.(config)) {
+    return;
+  }
   runtime.state.mode = "summary";
   runtime.state.summary.active = true;
   runtime.state.summary.game = String(config.game || "");
@@ -566,7 +712,6 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.summary.mistakes = Array.isArray(config.mistakes) ? config.mistakes : [];
   runtime.state.summary.corrects = Array.isArray(config.corrects) ? config.corrects : [];
   runtime.state.route = "results";
-  h.clearFeedback?.();
   h.renderAll?.();
 };
 
