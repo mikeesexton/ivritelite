@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 150);
+  assert.equal(entries.length, 158);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -600,6 +600,55 @@ test("Inbal and Inat verbs expose verified pointed paradigms in conjugation", ()
     assert.ok(item.forms.some((form) => form.valuePlain === pastForm), `${lemma} missing ${pastForm}`);
     assert.ok(item.forms.some((form) => form.valuePlain === futureForm), `${lemma} missing ${futureForm}`);
   });
+});
+
+test("Ido verbs expose verified pointed paradigms in conjugation", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  // Five of these carry imperatives and five do not, so the modern slots are
+  // checked by id rather than by counting forms.
+  const modernSlotIds = verbApi.MATCH_FORM_ORDER.filter((id) => !id.startsWith("imperative_"));
+  const expected = new Map([
+    ["לרקוד", ["רקדנו", "נרקוד"]],
+    ["לבלות", ["בילינו", "נבלה"]],
+    ["לחפור", ["חפרנו", "נחפור"]],
+    ["לזרום", ["זרמנו", "נזרום"]],
+    ["לפרגן", ["פרגנתי", "נפרגן"]],
+    ["להתחרפן", ["התחרפנתי", "נתחרפן"]],
+    ["להתמזמז", ["התמזמזנו", "נתמזמז"]],
+    ["להתלבט", ["התלבטנו", "נתלבט"]],
+  ]);
+
+  expected.forEach(([pastForm, futureForm], lemma) => {
+    const seed = entries.find((entry) => entry.lemma === lemma);
+    const item = deck.find((entry) => entry.word.he === lemma);
+    assert.ok(seed, `missing seed entry for ${lemma}`);
+    assert.ok(item, `missing conjugation item for ${lemma}`);
+    assert.equal(item.formSource, "authoritative");
+    modernSlotIds.forEach((slotId) => {
+      assert.ok(item.forms.some((form) => form.id === slotId), `${lemma} missing ${slotId}`);
+    });
+    assert.ok(item.forms.every((form) => /[֑-ׇ]/.test(form.valueNiqqud)));
+    assert.ok(item.forms.some((form) => form.valuePlain === pastForm), `${lemma} missing ${pastForm}`);
+    assert.ok(item.forms.some((form) => form.valuePlain === futureForm), `${lemma} missing ${futureForm}`);
+  });
+});
+
+// Regression: ENGLISH_PAST_IRREGULARS had no "hang", and pastPl only special-cased
+// the bare copula, so "to hang out" read "we hanged out" and every multi-word
+// "to be …" gloss read "we was …".
+test("past-tense English labels inflect phrasal and copular glosses correctly", () => {
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  const labelFor = (lemma, slotId) =>
+    deck.find((entry) => entry.word.he === lemma)?.forms.find((form) => form.id === slotId)?.englishText;
+
+  assert.equal(labelFor("לבלות", "past_first_person_plural"), "we hung out");
+  assert.equal(labelFor("להצטער", "past_first_person_plural"), "we were sorry");
+  assert.equal(labelFor("להיזהר", "past_third_person_plural"), "they were careful");
+  assert.equal(labelFor("להיוולד", "past_second_person_masculine_singular"), "you (m.s.) were born");
+  // Singular first person keeps "was", and non-copular glosses are untouched.
+  assert.equal(labelFor("להצטער", "past_first_person_singular"), "I was sorry");
+  assert.equal(labelFor("להתלבש", "past_first_person_plural"), "we got dressed");
 });
 
 test("starter run verb appears in conjugation with the expected English labels", () => {

@@ -178,6 +178,12 @@ test("approved character copy and gender labels come from the registry", () => {
   assert.equal(ivri.fourRight.text, "מצוין. זה מה שאני קורא לו בקרת איכות. ממשיכים לבצע.");
   assert.equal(ivri.mission.text, "סגרנו את הסיבוב בהצלחה. מחר חוזרים לעבוד.");
   assert.equal(ivri.abbreviationsM.text, "זמן זה משאב יקר. קיצורים יביאו אותנו לדדליין. בוא נתחיל.");
+  const inat = characterData.characters.inat.dialogue;
+  assert.equal(inat.descriptionM.text, "פוליטיקה. משפטים. היסטוריה. תכיר את הפרופסורית.");
+  assert.equal(inat.first.text, "להימנע מפוליטיקה זה חכם. אבל להבין אותה זה חשוב. שנתחיל?");
+  assert.equal(inat.fourWrong.text, "אולי כדאי להתחיל טיוטה חדשה.");
+  assert.equal(inat.perfect.text, "עבודה יוצאת מן הכלל. רמת דוקטורט. שקלת לימודי משפטים?");
+  assert.equal(inat.abbreviationsM.glosses["מר״ת"], "abbreviations");
 
   // The markup carries the English default (the app's default language);
   // renderSettings swaps in זכר/נקבה when the UI language is Hebrew.
@@ -227,6 +233,18 @@ test("gendered lines resolve per character and ungendered lines are shared", () 
       assert.ok(ivri[key], `ivri ${key} should exist unsuffixed`);
       assert.equal(ivri[`${key}M`], undefined, `ivri ${key} should not be gendered`);
     });
+
+  const inat = characterData.characters.inat.dialogue;
+  assert.equal(inat.listeningM.text, "תקשיב לראיון הזה בפודקאסט. מה מעניין אותך פה?");
+  assert.equal(inat.listeningF.text, "תקשיבי לראיון הזה בפודקאסט. מה מעניין אותך פה?");
+  assert.equal(inat.handwritingF.text, "האוניברסיטה מארחת פאנל, אני צריכה שתרשמי הערות.");
+  assert.equal(inat.oneWrongF.text, "זהירות. כדאי לקרוא שוב. קטן עלייך.");
+  // Her masculine and feminine singulars are spelled alike in these lines
+  // (שלך, שקלת, לך), so they stay single-variant.
+  ["first", "fourWrong", "recovery", "perfect", "mission", "conjugation"].forEach((key) => {
+    assert.ok(inat[key], `inat ${key} should exist unsuffixed`);
+    assert.equal(inat[`${key}M`], undefined, `inat ${key} should not be gendered`);
+  });
 });
 
 test("sprite CSS and assets exist for every character reaction", () => {
@@ -273,6 +291,8 @@ test("character routing boosts owned content and stays neutral otherwise", () =>
   app.runtime.characterState.dailyChoice = "ido";
   assert.ok(character.getContentWeight("sentence", { id: "colloquial_01", category: "colloquial" }) > 1);
   assert.ok(character.getContentWeight("verb", { id: "advanced-verb-laharos--sense-1" }) > 1);
+  assert.ok(character.getContentWeight("verb", { id: "character-verb-lirkod--sense-1" }) > 1);
+  assert.ok(character.getContentWeight("verb", { id: "common-verb-latzet--sense-2" }) > 1);
   assert.equal(character.getContentWeight("sentence", { id: "inbal_04" }), 1);
 
   // Ivri owns professional, business, finance, and high-tech content.
@@ -958,6 +978,11 @@ test("every routed verb id resolves to a real conjugation deck entry", () => {
       );
     });
   });
+
+  // Ido's verb route is the one deliberately sized against the others, so a
+  // silent trim or an accidental re-route should have to update this number.
+  assert.equal(characterData.characters.ido.route.verbIds.length, 18);
+  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 18);
 });
 
 function createStubElement(tag) {
@@ -1098,7 +1123,7 @@ test("Settings character names and address labels follow the UI language", () =>
   character.renderSettings();
   assert.deepEqual(read(), {
     gender: ["Male", "Female"],
-    lens: ["None", "Ido", "Inbal", "Ivri"],
+    lens: ["None", "Ido", "Inbal", "Ivri", "Inat"],
     label: "Free-play companion",
   });
 
@@ -1106,7 +1131,7 @@ test("Settings character names and address labels follow the UI language", () =>
   character.renderSettings();
   assert.deepEqual(read(), {
     gender: ["זכר", "נקבה"],
-    lens: ["ללא", "עידו", "ענבל", "עברי"],
+    lens: ["ללא", "עידו", "ענבל", "עברי", "עינת"],
     label: "דמות למשחק חופשי",
   });
 });
