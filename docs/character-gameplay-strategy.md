@@ -48,9 +48,16 @@ Owns religion, folk practice, magic, spirituality, the supernatural, ritual, ex-
 
 ### Inat
 
-Incisive · cultured · defiant
+Incisive · cultured · defiant. A distinguished professor; her own framing is
+"politics, law, history."
 
 Owns literature, music, visual art, history, cultural memory, political language, activism, occupation, policing, social justice, and left-wing analysis.
+
+As implemented she also owns the legal-studies pools (`legal_civic`,
+`law_legal_systems_expanded`) and the academic/analytical `formal` sentence
+register. That extends the boundary below: law-as-a-discipline — courts, rights,
+evidence, precedent — is hers, while Ivri keeps regulatory and contractual law as
+business process. Ivri retains the `professional` sentence register.
 
 - Greeting: “שלום. Bring a sharp pencil—we're reading the text and the power behind it.”
 - Four correct: “Four strong answers. That's an argument with evidence—keep going.”
@@ -90,22 +97,35 @@ Abbreviations need explicit multi-owner routing; forcing every abbreviation into
 
 ## Implemented content ledger
 
-### Ido baseline
+### Ido baseline and verb expansion
 
-The existing colloquial tranche includes the newer LGBTQ+ and camp slang material, related sentences, and the verbs `להרוס` and `ללרלר`. Preserve it as the current Ido content baseline.
+The existing colloquial tranche includes the newer LGBTQ+ and camp slang material and its related sentences. Preserve it as the current Ido content baseline.
+
+- Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories.
+- Sentences: the `colloquial` category plus the `whatsapp` style.
+- Conjugation verbs: 18 in total, split three ways. Baseline — `להרוס` and `ללרלר`. Authored for him — `לרקוד`, `לבלות`, `לחפור`, `לזרום`, `לפרגן`, `להתחרפן`, `להתמזמז`, `להתלבט`. Routed from the shared pool — `לצאת`, `להיפגש`, `להתקשר`, `לשלוח`, `להזמין`, `לצחוק`, `להתלבש`, `להתרגש`.
+- The routed eight are his by **register**, not by topic: going out, making plans, texting, laughing, getting dressed to leave the house. They stay unowned by anyone else and simply weigh more during his missions. `לשיר` was considered and rejected on exactly this test — singing is not streetwise. Do not re-route it here.
+- Five of the authored verbs are slang whose paradigms are template-derived rather than dictionary-attested; each discloses that in its `notes`.
 
 ### Inbal expansion
 
-- Vocabulary: 30 cards in `religion_magic_spirituality`.
-- Sentences: 16 entries, `inbal_01` through `inbal_16`.
+- Vocabulary: 30 cards in `religion_magic_spirituality`, plus routed words that sit in other categories.
+- Sentences: 70 entries, `inbal_01` through `inbal_70`. The `inbal_51`–`inbal_70` batch deliberately targets two gaps — colloquial register (she had 1 colloquial row against 27 everyday) and Hebrew length, since the handwriting mode only draws sentences of 6–34 Hebrew letters. All 20 sit in 23–33 letters, taking her handwriting-eligible share from 37/50 to 57/70.
 - Conjugation verbs: `לברך` and `להתפלל`, with stored present, past, and future forms.
 - Coverage includes incantation bowls, Aramaic inscriptions, amulets, the evil eye, dream interpretation, dybbuks, prayer, mikveh, ex-religious identity, ritual practice, and careful distinctions between folklore and factual claims.
 
 ### Inat expansion
 
-- Vocabulary: 30 cards in `literature_arts_cultural_history`.
-- Sentences: 24 entries, `inat_01` through `inat_24`.
-- Conjugation verbs: `לפרש` and `למחות`, with stored present, past, and future forms.
+- Vocabulary: 30 cards in `literature_arts_cultural_history`, plus the routed
+  `politics_society_expanded`, `legal_civic`, and `law_legal_systems_expanded`
+  categories — 232 cards in total.
+- Sentences: 24 entries, `inat_01` through `inat_24`, plus the `formal` register.
+- Conjugation verbs: `לפרש` and `למחות`, with stored present, past, and future forms,
+  plus `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, and `ללמד` from the shared pool.
+- Abbreviations: shares the `Civics, Law & Work` bucket with Ivri. The bucket mixes
+  his corporate and regulatory acronyms with her parties, courts, and rights bodies,
+  and the routing table has no finer grain than a bucket, so multi-owner routing is
+  the correct answer rather than an arbitrary cut.
 - Coverage includes short public-domain cultural texts, close reading, narrators, archives, oral history, protest music, satire, theater, visual art, censorship, labor action, civil disobedience, policing, collective memory, and counter-narratives.
 
 No dedicated first-pass additions are currently required for Binyanim, Prepositions, or the abbreviation game. Those modes can use multi-owner routing when the character layer is implemented.

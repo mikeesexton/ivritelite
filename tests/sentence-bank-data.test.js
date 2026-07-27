@@ -410,7 +410,7 @@ const POLITICAL_ENTRY_IDS = [
 ];
 
 const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
-const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 16).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 70).map((id) => id.replace(/_(\d)$/, "_0$1"));
 const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 24).map((id) => id.replace(/_(\d)$/, "_0$1"));
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
@@ -771,15 +771,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 536 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 556 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 536);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 536);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 536);
+  assert.equal(entries.length, 556);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 556);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 556);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -807,10 +807,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 164,
-    everyday: 169,
+    colloquial: 174,
+    everyday: 175,
     professional: 100,
-    formal: 103,
+    formal: 107,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -908,7 +908,7 @@ test("Inbal and Inat sentence tranches stay aligned and exercise their conjugati
   const inbal = INBAL_ENTRY_IDS.map((id) => byId.get(id));
   const inat = INAT_ENTRY_IDS.map((id) => byId.get(id));
 
-  assert.equal(inbal.length, 16);
+  assert.equal(inbal.length, 70);
   assert.equal(inat.length, 24);
   assert.ok([...inbal, ...inat].every(Boolean));
   [...inbal, ...inat].forEach((entry) => {

@@ -357,7 +357,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     assertFeedbackFooterInFlow(shemaFeedback.geometry, "Shema structured feedback");
     assert.ok(shemaFeedback.geometry.prompt?.height > 0, "Shema feedback keeps the prompt visible");
     assert.ok(shemaFeedback.geometry.builder?.height > 0, "Shema feedback keeps the answer builder visible");
-    assert.equal(shemaFeedback.result, "נכון");
+    assert.equal(shemaFeedback.result, "", "A correct answer leans on the green tray instead of a headline");
     assert.equal(shemaFeedback.rows.length, 2, "Shema feedback must not add a tip row");
     assert.deepEqual(
       shemaFeedback.rows.slice(0, 2),

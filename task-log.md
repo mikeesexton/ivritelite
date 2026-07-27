@@ -5280,3 +5280,308 @@ iPhone/iPad Safari remains a worthwhile final device check.
 **Tests run:** `npm test` — 309 pass, 0 fail (was 308). Verified live at `http://localhost:3242` at 375×812 in both languages: Settings shows `["None","Ido","Inbal","Ivri"]` / `["Male","Female"]` with the label at `font-weight: 600` in English, and `["ללא","עידו","ענבל","עברי"]` / `["זכר","נקבה"]` right-aligned in Hebrew; the picker scene shows the English names, buttons, and hint; the Characters review tab returns English names in EN and Hebrew names in HE. No console errors.
 
 **Risks / regressions to check:** `characterName` falls back across languages, so a character added with only one name still renders. The address toggle's pre-JS markup is now English, so a Hebrew-UI user may see a one-frame `Male`/`Female` before `renderSettings` runs — the same tradeoff the rest of the `data-i18n` markup already makes. Companion-row wrapping was checked at 375px with four options; worth re-checking once a fifth character lands.
+
+---
+
+### 2026-07-26 EDT — Tighten the character picker and mission hub, quiet the correct-answer headline, fix two clipping bugs
+
+**Requested:** (1) Character-selection page is too spacious: drop the "Choose Male or Female…" hint, put characters/Free Play in a two-column grid, tighten the layout as far as is safe. (2) Mission page is too spacious: tighten the line spacing around the character eyebrow, "Today's mission", and the activity counter, and tighten the activity boxes. (3) In the Sentence and Shema games, stop printing נכון in the green feedback box — green is enough. (4) In Conjugation+, the `j` and `g` in the top banner title are cut off; diagnose and fix. (5) (Added mid-session) The character display is broken on the mission-complete page — fix however seems best.
+
+**Diagnosis of (4):** `body[data-gameplay-active="true"] .shell-brand-title h1` sets `overflow: hidden` (for the ellipsis) while `.shell-brand-title h1` sets `line-height: 1`. A 1.0 line box in Frank Ruhl Libre is shorter than the font's descender extent, so `overflow: hidden` cropped the descenders. Measured `scrollHeight === clientHeight === 25px` after the fix, i.e. nothing clipped.
+
+**Diagnosis of (5):** `.mission-results-character` is a grid whose column sizes to its widest child. Its bubble carried a fixed `width: min(150px, 42vw)` while the hero column it lives in was only 110px on phones, so the single implicit column overflowed to the right — pushing both bubble and sprite off the screen edge (measured right edge 389px in a 375px viewport). Fixed by capping the bubble at `min(250px, 100%)` and, below 720px, stacking the hero so the character gets a full-width row of its own.
+
+**Files changed:**
+- `app/character.js` — `renderPicker` no longer appends the `character-required-note` gender hint; the disabled Choose buttons carry that cue on their own.
+- `app/ui.js` — `setFeedback` only renders the `.feedback-result` headline when `tone !== "success"`. The payload still carries the string, so misses read "לא בדיוק"/"Not quite" as before.
+- `styles.css` — Picker: `#characterSceneContent` gap 1.2→0.85rem; grid `minmax(240px→220px)`, gap 1→0.7rem; card padding 1→0.85rem, gap 0.75→0.5rem, plus `grid-template-rows: auto auto 1fr auto` so the blurb row absorbs slack and every card's button lands on one line; gender picker gap 0.55→0.4rem and option min-height 46→42px; removed the now-unused `.character-required-note` rules. Below 720px the choice grid is two columns of stacked compact cards (sprite `min(100%, 150px)`, 124px below 480px, smaller name/blurb/button type) replacing the old one-column sprite-beside-text layout. Mission hub: card gap 1→0.7rem, hero gap 1→0.75rem, copy gap 0.42→0.22rem with `line-height: 1.15` on the headings and 1.1 on the eyebrow, counter to 0.92rem; list gap 0.5→0.38rem; row min-height 64→50px (44px below 480px), padding 0.72/0.82→0.48/0.7rem, badge 2→1.85rem, name 1.08→1.02rem, status 0.84→0.8rem, and below 480px `row-gap: 0` with the badge spanning both stacked lines (`grid-row: 1 / span 2`) so it stops setting the row height. Mission results: `min-width: 0` on the character block and `max-width: min(250px, 100%)` on the bubble; below 720px the hero is single-column with the character ordered first as a `1fr / 132px` row (110px below 480px) and the bubble at `width: auto; max-width: 100%`. Feedback: `.feedback-items > .feedback-item:first-child` drops its top border and padding, so removing the headline does not leave a stray rule. Gameplay topbar: added `line-height: 1.32` to the truncating `h1`.
+- `index.html` — cache-busted `styles.css` → `?v=20260726g`, `app/ui.js` → `?v=20260726e`, `app/character.js` → `?v=20260726h`.
+- `tests/gameplay-layout.test.js` — the Shema correct-answer case now expects an empty `.feedback-result`.
+- `tests/app-progress.test.js` — the Shema structured-feedback assertions drop the headline child and shift to 2 rows (`children[0]` = שמעת, `children[1]` = משמעות).
+
+**Behavior changed:** The picker fits on one phone screen with no scrolling (measured 693px of the 812px viewport) as a 2×2 grid of Ido / Inbal / Ivri / Free Play, with no red hint line. The mission hub shows all nine activities at once on a 375×812 screen instead of four. A correct Sentence/Shema answer shows only the labelled sentence rows inside the green tray; a miss still shows its headline. "Conjugation+" renders its descenders. The mission-complete screen keeps the bubble and sprite inside the card at phone widths, with the character above the metric tiles; desktop is unchanged.
+
+**Tests run:** `npm test` — 309 pass, 0 fail, both before and after (three assertions updated, no net count change). Verified live at `http://localhost:3242` at 375×812, 700×900, and 1600×900: picker fits without scroll and buttons align per row; mission hub rows measure 52.3px (was 62.3px); a forced-correct Sentences answer renders no `.feedback-result` while a forced-wrong one renders "Not quite"; `#shellTopTitle` `scrollHeight === clientHeight`; mission-results bubble/sprite right edges both land at the card edge (349px) with `documentElement.scrollWidth === innerWidth`. No console errors.
+
+**Risks / regressions to check:** (1) The `tone !== "success"` gate lives in the shared `setFeedback`, so any future game that sends `structured` feedback also loses its success headline — intended, but worth knowing. (2) `hasStructuredFeedback` still requires a non-empty `structured.result`, so the string must keep being sent even though success no longer renders it. (3) The two-column picker was checked with four cards; a fifth character makes it 2×3 and may reintroduce scrolling on short phones. (4) Mission-hub row heights were tuned against the current activity names; a longer localized name could wrap and re-grow the rows. (5) Mission-complete now orders the character above the metrics on phones via `order: -1` while DOM order is metrics-first — screen readers still hear metrics first.
+
+---
+
+### 2026-07-26 20:24 EDT — Create the complete Inat reaction sprite package
+
+**Requested:** Create Inat, a distinguished professor in her 50s loosely based
+on the supplied woman, with blonde hair, glasses, and a stylish yellow pantsuit.
+Deliver every active pose used by the existing IvritElite characters while
+matching their artistic style and pixel density and avoiding a doll-like look.
+
+**Files changed:**
+- `assets/inat/neutral.png` — locked neutral design: mature angular features,
+  swept-back honey-blonde hair, tortoiseshell glasses, mustard-yellow blazer,
+  cream blouse, and gold brooch.
+- `assets/inat/nervous-laugh.png` — wry nervous laugh with one hand behind her
+  neck.
+- `assets/inat/celebrating.png` — assured open smile and compact raised victory
+  fist.
+- `assets/inat/frustrated.png` — restrained displeasure with narrowed eyes and a
+  tense mouth.
+- `assets/inat/struggling.png` — eyes shut behind the glasses with a clenched,
+  difficult-moment grimace.
+- `assets/inat/mission-complete.png` — composed approving smile and compact
+  thumbs-up.
+- `assets/inat/README.md` — records the six-pose contract, locked character
+  design, source-master workflow, style constraints, and rebuild command.
+- `scripts/build-inat-sprites.py` — validates the six local 1254×1254
+  transparent masters and nearest-neighbor builds the 512×512 runtime PNGs.
+- `task-log.md` — records this asset-production session.
+
+**Behavior changed:** None yet. The complete Inat sprite package is ready in
+`assets/inat/`, but Inat was not added to the character registry, picker,
+dialogue, or CSS because this task requested the art set rather than gameplay
+integration.
+
+**Tests run:** `python scripts/build-inat-sprites.py` — pass; rebuilt all six
+512×512 runtime PNGs. Alpha/dimension validation — pass; all sprites are RGBA,
+all four corners are transparent, and every visible bounding box is non-empty
+and inside the canvas. `npm test` — 309 pass, 0 fail. `git diff --check` — pass.
+
+**Risks / regressions to check:** Review the set in the intended dark UI at its
+smallest companion size before integrating. The celebrating fist sits close to
+the left canvas edge, comparable to existing Ivri reactions, but should be
+rechecked in compact gameplay. Source chroma and transparent masters live under
+the intentionally ignored `assets/inat/source/` directory and must remain
+available locally for future rebuilds.
+
+---
+
+### 2026-07-26 20:29 EDT — Correct the character name from Inav to Inat
+
+**Requested:** Fix the preceding sprite package because the intended character
+name is Inat, not Inav.
+
+**Files changed:**
+- `assets/inat/` — renamed the complete six-pose package and its local source
+  masters from `assets/inav/`.
+- `assets/inat/README.md` — corrected the character name and rebuild command.
+- `scripts/build-inat-sprites.py` — renamed the builder and changed its asset
+  target from `assets/inav/` to `assets/inat/`.
+- `task-log.md` — corrected the preceding production entry and records this
+  naming correction.
+
+**Behavior changed:** None. The art is unchanged; only the character and package
+identity changed from Inav to Inat. Gameplay integration remains intentionally
+out of scope.
+
+**Tests run:** `python scripts/build-inat-sprites.py` — pass; rebuilt all six
+runtime sprites from the renamed source directory. Alpha/dimension validation —
+pass. `git diff --check` — pass.
+
+**Risks / regressions to check:** None. Future integration should use the
+existing `inat` content prefix and the new `assets/inat/` package consistently.
+
+---
+
+### 2026-07-26 21:10 EDT — Integrate Inat as the fourth playable character
+
+**Requested:** Add Inat, the professor, as a new character. Her sprites were
+already produced in `assets/inat/`; her lines came from the first data row of
+`~/Documents/Character lines.xlsx`. The source lines address the learner in the
+plural and had to be rewritten to masculine/feminine singular. Also report the
+content share for her and for each existing character.
+
+**Line conversion:** All 19 authored columns were rewritten from plural to
+singular address. Nine lines needed genuine M/F pairs (`description`, `greeting`,
+`fourRight`, `oneWrong`, `vocabulary`, `sentences`, `listening`, `abbreviations`,
+`advConj`, `prepositions`, `binyanim`, `handwriting`). Six stayed single-variant
+because the masculine and feminine singulars are spelled identically — `first`
+(no second-person form at all), `fourWrong`, `conjugation` (impersonal `כדאי` /
+`צריך` plus infinitives), `recovery` (`שלכם` → `שלך`), `perfect` (`שקלתם` →
+`שקלת`), and `mission` (`לכם` → `לך`). Two `--` separators were normalized to the
+house `—`, and `ר"ת` to `ר״ת` so the gloss tokenizer treats it as one word.
+
+**Files changed:**
+- `app/character-data.js` — added `INAT_DIALOGUE` (all 19 keys, every Hebrew token
+  glossed) and the `inat` registry entry at `order: 4`, with her content route:
+  vocab `politics_society_expanded`, `literature_arts_cultural_history`,
+  `legal_civic`, `law_legal_systems_expanded`; sentences `formal` plus the
+  `inat_` prefix; abbreviations `Civics, Law & Work` (shared with Ivri); and eight
+  verbs (`לפרש`, `למחות`, `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, `ללמד`).
+- `styles.css` — added the six `data-character="inat"` sprite rules.
+- `index.html` — cache-busted `styles.css` → `?v=20260726h` and
+  `app/character-data.js` → `?v=20260726g`.
+- `tests/character-mission.test.js` — added Inat copy/gloss assertions and her
+  gendered/ungendered split; extended the two hardcoded free-play lens lists.
+- `docs/character-gameplay-strategy.md` — recorded her implemented routing and the
+  law-boundary extension against Ivri.
+- `task-log.md` — records this session.
+
+**Behavior changed:** Inat is now selectable as a daily character and as a
+free-play companion. The picker shows four character cards plus Free Play; her
+sprite, description, greeting, all nine activity intros, streak reactions, and
+mission-complete line render in the chosen gender. Her material is boosted toward
+the 65% owned share during her missions and while she is the free-play lens, and
+she appears in the Review bond panel.
+
+**Content share** (`node scripts/character-content-report.js`):
+
+| Character | Vocabulary | Sentences | Abbreviations | Verbs | Total |
+| --- | --- | --- | --- | --- | --- |
+| Ido | 199 (12.1%) | 164 (30.6%) | 41 (18.0%) | 2 (1.3%) | 406 |
+| Inbal | 124 (7.5%) | 50 (9.3%) | 74 (32.5%) | 10 (6.7%) | 258 |
+| Ivri | 176 (10.7%) | 100 (18.7%) | 113 (49.6%) | 8 (5.3%) | 397 |
+| Inat | 232 (14.1%) | 117 (21.8%) | 76 (33.3%) | 8 (5.3%) | 433 |
+
+Spread narrowed from 1.6x to 1.7x across a larger cast; unrouted vocabulary fell
+from 1158 to 931 and unrouted sentences from 229 to 138. Inat is now the largest
+route, and Inbal remains the smallest.
+
+**Tests run:** `npm test` — 309 pass, 0 fail (309 pass, 0 fail before the change
+too; one pre-existing test needed its hardcoded lens list extended). Browser
+verification on the dev server: no console errors; picker renders her card at
+375px and 1280px; `תכיר` → `תכירי` on switching to Female; all nine activity
+intros plus `perfect` render in feminine form with a gloss on every Hebrew token;
+an in-page audit found zero missing glosses across her table; `getContentWeight`
+returns 2 for each of her four routed kinds (including an inflected verb id) and 1
+otherwise; a live Vocabulary round with her as the lens drew `פרקליטות` and
+`שביתה כללית`; her companion sprite resolves to `assets/inat/neutral.png`.
+
+**Risks / regressions to check:** (1) The desktop picker now leaves Free Play
+alone on a second row — 4 cards fill the first. Cosmetic, but worth a design
+decision. (2) `מתחיל ב-9` in her mission line glosses `ב` alone because the
+tokenizer only matches Hebrew letter runs; spelling it `בתשע` would gloss cleanly
+and read better to TTS. (3) She shares the `Civics, Law & Work` abbreviation
+bucket with Ivri, so 76 items are double-owned — intended per the strategy doc,
+but it makes his acronyms appear in her missions. (4) `לספר` and `ללמד` are
+high-frequency verbs; boosting them means her missions drill common material
+alongside her topical verbs. (5) Pre-existing and untouched: Ivri's
+`conjugationM/F` gloss key `פיץ׳` never matches, because the tokenizer requires a
+Hebrew letter after the geresh, so that word renders unglossed.
+
+---
+
+### 2026-07-26 22:15 EDT — Fix Inat's clock line, expand Inbal's sentences, expand Ido's verbs
+
+**Requested:** Three items. (1) Change Inat's `ב-9` to `בתשע`. (2) Plan and add more
+sentences for Inbal. (3) Plan and add more verbs for Ido.
+
+**Files changed:**
+- `app/character-data.js` — Inat's `mission` line now reads `מתחיל בתשע`, with the
+  gloss key changed from `ב: "at"` to `בתשע: "at nine"`. Separately, Ido's
+  `route.verbIds` grew from 2 ids to 18, commented to separate the eight authored
+  for him from the eight routed out of the shared pool.
+- `hebrew-verbs.js` — eight new `createVerbEntry` records appended to
+  `buildStarterVerbEntries`: `לרקוד`, `לבלות`, `לחפור`, `לזרום`, `לפרגן`,
+  `להתחרפן`, `להתמזמז`, `להתלבט`. Two label bugs fixed (below). `__build` →
+  `20260726e`.
+- `sentence-bank-data.js` — 20 `buildReviewedSentence` rows, `inbal_51` through
+  `inbal_70`, appended to `INBAL_SENTENCES`. `__build` → `20260726e`.
+- `index.html` — cache-busted `sentence-bank-data.js` and `hebrew-verbs.js` →
+  `?v=20260726e`, `app/character-data.js` → `?v=20260726h`.
+- `tests/sentence-bank-data.test.js` — totals 536 → 556 (test name included);
+  category mix → colloquial 174, everyday 175, professional 100, formal 107;
+  `INBAL_ENTRY_IDS` widened from `inbal_01–16` to `inbal_01–70` and the tranche
+  length assertion from 16 to 70.
+- `tests/hebrew-verbs.test.js` — seed count 150 → 158; new "Ido verbs expose
+  verified pointed paradigms" test; new past-tense English label regression test.
+- `tests/character-mission.test.js` — Ido weighting probes for an authored and a
+  routed verb; `verbIds.length` and uniqueness guards on his route.
+- `docs/character-gameplay-strategy.md` — Ido's ledger stub replaced with a full
+  entry recording the authored/routed split and why `לשיר` was rejected; Inbal's
+  entry updated with the new sentence count and the handwriting rationale.
+
+**Why the ב-9 change:** `renderDialogue` tokenizes on Hebrew letter runs only, so
+`ב-9` glossed `ב` alone and left `-9` as bare text. `בתשע` is one token, glosses
+cleanly, and reads correctly to TTS.
+
+**Inbal sentences — what they target:** Volume was not the real gap. Of her 50
+rows only 37 cleared the handwriting mode's 6–34 Hebrew-letter filter, and she had
+27 `everyday` against a single `colloquial` row, which made a character written as
+a mystic read as liturgical. The batch is 10 colloquial, 6 everyday, 4 formal, all
+at 23–33 letters. Coverage: bli neder, paying a kabbalist, Psalms for safe travel,
+leaving observance while keeping Yom Kippur, horoscopes without belief, salt in
+the corners, notes in the Kotel, spiritual-not-religious identity, snake dreams,
+shomer negiah, mezuzah checking after misfortune, tefillin, Tashlich, counting the
+Omer by app, the hamsa in the car, Hagomel after a flight, poskim against amulets,
+the Golem of Prague, reincarnation as kabbalistic rather than talmudic, and the
+Berakhot 55a dictum on uninterpreted dreams. Themes were checked against
+`inbal_01`–`50` to avoid repeats.
+
+**Ido verbs — the split:** Two independent causes were fixed. Eight verbs already
+in the pool were his by register and routed to nobody (`לצאת`, `להיפגש`,
+`להתקשר`, `לשלוח`, `להזמין`, `לצחוק`, `להתלבש`, `להתרגש`); they are now routed and
+remain available to everyone. Eight genuinely Tel Aviv verbs did not exist at all
+and were authored. `לשיר` was considered for routing and rejected — singing is not
+streetwise, and it was the one arbitrary pick.
+
+**Paradigm attestation (required disclosure):** Dictionary-attested throughout —
+`לרקוד`, `לבלות`, `להתלבט`. Attested paradigm with a colloquial gloss, where only
+the meaning is slang — `לחפור` (literally to dig) and `לזרום` (literally to flow).
+Template-derived rather than dictionary-attested, and to be checked by a native
+ear — `לפרגן` (denominal from Yiddish *farginen*, on the regular quadriliteral
+pi'el template), `להתחרפן` and `להתמזמז` (regular quadriliteral hitpa'el template,
+same status as `מלרלר` in the 2026-07-20 entry). Each discloses this in its
+`notes`. The single lowest-confidence form is `לחפור`'s 1s future `אֶחְפּוֹר`,
+pointed on the `לחשוב` pattern rather than the chataf pattern this file uses for
+`לחזור`/`להרוס`; worth a Pealim check.
+
+**Two English-label bugs found and fixed** (both were already shipping):
+1. `pastPl` in `buildEnglishFormLabel` only special-cased the bare copula, so every
+   multi-word `to be …` gloss rendered `was` in the plural and second person.
+   `להצטער`, `להיזהר`, and `להיוולד` were live in the deck reading "we was sorry",
+   "they was careful", "we was born". Now matched on the head, so they read
+   "were" while the 1s correctly keeps "was".
+2. `ENGLISH_PAST_IRREGULARS` had no `hang`, so `to hang out` would have rendered
+   "I hanged out". Added `["hang", "hung"]`.
+
+**Behavior changed:** Inat's mission line ends `בתשע` with a working tooltip.
+Inbal has 70 sentences, 57 of them handwriting-eligible (was 37/50), and 14 of the
+20 new rows fall inside the handwriting picker's preferred shortest-60% shortlist.
+Ido has 18 conjugation verbs instead of 2. Eight new Translation Match cards appear
+(one per authored verb). Three existing verbs stopped printing ungrammatical
+English.
+
+**Content share** (`npm run report:characters`), before → after:
+
+| Character | Vocabulary | Sentences | Abbreviations | Verbs | Total |
+| --- | --- | --- | --- | --- | --- |
+| Ido | 199 (12.1%) | 164→174 (31.3%) | 41 (18.0%) | 2→18 (11.4%) | 406→432 |
+| Inbal | 124 (7.5%) | 50→70 (12.6%) | 74 (32.5%) | 10 (6.3%) | 258→278 |
+| Ivri | 176 (10.7%) | 100 (18.0%) | 113 (49.6%) | 8 (5.1%) | 397 |
+| Inat | 232 (14.1%) | 117→121 (21.8%) | 76 (33.3%) | 8 (5.1%) | 433→437 |
+
+Spread narrowed from 1.7x to 1.6x. Unrouted sentences unchanged at 138; unrouted
+verbs 130 → 114.
+
+**Tests run:** `npm test` — 311 pass, 0 fail (309 pass, 0 fail before the change).
+`node --test tests/sentence-bank-data.test.js` after the data append and before
+touching any expectation — exactly the two predicted count failures and no data
+bugs. Widening `INBAL_ENTRY_IDS` to all 70 rows was dry-run first against
+`inbal_17`–`50`, which had never been through the strict per-row checks: all
+passed, and they still pass now. `node scripts/character-content-report.js` — see
+above. Browser verification on the dev server: builds all `20260726e`, seed verbs
+158, sentence bank 556, Inbal 70; Inat's `בתשע` is a single glossed token; all
+eight new verbs reach the deck with `formSource: "authoritative"`, niqqud on every
+form, and correct English labels including "we hung out"; a live Handwriting
+session with Inbal as companion drew her material; every new row keeps 5
+distractors under the 12-tile Shema cap and all 20 have matching bilingual chip
+counts; no console errors.
+
+**Risks / regressions to check:** (1) **Multi-owner side effect worth a decision:**
+because Ido owns the `colloquial` category and Inat owns `formal`, 14 of Inbal's 20
+new rows are also counted for them — Ido's sentence total rose 164 → 174 and
+Inat's 117 → 121 purely from this batch. Multi-owner routing is sanctioned by the
+strategy doc and the rows are genuinely colloquial Hebrew, but it does mean Ido's
+missions will occasionally serve a sentence about tefillin or the Kotel. Recategorize
+the colloquial ten as `everyday` if that reads wrong. (2) No test compares pointed
+to plain text for `inbal_*` rows, and Shema reads the pointed text preferentially,
+so niqqud errors ship silently — the deliberate pointings are
+`בָּאַפְּלִיקַצְיָה` (dagesh mandatory), `בְּעִיר פְּרָאג` (written that way so the
+פ stays hard), `שָׂמָה` with sin, and `אַל תִּלְחֲצִי`. Worth an ear check in Shema.
+(3) `inbal_69` sits at 33 of 34 letters and `inbal_67` at 32; one added word drops
+either out of handwriting with no test failure. (4) The three template-derived verb
+paradigms above need a native-speaker or Pealim pass. (5) `לזרום` now exists both
+as a conjugatable verb and as the separate `לזרום עם` phrase card in
+`vocab-data.js`, the same dual surface flagged for `הורס`/`להרוס` on 2026-07-20.
+(6) `להתמזמז` ("to make out") is mildly adult and visible in Translation Match;
+kept deliberately at the user's instruction. (7) `character-verb-*` ids now span
+two builders in `hebrew-verbs.js` — `buildStarterVerbEntries` and
+`buildRequestedVerbEntries` — so grep both.

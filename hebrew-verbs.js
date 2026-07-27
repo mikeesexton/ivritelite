@@ -6557,6 +6557,391 @@ function buildStarterVerbEntries() {
       tags: ["paal", "irregular", "pe-nun", "lamed-guttural"],
       personal_priority: 70,
     }),
+    createVerbEntry({
+      id: "character-verb-lirkod",
+      availability: getStarterVerbAvailability("character-verb-lirkod"),
+      lemma: "לרקוד",
+      lemma_niqqud: "לִרְקוֹד",
+      root: ["ר", "ק", "ד"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to dance", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("רוקד", "רוֹקֵד"),
+          markedForm("רוקדת", "רוֹקֶדֶת"),
+          markedForm("רוקדים", "רוֹקְדִים"),
+          markedForm("רוקדות", "רוֹקְדוֹת")
+        ),
+        makePast(
+          markedForm("רקדתי", "רָקַדְתִּי"),
+          markedForm("רקדת", "רָקַדְתָּ"),
+          markedForm("רקדת", "רָקַדְתְּ"),
+          markedForm("רקד", "רָקַד"),
+          markedForm("רקדה", "רָקְדָה"),
+          markedForm("רקדנו", "רָקַדְנוּ"),
+          markedForm("רקדתם", "רְקַדְתֶּם"),
+          markedForm("רקדתן", "רְקַדְתֶּן"),
+          markedForm("רקדו", "רָקְדוּ")
+        ),
+        makeFuture(
+          markedForm("ארקוד", "אֶרְקוֹד"),
+          markedForm("תרקוד", "תִּרְקוֹד"),
+          markedForm("תרקדי", "תִּרְקְדִי"),
+          markedForm("ירקוד", "יִרְקוֹד"),
+          markedForm("תרקוד", "תִּרְקוֹד"),
+          markedForm("נרקוד", "נִרְקוֹד"),
+          markedForm("תרקדו", "תִּרְקְדוּ"),
+          markedForm("ירקדו", "יִרְקְדוּ")
+        ),
+        makeImperative(
+          markedForm("רקוד", "רְקוֹד"),
+          markedForm("רקדי", "רִקְדִי"),
+          markedForm("רקדו", "רִקְדוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Regular pa'al of ר-ק-ד with an o-future (אֶרְקוֹד, like לִטְבּוֹל). Dictionary-attested throughout. Nightlife staple in Ido's register.",
+      difficulty_level: 2,
+      tags: ["paal", "regular", "everyday", "nightlife"],
+      personal_priority: 84,
+    }),
+    createVerbEntry({
+      id: "character-verb-levalot",
+      availability: getStarterVerbAvailability("character-verb-levalot"),
+      lemma: "לבלות",
+      lemma_niqqud: "לְבַלּוֹת",
+      root: ["ב", "ל", "ה"],
+      binyan: "piel",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to hang out", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מבלה", "מְבַלֶּה"),
+          markedForm("מבלה", "מְבַלָּה"),
+          markedForm("מבלים", "מְבַלִּים"),
+          markedForm("מבלות", "מְבַלּוֹת")
+        ),
+        makePast(
+          markedForm("ביליתי", "בִּלִּיתִי"),
+          markedForm("בילית", "בִּלִּיתָ"),
+          markedForm("בילית", "בִּלִּית"),
+          markedForm("בילה", "בִּלָּה"),
+          markedForm("בילתה", "בִּלְּתָה"),
+          markedForm("בילינו", "בִּלִּינוּ"),
+          markedForm("ביליתם", "בִּלִּיתֶם"),
+          markedForm("ביליתן", "בִּלִּיתֶן"),
+          markedForm("בילו", "בִּלּוּ")
+        ),
+        makeFuture(
+          markedForm("אבלה", "אֲבַלֶּה"),
+          markedForm("תבלה", "תְּבַלֶּה"),
+          markedForm("תבלי", "תְּבַלִּי"),
+          markedForm("יבלה", "יְבַלֶּה"),
+          markedForm("תבלה", "תְּבַלֶּה"),
+          markedForm("נבלה", "נְבַלֶּה"),
+          markedForm("תבלו", "תְּבַלּוּ"),
+          markedForm("יבלו", "יְבַלּוּ")
+        ),
+        makeImperative(
+          markedForm("בלה", "בַּלֵּה"),
+          markedForm("בלי", "בַּלִּי"),
+          markedForm("בלו", "בַּלּוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pi'el ל\"ה of ב-ל-ה, slot-for-slot like לנסות. Present ms and fs share the plain spelling מבלה, and past 2ms/2fs share בילית — both resolved only by niqqud. Everyday sense is spending time out with people.",
+      difficulty_level: 2,
+      tags: ["piel", "irregular", "lamed-hey", "everyday", "nightlife"],
+      personal_priority: 86,
+    }),
+    createVerbEntry({
+      id: "character-verb-lachpor",
+      availability: getStarterVerbAvailability("character-verb-lachpor"),
+      lemma: "לחפור",
+      lemma_niqqud: "לַחְפּוֹר",
+      root: ["ח", "פ", "ר"],
+      binyan: "paal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to go on and on", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("חופר", "חוֹפֵר"),
+          markedForm("חופרת", "חוֹפֶרֶת"),
+          markedForm("חופרים", "חוֹפְרִים"),
+          markedForm("חופרות", "חוֹפְרוֹת")
+        ),
+        makePast(
+          markedForm("חפרתי", "חָפַרְתִּי"),
+          markedForm("חפרת", "חָפַרְתָּ"),
+          markedForm("חפרת", "חָפַרְתְּ"),
+          markedForm("חפר", "חָפַר"),
+          markedForm("חפרה", "חָפְרָה"),
+          markedForm("חפרנו", "חָפַרְנוּ"),
+          markedForm("חפרתם", "חֲפַרְתֶּם"),
+          markedForm("חפרתן", "חֲפַרְתֶּן"),
+          markedForm("חפרו", "חָפְרוּ")
+        ),
+        makeFuture(
+          markedForm("אחפור", "אֶחְפּוֹר"),
+          markedForm("תחפור", "תַּחְפּוֹר"),
+          markedForm("תחפרי", "תַּחְפְּרִי"),
+          markedForm("יחפור", "יַחְפּוֹר"),
+          markedForm("תחפור", "תַּחְפּוֹר"),
+          markedForm("נחפור", "נַחְפּוֹר"),
+          markedForm("תחפרו", "תַּחְפְּרוּ"),
+          markedForm("יחפרו", "יַחְפְּרוּ")
+        ),
+        makeImperative(
+          markedForm("חפור", "חֲפוֹר"),
+          markedForm("חפרי", "חִפְרִי"),
+          markedForm("חפרו", "חִפְרוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pe-guttural pa'al of ח-פ-ר, pointed like לחשוב: segol prefix in the 1s future (אֶחְפּוֹר) and patach elsewhere (תַּחְפּוֹר, יַחְפּוֹר). The paradigm is the dictionary verb 'to dig'; only the gloss is slang — חופר describes someone talking your ear off.",
+      difficulty_level: 3,
+      tags: ["paal", "irregular", "guttural", "slang", "colloquial"],
+      personal_priority: 72,
+    }),
+    createVerbEntry({
+      id: "character-verb-lizrom",
+      availability: getStarterVerbAvailability("character-verb-lizrom"),
+      lemma: "לזרום",
+      lemma_niqqud: "לִזְרוֹם",
+      root: ["ז", "ר", "מ"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to go with the flow", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("זורם", "זוֹרֵם"),
+          markedForm("זורמת", "זוֹרֶמֶת"),
+          markedForm("זורמים", "זוֹרְמִים"),
+          markedForm("זורמות", "זוֹרְמוֹת")
+        ),
+        makePast(
+          markedForm("זרמתי", "זָרַמְתִּי"),
+          markedForm("זרמת", "זָרַמְתָּ"),
+          markedForm("זרמת", "זָרַמְתְּ"),
+          markedForm("זרם", "זָרַם"),
+          markedForm("זרמה", "זָרְמָה"),
+          markedForm("זרמנו", "זָרַמְנוּ"),
+          markedForm("זרמתם", "זְרַמְתֶּם"),
+          markedForm("זרמתן", "זְרַמְתֶּן"),
+          markedForm("זרמו", "זָרְמוּ")
+        ),
+        makeFuture(
+          markedForm("אזרום", "אֶזְרוֹם"),
+          markedForm("תזרום", "תִּזְרוֹם"),
+          markedForm("תזרמי", "תִּזְרְמִי"),
+          markedForm("יזרום", "יִזְרוֹם"),
+          markedForm("תזרום", "תִּזְרוֹם"),
+          markedForm("נזרום", "נִזְרוֹם"),
+          markedForm("תזרמו", "תִּזְרְמוּ"),
+          markedForm("יזרמו", "יִזְרְמוּ")
+        ),
+        makeImperative(
+          markedForm("זרום", "זְרוֹם"),
+          markedForm("זרמי", "זִרְמִי"),
+          markedForm("זרמו", "זִרְמוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Regular pa'al of ז-ר-מ with an o-future. The paradigm is the dictionary verb 'to flow'; the colloquial sense is being easygoing, and it takes עם — זורם עם זה.",
+      difficulty_level: 2,
+      tags: ["paal", "regular", "slang", "colloquial"],
+      personal_priority: 76,
+    }),
+    createVerbEntry({
+      id: "character-verb-lefargen",
+      availability: getStarterVerbAvailability("character-verb-lefargen"),
+      lemma: "לפרגן",
+      lemma_niqqud: "לְפַרְגֵּן",
+      root: ["פ", "ר", "ג", "נ"],
+      binyan: "piel",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to give props", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מפרגן", "מְפַרְגֵּן"),
+          markedForm("מפרגנת", "מְפַרְגֶּנֶת"),
+          markedForm("מפרגנים", "מְפַרְגְּנִים"),
+          markedForm("מפרגנות", "מְפַרְגְּנוֹת")
+        ),
+        makePast(
+          markedForm("פרגנתי", "פִּרְגַּנְתִּי"),
+          markedForm("פרגנת", "פִּרְגַּנְתָּ"),
+          markedForm("פרגנת", "פִּרְגַּנְתְּ"),
+          markedForm("פרגן", "פִּרְגֵּן"),
+          markedForm("פרגנה", "פִּרְגְּנָה"),
+          markedForm("פרגנו", "פִּרְגַּנּוּ"),
+          markedForm("פרגנתם", "פִּרְגַּנְתֶּם"),
+          markedForm("פרגנתן", "פִּרְגַּנְתֶּן"),
+          markedForm("פרגנו", "פִּרְגְּנוּ")
+        ),
+        makeFuture(
+          markedForm("אפרגן", "אֲפַרְגֵּן"),
+          markedForm("תפרגן", "תְּפַרְגֵּן"),
+          markedForm("תפרגני", "תְּפַרְגְּנִי"),
+          markedForm("יפרגן", "יְפַרְגֵּן"),
+          markedForm("תפרגן", "תְּפַרְגֵּן"),
+          markedForm("נפרגן", "נְפַרְגֵּן"),
+          markedForm("תפרגנו", "תְּפַרְגְּנוּ"),
+          markedForm("יפרגנו", "יְפַרְגְּנוּ")
+        ),
+        makeImperative(
+          markedForm("פרגן", "פַּרְגֵּן"),
+          markedForm("פרגני", "פַּרְגְּנִי"),
+          markedForm("פרגנו", "פַּרְגְּנוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Denominal loan verb from Yiddish farginen; the quadriliteral pi'el paradigm follows the regular לתכנן template rather than a dictionary paradigm. Past 1p פִּרְגַּנּוּ and 3p פִּרְגְּנוּ share the plain spelling פרגנו, as in תכננו. The פ takes a dagesh in the past (פִּרְגֵּן, \"pirgen\") but not after the sheva na of the infinitive (לְפַרְגֵּן, \"lefargen\"). Takes ל — מפרגן לו.",
+      difficulty_level: 3,
+      tags: ["piel", "quadriliteral", "slang", "colloquial"],
+      personal_priority: 74,
+    }),
+    createVerbEntry({
+      id: "character-verb-lehitcharfen",
+      availability: getStarterVerbAvailability("character-verb-lehitcharfen"),
+      lemma: "להתחרפן",
+      lemma_niqqud: "לְהִתְחַרְפֵּן",
+      root: ["ח", "ר", "פ", "נ"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to freak out", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתחרפן", "מִתְחַרְפֵּן"),
+          markedForm("מתחרפנת", "מִתְחַרְפֶּנֶת"),
+          markedForm("מתחרפנים", "מִתְחַרְפְּנִים"),
+          markedForm("מתחרפנות", "מִתְחַרְפְּנוֹת")
+        ),
+        makePast(
+          markedForm("התחרפנתי", "הִתְחַרְפַּנְתִּי"),
+          markedForm("התחרפנת", "הִתְחַרְפַּנְתָּ"),
+          markedForm("התחרפנת", "הִתְחַרְפַּנְתְּ"),
+          markedForm("התחרפן", "הִתְחַרְפֵּן"),
+          markedForm("התחרפנה", "הִתְחַרְפְּנָה"),
+          markedForm("התחרפנו", "הִתְחַרְפַּנּוּ"),
+          markedForm("התחרפנתם", "הִתְחַרְפַּנְתֶּם"),
+          markedForm("התחרפנתן", "הִתְחַרְפַּנְתֶּן"),
+          markedForm("התחרפנו", "הִתְחַרְפְּנוּ")
+        ),
+        makeFuture(
+          markedForm("אתחרפן", "אֶתְחַרְפֵּן"),
+          markedForm("תתחרפן", "תִּתְחַרְפֵּן"),
+          markedForm("תתחרפני", "תִּתְחַרְפְּנִי"),
+          markedForm("יתחרפן", "יִתְחַרְפֵּן"),
+          markedForm("תתחרפן", "תִּתְחַרְפֵּן"),
+          markedForm("נתחרפן", "נִתְחַרְפֵּן"),
+          markedForm("תתחרפנו", "תִּתְחַרְפְּנוּ"),
+          markedForm("יתחרפנו", "יִתְחַרְפְּנוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Slang hitpa'el built on מחורפן; the quadriliteral paradigm is derived from the regular template, not dictionary-attested in this shape. No metathesis — only sibilants trigger it and the first radical here is ח. No imperative: the live command is the negated future, אל תתחרפן.",
+      difficulty_level: 3,
+      tags: ["hitpael", "quadriliteral", "slang", "colloquial"],
+      personal_priority: 70,
+    }),
+    createVerbEntry({
+      id: "character-verb-lehitmazmez",
+      availability: getStarterVerbAvailability("character-verb-lehitmazmez"),
+      lemma: "להתמזמז",
+      lemma_niqqud: "לְהִתְמַזְמֵז",
+      root: ["מ", "ז", "מ", "ז"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to make out", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתמזמז", "מִתְמַזְמֵז"),
+          markedForm("מתמזמזת", "מִתְמַזְמֶזֶת"),
+          markedForm("מתמזמזים", "מִתְמַזְמְזִים"),
+          markedForm("מתמזמזות", "מִתְמַזְמְזוֹת")
+        ),
+        makePast(
+          markedForm("התמזמזתי", "הִתְמַזְמַזְתִּי"),
+          markedForm("התמזמזת", "הִתְמַזְמַזְתָּ"),
+          markedForm("התמזמזת", "הִתְמַזְמַזְתְּ"),
+          markedForm("התמזמז", "הִתְמַזְמֵז"),
+          markedForm("התמזמזה", "הִתְמַזְמְזָה"),
+          markedForm("התמזמזנו", "הִתְמַזְמַזְנוּ"),
+          markedForm("התמזמזתם", "הִתְמַזְמַזְתֶּם"),
+          markedForm("התמזמזתן", "הִתְמַזְמַזְתֶּן"),
+          markedForm("התמזמזו", "הִתְמַזְמְזוּ")
+        ),
+        makeFuture(
+          markedForm("אתמזמז", "אֶתְמַזְמֵז"),
+          markedForm("תתמזמז", "תִּתְמַזְמֵז"),
+          markedForm("תתמזמזי", "תִּתְמַזְמְזִי"),
+          markedForm("יתמזמז", "יִתְמַזְמֵז"),
+          markedForm("תתמזמז", "תִּתְמַזְמֵז"),
+          markedForm("נתמזמז", "נִתְמַזְמֵז"),
+          markedForm("תתמזמזו", "תִּתְמַזְמְזוּ"),
+          markedForm("יתמזמזו", "יִתְמַזְמְזוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Reduplicated slang root מ-ז-מ-ז; the quadriliteral hitpa'el paradigm is template-derived, not dictionary-attested, the same status as מלרלר. No metathesis — the first radical is מ, and the ז radicals sit in positions two and four where it never applies. Takes עם.",
+      difficulty_level: 3,
+      tags: ["hitpael", "quadriliteral", "slang", "colloquial", "dating"],
+      personal_priority: 66,
+    }),
+    createVerbEntry({
+      id: "character-verb-lehitlabet",
+      availability: getStarterVerbAvailability("character-verb-lehitlabet"),
+      lemma: "להתלבט",
+      lemma_niqqud: "לְהִתְלַבֵּט",
+      root: ["ל", "ב", "ט"],
+      binyan: "hitpael",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to go back and forth", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מתלבט", "מִתְלַבֵּט"),
+          markedForm("מתלבטת", "מִתְלַבֶּטֶת"),
+          markedForm("מתלבטים", "מִתְלַבְּטִים"),
+          markedForm("מתלבטות", "מִתְלַבְּטוֹת")
+        ),
+        makePast(
+          markedForm("התלבטתי", "הִתְלַבַּטְתִּי"),
+          markedForm("התלבטת", "הִתְלַבַּטְתָּ"),
+          markedForm("התלבטת", "הִתְלַבַּטְתְּ"),
+          markedForm("התלבט", "הִתְלַבֵּט"),
+          markedForm("התלבטה", "הִתְלַבְּטָה"),
+          markedForm("התלבטנו", "הִתְלַבַּטְנוּ"),
+          markedForm("התלבטתם", "הִתְלַבַּטְתֶּם"),
+          markedForm("התלבטתן", "הִתְלַבַּטְתֶּן"),
+          markedForm("התלבטו", "הִתְלַבְּטוּ")
+        ),
+        makeFuture(
+          markedForm("אתלבט", "אֶתְלַבֵּט"),
+          markedForm("תתלבט", "תִּתְלַבֵּט"),
+          markedForm("תתלבטי", "תִּתְלַבְּטִי"),
+          markedForm("יתלבט", "יִתְלַבֵּט"),
+          markedForm("תתלבט", "תִּתְלַבֵּט"),
+          markedForm("נתלבט", "נִתְלַבֵּט"),
+          markedForm("תתלבטו", "תִּתְלַבְּטוּ"),
+          markedForm("יתלבטו", "יִתְלַבְּטוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Regular hitpa'el of ל-ב-ט, pointed exactly like להתלבש apart from the third radical. Dictionary-attested. Describes weighing a decision rather than physical movement. No imperative — הִתְלַבֵּט does not work as a command.",
+      difficulty_level: 3,
+      tags: ["hitpael", "regular", "everyday"],
+      personal_priority: 78,
+    }),
   ];
 }
 
@@ -7375,7 +7760,10 @@ function buildEnglishFormLabel(gloss, slotId) {
   const presentThird = inflectEnglishThirdPerson(base);
   const presentNonThird = inflectEnglishPresentNonThird(base);
   const past = inflectEnglishPast(base);
-  const pastPl = base === "be" ? "were" : past;
+  // Only the copula head inflects for number, so "be sorry" has to become
+  // "were sorry" and not "was sorry". Matching the head rather than the whole
+  // phrase keeps every multi-word "to be …" gloss right, not just bare "be".
+  const pastPl = past.replace(/^was\b/, "were");
   const pastTag = past === base ? " (past)" : "";
 
   switch (slotId) {
@@ -7478,6 +7866,7 @@ const ENGLISH_PAST_IRREGULARS = new Map([
   ["give", "gave"],
   ["go", "went"],
   ["grow", "grew"],
+  ["hang", "hung"],
   ["have", "had"],
   ["hear", "heard"],
   ["keep", "kept"],
@@ -7668,6 +8057,6 @@ return {
   buildGeneratedForms,
   resolveLearnerFacingForms,
   normalizeAndValidateFormSet,
-  __build: "20260721a",
+  __build: "20260726e",
 };
 });

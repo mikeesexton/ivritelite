@@ -308,6 +308,138 @@ const IVRI_DIALOGUE = Object.freeze({
   }),
 });
 
+// Authored plural-address in the source script; every line below is rewritten to
+// singular. Where masculine and feminine singular share a spelling (שלך, לך,
+// שקלת, אותך) the line stays single-variant rather than duplicated.
+const INAT_DIALOGUE = Object.freeze({
+  descriptionM: dialogue("פוליטיקה. משפטים. היסטוריה. תכיר את הפרופסורית.", {
+    פוליטיקה: "politics", משפטים: "law", היסטוריה: "history", תכיר: "meet",
+    את: "(object marker)", הפרופסורית: "the professor",
+  }),
+  descriptionF: dialogue("פוליטיקה. משפטים. היסטוריה. תכירי את הפרופסורית.", {
+    פוליטיקה: "politics", משפטים: "law", היסטוריה: "history", תכירי: "meet",
+    את: "(object marker)", הפרופסורית: "the professor",
+  }),
+  first: dialogue("להימנע מפוליטיקה זה חכם. אבל להבין אותה זה חשוב. שנתחיל?", {
+    להימנע: "to avoid", מפוליטיקה: "politics", זה: "is", חכם: "smart",
+    אבל: "but", להבין: "to understand", אותה: "it", חשוב: "important",
+    שנתחיל: "shall we begin",
+  }),
+  greetingM: dialogue("אנחנו חיים בזמנים מורכבים. זה תלוי בנו לעשות בזה סדר. בוא נתחיל.", {
+    אנחנו: "we", חיים: "live", בזמנים: "in times", מורכבים: "complicated",
+    זה: "it", תלוי: "is up to", בנו: "us", לעשות: "to make", בזה: "of it",
+    סדר: "sense", בוא: "come", נתחיל: "let’s begin",
+  }),
+  greetingF: dialogue("אנחנו חיים בזמנים מורכבים. זה תלוי בנו לעשות בזה סדר. בואי נתחיל.", {
+    אנחנו: "we", חיים: "live", בזמנים: "in times", מורכבים: "complicated",
+    זה: "it", תלוי: "is up to", בנו: "us", לעשות: "to make", בזה: "of it",
+    סדר: "sense", בואי: "come", נתחיל: "let’s begin",
+  }),
+  fourRightM: dialogue("מצוין. בקרוב תופיע בקשת 12.", {
+    מצוין: "excellent", בקרוב: "soon", תופיע: "you’ll be on", בקשת: "Channel 12",
+  }),
+  fourRightF: dialogue("מצוין. בקרוב תופיעי בקשת 12.", {
+    מצוין: "excellent", בקרוב: "soon", תופיעי: "you’ll be on", בקשת: "Channel 12",
+  }),
+  oneWrongM: dialogue("זהירות. כדאי לקרוא שוב. קטן עליך.", {
+    זהירות: "careful", כדאי: "it’s worth", לקרוא: "reading", שוב: "again",
+    קטן: "you’ve got this", עליך: "you’ve got this",
+  }),
+  oneWrongF: dialogue("זהירות. כדאי לקרוא שוב. קטן עלייך.", {
+    זהירות: "careful", כדאי: "it’s worth", לקרוא: "reading", שוב: "again",
+    קטן: "you’ve got this", עלייך: "you’ve got this",
+  }),
+  fourWrong: dialogue("אולי כדאי להתחיל טיוטה חדשה.", {
+    אולי: "maybe", כדאי: "it’s worth", להתחיל: "starting", טיוטה: "a draft", חדשה: "new",
+  }),
+  recovery: dialogue("תיקון מעולה. הנקודה שלך ברורה עכשיו.", {
+    תיקון: "a correction", מעולה: "excellent", הנקודה: "the point",
+    שלך: "your", ברורה: "is clear", עכשיו: "now",
+  }),
+  perfect: dialogue("עבודה יוצאת מן הכלל. רמת דוקטורט. שקלת לימודי משפטים?", {
+    עבודה: "work", יוצאת: "outstanding", מן: "outstanding", הכלל: "outstanding",
+    רמת: "level", דוקטורט: "doctorate", שקלת: "have you considered",
+    לימודי: "studies", משפטים: "law",
+  }),
+  mission: dialogue("תודה על העזרה. כדאי לך לנוח — השיעור מחר מתחיל בתשע.", {
+    תודה: "thank you", על: "for", העזרה: "the help", כדאי: "you should",
+    לך: "you", לנוח: "rest", השיעור: "the class", מחר: "tomorrow",
+    מתחיל: "starts", בתשע: "at nine",
+  }),
+  vocabularyM: dialogue("טיעונים חזקים דורשים שפה מדויקת. בוא נתרגל.", {
+    טיעונים: "arguments", חזקים: "strong", דורשים: "require", שפה: "language",
+    מדויקת: "precise", בוא: "come", נתרגל: "let’s practice",
+  }),
+  vocabularyF: dialogue("טיעונים חזקים דורשים שפה מדויקת. בואי נתרגל.", {
+    טיעונים: "arguments", חזקים: "strong", דורשים: "require", שפה: "language",
+    מדויקת: "precise", בואי: "come", נתרגל: "let’s practice",
+  }),
+  sentencesM: dialogue("העיתון ביקש טור דעה. תוכל לעבור על זה?", {
+    העיתון: "the newspaper", ביקש: "asked for", טור: "an opinion column",
+    דעה: "an opinion column", תוכל: "could you", לעבור: "go over", על: "over", זה: "it",
+  }),
+  sentencesF: dialogue("העיתון ביקש טור דעה. תוכלי לעבור על זה?", {
+    העיתון: "the newspaper", ביקש: "asked for", טור: "an opinion column",
+    דעה: "an opinion column", תוכלי: "could you", לעבור: "go over", על: "over", זה: "it",
+  }),
+  listeningM: dialogue("תקשיב לראיון הזה בפודקאסט. מה מעניין אותך פה?", {
+    תקשיב: "listen", לראיון: "to the interview", הזה: "this",
+    בפודקאסט: "on the podcast", מה: "what", מעניין: "interests", אותך: "you", פה: "here",
+  }),
+  listeningF: dialogue("תקשיבי לראיון הזה בפודקאסט. מה מעניין אותך פה?", {
+    תקשיבי: "listen", לראיון: "to the interview", הזה: "this",
+    בפודקאסט: "on the podcast", מה: "what", מעניין: "interests", אותך: "you", פה: "here",
+  }),
+  conjugation: dialogue("כדי לנהל דיון טוב, צריך לחשוב מהר. קדימה.", {
+    כדי: "in order", לנהל: "to hold", דיון: "a debate", טוב: "good",
+    צריך: "you need", לחשוב: "to think", מהר: "fast", קדימה: "let’s go",
+  }),
+  abbreviationsM: dialogue("אי אפשר להימנע מר״ת כשמדברים על מדיניות. בוא נתרגל.", {
+    אי: "impossible", אפשר: "impossible", להימנע: "to avoid",
+    "מר״ת": "abbreviations", כשמדברים: "when talking", על: "about",
+    מדיניות: "policy", בוא: "come", נתרגל: "let’s practice",
+  }),
+  abbreviationsF: dialogue("אי אפשר להימנע מר״ת כשמדברים על מדיניות. בואי נתרגל.", {
+    אי: "impossible", אפשר: "impossible", להימנע: "to avoid",
+    "מר״ת": "abbreviations", כשמדברים: "when talking", על: "about",
+    מדיניות: "policy", בואי: "come", נתרגל: "let’s practice",
+  }),
+  advConjM: dialogue("היסטוריה היא בעצם אוסף של סיפורים. בוא נלמד אותם.", {
+    היסטוריה: "history", היא: "is", בעצם: "really", אוסף: "a collection",
+    של: "of", סיפורים: "stories", בוא: "come", נלמד: "let’s learn", אותם: "them",
+  }),
+  advConjF: dialogue("היסטוריה היא בעצם אוסף של סיפורים. בואי נלמד אותם.", {
+    היסטוריה: "history", היא: "is", בעצם: "really", אוסף: "a collection",
+    של: "of", סיפורים: "stories", בואי: "come", נלמד: "let’s learn", אותם: "them",
+  }),
+  prepositionsM: dialogue("היסטוריה עוסקת באנשים ובמערכות היחסים ביניהם. בוא נבין אותם.", {
+    היסטוריה: "history", עוסקת: "is about", באנשים: "people",
+    ובמערכות: "and the relationships", היחסים: "and the relationships",
+    ביניהם: "between them", בוא: "come", נבין: "let’s understand", אותם: "them",
+  }),
+  prepositionsF: dialogue("היסטוריה עוסקת באנשים ובמערכות היחסים ביניהם. בואי נבין אותם.", {
+    היסטוריה: "history", עוסקת: "is about", באנשים: "people",
+    ובמערכות: "and the relationships", היחסים: "and the relationships",
+    ביניהם: "between them", בואי: "come", נבין: "let’s understand", אותם: "them",
+  }),
+  binyanimM: dialogue("חוקים חלים על הכל — אפילו על שורשים. בוא נלמד.", {
+    חוקים: "laws", חלים: "apply", על: "to", הכל: "everything",
+    אפילו: "even", שורשים: "roots", בוא: "come", נלמד: "let’s learn",
+  }),
+  binyanimF: dialogue("חוקים חלים על הכל — אפילו על שורשים. בואי נלמד.", {
+    חוקים: "laws", חלים: "apply", על: "to", הכל: "everything",
+    אפילו: "even", שורשים: "roots", בואי: "come", נלמד: "let’s learn",
+  }),
+  handwritingM: dialogue("האוניברסיטה מארחת פאנל, אני צריכה שתרשום הערות.", {
+    האוניברסיטה: "the university", מארחת: "is hosting", פאנל: "a panel",
+    אני: "I", צריכה: "need", שתרשום: "you to take", הערות: "notes",
+  }),
+  handwritingF: dialogue("האוניברסיטה מארחת פאנל, אני צריכה שתרשמי הערות.", {
+    האוניברסיטה: "the university", מארחת: "is hosting", פאנל: "a panel",
+    אני: "I", צריכה: "need", שתרשמי: "you to take", הערות: "notes",
+  }),
+});
+
 // Missing keys resolve through this chain so a character with an incomplete
 // dialogue table degrades to a sensible line instead of rendering nothing.
 characterData.DIALOGUE_FALLBACKS = characterData.DIALOGUE_FALLBACKS || Object.freeze({
@@ -343,7 +475,29 @@ characterData.characters = characterData.characters || Object.freeze({
       sentenceCategories: Object.freeze(["colloquial"]),
       sentenceStyles: Object.freeze(["whatsapp"]),
       abbrBuckets: Object.freeze(["Daily Life & Home"]),
-      verbIds: Object.freeze(["advanced-verb-laharos", "advanced-verb-lelarler"]),
+      // Authored for Ido, then routed from the shared pool. The pool verbs are
+      // his by register rather than by topic — going out, making plans, texting,
+      // laughing — so they stay available to everyone and simply weigh more here.
+      verbIds: Object.freeze([
+        "advanced-verb-laharos",
+        "advanced-verb-lelarler",
+        "character-verb-lirkod",
+        "character-verb-levalot",
+        "character-verb-lachpor",
+        "character-verb-lizrom",
+        "character-verb-lefargen",
+        "character-verb-lehitcharfen",
+        "character-verb-lehitmazmez",
+        "character-verb-lehitlabet",
+        "common-verb-latzet",
+        "common-verb-lehipagesh",
+        "common-verb-lehitkasher",
+        "common-verb-lishloach",
+        "common-verb-lehazmin",
+        "advanced-verb-litzchok",
+        "advanced-verb-lehitlabesh",
+        "advanced-verb-lehitragesh",
+      ]),
     }),
   }),
   inbal: Object.freeze({
@@ -417,6 +571,38 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lehachlit",
         "advanced-verb-leadken",
         "advanced-verb-leasher",
+      ]),
+    }),
+  }),
+  inat: Object.freeze({
+    id: "inat",
+    nameEn: "Inat",
+    nameHe: "עינת",
+    order: 4,
+    dialogue: INAT_DIALOGUE,
+    route: Object.freeze({
+      vocabCategories: Object.freeze([
+        "politics_society_expanded",
+        "literature_arts_cultural_history",
+        "legal_civic",
+        "law_legal_systems_expanded",
+      ]),
+      // The academic/analytical register is hers; Ivri keeps `professional`.
+      sentenceCategories: Object.freeze(["formal"]),
+      sentenceIdPrefixes: Object.freeze(["inat_"]),
+      // Shared with Ivri on purpose: the bucket mixes his corporate and
+      // regulatory acronyms with her parties, courts, and rights bodies, and the
+      // strategy doc sanctions multi-owner routing rather than an arbitrary cut.
+      abbrBuckets: Object.freeze(["Civics, Law & Work"]),
+      verbIds: Object.freeze([
+        "character-verb-lefaresh",
+        "character-verb-limchot",
+        "advanced-verb-ladun",
+        "advanced-verb-lehochiach",
+        "advanced-verb-lehashpia",
+        "starter-verb-leshacharer",
+        "common-verb-lesaper",
+        "advanced-verb-lelamed",
       ]),
     }),
   }),

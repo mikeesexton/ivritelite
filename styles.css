@@ -1768,6 +1768,12 @@ body[data-theme="light"] .sentence-answer-line {
   border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
 }
 
+/* With no result headline above it there is nothing to rule off. */
+.feedback-items > .feedback-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
 .feedback-item-label {
   color: var(--ink-soft);
   font-size: 0.78rem;
@@ -2715,6 +2721,30 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   background-image: url("./assets/ivri/nervous-laugh.png?v=20260726a");
 }
 
+.character-sprite[data-character="inat"][data-reaction="neutral"] {
+  background-image: url("./assets/inat/neutral.png?v=20260726a");
+}
+
+.character-sprite[data-character="inat"][data-reaction="frustrated"] {
+  background-image: url("./assets/inat/frustrated.png?v=20260726a");
+}
+
+.character-sprite[data-character="inat"][data-reaction="celebrating"] {
+  background-image: url("./assets/inat/celebrating.png?v=20260726a");
+}
+
+.character-sprite[data-character="inat"][data-reaction="struggling"] {
+  background-image: url("./assets/inat/struggling.png?v=20260726a");
+}
+
+.character-sprite[data-character="inat"][data-reaction="mission-complete"] {
+  background-image: url("./assets/inat/mission-complete.png?v=20260726a");
+}
+
+.character-sprite[data-character="inat"][data-reaction="nervous-laugh"] {
+  background-image: url("./assets/inat/nervous-laugh.png?v=20260726a");
+}
+
 .character-scene {
   position: fixed;
   inset: 0;
@@ -2737,7 +2767,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 
 #characterSceneContent {
   display: grid;
-  gap: 1.2rem;
+  gap: 0.85rem;
 }
 
 .character-scene-heading {
@@ -2760,15 +2790,17 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 
 .character-choice-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.7rem;
 }
 
 .character-choice-card {
   min-width: 0;
-  padding: 1rem;
+  padding: 0.85rem;
   display: grid;
-  gap: 0.75rem;
+  /* The blurb row absorbs slack so every card's button lands on one line. */
+  grid-template-rows: auto auto 1fr auto;
+  gap: 0.5rem;
   justify-items: center;
   align-content: start;
   text-align: center;
@@ -2801,12 +2833,11 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 
 .character-gender-picker {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.4rem;
   justify-items: center;
 }
 
-.character-picker-label,
-.character-required-note {
+.character-picker-label {
   margin: 0;
   text-align: center;
 }
@@ -2818,18 +2849,13 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 }
 
 .character-gender-options button {
-  min-height: 46px;
+  min-height: 42px;
 }
 
 .character-gender-options button.selected {
   border-color: var(--brand);
   background: var(--paper-2);
   color: var(--brand);
-}
-
-.character-required-note {
-  color: var(--error);
-  font-size: 0.88rem;
 }
 
 .character-scene-layout {
@@ -2875,6 +2901,10 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.character-card-dialogue-wrap {
+  align-self: start;
 }
 
 .character-dialogue-wrap,
@@ -3051,20 +3081,20 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 }
 
 .character-mission-card {
-  gap: 1rem;
+  gap: 0.7rem;
 }
 
 .character-mission-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 136px;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: center;
   direction: ltr;
 }
 
 .character-mission-copy {
   display: grid;
-  gap: 0.42rem;
+  gap: 0.22rem;
   text-align: left;
 }
 
@@ -3076,10 +3106,16 @@ body[data-ui-lang="he"] .character-mission-copy {
 .character-mission-copy h2,
 .character-mission-copy p {
   margin: 0;
+  line-height: 1.15;
+}
+
+.character-mission-copy .character-scene-eyebrow {
+  line-height: 1.1;
 }
 
 .character-mission-progress-text {
   color: var(--ink-soft);
+  font-size: 0.92rem;
 }
 
 .character-bond-grid {
@@ -3175,16 +3211,16 @@ body[data-ui-lang="he"] .character-mission-copy {
 
 .character-mission-list {
   display: grid;
-  gap: 0.5rem;
+  gap: 0.38rem;
 }
 
 .character-mission-row {
   width: 100%;
-  min-height: 64px;
-  padding: 0.72rem 0.82rem;
+  min-height: 50px;
+  padding: 0.48rem 0.7rem;
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) auto;
-  gap: 0.65rem;
+  grid-template-columns: 1.85rem minmax(0, 1fr) auto;
+  gap: 0.6rem;
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -3214,8 +3250,8 @@ body[data-ui-lang="he"] .character-mission-copy {
 .character-mission-number {
   display: grid;
   place-items: center;
-  width: 2rem;
-  height: 2rem;
+  width: 1.85rem;
+  height: 1.85rem;
   border-radius: 999px;
   background: var(--paper-2);
   color: var(--brand);
@@ -3225,12 +3261,14 @@ body[data-ui-lang="he"] .character-mission-copy {
 .character-mission-row strong {
   min-width: 0;
   font-family: var(--display-font);
-  font-size: 1.08rem;
+  font-size: 1.02rem;
+  line-height: 1.2;
 }
 
 .character-mission-status {
   color: var(--ink-soft);
-  font-size: 0.84rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
   text-align: right;
 }
 
@@ -3277,15 +3315,18 @@ body[data-ui-lang="he"] .character-mission-copy {
 }
 
 .mission-results-character {
+  min-width: 0;
   display: grid;
   gap: 0.4rem;
   justify-items: end;
   direction: ltr;
 }
 
+/* Capping at 100% keeps the bubble from widening the grid track past the
+   column it sits in, which used to push the sprite off the screen edge. */
 .mission-results-dialogue {
   width: fit-content;
-  max-width: 250px;
+  max-width: min(250px, 100%);
   font-size: 1rem;
   direction: rtl;
   text-align: right;
@@ -3329,7 +3370,12 @@ body[data-ui-lang="he"] .character-mission-copy {
 }
 
 @media (max-width: 720px) {
-  .character-choice-grid,
+  /* Two compact columns keep all four choices near the top of the scene. */
+  .character-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
   .character-scene-layout {
     grid-template-columns: 1fr;
   }
@@ -3344,44 +3390,59 @@ body[data-ui-lang="he"] .character-mission-copy {
 
   .character-picker-sprite,
   .free-play-icon {
-    width: 132px;
+    width: min(100%, 150px);
+  }
+
+  .free-play-icon {
+    font-size: clamp(2.4rem, 11vw, 3.6rem);
   }
 
   .character-choice-card {
-    grid-template-columns: 118px minmax(0, 1fr);
-    align-items: center;
-    justify-items: start;
-    text-align: start;
+    padding: 0.55rem 0.45rem 0.65rem;
+    gap: 0.35rem;
+  }
+
+  .character-choice-card h3 {
+    font-size: 1.02rem;
+  }
+
+  .character-card-dialogue {
+    font-size: 0.86rem;
   }
 
   .character-choice-card > button {
-    grid-column: 1 / -1;
-  }
-
-  .character-card-dialogue-wrap {
-    justify-self: stretch;
+    padding: 0.56rem 0.4rem;
+    font-size: 0.88rem;
   }
 
   .character-scene-sprite {
     width: min(48vw, 220px);
   }
 
+  /* Stacked hero: the character gets a full-width row of its own so the
+     bubble has room to wrap instead of spilling past the card. */
   .mission-results-hero {
-    grid-template-columns: minmax(0, 1fr) 132px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
   }
 
   .mission-results-character {
-    min-width: 0;
+    order: -1;
+    grid-template-columns: minmax(0, 1fr) 132px;
+    align-items: center;
+    justify-items: stretch;
+    gap: 0.6rem;
   }
 
   .mission-results-sprite {
     width: 132px;
+    justify-self: end;
   }
 
   .mission-results-dialogue {
-    width: min(48vw, 190px);
-    font-size: 0.88rem;
+    width: auto;
+    max-width: 100%;
+    font-size: 0.9rem;
   }
 }
 
@@ -3392,6 +3453,11 @@ body[data-ui-lang="he"] .character-mission-copy {
 
   .character-scene-card {
     padding: 0.85rem;
+  }
+
+  .character-picker-sprite,
+  .free-play-icon {
+    width: min(100%, 124px);
   }
 
   .character-companion {
@@ -3420,8 +3486,12 @@ body[data-ui-lang="he"] .character-mission-copy {
   }
 
   .mission-results-hero {
+    gap: 0.6rem;
+  }
+
+  .mission-results-character {
     grid-template-columns: minmax(0, 1fr) 110px;
-    gap: 0.55rem;
+    gap: 0.5rem;
   }
 
   .mission-results-metrics {
@@ -3441,14 +3511,13 @@ body[data-ui-lang="he"] .character-mission-copy {
   }
 
   .mission-results-dialogue {
-    width: min(150px, 42vw);
-    padding: 0.55rem;
-    font-size: 0.78rem;
+    padding: 0.55rem 0.6rem;
+    font-size: 0.85rem;
   }
 
   .character-mission-hero {
     grid-template-columns: minmax(0, 1fr) 108px;
-    gap: 0.65rem;
+    gap: 0.55rem;
   }
 
   .character-mission-sprite {
@@ -3457,7 +3526,14 @@ body[data-ui-lang="he"] .character-mission-copy {
 
   .character-mission-row {
     grid-template-columns: 1.8rem minmax(0, 1fr);
-    min-height: 58px;
+    min-height: 44px;
+    column-gap: 0.55rem;
+    row-gap: 0;
+  }
+
+  /* The badge spans both stacked lines so it stops padding out the row. */
+  .character-mission-row .character-mission-number {
+    grid-row: 1 / span 2;
   }
 
   .character-mission-status {
@@ -4654,8 +4730,12 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
     height: 1.9rem;
   }
 
+  /* `overflow: hidden` (needed for the ellipsis) crops whatever falls outside
+     the line box, so line-height must leave room for descenders like the j/g
+     in "Conjugation+". */
   body[data-gameplay-active="true"] .shell-brand-title h1 {
     font-size: 1.18rem;
+    line-height: 1.32;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

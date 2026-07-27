@@ -515,12 +515,6 @@ function renderPicker(target) {
   cards.append(freeCard);
   target.append(heading);
   renderGenderPicker(target);
-  if (!state?.gender) {
-    const genderHint = global.document.createElement("p");
-    genderHint.className = "character-required-note";
-    genderHint.textContent = uiText("Choose Male or Female to continue with a character.", "צריך לבחור זכר או נקבה כדי להמשיך עם דמות.");
-    target.append(genderHint);
-  }
   target.append(cards);
 }
 

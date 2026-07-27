@@ -497,11 +497,15 @@ ui.setFeedback = ui.setFeedback || function setFeedback(payload, success) {
     structuredTarget.classList.toggle("hidden", !hasStructuredFeedback);
     if (hasStructuredFeedback) {
       const doc = runtime.global?.document;
-      const result = doc.createElement("p");
-      result.className = "feedback-result";
-      result.setAttribute("dir", "auto");
-      result.textContent = normalized.structured.result;
-      structuredTarget.appendChild(result);
+      // A correct answer already reads as correct from the green tray, so the
+      // "נכון" headline only earns its line on a miss.
+      if (normalized.tone !== "success") {
+        const result = doc.createElement("p");
+        result.className = "feedback-result";
+        result.setAttribute("dir", "auto");
+        result.textContent = normalized.structured.result;
+        structuredTarget.appendChild(result);
+      }
 
       normalized.structured.items.forEach((item) => {
         const row = doc.createElement("div");
