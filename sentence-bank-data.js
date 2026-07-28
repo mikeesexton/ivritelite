@@ -13525,9 +13525,210 @@ const INAT_SENTENCES = [
     englishDistractors: ["The speech", "hides", "a consensus", "beside"],
     notes: "נרטיב נגדי is a counter-narrative; הגמוני describes a dominant cultural account."
   }),
+  buildReviewedSentence({
+    id: "inat_25", emoji: "🎙️", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הקלטנו את העדות לארכיון.",
+    hebrewNiqqud: "הִקְלַטְנוּ אֶת הָעֵדוּת לָאַרְכִיּוֹן.",
+    english: "We recorded the testimony for the archive.",
+    hebrewTokenPairs: [["הקלטנו", "הִקְלַטְנוּ"], ["את העדות", "אֶת הָעֵדוּת"], ["לארכיון", "לָאַרְכִיּוֹן"]],
+    englishTokens: ["We recorded", "the testimony", "for the archive"],
+    hebrewDistractorPairs: [["תיעדנו", "תִּיעַדְנוּ"], ["את הנאום", "אֶת הַנְּאוּם"], ["לעיתון", "לָעִיתּוֹן"], ["מחקנו", "מָחַקְנוּ"]],
+    englishDistractors: ["We documented", "the speech", "for the newspaper", "We erased"],
+    notes: "להקליט is the hif'il of ק-ל-ט — the causative partner of לקלוט: קלט takes something in, הקליט commits it to a recording. עדות is testimony, the unit oral-history archives collect."
+  }),
 ];
 
-SENTENCE_BANK.push(...INBAL_SENTENCES, ...INAT_SENTENCES);
+// Sentences built around one lexical item each, so a word introduced in the
+// vocabulary or conjugation decks also appears in context. Ids are plain
+// `<bank>_<number>` rather than slugged, because the compact-token policy in
+// tests/sentence-bank-data.test.js only matches that shape — a slugged id would
+// silently opt out of the chip review.
+const LEXICAL_FOCUS_SENTENCES = [
+  buildReviewedSentence({
+    id: "colloquial_152", emoji: "🤷", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אני אומר את האמת בלי חרטות.",
+    hebrewNiqqud: "אֲנִי אוֹמֵר אֶת הָאֱמֶת בְּלִי חֲרָטוֹת.",
+    english: "I tell the truth with no regrets.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["אומר", "אוֹמֵר"], ["את האמת", "אֶת הָאֱמֶת"], ["בלי חרטות", "בְּלִי חֲרָטוֹת"]],
+    englishTokens: ["I", "tell", "the truth", "with no regrets"],
+    hebrewDistractorPairs: [["חושב", "חוֹשֵׁב"], ["שומע", "שׁוֹמֵעַ"], ["את השקר", "אֶת הַשֶּׁקֶר"], ["בלי בושה", "בְּלִי בּוּשָׁה"]],
+    englishDistractors: ["think", "hear", "the lie", "with no shame"],
+    notes: "בלי חרטות is the fixed expression 'no regrets.' חרטות is the plural of חֲרָטָה, regret; the singular בלי חרטה is not the idiom."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_153", emoji: "🚪", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אם זה לא עובד, עדיף לצאת בלי חרטות.",
+    hebrewNiqqud: "אִם זֶה לֹא עוֹבֵד, עָדִיף לָצֵאת בְּלִי חֲרָטוֹת.",
+    english: "If it does not work, it is better to leave with no regrets.",
+    hebrewTokenPairs: [["אם", "אִם"], ["זה", "זֶה"], ["לא עובד", "לֹא עוֹבֵד"], ["עדיף", "עָדִיף"], ["לצאת", "לָצֵאת"], ["בלי חרטות", "בְּלִי חֲרָטוֹת"]],
+    englishTokens: ["If", "it", "does not work", "it is better", "to leave", "with no regrets"],
+    hebrewDistractorPairs: [["כשזה", "כְּשֶׁזֶּה"], ["מסתבך", "מִסְתַּבֵּךְ"], ["אסור", "אָסוּר"], ["להישאר", "לְהִישָּׁאֵר"], ["בלי לחשוב", "בְּלִי לַחְשֹׁב"]],
+    englishDistractors: ["when it", "backfires", "it is forbidden", "to stay", "without thinking"],
+    hebrewOrderAlternates: [{
+      text: "עדיף לצאת בלי חרטות אם זה לא עובד.",
+      textNiqqud: "עָדִיף לָצֵאת בְּלִי חֲרָטוֹת אִם זֶה לֹא עוֹבֵד.",
+      order: [3, 4, 5, 0, 1, 2],
+    }],
+    notes: "The אם clause is neutral in either position, so both orders are accepted. עדיף plus an infinitive is the ordinary way to say 'it is better to.'"
+  }),
+  buildReviewedSentence({
+    id: "colloquial_154", emoji: "📱", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "מחקתי את האפליקציה בלי חרטות.",
+    hebrewNiqqud: "מָחַקְתִּי אֶת הָאַפְּלִיקַצְיָה בְּלִי חֲרָטוֹת.",
+    english: "I deleted the app with no regrets.",
+    hebrewTokenPairs: [["מחקתי", "מָחַקְתִּי"], ["את האפליקציה", "אֶת הָאַפְּלִיקַצְיָה"], ["בלי חרטות", "בְּלִי חֲרָטוֹת"]],
+    englishTokens: ["I deleted", "the app", "with no regrets"],
+    hebrewDistractorPairs: [["הורדתי", "הוֹרַדְתִּי"], ["את המשחק", "אֶת הַמִּשְׂחָק"], ["בלי היסוס", "בְּלִי הִיסּוּס"], ["פתחתי", "פָּתַחְתִּי"]],
+    englishDistractors: ["I downloaded", "the game", "without hesitation", "I opened"],
+    notes: "אפליקציה is the everyday word for a phone app. בלי חרטות attaches to the whole action rather than to a single word."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_155", emoji: "💡", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "לקח לי זמן לקלוט מה שהוא אמר.",
+    hebrewNiqqud: "לָקַח לִי זְמַן לִקְלוֹט מַה שֶּׁהוּא אָמַר.",
+    english: "It took me a while to catch on to what he said.",
+    hebrewTokenPairs: [["לקח לי", "לָקַח לִי"], ["זמן", "זְמַן"], ["לקלוט", "לִקְלוֹט"], ["מה שהוא אמר", "מַה שֶּׁהוּא אָמַר"]],
+    englishTokens: ["It took me", "a while", "to catch on", "to what he said"],
+    hebrewDistractorPairs: [["היה לי", "הָיָה לִי"], ["קשה", "קָשֶׁה"], ["להקשיב", "לְהַקְשִׁיב"], ["מה שהיא כתבה", "מַה שֶּׁהִיא כָּתְבָה"]],
+    englishDistractors: ["I found it", "hard", "to listen", "to what she wrote"],
+    notes: "לקלוט in the colloquial sense is 'to catch on' — the moment something clicks. Note מה שהוא, not מה הוא, for 'what he.'"
+  }),
+  buildReviewedSentence({
+    id: "colloquial_156", emoji: "❓", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "קלטת מה קרה שם?",
+    hebrewNiqqud: "קָלַטְתָּ מַה קָרָה שָׁם?",
+    english: "Did you catch on to what happened there?",
+    hebrewTokenPairs: [["קלטת", "קָלַטְתָּ"], ["מה קרה", "מַה קָרָה"], ["שם", "שָׁם"]],
+    englishTokens: ["Did you catch on", "to what happened", "there"],
+    hebrewDistractorPairs: [["שכחת", "שָׁכַחְתָּ"], ["מי היה", "מִי הָיָה"], ["איפה", "אֵיפֹה"], ["מתי", "מָתַי"]],
+    englishDistractors: ["Did you forget", "who was", "where", "when"],
+    notes: "קלטת? on its own is a very common check that the other person followed you. The masculine singular past is addressed to a man; קלטת is spelled the same for a woman but pointed קָלַטְתְּ."
+  }),
+  buildReviewedSentence({
+    id: "professional_85", emoji: "📶", category: "professional", difficulty: 1,
+    wordOrderDecision: "alternates",
+    hebrew: "במעלית הטלפון לא קולט.",
+    hebrewNiqqud: "בַּמַּעֲלִית הַטֶּלֶפוֹן לֹא קוֹלֵט.",
+    english: "In the elevator the phone does not pick up.",
+    hebrewTokenPairs: [["במעלית", "בַּמַּעֲלִית"], ["הטלפון", "הַטֶּלֶפוֹן"], ["לא קולט", "לֹא קוֹלֵט"]],
+    englishTokens: ["In the elevator", "the phone", "does not pick up"],
+    hebrewDistractorPairs: [["במרתף", "בַּמַּרְתֵּף"], ["המחשב", "הַמַּחְשֵׁב"], ["לא נטען", "לֹא נִטְעָן"], ["הרשת", "הָרֶשֶׁת"]],
+    englishDistractors: ["In the basement", "the computer", "does not charge", "the network"],
+    hebrewOrderAlternates: [{
+      text: "הטלפון לא קולט במעלית.",
+      textNiqqud: "הַטֶּלֶפוֹן לֹא קוֹלֵט בַּמַּעֲלִית.",
+      order: [1, 2, 0],
+    }],
+    notes: "קולט in the technical sense is picking up reception or a signal. The locative במעלית is equally neutral before or after the clause. The related noun is קליטה, reception."
+  }),
+  buildReviewedSentence({
+    id: "professional_86", emoji: "📥", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אתמול הגשנו את המכרז לוועדה.",
+    hebrewNiqqud: "אֶתְמוֹל הִגַּשְׁנוּ אֶת הַמִּכְרָז לַוַּעֲדָה.",
+    english: "Yesterday we submitted the tender to the committee.",
+    hebrewTokenPairs: [["אתמול", "אֶתְמוֹל"], ["הגשנו", "הִגַּשְׁנוּ"], ["את המכרז", "אֶת הַמִּכְרָז"], ["לוועדה", "לַוַּעֲדָה"]],
+    englishTokens: ["Yesterday", "we submitted", "the tender", "to the committee"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["ביטלנו", "בִּיטַּלְנוּ"], ["את החוזה", "אֶת הַחוֹזֶה"], ["למנהל", "לַמְּנַהֵל"]],
+    englishDistractors: ["Tomorrow", "we cancelled", "the contract", "to the manager"],
+    hebrewOrderAlternates: [
+      {
+        text: "הגשנו את המכרז לוועדה אתמול.",
+        textNiqqud: "הִגַּשְׁנוּ אֶת הַמִּכְרָז לַוַּעֲדָה אֶתְמוֹל.",
+        order: [1, 2, 3, 0],
+      },
+      {
+        text: "הגשנו אתמול את המכרז לוועדה.",
+        textNiqqud: "הִגַּשְׁנוּ אֶתְמוֹל אֶת הַמִּכְרָז לַוַּעֲדָה.",
+        order: [1, 0, 2, 3],
+      },
+    ],
+    notes: "להגיש is the hif'il of נ-ג-ש with the nun assimilated: הִגַּשְׁנוּ. It is the standard verb for filing paperwork — להגיש מכרז, בקשה, טופס, תלונה. אתמול is neutral in all three positions."
+  }),
+  buildReviewedSentence({
+    id: "professional_87", emoji: "🗂️", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "צריך להגיש את הטופס פעמיים בשנה.",
+    hebrewNiqqud: "צָרִיךְ לְהַגִּישׁ אֶת הַטֹּפֶס פַּעֲמַיִים בַּשָּׁנָה.",
+    english: "You need to submit the form twice a year.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["להגיש", "לְהַגִּישׁ"], ["את הטופס", "אֶת הַטֹּפֶס"], ["פעמיים", "פַּעֲמַיִים"], ["בשנה", "בַּשָּׁנָה"]],
+    englishTokens: ["You need", "to submit", "the form", "twice", "a year"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לחדש", "לְחַדֵּשׁ"], ["את הרישיון", "אֶת הָרִישָּׁיוֹן"], ["פעם", "פַּעַם"], ["בחודש", "בַּחֹדֶשׁ"]],
+    englishDistractors: ["You may", "to renew", "the license", "once", "a month"],
+    hebrewOrderAlternates: [{
+      text: "פעמיים בשנה צריך להגיש את הטופס.",
+      textNiqqud: "פַּעֲמַיִים בַּשָּׁנָה צָרִיךְ לְהַגִּישׁ אֶת הַטֹּפֶס.",
+      order: [3, 4, 0, 1, 2],
+    }],
+    notes: "Impersonal צריך plus an infinitive is the ordinary way to state an obligation with no named subject. The frequency phrase פעמיים בשנה is neutral at either end of the clause."
+  }),
+  buildReviewedSentence({
+    id: "professional_88", emoji: "🏁", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "המכרז הזה מאוד תחרותי.",
+    hebrewNiqqud: "הַמִּכְרָז הַזֶּה מְאוֹד תַּחֲרוּתִי.",
+    english: "This tender is very competitive.",
+    hebrewTokenPairs: [["המכרז", "הַמִּכְרָז"], ["הזה", "הַזֶּה"], ["מאוד", "מְאוֹד"], ["תחרותי", "תַּחֲרוּתִי"]],
+    englishTokens: ["This", "tender", "is very", "competitive"],
+    hebrewDistractorPairs: [["השוק", "הַשּׁוּק"], ["ההוא", "הַהוּא"], ["פחות", "פָּחוֹת"], ["רווחי", "רִווְחִי"]],
+    englishDistractors: ["that", "market", "is less", "profitable"],
+    hebrewOrderAlternates: [{
+      text: "המכרז הזה תחרותי מאוד.",
+      textNiqqud: "הַמִּכְרָז הַזֶּה תַּחֲרוּתִי מְאוֹד.",
+      order: [0, 1, 3, 2],
+    }],
+    notes: "תחרותי is the adjective from תַּחֲרוּת, competition. מאוד is neutral before or after the adjective, so both orders count."
+  }),
+  buildReviewedSentence({
+    id: "formal_78", emoji: "🗳️", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הבחירות האלה היו תחרותיות.",
+    hebrewNiqqud: "הַבְּחִירוֹת הָאֵלֶּה הָיוּ תַּחֲרוּתִיּוֹת.",
+    english: "These elections were competitive.",
+    hebrewTokenPairs: [["הבחירות", "הַבְּחִירוֹת"], ["האלה", "הָאֵלֶּה"], ["היו", "הָיוּ"], ["תחרותיות", "תַּחֲרוּתִיּוֹת"]],
+    englishTokens: ["These", "elections", "were", "competitive"],
+    hebrewDistractorPairs: [["ההפגנות", "הַהַפְגָּנוֹת"], ["ההן", "הָהֵן"], ["נראו", "נִרְאוּ"], ["שקטות", "שְׁקֵטוֹת"]],
+    englishDistractors: ["those", "protests", "seemed", "quiet"],
+    notes: "תחרותיות is the feminine plural of תחרותי, agreeing with בחירות. English 'competitive' never inflects, so the agreement has to be read off the Hebrew."
+  }),
+  buildReviewedSentence({
+    id: "formal_79", emoji: "⏳", category: "formal", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "שעות ספורות נותרו עד ההצבעה.",
+    hebrewNiqqud: "שָׁעוֹת סְפוּרוֹת נוֹתְרוּ עַד הַהַצְבָּעָה.",
+    english: "Only a few hours remain until the vote.",
+    hebrewTokenPairs: [["שעות", "שָׁעוֹת"], ["ספורות", "סְפוּרוֹת"], ["נותרו", "נוֹתְרוּ"], ["עד", "עַד"], ["ההצבעה", "הַהַצְבָּעָה"]],
+    englishTokens: ["Only a few", "hours", "remain", "until", "the vote"],
+    hebrewDistractorPairs: [["ימים", "יָמִים"], ["רבים", "רַבִּים"], ["עברו", "עָבְרוּ"], ["אחרי", "אַחֲרֵי"], ["הדיון", "הַדִּיּוּן"]],
+    englishDistractors: ["days", "many", "passed", "after", "the debate"],
+    hebrewOrderAlternates: [{
+      text: "נותרו שעות ספורות עד ההצבעה.",
+      textNiqqud: "נוֹתְרוּ שָׁעוֹת סְפוּרוֹת עַד הַהַצְבָּעָה.",
+      order: [2, 0, 1, 3, 4],
+    }],
+    notes: "ספורות is the feminine plural of ספור, literally 'counted' — it follows its noun and means 'only a few.' Both subject-first and verb-first orders are neutral with נותרו."
+  }),
+  buildReviewedSentence({
+    id: "everyday_139", emoji: "🪑", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אנשים ספורים הגיעו למפגש.",
+    hebrewNiqqud: "אֲנָשִׁים סְפוּרִים הִגִּיעוּ לַמִּפְגָּשׁ.",
+    english: "Only a few people came to the meetup.",
+    hebrewTokenPairs: [["אנשים", "אֲנָשִׁים"], ["ספורים", "סְפוּרִים"], ["הגיעו", "הִגִּיעוּ"], ["למפגש", "לַמִּפְגָּשׁ"]],
+    englishTokens: ["Only a few", "people", "came", "to the meetup"],
+    hebrewDistractorPairs: [["כל האורחים", "כָּל הָאוֹרְחִים"], ["איחרו", "אִיחֲרוּ"], ["לחתונה", "לַחֲתוּנָה"], ["הלכו", "הָלְכוּ"]],
+    englishDistractors: ["All the guests", "were late", "to the wedding", "left"],
+    notes: "ספורים is the masculine plural, agreeing with אנשים; compare the feminine ספורות in formal_79. The word is always plural in this sense and always follows its noun."
+  }),
+];
+
+SENTENCE_BANK.push(...INBAL_SENTENCES, ...INAT_SENTENCES, ...LEXICAL_FOCUS_SENTENCES);
 
 function cloneSentence(item) {
   return {
@@ -13548,6 +13749,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260726e",
+  __build: "20260727b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -546,6 +546,7 @@ const RAW = {
     ["talent", "כישרון", "כִּשָּׁרוֹן"],
     ["flash of inspiration", "הברקה", "הַבְרָקָה"],
     ["mystery", "תעלומה", "תַּעֲלוּמָה"],
+    ["just a handful", "ספורים", "סְפוּרִים"],
   ],
   cooking_utensils: [
     ["knife", "סכין", "סַכִּין"],
@@ -863,6 +864,7 @@ const RAW = {
     ["scope creep", "זליגת היקף", "זְלִיגַת הֶקֵּף"],
     ["flagship initiative", "יוזמת דגל", "יוֹזְמַת דֶּגֶל"],
     ["implementation gap", "פער יישום", "פַּעַר יִישּׂוּם"],
+    ["competitive", "תחרותי", "תַּחֲרוּתִי"],
   ],
   bureaucracy: [
     ["municipality", "עירייה", "עִירִיָּה"],
@@ -1214,6 +1216,7 @@ const RAW = {
         hebrew: ["משעמם", "כישלון", "עייף"],
       },
     }],
+    ["no regrets", "בלי חרטות", "בְּלִי חֲרָטוֹת"],
   ],
   legal_civic: [
     ["constitution", "חוקה", "חֻקָּה"],
@@ -2232,6 +2235,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260721a",
+  __build: "20260727b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

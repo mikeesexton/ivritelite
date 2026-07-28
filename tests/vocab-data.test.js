@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1650);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1596);
+  assert.equal(vocabulary.length, 1653);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1599);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -331,4 +331,34 @@ test("planned compound cards stay inside the narrow-mobile stress envelope", () 
 
   assert.ok(longestEnglish.en.length <= 20, `${longestEnglish.en} exceeds the English stress envelope`);
   assert.ok(longestHebrew.he.length <= 12, `${longestHebrew.he} exceeds the Hebrew stress envelope`);
+});
+
+test("the lexical-focus cards are playable, pointed, and free of gloss collisions", () => {
+  const vocabulary = loadVocabulary();
+  const expected = new Map([
+    ["תחרותי", { en: "competitive", category: "work_business", id: "work_business-087-competitive" }],
+    ["ספורים", { en: "just a handful", category: "core_advanced", id: "core_advanced-168-just-a-handful" }],
+    ["בלי חרטות", { en: "no regrets", category: "conversation_glue", id: "conversation_glue-098-no-regrets" }],
+  ]);
+
+  const hebrewCounts = new Map();
+  const englishCounts = new Map();
+  vocabulary.forEach((word) => {
+    hebrewCounts.set(word.he, (hebrewCounts.get(word.he) || 0) + 1);
+    englishCounts.set(word.en, (englishCounts.get(word.en) || 0) + 1);
+  });
+
+  expected.forEach((meta, hebrew) => {
+    const word = vocabulary.find((entry) => entry.he === hebrew);
+    assert.ok(word, `missing card for ${hebrew}`);
+    assert.equal(word.en, meta.en);
+    assert.equal(word.category, meta.category);
+    assert.equal(word.id, meta.id, `${hebrew} id must stay stable`);
+    assert.equal(word.availability?.translationQuiz, true);
+    assert.match(word.heNiqqud, /[ְ-ׇּׁׂ]/, `${hebrew} needs niqqud`);
+    // The matching board grades by pair id, so a shared surface or gloss would
+    // mark a correct answer wrong when both cards land on one board.
+    assert.equal(hebrewCounts.get(word.he), 1, `duplicate Hebrew card: ${word.he}`);
+    assert.equal(englishCounts.get(word.en), 1, `duplicate English card: ${word.en}`);
+  });
 });

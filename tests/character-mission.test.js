@@ -957,6 +957,23 @@ test("vocabWords routes words that live outside the character's own category", (
   assert.equal(character.getContentWeight("vocab", { he: "חילוני", category: "social_cultural" }), 1);
 });
 
+test("Inat's vocabWords reach cards that sit on someone else's shelf", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "inat", mission: { active: true } };
+
+  // תחרותי lives in work_business, which Ivri owns by category; ספורים lives in
+  // the unrouted core_advanced. Neither is re-shelved — both are reached by word.
+  assert.ok(character.getContentWeight("vocab", { he: "תחרותי", category: "work_business" }) > 1);
+  assert.ok(character.getContentWeight("vocab", { he: "ספורים", category: "core_advanced" }) > 1);
+  // An unlisted neighbour in the same borrowed category stays neutral.
+  assert.equal(character.getContentWeight("vocab", { he: "פער יישום", category: "work_business" }), 1);
+
+  // Ivri keeps תחרותי through the category route, so it is genuinely shared.
+  app.runtime.characterState.dailyChoice = "ivri";
+  assert.ok(character.getContentWeight("vocab", { he: "תחרותי", category: "work_business" }) > 1);
+  assert.equal(character.getContentWeight("vocab", { he: "ספורים", category: "core_advanced" }), 1);
+});
+
 test("every routed verb id resolves to a real conjugation deck entry", () => {
   const { characterData } = loadCharacterModule();
   const verbContext = { console };

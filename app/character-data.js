@@ -616,6 +616,13 @@ characterData.characters = characterData.characters || Object.freeze({
         "legal_civic",
         "law_legal_systems_expanded",
       ]),
+      // Words on her lens that sit on someone else's shelf. תחרותי is a
+      // work_business card Ivri also owns; ספורים is unrouted core_advanced and
+      // is hers by register — it is journalistic rather than conversational.
+      vocabWords: Object.freeze([
+        "תחרותי",
+        "ספורים",
+      ]),
       // The academic/analytical register is hers; Ivri keeps `professional`.
       sentenceCategories: Object.freeze(["formal"]),
       sentenceIdPrefixes: Object.freeze(["inat_"]),

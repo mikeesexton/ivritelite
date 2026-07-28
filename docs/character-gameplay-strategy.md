@@ -140,7 +140,10 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
 
 - Vocabulary: 30 cards in `literature_arts_cultural_history`, plus the routed
   `politics_society_expanded`, `legal_civic`, and `law_legal_systems_expanded`
-  categories — 232 cards in total.
+  categories, plus `תחרותי` and `ספורים` reached individually through
+  `vocabWords` — 234 cards in total. Both of those sit on someone else's shelf
+  (`work_business` and the unrouted `core_advanced`) and were deliberately not
+  re-shelved.
 - Sentences: 24 entries, `inat_01` through `inat_24`, plus the `formal` register.
 - Conjugation verbs: 22 route entries. `לפרש` and `למחות`, with stored present, past,
   and future forms, plus `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, `ללמד`, and a
@@ -154,6 +157,27 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   and the routing table has no finer grain than a bucket, so multi-owner routing is
   the correct answer rather than an arbitrary cut.
 - Coverage includes short public-domain cultural texts, close reading, narrators, archives, oral history, protest music, satire, theater, visual art, censorship, labor action, civil disobedience, policing, collective memory, and counter-narratives.
+
+### Lexical-focus rows
+
+A small shared tranche exists for words introduced in the vocabulary or
+conjugation decks that also need context: `colloquial_152`–`156`,
+`professional_85`–`88`, `formal_78`–`79`, `everyday_139`, and `inat_25`. It
+covers `בלי חרטות`, `לקלוט` in both its colloquial and technical senses,
+`להגיש`, `להקליט`, `תחרותי` in the masculine and feminine, and `ספורים`/`ספורות`.
+
+Use plain `<bank>_<number>` ids for rows like these, not slugged ids. The
+compact-token policy in `tests/sentence-bank-data.test.js` only matches
+`^(colloquial|everyday|professional|formal)_\d+$` and `^(inbal|inat)_\d+$`, so a
+slugged id such as `colloquial_charatot_01` silently opts out of the chip review.
+The older `colloquial_vodge_01`-style rows predate that policy and are not
+authoring precedent. Register any new tranche in the alignment test's id lists as
+well, since those checks are opt-in per range.
+
+Two adjective/quantifier pairs deliberately teach agreement across two rows,
+because a vocabulary card can only ever show one form: `תחרותי` (professional_88)
+against `תחרותיות` (formal_78), and `ספורים` (everyday_139) against `ספורות`
+(formal_79).
 
 No dedicated first-pass additions are currently required for Binyanim, Prepositions, or the abbreviation game. Those modes can use multi-owner routing when the character layer is implemented.
 
