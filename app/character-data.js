@@ -312,13 +312,10 @@ const IVRI_DIALOGUE = Object.freeze({
 // singular. Where masculine and feminine singular share a spelling (שלך, לך,
 // שקלת, אותך) the line stays single-variant rather than duplicated.
 const INAT_DIALOGUE = Object.freeze({
-  descriptionM: dialogue("פוליטיקה. משפטים. היסטוריה. תכיר את הפרופסורית.", {
-    פוליטיקה: "politics", משפטים: "law", היסטוריה: "history", תכיר: "meet",
-    את: "(object marker)", הפרופסורית: "the professor",
-  }),
-  descriptionF: dialogue("פוליטיקה. משפטים. היסטוריה. תכירי את הפרופסורית.", {
-    פוליטיקה: "politics", משפטים: "law", היסטוריה: "history", תכירי: "meet",
-    את: "(object marker)", הפרופסורית: "the professor",
+  // Ungendered like the other three cards: dropping תכיר/תכירי removes the only
+  // gendered word, so one line serves both.
+  description: dialogue("פוליטיקה. היסטוריה. הפרופסורית.", {
+    פוליטיקה: "politics", היסטוריה: "history", הפרופסורית: "the professor",
   }),
   first: dialogue("להימנע מפוליטיקה זה חכם. אבל להבין אותה זה חשוב. שנתחיל?", {
     להימנע: "to avoid", מפוליטיקה: "politics", זה: "is", חכם: "smart",
@@ -497,6 +494,11 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-litzchok",
         "advanced-verb-lehitlabesh",
         "advanced-verb-lehitragesh",
+        "character-verb-lignoach",
+        // One sense of a shared paradigm. The route matcher accepts a full deck
+        // id, so קלטתי ("it clicked") weighs here while the signal and immigrant
+        // senses of the same verb belong to Ivri and Inat.
+        "character-verb-liklot--sense-1",
       ]),
     }),
   }),
@@ -542,6 +544,15 @@ characterData.characters = characterData.characters || Object.freeze({
         "character-verb-lenachesh",
         "character-verb-lehashbia",
         "character-verb-lehitgayer",
+        // Routed from the shared pool: birth, disappearance, appearance, sleep
+        // and liturgy are hers by subject rather than by register. לשיר was
+        // rejected for Ido as not streetwise; sung prayer makes it hers.
+        "advanced-verb-lehealem",
+        "advanced-verb-lehivaled",
+        "advanced-verb-leheraot",
+        "advanced-verb-leheradem",
+        "advanced-verb-lehitorer",
+        "common-verb-lashir",
       ]),
     }),
   }),
@@ -571,6 +582,24 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lehachlit",
         "advanced-verb-leadken",
         "advanced-verb-leasher",
+        "character-verb-lehagish",
+        "character-verb-lehaklit",
+        // Reception and input, not the colloquial "I got it" — see Ido's route.
+        "character-verb-liklot--sense-2",
+        // Routed from the shared pool: the process verbs a form, a contract, or
+        // a deadline runs on. His by register rather than by topic.
+        "advanced-verb-letaken",
+        "advanced-verb-lehishtamesh",
+        "advanced-verb-levatel",
+        "advanced-verb-letzaref",
+        "advanced-verb-levarer",
+        "advanced-verb-lehaskim",
+        "advanced-verb-lehaspik",
+        "advanced-verb-lehavhir",
+        "advanced-verb-lehazhir",
+        "advanced-verb-lehachzir",
+        "common-verb-leshalem",
+        "common-verb-livdok",
       ]),
     }),
   }),
@@ -603,6 +632,25 @@ characterData.characters = characterData.characters || Object.freeze({
         "starter-verb-leshacharer",
         "common-verb-lesaper",
         "advanced-verb-lelamed",
+        // Shared with Ivri: he submits forms and tenders, she files complaints
+        // and objections; he records a meeting, she records an oral history.
+        "character-verb-lehagish",
+        "character-verb-lehaklit",
+        // קליטת עלייה as policy and history, not the colloquial sense.
+        "character-verb-liklot--sense-3",
+        // Only the criticism sense of לבקר; the visit sense stays unowned.
+        "advanced-verb-levaker--sense-2",
+        // Routed from the shared pool: reading, writing, memory, and argument.
+        "starter-verb-lichtov",
+        "common-verb-likro",
+        "common-verb-lizkor",
+        "common-verb-lishkoach",
+        "advanced-verb-lehishtatef",
+        "advanced-verb-leshanot",
+        "common-verb-lishol",
+        "common-verb-laanot",
+        "advanced-verb-lehasbir",
+        "common-verb-lehavin",
       ]),
     }),
   }),

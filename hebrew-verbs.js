@@ -5916,7 +5916,10 @@ function buildStarterVerbEntries() {
       binyan: "piel",
       regularity: "regular",
       conjugation_mode: "curated",
-      senses: [makeSense("to visit", null, false)],
+      senses: [
+        makeSense("to visit", "ב־", false),
+        makeSense("to criticize", "את־", false),
+      ],
       forms: makeForms(
         makePresent(
           markedForm("מבקר", "מְבַקֵּר"),
@@ -5952,7 +5955,7 @@ function buildStarterVerbEntries() {
         )
       ),
       review_status: "approved",
-      notes: "Pi'el of ב-ק-ר (distinct from ב-ק-ש 'request'): visit, and also 'to criticize/review'. Takes אצל or ב for the host — מבקר אצל סבתא.",
+      notes: "Pi'el of ב-ק-ר (distinct from ב-ק-ש 'request'). Two senses on one paradigm, told apart by what follows: לבקר ב־ or אצל is to visit (מבקר אצל סבתא), while לבקר את is to criticize or review (מבקר את המדיניות, and the agent noun מבקר המדינה, the State Comptroller).",
       difficulty_level: 2,
       tags: ["piel", "regular", "everyday"],
       personal_priority: 75,
@@ -6941,6 +6944,200 @@ function buildStarterVerbEntries() {
       difficulty_level: 3,
       tags: ["hitpael", "regular", "everyday"],
       personal_priority: 78,
+    }),
+    createVerbEntry({
+      id: "character-verb-lignoach",
+      availability: getStarterVerbAvailability("character-verb-lignoach"),
+      lemma: "לגנוח",
+      lemma_niqqud: "לִגְנוֹחַ",
+      root: ["ג", "נ", "ח"],
+      binyan: "paal",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to groan", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("גונח", "גּוֹנֵחַ"),
+          markedForm("גונחת", "גּוֹנַחַת"),
+          markedForm("גונחים", "גּוֹנְחִים"),
+          markedForm("גונחות", "גּוֹנְחוֹת")
+        ),
+        makePast(
+          markedForm("גנחתי", "גָּנַחְתִּי"),
+          markedForm("גנחת", "גָּנַחְתָּ"),
+          markedForm("גנחת", "גָּנַחְתְּ"),
+          markedForm("גנח", "גָּנַח"),
+          markedForm("גנחה", "גָּנְחָה"),
+          markedForm("גנחנו", "גָּנַחְנוּ"),
+          markedForm("גנחתם", "גְּנַחְתֶּם"),
+          markedForm("גנחתן", "גְּנַחְתֶּן"),
+          markedForm("גנחו", "גָּנְחוּ")
+        ),
+        makeFuture(
+          markedForm("אגנח", "אֶגְנַח"),
+          markedForm("תגנח", "תִּגְנַח"),
+          markedForm("תגנחי", "תִּגְנְחִי"),
+          markedForm("יגנח", "יִגְנַח"),
+          markedForm("תגנח", "תִּגְנַח"),
+          markedForm("נגנח", "נִגְנַח"),
+          markedForm("תגנחו", "תִּגְנְחוּ"),
+          markedForm("יגנחו", "יִגְנְחוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Pa'al ל-guttural of ג-נ-ח, pointed exactly like לשלוח and לפתוח: patach under the final guttural in the infinitive (לִגְנוֹחַ), the present feminine singular (גּוֹנַחַת), and the future (אֶגְנַח, יִגְנַח). Covers a groan of pain, effort, or complaint. No imperative — commanding someone to groan is not idiomatic.",
+      difficulty_level: 3,
+      tags: ["paal", "irregular", "lamed-guttural", "body", "colloquial"],
+      personal_priority: 70,
+    }),
+    createVerbEntry({
+      id: "character-verb-lehagish",
+      availability: getStarterVerbAvailability("character-verb-lehagish"),
+      lemma: "להגיש",
+      lemma_niqqud: "לְהַגִּישׁ",
+      root: ["נ", "ג", "ש"],
+      binyan: "hifil",
+      regularity: "irregular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to submit", "את־", false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מגיש", "מַגִּישׁ"),
+          markedForm("מגישה", "מַגִּישָׁה"),
+          markedForm("מגישים", "מַגִּישִׁים"),
+          markedForm("מגישות", "מַגִּישׁוֹת")
+        ),
+        makePast(
+          markedForm("הגשתי", "הִגַּשְׁתִּי"),
+          markedForm("הגשת", "הִגַּשְׁתָּ"),
+          markedForm("הגשת", "הִגַּשְׁתְּ"),
+          markedForm("הגיש", "הִגִּישׁ"),
+          markedForm("הגישה", "הִגִּישָׁה"),
+          markedForm("הגשנו", "הִגַּשְׁנוּ"),
+          markedForm("הגשתם", "הִגַּשְׁתֶּם"),
+          markedForm("הגשתן", "הִגַּשְׁתֶּן"),
+          markedForm("הגישו", "הִגִּישׁוּ")
+        ),
+        makeFuture(
+          markedForm("אגיש", "אַגִּישׁ"),
+          markedForm("תגיש", "תַּגִּישׁ"),
+          markedForm("תגישי", "תַּגִּישִׁי"),
+          markedForm("יגיש", "יַגִּישׁ"),
+          markedForm("תגיש", "תַּגִּישׁ"),
+          markedForm("נגיש", "נַגִּישׁ"),
+          markedForm("תגישו", "תַּגִּישׁוּ"),
+          markedForm("יגישו", "יַגִּישׁוּ")
+        ),
+        makeImperative(
+          markedForm("הגש", "הַגֵּשׁ"),
+          markedForm("הגישי", "הַגִּישִׁי"),
+          markedForm("הגישו", "הַגִּישׁוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Hif'il pe-nun of נ-ג-ש: the nun assimilates into a dagesh throughout (הִגַּשְׁתִּי, הִגִּישׁ), exactly like להגיע and להגיד, but with plain non-guttural endings like להדליק. The stored gloss is the bureaucratic one — להגיש בקשה, טופס, מכרז, תלונה, התנגדות. The same verb also means 'to serve' food (להגיש ארוחה), which keeps its own dictionary card in cooking_verbs.",
+      difficulty_level: 3,
+      tags: ["hifil", "irregular", "pe-nun", "bureaucracy", "practical"],
+      personal_priority: 76,
+    }),
+    createVerbEntry({
+      id: "character-verb-liklot",
+      availability: { translationQuiz: false, sentenceHints: true },
+      lemma: "לקלוט",
+      lemma_niqqud: "לִקְלוֹט",
+      root: ["ק", "ל", "ט"],
+      binyan: "paal",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [
+        makeSense("to catch on", null, false),
+        makeSense("to pick up (a signal)", null, false),
+        makeSense("to take in (immigrants)", null, false),
+      ],
+      forms: makeForms(
+        makePresent(
+          markedForm("קולט", "קוֹלֵט"),
+          markedForm("קולטת", "קוֹלֶטֶת"),
+          markedForm("קולטים", "קוֹלְטִים"),
+          markedForm("קולטות", "קוֹלְטוֹת")
+        ),
+        makePast(
+          markedForm("קלטתי", "קָלַטְתִּי"),
+          markedForm("קלטת", "קָלַטְתָּ"),
+          markedForm("קלטת", "קָלַטְתְּ"),
+          markedForm("קלט", "קָלַט"),
+          markedForm("קלטה", "קָלְטָה"),
+          markedForm("קלטנו", "קָלַטְנוּ"),
+          markedForm("קלטתם", "קְלַטְתֶּם"),
+          markedForm("קלטתן", "קְלַטְתֶּן"),
+          markedForm("קלטו", "קָלְטוּ")
+        ),
+        makeFuture(
+          markedForm("אקלוט", "אֶקְלוֹט"),
+          markedForm("תקלוט", "תִּקְלוֹט"),
+          markedForm("תקלטי", "תִּקְלְטִי"),
+          markedForm("יקלוט", "יִקְלוֹט"),
+          markedForm("תקלוט", "תִּקְלוֹט"),
+          markedForm("נקלוט", "נִקְלוֹט"),
+          markedForm("תקלטו", "תִּקְלְטוּ"),
+          markedForm("יקלטו", "יִקְלְטוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Regular pa'al-o of the strong root ק-ל-ט, pointed exactly like לסגור. One paradigm, three senses that route to different companions: קלטתי is colloquial for 'I got it / it clicked'; קולט means picking up a signal or reception; קליטת עלייה is the absorption of new immigrants. Kept out of Translation Match because all three senses share the surface לקלוט and would collide on the matching board — the sense split is taught in conjugation instead. See also להקליט, the hif'il of the same root.",
+      difficulty_level: 3,
+      tags: ["paal", "regular", "shlemim", "multi-sense", "practical"],
+      personal_priority: 74,
+    }),
+    createVerbEntry({
+      id: "character-verb-lehaklit",
+      availability: getStarterVerbAvailability("character-verb-lehaklit"),
+      lemma: "להקליט",
+      lemma_niqqud: "לְהַקְלִיט",
+      root: ["ק", "ל", "ט"],
+      binyan: "hifil",
+      regularity: "regular",
+      conjugation_mode: "curated",
+      senses: [makeSense("to record", null, false)],
+      forms: makeForms(
+        makePresent(
+          markedForm("מקליט", "מַקְלִיט"),
+          markedForm("מקליטה", "מַקְלִיטָה"),
+          markedForm("מקליטים", "מַקְלִיטִים"),
+          markedForm("מקליטות", "מַקְלִיטוֹת")
+        ),
+        makePast(
+          markedForm("הקלטתי", "הִקְלַטְתִּי"),
+          markedForm("הקלטת", "הִקְלַטְתָּ"),
+          markedForm("הקלטת", "הִקְלַטְתְּ"),
+          markedForm("הקליט", "הִקְלִיט"),
+          markedForm("הקליטה", "הִקְלִיטָה"),
+          markedForm("הקלטנו", "הִקְלַטְנוּ"),
+          markedForm("הקלטתם", "הִקְלַטְתֶּם"),
+          markedForm("הקלטתן", "הִקְלַטְתֶּן"),
+          markedForm("הקליטו", "הִקְלִיטוּ")
+        ),
+        makeFuture(
+          markedForm("אקליט", "אַקְלִיט"),
+          markedForm("תקליט", "תַּקְלִיט"),
+          markedForm("תקליטי", "תַּקְלִיטִי"),
+          markedForm("יקליט", "יַקְלִיט"),
+          markedForm("תקליט", "תַּקְלִיט"),
+          markedForm("נקליט", "נַקְלִיט"),
+          markedForm("תקליטו", "תַּקְלִיטוּ"),
+          markedForm("יקליטו", "יַקְלִיטוּ")
+        ),
+        makeImperative(
+          markedForm("הקלט", "הַקְלֵט"),
+          markedForm("הקליטי", "הַקְלִיטִי"),
+          markedForm("הקליטו", "הַקְלִיטוּ")
+        )
+      ),
+      review_status: "approved",
+      notes: "Regular hif'il of ק-ל-ט, pointed exactly like להדליק. The causative partner of לקלוט: קלט takes something in, הקליט commits it to a recording. Covers recording audio, video, a meeting, or an oral-history interview. Related nouns from the same root: הקלטה, תקליט, קלטת, מקלט.",
+      difficulty_level: 3,
+      tags: ["hifil", "regular", "media", "practical"],
+      personal_priority: 74,
     }),
   ];
 }
@@ -8057,6 +8254,6 @@ return {
   buildGeneratedForms,
   resolveLearnerFacingForms,
   normalizeAndValidateFormSet,
-  __build: "20260726e",
+  __build: "20260727a",
 };
 });

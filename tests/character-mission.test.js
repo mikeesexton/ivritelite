@@ -179,7 +179,10 @@ test("approved character copy and gender labels come from the registry", () => {
   assert.equal(ivri.mission.text, "סגרנו את הסיבוב בהצלחה. מחר חוזרים לעבוד.");
   assert.equal(ivri.abbreviationsM.text, "זמן זה משאב יקר. קיצורים יביאו אותנו לדדליין. בוא נתחיל.");
   const inat = characterData.characters.inat.dialogue;
-  assert.equal(inat.descriptionM.text, "פוליטיקה. משפטים. היסטוריה. תכיר את הפרופסורית.");
+  // Ungendered like the other three: dropping תכיר/תכירי leaves no gendered word.
+  assert.equal(inat.description.text, "פוליטיקה. היסטוריה. הפרופסורית.");
+  assert.equal(inat.descriptionM, undefined);
+  assert.equal(inat.descriptionF, undefined);
   assert.equal(inat.first.text, "להימנע מפוליטיקה זה חכם. אבל להבין אותה זה חשוב. שנתחיל?");
   assert.equal(inat.fourWrong.text, "אולי כדאי להתחיל טיוטה חדשה.");
   assert.equal(inat.perfect.text, "עבודה יוצאת מן הכלל. רמת דוקטורט. שקלת לימודי משפטים?");
@@ -971,9 +974,11 @@ test("every routed verb id resolves to a real conjugation deck entry", () => {
   Object.values(characterData.characters).forEach((entry) => {
     (entry.route.verbIds || []).forEach((verbId) => {
       // A routed id that never reaches the deck is dead weight: the boost can
-      // never fire, and a malformed paradigm drops a verb silently.
+      // never fire, and a malformed paradigm drops a verb silently. A route may
+      // name a whole entry (matched through its first sense) or one deck id
+      // directly, which is how a shared paradigm splits between characters.
       assert.ok(
-        deckIds.has(`${verbId}--sense-1`),
+        deckIds.has(verbId) || deckIds.has(`${verbId}--sense-1`),
         `${entry.id} routes ${verbId} but it is not in the conjugation deck`,
       );
     });
@@ -981,8 +986,30 @@ test("every routed verb id resolves to a real conjugation deck entry", () => {
 
   // Ido's verb route is the one deliberately sized against the others, so a
   // silent trim or an accidental re-route should have to update this number.
-  assert.equal(characterData.characters.ido.route.verbIds.length, 18);
-  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 18);
+  assert.equal(characterData.characters.ido.route.verbIds.length, 20);
+  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 20);
+});
+
+test("a per-sense verb route reaches only that sense", () => {
+  const { character, characterData, app } = loadCharacterModule();
+
+  // לקלוט is one paradigm whose senses belong to three different companions.
+  assert.ok(characterData.characters.ido.route.verbIds.includes("character-verb-liklot--sense-1"));
+  assert.ok(characterData.characters.ivri.route.verbIds.includes("character-verb-liklot--sense-2"));
+  assert.ok(characterData.characters.inat.route.verbIds.includes("character-verb-liklot--sense-3"));
+
+  app.runtime.characterState = { dailyChoice: "ivri", mission: { active: true } };
+  assert.ok(character.getContentWeight("verb", { id: "character-verb-liklot--sense-2" }) > 1);
+  // The colloquial and immigration senses must stay neutral for him.
+  assert.equal(character.getContentWeight("verb", { id: "character-verb-liklot--sense-1" }), 1);
+  assert.equal(character.getContentWeight("verb", { id: "character-verb-liklot--sense-3" }), 1);
+  // A whole-entry route still covers every sense of that entry.
+  assert.ok(character.getContentWeight("verb", { id: "character-verb-lehaklit--sense-1" }) > 1);
+
+  // לבקר's criticism sense is Inat's; its visit sense stays unowned.
+  app.runtime.characterState.dailyChoice = "inat";
+  assert.ok(character.getContentWeight("verb", { id: "advanced-verb-levaker--sense-2" }) > 1);
+  assert.equal(character.getContentWeight("verb", { id: "advanced-verb-levaker--sense-1" }), 1);
 });
 
 function createStubElement(tag) {

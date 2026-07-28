@@ -9,6 +9,8 @@ Each day the learner chooses a Tel Aviv character. The choice changes the day's 
 - Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review.
 - Itamar mix: primarily the learner's weakest material across the entire course, with no protected comfort zone.
 - Character assignment is a lens, not an exclusive taxonomy. A word or sentence may belong to multiple characters.
+- Routing works on existing item fields, never on a `character` tag in the content files. Keep a word on its true topic shelf and reach it through `route.vocabWords`; never move it between vocabulary categories, because vocabulary ids embed a positional index and re-shelving orphans learner progress.
+- A conjugation route may name a whole verb or a single sense. `route.verbIds` accepts either an entry id (`character-verb-lehaklit`, which matches every sense) or a full deck id (`character-verb-liklot--sense-2`, which matches one). Use the sense form when one paradigm carries meanings that belong to different characters. `npm run report:characters` counts the conjugation deck rather than the seed entries so per-sense routes are visible.
 - Keep the initial cast at five. Ido's practical-life coverage closes the largest remaining gap without adding a sixth character.
 
 ## Cast and routing
@@ -48,8 +50,9 @@ Owns religion, folk practice, magic, spirituality, the supernatural, ritual, ex-
 
 ### Inat
 
-Incisive · cultured · defiant. A distinguished professor; her own framing is
-"politics, law, history."
+Incisive · cultured · defiant. A distinguished professor; her card framing is
+"politics, history." Law was cut from the blurb for length — she still owns the
+legal-studies pools below, and her `perfect` line still offers law school.
 
 Owns literature, music, visual art, history, cultural memory, political language, activism, occupation, policing, social justice, and left-wing analysis.
 
@@ -103,16 +106,35 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
 
 - Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories.
 - Sentences: the `colloquial` category plus the `whatsapp` style.
-- Conjugation verbs: 18 in total, split three ways. Baseline — `להרוס` and `ללרלר`. Authored for him — `לרקוד`, `לבלות`, `לחפור`, `לזרום`, `לפרגן`, `להתחרפן`, `להתמזמז`, `להתלבט`. Routed from the shared pool — `לצאת`, `להיפגש`, `להתקשר`, `לשלוח`, `להזמין`, `לצחוק`, `להתלבש`, `להתרגש`.
-- The routed eight are his by **register**, not by topic: going out, making plans, texting, laughing, getting dressed to leave the house. They stay unowned by anyone else and simply weigh more during his missions. `לשיר` was considered and rejected on exactly this test — singing is not streetwise. Do not re-route it here.
+- Conjugation verbs: 20 route entries, split four ways. Baseline — `להרוס` and `ללרלר`. Authored for him — `לרקוד`, `לבלות`, `לחפור`, `לזרום`, `לפרגן`, `להתחרפן`, `להתמזמז`, `להתלבט`, `לגנוח`. Routed from the shared pool — `לצאת`, `להיפגש`, `להתקשר`, `לשלוח`, `להזמין`, `לצחוק`, `להתלבש`, `להתרגש`. One sense of a shared paradigm — `לקלוט--sense-1`.
+- The routed eight are his by **register**, not by topic: going out, making plans, texting, laughing, getting dressed to leave the house. They stay unowned by anyone else and simply weigh more during his missions. `לשיר` was considered and rejected on exactly this test — singing is not streetwise, and it is now Inbal's for sung prayer.
 - Five of the authored verbs are slang whose paradigms are template-derived rather than dictionary-attested; each discloses that in its `notes`.
+- `לגנוח` is a dictionary pa'al of ג-נ-ח, not slang; only its register is his.
 
 ### Inbal expansion
 
 - Vocabulary: 30 cards in `religion_magic_spirituality`, plus routed words that sit in other categories.
 - Sentences: 70 entries, `inbal_01` through `inbal_70`. The `inbal_51`–`inbal_70` batch deliberately targets two gaps — colloquial register (she had 1 colloquial row against 27 everyday) and Hebrew length, since the handwriting mode only draws sentences of 6–34 Hebrew letters. All 20 sit in 23–33 letters, taking her handwriting-eligible share from 37/50 to 57/70.
-- Conjugation verbs: `לברך` and `להתפלל`, with stored present, past, and future forms.
+- Conjugation verbs: 16 in total. Authored for her — `לברך`, `להתפלל`, `להאמין`, `לצום`, `לקדש`, `לטבול`, `לקלל`, `לנחש`, `להשביע`, `להתגייר`, with stored present, past, and future forms. Routed from the shared pool — `להיעלם`, `להיוולד`, `להיראות`, `להירדם`, `להתעורר`, `לשיר`: birth, disappearance, appearance, sleep, and liturgy are hers by subject rather than register.
 - Coverage includes incantation bowls, Aramaic inscriptions, amulets, the evil eye, dream interpretation, dybbuks, prayer, mikveh, ex-religious identity, ritual practice, and careful distinctions between folklore and factual claims.
+
+### Ivri expansion
+
+- Vocabulary: the six routed `work_business`, `technology_ai`, `finance_investing`,
+  `technology_ai_expanded`, `business_finance_expanded`, and
+  `communication_mastery_expanded` categories — 176 cards.
+- Sentences: the `professional` register.
+- Conjugation verbs: 23 route entries. `לעבוד`, `לתכנן`, `לנתח`, `לקנות`, `למכור`,
+  `להחליט`, `לעדכן`, `לאשר`, plus a process tranche from the shared pool —
+  `לתקן`, `להשתמש`, `לבטל`, `לצרף`, `לברר`, `להסכים`, `להספיק`, `להבהיר`, `להזהיר`,
+  `להחזיר`, `לשלם`, `לבדוק` — the verbs a form, a contract, or a deadline runs on.
+  Authored for him and shared with Inat: `להגיש` and `להקליט`. One sense of a shared
+  paradigm: `לקלוט--sense-2` (reception and input).
+- Device and OS vocabulary is still a gap. His three technology categories are
+  AI, startup, and discourse heavy; the only device-UI words in the lexicon
+  (`הגדרות`, `לגלול`, `להחליק`, `להקיש`) sit in `media_digital_life_expanded`,
+  which is Ido's. A dedicated device-settings category routed to Ivri is the
+  clean shape when that lands.
 
 ### Inat expansion
 
@@ -120,8 +142,13 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   `politics_society_expanded`, `legal_civic`, and `law_legal_systems_expanded`
   categories — 232 cards in total.
 - Sentences: 24 entries, `inat_01` through `inat_24`, plus the `formal` register.
-- Conjugation verbs: `לפרש` and `למחות`, with stored present, past, and future forms,
-  plus `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, and `ללמד` from the shared pool.
+- Conjugation verbs: 22 route entries. `לפרש` and `למחות`, with stored present, past,
+  and future forms, plus `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, `ללמד`, and a
+  reading-and-memory tranche — `לכתוב`, `לקרוא`, `לזכור`, `לשכוח`, `להשתתף`, `לשנות`,
+  `לשאול`, `לענות`, `להסביר`, `להבין` — from the shared pool. Shared with Ivri:
+  `להגיש` and `להקליט`. Single senses of shared paradigms: `לקלוט--sense-3`
+  (קליטת עלייה as policy and history) and `לבקר--sense-2` (to criticize; the visit
+  sense stays unowned).
 - Abbreviations: shares the `Civics, Law & Work` bucket with Ivri. The bucket mixes
   his corporate and regulatory acronyms with her parties, courts, and rights bodies,
   and the routing table has no finer grain than a bucket, so multi-owner routing is
