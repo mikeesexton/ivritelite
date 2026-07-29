@@ -73,7 +73,14 @@ const HEBREW_IDIOMS = (function () {
       "present": { "msg": "מדליק", "fsg": "מדליקה", "mpl": "מדליקים", "fpl": "מדליקות" },
       "past":    { "msg": "הדליק", "fsg": "הדליקה", "mpl": "הדליקו", "fpl": "הדליקו" },
       "future":  { "msg": "ידליק", "fsg": "תדליק", "mpl": "ידליקו", "fpl": "ידליקו" }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": { "msg": "מַדְלִיק", "fsg": "מַדְלִיקָה", "mpl": "מַדְלִיקִים", "fpl": "מַדְלִיקוֹת" },
+      "past":    { "msg": "הִדְלִיק", "fsg": "הִדְלִיקָה", "mpl": "הִדְלִיקוּ", "fpl": "הִדְלִיקוּ" },
+      "future":  { "msg": "יַדְלִיק", "fsg": "תַּדְלִיק", "mpl": "יַדְלִיקוּ", "fpl": "יַדְלִיקוּ" }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": ["https://www.pealim.com/dict/423-lehadlik/"]
   },
   {
     "id": "hitrif",
@@ -287,7 +294,18 @@ const HEBREW_IDIOMS = (function () {
       "present": { "msg": "פותח", "fsg": "פותחת", "mpl": "פותחים", "fpl": "פותחות" },
       "past":    { "msg": "פתח", "fsg": "פתחה", "mpl": "פתחו", "fpl": "פתחו" },
       "future":  { "msg": "יפתח", "fsg": "תפתח", "mpl": "יפתחו", "fpl": "יפתחו" }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": { "msg": "פּוֹתֵחַ", "fsg": "פּוֹתַחַת", "mpl": "פּוֹתְחִים", "fpl": "פּוֹתְחוֹת" },
+      "past":    { "msg": "פָּתַח", "fsg": "פָּתְחָה", "mpl": "פָּתְחוּ", "fpl": "פָּתְחוּ" },
+      "future":  { "msg": "יִפְתַּח", "fsg": "תִּפְתַּח", "mpl": "יִפְתְּחוּ", "fpl": "יִפְתְּחוּ" }
+    },
+    "fixed_object_niqqud": "אֶת הָעֵינַיִם",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "https://www.pealim.com/dict/1747-liftoach/",
+      "https://terms.hebrew-academy.org.il/munnah/66449_1/%D7%A8%D6%B4%D7%A4%D6%B0%D7%A8%D7%95%D6%BC%D7%A3%20%D7%94%D6%B8%D7%A2%D6%B5%D7%99%D7%A0%D6%B7%D7%99%D6%B4%D7%9D"
+    ]
   },
   {
     "id": "yeshiva_neshama",
@@ -778,7 +796,14 @@ const HEBREW_IDIOMS = (function () {
       "present": { "msg": "מסדר", "fsg": "מסדרת", "mpl": "מסדרים", "fpl": "מסדרות" },
       "past":    { "msg": "סידר", "fsg": "סידרה", "mpl": "סידרו", "fpl": "סידרו" },
       "future":  { "msg": "יסדר", "fsg": "תסדר", "mpl": "יסדרו", "fpl": "יסדרו" }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": { "msg": "מְסַדֵּר", "fsg": "מְסַדֶּרֶת", "mpl": "מְסַדְּרִים", "fpl": "מְסַדְּרוֹת" },
+      "past":    { "msg": "סִדֵּר", "fsg": "סִדְּרָה", "mpl": "סִדְּרוּ", "fpl": "סִדְּרוּ" },
+      "future":  { "msg": "יְסַדֵּר", "fsg": "תְּסַדֵּר", "mpl": "יְסַדְּרוּ", "fpl": "יְסַדְּרוּ" }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": ["https://www.pealim.com/dict/1320-lesader/"]
   },
   {
     "id": "marach",
@@ -825,7 +850,18 @@ const HEBREW_IDIOMS = (function () {
       "present": { "msg": "עושה", "fsg": "עושה", "mpl": "עושים", "fpl": "עושות" },
       "past":    { "msg": "עשה", "fsg": "עשתה", "mpl": "עשו", "fpl": "עשו" },
       "future":  { "msg": "יעשה", "fsg": "תעשה", "mpl": "יעשו", "fpl": "יעשו" }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": { "msg": "עוֹשֶׂה", "fsg": "עוֹשָׂה", "mpl": "עוֹשִׂים", "fpl": "עוֹשׂוֹת" },
+      "past":    { "msg": "עָשָׂה", "fsg": "עָשְׂתָה", "mpl": "עָשׂוּ", "fpl": "עָשׂוּ" },
+      "future":  { "msg": "יַעֲשֶׂה", "fsg": "תַּעֲשֶׂה", "mpl": "יַעֲשׂוּ", "fpl": "יַעֲשׂוּ" }
+    },
+    "fixed_object_niqqud": "אֶת הַיּוֹם",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "https://www.pealim.com/dict/3-laasot/",
+      "https://www.pealim.com/dict/5998-hayom/"
+    ]
   },
   {
     "id": "haramat_moral",
@@ -2284,7 +2320,29 @@ const HEBREW_IDIOMS = (function () {
       "present": { "msg": "מחזיר", "fsg": "מחזירה", "mpl": "מחזירים", "fpl": "מחזירות" },
       "past":    { "msg": "החזיר", "fsg": "החזירה", "mpl": "החזירו", "fpl": "החזירו" },
       "future":  { "msg": "יחזיר", "fsg": "תחזיר", "mpl": "יחזירו", "fpl": "יחזירו" }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": { "msg": "מַחְזִיר", "fsg": "מַחְזִירָה", "mpl": "מַחְזִירִים", "fpl": "מַחְזִירוֹת" },
+      "past":    { "msg": "הֶחְזִיר", "fsg": "הֶחְזִירָה", "mpl": "הֶחְזִירוּ", "fpl": "הֶחְזִירוּ" },
+      "future":  { "msg": "יַחְזִיר", "fsg": "תַּחְזִיר", "mpl": "יַחְזִירוּ", "fpl": "יַחְזִירוּ" }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "לְעַצְמִי",
+      "2msg": "לְעַצְמְךָ",
+      "2fsg": "לְעַצְמֵךְ",
+      "3msg": "לְעַצְמוֹ",
+      "3fsg": "לְעַצְמָהּ",
+      "1pl": "לְעַצְמֵנוּ",
+      "2mpl": "לְעַצְמְכֶם",
+      "2fpl": "לְעַצְמְכֶן",
+      "3mpl": "לְעַצְמָם",
+      "3fpl": "לְעַצְמָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "https://www.pealim.com/dict/581-lehachazir/",
+      "https://hebrew-academy.org.il/%D7%A0%D7%98%D7%99%D7%99%D7%AA-%D7%9E%D7%99%D7%9C%D7%95%D7%AA-%D7%94%D7%99%D7%97%D7%A1/"
+    ]
   },
   {
     "id": "haavara_al_daato",
@@ -2510,13 +2568,20 @@ const HEBREW_IDIOMS = (function () {
   }
 ];
 
-  // Normalize: expose tense aliases and english_meaning.
+  // Normalize the runtime aliases and expose an explicit pointing contract.
+  // A reviewed entry must supply a complete pointed paradigm and provenance;
+  // unreviewed entries deliberately fall back to plain Hebrew in the game.
   return raw.map(function (item) {
     return Object.assign({}, item, {
       present_tense: item.conjugations.present,
       past_tense: item.conjugations.past || null,
       future_tense: item.conjugations.future || null,
+      present_tense_niqqud: item.conjugations_niqqud?.present || null,
+      past_tense_niqqud: item.conjugations_niqqud?.past || null,
+      future_tense_niqqud: item.conjugations_niqqud?.future || null,
       english_meaning: item.english,
+      niqqud_status: item.niqqud_status || "unreviewed",
+      niqqud_sources: Array.isArray(item.niqqud_sources) ? item.niqqud_sources.slice() : [],
     });
   });
 })();

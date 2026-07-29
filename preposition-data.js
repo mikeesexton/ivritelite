@@ -5,14 +5,14 @@
 // canonical display order; `en` is the English gloss substituted into a
 // trigger's {o} slot.
 const PREPOSITION_OBJECTS = [
-  { key: "1sg", en: "me" },
-  { key: "2ms", en: "you (m.sg.)" },
-  { key: "2fs", en: "you (f.sg.)" },
-  { key: "3ms", en: "him" },
-  { key: "3fs", en: "her" },
-  { key: "1pl", en: "us" },
-  { key: "2mp", en: "you (pl.)" },
-  { key: "3mp", en: "them" },
+  { key: "1sg", en: "me", poss: "my" },
+  { key: "2ms", en: "you (m.sg.)", poss: "your (m.sg.)" },
+  { key: "2fs", en: "you (f.sg.)", poss: "your (f.sg.)" },
+  { key: "3ms", en: "him", poss: "his" },
+  { key: "3fs", en: "her", poss: "her" },
+  { key: "1pl", en: "us", poss: "our" },
+  { key: "2mp", en: "you (pl.)", poss: "your (pl.)" },
+  { key: "3mp", en: "them", poss: "their" },
 ];
 
 // Inflection paradigms for each governed preposition. `plain` is the
@@ -306,8 +306,8 @@ const PREPOSITIONS = [
   { id: "prep-share",        type: "verb",       he: "מתחלק",       prep: "im",      en: "to share with {o}" },
   { id: "prep-cooperate",    type: "expression", he: "משתף פעולה",  prep: "im",      en: "to cooperate with {o}" },
   { id: "prep-impressed",    type: "verb",       he: "מתרשם",       prep: "mi",      en: "to be impressed by {o}" },
-  { id: "prep-visitat",      type: "verb",       he: "מבקר",        prep: "etsel",   en: "to visit at {o}'s place" },
-  { id: "prep-sleepover",    type: "verb",       he: "ישן",         prep: "etsel",   en: "to sleep over at {o}'s place" },
+  { id: "prep-visitat",      type: "verb",       he: "מבקר",        prep: "etsel",   en: "to visit {o} at home" },
+  { id: "prep-sleepover",    type: "verb",       he: "ישן",         prep: "etsel",   en: "to sleep over at {p} place" },
   { id: "prep-passby",       type: "verb",       he: "עובר",        prep: "leyad",   en: "to pass by {o}" },
   { id: "prep-fightagainst", type: "verb",       he: "נלחם",        prep: "neged",   en: "to fight against {o}" },
   { id: "prep-demonstrate",  type: "verb",       he: "מפגין",       prep: "neged",   en: "to demonstrate against {o}" },
@@ -329,13 +329,101 @@ const PREPOSITIONS = [
   { id: "prep-love",         type: "verb",       he: "אוהב",        prep: "et",      en: "to love {o}" },
 ];
 
+// Verb forms a governed-preposition frame is conjugated into. Governance does
+// not change with tense or person — לחכות takes ל־ in every form — so the verb
+// here is context, not the answer, and a curated spread is enough to stop the
+// frame being learned as one memorized string. Taking every stored form instead
+// would multiply the deck by 23 and thin the adaptive weighting, which is keyed
+// per trigger/object rather than per form for exactly that reason.
+//
+// `subject` is the person the Hebrew form's subject carries, in the same key
+// space as PREPOSITION_OBJECTS, so the deck builder can drop items whose subject
+// and object coreference. Present-tense Hebrew marks no person, so those three
+// forms are glossed third-person and are treated as such.
+const PREPOSITION_VERB_FORMS = [
+  { formId: "present_masculine_singular",            subject: "3ms", pronoun: "he",   key: "s3" },
+  { formId: "present_feminine_singular",             subject: "3fs", pronoun: "she",  key: "s3" },
+  { formId: "present_masculine_plural",              subject: "3mp", pronoun: "they", key: "base" },
+  { formId: "past_first_person_singular",            subject: "1sg", pronoun: "I",    key: "past" },
+  { formId: "past_third_person_masculine_singular",  subject: "3ms", pronoun: "he",   key: "past" },
+  { formId: "past_third_person_feminine_singular",   subject: "3fs", pronoun: "she",  key: "past" },
+  { formId: "past_first_person_plural",              subject: "1pl", pronoun: "we",   key: "past" },
+  { formId: "future_first_person_singular",          subject: "1sg", pronoun: "I",    key: "future" },
+  { formId: "future_third_person_masculine_singular",subject: "3ms", pronoun: "he",   key: "future" },
+  { formId: "future_first_person_plural",            subject: "1pl", pronoun: "we",   key: "future" },
+];
+
+// Trigger id → the hebrew-verbs.js entry whose paradigm supplies the conjugated
+// frames, plus English for the two forms that cannot be derived.
+//
+// `base` (bare predicate) is taken from the trigger's own `en` with the leading
+// "to " removed, and `future` is "will " + base, so `en` stays the single source
+// of truth for the predicate and its object slots. Only third-person singular
+// and past need authoring, because English inflects irregularly there
+// (goes out / went out, studies, stood, knew).
+//
+// The verb deck's own `englishText` labels deliberately are not reused. They
+// gloss the verb's core sense, which is often not the sense this trigger drills:
+// שומר is "look after" here but "keep" in hebrew-verbs.js, מזמין is "invite"
+// here but "order (food, tickets)" there, and נראה is "look like" here but
+// "seem" there. Borrowing them would contradict the authored trigger gloss.
+const PREPOSITION_VERB_LINKS = {
+  "prep-wait":         { entryId: "common-verb-lechakot",       s3: "waits for {o}",          past: "waited for {o}" },
+  "prep-help":         { entryId: "common-verb-laazor",         s3: "helps {o}",              past: "helped {o}" },
+  "prep-getused":      { entryId: "advanced-verb-lehitragel",   s3: "gets used to {o}",       past: "got used to {o}" },
+  "prep-thinkof":      { entryId: "common-verb-lachshov",       s3: "thinks about {o}",       past: "thought about {o}" },
+  "prep-lookat":       { entryId: "advanced-verb-lehistakel",   s3: "looks at {o}",           past: "looked at {o}" },
+  "prep-hearabout":    { entryId: "common-verb-lishmoa",        s3: "hears about {o}",        past: "heard about {o}" },
+  "prep-giveup":       { entryId: "advanced-verb-levater",      s3: "gives up on {o}",        past: "gave up on {o}" },
+  "prep-guard":        { entryId: "starter-verb-lishmor",       s3: "looks after {o}",        past: "looked after {o}" },
+  "prep-influence":    { entryId: "advanced-verb-lehashpia",    s3: "influences {o}",         past: "influenced {o}" },
+  "prep-laughat":      { entryId: "advanced-verb-litzchok",     s3: "laughs at {o}",          past: "laughed at {o}" },
+  "prep-believe":      { entryId: "character-verb-lehaamin",    s3: "believes in {o}",        past: "believed in {o}" },
+  "prep-use":          { entryId: "advanced-verb-lehishtamesh", s3: "uses {o}",               past: "used {o}" },
+  "prep-talkwith":     { entryId: "common-verb-ledaber",        s3: "talks with {o}",         past: "talked with {o}" },
+  "prep-agree":        { entryId: "advanced-verb-lehaskim",     s3: "agrees with {o}",        past: "agreed with {o}" },
+  "prep-tell":         { entryId: "common-verb-lesaper",        s3: "tells {o}",              past: "told {o}" },
+  "prep-recommend":    { entryId: "advanced-verb-lehamlitz",    s3: "recommends {o}",         past: "recommended {o}" },
+  "prep-touch":        { entryId: "advanced-verb-lagaat",       s3: "touches {o}",            past: "touched {o}" },
+  "prep-meet":         { entryId: "common-verb-lehipagesh",     s3: "meets {o}",              past: "met {o}" },
+  "prep-askfrom":      { entryId: "common-verb-levakesh",       s3: "requests from {o}",      past: "requested from {o}" },
+  "prep-partfrom":     { entryId: "advanced-verb-lehipared",    s3: "parts from {o}",         past: "parted from {o}" },
+  "prep-workfor":      { entryId: "starter-verb-laavod",        s3: "works for {o}",          past: "worked for {o}" },
+  "prep-studyunder":   { entryId: "starter-verb-lilmod",        s3: "studies under {o}",      past: "studied under {o}" },
+  "prep-sitnextto":    { entryId: "starter-verb-lashevet",      s3: "sits next to {o}",       past: "sat next to {o}" },
+  "prep-standnextto":  { entryId: "starter-verb-laamod",        s3: "stands next to {o}",     past: "stood next to {o}" },
+  "prep-playagainst":  { entryId: "starter-verb-lesachek",      s3: "plays against {o}",      past: "played against {o}" },
+  "prep-looklike":     { entryId: "advanced-verb-leheraot",     s3: "looks like {o}",         past: "looked like {o}" },
+  "prep-behavelike":   { entryId: "advanced-verb-lehitnaheg",   s3: "behaves like {o}",       past: "behaved like {o}" },
+  "prep-phone":        { entryId: "common-verb-lehitkasher",    s3: "phones {o}",             past: "phoned {o}" },
+  "prep-listen":       { entryId: "advanced-verb-lehakshiv",    s3: "listens to {o}",         past: "listened to {o}" },
+  "prep-dateout":      { entryId: "common-verb-latzet",         s3: "goes out with {o}",      past: "went out with {o}" },
+  "prep-visitat":      { entryId: "advanced-verb-levaker",      s3: "visits {o} at home",     past: "visited {o} at home" },
+  "prep-sleepover":    { entryId: "common-verb-lishon",         s3: "sleeps over at {p} place", past: "slept over at {p} place" },
+  "prep-thinklike":    { entryId: "common-verb-lachshov",       s3: "thinks like {o}",        past: "thought like {o}" },
+  "prep-arrivebefore": { entryId: "common-verb-lehagia",        s3: "arrives before {o}",     past: "arrived before {o}" },
+  "prep-liveacross":   { entryId: "starter-verb-lagur",         s3: "lives across from {o}",  past: "lived across from {o}" },
+  "prep-standfacing":  { entryId: "starter-verb-laamod",        s3: "stands facing {o}",      past: "stood facing {o}" },
+  "prep-know":         { entryId: "advanced-verb-lehakir",      s3: "knows {o}",              past: "knew {o}" },
+  "prep-invite":       { entryId: "common-verb-lehazmin",       s3: "invites {o}",            past: "invited {o}" },
+  "prep-love":         { entryId: "common-verb-leehov",         s3: "loves {o}",              past: "loved {o}" },
+};
+
 if (typeof global !== "undefined") {
   global.PREPOSITION_OBJECTS = PREPOSITION_OBJECTS;
   global.PREPOSITION_INFLECTIONS = PREPOSITION_INFLECTIONS;
   global.PREPOSITIONS = PREPOSITIONS;
+  global.PREPOSITION_VERB_FORMS = PREPOSITION_VERB_FORMS;
+  global.PREPOSITION_VERB_LINKS = PREPOSITION_VERB_LINKS;
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { PREPOSITION_OBJECTS, PREPOSITION_INFLECTIONS, PREPOSITIONS };
+  module.exports = {
+    PREPOSITION_OBJECTS,
+    PREPOSITION_INFLECTIONS,
+    PREPOSITIONS,
+    PREPOSITION_VERB_FORMS,
+    PREPOSITION_VERB_LINKS,
+  };
 }
 })(typeof globalThis !== "undefined" ? globalThis : this);

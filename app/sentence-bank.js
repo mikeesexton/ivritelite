@@ -80,8 +80,6 @@ const NON_DISTINCT_DISTRACTOR_GROUPS = [
   ["מדויקות", "נכונות"],
 ];
 
-const FALLBACK_HEBREW_FLEXIBLE_MODIFIER_TOKENS = ["די", "לגמרי", "ממש", "מאוד"];
-
 const NON_DISTINCT_DISTRACTOR_INDEX = new Map();
 NON_DISTINCT_DISTRACTOR_GROUPS.forEach((group, groupIndex) => {
   group.forEach((token) => {
@@ -91,15 +89,6 @@ NON_DISTINCT_DISTRACTOR_GROUPS.forEach((group, groupIndex) => {
 
 function normalizeComparableToken(token) {
   return String(token || "").trim().toLowerCase();
-}
-
-function normalizeComparableHebrewToken(token) {
-  const value = String(token || "").trim();
-  if (!value) return "";
-  const stripped = app.hebrew?.stripNiqqud ? app.hebrew.stripNiqqud(value) : value;
-  return app.hebrew?.normalizeHebrewToMedial
-    ? app.hebrew.normalizeHebrewToMedial(stripped).trim()
-    : stripped.trim();
 }
 
 function sentenceTokenDisplayText(token) {
@@ -123,15 +112,6 @@ function sanitizeDistractors(tokens, targetTokens) {
     seen.add(token);
     return true;
   });
-}
-
-function isHebrewFlexibleModifierToken(token) {
-  const fromApi = getRuntime().sentenceBankApi?.getFlexibleModifierTokens?.();
-  const tokens = Array.isArray(fromApi) && fromApi.length
-    ? fromApi
-    : FALLBACK_HEBREW_FLEXIBLE_MODIFIER_TOKENS;
-  const normalized = normalizeComparableHebrewToken(token);
-  return tokens.some((candidate) => normalizeComparableHebrewToken(candidate) === normalized);
 }
 
 function isAttachableSentenceSuffix(text) {
@@ -433,31 +413,15 @@ function buildSentenceBankTokenAriaDescription(isSelected) {
     : "Press Space to select this word for keyboard placement, or activate it to place it in the next blank.";
 }
 
-function isEquivalentAdjacentModifierSwap(expectedTokens, actualTokens, mismatchIndex) {
-  if (!Array.isArray(expectedTokens) || !Array.isArray(actualTokens)) return false;
-  const nextIndex = mismatchIndex + 1;
-  if (nextIndex >= expectedTokens.length || nextIndex >= actualTokens.length) return false;
-  if (actualTokens[mismatchIndex] !== expectedTokens[nextIndex] || actualTokens[nextIndex] !== expectedTokens[mismatchIndex]) {
-    return false;
-  }
-  return isHebrewFlexibleModifierToken(expectedTokens[mismatchIndex]) || isHebrewFlexibleModifierToken(expectedTokens[nextIndex]);
-}
-
 function isEquivalentSentenceTokenOrder(expectedTokens, actualTokens) {
   if (!Array.isArray(expectedTokens) || !Array.isArray(actualTokens) || expectedTokens.length !== actualTokens.length) {
     return false;
   }
 
-  const mismatchIndexes = [];
   for (let index = 0; index < expectedTokens.length; index += 1) {
-    if (expectedTokens[index] === actualTokens[index]) continue;
-    mismatchIndexes.push(index);
-    if (mismatchIndexes.length > 2) return false;
+    if (expectedTokens[index] !== actualTokens[index]) return false;
   }
-
-  if (!mismatchIndexes.length) return true;
-  if (mismatchIndexes.length !== 2 || mismatchIndexes[1] !== mismatchIndexes[0] + 1) return false;
-  return isEquivalentAdjacentModifierSwap(expectedTokens, actualTokens, mismatchIndexes[0]);
+  return true;
 }
 
 function buildSingleWordDifference(question) {
@@ -1355,33 +1319,9 @@ sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function star
   const session = getSession();
 
   app.speech?.cancel?.();
-  session.stopVerbMatchTimer?.();
-  session.stopLessonTimer?.();
-  session.stopSentenceBankTimer?.();
-  session.stopAbbreviationTimer?.();
-  session.closeLeaveSessionConfirm?.();
-  h.closeMasteredModal?.();
-  h.resetVerbMatchState?.();
-  h.resetAbbreviationState?.();
-  h.resetAdvConjState?.();
-  runtime.state.lesson.active = false;
-  runtime.state.lesson.inReview = false;
-  runtime.state.currentQuestion = null;
+  session.resetAllModeSessions?.();
   session.clearSummaryState?.();
-  session.clearLessonStartIntro?.();
-  session.clearSecondChanceIntro?.();
-  session.clearSentenceBankIntro?.();
-  session.clearVerbMatchIntro?.();
-  session.clearAbbreviationIntro?.();
-  session.clearWordMatchIntro?.();
-  session.clearAdvConjIntro?.();
-  session.clearBinyanBoardIntro?.();
-  app.wordMatch?.resetWordMatchState?.();
-  app.binyanBoard?.resetBinyanBoardState?.();
-  session.clearHandwritingIntro?.();
-  app.handwriting?.resetHandwritingState?.();
   h.resetSessionScore?.();
-  sentenceBank.resetSentenceBankState();
   runtime.state.sentenceBank.shemaMode = options.shema === true;
   runtime.state.mode = "sentenceBank";
   runtime.state.route = "home";

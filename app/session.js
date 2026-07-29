@@ -604,7 +604,16 @@ session.requestGoHome = session.requestGoHome || function requestGoHome() {
   session.requestLeaveSession("home");
 };
 
-session.endSessionAndNavigate = session.endSessionAndNavigate || function endSessionAndNavigate(targetRoute = "home") {
+// Single teardown for every game mode: timers, overlays, and per-mode state.
+// `hasActiveLearnSession` ORs across every mode's `active`/`introActive` flag, so
+// a mode left half-reset makes the app believe a session is still running and
+// raises the leave-session guard over one the learner already abandoned. Each
+// mode's start path used to inline its own subset of this list and every subset
+// was different, so switching modes leaked whichever slices that mode forgot.
+// Teardown only: mode, route, score, and summary state stay with the caller,
+// because starting a game, abandoning one, and summarizing one want different
+// answers there.
+session.resetAllModeSessions = session.resetAllModeSessions || function resetAllModeSessions() {
   const runtime = getRuntime();
   const h = getHelpers();
 
@@ -613,6 +622,9 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.stopSentenceBankTimer();
   session.stopAbbreviationTimer();
   session.stopWordMatchTimer();
+  app.binyanBoard?.stopBinyanBoardTimer?.();
+  app.handwriting?.stopHandwritingTimer?.();
+
   session.closeLeaveSessionConfirm();
   h.closeMasteredModal?.();
   session.clearLessonStartIntro();
@@ -624,7 +636,10 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.clearAdvConjIntro();
   session.clearPrepositionsIntro?.();
   session.clearBinyanBoardIntro?.();
-  h.resetSessionCounters?.();
+  session.clearHandwritingIntro?.();
+
+  // resetAdvConjState and resetPrepositionsState also clear their own intervals,
+  // which is why they must be called rather than flipping `active` by hand.
   h.resetSentenceBankState?.();
   h.resetVerbMatchState?.();
   h.resetAbbreviationState?.();
@@ -632,14 +647,20 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
   session.resetAdvConjState();
   session.resetPrepositionsState?.();
   app.binyanBoard?.resetBinyanBoardState?.();
-  session.clearHandwritingIntro?.();
   app.handwriting?.resetHandwritingState?.();
+
+  // The legacy lesson slice has no reset function of its own.
   runtime.state.lesson.active = false;
   runtime.state.lesson.inReview = false;
-  runtime.state.sentenceBank.active = false;
-  runtime.state.sentenceBank.inReview = false;
-  runtime.state.sentenceBank.currentQuestion = null;
   runtime.state.currentQuestion = null;
+};
+
+session.endSessionAndNavigate = session.endSessionAndNavigate || function endSessionAndNavigate(targetRoute = "home") {
+  const runtime = getRuntime();
+  const h = getHelpers();
+
+  session.resetAllModeSessions();
+  h.resetSessionCounters?.();
   session.clearSummaryState();
   runtime.state.mode = "home";
   runtime.state.route = targetRoute === "review" || targetRoute === "settings" ? targetRoute : "home";

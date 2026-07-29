@@ -135,7 +135,7 @@ well-covered characters beats 1.0x reached by padding.
 The existing colloquial tranche includes the newer LGBTQ+ and camp slang material and its related sentences. Preserve it as the current Ido content baseline.
 
 - Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories, plus the practical-life shelves added later — `home_everyday_life`, `groceries_food`, and `everyday_survival_expanded` — for 401 cards. This document always assigned him practical Tel Aviv life, but the route table did not carry it until then. `cooking_utensils` and `cooking_verbs` stay shared: they are technique rather than street life.
-- Sentences: the `colloquial` category plus the `whatsapp` style. The `everyday` register is deliberately **not** his. Adding its 139 unrouted rows would put him at 56% of the whole sentence bank and blur the colloquial identity that distinguishes him.
+- Sentences: the `colloquial` category plus the `whatsapp` style. The `everyday` register is deliberately **not** his. Adding its 142 unrouted rows would put him at 56% of the whole sentence bank and blur the colloquial identity that distinguishes him.
 - Conjugation verbs: 30 route entries. The domestic tranche — `לבשל`, `לנקות`, `להדליק`,
   `לכבות`, `לסדר`, `להתקלח`, `לגור`, `לטייל`, `לשבת`, `לקום` — arrived with the
   practical-life vocabulary: the verbs an apartment runs on. `לישון` was left unowned

@@ -149,35 +149,12 @@ function pickPairs(game) {
 }
 
 function resetCompetingSessions() {
-  const runtime = getRuntime();
   const h = getHelpers();
   const s = getSession();
   app.speech?.cancel?.();
-  s.stopVerbMatchTimer?.();
-  s.stopLessonTimer?.();
-  s.stopAbbreviationTimer?.();
-  s.stopSentenceBankTimer?.();
-  s.stopWordMatchTimer?.();
-  s.closeLeaveSessionConfirm?.();
-  h.closeMasteredModal?.();
-  s.clearLessonStartIntro?.();
-  s.clearSecondChanceIntro?.();
-  s.clearVerbMatchIntro?.();
-  s.clearAbbreviationIntro?.();
-  s.clearSentenceBankIntro?.();
-  s.clearWordMatchIntro?.();
-  s.clearBinyanBoardIntro?.();
-  s.clearHandwritingIntro?.();
-  app.handwriting?.resetHandwritingState?.();
+  s.resetAllModeSessions?.();
   s.clearSummaryState?.();
-  runtime.state.lesson.active = false;
-  runtime.state.lesson.inReview = false;
-  runtime.state.sentenceBank.active = false;
-  runtime.state.currentQuestion = null;
   h.resetSessionScore?.();
-  h.resetVerbMatchState?.();
-  h.resetAbbreviationState?.();
-  h.resetSentenceBankState?.();
 }
 
 function startGame(game) {

@@ -60,6 +60,22 @@ const OBJECT_TYPES = new Set(["direct", "l_dative", "possessive_suffix"]);
 // Every other data file in the repo spells this binyan `paal`. The idiom file
 // used to mix in `qal`, which would split any grouping by binyan.
 const BINYANIM = new Set(["paal", "piel", "hifil", "nifal", "hitpael", "pual", "hufal"]);
+const NIQQUD_PATTERN = /[\u0591-\u05C7]/;
+const REVIEWED_NIQQUD_IDS = [
+  "asiyat_yom",
+  "hachzara_leatzmo",
+  "hidlik",
+  "ptihat_einayim",
+  "sider",
+];
+
+function stripNiqqud(text) {
+  return String(text || "").normalize("NFC").replace(/[\u0591-\u05C7]/g, "");
+}
+
+function consonantalSkeleton(text) {
+  return stripNiqqud(text).replace(/[אהוי]/g, "");
+}
 
 test("every idiom carries the fields advConj needs to build an item", () => {
   const idioms = loadIdioms();
@@ -126,6 +142,208 @@ test("the idiom pool stays deep enough that a ten-round session does not exhaust
 
   // The ladder reached level 3 and stopped; level 4 is the advanced tier.
   assert.ok(idioms.some((idiom) => idiom.level === 4), "no level-4 idioms");
+});
+
+test("advanced conjugation pointing is explicit, complete, and sourced before runtime use", () => {
+  const idioms = loadIdioms();
+  const statusCounts = {};
+
+  idioms.forEach((idiom) => {
+    statusCounts[idiom.niqqud_status] = (statusCounts[idiom.niqqud_status] || 0) + 1;
+    assert.ok(
+      ["unreviewed", "reviewed"].includes(idiom.niqqud_status),
+      `${idiom.id} has unsupported niqqud_status ${idiom.niqqud_status}`,
+    );
+    assert.ok(Array.isArray(idiom.niqqud_sources), `${idiom.id} needs niqqud_sources`);
+
+    if (idiom.niqqud_status !== "reviewed") return;
+
+    assert.ok(idiom.niqqud_sources.length > 0, `${idiom.id} reviewed pointing needs provenance`);
+    idiom.niqqud_sources.forEach((source) => {
+      assert.match(String(source), /^https:\/\//, `${idiom.id} has invalid pointing source ${source}`);
+    });
+    ["present", "past", "future"].forEach((tense) => {
+      const forms = idiom.conjugations_niqqud?.[tense];
+      assert.ok(forms, `${idiom.id} reviewed pointing needs ${tense} forms`);
+      SUBJECT_FORMS.forEach((form) => {
+        assert.match(String(forms?.[form] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed ${tense}.${form}`);
+        assert.equal(
+          consonantalSkeleton(forms?.[form]),
+          consonantalSkeleton(idiom.conjugations[tense][form]),
+          `${idiom.id} ${tense}.${form} pointing changes the consonantal skeleton`,
+        );
+      });
+    });
+    if (idiom.object_type === "l_dative") {
+      assert.match(String(idiom.fixed_object_niqqud || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed fixed_object`);
+      assert.equal(
+        consonantalSkeleton(idiom.fixed_object_niqqud),
+        consonantalSkeleton(idiom.fixed_object),
+        `${idiom.id} fixed_object pointing changes the consonantal skeleton`,
+      );
+    }
+    if (idiom.object_type === "possessive_suffix") {
+      assert.deepEqual(
+        Object.keys(idiom.suffix_forms_niqqud).sort(),
+        Object.keys(idiom.suffix_forms).sort(),
+        `${idiom.id} needs every authored suffix form pointed`,
+      );
+      Object.keys(idiom.suffix_forms).forEach((key) => {
+        assert.match(
+          String(idiom.suffix_forms_niqqud?.[key] || ""),
+          NIQQUD_PATTERN,
+          `${idiom.id} needs pointed suffix_forms.${key}`,
+        );
+        assert.equal(
+          consonantalSkeleton(idiom.suffix_forms_niqqud[key]),
+          consonantalSkeleton(idiom.suffix_forms[key]),
+          `${idiom.id} suffix_forms.${key} pointing changes the consonantal skeleton`,
+        );
+      });
+    }
+  });
+
+  assert.deepEqual(statusCounts, { reviewed: 5, unreviewed: 95 });
+  assert.deepEqual(
+    Array.from(idioms)
+      .filter((idiom) => idiom.niqqud_status === "reviewed")
+      .map((idiom) => idiom.id)
+      .sort(),
+    REVIEWED_NIQQUD_IDS,
+  );
+});
+
+test("the reviewed idiom pilot exactly matches approved internal verb paradigms", () => {
+  const verbApi = require(path.join(__dirname, "..", "hebrew-verbs.js"));
+  const seeds = new Map(verbApi.getSeedVerbEntries().map((entry) => [entry.id, entry]));
+  const idioms = new Map(loadIdioms().map((entry) => [entry.id, entry]));
+  const seedIds = {
+    hidlik: "advanced-verb-lehadlik",
+    sider: "advanced-verb-lesader",
+    asiyat_yom: "common-verb-laasot",
+    ptihat_einayim: "starter-verb-liftoach",
+    hachzara_leatzmo: "advanced-verb-lehachzir",
+  };
+  const formSlots = {
+    present: {
+      msg: "masculine_singular",
+      fsg: "feminine_singular",
+      mpl: "masculine_plural",
+      fpl: "feminine_plural",
+    },
+    past: {
+      msg: "third_person_masculine_singular",
+      fsg: "third_person_feminine_singular",
+      mpl: "third_person_plural",
+      fpl: "third_person_plural",
+    },
+    future: {
+      msg: "third_person_masculine_singular",
+      fsg: "third_person_feminine_singular",
+      mpl: "third_person_plural",
+      fpl: "third_person_plural",
+    },
+  };
+
+  Object.entries(seedIds).forEach(([idiomId, seedId]) => {
+    const idiom = idioms.get(idiomId);
+    const seed = seeds.get(seedId);
+    assert.ok(idiom, `missing reviewed idiom ${idiomId}`);
+    assert.ok(seed, `missing approved verb seed ${seedId}`);
+    assert.equal(seed.review_status, "approved", `${seedId} is no longer approved`);
+
+    Object.entries(formSlots).forEach(([tense, slots]) => {
+      Object.entries(slots).forEach(([idiomForm, seedForm]) => {
+        assert.equal(
+          idiom.conjugations[tense][idiomForm],
+          seed.forms[tense][seedForm].plain,
+          `${idiomId} ${tense}.${idiomForm} plain form drifted from ${seedId}`,
+        );
+        assert.equal(
+          idiom.conjugations_niqqud[tense][idiomForm],
+          seed.forms[tense][seedForm].niqqud,
+          `${idiomId} ${tense}.${idiomForm} niqqud drifted from ${seedId}`,
+        );
+      });
+    });
+  });
+});
+
+test("advanced conjugation propagates only complete reviewed niqqud into prompts and choices", () => {
+  const root = path.join(__dirname, "..");
+  const deterministicMath = Object.create(Math);
+  deterministicMath.random = () => 0;
+  const context = { console, Math: deterministicMath };
+  context.window = context;
+  context.globalThis = context;
+  vm.createContext(context);
+
+  runScriptInContext(path.join(root, "app", "constants.js"), context);
+  runScriptInContext(path.join(root, "app", "utils.js"), context);
+  runScriptInContext(path.join(root, "app", "adv-conj.js"), context);
+  context.IvriQuestApp.runtime = {
+    constants: context.IvriQuestApp.constants,
+    helpers: {},
+  };
+
+  const conjugations = {
+    present: { msg: "כותב", fsg: "כותבת", mpl: "כותבים", fpl: "כותבות" },
+    past: { msg: "כתב", fsg: "כתבה", mpl: "כתבו", fpl: "כתבו" },
+    future: { msg: "יכתוב", fsg: "תכתוב", mpl: "יכתבו", fpl: "יכתבו" },
+  };
+  const conjugationsNiqqud = {
+    present: { msg: "כּוֹתֵב", fsg: "כּוֹתֶבֶת", mpl: "כּוֹתְבִים", fpl: "כּוֹתְבוֹת" },
+    past: { msg: "כָּתַב", fsg: "כָּתְבָה", mpl: "כָּתְבוּ", fpl: "כָּתְבוּ" },
+    future: { msg: "יִכְתֹּב", fsg: "תִּכְתֹּב", mpl: "יִכְתְּבוּ", fpl: "יִכְתְּבוּ" },
+  };
+  context.HEBREW_IDIOMS = [{
+    id: "pointed-fixture",
+    object_type: "direct",
+    negated: false,
+    literal_sg: "{s} writes to {o}",
+    literal_pl: "{s} write to {o}",
+    literal_past: "{s} wrote to {o}",
+    literal_future: "{s} will write to {o}",
+    english: "to write",
+    english_meaning: "to write",
+    showMeaning: false,
+    conjugations,
+    conjugations_niqqud: conjugationsNiqqud,
+    present_tense: conjugations.present,
+    past_tense: conjugations.past,
+    future_tense: conjugations.future,
+    present_tense_niqqud: conjugationsNiqqud.present,
+    past_tense_niqqud: conjugationsNiqqud.past,
+    future_tense_niqqud: conjugationsNiqqud.future,
+    niqqud_status: "reviewed",
+    niqqud_sources: ["https://example.test/reviewed-paradigm"],
+  }];
+
+  const advConj = context.IvriQuestApp.advConj;
+  assert.equal(
+    advConj.buildAdvConjHebrewAnswerNiqqud(context.HEBREW_IDIOMS[0], "msg", "הוא", "1sg", "present"),
+    "כּוֹתֵב אוֹתִי",
+  );
+
+  const en2he = advConj.buildAdvConjDeck();
+  assert.ok(en2he.length > 0);
+  assert.ok(en2he.every((question) => question.direction === "en2he"));
+  en2he.forEach((question) => {
+    assert.match(question.correctAnswerNiqqud, NIQQUD_PATTERN);
+    question.options.forEach((option) => assert.match(option.textNiqqud, NIQQUD_PATTERN));
+  });
+
+  deterministicMath.random = () => 0.9;
+  const he2en = advConj.buildAdvConjDeck();
+  assert.ok(he2en.length > 0);
+  assert.ok(he2en.every((question) => question.direction === "he2en"));
+  he2en.forEach((question) => assert.match(question.promptNiqqud, NIQQUD_PATTERN));
+
+  context.HEBREW_IDIOMS[0].niqqud_status = "unreviewed";
+  assert.equal(
+    advConj.buildAdvConjHebrewAnswerNiqqud(context.HEBREW_IDIOMS[0], "msg", "הוא", "1sg", "present"),
+    "",
+  );
 });
 
 test("the literal translation for לדרוך על היבלות uses blisters", () => {

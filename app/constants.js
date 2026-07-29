@@ -72,13 +72,13 @@ constants.ADV_CONJ_SUBJECTS = constants.ADV_CONJ_SUBJECTS || [
 ];
 
 constants.ADV_CONJ_OBJECTS = constants.ADV_CONJ_OBJECTS || [
-  { key: "1sg",  dirObj: "אותי",  lObj: "לי",   en: "me",        poss: "my" },
-  { key: "2msg", dirObj: "אותך",  lObj: "לך",   en: "you (sg.)", poss: "your (sg.)" },
-  { key: "3msg", dirObj: "אותו",  lObj: "לו",   en: "him",       poss: "his" },
-  { key: "3fsg", dirObj: "אותה",  lObj: "לה",   en: "her",       poss: "her" },
-  { key: "1pl",  dirObj: "אותנו", lObj: "לנו",  en: "us",        poss: "our" },
-  { key: "2mpl", dirObj: "אתכם",  lObj: "לכם",  en: "you (pl.)", poss: "your (pl.)" },
-  { key: "3mpl", dirObj: "אותם",  lObj: "להם",  en: "them",      poss: "their" },
+  { key: "1sg",  dirObj: "אותי",  dirObjNiqqud: "אוֹתִי",  lObj: "לי",   lObjNiqqud: "לִי",   en: "me",        poss: "my" },
+  { key: "2msg", dirObj: "אותך",  dirObjNiqqud: "אוֹתְךָ", lObj: "לך",   lObjNiqqud: "לְךָ",   en: "you (sg.)", poss: "your (sg.)" },
+  { key: "3msg", dirObj: "אותו",  dirObjNiqqud: "אוֹתוֹ",  lObj: "לו",   lObjNiqqud: "לוֹ",    en: "him",       poss: "his" },
+  { key: "3fsg", dirObj: "אותה",  dirObjNiqqud: "אוֹתָהּ", lObj: "לה",   lObjNiqqud: "לָהּ",   en: "her",       poss: "her" },
+  { key: "1pl",  dirObj: "אותנו", dirObjNiqqud: "אוֹתָנוּ", lObj: "לנו", lObjNiqqud: "לָנוּ", en: "us",        poss: "our" },
+  { key: "2mpl", dirObj: "אתכם",  dirObjNiqqud: "אֶתְכֶם", lObj: "לכם",  lObjNiqqud: "לָכֶם",  en: "you (pl.)", poss: "your (pl.)" },
+  { key: "3mpl", dirObj: "אותם",  dirObjNiqqud: "אוֹתָם",  lObj: "להם",  lObjNiqqud: "לָהֶם",  en: "them",      poss: "their" },
 ];
 
 constants.HEBREW_FINAL_TO_MEDIAL = constants.HEBREW_FINAL_TO_MEDIAL || Object.freeze({

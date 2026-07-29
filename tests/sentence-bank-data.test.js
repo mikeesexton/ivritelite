@@ -424,6 +424,12 @@ const LEXICAL_FOCUS_ENTRY_IDS = [
 ];
 // Singular שמועה rows added alongside the rumor vocabulary card.
 const RUMOR_ENTRY_IDS = ["colloquial_157", "professional_89"];
+const CONTEXT_BRIDGE_ENTRY_IDS = [
+  ...sentenceIdRange("professional", 90, 92),
+  ...sentenceIdRange("formal", 80, 82),
+  ...sentenceIdRange("everyday", 140, 142),
+  ...sentenceIdRange("colloquial", 158, 160),
+];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -560,6 +566,40 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     evil eye
     oral history
     protest song
+    active listening
+    balance sheet
+    band aid
+    biblical hebrew
+    chefs knife
+    civil lawsuit
+    concise writing
+    conflict resolution
+    cough syrup
+    criminal offense
+    cutting board
+    emotional regulation
+    formal register
+    interest rate
+    language register
+    medical referral
+    measuring cup
+    mixing bowl
+    modern hebrew
+    plea bargain
+    policy recommendation
+    prescription renewal
+    preventive screening
+    privacy policy
+    public speaking
+    revenue forecast
+    scenario planning
+    self awareness
+    software release
+    strategic ambiguity
+    technological forecasting
+    tone voice
+    training data
+    treatment plan
   `, "term: recognized multiword vocabulary unit"),
   ...compactUnitMap(`
     calms down
@@ -572,6 +612,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     right left
     present day
     upside down
+    went down
   `, "fixed-expression: lexicalized verb or paired expression"),
   ...compactUnitMap(`
     basic laws
@@ -663,6 +704,11 @@ const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
 ];
 
 const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
+  everyday_31: ["מחר בבוקר אצטרך לקום מוקדם."],
+  everyday_72: ["מחר בבוקר הטכנאי יגיע לתקן את המקרר."],
+  everyday_83: ["היום חם מאוד, קחי כובע ובקבוק מים."],
+  everyday_91: ["אין לי קליטה כאן, אחר כך אחזור אליך."],
+  professional_69: ["במשרד יש שלושה כלבים ורק מנהלת אחת."],
   colloquial_26: ["לקחתי מספר ואני מחכה כבר שעה בתור."],
   professional_06: [
     "כרגע אנחנו עובדים על זה, נעדכן כשיהיו תוצאות.",
@@ -724,6 +770,7 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
   inbal_09: ["לפני השקיעה היא חזרה מהמקווה."],
   inbal_10: ["היא משלבת טקסט קדוש ואמנות רחוב כאומנית שחזרה בשאלה."],
   inbal_15: ["בסיפור לכל קללה יש פרצה שמבטלת אותה."],
+  inbal_87: ["הרב פירש את החלום שלי לגמרי אחרת."],
   inat_14: [
     "לפעמים צנזורה הופכת ספר אסור לספר מבוקש.",
     "צנזורה הופכת לפעמים ספר אסור לספר מבוקש.",
@@ -783,15 +830,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 596 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 608 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 596);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 596);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 596);
+  assert.equal(entries.length, 608);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 608);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 608);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -819,10 +866,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 196,
-    everyday: 185,
-    professional: 105,
-    formal: 110,
+    colloquial: 199,
+    everyday: 188,
+    professional: 108,
+    formal: 113,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -885,7 +932,19 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
 
-  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS, ...REQUESTED_ENTRY_IDS, ...INBAL_ENTRY_IDS, ...INAT_ENTRY_IDS, ...LEXICAL_FOCUS_ENTRY_IDS, ...RUMOR_ENTRY_IDS].forEach((id) => {
+  [
+    ...EXPANSION_ENTRY_IDS,
+    ...ROUND2_ENTRY_IDS,
+    ...ROUND3_ENTRY_IDS,
+    ...ROUND4_ENTRY_IDS,
+    ...POLITICAL_ENTRY_IDS,
+    ...REQUESTED_ENTRY_IDS,
+    ...INBAL_ENTRY_IDS,
+    ...INAT_ENTRY_IDS,
+    ...LEXICAL_FOCUS_ENTRY_IDS,
+    ...RUMOR_ENTRY_IDS,
+    ...CONTEXT_BRIDGE_ENTRY_IDS,
+  ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
@@ -1534,25 +1593,36 @@ test("legacy sentence rows shape-match Hebrew multiword compounds with multiword
   });
 });
 
-test("sentence bank data exposes the flexible modifier tokens used for adjacent-swap grading", () => {
+test("sentence bank data does not expose global flexible modifier grading", () => {
   const api = loadSentenceBankApi();
-  assert.equal(typeof api.getFlexibleModifierTokens, "function");
+  assert.equal(api.getFlexibleModifierTokens, undefined);
+});
 
-  const tokens = api.getFlexibleModifierTokens();
-  assert.ok(Array.isArray(tokens));
-  assert.ok(tokens.length > 0);
-  tokens.forEach((token) => {
-    assert.equal(typeof token, "string");
-    assert.equal(token, token.trim());
-    assert.ok(token.length > 0);
-  });
-  assert.equal(new Set(tokens).size, tokens.length);
-  ["די", "לגמרי", "ממש", "מאוד"].forEach((expected) => {
-    assert.ok(tokens.includes(expected), `missing flexible modifier ${expected}`);
-  });
+test("reviewed legacy modifier orders are authored per sentence", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const expectedOrders = new Map([
+    ["colloquial_07", ["אתה|רציני|עכשיו|זה|נשמע|לי|לגמרי|הזוי"]],
+    ["colloquial_12", ["אפשר|לפתוח|את|החלון|חם|מאוד|כאן"]],
+    ["professional_08", ["אפשר|לקבל|הבהרה|בנושא|הזה|זה|לא|ברור|לגמרי"]],
+    ["colloquial_42", [
+      "אני|מבין|את|הנקודה|אבל|לא|מסכים|לגמרי",
+      "אני|מבינה|את|הנקודה|אבל|לא|לגמרי|מסכימה",
+      "אני|מבינה|את|הנקודה|אבל|לא|מסכימה|לגמרי",
+    ]],
+    ["everyday_71", ["המרק|יצא|טעים|ממש|רוצה|לטעום"]],
+    ["everyday_83", [
+      "מאוד|חם|היום|קחי|כובע|ובקבוק|מים",
+      "היום|חם|מאוד|קחי|כובע|ובקבוק|מים",
+    ]],
+  ]);
 
-  tokens.push("mutated");
-  assert.ok(!api.getFlexibleModifierTokens().includes("mutated"));
+  for (const [entryId, expected] of expectedOrders) {
+    const entry = byId.get(entryId);
+    assert.ok(entry, `missing ${entryId}`);
+    const actual = new Set((entry.hebrew_alternates || []).map((alternate) => alternate.tokens.join("|")));
+    expected.forEach((order) => assert.ok(actual.has(order), `${entryId} is missing ${order}`));
+  }
 });
 
 test("everyday_85 accepts the alternate order with a fronted time adverb", () => {

@@ -42,6 +42,19 @@ function getAdvConjMeaningDetail(question) {
   return meaning;
 }
 
+advConj.getAdvConjDisplayText = advConj.getAdvConjDisplayText || function getAdvConjDisplayText(plain, niqqud, isHebrew = true) {
+  const showNiqqud = Boolean(getRuntime().state?.showNiqqudInline);
+  return isHebrew && showNiqqud && niqqud ? niqqud : plain;
+};
+
+function getAdvConjCorrectAnswerDisplay(question) {
+  return advConj.getAdvConjDisplayText(
+    question?.correctAnswer || "",
+    question?.correctAnswerNiqqud || "",
+    Boolean(question?.correctAnswerIsHebrew),
+  );
+}
+
 advConj.getAdvConjPromptSpeechPayload = advConj.getAdvConjPromptSpeechPayload || function getAdvConjPromptSpeechPayload(question = getRuntime().state.advConj.currentQuestion) {
   if (!question?.promptIsHebrew) return null;
   return app.speech?.buildSpeechPayload?.({
@@ -129,6 +142,31 @@ advConj.buildAdvConjHebrewAnswer = advConj.buildAdvConjHebrewAnswer || function 
   return "";
 };
 
+advConj.buildAdvConjHebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud || function buildAdvConjHebrewAnswerNiqqud(idiom, subjectForm, subjectPronoun, objectKey, tense) {
+  const runtime = getRuntime();
+  const obj = runtime.constants.ADV_CONJ_OBJECTS.find((entry) => entry.key === objectKey);
+  if (!obj || idiom?.niqqud_status !== "reviewed") return "";
+  const tenseData = tense === "past"
+    ? idiom.past_tense_niqqud
+    : tense === "future"
+      ? idiom.future_tense_niqqud
+      : idiom.present_tense_niqqud;
+  const verbForm = tenseData?.[subjectForm];
+  if (!verbForm) return "";
+  const neg = idiom.negated ? "לֹא " : "";
+  if (idiom.object_type === "direct" && obj.dirObjNiqqud) {
+    return `${neg}${verbForm} ${obj.dirObjNiqqud}`;
+  }
+  if (idiom.object_type === "l_dative" && obj.lObjNiqqud && idiom.fixed_object_niqqud) {
+    return `${neg}${verbForm} ${obj.lObjNiqqud} ${idiom.fixed_object_niqqud}`;
+  }
+  if (idiom.object_type === "possessive_suffix" && obj.dirObjNiqqud) {
+    const suffix = idiom.suffix_forms_niqqud?.[objectKey];
+    if (suffix) return `${neg}${verbForm} ${obj.dirObjNiqqud} ${suffix}`;
+  }
+  return "";
+};
+
 advConj.buildAdvConjEnglishSentence = advConj.buildAdvConjEnglishSentence || function buildAdvConjEnglishSentence(idiom, subj, obj, tense) {
   let tpl;
   if (tense === "past") {
@@ -194,6 +232,7 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
           if (isSecondPersonSubject(subj) && isSecondPersonObject(obj)) continue;
           if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[obj.key]) continue;
           const hebrewAnswer = advConj.buildAdvConjHebrewAnswer(idiom, subj.form, subj.pronoun, obj.key, tense);
+          const hebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj.form, subj.pronoun, obj.key, tense);
           if (!hebrewAnswer) continue;
           const englishSentence = advConj.buildAdvConjEnglishSentence(idiom, subj, obj, tense);
           if (!englishSentence) continue;
@@ -208,21 +247,29 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
           const otherObjs = runtime.constants.ADV_CONJ_OBJECTS.filter((entry) => entry.key !== obj.key);
           const otherSubjs = subjects.filter((subject) => subject.en !== subj.en);
           const correctText = direction === "en2he" ? hebrewAnswer : englishSentence;
+          const correctTextNiqqud = direction === "en2he" ? hebrewAnswerNiqqud : "";
           const subjectLabel = getAdvConjSubjectEnglishLabel(idiom, subj, tense);
           const objectLabel = sanitizeEnglishText(obj.en);
 
           function buildDistractor(subject, object) {
             if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[object.key]) return null;
             if (!tenseData[subject.form]) return null;
-            return direction === "en2he"
+            const text = direction === "en2he"
               ? advConj.buildAdvConjHebrewAnswer(idiom, subject.form, subject.pronoun, object.key, tense)
               : advConj.buildAdvConjEnglishSentence(idiom, subject, object, tense);
+            if (!text) return null;
+            return {
+              text,
+              textNiqqud: direction === "en2he"
+                ? advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subject.form, subject.pronoun, object.key, tense)
+                : "",
+            };
           }
 
           let d1 = null;
           for (const wrongObject of typeof shuffle === "function" ? shuffle([...otherObjs]) : otherObjs) {
             const answer = buildDistractor(subj, wrongObject);
-            if (answer && answer !== correctText) {
+            if (answer && answer.text !== correctText) {
               d1 = answer;
               break;
             }
@@ -231,7 +278,7 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
           let d2 = null;
           for (const wrongSubject of typeof shuffle === "function" ? shuffle([...otherSubjs]) : otherSubjs) {
             const answer = buildDistractor(wrongSubject, obj);
-            if (answer && answer !== correctText && answer !== d1) {
+            if (answer && answer.text !== correctText && answer.text !== d1?.text) {
               d2 = answer;
               break;
             }
@@ -241,7 +288,7 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
           for (const wrongSubject of typeof shuffle === "function" ? shuffle([...otherSubjs]) : otherSubjs) {
             for (const wrongObject of typeof shuffle === "function" ? shuffle([...otherObjs]) : otherObjs) {
               const answer = buildDistractor(wrongSubject, wrongObject);
-              if (answer && answer !== correctText && answer !== d1 && answer !== d2) {
+              if (answer && answer.text !== correctText && answer.text !== d1?.text && answer.text !== d2?.text) {
                 d3 = answer;
                 break;
               }
@@ -252,16 +299,16 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
           if (!d1 || !d2 || !d3) continue;
           const options = typeof shuffle === "function"
             ? shuffle([
-                { id: "correct", text: correctText, isCorrect: true },
-                { id: "d1", text: d1, isCorrect: false },
-                { id: "d2", text: d2, isCorrect: false },
-                { id: "d3", text: d3, isCorrect: false },
+                { id: "correct", text: correctText, textNiqqud: correctTextNiqqud, isCorrect: true },
+                { id: "d1", text: d1.text, textNiqqud: d1.textNiqqud, isCorrect: false },
+                { id: "d2", text: d2.text, textNiqqud: d2.textNiqqud, isCorrect: false },
+                { id: "d3", text: d3.text, textNiqqud: d3.textNiqqud, isCorrect: false },
               ])
             : [
-                { id: "correct", text: correctText, isCorrect: true },
-                { id: "d1", text: d1, isCorrect: false },
-                { id: "d2", text: d2, isCorrect: false },
-                { id: "d3", text: d3, isCorrect: false },
+                { id: "correct", text: correctText, textNiqqud: correctTextNiqqud, isCorrect: true },
+                { id: "d1", text: d1.text, textNiqqud: d1.textNiqqud, isCorrect: false },
+                { id: "d2", text: d2.text, textNiqqud: d2.textNiqqud, isCorrect: false },
+                { id: "d3", text: d3.text, textNiqqud: d3.textNiqqud, isCorrect: false },
               ];
 
           deck.push({
@@ -273,8 +320,10 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
             objectKey: obj.key,
             objectLabel,
             promptText: direction === "en2he" ? englishSentence : hebrewAnswer,
+            promptNiqqud: direction === "he2en" ? hebrewAnswerNiqqud : "",
             promptIsHebrew: direction === "he2en",
             correctAnswer: correctText,
+            correctAnswerNiqqud: correctTextNiqqud,
             correctAnswerIsHebrew: direction === "en2he",
             showMeaning: Boolean(idiom.showMeaning),
             colloquialMeaning: sanitizeEnglishText(idiom.english_meaning),
@@ -312,20 +361,8 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   const h = getHelpers();
   const s = getSession();
   app.speech?.cancel?.();
-  s.stopVerbMatchTimer?.();
-  s.stopLessonTimer?.();
-  s.stopAbbreviationTimer?.();
-  s.stopWordMatchTimer?.();
-  h.resetAbbreviationState?.();
-  s.clearAbbreviationIntro?.();
-  s.clearWordMatchIntro?.();
-  s.clearBinyanBoardIntro?.();
+  s.resetAllModeSessions?.();
   s.clearSummaryState?.();
-  app.wordMatch?.resetWordMatchState?.();
-  app.binyanBoard?.resetBinyanBoardState?.();
-  s.clearHandwritingIntro?.();
-  app.handwriting?.resetHandwritingState?.();
-  s.resetAdvConjState?.();
   h.resetSessionScore?.();
   runtime.state.mode = "advConj";
   runtime.state.route = "home";
@@ -401,12 +438,19 @@ advConj.renderAdvConjQuestion = advConj.renderAdvConjQuestion || function render
   h.renderSessionHeader?.();
   app.ui?.renderPromptLabel?.("", false);
   if (runtime.el.promptText) {
-    runtime.el.promptText.textContent = question.promptText;
+    runtime.el.promptText.textContent = advConj.getAdvConjDisplayText(
+      question.promptText,
+      question.promptNiqqud,
+      question.promptIsHebrew,
+    );
     runtime.el.promptText.classList.remove("hidden");
     runtime.el.promptText.classList.toggle("hebrew", question.promptIsHebrew);
     runtime.el.promptText.classList.toggle("english-prompt", !question.promptIsHebrew);
   }
   advConj.renderAdvConjChoices(question);
+  if (question.locked) {
+    advConj.renderAdvConjFeedback(question);
+  }
   h.renderNiqqudToggle?.();
   app.ui?.renderPromptSpeechButton?.();
 };
@@ -423,7 +467,11 @@ advConj.renderAdvConjChoices = advConj.renderAdvConjChoices || function renderAd
       btn.dir = "rtl";
       btn.setAttribute("lang", "he");
     }
-    btn.textContent = option.text;
+    btn.textContent = advConj.getAdvConjDisplayText(
+      option.text,
+      option.textNiqqud,
+      question.correctAnswerIsHebrew,
+    );
     btn.addEventListener("click", () => {
       if (question.locked) return;
       question.selectedOptionId = option.id;
@@ -449,6 +497,23 @@ advConj.markAdvConjChoiceResults = advConj.markAdvConjChoiceResults || function 
     if (option.isCorrect) buttons[index].classList.add("correct");
     else if (option.id === question.selectedOptionId) buttons[index].classList.add("wrong");
     buttons[index].disabled = true;
+  });
+};
+
+advConj.renderAdvConjFeedback = advConj.renderAdvConjFeedback || function renderAdvConjFeedback(question) {
+  if (!question?.locked) return;
+  const selected = question.options?.find((option) => option.id === question.selectedOptionId);
+  const isCorrect = selected?.isCorrect ?? false;
+  getHelpers().setFeedback?.({
+    tone: isCorrect ? "success" : "error",
+    sentence: translate(
+      isCorrect ? "feedback.advConjCorrectSentence" : "feedback.advConjWrongSentence",
+      { answer: getAdvConjCorrectAnswerDisplay(question) },
+    ),
+    detail: (() => {
+      const meaning = getAdvConjMeaningDetail(question);
+      return meaning ? translate("feedback.advConjMeaningDetail", { meaning }) : "";
+    })(),
   });
 };
 
@@ -486,7 +551,7 @@ advConj.applyAdvConjAnswer = advConj.applyAdvConjAnswer || function applyAdvConj
       const meaning = getAdvConjMeaningDetail(question);
       runtime.state.advConj.sessionMistakes.push({
         key: mistakeKey,
-        primary: question.correctAnswer,
+        primary: question.correctAnswerNiqqud || question.correctAnswer,
         secondary: meaning || question.promptText,
         clinicKey: "results.advConjClinic",
         clinicVars: {
@@ -509,19 +574,7 @@ advConj.applyAdvConjAnswer = advConj.applyAdvConjAnswer || function applyAdvConj
     }
   }
 
-  h.setFeedback?.(
-    {
-      tone: isCorrect ? "success" : "error",
-      sentence: translate(
-        isCorrect ? "feedback.advConjCorrectSentence" : "feedback.advConjWrongSentence",
-        { answer: question.correctAnswer }
-      ),
-      detail: (() => {
-        const meaning = getAdvConjMeaningDetail(question);
-        return meaning ? translate("feedback.advConjMeaningDetail", { meaning }) : "";
-      })(),
-    }
-  );
+  advConj.renderAdvConjFeedback(question);
   h.playAnswerFeedbackSound?.(isCorrect);
   advConj.updateAdvConjStats(isCorrect);
   advConj.updateAdvConjItemStats(question.idiomId, isCorrect);
@@ -572,8 +625,11 @@ advConj.buildAdvConjMistakeSummary = advConj.buildAdvConjMistakeSummary || funct
       const subj = advConj.getAdvConjSubjectsForTense("present").find((subject) => idiom.present_tense[subject.form]);
       const obj = runtime.constants.ADV_CONJ_OBJECTS[0];
       const answer = subj ? advConj.buildAdvConjHebrewAnswer(idiom, subj.form, subj.pronoun, obj.key, "present") : "";
+      const answerNiqqud = subj
+        ? advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj.form, subj.pronoun, obj.key, "present")
+        : "";
       return {
-        primary: answer,
+        primary: answerNiqqud || answer,
         secondary: sanitizeEnglishText(idiom.english_meaning),
       };
     })

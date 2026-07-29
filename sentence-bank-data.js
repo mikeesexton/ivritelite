@@ -1,10 +1,6 @@
 (function initIvriQuestSentenceBank(global) {
 "use strict";
 
-// Degree adverbs the sentence builder accepts in either adjacent order.
-// Add here when authoring sentences that rely on flexible modifier placement.
-const HEBREW_FLEXIBLE_MODIFIER_TOKENS = ["די", "לגמרי", "ממש", "מאוד"];
-
 function buildExpandedSentence({
   id,
   emoji,
@@ -626,6 +622,32 @@ const SENTENCE_BANK = [
       "really serious",
       "for me"
     ],
+    "hebrew_alternates": [
+      {
+        "text": "אתה רציני עכשיו? זה נשמע לי לגמרי הזוי.",
+        "text_niqqud": "אַתָּה רְצִינִי עַכְשָׁו? זֶה נִשְׁמָע לִי לְגַמְרֵי הָזוּי.",
+        "tokens": [
+          "אתה",
+          "רציני",
+          "עכשיו",
+          "זה",
+          "נשמע",
+          "לי",
+          "לגמרי",
+          "הזוי"
+        ],
+        "tokens_niqqud": [
+          "אַתָּה",
+          "רְצִינִי",
+          "עַכְשָׁו",
+          "זֶה",
+          "נִשְׁמָע",
+          "לִי",
+          "לְגַמְרֵי",
+          "הָזוּי"
+        ]
+      }
+    ],
     "notes": "הזוי literally means 'hallucinatory/delusional' — used colloquially to mean 'ridiculous/unbelievable.'"
   },
   {
@@ -985,7 +1007,31 @@ const SENTENCE_BANK = [
       "It's very cold",
       "outside"
     ],
-    "notes": "Semantic opposites make strong distractors: לפתוח/לסגור (open/close), חם/קר (hot/cold)."
+    "hebrew_alternates": [
+      {
+        "text": "אפשר לפתוח את החלון? חם מאוד כאן.",
+        "text_niqqud": "אֶפְשָׁר לִפְתֹּחַ אֶת הַחַלּוֹן? חַם מְאוֹד כָּאן.",
+        "tokens": [
+          "אפשר",
+          "לפתוח",
+          "את",
+          "החלון",
+          "חם",
+          "מאוד",
+          "כאן"
+        ],
+        "tokens_niqqud": [
+          "אֶפְשָׁר",
+          "לִפְתֹּחַ",
+          "אֶת",
+          "הַחַלּוֹן",
+          "חַם",
+          "מְאוֹד",
+          "כָּאן"
+        ]
+      }
+    ],
+    "notes": "Semantic opposites make strong distractors: לפתוח/לסגור (open/close), חם/קר (hot/cold). Both חם כאן מאוד and חם מאוד כאן are neutral here and are authored explicitly."
   },
   {
     "id": "colloquial_13",
@@ -3487,7 +3533,35 @@ const SENTENCE_BANK = [
       "not at all",
       "fully understood"
     ],
-    "notes": "הבהרה (clarification) vs הסבר (explanation) — both professional but different nuances."
+    "hebrew_alternates": [
+      {
+        "text": "אפשר לקבל הבהרה בנושא הזה? זה לא ברור לגמרי.",
+        "text_niqqud": "אֶפְשָׁר לְקַבֵּל הַבְהָרָה בַּנּוֹשֵׂא הַזֶּה? זֶה לֹא בָּרוּר לְגַמְרֵי.",
+        "tokens": [
+          "אפשר",
+          "לקבל",
+          "הבהרה",
+          "בנושא",
+          "הזה",
+          "זה",
+          "לא",
+          "ברור",
+          "לגמרי"
+        ],
+        "tokens_niqqud": [
+          "אֶפְשָׁר",
+          "לְקַבֵּל",
+          "הַבְהָרָה",
+          "בַּנּוֹשֵׂא",
+          "הַזֶּה",
+          "זֶה",
+          "לֹא",
+          "בָּרוּר",
+          "לְגַמְרֵי"
+        ]
+      }
+    ],
+    "notes": "הבהרה (clarification) vs הסבר (explanation) — both professional but different nuances. לא לגמרי ברור and לא ברור לגמרי are both reviewed as neutral equivalents."
   },
   {
     "id": "professional_09",
@@ -7739,7 +7813,27 @@ const SENTENCE_BANK = [
       "yesterday",
       "evening"
     ],
-    "notes": "אצטרך is the future of the suppletive 'need' paradigm — present צריך, past היה צריך, future אצטרך (from להצטרך). Like צריך, it takes an infinitive: אצטרך לקום = I'll have to get up."
+    "hebrew_alternates": [
+      {
+        "text": "מחר בבוקר אצטרך לקום מוקדם.",
+        "text_niqqud": "מָחָר בַּבֹּקֶר אֶצְטָרֵךְ לָקוּם מֻקְדָּם.",
+        "tokens": [
+          "מחר",
+          "בבוקר",
+          "אצטרך",
+          "לקום",
+          "מוקדם"
+        ],
+        "tokens_niqqud": [
+          "מָחָר",
+          "בַּבֹּקֶר",
+          "אֶצְטָרֵךְ",
+          "לָקוּם",
+          "מֻקְדָּם"
+        ]
+      }
+    ],
+    "notes": "אצטרך is the future of the suppletive 'need' paradigm — present צריך, past היה צריך, future אצטרך (from להצטרך). Like צריך, it takes an infinitive: אצטרך לקום = I'll have to get up. The temporal phrase may also lead the sentence."
   },
   {
     "id": "everyday_32",
@@ -8627,11 +8721,21 @@ const SENTENCE_EXPANSION = [
     englishTokens: ["I see", "the point", "but", "I don't", "completely", "agree"],
     hebrewDistractorPairs: [["מכיר", "מַכִּיר"], ["הבעיה", "הַבְּעָיָה"], ["לכן", "לָכֵן"], ["מאוד", "מְאֹד"], ["מתנגד", "מִתְנַגֵּד"]],
     englishDistractors: ["I know", "the problem", "therefore", "I strongly", "object"],
-    notes: "מבין את הנקודה means 'I see the point.' לגמרי adds 'completely,' leaving room for partial agreement.",
-    hebrewAlternates: [{
-      text: "אני מבינה את הנקודה, אבל לא לגמרי מסכימה.", textNiqqud: "אֲנִי מְבִינָה אֶת הַנְּקֻדָּה, אֲבָל לֹא לְגַמְרֵי מַסְכִּימָה.",
-      tokenPairs: [["אני", "אֲנִי"], ["מבינה", "מְבִינָה"], ["את", "אֶת"], ["הנקודה", "הַנְּקֻדָּה"], ["אבל", "אֲבָל"], ["לא", "לֹא"], ["לגמרי", "לְגַמְרֵי"], ["מסכימה", "מַסְכִּימָה"]]
-    }]
+    notes: "מבין את הנקודה means 'I see the point.' לגמרי adds 'completely,' leaving room for partial agreement. Both speaker genders and both neutral modifier positions are authored.",
+    hebrewAlternates: [
+      {
+        text: "אני מבין את הנקודה, אבל לא מסכים לגמרי.", textNiqqud: "אֲנִי מֵבִין אֶת הַנְּקֻדָּה, אֲבָל לֹא מַסְכִּים לְגַמְרֵי.",
+        tokenPairs: [["אני", "אֲנִי"], ["מבין", "מֵבִין"], ["את", "אֶת"], ["הנקודה", "הַנְּקֻדָּה"], ["אבל", "אֲבָל"], ["לא", "לֹא"], ["מסכים", "מַסְכִּים"], ["לגמרי", "לְגַמְרֵי"]]
+      },
+      {
+        text: "אני מבינה את הנקודה, אבל לא לגמרי מסכימה.", textNiqqud: "אֲנִי מְבִינָה אֶת הַנְּקֻדָּה, אֲבָל לֹא לְגַמְרֵי מַסְכִּימָה.",
+        tokenPairs: [["אני", "אֲנִי"], ["מבינה", "מְבִינָה"], ["את", "אֶת"], ["הנקודה", "הַנְּקֻדָּה"], ["אבל", "אֲבָל"], ["לא", "לֹא"], ["לגמרי", "לְגַמְרֵי"], ["מסכימה", "מַסְכִּימָה"]]
+      },
+      {
+        text: "אני מבינה את הנקודה, אבל לא מסכימה לגמרי.", textNiqqud: "אֲנִי מְבִינָה אֶת הַנְּקֻדָּה, אֲבָל לֹא מַסְכִּימָה לְגַמְרֵי.",
+        tokenPairs: [["אני", "אֲנִי"], ["מבינה", "מְבִינָה"], ["את", "אֶת"], ["הנקודה", "הַנְּקֻדָּה"], ["אבל", "אֲבָל"], ["לא", "לֹא"], ["מסכימה", "מַסְכִּימָה"], ["לגמרי", "לְגַמְרֵי"]]
+      }
+    ]
   }),
   buildExpandedSentence({
     id: "colloquial_43", emoji: "🫱", category: "colloquial", difficulty: 1,
@@ -9102,7 +9206,11 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["The soup", "came out", "really", "tasty", "want", "a taste"],
     hebrewDistractorPairs: [["הסלט", "הַסָּלָט"], ["נשאר", "נִשְׁאַר"], ["מגעיל", "מַגְעִיל"], ["יכולה", "יְכוֹלָה"], ["לבשל", "לְבַשֵּׁל"]],
     englishDistractors: ["The salad", "stayed", "disgusting", "can you", "to cook"],
-    notes: "יצא is used idiomatically — the soup 'came out' tasty. ממש means 'really' and is a flexible modifier; מגעיל (disgusting) is the opposite trap."
+    notes: "יצא is used idiomatically — the soup 'came out' tasty. ממש means 'really'; both ממש טעים and טעים ממש are authored as reviewed equivalents. מגעיל (disgusting) is the opposite trap.",
+    hebrewAlternates: [{
+      text: "המרק יצא טעים ממש, רוצה לטעום?", textNiqqud: "הַמָּרָק יָצָא טָעִים מַמָּשׁ, רוֹצֶה לִטְעֹם?",
+      tokenPairs: [["המרק", "הַמָּרָק"], ["יצא", "יָצָא"], ["טעים", "טָעִים"], ["ממש", "מַמָּשׁ"], ["רוצה", "רוֹצֶה"], ["לטעום", "לִטְעֹם"]]
+    }]
   }),
   buildExpandedSentence({
     id: "everyday_72", emoji: "🧰", category: "everyday", difficulty: 2,
@@ -9112,7 +9220,11 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["The technician", "will arrive", "tomorrow", "morning", "to fix", "the refrigerator"],
     hebrewDistractorPairs: [["הגיע", "הִגִּיעַ"], ["השכן", "הַשָּׁכֵן"], ["בערב", "בָּעֶרֶב"], ["לנקות", "לְנַקּוֹת"], ["המדיח", "הַמֵּדִיחַ"]],
     englishDistractors: ["arrived", "The neighbor", "evening", "to clean", "the dishwasher"],
-    notes: "יגיע is true future — הגיע (arrived) is the tense trap. לתקן (fix) vs לנקות (clean), מקרר (refrigerator) vs מדיח (dishwasher)."
+    notes: "יגיע is true future — הגיע (arrived) is the tense trap. לתקן (fix) vs לנקות (clean), מקרר (refrigerator) vs מדיח (dishwasher). The temporal phrase may also lead the sentence.",
+    hebrewAlternates: [{
+      text: "מחר בבוקר הטכנאי יגיע לתקן את המקרר.", textNiqqud: "מָחָר בַּבֹּקֶר הַטֶּכְנַאי יַגִּיעַ לְתַקֵּן אֶת הַמְּקָרֵר.",
+      tokenPairs: [["מחר", "מָחָר"], ["בבוקר", "בַּבֹּקֶר"], ["הטכנאי", "הַטֶּכְנַאי"], ["יגיע", "יַגִּיעַ"], ["לתקן", "לְתַקֵּן"], ["את", "אֶת"], ["המקרר", "הַמְּקָרֵר"]]
+    }]
   }),
   buildExpandedSentence({
     id: "everyday_73", emoji: "🏢", category: "everyday", difficulty: 2,
@@ -9226,7 +9338,17 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["It's", "very", "hot", "today", "take", "a hat", "and a bottle", "of water"],
     hebrewDistractorPairs: [["קר", "קַר"], ["מחר", "מָחָר"], ["מטרייה", "מִטְרִיָּה"], ["ומעיל", "וּמְעִיל"], ["קפה", "קָפֶה"]],
     englishDistractors: ["cold", "It was", "an umbrella", "and a coat", "of coffee"],
-    notes: "קחי is the feminine imperative — the masculine קח is the gender swap. מאוד means 'very' and is a flexible modifier the builder accepts on either side of חם. קר (cold) is the opposite."
+    notes: "קחי is the feminine imperative — the masculine קח is the gender swap. חם מאוד and מאוד חם are both neutral here; היום may also lead the sentence. קר (cold) is the opposite.",
+    hebrewAlternates: [
+      {
+        text: "מאוד חם היום, קחי כובע ובקבוק מים.", textNiqqud: "מְאוֹד חַם הַיּוֹם, קְחִי כּוֹבַע וּבַקְבּוּק מַיִם.",
+        tokenPairs: [["מאוד", "מְאוֹד"], ["חם", "חַם"], ["היום", "הַיּוֹם"], ["קחי", "קְחִי"], ["כובע", "כּוֹבַע"], ["ובקבוק", "וּבַקְבּוּק"], ["מים", "מַיִם"]]
+      },
+      {
+        text: "היום חם מאוד, קחי כובע ובקבוק מים.", textNiqqud: "הַיּוֹם חַם מְאוֹד, קְחִי כּוֹבַע וּבַקְבּוּק מַיִם.",
+        tokenPairs: [["היום", "הַיּוֹם"], ["חם", "חַם"], ["מאוד", "מְאוֹד"], ["קחי", "קְחִי"], ["כובע", "כּוֹבַע"], ["ובקבוק", "וּבַקְבּוּק"], ["מים", "מַיִם"]]
+      }
+    ]
   }),
   buildExpandedSentence({
     id: "everyday_84", emoji: "🌧️", category: "everyday", difficulty: 2,
@@ -9870,7 +9992,11 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["I have no", "reception", "here", "I'll get back", "to you", "later"],
     hebrewDistractorPairs: [["יש", "יֵשׁ"], ["אינטרנט", "אִינְטֶרְנֶט"], ["שם", "שָׁם"], ["אתקשר", "אֶתְקַשֵּׁר"], ["לפני כן", "לִפְנֵי כֵן"]],
     englishDistractors: ["There is", "wifi", "there", "I'll call", "before that"],
-    notes: "קליטה = (cell) reception. אחזור אליך — lit. 'I will return to you' — is the standard 'I'll get back to you'. אחר כך = later."
+    notes: "קליטה = (cell) reception. אחזור אליך — lit. 'I will return to you' — is the standard 'I'll get back to you'. אחר כך may also introduce the second clause.",
+    hebrewAlternates: [{
+      text: "אין לי קליטה כאן, אחר כך אחזור אליך.", textNiqqud: "אֵין לִי קְלִיטָה כָּאן, אַחַר כָּךְ אֶחֱזֹר אֵלֶיךָ.",
+      tokenPairs: [["אין", "אֵין"], ["לי", "לִי"], ["קליטה", "קְלִיטָה"], ["כאן", "כָּאן"], ["אחר כך", "אַחַר כָּךְ"], ["אחזור", "אֶחֱזֹר"], ["אליך", "אֵלֶיךָ"]]
+    }]
   }),
   buildExpandedSentence({
     id: "everyday_92", emoji: "🔉", category: "everyday", difficulty: 2,
@@ -11380,7 +11506,11 @@ const SENTENCE_EXPANSION_ROUND4 = [
     englishTokens: ["There are", "three dogs", "at the office", "and only", "one manager"],
     hebrewDistractorPairs: [["אין", "אֵין"], ["חתולים", "חֲתוּלִים"], ["שני", "שְׁנֵי"], ["בישיבה", "בַּיְשִׁיבָה"], ["מתמחה", "מִתְמַחֶה"]],
     englishDistractors: ["There is", "two cats", "at the meeting", "and also", "one intern"],
-    notes: "The office dog (כלב משרד) outranks everyone at a Tel Aviv startup. מנהלת = a (female) manager; אחת agrees in the feminine."
+    notes: "The office dog (כלב משרד) outranks everyone at a Tel Aviv startup. מנהלת = a (female) manager; אחת agrees in the feminine. במשרד may also establish the scene at the start.",
+    hebrewAlternates: [{
+      text: "במשרד יש שלושה כלבים ורק מנהלת אחת.", textNiqqud: "בַּמִּשְׂרָד יֵשׁ שְׁלוֹשָׁה כְּלָבִים וְרַק מְנַהֶלֶת אַחַת.",
+      tokenPairs: [["במשרד", "בַּמִּשְׂרָד"], ["יש", "יֵשׁ"], ["שלושה", "שְׁלוֹשָׁה"], ["כלבים", "כְּלָבִים"], ["ורק", "וְרַק"], ["מנהלת", "מְנַהֶלֶת"], ["אחת", "אַחַת"]]
+    }]
   }),
   buildExpandedSentence({
     id: "professional_70", emoji: "⏰", category: "professional", difficulty: 2,
@@ -13408,7 +13538,7 @@ const INBAL_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "inbal_87", emoji: "📖", category: "everyday", difficulty: 2,
-    wordOrderDecision: "fixed",
+    wordOrderDecision: "alternates",
     hebrew: "הרב פירש את החלום שלי אחרת לגמרי.",
     hebrewNiqqud: "הָרַב פֵּרֵשׁ אֶת הַחֲלוֹם שֶׁלִּי אַחֶרֶת לְגַמְרֵי.",
     english: "The rabbi interpreted my dream completely differently.",
@@ -13416,7 +13546,12 @@ const INBAL_SENTENCES = [
     englishTokens: ["The rabbi", "interpreted", "my dream", "completely", "differently"],
     hebrewDistractorPairs: [["המקובל", "הַמְּקֻבָּל"], ["שכח", "שָׁכַח"], ["את הסימן", "אֶת הַסִּימָן"], ["בדיוק", "בְּדִיּוּק"]],
     englishDistractors: ["The kabbalist", "forgot", "the sign", "exactly"],
-    notes: "פירש is the verb for interpreting a text, a dream, or a sign — the same word across all three, which is why dream interpretation reads as a form of reading."
+    hebrewOrderAlternates: [{
+      text: "הרב פירש את החלום שלי לגמרי אחרת.",
+      textNiqqud: "הָרַב פֵּרֵשׁ אֶת הַחֲלוֹם שֶׁלִּי לְגַמְרֵי אַחֶרֶת.",
+      order: [0, 1, 2, 4, 3]
+    }],
+    notes: "פירש is the verb for interpreting a text, a dream, or a sign — the same word across all three. Both neutral orders of לגמרי אחרת are explicitly reviewed."
   }),
   buildReviewedSentence({
     id: "inbal_88", emoji: "✋", category: "colloquial", difficulty: 1,
@@ -14092,7 +14227,333 @@ const RUMOR_SENTENCES = [
   }),
 ];
 
-SENTENCE_BANK.push(...INBAL_SENTENCES, ...INAT_SENTENCES, ...LEXICAL_FOCUS_SENTENCES, ...RUMOR_SENTENCES);
+const CONTEXT_BRIDGE_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_90",
+    emoji: "📈",
+    category: "professional",
+    difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "תחזית ההכנסות מניחה שהריבית תישאר גבוהה.",
+    hebrewNiqqud: "תַּחֲזִית הַהַכְנָסוֹת מַנִּיחָה שֶׁהָרִבִּית תִּשָּׁאֵר גְּבוֹהָה.",
+    english: "The revenue forecast assumes that the interest rate will remain high.",
+    hebrewTokenPairs: [
+      ["תחזית ההכנסות", "תַּחֲזִית הַהַכְנָסוֹת"],
+      ["מניחה", "מַנִּיחָה"],
+      ["שהריבית", "שֶׁהָרִבִּית"],
+      ["תישאר", "תִּשָּׁאֵר"],
+      ["גבוהה", "גְּבוֹהָה"]
+    ],
+    englishTokens: ["The revenue forecast", "assumes", "that the interest rate", "will remain", "high"],
+    hebrewDistractorPairs: [
+      ["המאזן", "הַמַּאֲזָן"],
+      ["מראה", "מַרְאֶה"],
+      ["שהאינפלציה", "שֶׁהָאִינְפְלַצְיָה"],
+      ["תרד", "תֵּרֵד"],
+      ["נמוכה", "נְמוּכָה"]
+    ],
+    englishDistractors: ["The balance sheet", "shows", "that inflation", "will fall", "low"],
+    notes: "Reviews תחזית הכנסות and ריבית in a finance context; feminine agreement is explicit."
+  }),
+  buildReviewedSentence({
+    id: "professional_91",
+    emoji: "🔐",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מדיניות הפרטיות מחייבת הצפנה של מאגר הנתונים.",
+    hebrewNiqqud: "מְדִינִיּוּת הַפְּרָטִיּוּת מְחַיֶּבֶת הַצְפָּנָה שֶׁל מַאֲגַר הַנְּתוּנִים.",
+    english: "The privacy policy requires encryption of the dataset.",
+    hebrewTokenPairs: [
+      ["מדיניות הפרטיות", "מְדִינִיּוּת הַפְּרָטִיּוּת"],
+      ["מחייבת", "מְחַיֶּבֶת"],
+      ["הצפנה", "הַצְפָּנָה"],
+      ["של", "שֶׁל"],
+      ["מאגר הנתונים", "מַאֲגַר הַנְּתוּנִים"]
+    ],
+    englishTokens: ["The privacy policy", "requires", "encryption", "of", "the dataset"],
+    hebrewDistractorPairs: [
+      ["גרסת התוכנה", "גִּרְסַת הַתּוֹכְנָה"],
+      ["מאפשרת", "מְאַפְשֶׁרֶת"],
+      ["מעקב", "מַעֲקָב"],
+      ["בלי", "בְּלִי"],
+      ["נתוני האימון", "נְתוּנֵי הָאִמּוּן"]
+    ],
+    englishDistractors: ["The software release", "allows", "surveillance", "without", "training data"],
+    notes: "Connects the reviewed technology terms for privacy policy, encryption, and dataset."
+  }),
+  buildReviewedSentence({
+    id: "professional_92",
+    emoji: "🤝",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "כתיבה תמציתית והקשבה פעילה מסייעות ביישוב סכסוכים.",
+    hebrewNiqqud: "כְּתִיבָה תַּמְצִיתִית וְהַקְשָׁבָה פְּעִילָה מְסַיְּעוֹת בְּיִישּׁוּב סִכְסוּכִים.",
+    english: "Concise writing and active listening help with conflict resolution.",
+    hebrewTokenPairs: [
+      ["כתיבה תמציתית", "כְּתִיבָה תַּמְצִיתִית"],
+      ["והקשבה פעילה", "וְהַקְשָׁבָה פְּעִילָה"],
+      ["מסייעות", "מְסַיְּעוֹת"],
+      ["ביישוב סכסוכים", "בְּיִישּׁוּב סִכְסוּכִים"]
+    ],
+    englishTokens: ["Concise writing", "and active listening", "help with", "conflict resolution"],
+    hebrewDistractorPairs: [
+      ["דיבור בפני קהל", "דִּבּוּר בִּפְנֵי קָהָל"],
+      ["וטון דיבור", "וְטוֹן דִּבּוּר"],
+      ["מקשים", "מַקְשִׁים"],
+      ["במשא ומתן", "בְּמַשָּׂא וּמַתָּן"]
+    ],
+    englishDistractors: ["Public speaking", "and tone of voice", "hinder", "in negotiation"],
+    notes: "Combines concise writing, active listening, and conflict resolution with feminine plural agreement."
+  }),
+  buildReviewedSentence({
+    id: "formal_80",
+    emoji: "⚖️",
+    category: "formal",
+    difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "כתב האישום מפרט את העבירה הפלילית ואת הראיות.",
+    hebrewNiqqud: "כְּתַב הָאִישּׁוּם מְפָרֵט אֶת הָעֲבֵירָה הַפְּלִילִית וְאֶת הָרְאָיוֹת.",
+    english: "The indictment details the criminal offense and the evidence.",
+    hebrewTokenPairs: [
+      ["כתב האישום", "כְּתַב הָאִישּׁוּם"],
+      ["מפרט", "מְפָרֵט"],
+      ["את העבירה הפלילית", "אֶת הָעֲבֵירָה הַפְּלִילִית"],
+      ["ואת הראיות", "וְאֶת הָרְאָיוֹת"]
+    ],
+    englishTokens: ["The indictment", "details", "the criminal offense", "and the evidence"],
+    hebrewDistractorPairs: [
+      ["הסדר הטיעון", "הֶסְדֵּר הַטִּיעוּן"],
+      ["מסתיר", "מַסְתִּיר"],
+      ["את התביעה האזרחית", "אֶת הַתְּבִיעָה הָאֶזְרָחִית"],
+      ["ואת הפיצויים", "וְאֶת הַפִּיצּוּיִים"]
+    ],
+    englishDistractors: ["The plea bargain", "hides", "the civil lawsuit", "and the damages"],
+    notes: "Places the reviewed legal terms indictment and criminal offense in one neutral sentence."
+  }),
+  buildReviewedSentence({
+    id: "formal_81",
+    emoji: "📚",
+    category: "formal",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "המשלב הלשוני משתנה בין עברית מקראית לעברית מודרנית.",
+    hebrewNiqqud: "הַמִּשְׁלָב הַלְּשׁוֹנִי מִשְׁתַּנֶּה בֵּין עִבְרִית מִקְרָאִית לְעִבְרִית מוֹדֶרְנִית.",
+    english: "The language register changes between Biblical Hebrew and Modern Hebrew.",
+    hebrewTokenPairs: [
+      ["המשלב הלשוני", "הַמִּשְׁלָב הַלְּשׁוֹנִי"],
+      ["משתנה", "מִשְׁתַּנֶּה"],
+      ["בין", "בֵּין"],
+      ["עברית מקראית", "עִבְרִית מִקְרָאִית"],
+      ["לעברית מודרנית", "לְעִבְרִית מוֹדֶרְנִית"]
+    ],
+    englishTokens: ["The language register", "changes", "between", "Biblical Hebrew", "and Modern Hebrew"],
+    hebrewDistractorPairs: [
+      ["התחביר", "הַתַּחְבִּיר"],
+      ["נשאר", "נִשְׁאָר"],
+      ["מאז", "מֵאָז"],
+      ["ארמית", "אֲרָמִית"],
+      ["למשלב רשמי", "לְמִשְׁלָב רִשְׁמִי"]
+    ],
+    englishDistractors: ["The syntax", "stays", "since", "Aramaic", "and a formal register"],
+    notes: "Reviews language register, Biblical Hebrew, and Modern Hebrew in a contrastive context."
+  }),
+  buildReviewedSentence({
+    id: "formal_82",
+    emoji: "🧭",
+    category: "formal",
+    difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "תכנון תרחישים מסייע לגבש המלצת מדיניות.",
+    hebrewNiqqud: "תִּכְנוּן תַּרְחִישִׁים מְסַיֵּעַ לְגַבֵּשׁ הַמְלָצַת מְדִינִיּוּת.",
+    english: "Scenario planning helps formulate a policy recommendation.",
+    hebrewTokenPairs: [
+      ["תכנון תרחישים", "תִּכְנוּן תַּרְחִישִׁים"],
+      ["מסייע", "מְסַיֵּעַ"],
+      ["לגבש", "לְגַבֵּשׁ"],
+      ["המלצת מדיניות", "הַמְלָצַת מְדִינִיּוּת"]
+    ],
+    englishTokens: ["Scenario planning", "helps", "formulate", "a policy recommendation"],
+    hebrewDistractorPairs: [
+      ["חיזוי טכנולוגי", "חִיזּוּי טֶכְנוֹלוֹגִי"],
+      ["מונע", "מוֹנֵעַ"],
+      ["לדחות", "לִדְחוֹת"],
+      ["עמימות אסטרטגית", "עֲמִימוּת אֶסְטְרָטֶגִית"]
+    ],
+    englishDistractors: ["Technological forecasting", "prevents", "postponing", "strategic ambiguity"],
+    notes: "Connects the high-level discourse terms scenario planning and policy recommendation."
+  }),
+  buildReviewedSentence({
+    id: "everyday_140",
+    emoji: "🩺",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הרופאה נתנה לי הפניה רפואית ותוכנית טיפול.",
+    hebrewNiqqud: "הָרוֹפְאָה נָתְנָה לִי הַפְנָיָה רְפוּאִית וְתוֹכְנִית טִפּוּל.",
+    english: "The doctor gave me a medical referral and a treatment plan.",
+    hebrewTokenPairs: [
+      ["הרופאה", "הָרוֹפְאָה"],
+      ["נתנה", "נָתְנָה"],
+      ["לי", "לִי"],
+      ["הפניה רפואית", "הַפְנָיָה רְפוּאִית"],
+      ["ותוכנית טיפול", "וְתוֹכְנִית טִפּוּל"]
+    ],
+    englishTokens: ["The doctor", "gave", "me", "a medical referral", "and a treatment plan"],
+    hebrewDistractorPairs: [
+      ["האחות", "הָאָחוֹת"],
+      ["שלחה", "שָׁלְחָה"],
+      ["לו", "לוֹ"],
+      ["חידוש מרשם", "חִידּוּשׁ מִרְשָׁם"],
+      ["ובדיקת מנע", "וּבְדִיקַת מְנַע"]
+    ],
+    englishDistractors: ["The nurse", "sent", "him", "a prescription renewal", "and a preventive screening"],
+    notes: "Reviews medical referral and treatment plan with explicit feminine agreement."
+  }),
+  buildReviewedSentence({
+    id: "everyday_141",
+    emoji: "💊",
+    category: "everyday",
+    difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "קניתי משכך כאבים ומשחה בבית המרקחת.",
+    hebrewNiqqud: "קָנִיתִי מְשַׁכֵּךְ כְּאֵבִים וּמִשְׁחָה בְּבֵית הַמִּרְקַחַת.",
+    english: "I bought a painkiller and ointment at the pharmacy.",
+    hebrewTokenPairs: [
+      ["קניתי", "קָנִיתִי"],
+      ["משכך כאבים", "מְשַׁכֵּךְ כְּאֵבִים"],
+      ["ומשחה", "וּמִשְׁחָה"],
+      ["בבית המרקחת", "בְּבֵית הַמִּרְקַחַת"]
+    ],
+    englishTokens: ["I bought", "a painkiller", "and ointment", "at the pharmacy"],
+    hebrewDistractorPairs: [
+      ["לקחתי", "לָקַחְתִּי"],
+      ["סירופ לשיעול", "סִירוֹפּ לְשִׁעוּל"],
+      ["ופלסטר", "וּפְלַסְטֶר"],
+      ["במרפאה", "בַּמִּרְפָּאָה"]
+    ],
+    englishDistractors: ["I took", "cough syrup", "and a band-aid", "at the clinic"],
+    notes: "Places reviewed pharmacy vocabulary in a routine, non-advisory context."
+  }),
+  buildReviewedSentence({
+    id: "everyday_142",
+    emoji: "🔪",
+    category: "everyday",
+    difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "שים את קרש החיתוך ליד קערת הערבוב.",
+    hebrewNiqqud: "שִׂים אֶת קֶרֶשׁ הַחִיתּוּךְ לְיַד קְעָרַת הָעִרְבּוּב.",
+    english: "Put the cutting board next to the mixing bowl.",
+    hebrewTokenPairs: [
+      ["שים", "שִׂים"],
+      ["את קרש החיתוך", "אֶת קֶרֶשׁ הַחִיתּוּךְ"],
+      ["ליד", "לְיַד"],
+      ["קערת הערבוב", "קְעָרַת הָעִרְבּוּב"]
+    ],
+    englishTokens: ["Put", "the cutting board", "next to", "the mixing bowl"],
+    hebrewDistractorPairs: [
+      ["קח", "קַח"],
+      ["את סכין השף", "אֶת סַכִּין הַשֶּׁף"],
+      ["מעל", "מֵעַל"],
+      ["כוס המדידה", "כּוֹס הַמְּדִידָה"]
+    ],
+    englishDistractors: ["Take", "the chef's knife", "above", "the measuring cup"],
+    notes: "Reviews cutting board and mixing bowl with a masculine singular imperative."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_158",
+    emoji: "💔",
+    category: "colloquial",
+    difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "יש משיכה, אבל אין התאמה.",
+    hebrewNiqqud: "יֵשׁ מְשִׁיכָה, אֲבָל אֵין הַתְאָמָה.",
+    english: "There's attraction, but no compatibility.",
+    hebrewTokenPairs: [
+      ["יש", "יֵשׁ"],
+      ["משיכה", "מְשִׁיכָה"],
+      ["אבל", "אֲבָל"],
+      ["אין", "אֵין"],
+      ["התאמה", "הַתְאָמָה"]
+    ],
+    englishTokens: ["There's", "attraction", "but", "no", "compatibility"],
+    hebrewDistractorPairs: [
+      ["הרבה", "הַרְבֵּה"],
+      ["בלעדיות", "בִּלְעָדִיּוּת"],
+      ["ולכן", "וְלָכֵן"],
+      ["נשארה", "נִשְׁאֲרָה"],
+      ["מחויבות", "מְחֻיָּבוּת"]
+    ],
+    englishDistractors: ["a lot of", "exclusivity", "so", "remained", "commitment"],
+    notes: "Contrasts the reviewed relationship terms attraction and compatibility."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_159",
+    emoji: "🧠",
+    category: "colloquial",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "השחיקה מקשה על ויסות רגשי.",
+    hebrewNiqqud: "הַשְּׁחִיקָה מַקְשָׁה עַל וִיסּוּת רִגְשִׁי.",
+    english: "Burnout makes emotional regulation harder.",
+    hebrewTokenPairs: [
+      ["השחיקה", "הַשְּׁחִיקָה"],
+      ["מקשה", "מַקְשָׁה"],
+      ["על", "עַל"],
+      ["ויסות רגשי", "וִיסּוּת רִגְשִׁי"]
+    ],
+    englishTokens: ["Burnout", "makes", "emotional regulation", "harder"],
+    hebrewDistractorPairs: [
+      ["המוטיבציה", "הַמּוֹטִיבַצְיָה"],
+      ["משפרת", "מְשַׁפֶּרֶת"],
+      ["מודעות עצמית", "מוּדָעוּת עַצְמִית"],
+      ["במהירות", "בִּמְהִירוּת"]
+    ],
+    englishDistractors: ["Motivation", "improves", "self-awareness", "quickly"],
+    notes: "Connects burnout and emotional regulation with explicit feminine agreement."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_160",
+    emoji: "🏠",
+    category: "colloquial",
+    difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "הריבית על המשכנתה עלתה שוב.",
+    hebrewNiqqud: "הָרִבִּית עַל הַמַּשְׁכַּנְתָּה עָלְתָה שׁוּב.",
+    english: "The interest rate on the mortgage went up again.",
+    hebrewTokenPairs: [
+      ["הריבית", "הָרִבִּית"],
+      ["על המשכנתה", "עַל הַמַּשְׁכַּנְתָּה"],
+      ["עלתה", "עָלְתָה"],
+      ["שוב", "שׁוּב"]
+    ],
+    englishTokens: ["The interest rate", "on the mortgage", "went up", "again"],
+    hebrewDistractorPairs: [
+      ["התשואה", "הַתְּשׂוּאָה"],
+      ["בתיק ההשקעות", "בְּתִיק הַהַשְׁקָעוֹת"],
+      ["ירדה", "יָרְדָה"],
+      ["מעט", "מְעַט"]
+    ],
+    englishDistractors: ["The yield", "in the portfolio", "went down", "slightly"],
+    hebrewOrderAlternates: [
+      {
+        text: "הריבית על המשכנתה שוב עלתה.",
+        textNiqqud: "הָרִבִּית עַל הַמַּשְׁכַּנְתָּה שׁוּב עָלְתָה.",
+        order: [0, 1, 3, 2]
+      }
+    ],
+    notes: "Reviews interest rate and mortgage; both adverb placements are explicitly approved."
+  })
+];
+
+SENTENCE_BANK.push(
+  ...INBAL_SENTENCES,
+  ...INAT_SENTENCES,
+  ...LEXICAL_FOCUS_SENTENCES,
+  ...RUMOR_SENTENCES,
+  ...CONTEXT_BRIDGE_SENTENCES
+);
 
 function cloneSentence(item) {
   return {
@@ -14110,9 +14571,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  getFlexibleModifierTokens() {
-    return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
-  },
-  __build: "20260728a",
+  __build: "20260729b",
 };
 })(typeof window !== "undefined" ? window : globalThis);
