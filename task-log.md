@@ -6124,3 +6124,165 @@ unvocalized abbreviations are untouched and still need per-term Academy sourcing
 (6) Officer ranks were placed in Ideas, Science & Tech to sit with the existing
 military terms (מ״פ, מג״ד, מח״ט) rather than in Civics, Law & Work.
 
+### 2026-07-29 08:55 EDT — Quality-first IvritElite expansion: safer grading, natural Prepositions English, and 12 context bridges
+
+**Requested:** Review the content currently tested in IvritElite, plan a quality-first expansion, then proceed with as much of the plan as could be implemented safely in one careful pass.
+
+**Content review and scope decision:** The strongest safe expansion was not another large vocabulary tranche. The bank already held 1,684 vocabulary cards, 596 sentences, 282 abbreviations, 178 conjugation deck entries, 100 Conjugation+ idioms, and 800 generated Prepositions questions. The audit found three higher-value gaps: two generated Prepositions glosses produced object-pronoun possessives such as `me's`; Sentence Practice globally accepted adjacent swaps around four modifier words even when a sentence had never been reviewed for that order; and all 100 Conjugation+ idioms lacked pointed paradigms or source metadata. Expansion was therefore limited to 12 fully reviewed context sentences that recycle existing high-value terms, plus quality infrastructure. No Conjugation+ vocalizations were invented from templates.
+
+**Files changed:**
+- `preposition-data.js` — added possessive English labels for all eight object persons; rewrote the אצל visit gloss as natural `visit {o} at home` and the sleepover gloss to use a dedicated `{p}` possessive slot.
+- `app/prepositions.js` — resolves both object (`{o}`) and possessive (`{p}`) placeholders when generating English hints.
+- `app/sentence-bank.js` — removed the global flexible-modifier fallback and adjacent-swap grader. Sentence answers now match only the primary order or an explicitly authored alternate.
+- `sentence-bank-data.js` — made the six affected legacy modifier reorderings explicit, pointed alternates; appended 12 `buildReviewedSentence` context bridges (three each in professional, formal, everyday, and colloquial) covering finance, privacy, communication, law, language register, policy, health, kitchen, relationships, and emotional vocabulary. Only `colloquial_160` has a second neutral order, recorded as a pointed token permutation. Sentence total 596 → 608.
+- `hebrew-idioms.js` — added the Conjugation+ pointing contract: normalized pointed tense aliases, `niqqud_status`, and `niqqud_sources`. Existing idioms are honestly marked `unreviewed`.
+- `app/constants.js` — added reviewed niqqud for the seven Conjugation+ direct-object and dative-object forms used at runtime.
+- `app/adv-conj.js` — added all-or-nothing construction of pointed Hebrew answers for reviewed idioms and propagates those forms to Hebrew prompts and answer choices. Missing, partial, or unreviewed paradigms continue to display plain Hebrew.
+- `tests/prepositions-data.test.js` — requires both English object labels, validates placeholder resolution across the full deck, rejects forms such as `me's`, and pins representative natural outputs.
+- `tests/app-progress.test.js` — converted the two modifier-swap examples to explicit alternates and added a regression proving an unreviewed adjacent swap is rejected.
+- `tests/sentence-bank-data.test.js` — updated the 608-row/category ratchets, registered all 12 context rows in the full alignment audit, removed the obsolete global-flexibility API expectation, pinned the legacy alternates, and registered only the recognized multiword vocabulary units used by the new chips.
+- `tests/hebrew-idioms.test.js` — requires explicit pointing status and HTTPS provenance for any reviewed idiom, pins the honest 100-unreviewed baseline, and verifies with a complete synthetic paradigm that niqqud reaches prompts/options but disappears when review status is removed.
+- `docs/character-gameplay-strategy.md` — updated the unrouted everyday-sentence ledger 139 → 142.
+- `index.html` — cache-busted every edited learner-facing JavaScript/data file to `20260729a`.
+
+**Behavior changed:** Prepositions now shows `to visit me at home` and `to sleep over at my place`, never `me's place`. Sentence Practice no longer awards credit for a merely plausible modifier swap unless that exact order was reviewed and stored; the six intended legacy alternatives remain accepted. Sentences/Shema/Handwriting gain 12 pointed, contextual rows, bringing the register counts to 199 colloquial, 188 everyday, 108 professional, and 113 formal. Conjugation+ behaves the same for today's unreviewed idiom data, but is now ready to display and speak fully pointed answers as sourced paradigms are approved.
+
+**Tests run:** Baseline `npm test` — 323 pass, 0 fail. Focused during implementation: `node --test tests/prepositions-data.test.js`; `node --test tests/sentence-bank-data.test.js tests/app-progress.test.js tests/prepositions-data.test.js` — 167 pass; `node --test tests/hebrew-idioms.test.js tests/app-progress.test.js` — 131 pass; final focused `node --test tests/sentence-bank-data.test.js tests/hebrew-idioms.test.js tests/prepositions-data.test.js tests/app-progress.test.js` — 174 pass, 0 fail. Final `npm test` — 328 pass, 0 fail, including rendered Chrome layout coverage. `npm run report:characters` — pool sizes 1,684 vocabulary / 608 sentences / 282 abbreviations / 178 verbs; routed spread 358–698 (1.9x). `git diff --check` — pass.
+
+**Risks / regressions to check:** (1) The 12 new sentences and their niqqud passed structural and consonantal checks, not a native-editor review; the health, policy, and formal-register rows deserve the first human read-through. (2) Conjugation+ still has 0/100 reviewed pointed idioms by design. The new contract prevents false coverage but does not replace the source-by-source vocalization work; a future batch must provide complete tense tables, pointed fixed/suffix objects where applicable, and real provenance URLs. (3) Tightening sentence grading may expose older natural reorderings that were previously accepted accidentally; those should be reviewed and authored per sentence, not restored through another global rule. (4) The `{p}` Prepositions placeholder is new and guarded by tests, but future trigger authors must choose `{o}` versus `{p}` according to English grammar. (5) The 12-row tranche increases multi-owner character content and leaves 142 everyday rows unrouted, intentionally preserving the existing character strategy.
+
+### 2026-07-29 09:40 EDT — Content audit repairs and five-idiom Conjugation+ niqqud pilot
+
+**Requested:** Implement the approved follow-up audit plan: repair any remaining
+content or test-quality issues, add six explicitly reviewed Hebrew word orders,
+and launch a quality-first Conjugation+ pointing pilot across all three runtime
+composition paths.
+
+**Files changed:**
+- `tests/prepositions-data.test.js` — normalized the VM-created dative-expression
+  result with `Array.from` before strict deep comparison, removing the
+  optimization-dependent cross-realm failure.
+- `sentence-bank-data.js` — added pointed, token-aligned neutral orders for
+  `everyday_31`, `everyday_72`, `everyday_83`, `everyday_91`, and
+  `professional_69`; changed `inbal_87` from `fixed` to `alternates` and added
+  `לגמרי אחרת`; build id bumped to `20260729b`.
+- `tests/sentence-bank-data.test.js` — pinned all six reviewed orders, including
+  the second `everyday_83` alternate, under the audit ratchet.
+- `hebrew-idioms.js` — marked exactly five pilot idioms reviewed:
+  `hidlik`, `sider`, `asiyat_yom`, `ptihat_einayim`, and
+  `hachzara_leatzmo`. Added their complete 12-form pointed paradigms, sourced
+  fixed objects, all ten pointed `עצמי` suffix forms, and exact Pealim/Academy
+  provenance URLs.
+- `app/adv-conj.js` — added optional `correctAnswerNiqqud`; prompt, choices, and
+  locked feedback now follow the global niqqud preference with plain fallback
+  for unreviewed or restored legacy questions. Selection speech remains pointed
+  independently of display state, and mistake summaries prefer the sourced
+  pointed answer.
+- `tests/hebrew-idioms.test.js` — pinned `{ reviewed: 5, unreviewed: 95 }` and
+  the exact five ids; validates complete pointed data, provenance, consonantal
+  skeletons, fixed/suffix coverage, and byte-for-byte agreement with the five
+  approved `hebrew-verbs.js` entries.
+- `tests/app-progress.test.js` — added both-direction display tests for toggle
+  off/on, locked-feedback re-rendering, legacy fallback, pointed speech, and
+  pointed mistake summaries.
+- `generated/sentence-word-order-audit-2026-07-29.md` — recorded the current
+  608-row inventory, 200 authored alternates, the six accepted orders, and the
+  focus-changing cases deliberately kept out.
+- `index.html` — cache-busted the changed sentence, idiom, and Conjugation+
+  assets to `20260729b`.
+
+**Behavior changed:** Sentence Practice now accepts the six newly reviewed
+neutral orders without reopening global word-swapping. Conjugation+ mixes five
+fully pointed pilot idioms into the existing 100-idiom pool; those questions
+show niqqud when the preference is enabled, use pointed Hebrew for speech and
+mistake review, and remain plain when it is disabled. The other 95 idioms remain
+honestly unreviewed and plain. Restored sessions created before
+`correctAnswerNiqqud` continue to render normally.
+
+**Tests run:** Pre-change `npm test` — 328 pass, 0 fail. Focused:
+`node --test tests/prepositions-data.test.js tests/sentence-bank-data.test.js`
+— 41 pass; `node --test tests/hebrew-idioms.test.js` — 8 pass;
+`node --test --test-name-pattern='advanced conjugation (selections speak|niqqud toggle|mistake summaries)' tests/app-progress.test.js`
+— 3 pass. Flake stress: `tests/prepositions-data.test.js` passed 20/20 fresh
+Node processes. `node --test tests/gameplay-layout.test.js` — 1 pass.
+Post-change `npm test` ran three times — 331 pass, 0 fail on every run.
+`git diff --check` — pass. Browser verification at 360×640 with niqqud enabled:
+direct (`מְסַדֵּר`), dative (`יִפְתַּח ... אֶת הָעֵינַיִם`), and possessive
+suffix (`יַחְזִיר ... לְעַצְמֵנוּ`) pilot questions all rendered; active and
+answered states had `scrollHeight === clientHeight` (488px), choice buttons
+were 48px tall, pointed feedback rendered, and the console had no errors.
+
+**Risks / regressions to check:** (1) The pilot is intentionally sparse, so a
+ten-question session may contain no reviewed idiom; the 95 plain idioms are not
+a display regression. (2) Automated tests prove exact agreement with the
+internal approved paradigms and preserve the recorded HTTPS sources, but do not
+re-fetch external pages; source changes still require editorial review.
+(3) Fully pointed Hebrew sometimes uses defective spelling while the plain
+surface uses plene spelling (`הָעֵינַיִם` / `העיניים`); validation therefore
+checks consonantal skeletons and exact approved-source parity rather than naive
+mark stripping. (4) The niqqud preference lives in Settings, so a learner
+normally chooses it before starting a game; the renderer is tested to update a
+locked question if application state changes, but this task did not add a new
+mid-game settings control.
+
+### 2026-07-29 12:20 EDT — Product roadmap: recognize-vs-query thesis, feel tranche, content annotation spine, dialogue-scene design
+
+**Requested:** Review the codebase and write a high-level plan. Content coverage is enormous and may be hitting diminishing returns; brainstorm how to make the game more useful, engaging, and fun across a spectrum from tractable (per-character color schemes, simple sprite animation like blinking) to ambitious (RPG-style missions navigating interactions). Also identify gaps — useful Hebrew not yet taught — with practical ways to build it.
+
+**Scope decision:** Documentation only, by request. No code changes, no `?v=` bumps.
+
+**Four decisions taken during planning:** (1) audience is the author plus a few real learners, so `prefers-reduced-motion` and mobile layout are requirements rather than polish; (2) the above-beginner positioning governs the lexicon, not grammar — function words enter through system drills where the difficulty is morphological or agreement-based, never as Translation Match cards, which closes the measured gap without reversing the documented `צריך` removal; (3) architecture debt gets paid down before the ambitious work; (4) deliverable is a committed doc, not an implementation.
+
+**Central finding:** the binding constraint is not content volume. The app can only *recognize* and cannot *query*. Production: `grep -c '<input' index.html` returns 0 — the learner has never typed a Hebrew word, while 3,780 stored verb forms are only ever shown. Query: `register` exists only in `verb-game-data.js`, all 608 sentence `notes` hold grammar prose that is machine-unreadable, and `utility` — the field driving item selection in `data.pickBestWord` — is computed positionally from authoring order, so it measures when a word was typed rather than how much it matters. Separately, the app maintains an 8-box Leitner ladder per item and never shows the learner its distribution.
+
+**Files changed:**
+- `docs/product-roadmap.md` — new. Thesis and standing constraints (append-only vocab ids, the `APPEND_ONLY_REVIEWED_SENTENCES_START` ratchet, the standing word-order policy, routing never on a `character` field, cache-busting, test-count pinning, the 360×640 layout budget). Then five tranches: **A Feel** (motion tokens plus the missing `prefers-reduced-motion` block; `resetAllModeSessions`; an answer-feedback pulse hung off `audio.playAnswerFeedbackSound`; making the four already-styled streak tiers visible; a seed-var per-character palette; CSS-only sprite life; tile snap and the dialogue-bubble rebuild fix). **B** surfacing existing Leitner and bond-day data. **C** an annotation sidecar (`corpusHits` first and alone, then `pos`/`phraseType`/`register`), a typing mode over the existing verb corpus, a generated numerals/time deck, and six free derivations. **D** dead-code deletion then a descriptor-table mode registry. **E** a dialogue-scene design that splits narrative choice from Hebrew execution. Plus a 20-row gap ledger, an explicit non-goals list, and a recommended sequencing.
+- `task-log.md` — this entry.
+
+**Two exploration claims were found wrong and corrected before they entered the doc:**
+1. `data-streak-tier` was reported as unstyled. It is fully wired *and* styled — `app/ui.js:404` computes tiers 0–4 and `styles.css:892-908` has rules for all four — but each rule is only `filter: brightness(1.06→1.28) saturate(1.08→1.3)`, which is imperceptible. The item is therefore "make four existing tiers visible," which is cheaper than "add CSS."
+2. The session-reset problem was reported as N² duplication with a named `resetCompetingSessions` in `app/verb-match.js`. There is no such function there — the preambles are inline, and the real shape is a ragged matrix where every mode resets a different subset. `app/handwriting.js` is the only complete one. Measured omissions: verb-match misses advConj/prepositions/sentenceBank; word-match misses advConj/prepositions/binyanBoard; adv-conj misses prepositions/sentenceBank/verbMatch; prepositions misses sentenceBank/verbMatch; binyan-board and sentence-bank each miss prepositions.
+
+**The reset issue is a real bug, not a tidiness complaint.** `session.hasActiveLearnSession` (`app/session.js:95`) ORs across every per-mode `.active`/`.introActive` flag, so a stale flag makes the app believe a session is live. Repro: start Prepositions, go home mid-session, start Conjugation (whose preamble omits `resetPrepositionsState`) — `state.prepositions.active` is still true, so the leave-session guard fires on an already-abandoned session and `persistSessionState` writes a stale slice that `restoreSessionState` can act on. Fix is to extract `session.resetAllModeSessions(keepMode)` from the complete list already at `app/session.js:660-693`. Filed as item A0b, to be done before any new mode exists.
+
+**Behavior changed:** None. Documentation only.
+
+**Tests run:** `npm test` not run — no code changed. Verification was claim-by-claim instead. Independently re-derived, not taken from exploration: 39 of 83 verb-type preposition triggers match a full `hebrew-verbs.js` paradigm by their present-ms form (so the Prepositions game is frozen in present tense only because the two files were never joined); 34 of the 60 `verb-game-data.js` roots bridge to a full paradigm; 195 of 681 two-word vocab entries have a `־ת` head and 130 have a head that is also a standalone card; zero cardinal numbers in 1,684 cards (`שבעה` exists only as "mourning week", `השבעה`/`קערת השבעה` as "incantation"/"incantation bowl"). Four figures from exploration were wrong and were corrected in the doc: verb forms are 3,780 total of which 3,756 carry niqqud (not "3,780 pointed"); distinct roots 147 (not 141); two-word entries 681 (not 680); cardinals 0 (not 1). Line references were checked and two off-by-ones fixed (`styles.css:2652`, `app/character.js:25`). The dead-mode claim was verified properly: `app.lessonMode.startLesson`, `.renderQuestion`, `app.abbreviation.startAbbreviation` and `.renderAbbreviationQuestion` have zero definitions anywhere in `app/` — the apparent hits are `startLessonMatch`, `startLessonTimer` and `startAbbreviationTimer`, which are different functions — so all four call sites (`app/controller.js:248,303,325,352`, `app/ui.js:800,860`) silently no-op through `?.()`.
+
+**Risks / regressions to check:** (1) The doc is a plan, so its main risk is being followed without re-verification — several figures are derivations over live data that will drift as content is appended, and the `corpusHits` and annotation-ratchet items are specified to be re-runnable scripts partly for that reason. (2) Effort estimates are unvalidated; the typing mode's stated risk is layout, not logic, and `tests/gameplay-layout.test.js` at 360×640 with an on-screen Hebrew key row should be checked before its grader is written, since three key rows plus prompt, input and toolbar is a tight fit against the no-scroll budget. (3) The doc asserts that `docs/character-gameplay-strategy.md:232-244` is stale — it says not to weave character art into gameplay, but sprites for all four characters have shipped; that section should be updated or explicitly marked historical rather than left contradicting the roadmap. (4) `phraseType` is scoped at ~681 hand decisions on the assumption that construct-vs-adjectival is not reliably machine-derivable; if a proposal script turns out more precise than expected, that estimate is pessimistic. (5) The שם פעולה link is deliberately deferred on measured grounds (27 candidate pairs at roughly 60–70% precision, with `משיכה→להמשיך`, `ספירה→לספר` and `שבעה→להשביע` all wrong) and is the item most likely to be re-proposed as cheap by a later session. (6) Tranche E's V0 is specified with an explicit kill criterion; it is the item most at risk of expanding past one scene before that criterion is tested.
+
+### 2026-07-29 15:05 EDT — Fix the ragged mode-session teardown; conjugate governed prepositions across tense and person
+
+**Requested:** From the roadmap written earlier today: (1) fix the session-reset bug, (2) fix the preposition present-tense freeze. A third item — a numbers/cardinals deck — was rejected on review: this is an advanced app and assumes the learner can count.
+
+**1. `session.resetAllModeSessions` (bug fix)**
+
+Every mode's `start*` opened with an inline preamble resetting competing sessions, and each was a different subset. Measured omissions: verb-match missed advConj/prepositions/sentenceBank; word-match missed advConj/prepositions/binyanBoard; adv-conj missed prepositions/sentenceBank/verbMatch; prepositions missed sentenceBank/verbMatch; binyan-board and sentence-bank each missed prepositions. `handwriting.js` was the only complete one.
+
+Observable because `hasActiveLearnSession` (`app/session.js:95`) ORs across every per-mode `.active`/`.introActive` flag: a stale flag makes the app believe a session is live, so the leave-session guard fires over an already-abandoned session and `persistSessionState` writes a slice `restoreSessionState` can act on. Worse, `state.prepositions.timerId` and `state.advConj.timerId` were left running, because only `resetPrepositionsState`/`resetAdvConjState` clear those intervals and the preambles flipped `.active` by hand instead.
+
+The canonical complete list was in **`endSessionAndNavigate`, not `showSessionSummary`** — it is the only teardown that calls those two reset functions. `resetAllModeSessions` was extracted from there; `endSessionAndNavigate` now delegates to it, and all seven preambles call it. No `keepMode` parameter: each preamble already reset its own slice before building its session, so the shared function resets everything and callers set up afterwards. Teardown only — mode, route, score and summary state stay with the caller, since starting, abandoning and summarizing want different answers. **`showSessionSummary` was deliberately left unchanged**: it must preserve enough state for the summary it is about to render, and the normal finish path clears the intervals before it runs.
+
+**2. Full-tense governed prepositions**
+
+39 of 83 verb triggers match a complete `hebrew-verbs.js` paradigm by their present-ms form; the game was frozen in present tense only because the two files were never joined. Verified before building that all senses of a linked verb agree on every drilled form (0 mismatches) and that all 39 paradigms carry all 10 forms (0 missing).
+
+Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
+
+- **It is not authoring-free.** The verb deck's `englishText` labels cannot be borrowed: only 3 of 39 carry the governed preposition, and several gloss a different sense than the trigger drills (`שומר` is "look after" here but "I kept" there; `מזמין` is "invite" here but "I ordered (food, tickets)"; `נראה` is "look like" here but "seem"). Third-person-singular and past English were authored per trigger — 78 strings — while `base` and `future` derive from the trigger's existing `en`, keeping it the single source of truth for the predicate and its `{o}`/`{p}` slots.
+- **Conjugating the subject reintroduced the coreference bug** repaired on 2026-07-27 for the frozen dative-experiencer triggers. `חיכיתי לי` requires the reflexive, and first and second person also collide *across number* — "we waited for me" is incoherent in any context, since the singular sits inside the plural. Third person does not collide across number (`הוא חיכה להם` is ordinary disjoint reference). A smoke test caught `חיכינו ____ / "we waited for me"` before the guard existed.
+
+**Files changed:**
+- `app/session.js` — new `session.resetAllModeSessions()`; `endSessionAndNavigate` reduced to a call to it plus `resetSessionCounters` and `clearSummaryState`.
+- `app/verb-match.js`, `app/word-match.js`, `app/sentence-bank.js`, `app/adv-conj.js`, `app/prepositions.js`, `app/binyan-board.js`, `app/handwriting.js` — each start preamble replaced by `resetAllModeSessions()` + `clearSummaryState()` + `resetSessionScore()`. Net −120 lines. `sentence-bank.js` still sets `shemaMode` after the shared reset, since the reset clears it.
+- `preposition-data.js` — new `PREPOSITION_VERB_FORMS` (10 curated forms: present ms/fs/mp, past 1sg/3ms/3fs/1pl, future 1sg/3ms/1pl, each carrying the `subject` person in the `PREPOSITION_OBJECTS` key space) and `PREPOSITION_VERB_LINKS` (39 rows: `entryId` + authored `s3` and `past`). Both exported.
+- `app/prepositions.js` — `buildTriggerFrames` (paradigm lookup by seed-entry id with a module-level cache, deduped by Hebrew surface, falling back to the frozen frame); `subjectCoreferencesObject`; `joinTriggerParts`/`buildPromptText`/`buildEnglishHint` take the frame's form and gloss; deck items carry `triggerHeNiqqud`; prompt speech now passes niqqud so the Carmit respelling table can disambiguate forms sharing a consonantal skeleton (`תחכה` is both "she will wait" and "you (m.) will wait").
+- `tests/prepositions-data.test.js` — second loader that also loads `hebrew-verbs.js`, plus 6 tests: link integrity (every linked id is a real verb trigger whose `en` starts with "to ", every paradigm holds every drilled form, all senses agree, **and the paradigm's present-ms equals the trigger's displayed form** so a mis-linked `entryId` cannot conjugate a different verb than the learner is reading); `subjectCoreferencesObject` unit cases; a deck-wide sweep asserting no item pairs a subject with an object it must coreference, stated both over the keys and over the rendered English; frame/English agreement including irregular pasts and the `{p}` slot; unlinked triggers keeping one frozen frame each; and the graceful fallback when verb paradigms are absent.
+- `index.html` — `?v=20260729c` for all 9 changed `.js` files.
+- `docs/product-roadmap.md` — A0b and the governance item marked shipped with the corrections above; **C3 rescoped**: the earlier draft called a numbers deck "the largest Tier-1 hole" on a card count, which was wrong for an advanced app that assumes counting. Rewritten as an *agreement and idiom* item (gender polarity `שלוש בנות`/`שלושה בנים`, the counting form `שלושת הבנים`, gendered teens, clock/date conventions), explicitly never a bare cardinal card, and marked optional — cut entirely if polarity is already solid.
+
+**Behavior changed:** Switching games no longer leaves another game's session flagged active or its timer running. Prepositions deck 800 → 2,986 items: the 39 linked triggers now drill their governance across present, past and future with concrete subjects ("I waited for you (m.sg.)", "we will behave like you (m.sg.)") instead of one frozen present form with an infinitive gloss; the 61 unlinked triggers are unchanged at 8 items each with their infinitive glosses. Item stats stay keyed `triggerId:objectKey`, so no storage migration and no dilution of adaptive weighting — governance does not vary by tense, so mastery of חיכה+ל is one fact. Prompt audio now reads the conjugated form.
+
+**Tests run:** `npm test` — 337 pass, 0 fail (331 before, plus 6 new). Baseline was captured before any edit. Browser-verified on a dev server at port 3242 at 375×812: live deck 2,986 with 2,498 conjugated items; rendered `נתנהג ____` under "WE WILL BEHAVE LIKE YOU (M.SG.)" with both distractor axes intact (`אַחֲרֶיךָ`/`אִיתְּךָ` wrong preposition, `כָּמוֹךְ` right preposition wrong object); answering correctly produced "Correct. It's נתנהג כָּמוֹךָ. Meaning: we will behave like you (m.sg."; no vertical scroll (scrollHeight 812 = clientHeight); no console errors. The reset fix was exercised live through both previously-leaking paths (prepositions→verbMatch, advConj→lessonMatch) and confirmed to clear both the `.active` flags and the intervals, with `hasActiveLearnSession()` false after `goHome`.
+
+**Risks / regressions to check:** (1) `tests/gameplay-layout.test.js` is **intermittent** — "Binyanim feedback scrolls (516px > 488px)" appeared once in a full-suite run and the identical code then passed 3 full runs and 5 isolated runs. It is 28px over a 488px budget, so it is genuinely borderline rather than caused by this change; worth a real fix before it erodes trust in the suite. (2) Present-tense items now show a concrete subject ("he waits for me") where they previously showed the trigger infinitive ("to wait for me") — same Hebrew, same answer, changed hint, and the two loaders in the test file pin both forms. (3) The `כָּמוֹךָ`/`כָּמוֹךְ` style near-identical option pair (2ms vs 2fs differing only in the final vowel) is visible in a rendered screenshot; it is pre-existing — the task-log already noted it for the `le` table on 2026-07-27 — and its per-question frequency is unchanged, since distractors are still built per (preposition, object) and no new pairs were added. (4) Deck build now iterates 2,986 items instead of 800 on every `startPrepositions`; no perceptible delay was observed, but `buildPrepositionOptions` runs per item and this is the hot path if more forms are ever added. (5) The 10 drilled forms are a curated subset, deliberately excluding second-person subjects, third-person plural past/future, and every imperative; adding second-person subjects would need the coreference guard's 2nd-person branch, which is implemented and unit-tested but currently unreachable. (6) `resetAllModeSessions` is the single teardown for all nine modes, so a future mode that forgets to register its slice there will leak exactly the way these seven did — the ragged matrix is fixed, not structurally prevented, and the mode registry in Tranche D is what would prevent it.

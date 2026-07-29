@@ -2346,7 +2346,7 @@ test("sentence builder filters hold on/wait up distractors as too close to be fa
   assert.deepEqual(deck[0].hebrewDistractors, ["חבר שלי", "כרגע", "עוד מעט"]);
 });
 
-test("sentence builder accepts a Hebrew here/very swap when the meaning stays the same", () => {
+test("sentence builder accepts an explicitly reviewed Hebrew here/very alternate", () => {
   const sentenceBank = [
     {
       id: "sb-hot-here",
@@ -2356,6 +2356,10 @@ test("sentence builder accepts a Hebrew here/very swap when the meaning stays th
       hebrew: "אפשר לפתוח את החלון? חם כאן מאוד.",
       english_tokens: ["Can", "you", "open", "the", "window", "It's", "very", "hot", "here"],
       hebrew_tokens: ["אפשר", "לפתוח", "את", "החלון", "חם", "כאן", "מאוד"],
+      hebrew_alternates: [{
+        text: "אפשר לפתוח את החלון? חם מאוד כאן.",
+        tokens: ["אפשר", "לפתוח", "את", "החלון", "חם", "מאוד", "כאן"],
+      }],
       english_distractors: ["close", "door", "cold"],
       hebrew_distractors: ["לסגור", "הדלת", "קר"],
       notes: "",
@@ -2373,11 +2377,11 @@ test("sentence builder accepts a Hebrew here/very swap when the meaning stays th
   document.querySelector("#nextBtn").click();
 
   assert.equal(state.sessionScore, 2);
-  assert.match(getFeedbackText(document), /^Correct\. The Hebrew sentence is אפשר לפתוח את החלון\? חם כאן מאוד\./);
+  assert.match(getFeedbackText(document), /^Correct\. The Hebrew sentence is אפשר לפתוח את החלון\? חם מאוד כאן\./);
   assert.ok(getSentenceSlots(document).every((slot) => slot.classList.contains("correct") && !slot.classList.contains("wrong")));
 });
 
-test("sentence builder accepts a Hebrew degree-word swap when the meaning stays the same", () => {
+test("sentence builder accepts an explicitly reviewed Hebrew degree-word alternate", () => {
   const sentenceBank = [
     {
       id: "sb-not-clear",
@@ -2387,6 +2391,10 @@ test("sentence builder accepts a Hebrew degree-word swap when the meaning stays 
       hebrew: "זה לא לגמרי ברור.",
       english_tokens: ["It's", "not", "entirely", "clear"],
       hebrew_tokens: ["זה", "לא", "לגמרי", "ברור"],
+      hebrew_alternates: [{
+        text: "זה לא ברור לגמרי.",
+        tokens: ["זה", "לא", "ברור", "לגמרי"],
+      }],
       english_distractors: ["fully", "understood"],
       hebrew_distractors: ["מאוד", "מובן"],
       notes: "",
@@ -2404,8 +2412,39 @@ test("sentence builder accepts a Hebrew degree-word swap when the meaning stays 
   document.querySelector("#nextBtn").click();
 
   assert.equal(state.sessionScore, 3);
-  assert.match(getFeedbackText(document), /^Correct\. The Hebrew sentence is זה לא לגמרי ברור\./);
+  assert.match(getFeedbackText(document), /^Correct\. The Hebrew sentence is זה לא ברור לגמרי\./);
   assert.ok(getSentenceSlots(document).every((slot) => slot.classList.contains("correct") && !slot.classList.contains("wrong")));
+});
+
+test("sentence builder rejects unreviewed adjacent modifier swaps", () => {
+  const sentenceBank = [
+    {
+      id: "sb-no-global-modifier-swap",
+      category: "formal",
+      difficulty: 3,
+      english: "There is not enough existing evidence.",
+      hebrew: "אין די בראיות הקיימות.",
+      english_tokens: ["There is not", "enough", "existing", "evidence"],
+      hebrew_tokens: ["אין", "די", "בראיות", "הקיימות"],
+      english_distractors: ["There is", "plenty of", "new", "proof"],
+      hebrew_distractors: ["יש", "הרבה", "חדשות", "הוכחות"],
+      notes: "",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { document, state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  fillSentenceAnswerByTap(document, ["די", "אין", "בראיות", "הקיימות"]);
+  document.querySelector("#nextBtn").click();
+
+  assert.equal(state.sessionScore, 0);
+  assert.equal(state.sentenceBank.wrongAnswers, 1);
+  assert.match(getFeedbackText(document), /^Not quite\. The Hebrew sentence is אין די בראיות הקיימות\./);
 });
 
 test("sentence builder wrong answers enqueue review in the same direction without awarding review score", async () => {
@@ -3784,15 +3823,144 @@ test("advanced conjugation selections speak Hebrew answers before submit", () =>
     promptText: "he opened your eyes",
     promptIsHebrew: false,
     correctAnswer: "פתח לך את העיניים",
+    correctAnswerNiqqud: "פָּתַח לְךָ אֶת הָעֵינַיִם",
     correctAnswerIsHebrew: true,
-    options: [{ id: "correct", text: "פתח לך את העיניים", isCorrect: true }],
+    options: [{
+      id: "correct",
+      text: "פתח לך את העיניים",
+      textNiqqud: "פָּתַח לְךָ אֶת הָעֵינַיִם",
+      isCorrect: true,
+    }],
     selectedOptionId: null,
   };
   harness.app.advConj.renderAdvConjChoices(harness.state.advConj.currentQuestion);
   const buttons = harness.document.querySelector("#choiceContainer").querySelectorAll("button");
   buttons[0].click();
 
-  assert.deepEqual(harness.speechSpeakLog.map((entry) => entry.text), ["פתח לך את העיניים"]);
+  assert.equal(harness.speechSpeakLog.length, 1);
+  assert.equal(
+    harness.speechSpeakLog[0].text.normalize("NFD"),
+    "פָּתַח לְךָ אֶת הָעֵינַיִם".normalize("NFD"),
+  );
+});
+
+test("advanced conjugation niqqud toggle updates Hebrew prompts, choices, and locked feedback with legacy fallback", () => {
+  const harness = loadAppHarness([], [], [], {
+    idioms: [{ id: "pilot-idiom", english: "to open someone's eyes", showMeaning: false }],
+  });
+  const { app, document, state } = harness;
+  state.mode = "advConj";
+  state.advConj.active = true;
+
+  const he2en = {
+    idiomId: "pilot-idiom",
+    locked: false,
+    promptText: "פתח לי את העיניים",
+    promptNiqqud: "פָּתַח לִי אֶת הָעֵינַיִם",
+    promptIsHebrew: true,
+    correctAnswer: "he opened my eyes",
+    correctAnswerNiqqud: "",
+    correctAnswerIsHebrew: false,
+    options: [{ id: "correct", text: "he opened my eyes", textNiqqud: "", isCorrect: true }],
+    selectedOptionId: null,
+  };
+  state.advConj.currentQuestion = he2en;
+  state.showNiqqudInline = false;
+  app.advConj.renderAdvConjQuestion();
+  assert.equal(document.querySelector("#promptText").textContent, "פתח לי את העיניים");
+  state.showNiqqudInline = true;
+  app.advConj.renderAdvConjQuestion();
+  assert.equal(document.querySelector("#promptText").textContent, "פָּתַח לִי אֶת הָעֵינַיִם");
+
+  const en2he = {
+    idiomId: "pilot-idiom",
+    locked: true,
+    promptText: "he opened my eyes",
+    promptNiqqud: "",
+    promptIsHebrew: false,
+    correctAnswer: "פתח לי את העיניים",
+    correctAnswerNiqqud: "פָּתַח לִי אֶת הָעֵינַיִם",
+    correctAnswerIsHebrew: true,
+    options: [
+      {
+        id: "correct",
+        text: "פתח לי את העיניים",
+        textNiqqud: "פָּתַח לִי אֶת הָעֵינַיִם",
+        isCorrect: true,
+      },
+      {
+        id: "wrong",
+        text: "פתח לו את העיניים",
+        textNiqqud: "פָּתַח לוֹ אֶת הָעֵינַיִם",
+        isCorrect: false,
+      },
+    ],
+    selectedOptionId: "wrong",
+  };
+  state.advConj.currentQuestion = en2he;
+  app.advConj.renderAdvConjQuestion();
+  assert.equal(
+    document.querySelector("#choiceContainer").querySelectorAll("button")[0].textContent,
+    "פָּתַח לִי אֶת הָעֵינַיִם",
+  );
+  assert.match(getFeedbackText(document), /פָּתַח לִי אֶת הָעֵינַיִם/);
+
+  state.showNiqqudInline = false;
+  app.advConj.renderAdvConjQuestion();
+  assert.equal(
+    document.querySelector("#choiceContainer").querySelectorAll("button")[0].textContent,
+    "פתח לי את העיניים",
+  );
+  assert.match(getFeedbackText(document), /פתח לי את העיניים/);
+  assert.doesNotMatch(getFeedbackText(document), /[\u0591-\u05C7]/);
+
+  const legacy = {
+    ...en2he,
+    correctAnswerNiqqud: undefined,
+    options: en2he.options.map(({ textNiqqud, ...option }) => option),
+  };
+  state.showNiqqudInline = true;
+  state.advConj.currentQuestion = legacy;
+  app.advConj.renderAdvConjQuestion();
+  assert.equal(
+    document.querySelector("#choiceContainer").querySelectorAll("button")[0].textContent,
+    "פתח לי את העיניים",
+  );
+  assert.match(getFeedbackText(document), /פתח לי את העיניים/);
+});
+
+test("advanced conjugation mistake summaries prefer reviewed pointed answers", () => {
+  const harness = loadAppHarness([], [], [], {
+    idioms: [{ id: "pilot-idiom", english: "to open someone's eyes", showMeaning: false }],
+  });
+  const { app, state } = harness;
+  state.advConj.currentQuestion = {
+    idiomId: "pilot-idiom",
+    tense: "past",
+    subjectForm: "msg",
+    subjectLabel: "he",
+    objectKey: "1sg",
+    objectLabel: "me",
+    direction: "en2he",
+    locked: false,
+    promptText: "he opened my eyes",
+    promptIsHebrew: false,
+    correctAnswer: "פתח לי את העיניים",
+    correctAnswerNiqqud: "פָּתַח לִי אֶת הָעֵינַיִם",
+    correctAnswerIsHebrew: true,
+    options: [
+      { id: "correct", text: "פתח לי את העיניים", isCorrect: true },
+      { id: "wrong", text: "פתח לו את העיניים", isCorrect: false },
+    ],
+    selectedOptionId: "wrong",
+  };
+
+  app.advConj.applyAdvConjAnswer();
+
+  assert.equal(
+    app.advConj.buildAdvConjMistakeSummary()[0].primary,
+    "פָּתַח לִי אֶת הָעֵינַיִם",
+  );
 });
 
 test("verb match speaks only when the Hebrew card is selected first and shows the tip", async () => {

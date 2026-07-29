@@ -347,28 +347,8 @@ binyanBoard.startBinyanBoard = binyanBoard.startBinyanBoard || function startBin
   const s = getSession();
 
   app.speech?.cancel?.();
-  s.stopVerbMatchTimer?.();
-  s.stopLessonTimer?.();
-  s.stopSentenceBankTimer?.();
-  s.stopAbbreviationTimer?.();
-  s.stopWordMatchTimer?.();
-  s.clearLessonStartIntro?.();
-  s.clearSecondChanceIntro?.();
-  s.clearSentenceBankIntro?.();
-  s.clearVerbMatchIntro?.();
-  s.clearAbbreviationIntro?.();
-  s.clearWordMatchIntro?.();
-  s.clearAdvConjIntro?.();
-  s.clearBinyanBoardIntro?.();
-  s.resetAdvConjState?.();
-  s.clearHandwritingIntro?.();
-  app.handwriting?.resetHandwritingState?.();
-  app.wordMatch?.resetWordMatchState?.();
-  h.resetVerbMatchState?.();
-  h.resetAbbreviationState?.();
-  h.resetSentenceBankState?.();
+  s.resetAllModeSessions?.();
   s.clearSummaryState?.();
-  binyanBoard.resetBinyanBoardState();
   h.resetSessionScore?.();
   h.clearFeedback?.();
 

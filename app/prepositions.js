@@ -28,6 +28,104 @@ function getTriggers() {
   return Array.isArray(global.PREPOSITIONS) ? global.PREPOSITIONS : [];
 }
 
+function getVerbFormSpecs() {
+  return Array.isArray(global.PREPOSITION_VERB_FORMS) ? global.PREPOSITION_VERB_FORMS : [];
+}
+
+function getVerbLinks() {
+  return global.PREPOSITION_VERB_LINKS || {};
+}
+
+// Paradigms are looked up by seed-entry id, not deck id: a multi-sense verb is
+// split into one deck entry per sense but every sense shares one conjugation, so
+// the first entry under an id is representative. Cached because the deck is
+// rebuilt on every startPrepositions.
+let paradigmsByEntryId = null;
+
+function getParadigm(entryId) {
+  if (!paradigmsByEntryId) {
+    const runtimeDeck = getRuntime().verbFormDeck;
+    const deck = Array.isArray(runtimeDeck) && runtimeDeck.length
+      ? runtimeDeck
+      : (global.IvriQuestHebrewVerbs?.buildVerbConjugationDeck?.() || []);
+    paradigmsByEntryId = new Map();
+    for (const entry of deck) {
+      const key = String(entry?.id || "").replace(/--sense-\d+$/, "");
+      if (!key || paradigmsByEntryId.has(key)) continue;
+      const forms = new Map();
+      for (const form of entry.forms || []) {
+        if (form?.id) forms.set(form.id, form);
+      }
+      paradigmsByEntryId.set(key, forms);
+    }
+  }
+  return paradigmsByEntryId.get(entryId) || null;
+}
+
+function stripInfinitiveTo(text) {
+  return String(text || "").replace(/^to\s+/i, "");
+}
+
+// True when a verb subject and a drilled object cannot refer to different people,
+// so the frame would need a reflexive rather than a plain inflected preposition.
+//
+// Exact matches are the obvious case (חיכיתי לי wants חיכיתי לעצמי). First and
+// second person also collide across number, because their reference is fixed by
+// who is speaking: "we waited for me" and "I waited for us" are incoherent no
+// matter the context, since the singular is inside the plural. Third person does
+// not collide across number — "he waited for them" reads as disjoint reference
+// and is ordinary Hebrew — so only identical third-person pairs are excluded.
+prepositions.subjectCoreferencesObject = prepositions.subjectCoreferencesObject || function subjectCoreferencesObject(subjectKey, objectKey) {
+  if (!subjectKey || !objectKey) return false;
+  if (subjectKey === objectKey) return true;
+  const subjectPerson = String(subjectKey).charAt(0);
+  const objectPerson = String(objectKey).charAt(0);
+  if (subjectPerson !== objectPerson) return false;
+  return subjectPerson === "1" || subjectPerson === "2";
+};
+
+// One frame per Hebrew verb form this trigger is drilled in. A trigger with no
+// paradigm link — every adjective and expression, and the verbs whose present
+// form matches no stored paradigm — yields its single frozen frame with the
+// trigger's own infinitive gloss, which is the behaviour this game had before
+// conjugated frames existed.
+prepositions.buildTriggerFrames = prepositions.buildTriggerFrames || function buildTriggerFrames(trigger) {
+  const frozen = [{ he: trigger.he, heNiqqud: "", subject: "", en: trigger.en }];
+  const link = getVerbLinks()[trigger.id];
+  if (!link) return frozen;
+  const paradigm = getParadigm(link.entryId);
+  if (!paradigm) return frozen;
+
+  const base = stripInfinitiveTo(trigger.en);
+  const predicates = {
+    base,
+    future: `will ${base}`,
+    s3: link.s3 || base,
+    past: link.past || base,
+  };
+
+  // Deduped by Hebrew surface: several paradigms syncretize the forms this game
+  // uses — lamed-hey verbs spell present masculine and feminine singular alike
+  // (מחכה) — and two items with identical Hebrew and an identical answer differ
+  // only in flavour text, so they would dilute the queue without teaching more.
+  const frames = [];
+  const seenHe = new Set();
+  for (const spec of getVerbFormSpecs()) {
+    const form = paradigm.get(spec.formId);
+    if (!form?.valuePlain || seenHe.has(form.valuePlain)) continue;
+    const predicate = predicates[spec.key];
+    if (!predicate) continue;
+    seenHe.add(form.valuePlain);
+    frames.push({
+      he: form.valuePlain,
+      heNiqqud: form.valueNiqqud || "",
+      subject: spec.subject || "",
+      en: `${spec.pronoun} ${predicate}`,
+    });
+  }
+  return frames.length ? frames : frozen;
+};
+
 function sanitizeEnglishText(text) {
   return app.utils?.sanitizeEnglishDisplayText
     ? app.utils.sanitizeEnglishDisplayText(text)
@@ -43,20 +141,31 @@ prepositions.getObjectLabel = prepositions.getObjectLabel || function getObjectL
   return entry ? entry.en : objectKey;
 };
 
+prepositions.getPossessiveObjectLabel = prepositions.getPossessiveObjectLabel || function getPossessiveObjectLabel(objectKey) {
+  const entry = getObjects().find((object) => object.key === objectKey);
+  return entry?.poss || entry?.en || objectKey;
+};
+
 // A trigger may carry a `tail`: a fixed phrase that follows the blank, so the
 // inflected preposition can be drilled mid-sentence rather than only at the end.
 // Dative-experiencer expressions need this — in נמאס לי מהעבודה the slot worth
 // practising is the ל־ experiencer, and it sits before the מ־ source.
-prepositions.buildPromptText = prepositions.buildPromptText || function buildPromptText(trigger) {
-  return prepositions.joinTriggerParts(trigger, "____");
+// `frameHe` is the conjugated verb form for this item; it falls back to the
+// trigger's frozen form for triggers with no paradigm link.
+prepositions.buildPromptText = prepositions.buildPromptText || function buildPromptText(trigger, frameHe) {
+  return prepositions.joinTriggerParts(trigger, "____", frameHe);
 };
 
-prepositions.joinTriggerParts = prepositions.joinTriggerParts || function joinTriggerParts(trigger, middle) {
-  return [trigger.he, middle, trigger.tail].filter(Boolean).join(" ");
+prepositions.joinTriggerParts = prepositions.joinTriggerParts || function joinTriggerParts(trigger, middle, frameHe) {
+  return [frameHe || trigger.he, middle, trigger.tail].filter(Boolean).join(" ");
 };
 
-prepositions.buildEnglishHint = prepositions.buildEnglishHint || function buildEnglishHint(trigger, objectKey) {
-  return sanitizeEnglishText(String(trigger.en || "").replace(/\{o\}/g, prepositions.getObjectLabel(objectKey)));
+prepositions.buildEnglishHint = prepositions.buildEnglishHint || function buildEnglishHint(trigger, objectKey, frameEn) {
+  return sanitizeEnglishText(
+    String(frameEn || trigger.en || "")
+      .replace(/\{o\}/g, prepositions.getObjectLabel(objectKey))
+      .replace(/\{p\}/g, prepositions.getPossessiveObjectLabel(objectKey))
+  );
 };
 
 // Pure option builder: returns four shuffled options (one correct) for a
@@ -124,8 +233,12 @@ prepositions.getPrepositionsPromptSpeechPayload = prepositions.getPrepositionsPr
   // Speak only the trigger word, never the answer's preposition. A tail is not
   // spoken either: "נמאס מהעבודה" without its dative is a malformed sentence,
   // so reading the frame aloud without the blank would teach the wrong shape.
+  // Conjugated frames carry niqqud, which the TTS respelling table needs to
+  // disambiguate forms that share a consonantal skeleton (תחכה is both "she will
+  // wait" and "you (m.) will wait").
   return app.speech?.buildSpeechPayload?.({
     plain: question.triggerHe,
+    niqqud: question.triggerHeNiqqud || "",
     source: "prompt",
   }) || null;
 };
@@ -145,30 +258,37 @@ prepositions.buildPrepositionsDeck = prepositions.buildPrepositionsDeck || funct
   const objects = getObjects();
   for (const trigger of getTriggers()) {
     if (!getInflections()[trigger.prep]) continue;
-    for (const object of objects) {
-      const built = prepositions.buildPrepositionOptions(trigger.prep, object.key, shuffle);
-      if (!built) continue;
-      const answerPlain = prepositions.joinTriggerParts(trigger, built.correctForm.plain);
-      const answerNiqqud = prepositions.joinTriggerParts(trigger, built.correctForm.niqqud);
-      const prepBase = getInflections()[trigger.prep]?.base || trigger.prep;
-      deck.push({
-        triggerId: trigger.id,
-        triggerHe: trigger.he,
-        triggerTail: trigger.tail || "",
-        prepKey: trigger.prep,
-        prepBase,
-        objectKey: object.key,
-        objectLabel: prepositions.getObjectLabel(object.key),
-        promptText: prepositions.buildPromptText(trigger),
-        promptIsHebrew: true,
-        englishHint: prepositions.buildEnglishHint(trigger, object.key),
-        correctAnswer: built.correctForm.niqqud,
-        answerPlain,
-        answerNiqqud,
-        options: built.options,
-        selectedOptionId: null,
-        locked: false,
-      });
+    for (const frame of prepositions.buildTriggerFrames(trigger)) {
+      for (const object of objects) {
+        // This is the same failure the frozen dative-experiencer triggers had
+        // before their 2026-07-27 repair, reintroduced by conjugating the subject
+        // rather than baking it in.
+        if (prepositions.subjectCoreferencesObject(frame.subject, object.key)) continue;
+        const built = prepositions.buildPrepositionOptions(trigger.prep, object.key, shuffle);
+        if (!built) continue;
+        const answerPlain = prepositions.joinTriggerParts(trigger, built.correctForm.plain, frame.he);
+        const answerNiqqud = prepositions.joinTriggerParts(trigger, built.correctForm.niqqud, frame.he);
+        const prepBase = getInflections()[trigger.prep]?.base || trigger.prep;
+        deck.push({
+          triggerId: trigger.id,
+          triggerHe: frame.he,
+          triggerHeNiqqud: frame.heNiqqud || "",
+          triggerTail: trigger.tail || "",
+          prepKey: trigger.prep,
+          prepBase,
+          objectKey: object.key,
+          objectLabel: prepositions.getObjectLabel(object.key),
+          promptText: prepositions.buildPromptText(trigger, frame.he),
+          promptIsHebrew: true,
+          englishHint: prepositions.buildEnglishHint(trigger, object.key, frame.en),
+          correctAnswer: built.correctForm.niqqud,
+          answerPlain,
+          answerNiqqud,
+          options: built.options,
+          selectedOptionId: null,
+          locked: false,
+        });
+      }
     }
   }
   return typeof shuffle === "function" ? shuffle(deck) : deck;
@@ -194,22 +314,8 @@ prepositions.startPrepositions = prepositions.startPrepositions || function star
   const h = getHelpers();
   const s = getSession();
   app.speech?.cancel?.();
-  s.stopVerbMatchTimer?.();
-  s.stopLessonTimer?.();
-  s.stopAbbreviationTimer?.();
-  s.stopWordMatchTimer?.();
-  h.resetAbbreviationState?.();
-  s.clearAbbreviationIntro?.();
-  s.clearWordMatchIntro?.();
-  s.clearBinyanBoardIntro?.();
-  s.clearAdvConjIntro?.();
+  s.resetAllModeSessions?.();
   s.clearSummaryState?.();
-  app.wordMatch?.resetWordMatchState?.();
-  app.binyanBoard?.resetBinyanBoardState?.();
-  s.clearHandwritingIntro?.();
-  app.handwriting?.resetHandwritingState?.();
-  s.resetAdvConjState?.();
-  s.resetPrepositionsState?.();
   h.resetSessionScore?.();
   runtime.state.mode = "prepositions";
   runtime.state.route = "home";

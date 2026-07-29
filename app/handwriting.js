@@ -158,27 +158,7 @@ function resetCompetingSessions() {
   const h = getHelpers();
   const s = getSession();
   app.speech?.cancel?.();
-  s.stopVerbMatchTimer?.();
-  s.stopLessonTimer?.();
-  s.stopSentenceBankTimer?.();
-  s.stopAbbreviationTimer?.();
-  s.stopWordMatchTimer?.();
-  s.clearLessonStartIntro?.();
-  s.clearSecondChanceIntro?.();
-  s.clearSentenceBankIntro?.();
-  s.clearVerbMatchIntro?.();
-  s.clearAbbreviationIntro?.();
-  s.clearWordMatchIntro?.();
-  s.clearAdvConjIntro?.();
-  s.clearPrepositionsIntro?.();
-  s.clearBinyanBoardIntro?.();
-  s.resetAdvConjState?.();
-  s.resetPrepositionsState?.();
-  app.wordMatch?.resetWordMatchState?.();
-  app.binyanBoard?.resetBinyanBoardState?.();
-  h.resetVerbMatchState?.();
-  h.resetAbbreviationState?.();
-  h.resetSentenceBankState?.();
+  s.resetAllModeSessions?.();
   s.clearSummaryState?.();
   h.resetSessionScore?.();
 }
