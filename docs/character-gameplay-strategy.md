@@ -98,31 +98,77 @@ Abbreviations need explicit multi-owner routing; forcing every abbreviation into
 - Itamar: adaptive review of all abbreviation groups, weighted toward errors.
 - Unclear or genuinely cross-cutting items should route to two or more characters.
 
+## Balance after the practical-life routing
+
+Routing the orphaned shelves raised three characters and left the fourth where she was,
+so the measured spread widened rather than closed:
+
+| | before routing | after routing | after Inbal's tranche |
+|---|---|---|---|
+| Ido | 444 | 656 | 672 |
+| Inbal | 284 | 284 | 349 |
+| Ivri | 418 | 577 | 577 |
+| Inat | 458 | 524 | 524 |
+| spread | 1.6x | 2.3x | 1.9x |
+
+Routing alone widened the spread, and that was expected rather than a regression. Nothing
+was taken from Inbal, and none of the routed shelves are plausibly hers — she owns
+religion, folk practice, and ritual, and the orphans were home, food, bureaucracy,
+science, and philosophy. Evenness can only come from authoring her material, not from
+redistributing someone else's.
+
+**Parity is not the goal.** Do not author filler to make the numbers match, and do not
+"fix" the spread by routing `health`, `pharmacy_personal_care`, or the emotional shelves
+to Inbal. That scores well immediately and is the wrong answer: a learner drilling
+prescriptions and blood tests under her lens makes no sense. A character should own as
+much as its subject genuinely contains.
+
+The long-term goal is **comprehensive coverage of each character's own domain**, measured
+against what that domain actually holds rather than against the other characters. The
+spread is a symptom worth watching, not a target to hit — 1.9x with four coherent,
+well-covered characters beats 1.0x reached by padding.
+
 ## Implemented content ledger
 
 ### Ido baseline and verb expansion
 
 The existing colloquial tranche includes the newer LGBTQ+ and camp slang material and its related sentences. Preserve it as the current Ido content baseline.
 
-- Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories.
-- Sentences: the `colloquial` category plus the `whatsapp` style.
-- Conjugation verbs: 20 route entries, split four ways. Baseline — `להרוס` and `ללרלר`. Authored for him — `לרקוד`, `לבלות`, `לחפור`, `לזרום`, `לפרגן`, `להתחרפן`, `להתמזמז`, `להתלבט`, `לגנוח`. Routed from the shared pool — `לצאת`, `להיפגש`, `להתקשר`, `לשלוח`, `להזמין`, `לצחוק`, `להתלבש`, `להתרגש`. One sense of a shared paradigm — `לקלוט--sense-1`.
+- Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories, plus the practical-life shelves added later — `home_everyday_life`, `groceries_food`, and `everyday_survival_expanded` — for 401 cards. This document always assigned him practical Tel Aviv life, but the route table did not carry it until then. `cooking_utensils` and `cooking_verbs` stay shared: they are technique rather than street life.
+- Sentences: the `colloquial` category plus the `whatsapp` style. The `everyday` register is deliberately **not** his. Adding its 139 unrouted rows would put him at 56% of the whole sentence bank and blur the colloquial identity that distinguishes him.
+- Conjugation verbs: 30 route entries. The domestic tranche — `לבשל`, `לנקות`, `להדליק`,
+  `לכבות`, `לסדר`, `להתקלח`, `לגור`, `לטייל`, `לשבת`, `לקום` — arrived with the
+  practical-life vocabulary: the verbs an apartment runs on. `לישון` was left unowned
+  because Inbal already holds sleep through `להירדם` and `להתעורר`.
+- The original 20, split four ways. Baseline — `להרוס` and `ללרלר`. Authored for him — `לרקוד`, `לבלות`, `לחפור`, `לזרום`, `לפרגן`, `להתחרפן`, `להתמזמז`, `להתלבט`, `לגנוח`. Routed from the shared pool — `לצאת`, `להיפגש`, `להתקשר`, `לשלוח`, `להזמין`, `לצחוק`, `להתלבש`, `להתרגש`. One sense of a shared paradigm — `לקלוט--sense-1`.
 - The routed eight are his by **register**, not by topic: going out, making plans, texting, laughing, getting dressed to leave the house. They stay unowned by anyone else and simply weigh more during his missions. `לשיר` was considered and rejected on exactly this test — singing is not streetwise, and it is now Inbal's for sung prayer.
 - Five of the authored verbs are slang whose paradigms are template-derived rather than dictionary-attested; each discloses that in its `notes`.
 - `לגנוח` is a dictionary pa'al of ג-נ-ח, not slang; only its register is his.
 
 ### Inbal expansion
 
-- Vocabulary: 30 cards in `religion_magic_spirituality`, plus routed words that sit in other categories.
-- Sentences: 70 entries, `inbal_01` through `inbal_70`. The `inbal_51`–`inbal_70` batch deliberately targets two gaps — colloquial register (she had 1 colloquial row against 27 everyday) and Hebrew length, since the handwriting mode only draws sentences of 6–34 Hebrew letters. All 20 sit in 23–33 letters, taking her handwriting-eligible share from 37/50 to 57/70.
-- Conjugation verbs: 16 in total. Authored for her — `לברך`, `להתפלל`, `להאמין`, `לצום`, `לקדש`, `לטבול`, `לקלל`, `לנחש`, `להשביע`, `להתגייר`, with stored present, past, and future forms. Routed from the shared pool — `להיעלם`, `להיוולד`, `להיראות`, `להירדם`, `להתעורר`, `לשיר`: birth, disappearance, appearance, sleep, and liturgy are hers by subject rather than register.
+- Vocabulary: 138 cards in `religion_magic_spirituality`, plus routed words that sit
+  in other categories. The last 30 cover vows and oaths, mourning and memorial, the
+  liturgical rite, divination, and the folk-protection vocabulary her colloquial
+  sentences use.
+- Sentences: 95 entries, `inbal_01` through `inbal_95`. The `inbal_51`–`inbal_70` batch deliberately targets two gaps — colloquial register (she had 1 colloquial row against 27 everyday) and Hebrew length, since the handwriting mode only draws sentences of 6–34 Hebrew letters. All 20 sit in 23–33 letters, taking her handwriting-eligible share from 37/50 to 57/70.
+  The `inbal_71`–`inbal_95` batch targets colloquial register again: she sat at 11
+  colloquial rows against 33 everyday, so 16 of the 25 are colloquial and 8 are level 1,
+  a tier she had none of. All 25 fall in 22–29 Hebrew letters, well inside the
+  handwriting filter. Those 16 colloquial rows are deliberately multi-owner — Ido owns
+  the `colloquial` category, and a sentence about the evil eye is his register and her
+  subject at the same time.
+- Conjugation verbs: 24 in total. Authored for her — `לברך`, `להתפלל`, `להאמין`, `לצום`, `לקדש`, `לטבול`, `לקלל`, `לנחש`, `להשביע`, `להתגייר`, with stored present, past, and future forms. Routed from the shared pool — `להיעלם`, `להיוולד`, `להיראות`, `להירדם`, `להתעורר`, `לשיר`: birth, disappearance, appearance, sleep, and liturgy are hers by subject rather than register.
 - Coverage includes incantation bowls, Aramaic inscriptions, amulets, the evil eye, dream interpretation, dybbuks, prayer, mikveh, ex-religious identity, ritual practice, and careful distinctions between folklore and factual claims.
 
 ### Ivri expansion
 
 - Vocabulary: the six routed `work_business`, `technology_ai`, `finance_investing`,
   `technology_ai_expanded`, `business_finance_expanded`, and
-  `communication_mastery_expanded` categories — 176 cards.
+  `communication_mastery_expanded` categories, plus `bureaucracy`,
+  `scientific_analytical`, and `science_research_expanded` — 336 cards. Bureaucracy is
+  named in his blurb above and was simply never routed; the two science shelves follow
+  the abbreviation split, which already gives him the `Ideas, Science & Tech` bucket.
 - Sentences: the `professional` register.
 - Conjugation verbs: 23 route entries. `לעבוד`, `לתכנן`, `לנתח`, `לקנות`, `למכור`,
   `להחליט`, `לעדכן`, `לאשר`, plus a process tranche from the shared pool —
@@ -140,8 +186,10 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
 
 - Vocabulary: 30 cards in `literature_arts_cultural_history`, plus the routed
   `politics_society_expanded`, `legal_civic`, and `law_legal_systems_expanded`
-  categories, plus `תחרותי` and `ספורים` reached individually through
-  `vocabWords` — 234 cards in total. Both of those sit on someone else's shelf
+  categories, plus the abstract/philosophical shelves her academic register reads from —
+  `abstract_philosophy`, `philosophy_intellectual_expanded`,
+  `high_level_discourse_expanded`, and `abstract_concepts_expanded` — plus `תחרותי` and
+  `ספורים` reached individually through `vocabWords` — 300 cards in total. Both of those sit on someone else's shelf
   (`work_business` and the unrouted `core_advanced`) and were deliberately not
   re-shelved.
 - Sentences: 24 entries, `inat_01` through `inat_24`, plus the `formal` register.

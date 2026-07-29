@@ -253,8 +253,15 @@ const PREPOSITIONS = [
   { id: "prep-similar",   type: "adjective",  he: "דומה",    prep: "le", en: "similar to {o}" },
   { id: "prep-different", type: "adjective",  he: "שונה",    prep: "mi", en: "different from {o}" },
   { id: "prep-satisfied", type: "adjective",  he: "מרוצה",   prep: "mi", en: "satisfied with {o}" },
-  { id: "prep-care",      type: "expression", he: "אכפת לי", prep: "mi", en: "to care about {o}" },
-  { id: "prep-fedup",     type: "expression", he: "נמאס לי", prep: "mi", en: "to be fed up with {o}" },
+  // Dative-experiencer expressions. The slot worth drilling is the ל־
+  // experiencer, not the מ־ source, so these carry a `tail` and put the blank in
+  // the middle: "נמאס ____ מהעבודה". Freezing the experiencer at לי and rotating
+  // the source instead produced נמאס לי ממני / אכפת לי ממני, which are not just
+  // improbable but wrong — a source that coreferences the experiencer takes the
+  // reflexive (נמאס לי מעצמי). English glosses keep the object-form pronoun the
+  // {o} slot supplies, so they are phrased around the thing rather than the person.
+  { id: "prep-care",      type: "expression", he: "אכפת", prep: "le", tail: "מהתוצאה", en: "the result matters to {o}" },
+  { id: "prep-fedup",     type: "expression", he: "נמאס", prep: "le", tail: "מהעבודה", en: "work is getting old for {o}" },
   { id: "prep-bother",      type: "verb",      he: "מפריע",  prep: "le", en: "to bother {o}" },
   { id: "prep-tell",        type: "verb",      he: "מספר",   prep: "le", en: "to tell {o}" },
   { id: "prep-thank",       type: "verb",      he: "מודה",   prep: "le", en: "to thank {o}" },

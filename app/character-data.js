@@ -468,6 +468,13 @@ characterData.characters = characterData.characters || Object.freeze({
         "relationships_dating_expanded",
         "conversation_glue",
         "media_digital_life_expanded",
+        // Practical Tel Aviv life, which the strategy doc always gave him but
+        // the route table never carried. Groceries and the kitchen come with
+        // it; cooking_utensils and cooking_verbs stay shared because they are
+        // technique rather than street life.
+        "home_everyday_life",
+        "groceries_food",
+        "everyday_survival_expanded",
       ]),
       sentenceCategories: Object.freeze(["colloquial"]),
       sentenceStyles: Object.freeze(["whatsapp"]),
@@ -499,6 +506,19 @@ characterData.characters = characterData.characters || Object.freeze({
         // id, so קלטתי ("it clicked") weighs here while the signal and immigrant
         // senses of the same verb belong to Ivri and Inat.
         "character-verb-liklot--sense-1",
+        // The domestic tranche that comes with practical-life vocabulary: the
+        // verbs an apartment runs on. לישון stays unowned because Inbal already
+        // holds sleep through להירדם and להתעורר.
+        "advanced-verb-levashel",
+        "advanced-verb-lenakot",
+        "advanced-verb-lehadlik",
+        "starter-verb-lekhabot",
+        "advanced-verb-lesader",
+        "advanced-verb-lehitkaleach",
+        "starter-verb-lagur",
+        "advanced-verb-letayel",
+        "starter-verb-lashevet",
+        "common-verb-lakum",
       ]),
     }),
   }),
@@ -553,6 +573,19 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-leheradem",
         "advanced-verb-lehitorer",
         "common-verb-lashir",
+        // Second shared-pool tranche, hers by subject: petition and prayer,
+        // parting and mourning, inner feeling, ascent (עלייה לרגל, עליית נשמה),
+        // hearing a sign, breaking (the Lurianic שבירת הכלים), ritual caution,
+        // and return (חזרה בתשובה). לעלות is routed by sense, because its
+        // second sense is "to cost".
+        "common-verb-levakesh",
+        "advanced-verb-lehipared",
+        "common-verb-lehargish",
+        "common-verb-laalot--sense-1",
+        "common-verb-lishmoa",
+        "advanced-verb-lehishaver",
+        "advanced-verb-lehizaher",
+        "common-verb-lachzor",
       ]),
     }),
   }),
@@ -570,6 +603,12 @@ characterData.characters = characterData.characters || Object.freeze({
         "technology_ai_expanded",
         "business_finance_expanded",
         "communication_mastery_expanded",
+        // Bureaucracy is named in his blurb and was never routed. The two
+        // science shelves follow the abbreviation split, which already gives
+        // him the "Ideas, Science & Tech" bucket.
+        "bureaucracy",
+        "scientific_analytical",
+        "science_research_expanded",
       ]),
       sentenceCategories: Object.freeze(["professional"]),
       abbrBuckets: Object.freeze(["Civics, Law & Work", "Ideas, Science & Tech"]),
@@ -615,6 +654,12 @@ characterData.characters = characterData.characters || Object.freeze({
         "literature_arts_cultural_history",
         "legal_civic",
         "law_legal_systems_expanded",
+        // The academic/analytical register is already hers through the `formal`
+        // sentence bank; these are the shelves that register reads from.
+        "abstract_philosophy",
+        "philosophy_intellectual_expanded",
+        "high_level_discourse_expanded",
+        "abstract_concepts_expanded",
       ]),
       // Words on her lens that sit on someone else's shelf. תחרותי is a
       // work_business card Ivri also owns; ספורים is unrouted core_advanced and

@@ -132,7 +132,9 @@ test("binyan root data stays broad enough and fully authored", () => {
   const formIds = new Set();
   let playableFormCount = 0;
 
-  assert.equal(verbGameData.ROOTS.length, 35);
+  // 6 roots per session, so this is the number that decides how long the mode
+  // goes before it starts repeating. Raising it is a content decision.
+  assert.equal(verbGameData.ROOTS.length, 60);
 
   for (const root of verbGameData.ROOTS) {
     assert.ok(root.id);
@@ -166,7 +168,7 @@ test("binyan root data stays broad enough and fully authored", () => {
   }
 
   assert.ok(playableFormCount >= 65);
-  assert.ok(playableFormCount <= 200);
+  assert.ok(playableFormCount <= 400);
 });
 
 test("binyan root data keeps duplicate plain forms distinguishable", () => {

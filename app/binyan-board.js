@@ -9,6 +9,7 @@ const BINYAN_ROUND_ROOT_COUNT = 6;
 const TEACHING_POINT_KEYS = {
   "No metathesis — ל is not a sibilant, so the ת of hitpael stays put.": "binyan.teaching.noMetathesis",
   "Metathesis: ת and ס swap (התסדר → הסתדר) because the first radical is a sibilant.": "binyan.teaching.sibilantMetathesis",
+  "Metathesis: ת and ש swap (התשמע → השתמע) because the first radical is a sibilant.": "binyan.teaching.shinMetathesis",
   "Emphatic metathesis: ת swaps AND becomes ט after צ (התצלם → הצטלם).": "binyan.teaching.emphaticMetathesis",
   "Pi'el SLOT realized as polel (CoCeC) because the root is hollow.": "binyan.teaching.hollowFactitiveActive",
   "Pu'al slot realized as polal.": "binyan.teaching.hollowFactitivePassive",
@@ -18,6 +19,7 @@ const TEACHING_POINT_KEYS = {
   "The opening י stays a consonant after the ת, unlike the וֹ/וּ in נוֹשַׁב, הוֹשִׁיב, and הוּשַׁב.": "binyan.teaching.peYodConsonant",
   "Voiced-sibilant metathesis: the ת moves after the ז and hardens to ד (התזמן → הזדמן).": "binyan.teaching.voicedSibilantMetathesis",
   "פ\"ע guttural: the ע can't take a plain sheva, so it takes a hataf vowel and the prefix vowel shifts to match.": "binyan.teaching.peGuttural",
+  "פ\"ח guttural: the ח can't take a plain sheva, so it takes a hataf vowel and the prefix vowel shifts to match.": "binyan.teaching.peHetGuttural",
   "ל\"א quiescent alef: the final א is silent and takes no vowel of its own (מָצָא, נִמְצָא).": "binyan.teaching.lamedAlefQuiescent",
   "ע\"י but not hollow: the yod is a full consonant here, so this is a regular hitpa'el (הִתְקַיֵּם) — unlike hollow ק־ו־ם, which uses hitpolel (הִתְקוֹמֵם).": "binyan.teaching.ayinYodStrong",
   "Geminate (ע\"ע) hif'il: the doubled radical collapses, giving הֵסֵב (not הִסְבִּיב).": "binyan.teaching.geminateHifil",

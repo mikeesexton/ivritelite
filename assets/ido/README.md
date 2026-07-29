@@ -9,16 +9,18 @@ All runtime sprites use a transparent 512×512 canvas so changing reactions does
 | `celebrating.png` | Four or more correct answers and recovery after a miss |
 | `struggling.png` | Four or more wrong answers |
 | `mission-complete.png` | Final mission results |
-| `frustrated.png` | Preserved alternate negative reaction; currently unused |
-| `surprised-unused.png` | Preserved original top-center pose; intentionally unused |
+| `frustrated.png` | Alternate negative reaction |
 
-Each regenerated pose has a chroma-key source and a transparent source in `source/`.
-The six sheet-derived reactions were rebuilt individually so their shirts and
-silhouettes are natural rather than repaired with a shared mask. The approved
-`nervous-laugh.png` is intentionally excluded from the builder and remains
-unchanged.
+The six poses were generated as six independent square images. Each has a
+1254×1254 chroma-key source and transparent master in `source/`, named
+`<reaction>-chroma.png` and `<reaction>-transparent.png`. Sprite sheets, grids,
+and grid-derived crops are not production sources. The attached shirt mark is
+encoded as a 38×26 logical-pixel bitmap in `scripts/build-ido-sprites.py`,
+nearest-neighbor scaled to 114×78, and composited at a pose-specific chest
+position after each source is resized. This keeps the mark crisp and visibly
+pixelated without forcing one placement across six different torsos.
 
-Rebuild the six regenerated runtime PNGs with:
+Rebuild the six runtime PNGs with:
 
 ```sh
 python3 scripts/build-ido-sprites.py

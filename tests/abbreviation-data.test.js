@@ -243,7 +243,7 @@ test("political and identity expansion adds the high-value modern abbreviation s
   const deckIds = new Set(context.IvriQuestApp.abbreviation.prepareAbbreviationDeck(rows).map((entry) => entry.id));
   const expansion = Array.from({ length: 20 }, (_, index) => byId.get(`abbr-${210 + index}`));
 
-  assert.equal(rows.length, 228);
+  assert.equal(rows.length, 282);
   assert.equal(expansion.length, 20);
   assert.ok(expansion.every(Boolean));
   assert.ok(expansion.every((entry) => deckIds.has(entry.id)));
@@ -266,4 +266,42 @@ test("political and identity expansion adds the high-value modern abbreviation s
   assert.match(byId.get("abbr-224")?.english || "", /Hadash/);
   assert.equal(byId.get("abbr-228")?.expansionHe, "התאחדות הספרדים העולמית שומרי תורה");
   assert.equal(byId.get("abbr-229")?.expansionHe, "רק לא ביבי");
+});
+
+test("the everyday and measurement tranche deepens the two thinnest buckets", () => {
+  const context = loadAbbreviationContext();
+  const rows = context.IvriQuestAbbreviations.getAbbreviations();
+  const byId = new Map(rows.map((entry) => [entry.id, entry]));
+  const deckIds = new Set(context.IvriQuestApp.abbreviation.prepareAbbreviationDeck(rows).map((entry) => entry.id));
+  const tranche = Array.from({ length: 54 }, (_, index) => byId.get(`abbr-${230 + index}`));
+
+  assert.ok(tranche.every(Boolean), "abbr-230 through abbr-283 should all exist");
+  assert.ok(tranche.every((entry) => deckIds.has(entry.id)), "every new row should reach the deck");
+  // word-match truncates a long gloss, so keep them inside the card envelope
+  assert.ok(tranche.every((entry) => entry.english.length <= 40));
+  assert.ok(tranche.every((entry) => String(entry.notes || "").trim()), "every new row needs a note");
+
+  // Abbreviation Match serves 20 per session, so the playable pool size is what
+  // decides how long the mode runs before it starts repeating.
+  const playable = rows.filter((entry) => entry.availability?.abbreviationQuiz !== false);
+  assert.ok(playable.length >= 277, `only ${playable.length} playable abbreviations`);
+
+  // The batch deliberately targeted the two thinnest buckets.
+  const byBucket = rows.reduce((counts, entry) => {
+    counts[entry.bucket] = (counts[entry.bucket] || 0) + 1;
+    return counts;
+  }, {});
+  assert.ok(byBucket["Daily Life & Home"] >= 64);
+  assert.ok(byBucket["Ideas, Science & Tech"] >= 52);
+
+  // A vocalized row without provenance is the failure mode this file already
+  // guards globally; assert it here too so the tranche cannot regress alone.
+  tranche.filter((entry) => entry.expansionHeNiqqud).forEach((entry) => {
+    assert.match(String(entry.expansionHeNiqqudSource || ""), /^https?:\/\//, `${entry.id} needs a source`);
+  });
+
+  assert.equal(byId.get("abbr-230")?.expansionHe, "בדרך כלל");
+  assert.equal(byId.get("abbr-233")?.abbr, "עפ״י");
+  assert.equal(byId.get("abbr-242")?.expansionHe, "סך הכול");
+  assert.equal(byId.get("abbr-283")?.expansionHe, "תת אלוף");
 });

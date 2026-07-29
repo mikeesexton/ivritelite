@@ -254,25 +254,43 @@ test("sprite CSS and assets exist for every character reaction", () => {
   const { characterData } = loadCharacterModule();
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
   const reactions = ["neutral", "frustrated", "celebrating", "struggling", "mission-complete", "nervous-laugh"];
+  const expectedFiles = reactions.map((reaction) => `${reaction}.png`).sort();
 
   Object.keys(characterData.characters).forEach((id) => {
+    const assetDir = path.join(PROJECT_ROOT, "assets", id);
+    assert.deepEqual(
+      fs.readdirSync(assetDir).filter((name) => name.endsWith(".png")).sort(),
+      expectedFiles,
+      `${id} must expose exactly the standard six production sprites`,
+    );
     reactions.forEach((reaction) => {
       assert.match(css, new RegExp(
         `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png`,
         "s",
       ));
-      assert.equal(
-        fs.existsSync(path.join(PROJECT_ROOT, `assets/${id}/${reaction}.png`)),
-        true,
-        `assets/${id}/${reaction}.png is missing`,
-      );
+      const sprite = fs.readFileSync(path.join(assetDir, `${reaction}.png`));
+      assert.equal(sprite.subarray(1, 4).toString(), "PNG");
+      assert.equal(sprite.readUInt32BE(16), 512, `${id}/${reaction}.png width`);
+      assert.equal(sprite.readUInt32BE(20), 512, `${id}/${reaction}.png height`);
     });
   });
   assert.doesNotMatch(css, /ido-sprite/);
-  assert.match(
-    fs.readFileSync(path.join(PROJECT_ROOT, "scripts/build-ido-sprites.py"), "utf8"),
-    /regenerated-transparent\.png/,
+  const idoBuilder = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts/build-ido-sprites.py"),
+    "utf8",
   );
+  assert.match(
+    idoBuilder,
+    /f"\{name\}-transparent\.png"/,
+  );
+  assert.match(idoBuilder, /LOGO_SCALE = 3/);
+  reactions.forEach((reaction) => {
+    assert.match(
+      idoBuilder,
+      new RegExp(`"${reaction}": \\(\\d+, \\d+\\)`),
+      `${reaction} needs its own logo placement`,
+    );
+  });
 });
 
 test("character routing boosts owned content and stays neutral otherwise", () => {
@@ -1003,8 +1021,8 @@ test("every routed verb id resolves to a real conjugation deck entry", () => {
 
   // Ido's verb route is the one deliberately sized against the others, so a
   // silent trim or an accidental re-route should have to update this number.
-  assert.equal(characterData.characters.ido.route.verbIds.length, 20);
-  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 20);
+  assert.equal(characterData.characters.ido.route.verbIds.length, 30);
+  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 30);
 });
 
 test("a per-sense verb route reaches only that sense", () => {
