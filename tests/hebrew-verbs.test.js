@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 158);
+  assert.equal(entries.length, 162);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -632,6 +632,62 @@ test("Ido verbs expose verified pointed paradigms in conjugation", () => {
     assert.ok(item.forms.some((form) => form.valuePlain === pastForm), `${lemma} missing ${pastForm}`);
     assert.ok(item.forms.some((form) => form.valuePlain === futureForm), `${lemma} missing ${futureForm}`);
   });
+});
+
+test("the routed verb expansion exposes verified pointed paradigms", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  const modernSlotIds = verbApi.MATCH_FORM_ORDER.filter((id) => !id.startsWith("imperative_"));
+  // לגנוח and לקלוט carry no imperative, so slots are checked by id, not by count.
+  const expected = new Map([
+    ["character-verb-lignoach", { lemma: "לגנוח", past: "גנחנו", future: "אגנח" }],
+    ["character-verb-lehagish", { lemma: "להגיש", past: "הגשתי", future: "נגיש" }],
+    ["character-verb-liklot", { lemma: "לקלוט", past: "קלטתי", future: "אקלוט" }],
+    ["character-verb-lehaklit", { lemma: "להקליט", past: "הקלטנו", future: "נקליט" }],
+  ]);
+
+  expected.forEach(({ lemma, past, future }, id) => {
+    const seed = entries.find((entry) => entry.id === id);
+    const item = deck.find((entry) => entry.id === `${id}--sense-1`);
+    assert.ok(seed, `missing seed entry for ${id}`);
+    assert.equal(seed.lemma, lemma);
+    assert.ok(item, `missing conjugation item for ${id}`);
+    assert.equal(item.formSource, "authoritative");
+    modernSlotIds.forEach((slotId) => {
+      assert.ok(item.forms.some((form) => form.id === slotId), `${lemma} missing ${slotId}`);
+    });
+    assert.ok(item.forms.every((form) => /[֑-ׇ]/.test(form.valueNiqqud)));
+    assert.ok(item.forms.some((form) => form.valuePlain === past), `${lemma} missing ${past}`);
+    assert.ok(item.forms.some((form) => form.valuePlain === future), `${lemma} missing ${future}`);
+  });
+
+  // ל-guttural pa'al: patach where לסגור would take holam.
+  const groan = deck.find((entry) => entry.id === "character-verb-lignoach--sense-1");
+  assert.equal(groan.forms.find((form) => form.id === "present_feminine_singular")?.valueNiqqud, "גּוֹנַחַת");
+  assert.equal(groan.forms.find((form) => form.id === "future_first_person_singular")?.valueNiqqud, "אֶגְנַח");
+
+  // Pe-nun hif'il: the nun assimilates into a dagesh throughout.
+  const submit = deck.find((entry) => entry.id === "character-verb-lehagish--sense-1");
+  assert.equal(submit.forms.find((form) => form.id === "past_first_person_singular")?.valueNiqqud, "הִגַּשְׁתִּי");
+  assert.equal(submit.forms.find((form) => form.id === "past_third_person_masculine_singular")?.valueNiqqud, "הִגִּישׁ");
+
+  // One paradigm, three glosses, and out of Translation Match because all three
+  // senses share the surface לקלוט.
+  const absorb = deck.filter((entry) => entry.id.startsWith("character-verb-liklot--sense-"));
+  assert.deepEqual(
+    absorb.map((entry) => entry.word.en),
+    ["to catch on", "to pick up (a signal)", "to take in (immigrants)"],
+  );
+  absorb.forEach((entry) => {
+    assert.equal(entry.word.availability?.translationQuiz, false);
+    assert.equal(entry.word.availability?.sentenceHints, true);
+  });
+
+  // לבקר's two senses are told apart by what follows, so their cards do not
+  // collide on the matching board.
+  const review = deck.filter((entry) => entry.id.startsWith("advanced-verb-levaker--sense-"));
+  assert.deepEqual(review.map((entry) => entry.word.en), ["to visit (ב־)", "to criticize (את־)"]);
+  assert.deepEqual(review.map((entry) => entry.word.he), ["לבקר ב־", "לבקר את־"]);
 });
 
 // Regression: ENGLISH_PAST_IRREGULARS had no "hang", and pastPl only special-cased

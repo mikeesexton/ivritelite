@@ -13184,6 +13184,341 @@ const INBAL_SENTENCES = [
     englishDistractors: ["A secret", "that already", "was forgotten", "is different", "to a book"],
     notes: "The dictum is Talmudic, Berakhot 55a. It closes her dream-interpretation thread from the tradition's own side rather than from folk practice."
   }),
+  buildReviewedSentence({
+    id: "inbal_71", emoji: "🧿", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "שמתי חמסה בכניסה נגד עין הרע.",
+    hebrewNiqqud: "שַׂמְתִּי חַמְסָה בַּכְּנִיסָה נֶגֶד עַיִן הָרַע.",
+    english: "I put a hamsa at the entrance against the evil eye.",
+    hebrewTokenPairs: [["שמתי", "שַׂמְתִּי"], ["חמסה", "חַמְסָה"], ["בכניסה", "בַּכְּנִיסָה"], ["נגד", "נֶגֶד"], ["עין הרע", "עַיִן הָרַע"]],
+    englishTokens: ["I put", "a hamsa", "at the entrance", "against", "the evil eye"],
+    hebrewDistractorPairs: [["תליתי", "תָּלִיתִי"], ["מזוזה", "מְזוּזָה"], ["במטבח", "בַּמִּטְבָּח"], ["בלי", "בְּלִי"]],
+    englishDistractors: ["I hung", "a mezuzah", "in the kitchen", "without"],
+    notes: "חמסה is the hand-shaped amulet and עין הרע the evil eye. Both belong to folk practice rather than halakha, and both are ordinary household Hebrew."
+  }),
+  buildReviewedSentence({
+    id: "inbal_72", emoji: "🧶", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "קשרתי חוט אדום על היד לשמירה.",
+    hebrewNiqqud: "קָשַׁרְתִּי חוּט אָדֹם עַל הַיָּד לִשְׁמִירָה.",
+    english: "I tied a red string on my hand for protection.",
+    hebrewTokenPairs: [["קשרתי", "קָשַׁרְתִּי"], ["חוט", "חוּט"], ["אדום", "אָדֹם"], ["על", "עַל"], ["היד", "הַיָּד"], ["לשמירה", "לִשְׁמִירָה"]],
+    englishTokens: ["I tied", "a red", "string", "on", "my hand", "for protection"],
+    hebrewDistractorPairs: [["ענדתי", "עָנַדְתִּי"], ["שרוך", "שְׂרוֹךְ"], ["כחול", "כָּחֹל"], ["לברכה", "לִבְרָכָה"]],
+    englishDistractors: ["I wore", "a lace", "blue", "for a blessing"],
+    notes: "The red string from Rachel's Tomb is a widespread protective custom with no halakhic basis. לשמירה is the standard word for that protective purpose."
+  }),
+  buildReviewedSentence({
+    id: "inbal_73", emoji: "🔮", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אתמול היא קראה לי בקלפים בבית שלה.",
+    hebrewNiqqud: "אֶתְמוֹל הִיא קָרְאָה לִי בַּקְּלָפִים בַּבַּיִת שֶׁלָּהּ.",
+    english: "Yesterday she read the cards for me at her place.",
+    hebrewTokenPairs: [["אתמול", "אֶתְמוֹל"], ["היא", "הִיא"], ["קראה", "קָרְאָה"], ["לי", "לִי"], ["בקלפים", "בַּקְּלָפִים"], ["בבית שלה", "בַּבַּיִת שֶׁלָּהּ"]],
+    englishTokens: ["Yesterday", "she", "read", "the cards", "for me", "at her place"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["סירבה", "סֵרְבָה"], ["בקפה", "בַּקָּפֶה"], ["במרפאה", "בַּמִּרְפָּאָה"]],
+    englishDistractors: ["Tomorrow", "refused", "in the coffee", "at the clinic"],
+    hebrewOrderAlternates: [{
+      text: "היא קראה לי בקלפים בבית שלה אתמול.",
+      textNiqqud: "הִיא קָרְאָה לִי בַּקְּלָפִים בַּבַּיִת שֶׁלָּהּ אֶתְמוֹל.",
+      order: [1, 2, 3, 4, 5, 0],
+    }],
+    notes: "קריאה בקלפים is card reading. The same verb קרא covers reading a text and reading fortunes, which is why the preposition ב־ does the work here."
+  }),
+  buildReviewedSentence({
+    id: "inbal_74", emoji: "🙏", category: "everyday", difficulty: 1,
+    wordOrderDecision: "alternates",
+    hebrew: "סבתא שלי מברכת אותנו כל שבת.",
+    hebrewNiqqud: "סַבְתָּא שֶׁלִּי מְבָרֶכֶת אוֹתָנוּ כָּל שַׁבָּת.",
+    english: "My grandmother blesses us every Shabbat.",
+    hebrewTokenPairs: [["סבתא שלי", "סַבְתָּא שֶׁלִּי"], ["מברכת", "מְבָרֶכֶת"], ["אותנו", "אוֹתָנוּ"], ["כל שבת", "כָּל שַׁבָּת"]],
+    englishTokens: ["My grandmother", "blesses", "us", "every Shabbat"],
+    hebrewDistractorPairs: [["אימא שלי", "אִמָּא שֶׁלִּי"], ["מדליקה", "מַדְלִיקָה"], ["אותם", "אוֹתָם"], ["כל בוקר", "כָּל בֹּקֶר"]],
+    englishDistractors: ["My mother", "lights", "them", "every morning"],
+    hebrewOrderAlternates: [{
+      text: "כל שבת סבתא שלי מברכת אותנו.",
+      textNiqqud: "כָּל שַׁבָּת סַבְתָּא שֶׁלִּי מְבָרֶכֶת אוֹתָנוּ.",
+      order: [3, 0, 1, 2],
+    }],
+    notes: "The blessing over children on Shabbat is said at the table before kiddush, and grandparents commonly take it over when the family eats together."
+  }),
+  buildReviewedSentence({
+    id: "inbal_75", emoji: "🕯️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "הדלקנו נר נשמה לזכר סבא שלי אתמול.",
+    hebrewNiqqud: "הִדְלַקְנוּ נֵר נְשָׁמָה לְזֵכֶר סַבָּא שֶׁלִּי אֶתְמוֹל.",
+    english: "We lit a memorial candle in memory of my grandfather yesterday.",
+    hebrewTokenPairs: [["הדלקנו", "הִדְלַקְנוּ"], ["נר נשמה", "נֵר נְשָׁמָה"], ["לזכר", "לְזֵכֶר"], ["סבא שלי", "סַבָּא שֶׁלִּי"], ["אתמול", "אֶתְמוֹל"]],
+    englishTokens: ["We lit", "a memorial candle", "in memory of", "my grandfather", "yesterday"],
+    hebrewDistractorPairs: [["כיבינו", "כִּבִּינוּ"], ["נרות", "נֵרוֹת"], ["לכבוד", "לִכְבוֹד"], ["דוד שלי", "דּוֹד שֶׁלִּי"]],
+    englishDistractors: ["We put out", "candles", "in honor of", "my uncle"],
+    hebrewOrderAlternates: [{
+      text: "אתמול הדלקנו נר נשמה לזכר סבא שלי.",
+      textNiqqud: "אֶתְמוֹל הִדְלַקְנוּ נֵר נְשָׁמָה לְזֵכֶר סַבָּא שֶׁלִּי.",
+      order: [4, 0, 1, 2, 3],
+    }],
+    notes: "A נר נשמה burns for twenty-four hours on a yahrzeit and on memorial days. לזכר, in memory of, is the fixed phrase that goes with it."
+  }),
+  buildReviewedSentence({
+    id: "inbal_76", emoji: "🌳", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "היא נגעה בעץ כדי לא להביא עין הרע.",
+    hebrewNiqqud: "הִיא נָגְעָה בָּעֵץ כְּדֵי לֹא לְהָבִיא עַיִן הָרַע.",
+    english: "She touched wood so as not to bring the evil eye.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["נגעה", "נָגְעָה"], ["בעץ", "בָּעֵץ"], ["כדי לא", "כְּדֵי לֹא"], ["להביא", "לְהָבִיא"], ["עין הרע", "עַיִן הָרַע"]],
+    englishTokens: ["She", "touched", "wood", "so as not", "to bring", "the evil eye"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["דפקה", "דָּפְקָה"], ["בשולחן", "בַּשֻּׁלְחָן"], ["לגרש", "לְגָרֵשׁ"]],
+    englishDistractors: ["He", "knocked", "on the table", "to banish"],
+    notes: "Touching wood and saying בלי עין הרע are the two everyday gestures Israelis use against the evil eye, used well outside religious households."
+  }),
+  buildReviewedSentence({
+    id: "inbal_77", emoji: "📿", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הוא הלך לרב בירושלים כדי לקבל ברכה.",
+    hebrewNiqqud: "הוּא הָלַךְ לְרַב בִּירוּשָׁלַיִם כְּדֵי לְקַבֵּל בְּרָכָה.",
+    english: "He went to a rabbi in Jerusalem in order to get a blessing.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["הלך", "הָלַךְ"], ["לרב", "לְרַב"], ["בירושלים", "בִּירוּשָׁלַיִם"], ["כדי", "כְּדֵי"], ["לקבל", "לְקַבֵּל"], ["ברכה", "בְּרָכָה"]],
+    englishTokens: ["He", "went", "to a rabbi", "in Jerusalem", "in order", "to get", "a blessing"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["נסע", "נָסַע"], ["למקובל", "לִמְקֻבָּל"], ["בצפת", "בִּצְפַת"]],
+    englishDistractors: ["She", "travelled", "to a kabbalist", "in Safed"],
+    notes: "Visiting a rabbi or a מקובל for a blessing is common well beyond religious households, especially before exams, surgery, or army service."
+  }),
+  buildReviewedSentence({
+    id: "inbal_78", emoji: "🌙", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אמרו לי שאסור לספר חלום רע בבוקר.",
+    hebrewNiqqud: "אָמְרוּ לִי שֶׁאָסוּר לְסַפֵּר חֲלוֹם רַע בַּבֹּקֶר.",
+    english: "They told me that you must not tell a bad dream in the morning.",
+    hebrewTokenPairs: [["אמרו לי", "אָמְרוּ לִי"], ["שאסור", "שֶׁאָסוּר"], ["לספר", "לְסַפֵּר"], ["חלום", "חֲלוֹם"], ["רע", "רַע"], ["בבוקר", "בַּבֹּקֶר"]],
+    englishTokens: ["They told me", "that you must not", "tell", "a bad", "dream", "in the morning"],
+    hebrewDistractorPairs: [["שמעתי", "שָׁמַעְתִּי"], ["שמותר", "שֶׁמֻּתָּר"], ["לפתור", "לִפְתֹּר"], ["טוב", "טוֹב"]],
+    englishDistractors: ["I heard", "that it is permitted", "to interpret", "a good"],
+    notes: "Folk practice holds that telling a bad dream aloud can bring it about. The Talmudic remedy is הטבת חלום, a formal improving of the dream before three friends."
+  }),
+  buildReviewedSentence({
+    id: "inbal_79", emoji: "☕", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "היא קראה לי בקפה ואמרה שאתחתן בקרוב.",
+    hebrewNiqqud: "הִיא קָרְאָה לִי בַּקָּפֶה וְאָמְרָה שֶׁאֶתְחַתֵּן בְּקָרוֹב.",
+    english: "She read my coffee and said I would marry soon.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["קראה לי", "קָרְאָה לִי"], ["בקפה", "בַּקָּפֶה"], ["ואמרה", "וְאָמְרָה"], ["שאתחתן", "שֶׁאֶתְחַתֵּן"], ["בקרוב", "בְּקָרוֹב"]],
+    englishTokens: ["She", "read", "my coffee", "and said", "I would marry", "soon"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["ניחשה", "נִחֲשָׁה"], ["בכף יד", "בְּכַף יָד"], ["שאסע", "שֶׁאֶסַּע"]],
+    englishDistractors: ["He", "guessed", "my palm", "I would travel"],
+    notes: "Reading the grounds left in a Turkish-coffee cup is a Mizrahi and Balkan folk practice. קרא ב־ is the same verb used for reading a text."
+  }),
+  buildReviewedSentence({
+    id: "inbal_80", emoji: "🕍", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "בבית כנסת קטן מתפללים בנוסח תימני.",
+    hebrewNiqqud: "בְּבֵית כְּנֶסֶת קָטָן מִתְפַּלְּלִים בְּנֻסָּח תֵּימָנִי.",
+    english: "In a small synagogue they pray in a Yemenite rite.",
+    hebrewTokenPairs: [["בבית כנסת", "בְּבֵית כְּנֶסֶת"], ["קטן", "קָטָן"], ["מתפללים", "מִתְפַּלְּלִים"], ["בנוסח", "בְּנֻסָּח"], ["תימני", "תֵּימָנִי"]],
+    englishTokens: ["In a small", "synagogue", "they pray", "in a Yemenite", "rite"],
+    hebrewDistractorPairs: [["בישיבה", "בִּישִׁיבָה"], ["גדול", "גָּדוֹל"], ["לומדים", "לוֹמְדִים"], ["אשכנזי", "אַשְׁכְּנַזִּי"]],
+    englishDistractors: ["In a yeshiva", "large", "they study", "Ashkenazi"],
+    notes: "נוסח is the liturgical rite: the wording and melodies a congregation follows. תימני, ספרדי, and אשכנזי are the main ones in Israel."
+  }),
+  buildReviewedSentence({
+    id: "inbal_81", emoji: "🍀", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "המקובל אמר שיש לי מזל טוב השנה.",
+    hebrewNiqqud: "הַמְּקֻבָּל אָמַר שֶׁיֵּשׁ לִי מַזָּל טוֹב הַשָּׁנָה.",
+    english: "The kabbalist said that I have good luck this year.",
+    hebrewTokenPairs: [["המקובל", "הַמְּקֻבָּל"], ["אמר", "אָמַר"], ["שיש לי", "שֶׁיֵּשׁ לִי"], ["מזל", "מַזָּל"], ["טוב", "טוֹב"], ["השנה", "הַשָּׁנָה"]],
+    englishTokens: ["The kabbalist", "said", "that I have", "good", "luck", "this year"],
+    hebrewDistractorPairs: [["הרב", "הָרַב"], ["הבטיח", "הִבְטִיחַ"], ["שאין לי", "שֶׁאֵין לִי"], ["רע", "רַע"]],
+    englishDistractors: ["The rabbi", "promised", "that I have no", "bad"],
+    hebrewOrderAlternates: [{
+      text: "השנה המקובל אמר שיש לי מזל טוב.",
+      textNiqqud: "הַשָּׁנָה הַמְּקֻבָּל אָמַר שֶׁיֵּשׁ לִי מַזָּל טוֹב.",
+      order: [5, 0, 1, 2, 3, 4],
+    }],
+    notes: "A מקובל is a kabbalist consulted for blessings and advice. מזל is both the astrological sign and everyday luck, which is why the phrase works in both registers."
+  }),
+  buildReviewedSentence({
+    id: "inbal_82", emoji: "🐟", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "בראש השנה נהוג לאכול ראש של דג.",
+    hebrewNiqqud: "בְּרֹאשׁ הַשָּׁנָה נָהוּג לֶאֱכֹל רֹאשׁ שֶׁל דָּג.",
+    english: "On Rosh Hashanah it is customary to eat a head of fish.",
+    hebrewTokenPairs: [["בראש השנה", "בְּרֹאשׁ הַשָּׁנָה"], ["נהוג", "נָהוּג"], ["לאכול", "לֶאֱכֹל"], ["ראש", "רֹאשׁ"], ["של דג", "שֶׁל דָּג"]],
+    englishTokens: ["On Rosh Hashanah", "it is customary", "to eat", "a head", "of fish"],
+    hebrewDistractorPairs: [["ביום כיפור", "בְּיוֹם כִּפּוּר"], ["אסור", "אָסוּר"], ["לצום", "לָצוּם"], ["של כבש", "שֶׁל כֶּבֶשׂ"]],
+    englishDistractors: ["On Yom Kippur", "it is forbidden", "to fast", "of lamb"],
+    hebrewOrderAlternates: [{
+      text: "נהוג לאכול ראש של דג בראש השנה.",
+      textNiqqud: "נָהוּג לֶאֱכֹל רֹאשׁ שֶׁל דָּג בְּרֹאשׁ הַשָּׁנָה.",
+      order: [1, 2, 3, 4, 0],
+    }],
+    notes: "The simanim eaten on Rosh Hashanah are chosen for wordplay and omen. The fish head stands for לראש ולא לזנב, being at the head and not the tail."
+  }),
+  buildReviewedSentence({
+    id: "inbal_83", emoji: "🚪", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הוא עזב את הדת ואת הקהילה שלו.",
+    hebrewNiqqud: "הוּא עָזַב אֶת הַדָּת וְאֶת הַקְּהִלָּה שֶׁלּוֹ.",
+    english: "He left his religion and his community.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["עזב", "עָזַב"], ["את הדת", "אֶת הַדָּת"], ["ואת", "וְאֶת"], ["הקהילה שלו", "הַקְּהִלָּה שֶׁלּוֹ"]],
+    englishTokens: ["He", "left", "his religion", "and", "his community"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["מצאה", "מָצְאָה"], ["את האמונה", "אֶת הָאֱמוּנָה"], ["המשפחה שלו", "הַמִּשְׁפָּחָה שֶׁלּוֹ"]],
+    englishDistractors: ["She", "found", "her faith", "his family"],
+    notes: "יוצא בשאלה is the Hebrew term for someone who leaves Orthodox life, mirroring חוזר בתשובה for someone who becomes observant. This row states the act plainly."
+  }),
+  buildReviewedSentence({
+    id: "inbal_84", emoji: "🤲", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "היא מאמינה בקמעות אבל לא בקללות.",
+    hebrewNiqqud: "הִיא מַאֲמִינָה בִּקְמֵעוֹת אֲבָל לֹא בִּקְלָלוֹת.",
+    english: "She believes in amulets but not in curses.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["מאמינה", "מַאֲמִינָה"], ["בקמעות", "בִּקְמֵעוֹת"], ["אבל", "אֲבָל"], ["לא", "לֹא"], ["בקללות", "בִּקְלָלוֹת"]],
+    englishTokens: ["She", "believes", "in amulets", "but", "not", "in curses"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["צוחקת", "צוֹחֶקֶת"], ["בברכות", "בִּבְרָכוֹת"], ["בחלומות", "בַּחֲלוֹמוֹת"]],
+    englishDistractors: ["He", "laughs", "in blessings", "in dreams"],
+    notes: "קמע is an amulet and קללה a curse. Both belong to the same folk register even though the tradition treats them very differently."
+  }),
+  buildReviewedSentence({
+    id: "inbal_85", emoji: "🛐", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "הם טבלו במקווה לפני החתונה שלהם.",
+    hebrewNiqqud: "הֵם טָבְלוּ בַּמִּקְוֶה לִפְנֵי הַחֲתֻנָּה שֶׁלָּהֶם.",
+    english: "They immersed in the mikveh before their wedding.",
+    hebrewTokenPairs: [["הם", "הֵם"], ["טבלו", "טָבְלוּ"], ["במקווה", "בַּמִּקְוֶה"], ["לפני", "לִפְנֵי"], ["החתונה שלהם", "הַחֲתֻנָּה שֶׁלָּהֶם"]],
+    englishTokens: ["They", "immersed", "in the mikveh", "before", "their wedding"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["התפללו", "הִתְפַּלְּלוּ"], ["בבית כנסת", "בְּבֵית כְּנֶסֶת"], ["הלוויה", "הַלְוָיָה"]],
+    englishDistractors: ["She", "prayed", "in a synagogue", "the funeral"],
+    hebrewOrderAlternates: [{
+      text: "לפני החתונה שלהם הם טבלו במקווה.",
+      textNiqqud: "לִפְנֵי הַחֲתֻנָּה שֶׁלָּהֶם הֵם טָבְלוּ בַּמִּקְוֶה.",
+      order: [3, 4, 0, 1, 2],
+    }],
+    notes: "Immersion in a מקווה before a wedding is standard practice for brides and, in many communities, for grooms as well."
+  }),
+  buildReviewedSentence({
+    id: "inbal_86", emoji: "🤐", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אל תספרי לאף אחד עד שזה באמת יקרה.",
+    hebrewNiqqud: "אַל תְּסַפְּרִי לְאַף אֶחָד עַד שֶׁזֶּה בֶּאֱמֶת יִקְרֶה.",
+    english: "Do not tell anyone until it really happens.",
+    hebrewTokenPairs: [["אל תספרי", "אַל תְּסַפְּרִי"], ["לאף אחד", "לְאַף אֶחָד"], ["עד שזה", "עַד שֶׁזֶּה"], ["באמת", "בֶּאֱמֶת"], ["יקרה", "יִקְרֶה"]],
+    englishTokens: ["Do not tell", "anyone", "until it", "really", "happens"],
+    hebrewDistractorPairs: [["אל תגידי", "אַל תַּגִּידִי"], ["למישהו", "לְמִישֶׁהוּ"], ["כמעט", "כִּמְעַט"], ["נגמר", "נִגְמַר"]],
+    englishDistractors: ["Do not say", "to someone", "almost", "ended"],
+    notes: "Keeping good news quiet until it happens is the everyday form of avoiding עין הרע, and the reason people add בלי עין הרע when they do share it."
+  }),
+  buildReviewedSentence({
+    id: "inbal_87", emoji: "📖", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הרב פירש את החלום שלי אחרת לגמרי.",
+    hebrewNiqqud: "הָרַב פֵּרֵשׁ אֶת הַחֲלוֹם שֶׁלִּי אַחֶרֶת לְגַמְרֵי.",
+    english: "The rabbi interpreted my dream completely differently.",
+    hebrewTokenPairs: [["הרב", "הָרַב"], ["פירש", "פֵּרֵשׁ"], ["את החלום שלי", "אֶת הַחֲלוֹם שֶׁלִּי"], ["אחרת", "אַחֶרֶת"], ["לגמרי", "לְגַמְרֵי"]],
+    englishTokens: ["The rabbi", "interpreted", "my dream", "completely", "differently"],
+    hebrewDistractorPairs: [["המקובל", "הַמְּקֻבָּל"], ["שכח", "שָׁכַח"], ["את הסימן", "אֶת הַסִּימָן"], ["בדיוק", "בְּדִיּוּק"]],
+    englishDistractors: ["The kabbalist", "forgot", "the sign", "exactly"],
+    notes: "פירש is the verb for interpreting a text, a dream, or a sign — the same word across all three, which is why dream interpretation reads as a form of reading."
+  }),
+  buildReviewedSentence({
+    id: "inbal_88", emoji: "✋", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "יש לה חמסה קטנה של כסף על השרשרת.",
+    hebrewNiqqud: "יֵשׁ לָהּ חַמְסָה קְטַנָּה שֶׁל כֶּסֶף עַל הַשַּׁרְשֶׁרֶת.",
+    english: "She has a small silver hamsa on her necklace.",
+    hebrewTokenPairs: [["יש לה", "יֵשׁ לָהּ"], ["חמסה", "חַמְסָה"], ["קטנה", "קְטַנָּה"], ["של כסף", "שֶׁל כֶּסֶף"], ["על השרשרת", "עַל הַשַּׁרְשֶׁרֶת"]],
+    englishTokens: ["She has", "a small", "silver", "hamsa", "on her necklace"],
+    hebrewDistractorPairs: [["יש לו", "יֵשׁ לוֹ"], ["מזוזה", "מְזוּזָה"], ["גדולה", "גְּדוֹלָה"], ["של זהב", "שֶׁל זָהָב"]],
+    englishDistractors: ["He has", "a mezuzah", "large", "gold"],
+    notes: "The חמסה, a five-fingered hand, is worn as jewelry as often as it is hung at home. של כסף is the ordinary way to say what a thing is made of."
+  }),
+  buildReviewedSentence({
+    id: "inbal_89", emoji: "🔥", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "נדרנו נדר ולא קיימנו אותו בזמן.",
+    hebrewNiqqud: "נָדַרְנוּ נֶדֶר וְלֹא קִיַּמְנוּ אוֹתוֹ בַּזְּמַן.",
+    english: "We made a vow and did not keep it in time.",
+    hebrewTokenPairs: [["נדרנו", "נָדַרְנוּ"], ["נדר", "נֶדֶר"], ["ולא", "וְלֹא"], ["קיימנו", "קִיַּמְנוּ"], ["אותו", "אוֹתוֹ"], ["בזמן", "בַּזְּמַן"]],
+    englishTokens: ["We made", "a vow", "and did not", "keep", "it", "in time"],
+    hebrewDistractorPairs: [["הבטחנו", "הִבְטַחְנוּ"], ["שבועה", "שְׁבוּעָה"], ["וגם", "וְגַם"], ["שכחנו", "שָׁכַחְנוּ"]],
+    englishDistractors: ["We promised", "an oath", "and also", "forgot"],
+    notes: "A נדר is a binding vow. כל נדרי on Yom Kippur eve exists precisely to annul vows made and not kept, which is why the pairing is so idiomatic."
+  }),
+  buildReviewedSentence({
+    id: "inbal_90", emoji: "🧂", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "שמו מלח בפינות של החדר נגד רוחות.",
+    hebrewNiqqud: "שָׂמוּ מֶלַח בַּפִּנּוֹת שֶׁל הַחֶדֶר נֶגֶד רוּחוֹת.",
+    english: "They put salt in the corners of the room against spirits.",
+    hebrewTokenPairs: [["שמו", "שָׂמוּ"], ["מלח", "מֶלַח"], ["בפינות", "בַּפִּנּוֹת"], ["של החדר", "שֶׁל הַחֶדֶר"], ["נגד", "נֶגֶד"], ["רוחות", "רוּחוֹת"]],
+    englishTokens: ["They put", "salt", "in the corners", "of the room", "against", "spirits"],
+    hebrewDistractorPairs: [["תלו", "תָּלוּ"], ["שום", "שׁוּם"], ["בדלת", "בַּדֶּלֶת"], ["של הבית", "שֶׁל הַבַּיִת"]],
+    englishDistractors: ["They hung", "garlic", "in the door", "of the house"],
+    notes: "Salt and garlic in corners and doorways are protective folk remedies against harmful spirits, widespread across Jewish communities."
+  }),
+  buildReviewedSentence({
+    id: "inbal_91", emoji: "🙊", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "היא לחשה משהו בשקט ונגעה לי במצח.",
+    hebrewNiqqud: "הִיא לָחֲשָׁה מַשֶּׁהוּ בְּשֶׁקֶט וְנָגְעָה לִי בַּמֵּצַח.",
+    english: "She whispered something quietly and touched my forehead.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["לחשה", "לָחֲשָׁה"], ["משהו", "מַשֶּׁהוּ"], ["בשקט", "בְּשֶׁקֶט"], ["ונגעה לי", "וְנָגְעָה לִי"], ["במצח", "בַּמֵּצַח"]],
+    englishTokens: ["She", "whispered", "something", "quietly", "and touched", "my forehead"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["צעקה", "צָעֲקָה"], ["כלום", "כְּלוּם"], ["בכתף", "בַּכָּתֵף"]],
+    englishDistractors: ["He", "shouted", "nothing", "my shoulder"],
+    notes: "לחש is both the verb whispered and the noun for an incantation. The gesture belongs to folk healing against the evil eye."
+  }),
+  buildReviewedSentence({
+    id: "inbal_92", emoji: "📜", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "קבעו מזוזה בדלת של הדירה החדשה.",
+    hebrewNiqqud: "קָבְעוּ מְזוּזָה בַּדֶּלֶת שֶׁל הַדִּירָה הַחֲדָשָׁה.",
+    english: "They fixed a mezuzah on the door of the new apartment.",
+    hebrewTokenPairs: [["קבעו", "קָבְעוּ"], ["מזוזה", "מְזוּזָה"], ["בדלת", "בַּדֶּלֶת"], ["של", "שֶׁל"], ["הדירה", "הַדִּירָה"], ["החדשה", "הַחֲדָשָׁה"]],
+    englishTokens: ["They fixed", "a mezuzah", "on the door", "of", "the new", "apartment"],
+    hebrewDistractorPairs: [["הסירו", "הֵסִירוּ"], ["שלט", "שֶׁלֶט"], ["בחלון", "בַּחַלּוֹן"], ["הישנה", "הַיְשָׁנָה"]],
+    englishDistractors: ["They removed", "a sign", "on the window", "the old"],
+    notes: "קבע מזוזה is the fixed verb for affixing a mezuzah. It is done within thirty days of moving in, with a blessing."
+  }),
+  buildReviewedSentence({
+    id: "inbal_93", emoji: "✨", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "סבתא שלי אמרה שזה סימן טוב מאוד.",
+    hebrewNiqqud: "סַבְתָּא שֶׁלִּי אָמְרָה שֶׁזֶּה סִימָן טוֹב מְאֹד.",
+    english: "My grandmother said that this is a very good sign.",
+    hebrewTokenPairs: [["סבתא שלי", "סַבְתָּא שֶׁלִּי"], ["אמרה", "אָמְרָה"], ["שזה", "שֶׁזֶּה"], ["סימן", "סִימָן"], ["טוב", "טוֹב"], ["מאוד", "מְאֹד"]],
+    englishTokens: ["My grandmother", "said", "that this is", "a very", "good", "sign"],
+    hebrewDistractorPairs: [["דודה שלי", "דּוֹדָה שֶׁלִּי"], ["חשבה", "חָשְׁבָה"], ["שזאת", "שֶׁזֹּאת"], ["רע", "רַע"]],
+    englishDistractors: ["My aunt", "thought", "that that is", "bad"],
+    notes: "סימן covers omen and sign alike. Reading everyday events as signs is the register this whole tranche sits in."
+  }),
+  buildReviewedSentence({
+    id: "inbal_94", emoji: "👻", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הוא נשבע שראה שם רוח בבית הישן.",
+    hebrewNiqqud: "הוּא נִשְׁבַּע שֶׁרָאָה שָׁם רוּחַ בַּבַּיִת הַיָּשָׁן.",
+    english: "He swore that he saw a spirit there in the old house.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["נשבע", "נִשְׁבַּע"], ["שראה", "שֶׁרָאָה"], ["שם", "שָׁם"], ["רוח", "רוּחַ"], ["בבית", "בַּבַּיִת"], ["הישן", "הַיָּשָׁן"]],
+    englishTokens: ["He", "swore", "that he saw", "a spirit", "there", "in the old", "house"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["סיפר", "סִפֵּר"], ["צל", "צֵל"], ["בחדר", "בַּחֶדֶר"], ["החדש", "הֶחָדָשׁ"]],
+    englishDistractors: ["She", "told", "a shadow", "in the room", "the new"],
+    notes: "רוח is both wind and spirit. The ambiguity is why ghost stories in Hebrew lean on it so readily."
+  }),
+  buildReviewedSentence({
+    id: "inbal_95", emoji: "🤞", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "alternates",
+    hebrew: "בלי עין הרע, הכול הסתדר בסוף.",
+    hebrewNiqqud: "בְּלִי עַיִן הָרַע, הַכּוֹל הִסְתַּדֵּר בַּסּוֹף.",
+    english: "Without the evil eye, everything worked out in the end.",
+    hebrewTokenPairs: [["בלי", "בְּלִי"], ["עין הרע", "עַיִן הָרַע"], ["הכול", "הַכּוֹל"], ["הסתדר", "הִסְתַּדֵּר"], ["בסוף", "בַּסּוֹף"]],
+    englishTokens: ["Without", "the evil eye", "everything", "worked out", "in the end"],
+    hebrewDistractorPairs: [["עם", "עִם"], ["מזל רע", "מַזָּל רַע"], ["שום דבר", "שׁוּם דָּבָר"], ["בהתחלה", "בַּהַתְחָלָה"]],
+    englishDistractors: ["With", "misfortune", "nothing", "at the start"],
+    hebrewOrderAlternates: [{
+      text: "הכול הסתדר בסוף בלי עין הרע.",
+      textNiqqud: "הַכּוֹל הִסְתַּדֵּר בַּסּוֹף בְּלִי עַיִן הָרַע.",
+      order: [2, 3, 4, 0, 1],
+    }],
+    notes: "בלי עין הרע is the standard verbal ward said when reporting good news, so the row models both the phrase and the context it belongs to."
+  }),
 ];
 
 const INAT_SENTENCES = [
@@ -13525,9 +13860,239 @@ const INAT_SENTENCES = [
     englishDistractors: ["The speech", "hides", "a consensus", "beside"],
     notes: "נרטיב נגדי is a counter-narrative; הגמוני describes a dominant cultural account."
   }),
+  buildReviewedSentence({
+    id: "inat_25", emoji: "🎙️", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הקלטנו את העדות לארכיון.",
+    hebrewNiqqud: "הִקְלַטְנוּ אֶת הָעֵדוּת לָאַרְכִיּוֹן.",
+    english: "We recorded the testimony for the archive.",
+    hebrewTokenPairs: [["הקלטנו", "הִקְלַטְנוּ"], ["את העדות", "אֶת הָעֵדוּת"], ["לארכיון", "לָאַרְכִיּוֹן"]],
+    englishTokens: ["We recorded", "the testimony", "for the archive"],
+    hebrewDistractorPairs: [["תיעדנו", "תִּיעַדְנוּ"], ["את הנאום", "אֶת הַנְּאוּם"], ["לעיתון", "לָעִיתּוֹן"], ["מחקנו", "מָחַקְנוּ"]],
+    englishDistractors: ["We documented", "the speech", "for the newspaper", "We erased"],
+    notes: "להקליט is the hif'il of ק-ל-ט — the causative partner of לקלוט: קלט takes something in, הקליט commits it to a recording. עדות is testimony, the unit oral-history archives collect."
+  }),
 ];
 
-SENTENCE_BANK.push(...INBAL_SENTENCES, ...INAT_SENTENCES);
+// Sentences built around one lexical item each, so a word introduced in the
+// vocabulary or conjugation decks also appears in context. Ids are plain
+// `<bank>_<number>` rather than slugged, because the compact-token policy in
+// tests/sentence-bank-data.test.js only matches that shape — a slugged id would
+// silently opt out of the chip review.
+const LEXICAL_FOCUS_SENTENCES = [
+  buildReviewedSentence({
+    id: "colloquial_152", emoji: "🤷", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אני אומר את האמת בלי חרטות.",
+    hebrewNiqqud: "אֲנִי אוֹמֵר אֶת הָאֱמֶת בְּלִי חֲרָטוֹת.",
+    english: "I tell the truth with no regrets.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["אומר", "אוֹמֵר"], ["את האמת", "אֶת הָאֱמֶת"], ["בלי חרטות", "בְּלִי חֲרָטוֹת"]],
+    englishTokens: ["I", "tell", "the truth", "with no regrets"],
+    hebrewDistractorPairs: [["חושב", "חוֹשֵׁב"], ["שומע", "שׁוֹמֵעַ"], ["את השקר", "אֶת הַשֶּׁקֶר"], ["בלי בושה", "בְּלִי בּוּשָׁה"]],
+    englishDistractors: ["think", "hear", "the lie", "with no shame"],
+    notes: "בלי חרטות is the fixed expression 'no regrets.' חרטות is the plural of חֲרָטָה, regret; the singular בלי חרטה is not the idiom."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_153", emoji: "🚪", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אם זה לא עובד, עדיף לצאת בלי חרטות.",
+    hebrewNiqqud: "אִם זֶה לֹא עוֹבֵד, עָדִיף לָצֵאת בְּלִי חֲרָטוֹת.",
+    english: "If it does not work, it is better to leave with no regrets.",
+    hebrewTokenPairs: [["אם", "אִם"], ["זה", "זֶה"], ["לא עובד", "לֹא עוֹבֵד"], ["עדיף", "עָדִיף"], ["לצאת", "לָצֵאת"], ["בלי חרטות", "בְּלִי חֲרָטוֹת"]],
+    englishTokens: ["If", "it", "does not work", "it is better", "to leave", "with no regrets"],
+    hebrewDistractorPairs: [["כשזה", "כְּשֶׁזֶּה"], ["מסתבך", "מִסְתַּבֵּךְ"], ["אסור", "אָסוּר"], ["להישאר", "לְהִישָּׁאֵר"], ["בלי לחשוב", "בְּלִי לַחְשֹׁב"]],
+    englishDistractors: ["when it", "backfires", "it is forbidden", "to stay", "without thinking"],
+    hebrewOrderAlternates: [{
+      text: "עדיף לצאת בלי חרטות אם זה לא עובד.",
+      textNiqqud: "עָדִיף לָצֵאת בְּלִי חֲרָטוֹת אִם זֶה לֹא עוֹבֵד.",
+      order: [3, 4, 5, 0, 1, 2],
+    }],
+    notes: "The אם clause is neutral in either position, so both orders are accepted. עדיף plus an infinitive is the ordinary way to say 'it is better to.'"
+  }),
+  buildReviewedSentence({
+    id: "colloquial_154", emoji: "📱", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "מחקתי את האפליקציה בלי חרטות.",
+    hebrewNiqqud: "מָחַקְתִּי אֶת הָאַפְּלִיקַצְיָה בְּלִי חֲרָטוֹת.",
+    english: "I deleted the app with no regrets.",
+    hebrewTokenPairs: [["מחקתי", "מָחַקְתִּי"], ["את האפליקציה", "אֶת הָאַפְּלִיקַצְיָה"], ["בלי חרטות", "בְּלִי חֲרָטוֹת"]],
+    englishTokens: ["I deleted", "the app", "with no regrets"],
+    hebrewDistractorPairs: [["הורדתי", "הוֹרַדְתִּי"], ["את המשחק", "אֶת הַמִּשְׂחָק"], ["בלי היסוס", "בְּלִי הִיסּוּס"], ["פתחתי", "פָּתַחְתִּי"]],
+    englishDistractors: ["I downloaded", "the game", "without hesitation", "I opened"],
+    notes: "אפליקציה is the everyday word for a phone app. בלי חרטות attaches to the whole action rather than to a single word."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_155", emoji: "💡", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "לקח לי זמן לקלוט מה שהוא אמר.",
+    hebrewNiqqud: "לָקַח לִי זְמַן לִקְלוֹט מַה שֶּׁהוּא אָמַר.",
+    english: "It took me a while to catch on to what he said.",
+    hebrewTokenPairs: [["לקח לי", "לָקַח לִי"], ["זמן", "זְמַן"], ["לקלוט", "לִקְלוֹט"], ["מה שהוא אמר", "מַה שֶּׁהוּא אָמַר"]],
+    englishTokens: ["It took me", "a while", "to catch on", "to what he said"],
+    hebrewDistractorPairs: [["היה לי", "הָיָה לִי"], ["קשה", "קָשֶׁה"], ["להקשיב", "לְהַקְשִׁיב"], ["מה שהיא כתבה", "מַה שֶּׁהִיא כָּתְבָה"]],
+    englishDistractors: ["I found it", "hard", "to listen", "to what she wrote"],
+    notes: "לקלוט in the colloquial sense is 'to catch on' — the moment something clicks. Note מה שהוא, not מה הוא, for 'what he.'"
+  }),
+  buildReviewedSentence({
+    id: "colloquial_156", emoji: "❓", category: "colloquial", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "קלטת מה קרה שם?",
+    hebrewNiqqud: "קָלַטְתָּ מַה קָרָה שָׁם?",
+    english: "Did you catch on to what happened there?",
+    hebrewTokenPairs: [["קלטת", "קָלַטְתָּ"], ["מה קרה", "מַה קָרָה"], ["שם", "שָׁם"]],
+    englishTokens: ["Did you catch on", "to what happened", "there"],
+    hebrewDistractorPairs: [["שכחת", "שָׁכַחְתָּ"], ["מי היה", "מִי הָיָה"], ["איפה", "אֵיפֹה"], ["מתי", "מָתַי"]],
+    englishDistractors: ["Did you forget", "who was", "where", "when"],
+    notes: "קלטת? on its own is a very common check that the other person followed you. The masculine singular past is addressed to a man; קלטת is spelled the same for a woman but pointed קָלַטְתְּ."
+  }),
+  buildReviewedSentence({
+    id: "professional_85", emoji: "📶", category: "professional", difficulty: 1,
+    wordOrderDecision: "alternates",
+    hebrew: "במעלית הטלפון לא קולט.",
+    hebrewNiqqud: "בַּמַּעֲלִית הַטֶּלֶפוֹן לֹא קוֹלֵט.",
+    english: "In the elevator the phone does not pick up.",
+    hebrewTokenPairs: [["במעלית", "בַּמַּעֲלִית"], ["הטלפון", "הַטֶּלֶפוֹן"], ["לא קולט", "לֹא קוֹלֵט"]],
+    englishTokens: ["In the elevator", "the phone", "does not pick up"],
+    hebrewDistractorPairs: [["במרתף", "בַּמַּרְתֵּף"], ["המחשב", "הַמַּחְשֵׁב"], ["לא נטען", "לֹא נִטְעָן"], ["הרשת", "הָרֶשֶׁת"]],
+    englishDistractors: ["In the basement", "the computer", "does not charge", "the network"],
+    hebrewOrderAlternates: [{
+      text: "הטלפון לא קולט במעלית.",
+      textNiqqud: "הַטֶּלֶפוֹן לֹא קוֹלֵט בַּמַּעֲלִית.",
+      order: [1, 2, 0],
+    }],
+    notes: "קולט in the technical sense is picking up reception or a signal. The locative במעלית is equally neutral before or after the clause. The related noun is קליטה, reception."
+  }),
+  buildReviewedSentence({
+    id: "professional_86", emoji: "📥", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אתמול הגשנו את המכרז לוועדה.",
+    hebrewNiqqud: "אֶתְמוֹל הִגַּשְׁנוּ אֶת הַמִּכְרָז לַוַּעֲדָה.",
+    english: "Yesterday we submitted the tender to the committee.",
+    hebrewTokenPairs: [["אתמול", "אֶתְמוֹל"], ["הגשנו", "הִגַּשְׁנוּ"], ["את המכרז", "אֶת הַמִּכְרָז"], ["לוועדה", "לַוַּעֲדָה"]],
+    englishTokens: ["Yesterday", "we submitted", "the tender", "to the committee"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["ביטלנו", "בִּיטַּלְנוּ"], ["את החוזה", "אֶת הַחוֹזֶה"], ["למנהל", "לַמְּנַהֵל"]],
+    englishDistractors: ["Tomorrow", "we cancelled", "the contract", "to the manager"],
+    hebrewOrderAlternates: [
+      {
+        text: "הגשנו את המכרז לוועדה אתמול.",
+        textNiqqud: "הִגַּשְׁנוּ אֶת הַמִּכְרָז לַוַּעֲדָה אֶתְמוֹל.",
+        order: [1, 2, 3, 0],
+      },
+      {
+        text: "הגשנו אתמול את המכרז לוועדה.",
+        textNiqqud: "הִגַּשְׁנוּ אֶתְמוֹל אֶת הַמִּכְרָז לַוַּעֲדָה.",
+        order: [1, 0, 2, 3],
+      },
+    ],
+    notes: "להגיש is the hif'il of נ-ג-ש with the nun assimilated: הִגַּשְׁנוּ. It is the standard verb for filing paperwork — להגיש מכרז, בקשה, טופס, תלונה. אתמול is neutral in all three positions."
+  }),
+  buildReviewedSentence({
+    id: "professional_87", emoji: "🗂️", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "צריך להגיש את הטופס פעמיים בשנה.",
+    hebrewNiqqud: "צָרִיךְ לְהַגִּישׁ אֶת הַטֹּפֶס פַּעֲמַיִים בַּשָּׁנָה.",
+    english: "You need to submit the form twice a year.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["להגיש", "לְהַגִּישׁ"], ["את הטופס", "אֶת הַטֹּפֶס"], ["פעמיים", "פַּעֲמַיִים"], ["בשנה", "בַּשָּׁנָה"]],
+    englishTokens: ["You need", "to submit", "the form", "twice", "a year"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לחדש", "לְחַדֵּשׁ"], ["את הרישיון", "אֶת הָרִישָּׁיוֹן"], ["פעם", "פַּעַם"], ["בחודש", "בַּחֹדֶשׁ"]],
+    englishDistractors: ["You may", "to renew", "the license", "once", "a month"],
+    hebrewOrderAlternates: [{
+      text: "פעמיים בשנה צריך להגיש את הטופס.",
+      textNiqqud: "פַּעֲמַיִים בַּשָּׁנָה צָרִיךְ לְהַגִּישׁ אֶת הַטֹּפֶס.",
+      order: [3, 4, 0, 1, 2],
+    }],
+    notes: "Impersonal צריך plus an infinitive is the ordinary way to state an obligation with no named subject. The frequency phrase פעמיים בשנה is neutral at either end of the clause."
+  }),
+  buildReviewedSentence({
+    id: "professional_88", emoji: "🏁", category: "professional", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "המכרז הזה מאוד תחרותי.",
+    hebrewNiqqud: "הַמִּכְרָז הַזֶּה מְאוֹד תַּחֲרוּתִי.",
+    english: "This tender is very competitive.",
+    hebrewTokenPairs: [["המכרז", "הַמִּכְרָז"], ["הזה", "הַזֶּה"], ["מאוד", "מְאוֹד"], ["תחרותי", "תַּחֲרוּתִי"]],
+    englishTokens: ["This", "tender", "is very", "competitive"],
+    hebrewDistractorPairs: [["השוק", "הַשּׁוּק"], ["ההוא", "הַהוּא"], ["פחות", "פָּחוֹת"], ["רווחי", "רִווְחִי"]],
+    englishDistractors: ["that", "market", "is less", "profitable"],
+    hebrewOrderAlternates: [{
+      text: "המכרז הזה תחרותי מאוד.",
+      textNiqqud: "הַמִּכְרָז הַזֶּה תַּחֲרוּתִי מְאוֹד.",
+      order: [0, 1, 3, 2],
+    }],
+    notes: "תחרותי is the adjective from תַּחֲרוּת, competition. מאוד is neutral before or after the adjective, so both orders count."
+  }),
+  buildReviewedSentence({
+    id: "formal_78", emoji: "🗳️", category: "formal", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הבחירות האלה היו תחרותיות.",
+    hebrewNiqqud: "הַבְּחִירוֹת הָאֵלֶּה הָיוּ תַּחֲרוּתִיּוֹת.",
+    english: "These elections were competitive.",
+    hebrewTokenPairs: [["הבחירות", "הַבְּחִירוֹת"], ["האלה", "הָאֵלֶּה"], ["היו", "הָיוּ"], ["תחרותיות", "תַּחֲרוּתִיּוֹת"]],
+    englishTokens: ["These", "elections", "were", "competitive"],
+    hebrewDistractorPairs: [["ההפגנות", "הַהַפְגָּנוֹת"], ["ההן", "הָהֵן"], ["נראו", "נִרְאוּ"], ["שקטות", "שְׁקֵטוֹת"]],
+    englishDistractors: ["those", "protests", "seemed", "quiet"],
+    notes: "תחרותיות is the feminine plural of תחרותי, agreeing with בחירות. English 'competitive' never inflects, so the agreement has to be read off the Hebrew."
+  }),
+  buildReviewedSentence({
+    id: "formal_79", emoji: "⏳", category: "formal", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "שעות ספורות נותרו עד ההצבעה.",
+    hebrewNiqqud: "שָׁעוֹת סְפוּרוֹת נוֹתְרוּ עַד הַהַצְבָּעָה.",
+    english: "Only a few hours remain until the vote.",
+    hebrewTokenPairs: [["שעות", "שָׁעוֹת"], ["ספורות", "סְפוּרוֹת"], ["נותרו", "נוֹתְרוּ"], ["עד", "עַד"], ["ההצבעה", "הַהַצְבָּעָה"]],
+    englishTokens: ["Only a few", "hours", "remain", "until", "the vote"],
+    hebrewDistractorPairs: [["ימים", "יָמִים"], ["רבים", "רַבִּים"], ["עברו", "עָבְרוּ"], ["אחרי", "אַחֲרֵי"], ["הדיון", "הַדִּיּוּן"]],
+    englishDistractors: ["days", "many", "passed", "after", "the debate"],
+    hebrewOrderAlternates: [{
+      text: "נותרו שעות ספורות עד ההצבעה.",
+      textNiqqud: "נוֹתְרוּ שָׁעוֹת סְפוּרוֹת עַד הַהַצְבָּעָה.",
+      order: [2, 0, 1, 3, 4],
+    }],
+    notes: "ספורות is the feminine plural of ספור, literally 'counted' — it follows its noun and means 'only a few.' Both subject-first and verb-first orders are neutral with נותרו."
+  }),
+  buildReviewedSentence({
+    id: "everyday_139", emoji: "🪑", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אנשים ספורים הגיעו למפגש.",
+    hebrewNiqqud: "אֲנָשִׁים סְפוּרִים הִגִּיעוּ לַמִּפְגָּשׁ.",
+    english: "Only a few people came to the meetup.",
+    hebrewTokenPairs: [["אנשים", "אֲנָשִׁים"], ["ספורים", "סְפוּרִים"], ["הגיעו", "הִגִּיעוּ"], ["למפגש", "לַמִּפְגָּשׁ"]],
+    englishTokens: ["Only a few", "people", "came", "to the meetup"],
+    hebrewDistractorPairs: [["כל האורחים", "כָּל הָאוֹרְחִים"], ["איחרו", "אִיחֲרוּ"], ["לחתונה", "לַחֲתוּנָה"], ["הלכו", "הָלְכוּ"]],
+    englishDistractors: ["All the guests", "were late", "to the wedding", "left"],
+    notes: "ספורים is the masculine plural, agreeing with אנשים; compare the feminine ספורות in formal_79. The word is always plural in this sense and always follows its noun."
+  }),
+];
+
+// Rows for the שמועה card. The bank already had the plural השמועות in
+// colloquial_106; these teach the singular, indefinite and definite.
+const RUMOR_SENTENCES = [
+  buildReviewedSentence({
+    id: "colloquial_157", emoji: "🤫", category: "colloquial", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "שמעתי שמועה שהוא עוזב את העבודה.",
+    hebrewNiqqud: "שָׁמַעְתִּי שְׁמוּעָה שֶׁהוּא עוֹזֵב אֶת הָעֲבוֹדָה.",
+    english: "I heard a rumor that he is leaving the job.",
+    hebrewTokenPairs: [["שמעתי", "שָׁמַעְתִּי"], ["שמועה", "שְׁמוּעָה"], ["שהוא עוזב", "שֶׁהוּא עוֹזֵב"], ["את העבודה", "אֶת הָעֲבוֹדָה"]],
+    englishTokens: ["I heard", "a rumor", "that he is leaving", "the job"],
+    hebrewDistractorPairs: [["קראתי", "קָרָאתִי"], ["ידיעה", "יְדִיעָה"], ["שהיא נשארת", "שֶׁהִיא נִשְׁאֶרֶת"], ["את הדירה", "אֶת הַדִּירָה"]],
+    englishDistractors: ["I read", "a report", "that she is staying", "the apartment"],
+    notes: "שמועה shares its root with לשמוע, and שמעתי שמועה is the ordinary collocation — 'I heard a rumor.' The complementizer ש attaches to the following word: שהוא, never ש הוא."
+  }),
+  buildReviewedSentence({
+    id: "professional_89", emoji: "📰", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "השמועה על הפיטורים לא נכונה.",
+    hebrewNiqqud: "הַשְּׁמוּעָה עַל הַפִּטּוּרִים לֹא נְכוֹנָה.",
+    english: "The rumor about the layoffs is not true.",
+    hebrewTokenPairs: [["השמועה", "הַשְּׁמוּעָה"], ["על הפיטורים", "עַל הַפִּטּוּרִים"], ["לא נכונה", "לֹא נְכוֹנָה"]],
+    englishTokens: ["The rumor", "about the layoffs", "is not true"],
+    hebrewDistractorPairs: [["הידיעה", "הַיְּדִיעָה"], ["על הקיצוצים", "עַל הַקִּצּוּצִים"], ["לא מדויקת", "לֹא מְדֻיֶּקֶת"], ["התפרסמה", "הִתְפַּרְסְמָה"]],
+    englishDistractors: ["The report", "about the cuts", "is not accurate", "was published"],
+    notes: "השמועה ... לא נכונה is how a rumor gets denied in the workplace or the press. נכונה is feminine singular, agreeing with שמועה. The pointed הַפִּטּוּרִים drops the plene yod of the plain spelling הפיטורים."
+  }),
+];
+
+SENTENCE_BANK.push(...INBAL_SENTENCES, ...INAT_SENTENCES, ...LEXICAL_FOCUS_SENTENCES, ...RUMOR_SENTENCES);
 
 function cloneSentence(item) {
   return {
@@ -13548,6 +14113,6 @@ global.IvriQuestSentenceBank = {
   getFlexibleModifierTokens() {
     return [...HEBREW_FLEXIBLE_MODIFIER_TOKENS];
   },
-  __build: "20260726e",
+  __build: "20260728a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

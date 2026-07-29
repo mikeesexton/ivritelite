@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1650);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1596);
+  assert.equal(vocabulary.length, 1684);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1619);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -298,7 +298,7 @@ test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", ()
     ["literature_arts_cultural_history", ["ביקורת ספרות", "קריאה צמודה", "שיר מחאה", "זיכרון קולקטיבי", "תנועת הפועלים", "סאטירה"]],
   ]);
   const expectedCounts = new Map([
-    ["religion_magic_spirituality", 108],
+    ["religion_magic_spirituality", 138],
     ["literature_arts_cultural_history", 30],
   ]);
 
@@ -331,4 +331,105 @@ test("planned compound cards stay inside the narrow-mobile stress envelope", () 
 
   assert.ok(longestEnglish.en.length <= 20, `${longestEnglish.en} exceeds the English stress envelope`);
   assert.ok(longestHebrew.he.length <= 12, `${longestHebrew.he} exceeds the Hebrew stress envelope`);
+});
+
+test("the lexical-focus cards are playable, pointed, and free of gloss collisions", () => {
+  const vocabulary = loadVocabulary();
+  const expected = new Map([
+    ["תחרותי", { en: "competitive", category: "work_business", id: "work_business-087-competitive" }],
+    ["ספורים", { en: "just a handful", category: "core_advanced", id: "core_advanced-168-just-a-handful" }],
+    ["בלי חרטות", { en: "no regrets", category: "conversation_glue", id: "conversation_glue-098-no-regrets" }],
+  ]);
+
+  const hebrewCounts = new Map();
+  const englishCounts = new Map();
+  vocabulary.forEach((word) => {
+    hebrewCounts.set(word.he, (hebrewCounts.get(word.he) || 0) + 1);
+    englishCounts.set(word.en, (englishCounts.get(word.en) || 0) + 1);
+  });
+
+  expected.forEach((meta, hebrew) => {
+    const word = vocabulary.find((entry) => entry.he === hebrew);
+    assert.ok(word, `missing card for ${hebrew}`);
+    assert.equal(word.en, meta.en);
+    assert.equal(word.category, meta.category);
+    assert.equal(word.id, meta.id, `${hebrew} id must stay stable`);
+    assert.equal(word.availability?.translationQuiz, true);
+    assert.match(word.heNiqqud, /[ְ-ׇּׁׂ]/, `${hebrew} needs niqqud`);
+    // The matching board grades by pair id, so a shared surface or gloss would
+    // mark a correct answer wrong when both cards land on one board.
+    assert.equal(hebrewCounts.get(word.he), 1, `duplicate Hebrew card: ${word.he}`);
+    assert.equal(englishCounts.get(word.en), 1, `duplicate English card: ${word.en}`);
+  });
+});
+
+test("the rumor card is playable, pointed, and unique", () => {
+  const vocabulary = loadVocabulary();
+  const word = vocabulary.find((entry) => entry.he === "שמועה");
+
+  assert.ok(word, "missing card for שמועה");
+  assert.equal(word.en, "rumor");
+  assert.equal(word.category, "social_cultural");
+  assert.equal(word.id, "social_cultural-020-rumor", "שמועה id must stay stable");
+  assert.equal(word.heNiqqud, "שְׁמוּעָה");
+  assert.equal(word.availability?.translationQuiz, true);
+  assert.equal(vocabulary.filter((entry) => entry.he === word.he).length, 1);
+  assert.equal(vocabulary.filter((entry) => entry.en === word.en).length, 1);
+});
+
+// A card whose heNiqqud is just a copy of its plain form renders unpointed with
+// the nikud toggle on and gives the speech engine nothing to work with. 169
+// cards were in that state; this keeps the debt from creeping back.
+test("every vocabulary card carries real niqqud, apart from documented acronyms", () => {
+  const vocabulary = loadVocabulary();
+  const niqqudPattern = /[֑-ׇ]/;
+
+  // An acronym has no vowels of its own, so pointing it would be wrong rather
+  // than merely missing. Anything added here needs the same justification.
+  const ACRONYM_EXCEPTIONS = new Set(["אג״ח"]);
+
+  const unpointed = vocabulary.filter((word) => word.heNiqqud === word.he);
+  const unexpected = unpointed.filter((word) => !ACRONYM_EXCEPTIONS.has(word.he));
+  // Compared by length rather than deepEqual: loadVocabulary runs the source in
+  // a vm context, so arrays derived from it carry that realm's Array prototype
+  // and deepStrictEqual fails against a literal even when both are empty.
+  assert.equal(
+    unexpected.length,
+    0,
+    `these cards need real niqqud: ${unexpected.map((word) => `${word.id} (${word.he})`).join(", ")}`,
+  );
+
+  // Guard the other direction too: a heNiqqud that differs from he but carries
+  // no niqqud mark would be a typo rather than a vocalization.
+  vocabulary
+    .filter((word) => word.heNiqqud !== word.he)
+    .forEach((word) => {
+      assert.match(word.heNiqqud, niqqudPattern, `${word.id} heNiqqud has no niqqud mark`);
+    });
+
+  // Every listed exception must still exist, so a stale entry cannot hide a gap.
+  ACRONYM_EXCEPTIONS.forEach((he) => {
+    assert.ok(
+      vocabulary.some((word) => word.he === he && word.heNiqqud === word.he),
+      `stale acronym exception: ${he}`,
+    );
+  });
+});
+
+// Two playable cards sharing BOTH Hebrew and English can be drawn onto the same
+// Translation Match board, where the grader keys on pair id — so matching the
+// first Hebrew to the second English is marked wrong although it is correct.
+// Homographs with distinct glosses (אחריות, תור, הנחה) are fine and expected.
+test("no two playable cards share both their Hebrew and their English", () => {
+  const playable = loadVocabulary().filter((word) => word.availability?.translationQuiz);
+  const seen = new Map();
+  const collisions = [];
+
+  playable.forEach((word) => {
+    const key = `${word.he}\u0000${word.en}`;
+    if (seen.has(key)) collisions.push(`${word.he} / ${word.en}: ${seen.get(key)} + ${word.id}`);
+    else seen.set(key, word.id);
+  });
+
+  assert.equal(collisions.length, 0, `duplicate playable cards: ${collisions.join(" | ")}`);
 });

@@ -200,6 +200,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       teaching: {
         noMetathesis: "No spelling change here: ל is not a sibilant, so the ת stays in place.",
         sibilantMetathesis: "Because the root starts with ס, the ת moves after it: התסדר becomes הסתדר.",
+        shinMetathesis: "Because the root starts with ש, the ת moves after it: התשמע becomes השתמע.",
         emphaticMetathesis: "Because the root starts with צ, the ת moves and changes to ט: התצלם becomes הצטלם.",
         hollowFactitiveActive: "This hollow root uses a special intensive/causative pattern here.",
         hollowFactitivePassive: "This hollow root uses the matching passive pattern here.",
@@ -209,6 +210,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
         peYodConsonant: "The opening י stays a consonant after the ת, unlike the וֹ/וּ vowel in נושב, הושיב, and הושב.",
         voicedSibilantMetathesis: "Because the root starts with ז, the ת moves after it and changes to ד: התזמן becomes הזדמן.",
         peGuttural: "Because the root starts with the guttural ע, it cannot take a plain sheva: it takes a hataf vowel and the prefix vowel shifts to match (נעמד, העמיד, הועמד).",
+        peHetGuttural: "Because the root starts with the guttural ח, it cannot take a plain sheva: it takes a hataf vowel and the prefix vowel shifts to match (נחלק, החזיק, הוחזק).",
         lamedAlefQuiescent: "The final א is silent (ל\"א): it takes no vowel of its own, and the vowel before it lengthens — מצא, נמצא.",
         ayinYodStrong: "Although ק־י־ם is ע\"י, its yod acts as a full consonant, so the forms look regular (קִיֵּם, הִתְקַיֵּם) — unlike the hollow ק־ו־ם, which uses the special קוֹמֵם / הִתְקוֹמֵם patterns.",
         geminateHifil: "In a geminate (ע\"ע) root the doubled radical collapses, so the hif'il is הֵסֵב — not the expected הִסְבִּיב.",
@@ -641,6 +643,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       teaching: {
         noMetathesis: "אין כאן שינוי כתיב: ל אינה אות שורקת, ולכן ת נשארת במקום.",
         sibilantMetathesis: "מכיוון שהשורש מתחיל ב־ס, האות ת עוברת אחריה: התסדר הופך ל־הסתדר.",
+        shinMetathesis: "מכיוון שהשורש מתחיל ב־ש, האות ת עוברת אחריה: התשמע הופך ל־השתמע.",
         emphaticMetathesis: "מכיוון שהשורש מתחיל ב־צ, האות ת זזה והופכת ל־ט: התצלם הופך ל־הצטלם.",
         hollowFactitiveActive: "בשורש חלול כזה משתמשים כאן בתבנית פעילה מיוחדת.",
         hollowFactitivePassive: "בשורש חלול כזה משתמשים כאן בתבנית סבילה מיוחדת.",
@@ -650,6 +653,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
         peYodConsonant: "ה־י הפותחת נשארת עיצור אחרי ת, בניגוד לתנועת וֹ/וּ שב־נושב, הושיב והושב.",
         voicedSibilantMetathesis: "מכיוון שהשורש מתחיל ב־ז, האות ת עוברת אחריה והופכת ל־ד: התזמן הופך ל־הזדמן.",
         peGuttural: "מכיוון שהשורש מתחיל באות גרונית ע, היא אינה יכולה לקבל שווא רגיל: היא מקבלת חטף ותנועת התחילית משתנה בהתאם (נעמד, העמיד, הועמד).",
+        peHetGuttural: "מכיוון שהשורש מתחיל באות גרונית ח, היא אינה יכולה לקבל שווא רגיל: היא מקבלת חטף ותנועת התחילית משתנה בהתאם (נחלק, החזיק, הוחזק).",
         lamedAlefQuiescent: "האות א הסופית נחה (ל\"א): היא אינה מקבלת תנועה משלה, והתנועה שלפניה מתארכת — מצא, נמצא.",
         ayinYodStrong: "אף ש־ק־י־ם הוא שורש ע\"י, ה־י מתפקדת כעיצור מלא, ולכן הצורות נראות רגילות (קִיֵּם, הִתְקַיֵּם) — בניגוד לשורש החלול ק־ו־ם, שמשתמש בתבניות המיוחדות קוֹמֵם / הִתְקוֹמֵם.",
         geminateHifil: "בשורש כפול (ע\"ע) האות הכפולה נבלעת, ולכן ההפעיל הוא הֵסֵב — ולא הִסְבִּיב הצפוי.",

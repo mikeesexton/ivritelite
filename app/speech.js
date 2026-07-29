@@ -95,6 +95,15 @@ const TTS_RESPELLINGS = [
     pattern: /(^|[\s־("'])אָזְנ/g,
     replacement: "$1אוֹזְנ",
   },
+  // A vav that carries both a vowel and a dagesh is a doubled consonantal /v/
+  // (בַּוַּעֲדָה, צַוַּאר), but the he-IL voices read the geminate as /w/ —
+  // "ba-waada". Dropping the dagesh keeps the same letter and vowel and leaves
+  // the vav unambiguously consonantal. The vowel between ו and the dagesh is
+  // what separates these from shuruk (וּ), which must stay untouched.
+  {
+    pattern: /\u05d5([\u05b0-\u05b8\u05bb\u05c7])\u05bc/g,
+    replacement: "ו$1",
+  },
   // Kamatz directly before a chataf-kamatz syllable is always kamatz katan
   // (e.g. צָהֳרַיִם → צֹהֳרַיִם); the lookahead skips an intervening dagesh.
   {

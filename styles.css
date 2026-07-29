@@ -1417,9 +1417,12 @@ body[data-theme="light"] .sentence-answer-line {
   vertical-align: bottom;
 }
 
+/* Baseline, not flex-end: the slot's bottom padding and underline border sat
+   below its text, so punctuation aligned to the box bottom dropped ~6px under
+   the word and read as a stray period on the next line. */
 .sentence-piece {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: baseline;
   white-space: nowrap;
   vertical-align: bottom;
 }
@@ -2650,27 +2653,27 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 }
 
 .character-sprite[data-character="ido"][data-reaction="neutral"] {
-  background-image: url("./assets/ido/neutral.png?v=20260725f");
+  background-image: url("./assets/ido/neutral.png?v=20260728e");
 }
 
 .character-sprite[data-character="ido"][data-reaction="frustrated"] {
-  background-image: url("./assets/ido/frustrated.png?v=20260725f");
+  background-image: url("./assets/ido/frustrated.png?v=20260728e");
 }
 
 .character-sprite[data-character="ido"][data-reaction="celebrating"] {
-  background-image: url("./assets/ido/celebrating.png?v=20260725g");
+  background-image: url("./assets/ido/celebrating.png?v=20260728e");
 }
 
 .character-sprite[data-character="ido"][data-reaction="struggling"] {
-  background-image: url("./assets/ido/struggling.png?v=20260725f");
+  background-image: url("./assets/ido/struggling.png?v=20260728e");
 }
 
 .character-sprite[data-character="ido"][data-reaction="mission-complete"] {
-  background-image: url("./assets/ido/mission-complete.png?v=20260725f");
+  background-image: url("./assets/ido/mission-complete.png?v=20260728e");
 }
 
 .character-sprite[data-character="ido"][data-reaction="nervous-laugh"] {
-  background-image: url("./assets/ido/nervous-laugh.png?v=20260725f");
+  background-image: url("./assets/ido/nervous-laugh.png?v=20260728e");
 }
 
 .character-sprite[data-character="inbal"][data-reaction="neutral"] {
@@ -2935,6 +2938,11 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   font-size: clamp(1.1rem, 2.6vw, 1.45rem);
 }
 
+/* Keeps a glossed word and the punctuation after it on the same line. */
+.character-word-group {
+  white-space: nowrap;
+}
+
 .character-word {
   position: relative;
   display: inline;
@@ -3062,10 +3070,14 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   pointer-events: auto;
 }
 
-.character-companion--hidden {
+/* Doubled class on purpose: the narrow-screen `.character-companion` rule below
+   re-declares the two-column template, and a single class there would win on
+   source order — leaving a phantom sprite column that the drag clamp counted as
+   content and used to shove the toggle back toward the screen edge. */
+.character-companion.character-companion--hidden {
   width: auto;
   min-height: 30px;
-  grid-template-columns: auto;
+  grid-template-columns: max-content;
   grid-template-areas: "toggle";
 }
 
@@ -3540,10 +3552,6 @@ body[data-ui-lang="he"] .character-mission-copy {
     grid-column: 2;
     text-align: left;
   }
-}
-
-#resultsView.active {
-  padding-bottom: calc(5.75rem + env(safe-area-inset-bottom));
 }
 
 body[data-ui-locked="true"] {

@@ -53,7 +53,11 @@ function buildReport() {
   const vocab = loadInSandbox(["vocab-data.js"]).IvriQuestVocab.getBaseVocabulary();
   const sentences = loadInSandbox(["sentence-bank-data.js"]).IvriQuestSentenceBank.getSentenceBank();
   const abbreviations = loadInSandbox(["abbreviation-data.js"]).IvriQuestAbbreviations.getAbbreviations();
-  const verbs = loadInSandbox(["hebrew-verbs.js"]).IvriQuestHebrewVerbs.getSeedVerbEntries();
+  // The conjugation deck, not the seed entries: a route may name a single sense
+  // ("character-verb-liklot--sense-2"), and only deck ids carry the sense
+  // suffix. Counting entries would report a per-sense route as unrouted.
+  const verbs = loadInSandbox(["hebrew-verbs.js"]).IvriQuestHebrewVerbs
+    .buildVerbConjugationDeck({ vocabulary: [] });
 
   const pools = [
     { kind: "vocab", label: "Vocabulary", items: vocab },

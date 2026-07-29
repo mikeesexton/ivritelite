@@ -312,13 +312,10 @@ const IVRI_DIALOGUE = Object.freeze({
 // singular. Where masculine and feminine singular share a spelling (שלך, לך,
 // שקלת, אותך) the line stays single-variant rather than duplicated.
 const INAT_DIALOGUE = Object.freeze({
-  descriptionM: dialogue("פוליטיקה. משפטים. היסטוריה. תכיר את הפרופסורית.", {
-    פוליטיקה: "politics", משפטים: "law", היסטוריה: "history", תכיר: "meet",
-    את: "(object marker)", הפרופסורית: "the professor",
-  }),
-  descriptionF: dialogue("פוליטיקה. משפטים. היסטוריה. תכירי את הפרופסורית.", {
-    פוליטיקה: "politics", משפטים: "law", היסטוריה: "history", תכירי: "meet",
-    את: "(object marker)", הפרופסורית: "the professor",
+  // Ungendered like the other three cards: dropping תכיר/תכירי removes the only
+  // gendered word, so one line serves both.
+  description: dialogue("פוליטיקה. היסטוריה. הפרופסורית.", {
+    פוליטיקה: "politics", היסטוריה: "history", הפרופסורית: "the professor",
   }),
   first: dialogue("להימנע מפוליטיקה זה חכם. אבל להבין אותה זה חשוב. שנתחיל?", {
     להימנע: "to avoid", מפוליטיקה: "politics", זה: "is", חכם: "smart",
@@ -471,6 +468,13 @@ characterData.characters = characterData.characters || Object.freeze({
         "relationships_dating_expanded",
         "conversation_glue",
         "media_digital_life_expanded",
+        // Practical Tel Aviv life, which the strategy doc always gave him but
+        // the route table never carried. Groceries and the kitchen come with
+        // it; cooking_utensils and cooking_verbs stay shared because they are
+        // technique rather than street life.
+        "home_everyday_life",
+        "groceries_food",
+        "everyday_survival_expanded",
       ]),
       sentenceCategories: Object.freeze(["colloquial"]),
       sentenceStyles: Object.freeze(["whatsapp"]),
@@ -497,6 +501,24 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-litzchok",
         "advanced-verb-lehitlabesh",
         "advanced-verb-lehitragesh",
+        "character-verb-lignoach",
+        // One sense of a shared paradigm. The route matcher accepts a full deck
+        // id, so קלטתי ("it clicked") weighs here while the signal and immigrant
+        // senses of the same verb belong to Ivri and Inat.
+        "character-verb-liklot--sense-1",
+        // The domestic tranche that comes with practical-life vocabulary: the
+        // verbs an apartment runs on. לישון stays unowned because Inbal already
+        // holds sleep through להירדם and להתעורר.
+        "advanced-verb-levashel",
+        "advanced-verb-lenakot",
+        "advanced-verb-lehadlik",
+        "starter-verb-lekhabot",
+        "advanced-verb-lesader",
+        "advanced-verb-lehitkaleach",
+        "starter-verb-lagur",
+        "advanced-verb-letayel",
+        "starter-verb-lashevet",
+        "common-verb-lakum",
       ]),
     }),
   }),
@@ -542,6 +564,28 @@ characterData.characters = characterData.characters || Object.freeze({
         "character-verb-lenachesh",
         "character-verb-lehashbia",
         "character-verb-lehitgayer",
+        // Routed from the shared pool: birth, disappearance, appearance, sleep
+        // and liturgy are hers by subject rather than by register. לשיר was
+        // rejected for Ido as not streetwise; sung prayer makes it hers.
+        "advanced-verb-lehealem",
+        "advanced-verb-lehivaled",
+        "advanced-verb-leheraot",
+        "advanced-verb-leheradem",
+        "advanced-verb-lehitorer",
+        "common-verb-lashir",
+        // Second shared-pool tranche, hers by subject: petition and prayer,
+        // parting and mourning, inner feeling, ascent (עלייה לרגל, עליית נשמה),
+        // hearing a sign, breaking (the Lurianic שבירת הכלים), ritual caution,
+        // and return (חזרה בתשובה). לעלות is routed by sense, because its
+        // second sense is "to cost".
+        "common-verb-levakesh",
+        "advanced-verb-lehipared",
+        "common-verb-lehargish",
+        "common-verb-laalot--sense-1",
+        "common-verb-lishmoa",
+        "advanced-verb-lehishaver",
+        "advanced-verb-lehizaher",
+        "common-verb-lachzor",
       ]),
     }),
   }),
@@ -559,6 +603,12 @@ characterData.characters = characterData.characters || Object.freeze({
         "technology_ai_expanded",
         "business_finance_expanded",
         "communication_mastery_expanded",
+        // Bureaucracy is named in his blurb and was never routed. The two
+        // science shelves follow the abbreviation split, which already gives
+        // him the "Ideas, Science & Tech" bucket.
+        "bureaucracy",
+        "scientific_analytical",
+        "science_research_expanded",
       ]),
       sentenceCategories: Object.freeze(["professional"]),
       abbrBuckets: Object.freeze(["Civics, Law & Work", "Ideas, Science & Tech"]),
@@ -571,6 +621,24 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lehachlit",
         "advanced-verb-leadken",
         "advanced-verb-leasher",
+        "character-verb-lehagish",
+        "character-verb-lehaklit",
+        // Reception and input, not the colloquial "I got it" — see Ido's route.
+        "character-verb-liklot--sense-2",
+        // Routed from the shared pool: the process verbs a form, a contract, or
+        // a deadline runs on. His by register rather than by topic.
+        "advanced-verb-letaken",
+        "advanced-verb-lehishtamesh",
+        "advanced-verb-levatel",
+        "advanced-verb-letzaref",
+        "advanced-verb-levarer",
+        "advanced-verb-lehaskim",
+        "advanced-verb-lehaspik",
+        "advanced-verb-lehavhir",
+        "advanced-verb-lehazhir",
+        "advanced-verb-lehachzir",
+        "common-verb-leshalem",
+        "common-verb-livdok",
       ]),
     }),
   }),
@@ -586,6 +654,19 @@ characterData.characters = characterData.characters || Object.freeze({
         "literature_arts_cultural_history",
         "legal_civic",
         "law_legal_systems_expanded",
+        // The academic/analytical register is already hers through the `formal`
+        // sentence bank; these are the shelves that register reads from.
+        "abstract_philosophy",
+        "philosophy_intellectual_expanded",
+        "high_level_discourse_expanded",
+        "abstract_concepts_expanded",
+      ]),
+      // Words on her lens that sit on someone else's shelf. תחרותי is a
+      // work_business card Ivri also owns; ספורים is unrouted core_advanced and
+      // is hers by register — it is journalistic rather than conversational.
+      vocabWords: Object.freeze([
+        "תחרותי",
+        "ספורים",
       ]),
       // The academic/analytical register is hers; Ivri keeps `professional`.
       sentenceCategories: Object.freeze(["formal"]),
@@ -603,6 +684,25 @@ characterData.characters = characterData.characters || Object.freeze({
         "starter-verb-leshacharer",
         "common-verb-lesaper",
         "advanced-verb-lelamed",
+        // Shared with Ivri: he submits forms and tenders, she files complaints
+        // and objections; he records a meeting, she records an oral history.
+        "character-verb-lehagish",
+        "character-verb-lehaklit",
+        // קליטת עלייה as policy and history, not the colloquial sense.
+        "character-verb-liklot--sense-3",
+        // Only the criticism sense of לבקר; the visit sense stays unowned.
+        "advanced-verb-levaker--sense-2",
+        // Routed from the shared pool: reading, writing, memory, and argument.
+        "starter-verb-lichtov",
+        "common-verb-likro",
+        "common-verb-lizkor",
+        "common-verb-lishkoach",
+        "advanced-verb-lehishtatef",
+        "advanced-verb-leshanot",
+        "common-verb-lishol",
+        "common-verb-laanot",
+        "advanced-verb-lehasbir",
+        "common-verb-lehavin",
       ]),
     }),
   }),

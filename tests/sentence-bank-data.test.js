@@ -410,8 +410,20 @@ const POLITICAL_ENTRY_IDS = [
 ];
 
 const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
-const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 70).map((id) => id.replace(/_(\d)$/, "_0$1"));
-const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 24).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 95).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 25).map((id) => id.replace(/_(\d)$/, "_0$1"));
+// One-word-focus rows added alongside the תחרותי / ספורים / בלי חרטות cards and
+// the לקלוט, להגיש, להקליט conjugation entries. Registered here so the alignment
+// checks below cover them; the compact-token policy already does, via their
+// plain `<bank>_<number>` ids.
+const LEXICAL_FOCUS_ENTRY_IDS = [
+  ...sentenceIdRange("colloquial", 152, 156),
+  ...sentenceIdRange("professional", 85, 88),
+  ...sentenceIdRange("formal", 78, 79),
+  "everyday_139",
+];
+// Singular שמועה rows added alongside the rumor vocabulary card.
+const RUMOR_ENTRY_IDS = ["colloquial_157", "professional_89"];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -771,15 +783,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 556 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 596 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 556);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 556);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 556);
+  assert.equal(entries.length, 596);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 596);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 596);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -807,10 +819,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 174,
-    everyday: 175,
-    professional: 100,
-    formal: 107,
+    colloquial: 196,
+    everyday: 185,
+    professional: 105,
+    formal: 110,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -873,7 +885,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
 
-  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS, ...REQUESTED_ENTRY_IDS, ...INBAL_ENTRY_IDS, ...INAT_ENTRY_IDS].forEach((id) => {
+  [...EXPANSION_ENTRY_IDS, ...ROUND2_ENTRY_IDS, ...ROUND3_ENTRY_IDS, ...ROUND4_ENTRY_IDS, ...POLITICAL_ENTRY_IDS, ...REQUESTED_ENTRY_IDS, ...INBAL_ENTRY_IDS, ...INAT_ENTRY_IDS, ...LEXICAL_FOCUS_ENTRY_IDS, ...RUMOR_ENTRY_IDS].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
@@ -908,8 +920,8 @@ test("Inbal and Inat sentence tranches stay aligned and exercise their conjugati
   const inbal = INBAL_ENTRY_IDS.map((id) => byId.get(id));
   const inat = INAT_ENTRY_IDS.map((id) => byId.get(id));
 
-  assert.equal(inbal.length, 70);
-  assert.equal(inat.length, 24);
+  assert.equal(inbal.length, 95);
+  assert.equal(inat.length, 25);
   assert.ok([...inbal, ...inat].every(Boolean));
   [...inbal, ...inat].forEach((entry) => {
     assert.equal(entry.hebrew_tokens.length, entry.english_tokens.length, `${entry.id} bilingual target count`);

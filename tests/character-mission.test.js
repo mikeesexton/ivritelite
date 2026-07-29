@@ -179,7 +179,10 @@ test("approved character copy and gender labels come from the registry", () => {
   assert.equal(ivri.mission.text, "סגרנו את הסיבוב בהצלחה. מחר חוזרים לעבוד.");
   assert.equal(ivri.abbreviationsM.text, "זמן זה משאב יקר. קיצורים יביאו אותנו לדדליין. בוא נתחיל.");
   const inat = characterData.characters.inat.dialogue;
-  assert.equal(inat.descriptionM.text, "פוליטיקה. משפטים. היסטוריה. תכיר את הפרופסורית.");
+  // Ungendered like the other three: dropping תכיר/תכירי leaves no gendered word.
+  assert.equal(inat.description.text, "פוליטיקה. היסטוריה. הפרופסורית.");
+  assert.equal(inat.descriptionM, undefined);
+  assert.equal(inat.descriptionF, undefined);
   assert.equal(inat.first.text, "להימנע מפוליטיקה זה חכם. אבל להבין אותה זה חשוב. שנתחיל?");
   assert.equal(inat.fourWrong.text, "אולי כדאי להתחיל טיוטה חדשה.");
   assert.equal(inat.perfect.text, "עבודה יוצאת מן הכלל. רמת דוקטורט. שקלת לימודי משפטים?");
@@ -251,25 +254,43 @@ test("sprite CSS and assets exist for every character reaction", () => {
   const { characterData } = loadCharacterModule();
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
   const reactions = ["neutral", "frustrated", "celebrating", "struggling", "mission-complete", "nervous-laugh"];
+  const expectedFiles = reactions.map((reaction) => `${reaction}.png`).sort();
 
   Object.keys(characterData.characters).forEach((id) => {
+    const assetDir = path.join(PROJECT_ROOT, "assets", id);
+    assert.deepEqual(
+      fs.readdirSync(assetDir).filter((name) => name.endsWith(".png")).sort(),
+      expectedFiles,
+      `${id} must expose exactly the standard six production sprites`,
+    );
     reactions.forEach((reaction) => {
       assert.match(css, new RegExp(
         `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png`,
         "s",
       ));
-      assert.equal(
-        fs.existsSync(path.join(PROJECT_ROOT, `assets/${id}/${reaction}.png`)),
-        true,
-        `assets/${id}/${reaction}.png is missing`,
-      );
+      const sprite = fs.readFileSync(path.join(assetDir, `${reaction}.png`));
+      assert.equal(sprite.subarray(1, 4).toString(), "PNG");
+      assert.equal(sprite.readUInt32BE(16), 512, `${id}/${reaction}.png width`);
+      assert.equal(sprite.readUInt32BE(20), 512, `${id}/${reaction}.png height`);
     });
   });
   assert.doesNotMatch(css, /ido-sprite/);
-  assert.match(
-    fs.readFileSync(path.join(PROJECT_ROOT, "scripts/build-ido-sprites.py"), "utf8"),
-    /regenerated-transparent\.png/,
+  const idoBuilder = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts/build-ido-sprites.py"),
+    "utf8",
   );
+  assert.match(
+    idoBuilder,
+    /f"\{name\}-transparent\.png"/,
+  );
+  assert.match(idoBuilder, /LOGO_SCALE = 3/);
+  reactions.forEach((reaction) => {
+    assert.match(
+      idoBuilder,
+      new RegExp(`"${reaction}": \\(\\d+, \\d+\\)`),
+      `${reaction} needs its own logo placement`,
+    );
+  });
 });
 
 test("character routing boosts owned content and stays neutral otherwise", () => {
@@ -954,6 +975,23 @@ test("vocabWords routes words that live outside the character's own category", (
   assert.equal(character.getContentWeight("vocab", { he: "חילוני", category: "social_cultural" }), 1);
 });
 
+test("Inat's vocabWords reach cards that sit on someone else's shelf", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "inat", mission: { active: true } };
+
+  // תחרותי lives in work_business, which Ivri owns by category; ספורים lives in
+  // the unrouted core_advanced. Neither is re-shelved — both are reached by word.
+  assert.ok(character.getContentWeight("vocab", { he: "תחרותי", category: "work_business" }) > 1);
+  assert.ok(character.getContentWeight("vocab", { he: "ספורים", category: "core_advanced" }) > 1);
+  // An unlisted neighbour in the same borrowed category stays neutral.
+  assert.equal(character.getContentWeight("vocab", { he: "פער יישום", category: "work_business" }), 1);
+
+  // Ivri keeps תחרותי through the category route, so it is genuinely shared.
+  app.runtime.characterState.dailyChoice = "ivri";
+  assert.ok(character.getContentWeight("vocab", { he: "תחרותי", category: "work_business" }) > 1);
+  assert.equal(character.getContentWeight("vocab", { he: "ספורים", category: "core_advanced" }), 1);
+});
+
 test("every routed verb id resolves to a real conjugation deck entry", () => {
   const { characterData } = loadCharacterModule();
   const verbContext = { console };
@@ -971,9 +1009,11 @@ test("every routed verb id resolves to a real conjugation deck entry", () => {
   Object.values(characterData.characters).forEach((entry) => {
     (entry.route.verbIds || []).forEach((verbId) => {
       // A routed id that never reaches the deck is dead weight: the boost can
-      // never fire, and a malformed paradigm drops a verb silently.
+      // never fire, and a malformed paradigm drops a verb silently. A route may
+      // name a whole entry (matched through its first sense) or one deck id
+      // directly, which is how a shared paradigm splits between characters.
       assert.ok(
-        deckIds.has(`${verbId}--sense-1`),
+        deckIds.has(verbId) || deckIds.has(`${verbId}--sense-1`),
         `${entry.id} routes ${verbId} but it is not in the conjugation deck`,
       );
     });
@@ -981,8 +1021,30 @@ test("every routed verb id resolves to a real conjugation deck entry", () => {
 
   // Ido's verb route is the one deliberately sized against the others, so a
   // silent trim or an accidental re-route should have to update this number.
-  assert.equal(characterData.characters.ido.route.verbIds.length, 18);
-  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 18);
+  assert.equal(characterData.characters.ido.route.verbIds.length, 30);
+  assert.equal(new Set(characterData.characters.ido.route.verbIds).size, 30);
+});
+
+test("a per-sense verb route reaches only that sense", () => {
+  const { character, characterData, app } = loadCharacterModule();
+
+  // לקלוט is one paradigm whose senses belong to three different companions.
+  assert.ok(characterData.characters.ido.route.verbIds.includes("character-verb-liklot--sense-1"));
+  assert.ok(characterData.characters.ivri.route.verbIds.includes("character-verb-liklot--sense-2"));
+  assert.ok(characterData.characters.inat.route.verbIds.includes("character-verb-liklot--sense-3"));
+
+  app.runtime.characterState = { dailyChoice: "ivri", mission: { active: true } };
+  assert.ok(character.getContentWeight("verb", { id: "character-verb-liklot--sense-2" }) > 1);
+  // The colloquial and immigration senses must stay neutral for him.
+  assert.equal(character.getContentWeight("verb", { id: "character-verb-liklot--sense-1" }), 1);
+  assert.equal(character.getContentWeight("verb", { id: "character-verb-liklot--sense-3" }), 1);
+  // A whole-entry route still covers every sense of that entry.
+  assert.ok(character.getContentWeight("verb", { id: "character-verb-lehaklit--sense-1" }) > 1);
+
+  // לבקר's criticism sense is Inat's; its visit sense stays unowned.
+  app.runtime.characterState.dailyChoice = "inat";
+  assert.ok(character.getContentWeight("verb", { id: "advanced-verb-levaker--sense-2" }) > 1);
+  assert.equal(character.getContentWeight("verb", { id: "advanced-verb-levaker--sense-1" }), 1);
 });
 
 function createStubElement(tag) {

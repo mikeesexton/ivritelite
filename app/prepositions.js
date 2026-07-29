@@ -43,8 +43,16 @@ prepositions.getObjectLabel = prepositions.getObjectLabel || function getObjectL
   return entry ? entry.en : objectKey;
 };
 
+// A trigger may carry a `tail`: a fixed phrase that follows the blank, so the
+// inflected preposition can be drilled mid-sentence rather than only at the end.
+// Dative-experiencer expressions need this — in נמאס לי מהעבודה the slot worth
+// practising is the ל־ experiencer, and it sits before the מ־ source.
 prepositions.buildPromptText = prepositions.buildPromptText || function buildPromptText(trigger) {
-  return `${trigger.he} ____`;
+  return prepositions.joinTriggerParts(trigger, "____");
+};
+
+prepositions.joinTriggerParts = prepositions.joinTriggerParts || function joinTriggerParts(trigger, middle) {
+  return [trigger.he, middle, trigger.tail].filter(Boolean).join(" ");
 };
 
 prepositions.buildEnglishHint = prepositions.buildEnglishHint || function buildEnglishHint(trigger, objectKey) {
@@ -113,7 +121,9 @@ prepositions.buildPrepositionOptions = prepositions.buildPrepositionOptions || f
 
 prepositions.getPrepositionsPromptSpeechPayload = prepositions.getPrepositionsPromptSpeechPayload || function getPrepositionsPromptSpeechPayload(question = getRuntime().state.prepositions.currentQuestion) {
   if (!question?.triggerHe) return null;
-  // Speak only the trigger word, never the answer's preposition.
+  // Speak only the trigger word, never the answer's preposition. A tail is not
+  // spoken either: "נמאס מהעבודה" without its dative is a malformed sentence,
+  // so reading the frame aloud without the blank would teach the wrong shape.
   return app.speech?.buildSpeechPayload?.({
     plain: question.triggerHe,
     source: "prompt",
@@ -138,12 +148,13 @@ prepositions.buildPrepositionsDeck = prepositions.buildPrepositionsDeck || funct
     for (const object of objects) {
       const built = prepositions.buildPrepositionOptions(trigger.prep, object.key, shuffle);
       if (!built) continue;
-      const answerPlain = `${trigger.he} ${built.correctForm.plain}`;
-      const answerNiqqud = `${trigger.he} ${built.correctForm.niqqud}`;
+      const answerPlain = prepositions.joinTriggerParts(trigger, built.correctForm.plain);
+      const answerNiqqud = prepositions.joinTriggerParts(trigger, built.correctForm.niqqud);
       const prepBase = getInflections()[trigger.prep]?.base || trigger.prep;
       deck.push({
         triggerId: trigger.id,
         triggerHe: trigger.he,
+        triggerTail: trigger.tail || "",
         prepKey: trigger.prep,
         prepBase,
         objectKey: object.key,

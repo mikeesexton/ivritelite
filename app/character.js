@@ -385,11 +385,30 @@ function renderDialogue(target, entry, className = "character-dialogue") {
   line.className = className;
   line.dir = "rtl";
 
-  const pattern = /[א-ת]+(?:[׳״"'][א-ת]+)*/g;
+  // The optional trailing geresh keeps loanwords whose affricate sits at the end
+  // of the word — פיץ׳, בראנץ׳ — in one token, so their gloss keys still match.
+  // A medial geresh or gershayim (הרמ״ט, ג׳ינס) is covered by the inner group.
+  const pattern = /[א-ת]+(?:[׳״"'][א-ת]+)*[׳״]?/g;
   let lastIndex = 0;
+  // A glossed word is a button, and a line can break between that button and
+  // the punctuation right after it, which left a lone "." on its own line.
+  // Each button gets a nowrap group that swallows the punctuation next to it.
+  let group = null;
+  const appendBetweenWords = (text) => {
+    if (!text) return;
+    const attached = group ? /^\S+/.exec(text) : null;
+    if (attached) {
+      group.append(global.document.createTextNode(attached[0]));
+    }
+    const rest = attached ? text.slice(attached[0].length) : text;
+    if (rest) {
+      line.append(global.document.createTextNode(rest));
+    }
+    group = null;
+  };
   for (const match of entry.text.matchAll(pattern)) {
     if (match.index > lastIndex) {
-      line.append(global.document.createTextNode(entry.text.slice(lastIndex, match.index)));
+      appendBetweenWords(entry.text.slice(lastIndex, match.index));
     }
     const word = match[0];
     const gloss = entry.glosses[word] || "";
@@ -413,14 +432,18 @@ function renderDialogue(target, entry, className = "character-dialogue") {
         glossNode.classList.toggle("hidden", !willOpen);
         button.setAttribute("aria-expanded", String(willOpen));
       });
-      line.append(button);
+      group = global.document.createElement("span");
+      group.className = "character-word-group";
+      group.append(button);
+      line.append(group);
     } else {
       line.append(global.document.createTextNode(word));
+      group = null;
     }
     lastIndex = match.index + word.length;
   }
   if (lastIndex < entry.text.length) {
-    line.append(global.document.createTextNode(entry.text.slice(lastIndex)));
+    appendBetweenWords(entry.text.slice(lastIndex));
   }
 
   wrap.append(line);
@@ -475,7 +498,10 @@ function renderPicker(target) {
   heading.className = "character-scene-heading";
   const title = global.document.createElement("h2");
   title.id = "characterSceneTitle";
-  title.textContent = uiText("Choose today’s character", "בוחרים דמות להיום");
+  // The English line is deliberately not a translation of the Hebrew: the
+  // Hebrew asks "who do you feel like today?", the English keeps the
+  // pick-your-fighter joke.
+  title.textContent = uiText("Choose your character", "מי בא לך היום?");
   heading.append(title);
 
   const cards = global.document.createElement("div");
@@ -1668,12 +1694,38 @@ character.recordAnswer = character.recordAnswer || function recordAnswer(isCorre
   character.renderCompanion();
 };
 
+// Hiding the sprite collapses the companion's box, and the box is anchored by
+// its top-left corner, so the toggle used to jump up and to the left — to where
+// the sprite had been — instead of staying under the finger that just tapped it.
+// Re-anchor the companion on the button's own centre so the button holds still.
+function holdVisibilityToggleInPlace(before) {
+  const runtime = getRuntime();
+  const context = getReactionContext();
+  const companion = runtime.el?.characterCompanion;
+  const toggle = runtime.el?.characterVisibilityToggle;
+  if (!before || !context || !companion || !toggle) return;
+
+  const after = toggle.getBoundingClientRect();
+  const dx = before.x - (after.left + after.width / 2);
+  const dy = before.y - (after.top + after.height / 2);
+  if (!dx && !dy) return;
+
+  const rect = companion.getBoundingClientRect();
+  context.companionPosition = { x: rect.left + dx, y: rect.top + dy };
+  applyCompanionPosition(companion, context);
+}
+
 character.toggleVisibility = character.toggleVisibility || function toggleVisibility() {
   const context = getReactionContext();
   if (!context) return;
+  const toggleRect = getRuntime().el?.characterVisibilityToggle?.getBoundingClientRect?.();
+  const before = toggleRect
+    ? { x: toggleRect.left + toggleRect.width / 2, y: toggleRect.top + toggleRect.height / 2 }
+    : null;
   context.visible = context.visible === false;
-  saveState();
   character.renderCompanion();
+  holdVisibilityToggleInPlace(before);
+  saveState();
 };
 
 function pauseMissionTimers() {

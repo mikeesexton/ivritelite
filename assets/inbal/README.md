@@ -19,9 +19,7 @@ normalized to 512×512 runtime PNGs. The intentionally unused surprised pose fro
 Ido's set is omitted.
 
 Inbal's locked design is long dark-brown hair, a muted purple shirt, moss-green
-cardigan, silver hoop earrings, and a small crescent pendant. Source files in
-`source/drafts/` preserve the rejected higher-detail treatment and are not used
-by the builder.
+cardigan, silver hoop earrings, and a small crescent pendant.
 
 Rebuild the runtime sprites with:
 

@@ -7,6 +7,114 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-27 23:05 EDT — Fix the נמאס לי ממני preposition item; move the blank to the dative slot
+
+**Requested:** The Prepositions game showed "נמאס ____ " with the answer ממני, glossed "to be fed up with me" — נמאס לי ממני is an improbable expression. Asked whether the item should move to Conjugation+, and whether this is a one-off or the start of a class of items to migrate out of Prepositions.
+
+**Diagnosis:** `buildPrepositionsDeck` takes a full cross-product of 100 triggers × 8 object pronouns with no exclusion mechanism, so a trigger that bakes a pronoun into its own text can generate an item where the rotating object coreferences the frozen one. Exactly two triggers did that — `prep-care` ("אכפת לי", מ) and `prep-fedup` ("נמאס לי", מ) — and only on the 1sg object, so 2 bad items out of 800. Both are worse than improbable: a source that coreferences the dative experiencer takes the reflexive (נמאס לי מעצמי, אכפת לי מעצמי), so ממני is ungrammatical there, not just unlikely. A third, quieter flaw: the English glosses read as infinitives ("to be fed up with me") and hid the fact that the experiencer was frozen at 1sg.
+
+**Conjugation+ was rejected as the destination.** All 30 existing `l_dative` idioms are `<active verb> ל<someone> <fixed phrase>` with a real animate subject that conjugates. נמאס has no personal subject in the מ־ construction — it is impersonal masculine singular — so advConj's subject axis would generate נמאסה לי מהעבודה / נמאסו לי מהעבודה for she/they, which is wrong. The agreeing alternative (נמאסו לי הפגישות) drops מ־ and makes the thing the subject, which `ADV_CONJ_SUBJECTS` cannot express since it holds only animate pronouns. Moving the item there would have traded one bad item for six.
+
+**Files changed:**
+- `app/prepositions.js` — added optional `tail` support so the blank can sit mid-sentence: new `joinTriggerParts(trigger, middle)` helper used by `buildPromptText` and by both answer strings, and a `triggerTail` field on each deck item. Prompt speech deliberately still reads the trigger alone: speaking the frame "נמאס מהעבודה" without its dative would voice a malformed sentence.
+- `preposition-data.js` — retargeted both dative-experiencer expressions from `prep: "mi"` to `prep: "le"` with a fixed source in `tail`, so the drilled slot is the experiencer: `{ he: "נמאס", prep: "le", tail: "מהעבודה", en: "work is getting old for {o}" }` and `{ he: "אכפת", prep: "le", tail: "מהתוצאה", en: "the result matters to {o}" }`. Glosses are phrased around the thing rather than the person because the `{o}` slot supplies object-form pronouns ("me", "him"), so a subject-form gloss like "{o} is fed up" would render "me is fed up".
+- `index.html` — cache-busted `preposition-data.js` (`?v=20260712a` → `20260727c`) and `app/prepositions.js` (`20260725d` → `20260727c`).
+- `tests/prepositions-data.test.js` — relaxed the `answerNiqqud.endsWith(correctAnswer)` assertion to hold only for untailed triggers and assert exact three-part composition for tailed ones; new test "no trigger bakes in a pronoun that its own object rotation can coreference" (scans every trigger frame for any inflected form from the paradigm tables and fails if that person is also generated as an object); new test "the dative-experiencer expressions drill the ל־ experiencer, not the מ־ source" pinning both rows' shape and all eight generated נמאס answers.
+
+**Behavior changed:** Deck size unchanged at 800. The 16 items under these two triggers are all newly grammatical: "נמאס ____ מהעבודה" answering לי/לך/לו/לה/לנו/לכם/להם, and "אכפת ____ מהתוצאה" likewise. נמאס לי ממני and אכפת לי ממני no longer exist. The drilled slot is now the dative experiencer, which none of the existing `le` triggers taught — the others (מפריע, מספר, מודה, מרשה, מתאים, דומה) are all agentive.
+
+**Tests run:** `npm test` — 318 pass, 0 fail (315 before, plus 3 new). Guard verified by temporarily reverting `prep-fedup` to its old shape: the new test failed with `prep-fedup freezes "לי" (1sg) in its frame while also generating 1sg as an object, so "נמאס לי ממני" would coreference itself`, then passed again on restore. Browser verification on a dev server at port 3100 (port 3000 was held by a concurrent session) at 360×720: prompt renders "נמאס ____ מהעבודה" with the blank correctly placed between the two fixed parts in RTL, hint "work is getting old for her", options נֶגְדָּה / אוֹתָה / לָה / לָכֶם (both distractor axes intact); answering לָה scored correct and the feedback assembled the full three-part string "Correct. It's נמאס לָה מהעבודה." with "Meaning: work is getting old for her."; no console errors.
+
+**Risks / regressions to check:** (1) The `le` table gives 2ms and 2fs the same plain spelling לך, distinguished only by niqqud (לְךָ vs לָךְ) — already true of every other `le` trigger, and answer buttons show niqqud, but it means these two triggers now have a visually identical option pair. (2) The fixed tails מהעבודה and מהתוצאה are arbitrary choices; if they feel repetitive after a few sessions, `tail` supports any phrase. (3) Prompt speech now reads only "נמאס" / "אכפת" with no tail — bare but consistent with every other trigger. (4) `tail` is a new optional field with no other users yet; the two new tests are its only coverage. (5) Only these two triggers were audited for coreference — the new guard now covers the whole table automatically, including any trigger added later.
+
+### 2026-07-28 18:34 EDT — Companion toggle holds still, שמועה card plus two rows, word-final geresh glosses
+
+**Requested:** Three follow-ups: (1) the hide/show sprite button jumps to the top-left of where the sprite was instead of staying where the button was; (2) check whether `שמועה` ("rumor") is in the vocabulary or sentence games and, if not, add the card plus two sentences; (3) `פיץ׳` in one of Ivri's lines does not gloss — with the option of rewriting the line instead of fixing the cause.
+
+**Answer to (2) before the change:** the card did not exist in `vocab-data.js`. The word was already playable in the sentence bank once, as the plural `השמועות` in `colloquial_106` ("All those rumors? One big pile of nonsense"), and appeared in four distractor sets (`formal_51`, `professional_81`, `formal_72`, `inbal_13`). The singular was nowhere.
+
+**Files changed:**
+- `app/character.js` — `toggleVisibility` now captures the toggle's centre before the re-render and re-anchors the companion on it afterwards through the new `holdVisibilityToggleInPlace`, which writes `companionPosition` and reuses the existing drag clamp. The companion box is anchored by its top-left corner, so collapsing it on hide used to drag the button up and left. Also widened the dialogue tokenizer to `/[א-ת]+(?:[׳״"'][א-ת]+)*[׳״]?/g` so a word-final geresh stays in the token.
+- `styles.css` — `.character-companion--hidden` re-selected as `.character-companion.character-companion--hidden` and its column template changed from `auto` to `max-content`. The narrow-screen `.character-companion` rule later in the file re-declares `grid-template-columns: max-content 84px`, and at equal specificity it won on source order, so the hidden companion kept a phantom 84px sprite column. The drag clamp counted that phantom width as content and shoved the button back toward the screen edge even after the JS correction.
+- `vocab-data.js` — appended `["rumor", "שמועה", "שְׁמוּעָה"]` to `social_cultural` (id `social_cultural-020-rumor`). `__build` → `20260728a`. Totals 1653 → 1654, playable 1599 → 1600.
+- `sentence-bank-data.js` — new `RUMOR_SENTENCES` array of two `buildReviewedSentence` rows pushed after `LEXICAL_FOCUS_SENTENCES`: `colloquial_157` (`שמעתי שמועה שהוא עוזב את העבודה.`, indefinite singular, the `שמעתי שמועה` collocation) and `professional_89` (`השמועה על הפיטורים לא נכונה.`, definite singular, the standard denial). Both `wordOrderDecision: "fixed"` — no other neutral Hebrew order exists for either. `__build` → `20260728a`.
+- `index.html` — cache-busted `vocab-data.js` and `sentence-bank-data.js` to `?v=20260728a`. `styles.css` and `app/character.js` were already at `20260728a` from the earlier entry and are unpushed, so that version still covers these edits.
+- `tests/sentence-bank-data.test.js` — counts 569 → 571 (three asserts plus the test name), histogram `colloquial` 179 → 180 and `professional` 104 → 105, new `RUMOR_ENTRY_IDS` constant registered in the alignment forEach so both rows get the niqqud, distractor, chip-framing, and English-coverage checks.
+- `tests/vocab-data.test.js` — totals 1653 → 1654 and 1599 → 1600; new test "the rumor card is playable, pointed, and unique" pinning the id, category, gloss, niqqud, and global Hebrew/English uniqueness.
+
+**Behavior changed:** The hide/show button stays under the finger that tapped it, in both the default top-right anchoring and after a drag, with or without a dialogue bubble showing. Hiding now pins the companion to an explicit position the way dragging already did. Translation Match gains the `rumor` card; Sentences, Shema, and Handwriting gain two rows. Routed content moved to Ido 201 vocab / 180 sentences and Ivri 105 sentences. `פיץ׳` glosses as "a pitch"; Ivri's conjugation line is unchanged.
+
+**Why the tokenizer, not a new line:** the medial-geresh group already covered `הרמ״ט` / `מר״ת` / `להט״ב`; only a word-final geresh fell through, so the gloss key `"פיץ׳"` could never match the token `פיץ`. A rewrite would have left the same trap for the next loanword ending in `׳`. Sweeping all 102 authored dialogues, the old pattern left exactly two gloss keys unmatched (Ivri's `conjugationM` and `conjugationF`, both `פיץ׳`) and the new one leaves zero.
+
+**Tests run:** `npm test` — 316 pass, 0 fail (315 before, +1 new). `node scripts/character-content-report.js` — pools 1654 vocab / 571 sentences, spread 284–458. Browser verification on the dev server at 375×812: measured the toggle's centre across a hide/show cycle in three states — default anchor with a bubble, dragged with a bubble, dragged without one — and the shift is now `[0, 0]` in all three except a 2px clamp nudge in the dragged-with-bubble case where the wide box sits past the right margin (it was `[-96, -53]` before); a real click on the button (not a synthetic one) hid the sprite with the button holding its pixel position; the Ivri conjugation bubble renders nine glossed words including `פיץ׳`; and the new builds load as `20260728a` with both rumor rows exposing 4/4 and 3/3 bilingual chips.
+
+**Risks / regressions to check:** (1) Hiding the companion now writes `companionPosition`, so a learner who never dragged the sprite loses the responsive `top: clamp(112px, 22vh, 190px); right: 12px` default for that character and gets absolute pixels that only the clamp adjusts on rotate or resize. Reverting to the responsive anchor would require a "never positioned" sentinel. (2) The clamp still uses the whole companion box, so hiding very close to an edge can move the button a couple of pixels — visible in the dragged-with-bubble measurement above. (3) The wider tokenizer now swallows a trailing `׳` or `״` on any dialogue word; today only `פיץ׳` ends that way, but a future line using `׳` as a closing quotation mark right after a Hebrew word would fold the mark into the token and break that word's gloss. (4) `הַפִּטּוּרִים` in `professional_89` follows the repo convention of dropping the plene yod in pointed text (`vocab-data.js` already pairs plain `פיטורים` with `פִּטּוּרִים`), so plain and pointed differ in letters — intentional, but worth an ear check in Shema. (5) `שמועה` sits in `social_cultural`, which Ido owns by category, so the card is routed to him without a `vocabWords` entry; `docs/character-gameplay-strategy.md` records no per-category card count for Ido, so no ledger line needed updating — Ivri's stated "176 cards" was already stale at 177 before this change.
+
+### 2026-07-28 17:46 EDT — Results-page dead space, picker heading, orphaned periods, dageshed-vav TTS
+
+**Requested:** Four small fixes from device screenshots: (1) extra space at the bottom of the mission results page; (2) a less clunky Hebrew heading than `בוחרים דמות להיום` on the character picker, with the English left as an untranslated "choose your character" easter egg; (3) a stray period in Ivri's picker description; (4) `בוועדה` and other `וועדה` forms being spoken as "waada" in Shema. Then a follow-up: fix the same-looking stray period under the Shema slot row.
+
+**Files changed:**
+- `styles.css` — deleted the `#resultsView.active { padding-bottom: calc(5.75rem + env(safe-area-inset-bottom)); }` rule. `.app-shell` already reserves `5.8rem + safe-area` below the scrolling `.shell-body`, so this was a second copy of the bottom-nav clearance: it added 92px of empty padding *inside* the scroll container, which both showed as dead space under the card and forced a scrollbar on a page that otherwise fit. Added `.character-word-group { white-space: nowrap; }`. Changed `.sentence-piece` from `align-items: flex-end` to `align-items: baseline` — the slot button carries 2.88px bottom padding plus its 2px underline border, so punctuation aligned to the bottom of that box landed ~6px under the word (its box bottom sat 2px *below* the top of the underline) and read as a period stranded on the next line. Baseline alignment puts it back on the word's baseline, 4.8px above the underline.
+- `app/character.js` — picker heading is now `uiText("Choose your character", "מי בא לך היום?")`. In `renderDialogue`, each glossed word is wrapped in a `span.character-word-group` and the non-space run that follows it (sentence punctuation) is appended inside that span via a new `appendBetweenWords` helper, instead of going straight onto the paragraph as a bare text node.
+- `app/speech.js` — new `TTS_RESPELLINGS` rule `/ו([ְ-ָׇֻ])ּ/g → "ו$1"`: strips the dagesh from a vav that carries both a vowel and a dagesh (`בַּוַּעֲדָה` → `בַּוַעֲדָה`). Speech text only; displayed niqqud is untouched. Requiring a vowel between the vav and the dagesh is what keeps shuruk (`וּ`, as in `תּוֹשָׁבִים`/`וּמִשָּׁם`) out of the rule.
+- `index.html` — cache-busted `styles.css`, `app/speech.js`, `app/character.js` to `?v=20260728a`.
+
+**Behavior changed:** The results page no longer scrolls when its content fits, and the card's bottom edge sits flush with the scroll area (buttons still clear the bottom nav by ~24px on 375×812 when scrolled). The picker heading reads `מי בא לך היום?` in Hebrew and "Choose your character" in English — deliberately not translations of each other. A glossed word and its trailing punctuation can no longer be split across lines, so no lone `.` on its own line in a character bubble or picker card. In the sentence builder and Shema, punctuation attached to a slot now sits on the word's baseline instead of down at the underline. Shema/other TTS should say "ba-va'ada" instead of "ba-waada" for `בוועדה`, and the same rule covers `הוועדה`, `לוועדה`, `צַוַּאר`, and `אִי־הַוַּדָּאוּת`.
+
+**Tests run:** `npm test` — 315 pass, 0 fail (same before and after). Browser verification on the dev server: measured the orphan bug before the fix by sweeping the description paragraph's width — Ivri's trailing `.` wrapped to its own line at 120–124px and 238–242px — and after the fix no width from 110–420px orphans it; the gloss tooltip still opens centered above its word. On the fabricated mission-results state, `.shell-body` overflow went from 91px to 0 at 1024×1180 with the card-to-nav gap unchanged at 23px. For the slot-row period, a live Shema round with all seven slots filled: `align-items` toggled between `flex-end` and `baseline` on the same node moved the punctuation's box bottom from +2px past the underline to −4.8px above it, with the answer row's height, every piece's height, and every slot's position byte-identical in both states.
+
+**Not verified by ear:** the vav respelling was reasoned from the niqqud, not heard — Carmit renderings of the current spelling, the dagesh-free spelling, and a bet-rafe spelling (`בַּבַעֲדָה`) were sent to the user to confirm. If the dagesh is not what triggers the /w/, the fix becomes the bet-rafe replacement in the same rule.
+
+**Risks / regressions to check:** (1) If some he-IL voice reads a bare `וַ` after a vowel as a glide anyway, the respelling is a no-op rather than a fix — see above. (2) The vav rule is broad by design (any vowel+dagesh vav); it currently touches only the five word families listed above, but new pointed data with a geminate vav will be respelled silently. (3) Removing the results-view padding leaves only `.app-shell`'s clearance — if the bottom nav ever grows taller, the results buttons are the first thing to slip under it. (4) **Corrected diagnosis worth keeping:** the lone `.` under the Shema slot row is *not* an orphaned `sentenceFrame.trailingText` span — `buildSentenceFrame` already folds an attachable trailing suffix into the last piece's `afterText` (`app/sentence-bank.js:176`), and `.sentence-piece` is `inline-flex; white-space: nowrap`, so it can never wrap away from its slot. The DOM confirmed the `.` was already inside the last piece; it was purely vertical misalignment. Anyone chasing a similar report should measure the glyph position before touching the frame builder. (5) `align-items: baseline` now governs every `.sentence-piece` in both the Hebrew and English answer rows, filled and empty — verified no geometry change on this round, but a slot whose content ever becomes multi-line would take its baseline from its first line.
+
+### 2026-07-27 22:31 EDT — Lexical-focus expansion: תחרותי, ספורים, בלי חרטות cards plus 13 reviewed sentences
+
+**Requested:** PR 2 of 2 from the same session. Add `תחרותי` ("competitive"), `ספורים`/`ספורות` ("a few, a handful") and `בלי חרטות` ("no regrets") to the vocabulary game, route `תחרותי` toward Ivri and Inat, and give every new word from both PRs a few sentences in different senses — including the colloquial and technical senses of `לקלוט`, `להגיש`, and `להקליט`.
+
+**Files changed:**
+- `vocab-data.js` — three append-only cards: `["competitive", "תחרותי", "תַּחֲרוּתִי"]` at the end of `work_business` (id `work_business-087-competitive`), `["just a handful", "ספורים", "סְפוּרִים"]` at the end of `core_advanced` (id `core_advanced-168-just-a-handful`), and `["no regrets", "בלי חרטות", "בְּלִי חֲרָטוֹת"]` at the end of `conversation_glue` (id `conversation_glue-098-no-regrets`). Bumped `__build` → `20260727b`. Totals 1650 → 1653, playable 1596 → 1599.
+- `app/character-data.js` — gave Inat a `vocabWords` route with `תחרותי` and `ספורים`. Neither word was re-shelved: `תחרותי` stays in `work_business` (which Ivri owns by category, so it is genuinely shared) and `ספורים` stays in the unrouted `core_advanced`. Bumped `?v=` → `20260727b`.
+- `sentence-bank-data.js` — added `inat_25` to `INAT_SENTENCES` and a new `LEXICAL_FOCUS_SENTENCES` array of 12 `buildReviewedSentence` rows, pushed after the Inbal/Inat tranches: `colloquial_152`–`156` (בלי חרטות ×3, לקלוט "catch on" ×2), `professional_85`–`88` (לקלוט signal, להגיש ×2, תחרותי m.), `formal_78`–`79` (תחרותיות f.pl., ספורות f.pl.), `everyday_139` (ספורים m.pl.), `inat_25` (להקליט, an oral-history recording). Six rows carry pointed `hebrewOrderAlternates`; `professional_86` carries all three neutral placements of `אתמול`. Bumped `__build` → `20260727b`.
+- `index.html` — cache-busted `vocab-data.js` and `sentence-bank-data.js` (`?v=20260726e` → `20260727b`) and `app/character-data.js` (`20260727a` → `20260727b`).
+- `tests/sentence-bank-data.test.js` — count guardrails 556 → 569 and the category histogram to `{colloquial: 179, everyday: 176, professional: 104, formal: 110}`; `INAT_ENTRY_IDS` range 1–24 → 1–25 and the Inat tranche length 24 → 25; new `LEXICAL_FOCUS_ENTRY_IDS` constant registered in the alignment forEach so the new rows are actually checked for niqqud alignment, distractor counts, chip framing, and alternate framing.
+- `tests/vocab-data.test.js` — vocabulary length 1650 → 1653, playable 1596 → 1599; new test "the lexical-focus cards are playable, pointed, and free of gloss collisions" pinning each card's id, category, gloss, niqqud and global Hebrew/English uniqueness.
+- `tests/character-mission.test.js` — new test "Inat's vocabWords reach cards that sit on someone else's shelf", asserting both words boost for Inat, that an unlisted neighbour in the same borrowed category stays neutral, and that Ivri keeps `תחרותי` through the category route while `ספורים` stays neutral for him.
+- `docs/character-gameplay-strategy.md` — Inat's vocabulary ledger 232 → 234 cards with the `vocabWords` note; new "Lexical-focus rows" section recording the id-shape rule (see below) and the two agreement pairs.
+
+**Behavior changed:** Translation Match gains three cards. Sentences, Shema and Handwriting gain 13 rows. Routed content moved to Ido 200 vocab / 179 sentences, Ivri 177 / 104, Inat 234 / 124, Inbal unchanged; multi-owner vocabulary 12 → 13. `everyday_139` is intentionally unrouted so the ספורים pair is not owned by a single companion.
+
+**Authoring notes worth keeping:** Plain `<bank>_<number>` ids were used rather than the older slugged `colloquial_vodge_01` shape, because `isCompactTokenPolicyEntry` only matches `^(colloquial|everyday|professional|formal)_\d+$` and `^(inbal|inat)_\d+$` — a slugged id would have silently escaped the compact-chip review. Three real violations surfaced and were fixed rather than waived: `few` and `many` are **not** in `ENGLISH_FUNCTION_WORDS`, so "Only a few hours" and "Many days" each carried two content words (split into "Only a few" · "hours" and "days" · "many", with the Hebrew split to match and the alternate permutation renumbered); and `colloquial_152` originally used a standalone English "it" whose Hebrew chip was `את זה`, which fails `hasExplicitHebrewItCue` because the cue regex matches a whole token equal to `זה`, not a two-word chip — the row was rewritten to `אני אומר את האמת` / "I tell the truth" instead. No `COMPACT_ENGLISH_MULTIWORD_UNITS` or `COMPACT_TARGET_COUNT_EXCEPTIONS` entries were added.
+
+**Deviation from plan:** the plan proposed slugged ids (`colloquial_charatot_01`) for future per-word routability. Rejected — see above; routing already works by category for these three banks, so the slug bought nothing and cost the chip review.
+
+**Tests run:** `npm test` — 315 pass, 0 fail. `node scripts/character-content-report.js` — pools 1653 vocab / 569 sentences / 178 conjugation items. Browser verification on the dev server at 360×720: builds read vocab `20260727b`, sentences `20260727b`, verbs `20260727a`; `professional_86` renders as an en2he round and **accepts the authored alternate** `הגשנו את המכרז לוועדה אתמול` (streak incremented and the feedback echoed the learner's own variant rather than the primary order); the Vocabulary board renders `just a handful`/ספורים, `competitive`/תחרותי and `no regrets`/בלי חרטות, and matching `competitive` ↔ `תחרותי` scored correctly and refilled the board; no console or server errors.
+
+**Risks / regressions to check:** (1) `ספורים` is glossed "just a handful" and can only be taught in the masculine plural on a card — the feminine `ספורות` exists only in `formal_79`; confirm the single gloss reads clearly out of context. (2) Niqqud on the new rows is hand-authored — worth a native check on `לָאַרְכִיּוֹן`, `פַּעֲמַיִים`, `הָרִישָּׁיוֹן`, `אֶפְשָׁר`, and `תַּחֲרוּתִיּוֹת`. (3) `professional_88` relies on `מאוד` being in `HEBREW_FLEXIBLE_MODIFIER_TOKENS`, so the runtime already accepts the adjacent swap in addition to the authored alternate — harmless duplication, but confirm feedback is not confusing. (4) `professional_86` and `professional_88` both use `מכרז`; a learner may see the word twice in one session. (5) TTS pronunciation of `אפליקציה` and `לארכיון` in Shema mode. (6) Another session is concurrently adding a global gloss-uniqueness guard to `vocab-data.js` for the pre-existing duplicate-card bug; that work edits the same file and the same `tests/vocab-data.test.js:157-158` count assertions, so expect a merge conflict there — the three cards added here are append-only and collision-free, so resolution should be limited to the counts.
+
+### 2026-07-27 22:11 EDT — Character verb expansion: 4 new paradigms, per-sense routing, 28 routed verbs, shorter Inat blurb
+
+**Requested:** A wide conjugation expansion covering each character, including לגנוח for Ido and להגיש (assessed for Ivri + Inat); לקלוט with a colloquial sense for Ido and a technical sense for Ivri; a shorter Inat description with משפטים cut. Also asked for a high-level read on whether assigning vocabulary by character breaks the topic-category model and whether a structural reorg is due. (PR 1 of 2 — the תחרותי / ספורים / בלי חרטות vocabulary cards and all new sentences are deferred to PR 2.)
+
+**High-level answer recorded in the strategy doc:** category is a shelf, character ownership is a route query over existing item fields, and they are meant to be different axes. `route.vocabWords` is the per-word escape hatch (Inbal already uses it for 16 words living in Ido's categories), so a word keeps its true shelf. Never move a word between vocabulary categories — ids embed a positional index, so re-shelving orphans learner progress. The one real gap is verbs: 155 of 158 entries carried `category: "core_advanced"`, so verbs can only be routed by an explicit id allowlist, which is why they were the thinnest routed pool.
+
+**Files changed:**
+- `hebrew-verbs.js` — appended 4 verbose `createVerbEntry` entries after `character-verb-lehitlabet`: `character-verb-lignoach` (לגנוח, paal ל-guttural of ג-נ-ח, pointed off לשלוח, 21 forms, no imperative), `character-verb-lehagish` (להגיש, hifil pe-nun of נ-ג-ש, pointed off להגיע with plain non-guttural endings off להדליק, 24 forms, gloss "to submit" + usage_pattern את־), `character-verb-liklot` (לקלוט, regular paal-o pointed off לסגור, 21 forms, three senses, `translationQuiz: false`), `character-verb-lehaklit` (להקליט, regular hifil pointed off להדליק, 24 forms). Also split `advanced-verb-levaker` into two senses — "to visit" (ב־) and "to criticize" (את־) — with no new paradigm, and rewrote its notes. Bumped `__build` → `20260727a`. Seed entries 158 → 162; conjugation deck 171 → 178 items.
+- `app/character-data.js` — replaced Inat's gendered `descriptionM`/`descriptionF` with one ungendered `description: "פוליטיקה. היסטוריה. הפרופסורית."` (משפטים and תכיר/תכירי both dropped; she is now consistent with the other three cards). Extended `route.verbIds`: Ido +2 (לגנוח, `liklot--sense-1`), Inbal +6 (להיעלם, להיוולד, להיראות, להירדם, להתעורר, לשיר), Ivri +15 (להגיש, להקליט, `liklot--sense-2`, plus לתקן, להשתמש, לבטל, לצרף, לברר, להסכים, להספיק, להבהיר, להזהיר, להחזיר, לשלם, לבדוק), Inat +14 (להגיש, להקליט, `liklot--sense-3`, `levaker--sense-2`, plus לכתוב, לקרוא, לזכור, לשכוח, להשתתף, לשנות, לשאול, לענות, להסביר, להבין).
+- `scripts/character-content-report.js` — the verb pool now comes from `buildVerbConjugationDeck` instead of `getSeedVerbEntries`. Only deck ids carry the `--sense-N` suffix, so counting entries reported a per-sense route as unrouted.
+- `docs/character-gameplay-strategy.md` — documented the two routing rules (never re-shelve, use `vocabWords`; a `verbIds` entry may be a whole verb or one deck id). Added an "Ivri expansion" ledger section, updated Ido's, Inbal's and Inat's verb ledgers, corrected Inat's framing line to "politics, history" with a note that she still owns the legal pools, and recorded the device/OS vocabulary gap for Ivri.
+- `index.html` — cache-busted `hebrew-verbs.js` (`?v=20260726e` → `20260727a`) and `app/character-data.js` (`?v=20260726h` → `20260727a`).
+- `tests/hebrew-verbs.test.js` — seed count 158 → 162; new test "the routed verb expansion exposes verified pointed paradigms" covering all four new verbs (authoritative source, every modern slot present, niqqud on every form, spot-checked ל-guttural patach and pe-nun dagesh, the three לקלוט glosses with their availability, and the two לבקר surfaces).
+- `tests/character-mission.test.js` — the routed-verb guard now accepts `deckIds.has(verbId) || deckIds.has(verbId + "--sense-1")` so a route may name a single sense; Ido's route length 18 → 20; Inat's description assertion switched to the ungendered key with `descriptionM`/`descriptionF` asserted absent; new test "a per-sense verb route reaches only that sense".
+
+**Behavior changed:** Conjugation gains 4 verbs (7 new deck cards, since לקלוט contributes 3 senses and לבקר gains a second). לקלוט is deliberately absent from Translation Match — all three senses share the surface לקלוט and would collide on the id-graded matching board — while להגיש ("to submit (את־)"), להקליט ("to record") and לגנוח ("to groan") are new Translation Match cards. Routed verb weighting per character moved from Ido 18 / Inbal 10 / Ivri 8 / Inat 8 to 22 / 16 / 23 / 24 deck items against a pool of 178 (95 unrouted, down from 114; 2 multi-owner verbs, up from 0). Inat's picker card is one beat shorter and no longer varies by learner gender.
+
+**Notable deviation from plan:** the plan called for adding להגיש to `CONJUGATION_FIRST_TRANSLATION_HEBREW` so the existing cooking_verbs "to serve"/להגיש card would go dictionary-only. That turned out unnecessary: `usage_pattern: "את־"` gives the new card the distinct surface "להגיש את־", so no pair-match collision exists and the "to serve" card stays playable. `vocab-data.js` was therefore not touched in this PR and the playable-card count stayed at 1596.
+
+**Tests run:** `npm test` — 313 pass, 0 fail (was 310 pass / 1 fail before the change; the single failure was `tests/gameplay-layout.test.js` unable to expose Chrome DevTools locally, and it passed on later runs — environmental, unrelated). `node scripts/character-content-report.js` — counts as above. Browser verification on the dev server at 360×720: Inat's card renders "פוליטיקה. היסטוריה. הפרופסורית." on two lines, matching Inbal's and Ivri's weight, with all three words glossed and tappable and no leftover משפטים gloss key; in a live Ivri mission `liklot--sense-2` is boosted 13.16× while `liklot--sense-1` and `--sense-3` stay at 1.00 and לגנוח stays at 1.00; לקלוט renders as "to pick up (a signal) | לקלוט" with קולטות/קלטו/תקלטי/קלטתן/קלטה and correctly inflected English labels; לגנוח renders as "to groan | לגנוח" with גנח/גנחתם/גונחים/גנחתן/גונח; no console errors.
+
+**Risks / regressions to check:** (1) Niqqud on the four new paradigms is derived from model verbs in the same gizra rather than a dictionary lookup — have a native speaker or Pealim confirm לִגְנוֹחַ (especially גּוֹנַחַת and אֶגְנַח), הַגֵּשׁ, and קְלַטְתֶּם/קְלַטְתֶּן. (2) `advanced-verb-levaker`'s displayed gloss changed from "to visit" to "to visit (ב־)"; progress is keyed on id so nothing is orphaned, but the card now reads differently. (3) The "to pick up (a signal)" gloss produces long English labels ("they (f.pl.) pick up (a signal)") that wrap to two lines at 360px — they fit without scroll, but confirm they read acceptably. (4) לקלוט and לבקר are the first verbs to rely on per-sense routing; if a future edit reorders a verb's `senses` array, the `--sense-N` ids shift and the routes silently point at the wrong meaning. (5) 2 multi-owner verbs (להגיש, להקליט) are the first in that pool — confirm the shared boost feels right in both Ivri's and Inat's missions. (6) The report script now counts deck items rather than seed entries, so verb percentages are not comparable to figures logged before today.
+
 ### 2026-07-20 EDT — Add Tel Aviv gay-slang terms across sentences, conjugation, and translation
 
 **Requested:** Follow-up to the וודג' batch — add more authentic Tel Aviv gay-slang terms not already in the app. User selected (with per-term instructions): פאלש, אוחצ'ה, הורס (×2 sentences, + Conjugation + Translation Match), דוב (×2 sentences, explicitly NOT Translation Match), קוקיצה, מלרלר (+ Conjugation), פאטוץ'.
@@ -5585,3 +5693,434 @@ as a conjugatable verb and as the separate `לזרום עם` phrase card in
 kept deliberately at the user's instruction. (7) `character-verb-*` ids now span
 two builders in `hebrew-verbs.js` — `buildStarterVerbEntries` and
 `buildRequestedVerbEntries` — so grep both.
+
+### 2026-07-28 20:34 EDT — Reframe Ido sprites and verify Inat detail density
+
+**Requested:** Redo Ido so his otherwise-good portrait art fills a square frame
+like Inbal and Ivri instead of tapering off before the lower crop; use the newly
+reattached clean shirt logo rather than the previously shaved source. Separately,
+confirm whether Inat is rendered at a finer pixel density than the other
+characters.
+
+**Files changed:**
+- `assets/ido/neutral.png`, `struggling.png`, `mission-complete.png`,
+  `nervous-laugh.png`, `celebrating.png`, and `frustrated.png` — replaced the six
+  live 512×512 transparent portraits with square-framed versions. Each torso now
+  continues through the bottom edge, while identity, palette, expression, pose,
+  and coarse pixel-art treatment remain consistent.
+- `assets/ido/surprised-unused.png` — rebuilt the unused surprised pose from the
+  same sheet so the complete Ido set stays internally consistent.
+- `styles.css` — cache-busted all six live Ido sprite URLs to `20260728b`.
+- `index.html` — cache-busted `styles.css` to `20260728b` so returning browsers
+  fetch both the new rules and the replacement PNGs immediately.
+- `assets/ido/source/square-frame-redo/` — retained the generated chroma and
+  transparent sheets, clean nervous-laugh source, per-state working/final crops,
+  and QA contact sheets. The final shirt marks use a thresholded silhouette
+  extracted directly from the reattached logo screenshot, after removing each
+  generated approximation from the shirt.
+
+**Behavior changed:** Every Ido state now reads as a deliberately cropped square
+portrait rather than a floating/tapered bust. Visible lower-edge coverage is
+329–476 pixels across the 512-pixel frame depending on arm pose, versus five of
+the previous seven Ido images ending above row 512. The clean logo is complete
+and held above the bottom crop in every state. Updated cache keys prevent the
+old tapered images from surviving in a returning browser's cache.
+
+**Inat density finding:** Inat is not stored at a larger resolution — every
+production sprite is 512×512 — but she is visibly and measurably rendered with a
+finer internal raster. Across the six live states, Inat has a median 43,775 RGBA
+colors and a 0.159 significant adjacent-color transition rate, versus Ivri
+27,252/0.082, Inbal 16,169/0.085, and the reframed Ido 34,711/0.121. The smaller
+pixel clusters and denser hair/face shading therefore make “higher-def” an
+accurate visual description, even though the file dimensions are identical.
+
+**Tests run:** Bundled-Pillow asset validation — PASS: all seven Ido deliverables
+are 512×512 RGBA, have visible content on the bottom row, and contain zero opaque
+green chroma pixels. Alpha checks found expected transparent background corners;
+the celebrating pose has one partially transparent bottom-right edge pixel from
+his arm. Six-state density comparison completed for Ido, Inat, Inbal, and Ivri.
+Visual QA passed on the 1536×1024 production contact sheet after removing a
+four-pixel neighboring-cell fragment from the struggling crop. `npm test` not
+run because the only HTML/CSS edits are static asset cache keys; no code, data,
+or layout behavior changed.
+
+**Risks / regressions to check:** The exact logo silhouette comes from a
+198×156 screenshot (102×71 non-dark mark bounds), so it is faithful at sprite
+scale but is not a vector master. Ido's nervous-laugh state came from a separate
+generation because that pose was absent from the original six-up sheet; its
+identity and pose match, but its native source was 1254×1254 before
+nearest-neighbor reduction to 512×512.
+
+### 2026-07-28 20:52 EDT — Replace Ido sheet workflow with six independent standardized sprites
+
+**Requested:** Correct the nearly pitch-black, under-modeled shirt in Ido's
+nervous-laugh/shrug reaction; stop using or regenerating six-expression grids;
+standardize sprite assets and their organization across all four characters;
+clean up the grid-derived work from the preceding pass.
+
+**Diagnosis:** The report was correct. The preceding nervous-laugh render had a
+flatter, nearly black torso than the other Ido states, and five of the other
+states were still derived from a newly generated six-up sheet. The production
+files happened to be separate, but the source workflow was not. Ido also had a
+special source naming scheme, a seventh unused runtime PNG, and a builder that
+excluded nervous-laugh while including the unused surprised pose. Ivri, Inbal,
+and Inat already shared the intended six-state convention.
+
+**Files changed:**
+- `assets/ido/neutral.png`, `nervous-laugh.png`, `celebrating.png`,
+  `struggling.png`, `mission-complete.png`, and `frustrated.png` — replaced with
+  six independently generated, independently keyed, independently resized
+  512×512 RGBA sprites. Every shirt uses visible charcoal-gray planes, folds,
+  neckline highlights, and edge definition. The same exact silhouette extracted
+  from the user's clean logo screenshot was composited onto each blank generated
+  shirt after generation.
+- `assets/ido/surprised-unused.png` — removed from the active asset set so Ido,
+  Inbal, Ivri, and Inat all expose exactly the same six production reactions.
+- `assets/ido/source/` (local/ignored) — replaced the sheet-era filenames and
+  repair intermediates with exactly twelve canonical 1254×1254 files:
+  `<reaction>-chroma.png` and `<reaction>-transparent.png` for the six standard
+  reactions.
+- `assets/ivri/source/`, `assets/inbal/source/`, and `assets/inat/source/`
+  (local/ignored) — removed contact-sheet/style-comparison/draft extras from the
+  active project, leaving the same twelve-file convention in each character.
+- `assets/SPRITE_STANDARD.md` — documented the six reaction names, 512×512
+  runtime format, 1254×1254 source-pair format, independent-image requirement,
+  and explicit ban on sprite sheets, grids, contact sheets, and grid-derived
+  crops.
+- `scripts/build-ido-sprites.py` — brought Ido onto the same builder contract as
+  the other characters: six live reactions, canonical
+  `<reaction>-transparent.png` sources, and a shared 1254px source-size guard.
+- `assets/ido/README.md` — replaced the sheet-era/surprised-state description
+  with the six-independent-image workflow and exact post-generation logo step.
+- `assets/inbal/README.md` — removed the obsolete source/drafts note after the
+  local source cleanup.
+- `tests/character-mission.test.js` — strengthened the sprite test to require
+  exactly the standard six PNG filenames per character, verify every PNG is
+  512×512 from its IHDR, and pin Ido's canonical source filename pattern.
+- `styles.css` and `index.html` — cache-busted the new Ido files and stylesheet
+  to `20260728c`.
+
+**Behavior changed:** Ido's nervous-laugh shirt is no longer a black void; it
+has visible modeled fabric across the full torso and remains legible on the dark
+UI. All six Ido reactions now have square bottom crops, individually authored
+silhouettes, and an exact standardized shirt logo. The app exposes exactly six
+runtime sprite files for every character.
+
+**Cleanup / recovery:** The previous Ido source folder, the unused surprised
+PNG, other characters' source-only contact sheets/drafts, and the obsolete Codex
+grid output were moved—not permanently deleted—to
+`/Users/mikesexton/.Trash/ulpango-sprite-source-prestandardization-20260728-2045`.
+The temporary staging directory and the six duplicated Codex-generated
+individual outputs were moved into the same recoverable archive after the
+canonical project sources were installed. No grid or contact sheet was created
+during this replacement pass.
+
+**Tests run:** `npm test` before changes — 318 pass, 0 fail. `npm test` after
+changes — 318 pass, 0 fail. `scripts/build-ido-sprites.py` with the bundled
+Pillow runtime — PASS. Asset audit — PASS for every character: exactly six
+production PNGs, exactly twelve canonical source PNGs, all runtime images
+512×512, all source images 1254×1254, visible content on the bottom row, and no
+opaque green chroma residue. Individual visual inspection — PASS for all six
+Ido sprites. Nervous-laugh central shirt luminance is now mean 32.2/std 9.6 with
+75 rounded luminance levels, versus neutral at 23.7/std 7.2, confirming it is
+not flatter or darker than the baseline.
+
+**Risks / regressions to check:** The logo is faithfully derived from the
+reattached raster screenshot, but a vector or larger clean master would still
+improve any future output above sprite scale. Source masters are intentionally
+ignored by git under the existing repository policy, so the tracked builder
+requires those local 1254×1254 files to reproduce assets on this machine; CI
+validates the tracked 512×512 runtime set.
+
+### 2026-07-28 21:11 EDT — Pixel-native Ido logo with pose-specific placement
+
+**Requested:** Fix Ido's shirt mark: the attached celebrating sprite showed a
+smooth, spindly logo placed too close to the neckline, despite an earlier
+attachment preview appearing to show a different image. Make the mark genuinely
+pixelated and position it properly on all poses.
+
+**Diagnosis:** The user's attachment and `assets/ido/celebrating.png` were
+byte-for-byte identical (SHA-256
+`1016f9dbf85ed86d3dba2f1215decb8854b1a79542fa85e7ac7e9556e7a5c79c`) and
+Pillow reported no differing pixel. The visible defect was real. The prior mark
+was a thresholded 102×71 raster resized at source scale and then resampled with
+the whole sprite, leaving thin one-pixel-looking strokes at runtime. It also
+used a computed shared placement rule that left every mark about 10px left of
+the measured torso center and celebrating only 16px below its neckline. The
+apparently changing attachment was consistent with same-path preview caching
+after repeated overwrites, not different file content.
+
+**Files changed:**
+- `scripts/build-ido-sprites.py` — encoded the clean mark as a 38×26
+  logical-pixel bitmap, nearest-neighbor scales it by exactly 3× to 114×78 on
+  the final 512px canvas, and composites it in the final build step. Added
+  explicit per-reaction coordinates instead of a shared normalized anchor:
+  neutral `(198,393)`, nervous-laugh `(226,393)`, celebrating `(243,405)`,
+  struggling `(211,393)`, mission-complete `(208,393)`, and frustrated
+  `(204,397)`.
+- `assets/ido/neutral.png`, `nervous-laugh.png`, `celebrating.png`,
+  `struggling.png`, `mission-complete.png`, and `frustrated.png` — rebuilt with
+  the crisp 3×3-block mark at the pose-specific chest position.
+- `assets/ido/source/*-transparent.png` (local/ignored) — regenerated from the
+  six blank-shirt chroma sources so the builder owns logo rendering and cannot
+  double-apply an older raster mark.
+- `assets/ido/README.md` and `assets/SPRITE_STANDARD.md` — documented the
+  builder-owned logical bitmap, final-canvas compositing, and requirement for
+  per-pose placement.
+- `tests/character-mission.test.js` — now pins the 3× logical scale and requires
+  an explicit placement entry for every reaction.
+- `styles.css` and `index.html` — cache-busted the sprite and stylesheet URLs to
+  `20260728d`.
+
+**Behavior changed:** The logo is visibly made of 3×3 pixel blocks, not smooth
+resampled strokes. Each mark is centered on its pose's measured torso and
+lowered clear of the neckline; celebrating moved 10px right and 23px down. The
+same logical design is reproducible across all six without forcing the same
+coordinates onto differently posed bodies.
+
+**Tests run:** Pixel-level audit — PASS for all six states: every expected mark
+cell renders as an exact 3×3 block in color `(246,245,222,255)`, no extra
+logo-color pixels appear inside the logo rectangle, all 3,285 rendered logo
+pixels sit over fully opaque dark shirt pixels, and zero opaque green pixels
+remain. Six individual unique-path `v3` previews were visually inspected; no
+grid/contact sheet was created. `npm test` — 318 pass, 0 fail.
+
+**Cleanup / recovery:** The six superseded smooth-logo transparent masters were
+moved to the existing recoverable Trash archive at
+`/Users/mikesexton/.Trash/ulpango-sprite-source-prestandardization-20260728-2045/wrong-smooth-logo-transparent`.
+Unique review copies live only under `/tmp/ulpango-logo-review-20260728-v3` to
+avoid same-path preview caching.
+
+**Risks / regressions to check:** The mark is intentionally blockier than the
+reattached raster; that is the requested pixel-art translation, not a
+one-to-one antialiased reproduction. Same-path previews may still display an
+older cached PNG in the desktop app, so future visual reviews should use a new
+versioned filename and verify its hash before comparing.
+
+### 2026-07-28 21:18 EDT — Raise the active struggling-state logo
+
+**Requested:** Determine whether Ido's long-torso struggling pose is used and,
+if so, fix its logo, which sat visibly lower on the shirt than the marks in the
+other five poses.
+
+**Answer:** It is active. `reduceAnswerState` switches Ido to `struggling` after
+four or more consecutive wrong answers and holds that reaction as the wrong
+streak continues.
+
+**Files changed:**
+- `scripts/build-ido-sprites.py` — raised only the struggling mark from
+  `(211,393)` to `(211,365)`, a 28px upward move. Its horizontal torso-centered
+  position, 38×26 logical bitmap, 3× scale, and all other pose placements are
+  unchanged.
+- `assets/ido/struggling.png` — rebuilt with the corrected mark position.
+- `styles.css` and `index.html` — cache-busted Ido and the stylesheet to
+  `20260728e`.
+
+**Behavior changed:** The struggling mark now has approximately the same visual
+gap below its much higher neckline as the other poses, rather than being
+centered in the unusually long visible torso.
+
+**Tests run:** Pixel-level placement audit — PASS: all 3,285 expected logo
+pixels render exactly, and every one sits over fully opaque dark shirt.
+`node --test tests/character-mission.test.js` — 37 pass, 0 fail, including the
+reaction-state and sprite-contract tests. Unique-path visual review passed at
+`/tmp/ulpango-logo-review-20260728-v4/ido-struggling-logo-raised-v4.png`; its
+SHA-256 matches the production file:
+`f8f9c60e66a4939d17466eb51157b0f157899be47abbafb7a6afdcc75f629e86`.
+
+**Risks / regressions to check:** None beyond aesthetic preference; the logo
+remains fully on the shirt with substantial space above the bottom crop.
+
+### 2026-07-28 22:40 EDT — Content expansion, batches 1–4: routing, idioms 39→100, binyan roots 35→60, Inbal top-up
+
+**Requested:** Plan a content expansion and decide what is most useful. After the
+plan was approved, execute it as a staged program. Mid-run the user confirmed
+Inbal's tranche at ~63 items and set the standing rule: do not aim for parity
+between characters when there are not genuinely words to put there, but do aim
+long-term for comprehensive coverage of each character's own domain.
+
+**Diagnosis that shaped the plan:** Every previous expansion went into vocabulary
+and sentences, and those are now the two healthiest pools. Measured as pool size ÷
+items consumed per session, vocabulary lasts ~80 distinct sessions and sentences
+~57, while Conjugation+ lasted ~4 (39 idioms, 10 weighted per *idiom* per session)
+and Binyanim ~6 (35 roots, 6 per session). Those two shared pools are drawn by every
+character and had never been expanded. Separately, Inbal owned 284 items against
+Inat's 458, and `TARGET_OWNED_SHARE` (app/character.js:313) solves the boost so 65%
+of every draw comes from the active character's pool regardless of its size — a thin
+pool converts directly into repetition.
+
+**A stated plan target turned out to be wrong and was corrected rather than chased.**
+The approved plan set "spread ≤ 1.4×" as the Batch 1 exit criterion. Simulating the
+route table first showed routing alone moves the spread 1.61× → 2.31×, because none
+of the orphaned shelves are plausibly Inbal's and she gains nothing from them. The
+routing is still correct; the criterion belonged after her tranche. Recorded honestly
+in the strategy doc, along with an explicit warning not to "fix" the number by routing
+`health`/`pharmacy_personal_care` to her.
+
+**Files changed:**
+- `app/character-data.js` — Ido += `home_everyday_life`, `groceries_food`,
+  `everyday_survival_expanded` and a 10-verb domestic tranche (לבשל, לנקות, להדליק,
+  לכבות, לסדר, להתקלח, לגור, לטייל, לשבת, לקום); Ivri += `bureaucracy`,
+  `scientific_analytical`, `science_research_expanded`; Inat += `abstract_philosophy`,
+  `philosophy_intellectual_expanded`, `high_level_discourse_expanded`,
+  `abstract_concepts_expanded`; Inbal += 8 shared-pool verbs by subject (לבקש,
+  להיפרד, להרגיש, לעלות sense-1, לשמוע, להישבר, להיזהר, לחזור). `everyday` sentences
+  were deliberately *not* given to Ido — all 139 would put him at 56% of the bank.
+- `hebrew-idioms.js` — 39 → 100 idioms. Normalized 15 `qal` labels to `paal` (every
+  other file in the repo uses `paal`). Rebalanced frames to direct 40 / l_dative 48 /
+  possessive_suffix 12 and added a level-4 tier, which did not exist.
+- `verb-game-data.js` — 35 → 60 roots, 169 → 297 playable forms. Weighted to
+  easy/medium; the difficulty ladder went from 2 easy / 17 hard to 5 easy / 20 hard.
+- `app/binyan-board.js` + `app/bootstrap-data.js` — two new teaching points
+  (ש-metathesis, פ״ח guttural) with both locales, needed by the new roots.
+- `sentence-bank-data.js` — 25 new reviewed rows `inbal_71`–`inbal_95` (571 → 596).
+  16 colloquial and 8 at level 1, both gaps in her set; all 22–29 Hebrew letters so
+  they clear the handwriting filter.
+- `vocab-data.js` — 30 cards appended to `religion_magic_spirituality` (1654 → 1684).
+- `tests/hebrew-idioms.test.js` — the file had 3 tests and no schema validation at
+  all. Added required-field checks per `object_type`, `suffix_forms` coverage for the
+  7 keys advConj rotates, a binyan-label whitelist, and a pool-depth floor.
+- `tests/verb-game-data.test.js`, `tests/vocab-data.test.js`,
+  `tests/sentence-bank-data.test.js`, `tests/character-mission.test.js` — updated the
+  hard-coded count ratchets these files use on purpose (roots 35→60, playable-form cap
+  200→400, vocabulary 1654→1684 and playable 1600→1630, religion cards 108→138,
+  sentences 571→596 and the category histogram, INBAL_ENTRY_IDS 70→95, Ido's verb
+  route 20→30).
+- `docs/character-gameplay-strategy.md` — ledger updated for all four characters, plus
+  a new "Balance after the practical-life routing" section recording the spread
+  movement and the parity rule.
+- `index.html` — cache-busted `vocab-data.js`, `sentence-bank-data.js`,
+  `hebrew-idioms.js`, `verb-game-data.js`, `app/character-data.js`,
+  `app/bootstrap-data.js`, `app/binyan-board.js` to `?v=20260728f`.
+
+**Behavior changed:** Conjugation+ deck 2,590 → 6,626 items across 100 distinct
+expressions instead of 39. Binyanim draws 6 roots from 60 instead of 35. Inbal's
+missions draw from 154 vocabulary cards, 95 sentences, and 24 verbs instead of 124/70/16.
+Character totals moved Ido 444→672, Inbal 284→349, Ivri 418→577, Inat 458→524; spread
+1.6× → 1.9×. The 16 new colloquial Inbal rows are intentionally multi-owner, since Ido
+owns the `colloquial` category and the evil eye is his register and her subject at once.
+
+**Tests run:** `npm test` before any change — 318 pass, 0 fail. After each batch and at
+the end — 320 pass, 0 fail (318 plus the 2 new idiom tests). Focused runs during
+authoring: `node --test tests/hebrew-idioms.test.js` (5 pass),
+`tests/verb-game-data.test.js` (14 pass), `tests/sentence-bank-data.test.js` (33 pass),
+`tests/vocab-data.test.js` (16 pass), `tests/character-mission.test.js` (37 pass).
+`npm run report:characters` after batches 1 and 4. Browser verification on a dev server
+at port 3242: no console errors; `HEBREW_IDIOMS.length` 100, `ROOTS.length` 60,
+advConj deck 6,585 live in-page; all 25 new Inbal rows present in the prepared runtime
+deck; the sentence weigher returns 9.79× for an Inbal row against 1.0 for an unowned
+row, confirming the 65% target still solves with her larger pool; `inbal_76` played to
+completion — chips and the corrected distractor rendered at 547px, and the answer
+validated as `attempts:1, correct:1, misses:0`. The test progress row was then removed
+and the page reloaded.
+
+**Guards that caught real authoring errors (not test friction):**
+`areBinyanGlossesConfusinglySimilar` rejected four gloss pairs where one was a strict
+subset of another (`שבר` paal/nifal, `גלה` nifal/pual identical, `רפא` pual/hitpael,
+`טען` nifal/hufal); all four were reworded at the source. The compact-chip policy
+rejected three English chips carrying two content ideas (`a Shabbat candle`,
+`to drive away`, `bad luck`) and the nuance audit caught `לגמרי` glossed as
+"altogether" instead of an accepted cue. All were fixed by rewording, not by adding
+glossary entries.
+
+**Risks / regressions to check:** (1) The 61 new idioms and 25 new roots are authored
+Hebrew — the automated checks cover structure, not whether every vocalization and gloss
+is right; the pointed forms deserve a native read-through, particularly the pu'al and
+huf'al slots, which are the rarest in speech. (2) `verb-game-data.test.js` now allows up
+to 400 playable forms; that ceiling is arbitrary and should be revisited if roots keep
+growing. (3) Ido at 672 items is now the largest character by a wide margin; that is a
+consequence of practical life genuinely being large, but his identity is worth watching
+as it now spans slang and groceries. (4) The two new i18n teaching keys are only
+exercised by the new roots. (5) Batches 5 and 6 of the approved plan (abbreviations,
+and the 169-card vocalization debt) are not started.
+
+
+### 2026-07-28 23:40 EDT — Content expansion, batches 5–6: abbreviations +54, vocalization debt cleared, duplicate playable cards fixed
+
+**Requested:** Finish the approved staged plan — batch 5 (abbreviations) and
+batch 6 (the 169-card vocalization debt), in separate rounds if needed, with
+quality over quantity.
+
+**Two plan items turned out to need no work, and were not invented into work.**
+The plan listed "resolve the 3 abbreviation collision groups (ע״מ, ע״פ ×3, מ״מ)".
+They are already resolved: all five colliding rows carry
+`availability.abbreviationQuiz: false`, so no two identical `abbr` strings can
+reach one board. The plan also scoped batch 5 at "+60 entries, +60 vocalizations
+of existing rows". The vocalization half was dropped: every niqqud-bearing row
+needs a real `expansionHeNiqqudSource`, and pointing 60 institutional expansions
+at the generic Academy dictionary landing page would be citation theatre rather
+than provenance. New rows were vocalized where the expansion is ordinary Hebrew
+the dictionary actually covers; the remaining 163 unvocalized legacy rows stay a
+known gap.
+
+**Files changed:**
+- `abbreviation-data.js` — 54 new entries, `abbr-230` through `abbr-283`
+  (228 → 282). Weighted to the two thinnest buckets: Daily Life & Home 41 → 64
+  and Ideas, Science & Tech 37 → 52. Content is everyday discourse shorteners
+  (בד״כ, אעפ״כ, עפ״י, עפי״ר, כמו״כ, הנ״ל, סה״כ, בע״פ, לו״ז), civic and
+  institutional terms (ב״כ, ב״ד, ע״ר, למ״ס, נש״מ), measurement (מ״ר, סמ״ק,
+  קמ״ר, גר׳, טמפ׳), and the officer ranks the deck was missing between מש״ק and
+  מח״ט (רס״ר, רס״ן, סא״ל, אל״ם, תא״ל). 48 of the 54 carry niqqud; the six proper
+  names and institutions do not. Target was ~60 — the six I could not vouch for
+  were dropped rather than padded.
+- `vocab-data.js` — real niqqud for 168 cards that previously stored the plain
+  form twice, concentrated in the bulk-added `*_expanded` categories. `אג״ח` is
+  left unpointed on purpose: an acronym has no vowels of its own, so pointing it
+  would be wrong rather than missing. Two spelling corrections found on the way:
+  the bond card used an escaped ASCII quote (`אג\"ח`) where the rest of the
+  project uses gershayim, and `תשואת אגח` was missing its gershayim entirely —
+  both now match `abbreviation-data.js`.
+- `vocab-data.js` (builder) — `getBaseVocabulary` now lets a row's own 4th-element
+  meta carry `availability`, which takes precedence over
+  `LEXICON_AVAILABILITY_OVERRIDES`. That map is keyed by Hebrew headword alone and
+  therefore cannot separate two cards that share a spelling — the exact case this
+  needed. Eleven `*_expanded` rows that duplicated both the Hebrew *and* the
+  English of an earlier card are now suppressed from Translation Match while
+  staying in the lexicon for sentence hints (הסתברות, תופעת לוואי, שיקום, תזרים
+  מזומנים, מיזוג, רכישה, שווי, דירקטוריון, בעל מניות, זכויות אזרח, קיטוב).
+  Suppressed rather than deleted, because ids embed a positional index.
+- `tests/abbreviation-data.test.js` — total ratchet 228 → 282, plus a new test
+  pinning the tranche: all 54 reach the deck, every gloss stays inside the card
+  envelope, every row has a note, both target buckets hit their new floor, and
+  every vocalized row in the tranche has a provenance URL.
+- `tests/vocab-data.test.js` — playable ratchet 1630 → 1619, religion count
+  already updated in batch 4, plus two new guards: every card must carry real
+  niqqud apart from a documented acronym allowlist (and every allowlist entry
+  must still exist, so a stale exception cannot hide a gap), and no two *playable*
+  cards may share both their Hebrew and their English.
+
+**Behavior changed:** Abbreviation Match draws from 277 playable rows instead of
+223, roughly 14 distinct sessions before repetition instead of 11. 168 vocabulary
+cards now render pointed with the nikud toggle on and give the speech engine real
+vocalization to read; before, they showed and spoke as bare consonants. Eleven
+duplicate pairs can no longer both land on one Translation Match board, where the
+grader keys on pair id and would have marked a semantically correct match wrong.
+
+**Tests run:** `npm test` before — 320 pass, 0 fail. After batch 5 — 321 pass.
+After batch 6 — 323 pass, 0 fail. Focused: `node --test tests/abbreviation-data.test.js`
+(11 pass), `tests/vocab-data.test.js` (17 pass, then 18 with the dedupe guard).
+The niqqud guard was verified by deliberately reverting one card
+(`emotional_psychological_expanded-003-burnout`) to its unpointed form: the test
+failed naming that exact id, then passed again on restore. Browser verification
+on the dev server at port 3242, no console errors: 282 abbreviations load and all
+54 new rows reach the prepared deck; the four geresh-final entries (כנר׳, אג׳,
+גר׳, טמפ׳) picked up `speechDisabled` automatically from the existing rule; an
+Abbreviation Match board rendered עפי״ר / סה״כ / תח״צ / נתב״ג / סופ״ש against
+their glosses and a match scored correctly; a Vocabulary board with the nikud
+toggle on rendered אֶתִיקָה, הַרְגָּעָה, מוּסָר, תַּחְבִּיר and שְׁחִיקָה, all
+on one line.
+
+**Risks / regressions to check:** (1) The 168 vocalizations are authored Hebrew.
+The tests prove a niqqud mark is present, not that it is the right one — this is
+the batch most in need of a native read-through, particularly the loanwords
+(סַרְקָזְם, מָנִיפּוּלַצְיָה, פְּרַגְמָטִיקָה), where Academy vocalization of
+foreign words is genuinely contested. (2) Where plain ktiv male and pointed
+spelling disagreed I matched the plain form's letters (מְקוּוָּן, מְעוּקָּם-style
+choices) rather than the defective spelling; a reviewer may prefer the other
+convention. (3) Suppressing 11 cards drops the playable pool by 11; the base-category
+copy of each pair is the one that stays. (4) Per-row `availability` in the 4th
+tuple element is a new capability with only these 11 users. (5) The remaining 163
+unvocalized abbreviations are untouched and still need per-term Academy sourcing.
+(6) Officer ranks were placed in Ideas, Science & Tech to sit with the existing
+military terms (מ״פ, מג״ד, מח״ט) rather than in Civics, Law & Work.
+
