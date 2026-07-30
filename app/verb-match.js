@@ -483,6 +483,7 @@ verbMatch.renderVerbMatchCards = verbMatch.renderVerbMatchCards || function rend
 
   const leftCards = runtime.state.match.leftCards;
   const rightCards = runtime.state.match.rightCards;
+  const longLen = runtime.constants?.MATCH_LONG_LEN || 16;
   const rows = Math.max(leftCards.length, rightCards.length);
   for (let idx = 0; idx < rows; idx += 1) {
     const leftCard = leftCards[idx];
@@ -491,6 +492,9 @@ verbMatch.renderVerbMatchCards = verbMatch.renderVerbMatchCards || function rend
       btn.type = "button";
       btn.className = "choice-btn match-card";
       btn.textContent = leftCard.englishText;
+      if (String(leftCard.englishText || "").length > longLen) {
+        btn.classList.add("match-card-long");
+      }
       btn.classList.toggle("selected", leftSelected === leftCard.id);
       btn.classList.toggle("matched", matchedSet.has(leftCard.id));
       btn.classList.toggle("mismatch", mismatchSet.has(leftCard.id));
@@ -505,10 +509,14 @@ verbMatch.renderVerbMatchCards = verbMatch.renderVerbMatchCards || function rend
 
     const rightCard = rightCards[idx];
     if (rightCard) {
+      const text = runtime.state.showNiqqudInline ? rightCard.hebrewNiqqud : rightCard.hebrewPlain;
       const btn = global.document.createElement("button");
       btn.type = "button";
       btn.className = "choice-btn match-card hebrew";
-      btn.textContent = runtime.state.showNiqqudInline ? rightCard.hebrewNiqqud : rightCard.hebrewPlain;
+      btn.textContent = text;
+      if (String(text || "").length > longLen) {
+        btn.classList.add("match-card-long");
+      }
       btn.classList.toggle("selected", rightSelected === rightCard.id);
       btn.classList.toggle("matched", matchedSet.has(rightCard.id));
       btn.classList.toggle("mismatch", mismatchSet.has(rightCard.id));

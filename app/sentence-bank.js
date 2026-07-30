@@ -55,6 +55,7 @@ function sanitizeAnswerVariants(variants, targetTokens) {
       if (!tokens.length) return null;
       return {
         text: String(variant.text || "").trim(),
+        textNiqqud: String(variant.textNiqqud || variant.text_niqqud || "").trim(),
         tokens,
       };
     })
@@ -1047,6 +1048,33 @@ function getAcceptedAnswerVariants(question) {
   ].filter((variant) => Array.isArray(variant?.tokens) && variant.tokens.length === primaryTokens.length);
 }
 
+function findClosestAcceptedAnswerVariant(question, actualTokens = getPlacedAnswerTokens(question)) {
+  const actual = sanitizeTokenList(actualTokens);
+  const variants = getAcceptedAnswerVariants(question);
+  if (!variants.length) return null;
+  if (!actual.length) return variants[0];
+
+  let bestVariant = variants[0];
+  let bestScore = -1;
+
+  variants.forEach((variant) => {
+    let score = 0;
+    const vTokens = variant.tokens || [];
+    const minLen = Math.min(vTokens.length, actual.length);
+    for (let i = 0; i < minLen; i++) {
+      if (vTokens[i] === actual[i]) {
+        score++;
+      }
+    }
+    if (score > bestScore) {
+      bestScore = score;
+      bestVariant = variant;
+    }
+  });
+
+  return bestVariant;
+}
+
 function findMatchingAcceptedAnswerVariant(question, actualTokens = getPlacedAnswerTokens(question)) {
   const actual = sanitizeTokenList(actualTokens);
   if (!actual.length) return null;
@@ -1061,7 +1089,9 @@ function isPlacedAnswerCorrect(question) {
 
 function getCorrectAnswerText(question, options = {}) {
   if (!question?.sentence) return "";
-  const matchedVariant = options.matchingVariant || findMatchingAcceptedAnswerVariant(question, options.actualTokens);
+  const matchedVariant = options.matchingVariant
+    || findMatchingAcceptedAnswerVariant(question, options.actualTokens)
+    || findClosestAcceptedAnswerVariant(question, options.actualTokens);
   if (matchedVariant?.text) {
     return matchedVariant.text;
   }
@@ -1069,9 +1099,13 @@ function getCorrectAnswerText(question, options = {}) {
 }
 
 function getCorrectAnswerDisplayText(question, options = {}) {
-  const plain = getCorrectAnswerText(question, options);
+  const matchedVariant = options.matchingVariant
+    || findMatchingAcceptedAnswerVariant(question, options.actualTokens)
+    || findClosestAcceptedAnswerVariant(question, options.actualTokens);
+  const plain = getCorrectAnswerText(question, { matchingVariant: matchedVariant, actualTokens: options.actualTokens });
   if (!question?.sentence || question.direction === "he2en") return plain;
   if (!getRuntime().state?.showNiqqudInline) return plain;
+  if (matchedVariant?.textNiqqud) return matchedVariant.textNiqqud;
   if (plain === question.sentence.hebrew && question.sentence.hebrewNiqqud) {
     return question.sentence.hebrewNiqqud;
   }
@@ -1494,16 +1528,17 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
   const runtime = getRuntime();
   normalizeQuestionState(question);
   runtime.el.choiceContainer.innerHTML = "";
-  const acceptedVariant = question.locked && question.wasLastAnswerCorrect
-    ? findMatchingAcceptedAnswerVariant(question)
+  const slotTokenIds = getQuestionSlotTokenIds(question);
+  const slottedTokens = getSlottedTokens(question);
+  const placedTokenTexts = slottedTokens.map((t) => t?.text || "");
+  const acceptedVariant = question.locked
+    ? (findMatchingAcceptedAnswerVariant(question, placedTokenTexts) || findClosestAcceptedAnswerVariant(question, placedTokenTexts))
     : null;
   const displayTargetTokens = acceptedVariant?.tokens || question.targetTokens;
   const sentenceFrame = buildSentenceFrame(
-    getCorrectAnswerText(question, { matchingVariant: acceptedVariant }),
+    getCorrectAnswerText(question, { matchingVariant: acceptedVariant, actualTokens: placedTokenTexts }),
     displayTargetTokens
   );
-  const slotTokenIds = getQuestionSlotTokenIds(question);
-  const slottedTokens = getSlottedTokens(question);
 
   const board = global.document.createElement("div");
   board.className = `sentence-builder ${question.locked ? "is-feedback" : ""}`.trim();
@@ -1556,7 +1591,7 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
         slot.classList.add("selected");
       }
       if (question.locked) {
-        slot.classList.add(question.wasLastAnswerCorrect || token.text === piece.tokenText ? "correct" : "wrong");
+        slot.classList.add(question.wasLastAnswerCorrect || (token && token.text === displayTargetTokens[index]) ? "correct" : "wrong");
       }
     } else {
       slot.classList.add("empty");

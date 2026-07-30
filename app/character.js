@@ -913,17 +913,23 @@ function getCompanionBounds(companion) {
   const margin = 8;
   const topbarBottom = runtime.el?.shellTopbar?.getBoundingClientRect?.().bottom || margin;
   const navTop = runtime.el?.mobileBottomNav?.getBoundingClientRect?.().top || runtime.global.innerHeight;
-  const minX = margin;
-  const maxX = Math.max(minX, runtime.global.innerWidth - rect.width - margin);
+  const minRight = margin;
+  const maxRight = Math.max(minRight, runtime.global.innerWidth - rect.width - margin);
   const minY = Math.max(margin, topbarBottom + margin);
   const maxY = Math.max(minY, navTop - rect.height - margin);
-  return { minX, maxX, minY, maxY };
+  return { minRight, maxRight, minY, maxY };
 }
 
 function clampCompanionPosition(companion, position) {
+  const runtime = getRuntime();
   const bounds = getCompanionBounds(companion);
+  let right = position?.right;
+  if (right === undefined && position?.x !== undefined) {
+    const rect = companion.getBoundingClientRect();
+    right = runtime.global.innerWidth - (Number(position.x) + (rect.width || 200));
+  }
   return {
-    x: Math.min(bounds.maxX, Math.max(bounds.minX, Number(position?.x || 0))),
+    right: Math.min(bounds.maxRight, Math.max(bounds.minRight, Number(right ?? 12))),
     y: Math.min(bounds.maxY, Math.max(bounds.minY, Number(position?.y || 0))),
   };
 }
@@ -932,9 +938,9 @@ function applyCompanionPosition(companion, context) {
   if (!companion || !context?.companionPosition) return;
   const clamped = clampCompanionPosition(companion, context.companionPosition);
   context.companionPosition = clamped;
-  companion.style.left = `${clamped.x}px`;
+  companion.style.right = `${clamped.right}px`;
   companion.style.top = `${clamped.y}px`;
-  companion.style.right = "auto";
+  companion.style.left = "auto";
   companion.style.bottom = "auto";
 }
 
@@ -1711,7 +1717,8 @@ function holdVisibilityToggleInPlace(before) {
   if (!dx && !dy) return;
 
   const rect = companion.getBoundingClientRect();
-  context.companionPosition = { x: rect.left + dx, y: rect.top + dy };
+  const currentRight = runtime.global.innerWidth - rect.right;
+  context.companionPosition = { right: currentRight - dx, y: rect.top + dy };
   applyCompanionPosition(companion, context);
 }
 
@@ -1832,16 +1839,16 @@ function moveCompanionDrag(event) {
   if (!activeCompanionDrag || event.pointerId !== activeCompanionDrag.pointerId) return;
   event.preventDefault?.();
   const companion = activeCompanionDrag.companion;
+  const runtime = getRuntime();
+  const currentPointerRight = runtime.global.innerWidth - event.clientX;
+  const desiredRight = currentPointerRight - activeCompanionDrag.offsetRight;
   const position = clampCompanionPosition(companion, {
-    x: event.clientX - activeCompanionDrag.offsetX,
+    right: desiredRight,
     y: event.clientY - activeCompanionDrag.offsetY,
   });
-  companion.style.left = `${position.x}px`;
-  companion.style.top = `${position.y}px`;
-  companion.style.right = "auto";
-  companion.style.bottom = "auto";
   const context = getReactionContext();
   if (context) context.companionPosition = position;
+  applyCompanionPosition(companion, context);
 }
 
 function finishCompanionDrag(event) {
@@ -1868,12 +1875,12 @@ character.startCompanionDrag = character.startCompanionDrag || function startCom
     companion,
     sprite,
     pointerId: event.pointerId,
-    offsetX: event.clientX - rect.left,
+    offsetRight: (runtime.global.innerWidth - event.clientX) - (runtime.global.innerWidth - rect.right),
     offsetY: event.clientY - rect.top,
   };
   companion.classList.add("is-dragging");
   sprite.setPointerCapture?.(event.pointerId);
-  global.addEventListener?.("pointermove", moveCompanionDrag, { passive: false });
+  global.addEventListener?.("pointermove", moveCompanionDrag);
   global.addEventListener?.("pointerup", finishCompanionDrag);
   global.addEventListener?.("pointercancel", finishCompanionDrag);
 };

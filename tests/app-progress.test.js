@@ -1033,6 +1033,54 @@ test("sentence builder accepts an alternate Hebrew word order for en2he question
   assert.ok(state.sessionScore > 0, "reordered Hebrew answer is scored as correct");
 });
 
+test("sentence bank incorrect answer diffing matches the closest variant and keeps valid alternate tokens green", () => {
+  const sentenceBank = [
+    {
+      id: "colloquial_122",
+      category: "colloquial",
+      difficulty: 2,
+      emoji: "🎧",
+      english: "I don't get the hype around this podcast.",
+      english_tokens: ["I", "don't", "get the hype", "around", "this podcast"],
+      hebrew: "אני לא מבינה את ההייפ סביב הפודקאסט הזה.",
+      hebrew_tokens: ["אני", "לא", "מבינה", "את", "ההייפ", "סביב", "הפודקאסט", "הזה"],
+      hebrew_tokens_niqqud: ["אני", "לא", "מבינה", "את", "ההייפ", "סביב", "הפודקאסט", "הזה"],
+      hebrew_alternates: [
+        {
+          text: "אני לא מבין את ההייפ סביב הפודקאסט הזה.",
+          tokens: ["אני", "לא", "מבין", "את", "ההייפ", "סביב", "הפודקאסט", "הזה"],
+          tokens_niqqud: ["אני", "לא", "מבין", "את", "ההייפ", "סביב", "הפודקאסט", "הזה"],
+        },
+      ],
+      english_distractors: ["We", "can't", "hear the buzz"],
+      hebrew_distractors: ["מבין", "שומעת", "הזאת"],
+      hebrew_distractors_niqqud: ["מבין", "שומעת", "הזאת"],
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { document, state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  ["אני", "לא", "מבין", "את", "ההייפ", "סביב", "הפודקאסט", "הזאת"].forEach((tokenText) => {
+    placeSentenceTokenInNextEmptySlotByTap(document, tokenText);
+  });
+
+  document.querySelector("#nextBtn").click();
+
+  assert.equal(state.sentenceBank.currentQuestion.wasLastAnswerCorrect, false);
+  const slotButtons = getSentenceSlots(document);
+  assert.equal(slotButtons.length, 8);
+  assert.equal(slotButtons[2].classList.contains("correct"), true);
+  assert.equal(slotButtons[2].classList.contains("wrong"), false);
+  assert.equal(slotButtons[7].classList.contains("wrong"), true);
+  const feedbackMsg = getFeedbackText(document);
+  assert.match(feedbackMsg, /מבין/);
+});
+
 test("shema home tile is only shown when a Hebrew voice is available", () => {
   const withVoice = loadAppHarness([], [], [], {});
   withVoice.app.ui.renderHomeState();

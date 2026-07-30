@@ -1644,9 +1644,9 @@ body[data-theme="light"] .sentence-answer-line {
   padding: 0.6rem 0.55rem;
   text-align: center;
   font-size: clamp(0.98rem, 2.7vw, 1.06rem);
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.25;
 }
 
@@ -1659,6 +1659,9 @@ body[data-theme="light"] .sentence-answer-line {
 
 .match-card.match-card-long {
   font-size: clamp(0.82rem, 2.3vw, 0.96rem);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   line-height: 1.2;
 }
 
@@ -2482,6 +2485,16 @@ body[data-ui-lang="he"] .settings-row-label {
   left: 19px;
 }
 
+body[data-ui-lang="he"] .settings-switch::after,
+body[dir="rtl"] .settings-switch::after {
+  left: 19px;
+}
+
+body[data-ui-lang="he"] .settings-row[aria-pressed="true"] .settings-switch::after,
+body[dir="rtl"] .settings-row[aria-pressed="true"] .settings-switch::after {
+  left: 3px;
+}
+
 .settings-seg {
   flex: none;
   display: inline-flex;
@@ -2840,6 +2853,10 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   justify-items: center;
 }
 
+.character-scene-heading + .character-gender-picker {
+  margin-top: -0.5rem;
+}
+
 .character-picker-label {
   margin: 0;
   text-align: center;
@@ -3025,7 +3042,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 .character-companion-copy {
   grid-area: bubble;
   width: fit-content;
-  max-width: min(280px, calc(100vw - 116px));
+  max-width: min(230px, calc(100vw - 156px));
   min-width: 0;
   align-self: center;
   justify-self: end;
@@ -3034,12 +3051,13 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 .character-companion-dialogue {
   width: fit-content;
   max-width: 100%;
-  padding: 0.56rem 0.7rem;
+  padding: 0.45rem 0.65rem;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--bubble-bg);
   color: var(--bubble-ink);
-  font-size: 0.96rem;
+  font-size: 0.95rem;
+  line-height: 1.32;
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
 }
 
@@ -3476,7 +3494,7 @@ body[data-ui-lang="he"] .character-mission-copy {
     width: max-content;
     max-width: calc(100vw - 16px);
     min-height: 84px;
-    grid-template-columns: max-content 84px;
+    grid-template-columns: max-content 104px;
   }
 
   .character-companion .character-sprite {
@@ -3484,13 +3502,13 @@ body[data-ui-lang="he"] .character-mission-copy {
   }
 
   .character-companion-copy {
-    max-width: calc(100vw - 124px);
+    max-width: min(190px, calc(100vw - 124px));
   }
 
   .character-companion-dialogue {
-    padding: 0.45rem 0.55rem;
-    font-size: 0.84rem;
-    line-height: 1.25;
+    padding: 0.38rem 0.52rem;
+    font-size: 0.85rem;
+    line-height: 1.28;
   }
 
   .character-word-gloss {

@@ -7,6 +7,124 @@ Each entry records what was requested, what changed, what was tested, and what t
 
 ---
 
+### 2026-07-29 22:25 EDT — Fix card text wrapping in Word Match ("to bless")
+
+**Requested:** Fix Word Match (`אוצר מילים`) card text wrapping where short two-word phrases like "to bless" split across two lines ("to" \n "bless").
+
+**Files changed:**
+- `styles.css` — Updated `.match-card` to use `white-space: nowrap; overflow: hidden; text-overflow: ellipsis;` so standard cards (<= 16 chars) stay on one single line. Kept `white-space: normal` and reduced font size on `.match-card.match-card-long` (> 16 chars).
+- `app/verb-match.js` — Added `.match-card-long` toggle when verb card text length exceeds `MATCH_LONG_LEN` (16 chars), keeping it aligned with `app/match-engine.js`.
+- `index.html` — Cache-busted `styles.css` (`?v=20260729e` → `?v=20260729f`) and `app/verb-match.js` (`?v=20260729c` → `?v=20260729d`).
+
+**Behavior changed:** Short multi-word cards like "to bless", "in particular", "to run", etc., remain strictly on one rendered line without awkward line breaks.
+
+**Tests run:** `npm test` — 338 pass, 0 fail. All unit, integration, and Headless Chrome layout regression tests passed.
+
+**Risks / regressions to check:** Verify long multi-word cards (> 16 chars) continue to receive `.match-card-long` and wrap gracefully.
+
+---
+
+### 2026-07-29 22:18 EDT — Tighten Character Picker title and subtitle vertical spacing
+
+**Requested:** Reduce dead vertical space between character picker heading ("Choose your character" / "מי בא לך היום?") and subtitle ("How should the character address you?" / "איך הדמות תפנה אליך?").
+
+**Files changed:**
+- `styles.css` — Added `.character-scene-heading + .character-gender-picker { margin-top: -0.5rem; }` to reduce the gap between title and subtitle from `0.85rem` (~14px) to `0.35rem` (~5.6px).
+- `index.html` — Cache-busted `styles.css` (`?v=20260729d` → `?v=20260729e`).
+
+**Behavior changed:** In both English and Hebrew UI modes, the subtitle ("How should the character address you?") now sits tight and comfortably close under the main scene heading.
+
+**Tests run:** `npm test` — 338 pass, 0 fail. All unit, integration, and Headless Chrome rendered layout regression tests passed.
+
+**Risks / regressions to check:** None; spacing change is scoped strictly to `.character-scene-heading + .character-gender-picker`.
+
+---
+
+### 2026-07-29 22:15 EDT — Sentence bank closest variant diffing & alternate token correction
+
+**Requested:** Fix Sentence Bank evaluation so that when a submitted sentence contains a distractor in one slot (e.g. `הזאת` for masculine `הפודקאסט`) but valid alternate tokens in other slots (e.g. male `מבין` vs female `מבינה`), valid alternate tokens are marked correct (green) rather than falsely flagged wrong (red), and feedback text displays the closest matching variant.
+
+**Files changed:**
+- `app/sentence-bank.js` — Added `findClosestAcceptedAnswerVariant(question, actualTokens)` to compute token agreement against all accepted variants. Updated `renderSentenceBankBoard`, `getCorrectAnswerText`, and `getCorrectAnswerDisplayText` to resolve and display the closest matching variant when an answer is locked. Preserved `textNiqqud` in `sanitizeAnswerVariants`.
+- `tests/app-progress.test.js` — Added unit test verifying that `colloquial_122` with male token `מבין` and distractor `הזאת` evaluates `מבין` as `.correct` (green), `הזאת` as `.wrong` (red), and generates feedback text matching the male variant.
+- `index.html` — Cache-busted `app/sentence-bank.js` (`?v=20260729c` → `?v=20260729d`).
+
+**Behavior changed:** When a learner submits a sentence with a mistake, any valid alternate tokens (such as gender or word-order alternates) now stay green, and feedback text reflects the speaker gender / variant the learner chose.
+
+**Tests run:** `npm test` — 338 pass, 0 fail.
+
+**Risks / regressions to check:** Verify multiword alternate word orders continue to evaluate correctly without false positives.
+
+---
+
+### 2026-07-29 22:02 EDT — RTL toggle switch knob directionality correction
+
+**Requested:** Reverse setting toggle switch knob directionality in Hebrew (`body[data-ui-lang="he"]` / RTL) mode so that ON is Left and OFF is Right.
+
+**Files changed:**
+- `styles.css` — Added RTL rules for `.settings-switch::after` under `body[data-ui-lang="he"]` and `body[dir="rtl"]`: OFF state (`aria-pressed="false"`) rests knob at `left: 19px` (Right), and ON state (`aria-pressed="true"`) slides knob to `left: 3px` (Left).
+- `index.html` — Cache-busted `styles.css` (`?v=20260729c` → `?v=20260729d`).
+
+**Behavior changed:** When in Hebrew UI mode, toggle switches in the Settings panel now progress from right (OFF / inactive) to left (ON / active), matching RTL UI standards. English (LTR) toggle behavior is unchanged (OFF = Left, ON = Right).
+
+**Tests run:** `npm test` — 337 pass, 0 fail. All unit, integration, and Headless Chrome rendered layout regression tests (`tests/gameplay-layout.test.js`) passed.
+
+**Risks / regressions to check:** (1) Verify language switching dynamically updates toggle knob positions when switching between Hebrew and English in Settings.
+
+---
+
+### 2026-07-29 21:59 EDT — Compact gameplay companion speech bubbles
+
+**Requested:** Make gameplay speech bubbles compact and fix left-edge screen overflow on mobile viewports.
+
+**Files changed:**
+- `styles.css` — Reduced `.character-companion-dialogue` desktop font size to `0.95rem` (was `1.12rem`), padding to `0.45rem 0.65rem` (was `0.65rem 0.85rem`), and line-height to `1.32`. Reduced `.character-companion-copy` desktop max-width to `min(230px, calc(100vw - 156px))` (was 320px). In mobile media query (`@media (max-width: 480px)`), reduced font size to `0.85rem` (was `0.98rem`), padding to `0.38rem 0.52rem` (was `0.52rem 0.7rem`), line-height to `1.28`, and max-width to `min(190px, calc(100vw - 124px))`.
+- `app/character.js` — Updated `getCompanionBounds()` to calculate `maxRight` using `Math.max(minRight, runtime.global.innerWidth - rect.width - margin)`, ensuring the container's left edge (the speech bubble) cannot cross the left viewport margin.
+- `index.html` — Cache-busted `styles.css` (`?v=20260729b` → `?v=20260729c`) and `app/character.js` (`?v=20260729a` → `?v=20260729b`).
+
+**Behavior changed:** Gameplay speech bubbles render as neat, compact, tight cards wrapped around character dialogue. Speech bubbles no longer slam into or overflow off the left edge of the screen on mobile devices or narrow DevTools views.
+
+**Tests run:** `npm test` — 337 pass, 0 fail. All unit, integration, and Headless Chrome layout regression tests (`tests/gameplay-layout.test.js`) passed.
+
+**Risks / regressions to check:** (1) Verify multi-line Hebrew text in Shema and Sentence Bank wraps cleanly without clipping niqqud. (2) Confirm gloss tooltips on clickable words (`.character-word`) render cleanly within the compact bubble footprint.
+
+---
+
+### 2026-07-29 21:44 EDT — Fix companion sprite horizontal jumping between answers
+
+**Requested:** Fix the gameplay issue shown in the video where the companion sprite image shifts left and right across the screen between answer selections.
+
+**Diagnosis:** `.character-companion` layout puts the speech bubble in column 1 (left) and the sprite in column 2 (right). `applyCompanionPosition` anchored the container using `left: clamped.x`, fixing the left border of the speech bubble. Whenever an answer triggered or cleared a reaction (or dialogue text changed length), the bubble's width changed—pushing or pulling the sprite in column 2 horizontally by up to 220px. Additionally, mobile CSS specified `grid-template-columns: max-content 84px` while `.character-sprite` had `width: 104px`.
+
+**Files changed:**
+- `app/character.js` — Converted companion position tracking and application to right-anchored positioning (`right` style property instead of `left`). `applyCompanionPosition` writes `companion.style.right = ${clamped.right}px` and `left: "auto"`. `clampCompanionPosition` and `getCompanionBounds` calculate bounds relative to `minRight`/`maxRight`. Legacy stored positions `{ x, y }` automatically convert to `{ right, y }`. Updated `moveCompanionDrag`, `startCompanionDrag`, and `holdVisibilityToggleInPlace` to maintain right-anchored sprite geometry.
+- `styles.css` — Fixed mobile media query (`@media (max-width: 480px)`) grid template from `grid-template-columns: max-content 84px` to `grid-template-columns: max-content 104px` to match sprite element width.
+- `index.html` — Cache-busted `app/character.js` (`?v=20260728a` → `?v=20260729a`) and `styles.css` (`?v=20260729a` → `?v=20260729b`).
+
+**Behavior changed:** Companion sprite image remains completely stationary on screen when answering questions, triggering reactions, or clearing dialogue bubbles. Speech bubbles expand outward to the left of the stationary sprite without pushing the character image.
+
+**Tests run:** `npm test` — 337 pass, 0 fail. All unit, integration, and Headless Chrome rendered layout regression tests (`tests/gameplay-layout.test.js`) passed.
+
+**Risks / regressions to check:** (1) Verify companion dragging and visibility toggle hold in place near screen edges on narrow mobile viewports. (2) Verify legacy saved positions in local storage migrate smoothly without jump on initial load.
+
+---
+
+### 2026-07-29 21:35 EDT — Gameplay sprite speech bubble sizing expansion
+
+**Requested:** Make the companion sprite speech bubbles/text boxes bigger during gameplay so pointed Hebrew dialogue is clearer and easier to read. Propose a plan first, assess codebase complexity and agent safety, and make changes conservatively.
+
+**Files changed:**
+- `styles.css` — Increased default desktop font size for `.character-companion-dialogue` from `0.96rem` to `1.12rem`, padding from `0.56rem 0.7rem` to `0.65rem 0.85rem`, and line-height to `1.38`. Increased desktop max-width for `.character-companion-copy` from `min(280px, calc(100vw - 116px))` to `min(320px, calc(100vw - 116px))`. In mobile media query (`@media (max-width: 480px)`), increased font size from `0.84rem` to `0.98rem`, padding from `0.45rem 0.55rem` to `0.52rem 0.7rem`, line-height to `1.35`, and max-width to `calc(100vw - 110px)`.
+- `index.html` — Cache-busted `styles.css` (`?v=20260728e` → `?v=20260729a`).
+
+**Behavior changed:** Gameplay speech bubbles for the free-play/mission companion render noticeably larger text with generous padding and vertical line spacing, improving legibility of Hebrew niqqud and gloss underlines on both mobile devices and desktop displays.
+
+**Tests run:** `npm test` — 337 pass, 0 fail. All unit, integration, and Headless Chrome layout regression tests (`tests/gameplay-layout.test.js`) passed, confirming the 360×640 CSS pixels gameplay viewport floor is fully preserved.
+
+**Risks / regressions to check:** (1) Companion bubble footprint is slightly wider and taller; verify on small screens (360px wide) that dragging companion or displaying long dialogue lines does not obscure active game tiles or toolbar actions. (2) Line height increase (`1.38` / `1.35`) adds vertical space for niqqud; verify multi-line speech bubbles stay comfortably centered without clipping top or bottom edges.
+
+---
+
 ### 2026-07-27 23:05 EDT — Fix the נמאס לי ממני preposition item; move the blank to the dative slot
 
 **Requested:** The Prepositions game showed "נמאס ____ " with the answer ממני, glossed "to be fed up with me" — נמאס לי ממני is an improbable expression. Asked whether the item should move to Conjugation+, and whether this is a one-off or the start of a class of items to migrate out of Prepositions.
@@ -6286,3 +6404,35 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** `npm test` — 337 pass, 0 fail (331 before, plus 6 new). Baseline was captured before any edit. Browser-verified on a dev server at port 3242 at 375×812: live deck 2,986 with 2,498 conjugated items; rendered `נתנהג ____` under "WE WILL BEHAVE LIKE YOU (M.SG.)" with both distractor axes intact (`אַחֲרֶיךָ`/`אִיתְּךָ` wrong preposition, `כָּמוֹךְ` right preposition wrong object); answering correctly produced "Correct. It's נתנהג כָּמוֹךָ. Meaning: we will behave like you (m.sg."; no vertical scroll (scrollHeight 812 = clientHeight); no console errors. The reset fix was exercised live through both previously-leaking paths (prepositions→verbMatch, advConj→lessonMatch) and confirmed to clear both the `.active` flags and the intervals, with `hasActiveLearnSession()` false after `goHome`.
 
 **Risks / regressions to check:** (1) `tests/gameplay-layout.test.js` is **intermittent** — "Binyanim feedback scrolls (516px > 488px)" appeared once in a full-suite run and the identical code then passed 3 full runs and 5 isolated runs. It is 28px over a 488px budget, so it is genuinely borderline rather than caused by this change; worth a real fix before it erodes trust in the suite. (2) Present-tense items now show a concrete subject ("he waits for me") where they previously showed the trigger infinitive ("to wait for me") — same Hebrew, same answer, changed hint, and the two loaders in the test file pin both forms. (3) The `כָּמוֹךָ`/`כָּמוֹךְ` style near-identical option pair (2ms vs 2fs differing only in the final vowel) is visible in a rendered screenshot; it is pre-existing — the task-log already noted it for the `le` table on 2026-07-27 — and its per-question frequency is unchanged, since distractors are still built per (preposition, object) and no new pairs were added. (4) Deck build now iterates 2,986 items instead of 800 on every `startPrepositions`; no perceptible delay was observed, but `buildPrepositionOptions` runs per item and this is the hot path if more forms are ever added. (5) The 10 drilled forms are a curated subset, deliberately excluding second-person subjects, third-person plural past/future, and every imperative; adding second-person subjects would need the coreference guard's 2nd-person branch, which is implemented and unit-tested but currently unreachable. (6) `resetAllModeSessions` is the single teardown for all nine modes, so a future mode that forgets to register its slice there will leak exactly the way these seven did — the ragged matrix is fixed, not structurally prevented, and the mode registry in Tranche D is what would prevent it.
+
+### 2026-07-29 21:05 EDT — Re-gloss לנגב חומוס as "grab" instead of "wipe up"
+
+**Requested:** In the Sentences game, `colloquial_138` glossed בואי נלך לנגב חומוס ביפו as "Come on, let's go wipe up hummus in Jaffa before it runs out." The user flagged "wipe" as unusual English here, and noted that the obvious slang alternative ("nab") reads as theft rather than eating.
+
+**Approach:** Kept the Hebrew untouched — לנגב is the correct and idiomatic verb for eating hummus with pita, which is the whole pedagogical point of the card. Changed only the English gloss to a natural equivalent. "Grab" was chosen over "nab"/"swipe"/"mop up": "let's go grab hummus" is ordinary English for the same act, and it carries none of the theft connotation the user objected to (which matters doubly here, since Israeli slang לנגב *does* also mean to pilfer — a gloss that leaned on that sense would teach the wrong reading). The literal meaning is not lost: the card's `notes` already explain that לנגב חומוס is literally "to wipe hummus," so the note now does the etymological work and the gloss does the fluency work. `notes` left as written.
+
+**Files changed:**
+- `sentence-bank-data.js` — `colloquial_138`: `english` "wipe up hummus" → "grab hummus"; the matching `englishTokens` entry "wipe up" → "grab". Hebrew, niqqud, `hebrewTokenPairs`, distractors and `hebrewAlternates` untouched.
+- `index.html` — cache-busted `sentence-bank-data.js` (`?v=20260729b` → `20260729d`; `c` was already taken by the previous session's 9-file bump).
+
+**Behavior changed:** The English prompt for this one sentence now reads "Come on, let's go grab hummus in Jaffa before it runs out." In the English→Hebrew direction the third English tile reads "grab" instead of "wipe up". Nothing else about the card changes: same 7 tokens, same answer, same distractor set (`cook` still opposes the changed slot), both gendered alternates still accepted.
+
+**Tests run:** `npm test` — 337 pass, 0 fail, both before and after the edit. Verified the built card directly through the `getSentenceBank()` loader: `english_tokens` is 7 entries aligned 1:1 with the 7 `hebrew_tokens`, the third being "grab", and the new English string is unique across the whole bank (no gloss collision).
+
+**Risks / regressions to check:** (1) The gloss "grab" no longer signals the literal "wipe" sense on the card face, so a learner who skips the note loses that hook — deliberate, and the note is where that belongs. (2) Any user who has already seen this card will see a changed English prompt; item stats are keyed by sentence id, so progress is preserved and nothing re-teaches. (3) Not browser-verified in the Sentences deck — the card surfaces at random within a large bank, and the data-level check above pins the only thing that changed.
+
+### 2026-07-29 21:10 EDT — Audit and explain non-literal Hebrew discourse markers (כבר, דווקא, סתם, חבל, כפרה, etc.)
+
+**Requested:** The user questioned why `כבר` in `colloquial_86` ("אם אתה כבר בא, תביא משהו לשתות") is translated as "anyway," and asked for an audit/flagging of other cases in the Ulpango codebase where Hebrew words have non-literal, modal, or untranslatable pragmatic senses beyond their dictionary defaults.
+
+**Files analyzed:**
+- `sentence-bank-data.js` — inspected usages of `כבר`, `דווקא`, `סתם`, `בכלל`, `נו`, `כאילו`, `חבל`, `על הפנים`, `כפרה`, `קטן עליי`, `סגור`, `בכיף`.
+- `vocab-data.js` — inspected pragmatic card translations (`דווקא`, `בכלל`, `כאילו`, `לא נורא`, `נו באמת`, `חבל`).
+- `hebrew-idioms.js` — inspected idiomatic verb constructions (`לשבת למישהו על הנשמה`, `להוציא למישהו את הנשמה`, `לעבוד על`).
+
+**Behavior changed:** None (codebase analysis & pedagogical explanation task).
+
+**Tests run:** `npm test` — 336 unit tests passed cleanly.
+
+**Risks / regressions to check:** None.
+
