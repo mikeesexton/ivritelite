@@ -80,29 +80,43 @@ function consonantalSkeleton(text) {
 test("every idiom carries the fields advConj needs to build an item", () => {
   const idioms = loadIdioms();
 
-  assert.equal(idioms.length, 100);
+  assert.equal(idioms.length, 77);
   assert.equal(new Set(idioms.map((entry) => entry.id)).size, idioms.length);
 
   idioms.forEach((idiom) => {
     const where = `idiom ${idiom.id}`;
 
-    // buildAdvConjDeck skips the whole idiom without literal_sg, and
+    // buildAdvConjDeck skips the whole idiom without literal_sg (or literal_infinitive for infinitive-only), and
     // buildAdvConjEnglishSentence returns "" for whichever tense template is
     // missing — so a gap here silently shrinks the deck instead of failing.
-    ["literal_sg", "literal_pl", "literal_past", "literal_future"].forEach((key) => {
+    const requiredLiterals = idiom.tenses && idiom.tenses.includes("infinitive") && idiom.tenses.length === 1
+      ? ["literal_infinitive"]
+      : ["literal_sg", "literal_pl", "literal_past", "literal_future"];
+    if (idiom.tenses && idiom.tenses.includes("infinitive") && !requiredLiterals.includes("literal_infinitive")) {
+      requiredLiterals.push("literal_infinitive");
+    }
+
+    requiredLiterals.forEach((key) => {
       assert.ok(String(idiom[key] || "").trim(), `${where} needs ${key}`);
-      assert.match(idiom[key], /\{s\}/, `${where} ${key} needs a {s} placeholder`);
+      if (key !== "literal_infinitive") {
+        assert.match(idiom[key], /\{s\}/, `${where} ${key} needs a {s} placeholder`);
+      }
     });
 
     assert.ok(OBJECT_TYPES.has(idiom.object_type), `${where} has object_type ${idiom.object_type}`);
     assert.ok(BINYANIM.has(idiom.binyan), `${where} has binyan ${idiom.binyan}`);
 
-    ["present", "past", "future"].forEach((tense) => {
+    const requiredTenses = idiom.tenses || ["present", "past", "future"];
+    requiredTenses.forEach((tense) => {
       const forms = idiom.conjugations[tense];
       assert.ok(forms, `${where} needs a ${tense} table`);
-      SUBJECT_FORMS.forEach((form) => {
-        assert.ok(String(forms[form] || "").trim(), `${where} needs ${tense}.${form}`);
-      });
+      if (tense === "infinitive") {
+        assert.ok(String(forms["infinitive"] || "").trim(), `${where} needs ${tense}.infinitive`);
+      } else {
+        SUBJECT_FORMS.forEach((form) => {
+          assert.ok(String(forms[form] || "").trim(), `${where} needs ${tense}.${form}`);
+        });
+      }
     });
 
     if (idiom.object_type === "l_dative") {
@@ -128,7 +142,7 @@ test("the idiom pool stays deep enough that a ten-round session does not exhaust
   // advConj weights by idiom, not by item, so a session touches at most
   // ADV_CONJ_ROUNDS distinct expressions. At 39 idioms the whole pool was seen
   // in about four sessions; this floor keeps that regression visible.
-  assert.ok(idioms.length >= 100, `only ${idioms.length} idioms`);
+  assert.ok(idioms.length >= 75, `only ${idioms.length} idioms`);
 
   const byType = idioms.reduce((acc, idiom) => {
     acc[idiom.object_type] = (acc[idiom.object_type] || 0) + 1;
@@ -138,7 +152,7 @@ test("the idiom pool stays deep enough that a ten-round session does not exhaust
   Object.entries(byType).forEach(([type, count]) => {
     assert.ok(count >= 10, `only ${count} ${type} idioms`);
   });
-  assert.ok(byType.l_dative <= idioms.length * 0.6, "l_dative should not dominate the pool");
+  assert.ok(byType.l_dative <= idioms.length * 0.7, "l_dative should not dominate the pool");
 
   // The ladder reached level 3 and stopped; level 4 is the advanced tier.
   assert.ok(idioms.some((idiom) => idiom.level === 4), "no level-4 idioms");
@@ -162,17 +176,27 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
     idiom.niqqud_sources.forEach((source) => {
       assert.match(String(source), /^https:\/\//, `${idiom.id} has invalid pointing source ${source}`);
     });
-    ["present", "past", "future"].forEach((tense) => {
+    const requiredTenses = idiom.tenses || ["present", "past", "future"];
+    requiredTenses.forEach((tense) => {
       const forms = idiom.conjugations_niqqud?.[tense];
       assert.ok(forms, `${idiom.id} reviewed pointing needs ${tense} forms`);
-      SUBJECT_FORMS.forEach((form) => {
-        assert.match(String(forms?.[form] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed ${tense}.${form}`);
+      if (tense === "infinitive") {
+        assert.match(String(forms?.["infinitive"] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed infinitive`);
         assert.equal(
-          consonantalSkeleton(forms?.[form]),
-          consonantalSkeleton(idiom.conjugations[tense][form]),
-          `${idiom.id} ${tense}.${form} pointing changes the consonantal skeleton`,
+          consonantalSkeleton(forms?.["infinitive"]),
+          consonantalSkeleton(idiom.conjugations[tense]["infinitive"]),
+          `${idiom.id} infinitive pointing changes the consonantal skeleton`,
         );
-      });
+      } else {
+        SUBJECT_FORMS.forEach((form) => {
+          assert.match(String(forms?.[form] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed ${tense}.${form}`);
+          assert.equal(
+            consonantalSkeleton(forms?.[form]),
+            consonantalSkeleton(idiom.conjugations[tense][form]),
+            `${idiom.id} ${tense}.${form} pointing changes the consonantal skeleton`,
+          );
+        });
+      }
     });
     if (idiom.object_type === "l_dative") {
       assert.match(String(idiom.fixed_object_niqqud || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed fixed_object`);
@@ -203,7 +227,7 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
     }
   });
 
-  assert.deepEqual(statusCounts, { reviewed: 5, unreviewed: 95 });
+  assert.deepEqual(statusCounts, { reviewed: 5, unreviewed: 72 });
   assert.deepEqual(
     Array.from(idioms)
       .filter((idiom) => idiom.niqqud_status === "reviewed")

@@ -9094,8 +9094,88 @@ const SENTENCE_EXPANSION = [
     hebrewDistractorPairs: [["מרגיש", "מַרְגִּישׁ"], ["מוזר", "מוּזָר"], ["למרות", "לַמְרוֹת"], ["מעדיף", "מַעֲדִיף"], ["לשנות", "לְשַׁנּוֹת"], ["התוכנית", "הַתָּכְנִית"]],
     englishDistractors: ["This feels", "strange", "although", "I prefer", "to change", "the plan"],
     notes: "נשמע הגיוני is the everyday way to say that an idea sounds reasonable or makes sense."
+  }),
+  buildReviewedSentence({
+    id: "everyday_147",
+    emoji: "🕵️",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "תפסתי אותו משקר, אבל הוא לא הודה בזה.",
+    hebrewNiqqud: "תָּפַסְתִּי אוֹתוֹ מְשַׁקֵּר, אֲבָל הוּא לֹא הוֹדָה בָּזֶה.",
+    english: "I caught him lying, but he didn't admit it.",
+    hebrewTokenPairs: [
+      ["תפסתי", "תָּפַסְתִּי"],
+      ["אותו", "אוֹתוֹ"],
+      ["משקר,", "מְשַׁקֵּר,"],
+      ["אבל", "אֲבָל"],
+      ["הוא לא", "הוּא לֹא"],
+      ["הודה בזה.", "הוֹדָה בָּזֶה."]
+    ],
+    englishTokens: ["I caught", "him", "lying,", "but", "he didn't", "admit it."],
+    hebrewDistractorPairs: [
+      ["תפס", "תָּפַס"],
+      ["היא לא", "הִיא לֹא"],
+      ["להודות", "לְהוֹדוֹת"]
+    ],
+    englishDistractors: ["he caught", "she didn't", "to admit"],
+    notes: "Teaches לתפוס מישהו meaning 'to catch someone in the act'."
+  }),
+  buildReviewedSentence({
+    id: "everyday_148",
+    emoji: "📞",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "ניסיתי לתפוס אותך כל הבוקר, למה אתה לא עונה?",
+    hebrewNiqqud: "נִסִּיתִי לִתְפֹּס אוֹתְךָ כָּל הַבֹּקֶר, לָמָּה אַתָּה לֹא עוֹנֶה?",
+    english: "I tried to get ahold of you all morning, why aren't you answering?",
+    hebrewTokenPairs: [
+      ["ניסיתי", "נִסִּיתִי"],
+      ["לתפוס", "לִתְפֹּס"],
+      ["אותך", "אוֹתְךָ"],
+      ["כל הבוקר,", "כָּל הַבֹּקֶר,"],
+      ["למה", "לָמָּה"],
+      ["אתה לא", "אַתָּה לֹא"],
+      ["עונה?", "עוֹנֶה?"]
+    ],
+    englishTokens: ["I tried", "to get ahold of", "you", "all morning,", "why", "aren't you", "answering?"],
+    hebrewDistractorPairs: [
+      ["ניסה", "נִסָּה"],
+      ["אתכם", "אֶתְכֶם"],
+      ["עונים?", "עוֹנִים?"]
+    ],
+    englishDistractors: ["he tried", "you (pl.)", "are answering"],
+    notes: "Teaches לתפוס מישהו meaning 'to get ahold of someone'."
+  }),
+  buildReviewedSentence({
+    id: "everyday_149",
+    emoji: "🤷",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אני פשוט לא תופס אותך, לפעמים אתה ממש מוזר.",
+    hebrewNiqqud: "אֲנִי פָּשׁוּט לֹא תּוֹפֵס אוֹתְךָ, לִפְעָמִים אַתָּה מַמָּשׁ מוּזָר.",
+    english: "I just don't get you, sometimes you're really weird.",
+    hebrewTokenPairs: [
+      ["אני פשוט", "אֲנִי פָּשׁוּט"],
+      ["לא תופס", "לֹא תּוֹפֵס"],
+      ["אותך,", "אוֹתְךָ,"],
+      ["לפעמים", "לִפְעָמִים"],
+      ["אתה", "אַתָּה"],
+      ["ממש מוזר.", "מַמָּשׁ מוּזָר."]
+    ],
+    englishTokens: ["I just", "don't get", "you,", "sometimes", "you're", "really weird."],
+    hebrewDistractorPairs: [
+      ["תופסת", "תּוֹפֶסֶת"],
+      ["אותו,", "אוֹתוֹ,"],
+      ["הוא", "הוּא"]
+    ],
+    englishDistractors: ["she gets", "him,", "he's"],
+    notes: "Teaches לתפוס מישהו meaning 'to comprehend / get someone'."
   })
 ];
+
 
 SENTENCE_BANK.push(...SENTENCE_EXPANSION);
 
@@ -13654,6 +13734,35 @@ const INBAL_SENTENCES = [
     }],
     notes: "בלי עין הרע is the standard verbal ward said when reporting good news, so the row models both the phrase and the context it belongs to."
   }),
+  buildReviewedSentence({
+    id: "inbal_96",
+    emoji: "🔮",
+    category: "colloquial",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מגידת העתידות הכירה אותה לעומק עוד לפני שהחלה לקרוא בקלפים.",
+    hebrewNiqqud: "מַגִּידַת הָעֲתִידוֹת הִכִּירָה אוֹתָהּ לְעוֹמֶק עוֹד לִפְנֵי שֶׁהֵחֵלָה לִקְרֹא בַּקְּלָפִים.",
+    english: "The fortune teller got to know her in depth even before she began to read the cards.",
+    hebrewTokenPairs: [
+      ["מגידת העתידות", "מַגִּידַת הָעֲתִידוֹת"],
+      ["הכירה", "הִכִּירָה"],
+      ["אותה", "אוֹתָהּ"],
+      ["לעומק", "לְעוֹמֶק"],
+      ["עוד לפני", "עוֹד לִפְנֵי"],
+      ["שהחלה", "שֶׁהֵחֵלָה"],
+      ["לקרוא", "לִקְרֹא"],
+      ["בקלפים.", "בַּקְּלָפִים."]
+    ],
+    englishTokens: ["The fortune teller", "got to know", "her", "in depth", "even before", "she began", "to read", "the cards."],
+    hebrewDistractorPairs: [
+      ["הקוראת בקפה", "הַקּוֹרֵאת בַּקָּפֶה"],
+      ["גילתה", "גִּלְּתָה"],
+      ["רק אחרי", "רַק אַחֲרֵי"],
+      ["אותו", "אוֹתוֹ"]
+    ],
+    englishDistractors: ["The coffee reader", "discovered", "only after", "him"],
+    notes: "Teaches הכירה as 'got to know' rather than 'recognized'."
+  })
 ];
 
 const INAT_SENTENCES = [
@@ -14547,12 +14656,447 @@ const CONTEXT_BRIDGE_SENTENCES = [
   })
 ];
 
+const LEVERAGE_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_93",
+    emoji: "📈",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מינוף גבוה מגדיל את הסיכון הפיננסי.",
+    hebrewNiqqud: "מִינוּף גָּבוֹהַ מַגְדִּיל אֶת הַסִּיכּוֹן הַפִינַנְסִי.",
+    english: "High leverage increases financial risk.",
+    hebrewTokenPairs: [
+      ["מינוף", "מִינוּף"],
+      ["גבוה", "גָּבוֹהַ"],
+      ["מגדיל", "מַגְדִּיל"],
+      ["את הסיכון", "אֶת הַסִּיכּוֹן"],
+      ["הפיננסי", "הַפִּינַנְסִי"]
+    ],
+    englishTokens: ["High", "leverage", "increases", "financial", "risk"],
+    hebrewDistractorPairs: [
+      ["רווח", "רֶוַח"],
+      ["נמוך", "נָמוּךְ"],
+      ["מפחית", "מַפְחִית"],
+      ["את התקציב", "אֶת הַתַּקְצִיב"],
+      ["השנתי", "הַשְּׁנָתִי"]
+    ],
+    englishDistractors: ["Low", "profit", "reduces", "annual", "budget"],
+    notes: "Teaches financial leverage (מינוף) as a noun for gearing or capital leverage in business."
+  }),
+  buildReviewedSentence({
+    id: "formal_83",
+    emoji: "🌐",
+    category: "formal",
+    difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "סנקציות משמשות כמנוף כלכלי במשא ומתן.",
+    hebrewNiqqud: "סַנְקְצִיּוֹת מְשַׁמְשׁוֹת כְּמָנוֹף כַּלְכָּלִי בְּמַשָּׂא וּמַתָּן.",
+    english: "Sanctions serve as economic leverage in negotiations.",
+    hebrewTokenPairs: [
+      ["סנקציות", "סַנְקְצִיּוֹת"],
+      ["משמשות", "מְשַׁמְשׁוֹת"],
+      ["כמנוף", "כְּמָנוֹף"],
+      ["כלכלי", "כַּלְכָּלִי"],
+      ["במשא ומתן", "בְּמַשָּׂא וּמַתָּן"]
+    ],
+    englishTokens: ["Sanctions", "serve", "as", "economic leverage", "in negotiations"],
+    hebrewDistractorPairs: [
+      ["הסכמים", "הֶסְכֵּמִים"],
+      ["נועדו", "נוֹעֲדוּ"],
+      ["ללא", "לְלֹא"],
+      ["פתרון מדיני", "פִּתְרוֹן מְדִינִי"],
+      ["בדיונים", "בְּדִיּוּנִים"]
+    ],
+    englishDistractors: ["Agreements", "were intended", "without", "a political solution", "during debates"],
+    hebrewOrderAlternates: [
+      {
+        text: "במשא ומתן סנקציות משמשות כמנוף כלכלי.",
+        textNiqqud: "בְּמַשָּׂא וּמַתָּן סַנְקְצִיּוֹת מְשַׁמְשׁוֹת כְּמָנוֹף כַּלְכָּלִי.",
+        order: [4, 0, 1, 2, 3]
+      }
+    ],
+    notes: "Teaches leverage as a strategic policy/economic lever (מנוף כלכלי) with fronted locative alternate order."
+  }),
+  buildReviewedSentence({
+    id: "professional_94",
+    emoji: "💼",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "החברה רוצה למנף את היתרונות שלה.",
+    hebrewNiqqud: "הַחֶבְרָה רוֹצָה לְמַנֵּף אֶת הַיִּתְרוֹנוֹת שֶׁלָּהּ.",
+    english: "The company wants to leverage its advantages.",
+    hebrewTokenPairs: [
+      ["החברה", "הַחֶבְרָה"],
+      ["רוצה", "רוֹצָה"],
+      ["למנף", "לְמַנֵּף"],
+      ["את היתרונות שלה", "אֶת הַיִּתְרוֹנוֹת שֶׁלָּהּ"]
+    ],
+    englishTokens: ["The company", "wants", "to leverage", "its advantages"],
+    hebrewDistractorPairs: [
+      ["הסוכנות", "הַסּוֹכְנוּת"],
+      ["מנסה", "מְנַסָּה"],
+      ["לצמצם", "לְצַמְצֵם"],
+      ["את ההפסדים שלה", "אֶת הַהֶפְסֵדִים שֶׁלָּהּ"]
+    ],
+    englishDistractors: ["The agency", "tries", "to reduce", "its losses"],
+    notes: "Teaches the verb to leverage (למנף) in a commercial/business context."
+  })
+];
+
+const BIKORET_SENTENCES = [
+  buildReviewedSentence({
+    id: "formal_84",
+    emoji: "✍️",
+    category: "formal",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "ביקורת בונה מובילה לשיפורים.",
+    hebrewNiqqud: "בִּקֹּרֶת בּוֹנָה מוֹבִילָה לְשִׁפּוּרִים.",
+    english: "Constructive criticism leads to improvements.",
+    hebrewTokenPairs: [
+      ["ביקורת", "בִּקֹּרֶת"],
+      ["בונה", "בּוֹנָה"],
+      ["מובילה", "מוֹבִילָה"],
+      ["לשיפורים", "לְשִׁפּוּרִים"]
+    ],
+    englishTokens: ["Constructive", "criticism", "leads to", "improvements"],
+    hebrewDistractorPairs: [
+      ["תעמולה", "תַּעֲמוּלָה"],
+      ["זולה", "זוֹלָה"],
+      ["גורמת", "גוֹרֶמֶת"],
+      ["לעיכובים", "לְעִכּוּבִים"]
+    ],
+    englishDistractors: ["Cheap", "propaganda", "causes", "delays"],
+    notes: "Teaches critique/criticism (ביקורת) in the context of constructive feedback."
+  }),
+  buildReviewedSentence({
+    id: "professional_95",
+    emoji: "🧠",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "חשיבה ביקורתית היא מיומנות חיונית.",
+    hebrewNiqqud: "חֲשִׁיבָה בִּקּוֹרְתִּית הִיא מְיוּמָנוּת חִיּוֹנִית.",
+    english: "Critical thinking is an essential skill.",
+    hebrewTokenPairs: [
+      ["חשיבה ביקורתית", "חֲשִׁיבָה בִּקּוֹרְתִּית"],
+      ["היא", "הִיא"],
+      ["מיומנות", "מְיוּמָנוּת"],
+      ["חיונית", "חִיּוֹנִית"]
+    ],
+    englishTokens: ["Critical thinking", "is", "an essential", "skill"],
+    hebrewDistractorPairs: [
+      ["אינטואיציה", "אִינְטוּאִיצְיָה"],
+      ["נשארת", "נִשְׁאֶרֶת"],
+      ["תכונה", "תְּכוּנָה"],
+      ["זמנית", "זְמַנִּית"]
+    ],
+    englishDistractors: ["Intuition", "remains", "a temporary", "trait"],
+    notes: "Teaches the compound term critical thinking (חשיבה ביקורתית) as an analytical skill."
+  }),
+  buildReviewedSentence({
+    id: "formal_85",
+    emoji: "🏛️",
+    category: "formal",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "זה לגיטימי להעביר ביקורת על מדיניות.",
+    hebrewNiqqud: "זֶה לְגִיטִימִי לְהַעֲבִיר בִּקֹּרֶת עַל מְדִינִיּוּת.",
+    english: "It is legitimate to express critique of policy.",
+    hebrewTokenPairs: [
+      ["זה", "זֶה"],
+      ["לגיטימי", "לְגִיטִימִי"],
+      ["להעביר ביקורת", "לְהַעֲבִיר בִּקֹּרֶת"],
+      ["על מדיניות", "עַל מְדִינִיּוּת"]
+    ],
+    englishTokens: ["It is", "legitimate", "to express critique", "of policy"],
+    hebrewDistractorPairs: [
+      ["היה", "הָיָה"],
+      ["מסוכן", "מְסֻכָּן"],
+      ["להתעלם", "לְהִתְעַלֵּם"],
+      ["מהחוק", "מֵהַחֹק"]
+    ],
+    englishDistractors: ["It was", "dangerous", "to ignore", "the law"],
+    notes: "Drills the verb expression to express critique (להעביר ביקורת על) in public policy discourse."
+  })
+];
+
+const SHAKHTA_SENTENCES = [
+  buildReviewedSentence({
+    id: "colloquial_161",
+    emoji: "🚬",
+    category: "colloquial",
+    difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "תן לי שאכטה לפני שאתה מסיים.",
+    hebrewNiqqud: "תֵּן לִי שַׁאכְטָה לִפְנֵי שֶׁאַתָּה מְסַיֵּם.",
+    english: "Give me a drag before you finish.",
+    hebrewTokenPairs: [
+      ["תן לי", "תֵּן לִי"],
+      ["שאכטה", "שַׁאכְטָה"],
+      ["לפני", "לִפְנֵי"],
+      ["שאתה", "שֶׁאַתָּה"],
+      ["מסיים", "מְסַיֵּם"]
+    ],
+    englishTokens: ["Give me", "a drag", "before", "you", "finish"],
+    hebrewDistractorPairs: [
+      ["קח ממנו", "קַח מִמֶּנּוּ"],
+      ["שלוק", "שְׁלוּק"],
+      ["אחרי", "אַחֲרֵי"],
+      ["שאימא", "שֶׁאִמָּא"],
+      ["יוצאת", "יוֹצֵאת"]
+    ],
+    englishDistractors: ["Take from him", "a sip", "after", "mom", "leaves"],
+    notes: "Teaches the colloquial slang term שאכטה (drag/puff) with תן לי."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_162",
+    emoji: "🚪",
+    category: "colloquial",
+    difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "אני רק לוקח שאכטה וחוזר פנימה.",
+    hebrewNiqqud: "אֲנִי רַק לוֹקֵחַ שַׁאכְטָה וְחוֹזֵר פְּנִימָה.",
+    english: "I'm just taking a drag and heading back inside.",
+    hebrewTokenPairs: [
+      ["אני", "אֲנִי"],
+      ["רק", "רַק"],
+      ["לוקח", "לוֹקֵחַ"],
+      ["שאכטה", "שַׁאכְטָה"],
+      ["וחוזר", "וְחוֹזֵר"],
+      ["פנימה", "פְּנִימָה"]
+    ],
+    englishTokens: ["I'm", "just", "taking", "a drag", "and heading back", "inside"],
+    hebrewDistractorPairs: [
+      ["היא", "הִיא"],
+      ["כבר", "כְּבָר"],
+      ["זורקת", "זוֹרֶקֶת"],
+      ["קופסה", "קֻפְסָה"],
+      ["ורצה", "וְרָצָה"],
+      ["החוצה", "הַחוּצָה"]
+    ],
+    englishDistractors: ["She's", "already", "throwing", "a box", "and running", "outside"],
+    notes: "Drills taking a drag (לוקח שאכטה) in informal casual speech."
+  })
+];
+
+const HITRACHAKUT_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_143",
+    emoji: "👥",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "שמתי לב להתרחקות מסוימת בינינו לאחרונה.",
+    hebrewNiqqud: "שַׂמְתִּי לֵב לְהִתְרַחֲקוּת מְסֻיֶּמֶת בֵּינֵינוּ לָאַחֲרוֹנָה.",
+    hebrewOrderAlternates: [
+      {
+        text: "לאחרונה שמתי לב להתרחקות מסוימת בינינו.",
+        textNiqqud: "לָאַחֲרוֹנָה שַׂמְתִּי לֵב לְהִתְרַחֲקוּת מְסֻיֶּמֶת בֵּינֵינוּ.",
+        order: [4, 0, 1, 2, 3]
+      }
+    ],
+    english: "I noticed a certain distancing between us recently.",
+    hebrewTokenPairs: [
+      ["שמתי לב", "שַׂמְתִּי לֵב"],
+      ["להתרחקות", "לְהִתְרַחֲקוּת"],
+      ["מסוימת", "מְסֻיֶּמֶת"],
+      ["בינינו", "בֵּינֵינוּ"],
+      ["לאחרונה", "לָאַחֲרוֹנָה"]
+    ],
+    englishTokens: ["I noticed", "a certain", "distancing", "between us", "recently"],
+    hebrewDistractorPairs: [
+      ["הוא הדגיש", "הוּא הִדְגִּישׁ"],
+      ["התקרבות", "הִתְקָרְבוּת"],
+      ["פתאומית", "פִּתְאוֹמִית"],
+      ["ביניהם", "בֵּינֵיהֶם"],
+      ["בהתחלה", "בַּהַתְחָלָה"]
+    ],
+    englishDistractors: ["He emphasized", "a sudden", "closeness", "between them", "at first"],
+    notes: "Teaches התרחקות (distancing/growing apart) in personal relationships."
+  }),
+  buildReviewedSentence({
+    id: "formal_86",
+    emoji: "🏛️",
+    category: "formal",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "ניתוק המפלגה מבסיסה מדאיג את המתבוננים.",
+    hebrewNiqqud: "נִיתּוּק הַמִּפְלָגָה מִבְּסִיסָהּ מַדְאִיג אֶת הַמִּתְבּוֹנְנִים.",
+    english: "The party's disconnection from its base worries observers.",
+    hebrewTokenPairs: [
+      ["ניתוק", "נִיתּוּק"],
+      ["המפלגה", "הַמִּפְלָגָה"],
+      ["מבסיסה", "מִבְּסִיסָהּ"],
+      ["מדאיג", "מַדְאִיג"],
+      ["את המתבוננים", "אֶת הַמִּתְבּוֹנְנִים"]
+    ],
+    englishTokens: ["The party's", "disconnection", "from its base", "worries", "observers"],
+    hebrewDistractorPairs: [
+      ["חיבור", "חִבּוּר"],
+      ["הקואליציה", "הַקּוֹאָלִיצְיָה"],
+      ["לציבור", "לַצִּבּוּר"],
+      ["מעודד", "מְעוֹדֵד"],
+      ["את התומכים", "אֶת הַתּוֹמְכִים"]
+    ],
+    englishDistractors: ["The coalition's", "connection", "to the public", "encourages", "the supporters"],
+    notes: "Teaches ניתוק (disconnection/alienation) in formal political context."
+  }),
+  buildReviewedSentence({
+    id: "formal_87",
+    emoji: "🏛️",
+    category: "formal",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "האגף הרדיקלי במפלגה דורש שינוי מדיניות.",
+    hebrewNiqqud: "הָאָגָף הָרָדִיקָלִי בַּמִּפְלָגָה דּוֹרֵשׁ שִׁנּוּי מְדִינִיּוּת.",
+    english: "The radical wing of the party demands a policy change.",
+    hebrewTokenPairs: [
+      ["האגף הרדיקלי", "הָאָגָף הָרָדִיקָלִי"],
+      ["במפלגה", "בַּמִּפְלָגָה"],
+      ["דורש", "דּוֹרֵשׁ"],
+      ["שינוי מדיניות", "שִׁנּוּי מְדִינִיּוּת"]
+    ],
+    englishTokens: ["The radical wing", "of the party", "demands", "a policy change"],
+    hebrewDistractorPairs: [
+      ["הנהגת הקואליציה", "הַנְהָגַת הַקּוֹאָלִיצְיָה"],
+      ["בממשלה", "בַּמֶּמְשָׁלָה"],
+      ["מציעה", "מַצִּיעָה"],
+      ["פשרה", "פְּשָׁרָה"]
+    ],
+    englishDistractors: ["The coalition leadership", "in government", "proposes", "a compromise"],
+    notes: "Teaches אגף (wing/faction) in a political party context."
+  }),
+  buildReviewedSentence({
+    id: "everyday_144",
+    emoji: "🏛️",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הסיור במוזיאון מתחיל מהאגף המערבי.",
+    hebrewNiqqud: "הַסִּיּוּר בַּמּוֹזֵיאוֹן מַתְחִיל מֵהָאָגָף הַמַּעֲרָבִי.",
+    english: "The tour in the museum starts from the western wing.",
+    hebrewTokenPairs: [
+      ["הסיור", "הַסִּיּוּר"],
+      ["במוזיאון", "בַּמּוֹזֵיאוֹן"],
+      ["מתחיל", "מַתְחִיל"],
+      ["מהאגף המערבי", "מֵהָאָגָף הַמַּעֲרָבִי"]
+    ],
+    englishTokens: ["The tour", "in the museum", "starts", "from the western wing"],
+    hebrewDistractorPairs: [
+      ["האירוע", "הָאֵרוּעַ"],
+      ["באולם", "בָּאוּלָם"],
+      ["מסתיים", "מִסְתַּיֵּם"],
+      ["בכניסה הראשית", "בַּכְּנִיסָה הָרָאשִׁית"]
+    ],
+    englishDistractors: ["The event", "in the hall", "ends", "at the main entrance"],
+    notes: "Teaches אגף (wing/section) in a building/architectural context."
+  }),
+  buildReviewedSentence({
+    id: "everyday_145",
+    emoji: "🤝",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אני רוצה ליצור קשר עסקי איתו, תוכל להכיר אותו לי?",
+    hebrewNiqqud: "אֲנִי רוֹצֶה לִיצֹר קֶשֶׁר עִסְקִי אִתּוֹ, תּוּכַל לְהַכִּיר אוֹתוֹ לִי?",
+    english: "I want to build a business relationship with him, could you introduce him to me?",
+    hebrewTokenPairs: [
+      ["אני רוצה", "אֲנִי רוֹצֶה"],
+      ["ליצור", "לִיצֹר"],
+      ["קשר עסקי", "קֶשֶׁר עִסְקִי"],
+      ["איתו,", "אִתּוֹ,"],
+      ["תוכל", "תּוּכַל"],
+      ["להכיר", "לְהַכִּיר"],
+      ["אותו", "אוֹתוֹ"],
+      ["לי", "לִי"]
+    ],
+    englishTokens: ["I want", "to build", "a business relationship", "with him,", "could you", "introduce", "him", "to me"],
+    hebrewDistractorPairs: [
+      ["אותי", "אוֹתִי"],
+      ["לו", "לוֹ"],
+      ["לבסס", "לְבַסֵּס"],
+      ["יוכל", "יוּכַל"]
+    ],
+    englishDistractors: ["me", "to him", "to establish", "he could"],
+    hebrewOrderAlternates: [{
+      text: "אני רוצה ליצור קשר עסקי איתו, תוכל להכיר לי אותו?",
+      textNiqqud: "אֲנִי רוֹצֶה לִיצֹר קֶשֶׁר עִסְקִי אִתּוֹ, תּוּכַל לְהַכִּיר לִי אוֹתוֹ?",
+      order: [0, 1, 2, 3, 4, 5, 7, 6]
+    }],
+    notes: "Teaches להכיר as 'introduce' in a networking context. Includes distractors to test mastery of object/dative pronouns."
+  }),
+  buildReviewedSentence({
+    id: "everyday_146",
+    emoji: "👋",
+    category: "everyday",
+    difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "הוא נראה בחור מעניין, תוכלו להכיר אותו לה?",
+    hebrewNiqqud: "הוּא נִרְאֶה בָּחוּר מְעַנְיֵן, תּוּכְלוּ לְהַכִּיר אוֹתוֹ לָהּ?",
+    english: "He seems like an interesting guy, could you introduce him to her?",
+    hebrewTokenPairs: [
+      ["הוא נראה", "הוּא נִרְאֶה"],
+      ["בחור מעניין,", "בָּחוּר מְעַנְיֵן,"],
+      ["תוכלו", "תּוּכְלוּ"],
+      ["להכיר", "לְהַכִּיר"],
+      ["אותו", "אוֹתוֹ"],
+      ["לה", "לָהּ"]
+    ],
+    englishTokens: ["He seems like", "an interesting guy,", "could you", "introduce", "him", "to her"],
+    hebrewDistractorPairs: [
+      ["היא נראית", "הִיא נִרְאֵית"],
+      ["לו", "לוֹ"],
+      ["תוכל", "תּוּכַל"],
+      ["משעמם", "מְשַׁעֲמֵם"]
+    ],
+    englishDistractors: ["She seems like", "to him", "he could", "boring"],
+    hebrewOrderAlternates: [{
+      text: "הוא נראה בחור מעניין, תוכלו להכיר לה אותו?",
+      textNiqqud: "הוּא נִרְאֶה בָּחוּר מְעַנְיֵן, תּוּכְלוּ לְהַכִּיר לָהּ אוֹתוֹ?",
+      order: [0, 1, 2, 3, 5, 4]
+    }],
+    notes: "Teaches להכיר as 'introduce' in a plural context."
+  }),
+  buildReviewedSentence({
+    id: "professional_96",
+    emoji: "💼",
+    category: "professional",
+    difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אגף השיווק בחברה מתרחב לשווקים חדשים.",
+    hebrewNiqqud: "אֲגַף הַשִּׁוּוּק בַּחֶבְרָה מִתְרַחֵב לִשְׁוָקִים חֲדָשִׁים.",
+    english: "The marketing division in the company is expanding to new markets.",
+    hebrewTokenPairs: [
+      ["אגף השיווק", "אֲגַף הַשִּׁוּוּק"],
+      ["בחברה", "בַּחֶבְרָה"],
+      ["מתרחב", "מִתְרַחֵב"],
+      ["לשווקים חדשים", "לִשְׁוָקִים חֲדָשִׁים"]
+    ],
+    englishTokens: ["The marketing division", "in the company", "is expanding", "to new markets"],
+    hebrewDistractorPairs: [
+      ["צוות המחקר", "צֶוֶת הַמֶּחְקָר"],
+      ["בארגון", "בָּאַרְגּוֹן"],
+      ["מתמקד", "מִתְמַקֵּד"],
+      ["במוצרים קיימים", "בְּמוּצָרִים קַיָּמִים"]
+    ],
+    englishDistractors: ["The research team", "in the organization", "is focusing", "on existing products"],
+    notes: "Teaches אגף (wing/division/department) in a corporate context."
+  })
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
-  ...CONTEXT_BRIDGE_SENTENCES
+  ...CONTEXT_BRIDGE_SENTENCES,
+  ...LEVERAGE_SENTENCES,
+  ...BIKORET_SENTENCES,
+  ...SHAKHTA_SENTENCES,
+  ...HITRACHAKUT_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -14571,6 +15115,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260729b",
+  __build: "20260730e",
 };
 })(typeof window !== "undefined" ? window : globalThis);

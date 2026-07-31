@@ -123,7 +123,7 @@ advConj.buildAdvConjHebrewAnswer = advConj.buildAdvConjHebrewAnswer || function 
   const runtime = getRuntime();
   const obj = runtime.constants.ADV_CONJ_OBJECTS.find((entry) => entry.key === objectKey);
   if (!obj) return "";
-  const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : idiom.present_tense;
+  const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : tense === "infinitive" ? idiom.infinitive_tense : idiom.present_tense;
   if (!tenseData) return "";
   const verbForm = tenseData[subjectForm];
   if (!verbForm) return "";
@@ -150,7 +150,9 @@ advConj.buildAdvConjHebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud 
     ? idiom.past_tense_niqqud
     : tense === "future"
       ? idiom.future_tense_niqqud
-      : idiom.present_tense_niqqud;
+      : tense === "infinitive"
+        ? idiom.infinitive_tense_niqqud
+        : idiom.present_tense_niqqud;
   const verbForm = tenseData?.[subjectForm];
   if (!verbForm) return "";
   const neg = idiom.negated ? "לֹא " : "";
@@ -169,7 +171,9 @@ advConj.buildAdvConjHebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud 
 
 advConj.buildAdvConjEnglishSentence = advConj.buildAdvConjEnglishSentence || function buildAdvConjEnglishSentence(idiom, subj, obj, tense) {
   let tpl;
-  if (tense === "past") {
+  if (tense === "infinitive") {
+    tpl = idiom.literal_infinitive;
+  } else if (tense === "past") {
     tpl = idiom.literal_past;
   } else if (tense === "future") {
     tpl = idiom.literal_future;
@@ -203,6 +207,9 @@ advConj.buildAdvConjEnglishSentence = advConj.buildAdvConjEnglishSentence || fun
 };
 
 advConj.getAdvConjSubjectsForTense = advConj.getAdvConjSubjectsForTense || function getAdvConjSubjectsForTense(tense) {
+  if (tense === "infinitive") {
+    return [{ form: "infinitive", pronoun: "", en: "" }];
+  }
   return getRuntime().constants.ADV_CONJ_SUBJECTS.filter((subj) => !Array.isArray(subj.tenses) || subj.tenses.includes(tense));
 };
 
@@ -219,11 +226,11 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
   const runtime = getRuntime();
   const shuffle = app.utils?.shuffle;
   const deck = [];
-  const tenses = ["present", "past", "future"];
   for (const idiom of getIdioms()) {
-    if (!idiom.literal_sg) continue;
+    if (!idiom.literal_sg && !idiom.literal_infinitive) continue;
+    const tenses = idiom.tenses || ["present", "past", "future"];
     for (const tense of tenses) {
-      const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : idiom.present_tense;
+      const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : tense === "infinitive" ? idiom.infinitive_tense : idiom.present_tense;
       if (!tenseData) continue;
       const subjects = advConj.getAdvConjSubjectsForTense(tense);
       for (const subj of subjects) {
@@ -231,6 +238,7 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
         for (const obj of runtime.constants.ADV_CONJ_OBJECTS) {
           if (isSecondPersonSubject(subj) && isSecondPersonObject(obj)) continue;
           if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[obj.key]) continue;
+          if (idiom.invalid_objects && idiom.invalid_objects.includes(obj.key)) continue;
           const hebrewAnswer = advConj.buildAdvConjHebrewAnswer(idiom, subj.form, subj.pronoun, obj.key, tense);
           const hebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj.form, subj.pronoun, obj.key, tense);
           if (!hebrewAnswer) continue;
@@ -253,6 +261,7 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
 
           function buildDistractor(subject, object) {
             if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[object.key]) return null;
+            if (idiom.invalid_objects && idiom.invalid_objects.includes(object.key)) return null;
             if (!tenseData[subject.form]) return null;
             const text = direction === "en2he"
               ? advConj.buildAdvConjHebrewAnswer(idiom, subject.form, subject.pronoun, object.key, tense)

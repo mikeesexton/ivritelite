@@ -430,6 +430,12 @@ const CONTEXT_BRIDGE_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 140, 142),
   ...sentenceIdRange("colloquial", 158, 160),
 ];
+const LEVERAGE_ENTRY_IDS = ["professional_93", "formal_83", "professional_94"];
+const BIKORET_ENTRY_IDS = ["formal_84", "professional_95", "formal_85"];
+const SHAKHTA_ENTRY_IDS = ["colloquial_161", "colloquial_162"];
+const HITRACHAKUT_ENTRY_IDS = ["everyday_143", "formal_86"];
+const AGAF_ENTRY_IDS = ["formal_87", "everyday_144", "professional_96"];
+const LEHAKIR_ENTRY_IDS = ["everyday_145", "everyday_146", "inbal_96"];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -462,17 +468,25 @@ function compactUnitMap(values, reason) {
 // recognize as a term, category, fixed expression, or name.
 const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
   ...compactUnitMap(`
+    interesting guy
+    get ahold
+    dont get
+    really weird
     affordable housing
     annual growth
     budget analysis
+    business relationship
     central government
     centrist parties
     city limits
     civil marriage
     civil rights
     civilian government
+    coalition leadership
     coalition negotiations
+    coffee reader
     commercial space
+    critical thinking
     collective memory
     civil disobedience
     close reading
@@ -482,6 +496,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     disciplinary violations
     domestic law
     duty obey
+    economic leverage
     economic team
     education system
     effective control
@@ -490,16 +505,21 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     electoral threshold
     evacuation request
     existing law
+    existing products
     export prices
+    express critique
     family group chat
     final vote
+    fortune teller
     freedom expression
     freedom movement
     freedom religion
     gender identity
+    got know
     government decision
     government institutions
     higher education
+    heading back
     hiring policy
     housing prices
     independent review
@@ -517,7 +537,9 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     local lists
     longtime resident
     longtime residents
+    main entrance
     marital status
+    marketing division
     medical assistance
     meeting summary
     memorial day
@@ -528,13 +550,16 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     neighbor dispute
     new immigrant
     new immigrants
+    new markets
     outreach team
     party office
     place residence
     planning process
     police brutality
+    policy change
     protective formula
     political center
+    political solution
     polling station
     preliminary reading
     promotion procedure
@@ -543,11 +568,13 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     public participation
     public sphere
     public transportation
+    radical wing
     regional tribunal
     research team
     ritual bath
     self employed retirees
     settler violence
+    western wing
     sexual orientation
     sports organizations
     state revenue
@@ -830,15 +857,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 608 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 618 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 608);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 608);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 608);
+  assert.equal(entries.length, 627);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 627);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 627);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -866,10 +893,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   assert.deepEqual(categoryCounts, {
-    colloquial: 199,
-    everyday: 188,
-    professional: 108,
-    formal: 113,
+    colloquial: 202,
+    everyday: 194,
+    professional: 113,
+    formal: 118,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -944,6 +971,12 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...LEXICAL_FOCUS_ENTRY_IDS,
     ...RUMOR_ENTRY_IDS,
     ...CONTEXT_BRIDGE_ENTRY_IDS,
+    ...LEVERAGE_ENTRY_IDS,
+    ...BIKORET_ENTRY_IDS,
+    ...SHAKHTA_ENTRY_IDS,
+    ...HITRACHAKUT_ENTRY_IDS,
+    ...AGAF_ENTRY_IDS,
+    ...LEHAKIR_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
