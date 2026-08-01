@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 190);
+  assert.equal(entries.length, 231);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -1416,4 +1416,46 @@ test("past-tense labels for ambiguous put/put verbs include (past) annotation", 
     item.forms.find((f) => f.id === "present_masculine_singular")?.englishText,
     "he puts"
   );
+});
+
+// Plain forms are ktiv male and pointed forms are ktiv haser, so the two differ
+// by ו/י insertion and by nothing else. Anything left over is a typo in one of
+// the pair. This caught להרגיע shipping "הרגנו" (we killed) as the past of
+// "to calm down", and a truncated 2fs pointing on להמשיך, both invisible while
+// niqqud display is off.
+test("every stored plain form matches its pointed twin once ktiv male is normalized", () => {
+  const consonantalSkeleton = (text) =>
+    String(text || "").normalize("NFC").replace(/[֑-ׇ]/g, "").replace(/[וי]/g, "");
+
+  const mismatches = [];
+  verbApi.getSeedVerbEntries().forEach((entry) => {
+    Object.entries(entry.forms || {}).forEach(([tense, slots]) => {
+      Object.entries(slots).forEach(([slot, form]) => {
+        const plain = typeof form === "string" ? form : form?.plain;
+        const niqqud = typeof form === "string" ? "" : form?.niqqud;
+        if (!niqqud) return;
+        if (consonantalSkeleton(plain) !== consonantalSkeleton(niqqud)) {
+          mismatches.push(`${entry.lemma} ${tense}.${slot}: plain ${plain} vs pointed ${niqqud}`);
+        }
+      });
+    });
+  });
+
+  assert.deepEqual(mismatches, []);
+});
+
+test("seed verb ids and lemmas are unique", () => {
+  const entries = verbApi.getSeedVerbEntries();
+
+  const duplicateIds = entries
+    .map((entry) => entry.id)
+    .filter((id, index, all) => all.indexOf(id) !== index);
+  assert.deepEqual(duplicateIds, [], "duplicate seed verb ids collapse to one deck card");
+
+  // A repeated lemma is two cards for one verb in Translation Match, and it can
+  // silently bypass TRANSLATION_HIDDEN_STARTER_VERB_IDS when the ids differ.
+  const duplicateLemmas = entries
+    .map((entry) => entry.lemma)
+    .filter((lemma, index, all) => all.indexOf(lemma) !== index);
+  assert.deepEqual(duplicateLemmas, []);
 });

@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1716);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1651);
+  assert.equal(vocabulary.length, 1693);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1628);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -194,11 +194,13 @@ test("planned Translation Match cards have niqqud and no gloss collisions", () =
 test("politics and society tranche adds 150 safe, pointed, globally unique cards", () => {
   const vocabulary = loadVocabulary();
   const politics = vocabulary.filter((word) => word.category === "politics_society_expanded");
-  const tranche = politics.slice(18);
+  // Bounded so the tranche stays pinned at its original 150 cards while the
+  // category itself remains open to later appends.
+  const tranche = politics.slice(18, 168);
   const expectedNumbers = Array.from({ length: 150 }, (_, index) => String(index + 19).padStart(3, "0"));
   const actualNumbers = Array.from(tranche, (word) => word.id.match(/^politics_society_expanded-(\d{3})-/)?.[1]);
 
-  assert.equal(politics.length, 168);
+  assert.equal(politics.length, 170);
   assert.equal(tranche.length, 150);
   assert.deepEqual(actualNumbers, expectedNumbers);
   assert.equal(tranche[0].id, "politics_society_expanded-019-memorial");
@@ -432,4 +434,75 @@ test("no two playable cards share both their Hebrew and their English", () => {
   });
 
   assert.equal(collisions.length, 0, `duplicate playable cards: ${collisions.join(" | ")}`);
+});
+
+// Vocabulary ids embed a positional index (`vocab-data.js` builds
+// `${category}-${idx+1}-${slug}`), so a row inserted anywhere but the tail of
+// its category renumbers every row below it and orphans the learner's Leitner
+// box, accuracy history and mastered toggle for each one.
+//
+// The existing count assertions cannot see this: a head insertion changes no
+// total. Commit 4e8dc9b parked verbs at the head of four categories and
+// silently re-keyed 64 cards while every test stayed green. This baseline is
+// the guard — it fails on deletion and on insert-position alike.
+//
+// Adding cards at a category tail is expected and safe; regenerate the fixture
+// in the same commit that adds them, and confirm the diff is additions only.
+test("vocabulary ids are append-only within each category", () => {
+  const baseline = require("./fixtures/vocab-id-baseline.json");
+  const current = new Set(loadVocabulary().map((word) => word.id));
+
+  const missing = baseline.filter((id) => !current.has(id));
+  assert.deepEqual(missing, [], `${missing.length} vocabulary ids changed or disappeared`);
+});
+
+// The deck the learner actually sees is `vocab-data.js` concatenated with
+// `hebrew-verbs.js` seed vocabulary (`app.js` spreads both into
+// `prepareVocabulary`, which is a `.map()` and dedupes nothing). Every
+// uniqueness assertion above loads only `vocab-data.js`, so a verb present in
+// both files reaches Translation Match twice with the same Hebrew and English.
+// That is how commit 4e8dc9b shipped 25 duplicate cards with a green suite.
+//
+// KNOWN_MERGED_DUPLICATES predates that commit. These rows sit mid-category in
+// `core_advanced`, so deleting them would renumber every id below and orphan
+// learner progress — the very failure this file now guards. Retiring one means
+// setting `translationQuiz: false` on its `vocab-data.js` row so the id
+// survives; until then they are pinned, and the list must only ever shrink.
+const KNOWN_MERGED_DUPLICATES = [
+  "לאשר",
+  "לבטל",
+  "להבהיר",
+  "להזכיר",
+  "להמליץ",
+  "להסכים",
+  "להשפיע",
+  "לוותר",
+  "לעדכן",
+  "לצרף",
+];
+
+test("the merged Translation Match pool has no new duplicate cards", () => {
+  const verbApi = require("../hebrew-verbs.js");
+  const merged = [...loadVocabulary(), ...verbApi.getSeedVocabularyEntries()]
+    .filter((word) => word.availability?.translationQuiz);
+
+  const seen = new Map();
+  const collisions = [];
+  merged.forEach((word) => {
+    const key = `${word.he} ${word.en}`;
+    if (seen.has(key)) {
+      collisions.push({ he: word.he, detail: `${word.he} / ${word.en}: ${seen.get(key)} + ${word.id}` });
+    } else {
+      seen.set(key, word.id);
+    }
+  });
+
+  const unexpected = collisions.filter((item) => !KNOWN_MERGED_DUPLICATES.includes(item.he));
+  assert.deepEqual(unexpected.map((item) => item.detail), []);
+
+  // Fails when a pinned duplicate is resolved, so the list cannot go stale.
+  assert.deepEqual(
+    collisions.map((item) => item.he).sort(),
+    [...KNOWN_MERGED_DUPLICATES].sort(),
+  );
 });

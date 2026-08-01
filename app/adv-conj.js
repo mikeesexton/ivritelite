@@ -77,16 +77,67 @@ advConj.getAdvConjSelectionSpeechPayload = advConj.getAdvConjSelectionSpeechPayl
   }) || null;
 };
 
-function isSecondPersonSubject(subject) {
-  return /^you\b/i.test(String(subject?.en || ""));
+// Same rule as prepositions.subjectCoreferencesObject: an identical pair always
+// corefers, and first or second person collides across number too, because the
+// singular addressee sits inside the plural one. Disjoint third person is left
+// alone — "he breaks his heart" can be two different people.
+function subjectCoreferencesObject(subject, object) {
+  const subjectKey = subject?.personKey;
+  const objectKey = object?.key;
+  if (!subjectKey || !objectKey) return false;
+  if (subjectKey === objectKey) return true;
+  const subjectPerson = String(subjectKey).charAt(0);
+  const objectPerson = String(objectKey).charAt(0);
+  if (subjectPerson !== objectPerson) return false;
+  return subjectPerson === "1" || subjectPerson === "2";
 }
 
-function isSecondPersonObject(object) {
-  return String(object?.key || "").startsWith("2");
+let advConjParadigmsByLemma = null;
+
+function getVerbParadigmsByLemma() {
+  if (advConjParadigmsByLemma) return advConjParadigmsByLemma;
+  const api = getRuntime().verbApi || global.IvriQuestHebrewVerbs;
+  const entries = typeof api?.getSeedVerbEntries === "function" ? api.getSeedVerbEntries() : [];
+  // Deliberately not cached when empty: this can run before the runtime has its
+  // verbApi, and memoizing that would silently disable the join for the session.
+  if (!entries.length) return new Map();
+  advConjParadigmsByLemma = new Map(entries.map((entry) => [entry.lemma, entry]));
+  return advConjParadigmsByLemma;
+}
+
+// Hebrew present does not inflect for person, so an idiom's own four-slot table
+// serves every subject there. Past and future do, and those four slots hold
+// third-person forms only — so a first- or second-person subject reads the
+// verb's full paradigm out of hebrew-verbs.js instead, joined on the idiom's
+// `verb` lemma. This is the same join PREPOSITION_VERB_LINKS uses. An idiom
+// whose verb has no paradigm degrades to third person in past and future,
+// exactly as the whole file behaved before.
+function resolveAdvConjVerbForm(idiom, subject, tense) {
+  if (!idiom || !subject) return null;
+
+  if (tense === "present") {
+    const plain = idiom.present_tense?.[subject.form];
+    if (!plain) return null;
+    return { plain, niqqud: idiom.present_tense_niqqud?.[subject.form] || "" };
+  }
+
+  const slot = tense === "past" ? subject.pastSlot : subject.futureSlot;
+  const stored = slot ? getVerbParadigmsByLemma().get(idiom.verb)?.forms?.[tense]?.[slot] : null;
+  if (stored) {
+    const plain = typeof stored === "string" ? stored : stored.plain;
+    if (plain) return { plain, niqqud: typeof stored === "string" ? "" : (stored.niqqud || "") };
+  }
+
+  if (String(subject.personKey || "").charAt(0) !== "3") return null;
+  const table = tense === "past" ? idiom.past_tense : idiom.future_tense;
+  const plain = table?.[subject.form];
+  if (!plain) return null;
+  const pointed = tense === "past" ? idiom.past_tense_niqqud : idiom.future_tense_niqqud;
+  return { plain, niqqud: pointed?.[subject.form] || "" };
 }
 
 function usesPresentBaseVerb(subject) {
-  const label = String(subject?.en || "").trim().toLowerCase();
+  const label = stripAdvConjEnglishQualifier(String(subject?.en || "")).trim().toLowerCase();
   if (!label) return false;
   return label.startsWith("you") || label === "i" || label === "we" || label.startsWith("they");
 }
@@ -100,32 +151,30 @@ function getAdvConjSubjectEnglishLabel(idiom, subj, tense) {
   const baseLabel = stripAdvConjEnglishQualifier(label);
   if (!label || baseLabel === label) return label;
 
-  const tenseData = tense === "past" ? idiom?.past_tense : tense === "future" ? idiom?.future_tense : idiom?.present_tense;
-  const currentVerbForm = tenseData?.[subj?.form];
-  if (!currentVerbForm) return label;
+  const current = resolveAdvConjVerbForm(idiom, subj, tense);
+  if (!current) return label;
 
   // Keep the gender/number qualifier when another subject sharing the same bare
   // English label (e.g. another "you") conjugates to a different verb form.
   // Dropping it there would make a distractor built from that other subject a
   // valid reading of the bare label, so the prompt would be ambiguous. Only
-  // collapse to the bare label when every same-label subject shares one form.
+  // collapse to the bare label when every same-label subject shares one form —
+  // "I (m.)" and "I (f.)" split in the present and merge again in the past.
   const hasDivergentSubject = advConj.getAdvConjSubjectsForTense(tense).some((candidate) => {
-    if (!candidate || candidate.form === subj?.form) return false;
+    if (!candidate || candidate === subj) return false;
     if (stripAdvConjEnglishQualifier(sanitizeEnglishText(candidate.en)) !== baseLabel) return false;
-    const candidateVerbForm = tenseData?.[candidate.form];
-    return candidateVerbForm && candidateVerbForm !== currentVerbForm;
+    const candidateForm = resolveAdvConjVerbForm(idiom, candidate, tense);
+    return candidateForm && candidateForm.plain !== current.plain;
   });
 
   return hasDivergentSubject ? label : baseLabel;
 }
 
-advConj.buildAdvConjHebrewAnswer = advConj.buildAdvConjHebrewAnswer || function buildAdvConjHebrewAnswer(idiom, subjectForm, subjectPronoun, objectKey, tense) {
+advConj.buildAdvConjHebrewAnswer = advConj.buildAdvConjHebrewAnswer || function buildAdvConjHebrewAnswer(idiom, subject, objectKey, tense) {
   const runtime = getRuntime();
   const obj = runtime.constants.ADV_CONJ_OBJECTS.find((entry) => entry.key === objectKey);
   if (!obj) return "";
-  const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : tense === "infinitive" ? idiom.infinitive_tense : idiom.present_tense;
-  if (!tenseData) return "";
-  const verbForm = tenseData[subjectForm];
+  const verbForm = resolveAdvConjVerbForm(idiom, subject, tense)?.plain;
   if (!verbForm) return "";
   const neg = idiom.negated ? "לא " : "";
   if (idiom.object_type === "direct") {
@@ -142,18 +191,14 @@ advConj.buildAdvConjHebrewAnswer = advConj.buildAdvConjHebrewAnswer || function 
   return "";
 };
 
-advConj.buildAdvConjHebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud || function buildAdvConjHebrewAnswerNiqqud(idiom, subjectForm, subjectPronoun, objectKey, tense) {
+advConj.buildAdvConjHebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud || function buildAdvConjHebrewAnswerNiqqud(idiom, subject, objectKey, tense) {
   const runtime = getRuntime();
   const obj = runtime.constants.ADV_CONJ_OBJECTS.find((entry) => entry.key === objectKey);
+  // The fixed object and suffix forms are only pointed on reviewed idioms, so
+  // an unreviewed entry cannot render a fully pointed answer even when the verb
+  // form itself arrives pointed from a linked paradigm.
   if (!obj || idiom?.niqqud_status !== "reviewed") return "";
-  const tenseData = tense === "past"
-    ? idiom.past_tense_niqqud
-    : tense === "future"
-      ? idiom.future_tense_niqqud
-      : tense === "infinitive"
-        ? idiom.infinitive_tense_niqqud
-        : idiom.present_tense_niqqud;
-  const verbForm = tenseData?.[subjectForm];
+  const verbForm = resolveAdvConjVerbForm(idiom, subject, tense)?.niqqud;
   if (!verbForm) return "";
   const neg = idiom.negated ? "לֹא " : "";
   if (idiom.object_type === "direct" && obj.dirObjNiqqud) {
@@ -171,9 +216,7 @@ advConj.buildAdvConjHebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud 
 
 advConj.buildAdvConjEnglishSentence = advConj.buildAdvConjEnglishSentence || function buildAdvConjEnglishSentence(idiom, subj, obj, tense) {
   let tpl;
-  if (tense === "infinitive") {
-    tpl = idiom.literal_infinitive;
-  } else if (tense === "past") {
+  if (tense === "past") {
     tpl = idiom.literal_past;
   } else if (tense === "future") {
     tpl = idiom.literal_future;
@@ -207,9 +250,6 @@ advConj.buildAdvConjEnglishSentence = advConj.buildAdvConjEnglishSentence || fun
 };
 
 advConj.getAdvConjSubjectsForTense = advConj.getAdvConjSubjectsForTense || function getAdvConjSubjectsForTense(tense) {
-  if (tense === "infinitive") {
-    return [{ form: "infinitive", pronoun: "", en: "" }];
-  }
   return getRuntime().constants.ADV_CONJ_SUBJECTS.filter((subj) => !Array.isArray(subj.tenses) || subj.tenses.includes(tense));
 };
 
@@ -226,34 +266,42 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
   const runtime = getRuntime();
   const shuffle = app.utils?.shuffle;
   const deck = [];
+  const tenses = ["present", "past", "future"];
   for (const idiom of getIdioms()) {
-    if (!idiom.literal_sg && !idiom.literal_infinitive) continue;
-    const tenses = idiom.tenses || ["present", "past", "future"];
+    if (!idiom.literal_sg) continue;
     for (const tense of tenses) {
-      const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : tense === "infinitive" ? idiom.infinitive_tense : idiom.present_tense;
+      const tenseData = tense === "past" ? idiom.past_tense : tense === "future" ? idiom.future_tense : idiom.present_tense;
       if (!tenseData) continue;
       const subjects = advConj.getAdvConjSubjectsForTense(tense);
       for (const subj of subjects) {
-        if (!tenseData[subj.form]) continue;
+        const subjectForm = resolveAdvConjVerbForm(idiom, subj, tense);
+        if (!subjectForm) continue;
         for (const obj of runtime.constants.ADV_CONJ_OBJECTS) {
-          if (isSecondPersonSubject(subj) && isSecondPersonObject(obj)) continue;
+          if (subjectCoreferencesObject(subj, obj)) continue;
           if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[obj.key]) continue;
-          if (idiom.invalid_objects && idiom.invalid_objects.includes(obj.key)) continue;
-          const hebrewAnswer = advConj.buildAdvConjHebrewAnswer(idiom, subj.form, subj.pronoun, obj.key, tense);
-          const hebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj.form, subj.pronoun, obj.key, tense);
+          const hebrewAnswer = advConj.buildAdvConjHebrewAnswer(idiom, subj, obj.key, tense);
+          const hebrewAnswerNiqqud = advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj, obj.key, tense);
           if (!hebrewAnswer) continue;
           const englishSentence = advConj.buildAdvConjEnglishSentence(idiom, subj, obj, tense);
           if (!englishSentence) continue;
           const direction = Math.random() < 0.5 ? "en2he" : "he2en";
 
           if (direction === "he2en") {
-            const verbForm = tenseData[subj.form];
-            const ambiguous = subjects.some((subject) => subject.en !== subj.en && tenseData[subject.form] === verbForm);
+            // Reading Hebrew back to English only works when the verb form
+            // names one subject. Present is person-neutral, so it almost never
+            // does; past and future usually do once a paradigm supplies them.
+            const ambiguous = subjects.some((candidate) => {
+              if (candidate === subj) return false;
+              const candidateForm = resolveAdvConjVerbForm(idiom, candidate, tense);
+              return candidateForm && candidateForm.plain === subjectForm.plain;
+            });
             if (ambiguous) continue;
           }
 
           const otherObjs = runtime.constants.ADV_CONJ_OBJECTS.filter((entry) => entry.key !== obj.key);
-          const otherSubjs = subjects.filter((subject) => subject.en !== subj.en);
+          // Compared by identity, not by label: several subjects now share a
+          // label stem ("I (m.)" / "I (f.)") and several share a `form`.
+          const otherSubjs = subjects.filter((subject) => subject !== subj);
           const correctText = direction === "en2he" ? hebrewAnswer : englishSentence;
           const correctTextNiqqud = direction === "en2he" ? hebrewAnswerNiqqud : "";
           const subjectLabel = getAdvConjSubjectEnglishLabel(idiom, subj, tense);
@@ -261,16 +309,15 @@ advConj.buildAdvConjDeck = advConj.buildAdvConjDeck || function buildAdvConjDeck
 
           function buildDistractor(subject, object) {
             if (idiom.object_type === "possessive_suffix" && !idiom.suffix_forms[object.key]) return null;
-            if (idiom.invalid_objects && idiom.invalid_objects.includes(object.key)) return null;
-            if (!tenseData[subject.form]) return null;
+            if (!resolveAdvConjVerbForm(idiom, subject, tense)) return null;
             const text = direction === "en2he"
-              ? advConj.buildAdvConjHebrewAnswer(idiom, subject.form, subject.pronoun, object.key, tense)
+              ? advConj.buildAdvConjHebrewAnswer(idiom, subject, object.key, tense)
               : advConj.buildAdvConjEnglishSentence(idiom, subject, object, tense);
             if (!text) return null;
             return {
               text,
               textNiqqud: direction === "en2he"
-                ? advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subject.form, subject.pronoun, object.key, tense)
+                ? advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subject, object.key, tense)
                 : "",
             };
           }
@@ -633,9 +680,9 @@ advConj.buildAdvConjMistakeSummary = advConj.buildAdvConjMistakeSummary || funct
       if (!idiom) return null;
       const subj = advConj.getAdvConjSubjectsForTense("present").find((subject) => idiom.present_tense[subject.form]);
       const obj = runtime.constants.ADV_CONJ_OBJECTS[0];
-      const answer = subj ? advConj.buildAdvConjHebrewAnswer(idiom, subj.form, subj.pronoun, obj.key, "present") : "";
+      const answer = subj ? advConj.buildAdvConjHebrewAnswer(idiom, subj, obj.key, "present") : "";
       const answerNiqqud = subj
-        ? advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj.form, subj.pronoun, obj.key, "present")
+        ? advConj.buildAdvConjHebrewAnswerNiqqud(idiom, subj, obj.key, "present")
         : "";
       return {
         primary: answerNiqqud || answer,

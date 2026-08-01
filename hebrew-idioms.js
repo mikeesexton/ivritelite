@@ -7,54 +7,7 @@
 const HEBREW_IDIOMS = (function () {
   const raw = [
   {
-    "id": "shaga",
-    "level": 1,
-    "infinitive": "לשגע מישהו",
-    "english": "to drive someone crazy",
-    "verb": "לשגע",
-    "root": "ש.ג.ע",
-    "binyan": "piel",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "אתה משגע אותי",
-    "negated": false,
-    "literal_sg": "{s} drives {o} crazy",
-    "literal_pl": "{s} drive {o} crazy",
-    "literal_past": "{s} drove {o} crazy",
-    "literal_future": "{s} will drive {o} crazy",
-    "showMeaning": false,
-    "conjugations": {
-      "present": { "msg": "משגע", "fsg": "משגעת", "mpl": "משגעים", "fpl": "משגעות" },
-      "past":    { "msg": "שיגע", "fsg": "שיגעה", "mpl": "שיגעו", "fpl": "שיגעו" },
-      "future":  { "msg": "ישגע", "fsg": "תשגע", "mpl": "ישגעו", "fpl": "ישגעו" }
-    }
-  },
-  {
-    "id": "itzben",
-    "level": 1,
-    "infinitive": "לעצבן מישהו",
-    "english": "to annoy someone",
-    "verb": "לעצבן",
-    "root": "ע.צ.ב.נ",
-    "binyan": "piel",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "אתה מעצבן אותי",
-    "negated": false,
-    "literal_sg": "{s} annoys {o}",
-    "literal_pl": "{s} annoy {o}",
-    "literal_past": "{s} annoyed {o}",
-    "literal_future": "{s} will annoy {o}",
-    "showMeaning": false,
-    "conjugations": {
-      "present": { "msg": "מעצבן", "fsg": "מעצבנת", "mpl": "מעצבנים", "fpl": "מעצבנות" },
-      "past":    { "msg": "עיצבן", "fsg": "עיצבנה", "mpl": "עיצבנו", "fpl": "עיצבנו" },
-      "future":  { "msg": "יעצבן", "fsg": "תעצבן", "mpl": "יעצבנו", "fpl": "יעצבנו" }
-    }
-  },
-  {
     "id": "hidlik",
-    "level": 1,
     "infinitive": "להדליק מישהו",
     "english": "to excite / turn someone on",
     "verb": "להדליק",
@@ -83,31 +36,7 @@ const HEBREW_IDIOMS = (function () {
     "niqqud_sources": ["https://www.pealim.com/dict/423-lehadlik/"]
   },
   {
-    "id": "hitrif",
-    "level": 1,
-    "infinitive": "להטריף מישהו",
-    "english": "to drive someone insane",
-    "verb": "להטריף",
-    "root": "ט.ר.פ",
-    "binyan": "hifil",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "אתה מטריף אותי",
-    "negated": false,
-    "literal_sg": "{s} drives {o} insane",
-    "literal_pl": "{s} drive {o} insane",
-    "literal_past": "{s} drove {o} insane",
-    "literal_future": "{s} will drive {o} insane",
-    "showMeaning": false,
-    "conjugations": {
-      "present": { "msg": "מטריף", "fsg": "מטריפה", "mpl": "מטריפים", "fpl": "מטריפות" },
-      "past":    { "msg": "הטריף", "fsg": "הטריפה", "mpl": "הטריפו", "fpl": "הטריפו" },
-      "future":  { "msg": "יטריף", "fsg": "תטריף", "mpl": "יטריפו", "fpl": "יטריפו" }
-    }
-  },
-  {
     "id": "kara",
-    "level": 1,
     "infinitive": "לקרוע מישהו",
     "english": "to kill/send someone [funny]",
     "verb": "לקרוע",
@@ -130,7 +59,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haalat_sif",
-    "level": 2,
     "infinitive": "להעלות למישהו את הסעיף",
     "english": "to drive someone up the wall",
     "verb": "להעלות",
@@ -154,7 +82,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "horadat_hesheq",
-    "level": 2,
     "infinitive": "להוריד למישהו את החשק",
     "english": "to kill someone's motivation",
     "verb": "להוריד",
@@ -178,7 +105,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hotzaat_mitz",
-    "level": 2,
     "infinitive": "להוציא למישהו את המיץ",
     "english": "to exhaust / wear someone out",
     "verb": "להוציא",
@@ -202,7 +128,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "shvira_lev",
-    "level": 2,
     "infinitive": "לשבור למישהו את הלב",
     "english": "to break someone's heart",
     "verb": "לשבור",
@@ -226,7 +151,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "asiya_hayim",
-    "level": 2,
     "infinitive": "לעשות למישהו את החיים קשים",
     "english": "to make someone's life difficult",
     "verb": "לעשות",
@@ -250,7 +174,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hfalat_asiman",
-    "level": 2,
     "infinitive": "להפיל למישהו את האסימון",
     "english": "to make it click/make sense for someone",
     "verb": "להפיל",
@@ -274,7 +197,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "ptihat_einayim",
-    "level": 2,
     "infinitive": "לפתוח למישהו את העיניים",
     "english": "to open someone's eyes",
     "verb": "לפתוח",
@@ -309,7 +231,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "yeshiva_neshama",
-    "level": 2,
     "infinitive": "לשבת למישהו על הנשמה",
     "english": "to suffocate / pressure someone",
     "verb": "לשבת",
@@ -333,7 +254,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "yerida_gav",
-    "level": 2,
     "infinitive": "לרדת למישהו מהגב",
     "english": "to get off someone's back",
     "verb": "לרדת",
@@ -357,7 +277,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "amida_derekh",
-    "level": 2,
     "infinitive": "לעמוד למישהו בדרך",
     "english": "to stand in someone's way",
     "verb": "לעמוד",
@@ -381,7 +300,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "khnisa_rosh",
-    "level": 2,
     "infinitive": "להיכנס למישהו לראש",
     "english": "to get inside someone's head",
     "verb": "להיכנס",
@@ -405,7 +323,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "lo_yatza_rosh",
-    "level": 2,
     "infinitive": "לא לצאת למישהו מהראש",
     "english": "to not leave someone's head",
     "verb": "לצאת",
@@ -429,7 +346,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "ntina_barosh",
-    "level": 2,
     "infinitive": "לתת למישהו בראש",
     "english": "to tear into / yell at someone",
     "verb": "לתת",
@@ -453,7 +369,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "akhila_rosh",
-    "level": 2,
     "infinitive": "לאכול למישהו את הראש",
     "english": "to nag / drive someone crazy with talk",
     "verb": "לאכול",
@@ -477,7 +392,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "gnivat_lev",
-    "level": 2,
     "infinitive": "לגנוב למישהו את הלב",
     "english": "to steal someone's heart",
     "verb": "לגנוב",
@@ -501,7 +415,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hotzaat_midato",
-    "level": 3,
     "infinitive": "להוציא מישהו מדעתו",
     "english": "to drive someone out of their mind",
     "verb": "להוציא",
@@ -531,7 +444,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hotzaat_miklav",
-    "level": 3,
     "infinitive": "להוציא מישהו מכליו",
     "english": "to make someone totally lose it",
     "verb": "להוציא",
@@ -561,7 +473,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "bilbul_moach",
-    "level": 2,
     "infinitive": "לבלבל למישהו את המוח",
     "english": "to mess with someone's head / talk nonsense at someone",
     "verb": "לבלבל",
@@ -585,7 +496,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "shtifat_moach",
-    "level": 2,
     "infinitive": "לשטוף למישהו את המוח",
     "english": "to brainwash someone",
     "verb": "לשטוף",
@@ -609,7 +519,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hotzaat_neshama",
-    "level": 2,
     "infinitive": "להוציא למישהו את הנשמה",
     "english": "to wear someone down / drain someone completely",
     "verb": "להוציא",
@@ -633,7 +542,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "aliyat_atzabim",
-    "level": 2,
     "infinitive": "לעלות למישהו על העצבים",
     "english": "to get on someone's nerves",
     "verb": "לעלות",
@@ -657,7 +565,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "sivuv_rosh",
-    "level": 2,
     "infinitive": "לסובב למישהו את הראש",
     "english": "to turn someone's head / sweet-talk someone",
     "verb": "לסובב",
@@ -681,7 +588,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "simat_regel",
-    "level": 2,
     "infinitive": "לשים למישהו רגל",
     "english": "to trip someone up / sabotage someone",
     "verb": "לשים",
@@ -705,7 +611,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "chimum_lev",
-    "level": 2,
     "infinitive": "לחמם למישהו את הלב",
     "english": "to warm someone's heart",
     "verb": "לחמם",
@@ -729,7 +634,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "merihat_atzabim",
-    "level": 3,
     "infinitive": "למרוט למישהו את העצבים",
     "english": "to fray someone's nerves / wear someone's patience thin",
     "verb": "למרוט",
@@ -753,7 +657,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "ruach_mifrasim",
-    "level": 3,
     "infinitive": "להוציא למישהו את הרוח מהמפרשים",
     "english": "to take the wind out of someone's sails",
     "verb": "להוציא",
@@ -777,7 +680,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "sider",
-    "level": 2,
     "infinitive": "לסדר מישהו",
     "english": "to screw someone over",
     "verb": "לסדר",
@@ -787,11 +689,11 @@ const HEBREW_IDIOMS = (function () {
     "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
     "example": "הקבלן סידר אותנו",
     "negated": false,
-    "literal_sg": "{s} screws {o} over",
-    "literal_pl": "{s} screw {o} over",
-    "literal_past": "{s} screwed {o} over",
-    "literal_future": "{s} will screw {o} over",
-    "showMeaning": false,
+    "literal_sg": "{s} arranges {o}",
+    "literal_pl": "{s} arrange {o}",
+    "literal_past": "{s} arranged {o}",
+    "literal_future": "{s} will arrange {o}",
+    "showMeaning": true,
     "conjugations": {
       "present": { "msg": "מסדר", "fsg": "מסדרת", "mpl": "מסדרים", "fpl": "מסדרות" },
       "past":    { "msg": "סידר", "fsg": "סידרה", "mpl": "סידרו", "fpl": "סידרו" },
@@ -807,7 +709,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "marach",
-    "level": 3,
     "infinitive": "למרוח מישהו",
     "english": "to string someone along",
     "verb": "למרוח",
@@ -817,11 +718,11 @@ const HEBREW_IDIOMS = (function () {
     "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
     "example": "הוא מרח אותי שבועיים",
     "negated": false,
-    "literal_sg": "{s} strings {o} along",
-    "literal_pl": "{s} string {o} along",
-    "literal_past": "{s} strung {o} along",
-    "literal_future": "{s} will string {o} along",
-    "showMeaning": false,
+    "literal_sg": "{s} smears {o}",
+    "literal_pl": "{s} smear {o}",
+    "literal_past": "{s} smeared {o}",
+    "literal_future": "{s} will smear {o}",
+    "showMeaning": true,
     "conjugations": {
       "present": { "msg": "מורח", "fsg": "מורחת", "mpl": "מורחים", "fpl": "מורחות" },
       "past":    { "msg": "מרח", "fsg": "מרחה", "mpl": "מרחו", "fpl": "מרחו" },
@@ -830,7 +731,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "asiyat_yom",
-    "level": 1,
     "infinitive": "לעשות למישהו את היום",
     "english": "to make someone's day",
     "verb": "לעשות",
@@ -865,7 +765,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haramat_moral",
-    "level": 2,
     "infinitive": "להרים למישהו את המורל",
     "english": "to lift someone's spirits",
     "verb": "להרים",
@@ -889,7 +788,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "harisat_matzav_ruach",
-    "level": 2,
     "infinitive": "להרוס למישהו את מצב הרוח",
     "english": "to ruin someone's mood",
     "verb": "להרוס",
@@ -913,7 +811,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "gnivat_hatzaga",
-    "level": 2,
     "infinitive": "לגנוב למישהו את ההצגה",
     "english": "to steal someone's thunder",
     "verb": "לגנוב",
@@ -937,7 +834,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "drichat_yabalot",
-    "level": 3,
     "infinitive": "לדרוך למישהו על היבלות",
     "english": "to touch a sore spot / hit a nerve",
     "verb": "לדרוך",
@@ -961,7 +857,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "tsvitat_lev",
-    "level": 2,
     "infinitive": "לצבוט למישהו בלב",
     "english": "to tug at someone's heartstrings",
     "verb": "לצבוט",
@@ -984,62 +879,7 @@ const HEBREW_IDIOMS = (function () {
     }
   },
   {
-    "id": "hitzchik",
-    "level": 1,
-    "infinitive": "להצחיק מישהו",
-    "english": "to crack someone up",
-    "verb": "להצחיק",
-    "root": "צ.ח.ק",
-    "binyan": "hifil",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "הוא מצחיק אותי",
-    "negated": false,
-    "literal_sg": "{s} makes {o} laugh",
-    "literal_pl": "{s} make {o} laugh",
-    "literal_past": "{s} made {o} laugh",
-    "literal_future": "{s} will make {o} laugh",
-    "showMeaning": false,
-    "conjugations": {
-      "present": { "msg": "מצחיק", "fsg": "מצחיקה", "mpl": "מצחיקים", "fpl": "מצחיקות" },
-      "past":    { "msg": "הצחיק", "fsg": "הצחיקה", "mpl": "הצחיקו", "fpl": "הצחיקו" },
-      "future":  { "msg": "יצחיק", "fsg": "תצחיק", "mpl": "יצחיקו", "fpl": "יצחיקו" }
-    }
-  },
-  
-  
-  {
-    "id": "bies",
-    "level": 2,
-    "infinitive": "לבאס מישהו",
-    "english": "to bum someone out",
-    "verb": "לבאס",
-    "root": "ב.א.ס",
-    "binyan": "piel",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "זה ממש מבאס אותי",
-    "negated": false,
-    "literal_sg": "{s} bums {o} out",
-    "literal_pl": "{s} bum {o} out",
-    "literal_past": "{s} bummed {o} out",
-    "literal_future": "{s} will bum {o} out",
-    "showMeaning": true,
-    "conjugations": {
-      "present": { "msg": "מבאס", "fsg": "מבאסת", "mpl": "מבאסים", "fpl": "מבאסות" },
-      "past":    { "msg": "ביאס", "fsg": "ביאסה", "mpl": "ביאסו", "fpl": "ביאסו" },
-      "future":  { "msg": "יבאס", "fsg": "תבאס", "mpl": "יבאסו", "fpl": "יבאסו" }
-    }
-  },
-  
-  
-  
-  
-  
-  
-  {
     "id": "zarak",
-    "level": 2,
     "infinitive": "לזרוק מישהו",
     "english": "to dump someone",
     "verb": "לזרוק",
@@ -1062,7 +902,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "tafas_oti",
-    "level": 2,
     "infinitive": "לתפוס מישהו",
     "english": "to catch someone out",
     "verb": "לתפוס",
@@ -1085,7 +924,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "dafak",
-    "level": 3,
     "infinitive": "לדפוק מישהו",
     "english": "to screw someone over",
     "verb": "לדפוק",
@@ -1108,7 +946,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "heif",
-    "level": 3,
     "infinitive": "להעיף מישהו",
     "english": "to boot someone out",
     "verb": "להעיף",
@@ -1129,16 +966,8 @@ const HEBREW_IDIOMS = (function () {
       "future":  { "msg": "יעיף", "fsg": "תעיף", "mpl": "יעיפו", "fpl": "יעיפו" }
     }
   },
-  
-  
-  
-  
-  
-  
-  
   {
     "id": "chisel",
-    "level": 3,
     "infinitive": "לחסל מישהו",
     "english": "to finish someone off",
     "verb": "לחסל",
@@ -1160,85 +989,7 @@ const HEBREW_IDIOMS = (function () {
     }
   },
   {
-    "id": "hitish",
-    "level": 3,
-    "infinitive": "להתיש מישהו",
-    "english": "to wear someone down",
-    "verb": "להתיש",
-    "root": "ת.ש.ש",
-    "binyan": "hifil",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "הבירוקרטיה מתישה אותי",
-    "negated": false,
-    "literal_sg": "{s} wears {o} down",
-    "literal_pl": "{s} wear {o} down",
-    "literal_past": "{s} wore {o} down",
-    "literal_future": "{s} will wear {o} down",
-    "showMeaning": false,
-    "conjugations": {
-      "present": { "msg": "מתיש", "fsg": "מתישה", "mpl": "מתישים", "fpl": "מתישות" },
-      "past":    { "msg": "התיש", "fsg": "התישה", "mpl": "התישו", "fpl": "התישו" },
-      "future":  { "msg": "יתיש", "fsg": "תתיש", "mpl": "יתישו", "fpl": "יתישו" }
-    }
-  },
-  {
-    "id": "rima",
-    "level": 2,
-    "infinitive": "לרמות מישהו",
-    "english": "to cheat on someone",
-    "verb": "לרמות",
-    "root": "ר.מ.ה",
-    "binyan": "piel",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "הוא רימה אותה",
-    "negated": false,
-    "literal_sg": "{s} deceives {o}",
-    "literal_pl": "{s} deceive {o}",
-    "literal_past": "{s} deceived {o}",
-    "literal_future": "{s} will deceive {o}",
-    "showMeaning": true,
-    "conjugations": {
-      "present": { "msg": "מרמה", "fsg": "מרמה", "mpl": "מרמים", "fpl": "מרמות" },
-      "past":    { "msg": "רימה", "fsg": "רימתה", "mpl": "רימו", "fpl": "רימו" },
-      "future":  { "msg": "ירמה", "fsg": "תרמה", "mpl": "ירמו", "fpl": "ירמו" }
-    }
-  },
-  
-  
-  
-  {
-    "id": "nitzel",
-    "level": 3,
-    "infinitive": "לנצל מישהו",
-    "english": "to take advantage of someone",
-    "verb": "לנצל",
-    "root": "נ.צ.ל",
-    "binyan": "piel",
-    "object_type": "direct",
-    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
-    "example": "הם ניצלו אותנו",
-    "negated": false,
-    "literal_sg": "{s} exploits {o}",
-    "literal_pl": "{s} exploit {o}",
-    "literal_past": "{s} exploited {o}",
-    "literal_future": "{s} will exploit {o}",
-    "showMeaning": true,
-    "conjugations": {
-      "present": { "msg": "מנצל", "fsg": "מנצלת", "mpl": "מנצלים", "fpl": "מנצלות" },
-      "past":    { "msg": "ניצל", "fsg": "ניצלה", "mpl": "ניצלו", "fpl": "ניצלו" },
-      "future":  { "msg": "ינצל", "fsg": "תנצל", "mpl": "ינצלו", "fpl": "ינצלו" }
-    }
-  },
-  
-  
-  
-  
-  
-  {
     "id": "asiyat_tova",
-    "level": 1,
     "infinitive": "לעשות למישהו טובה",
     "english": "to do someone a favor",
     "verb": "לעשות",
@@ -1262,7 +1013,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "dibur_al_halev",
-    "level": 3,
     "infinitive": "לדבר למישהו על הלב",
     "english": "to talk someone round",
     "verb": "לדבר",
@@ -1286,7 +1036,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "asiyat_seder_barosh",
-    "level": 3,
     "infinitive": "לעשות למישהו סדר בראש",
     "english": "to sort someone's head out",
     "verb": "לעשות",
@@ -1310,7 +1059,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hachzarat_chiyuch",
-    "level": 2,
     "infinitive": "להחזיר למישהו את החיוך",
     "english": "to bring someone's smile back",
     "verb": "להחזיר",
@@ -1334,7 +1082,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "tfisat_ayin",
-    "level": 2,
     "infinitive": "לתפוס למישהו את העין",
     "english": "to catch someone's eye",
     "verb": "לתפוס",
@@ -1358,7 +1105,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "chisachon_keev",
-    "level": 2,
     "infinitive": "לחסוך למישהו את הכאב",
     "english": "to spare someone the pain",
     "verb": "לחסוך",
@@ -1382,7 +1128,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haarat_yom",
-    "level": 2,
     "infinitive": "להאיר למישהו את היום",
     "english": "to make someone's day",
     "verb": "להאיר",
@@ -1406,7 +1151,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "mirur_chayim",
-    "level": 3,
     "infinitive": "למרר למישהו את החיים",
     "english": "to make someone's life miserable",
     "verb": "למרר",
@@ -1430,7 +1174,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "asiyat_mavet",
-    "level": 3,
     "infinitive": "לעשות למישהו את המוות",
     "english": "to give someone hell",
     "verb": "לעשות",
@@ -1454,7 +1197,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haramat_telefon",
-    "level": 2,
     "infinitive": "להרים למישהו טלפון",
     "english": "to give someone a call",
     "verb": "להרים",
@@ -1478,7 +1220,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "ntinat_kavod",
-    "level": 1,
     "infinitive": "לתת למישהו כבוד",
     "english": "to show someone respect",
     "verb": "לתת",
@@ -1502,7 +1243,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "shibush_tochniyot",
-    "level": 3,
     "infinitive": "לשבש למישהו את התוכניות",
     "english": "to mess up someone's plans",
     "verb": "לשבש",
@@ -1526,7 +1266,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "zriyat_melach",
-    "level": 4,
     "infinitive": "לזרות למישהו מלח על הפצעים",
     "english": "to rub salt in someone's wounds",
     "verb": "לזרות",
@@ -1550,7 +1289,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hotzaat_milim",
-    "level": 4,
     "infinitive": "להוציא למישהו את המילים מהפה",
     "english": "to take the words out of someone's mouth",
     "verb": "להוציא",
@@ -1574,7 +1312,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "sgirat_pina",
-    "level": 3,
     "infinitive": "לסגור למישהו פינה",
     "english": "to sort something out for someone",
     "verb": "לסגור",
@@ -1598,7 +1335,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "ptichat_delet",
-    "level": 2,
     "infinitive": "לפתוח למישהו דלת",
     "english": "to open a door for someone",
     "verb": "לפתוח",
@@ -1622,7 +1358,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hatayat_ozen",
-    "level": 4,
     "infinitive": "להטות למישהו אוזן",
     "english": "to lend someone an ear",
     "verb": "להטות",
@@ -1646,7 +1381,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hafichat_chayim",
-    "level": 3,
     "infinitive": "להפוך למישהו את החיים",
     "english": "to turn someone's life upside down",
     "verb": "להפוך",
@@ -1670,7 +1404,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hotzaa_mishalva",
-    "level": 3,
     "infinitive": "להוציא מישהו משלוותו",
     "english": "to throw someone off balance",
     "verb": "להוציא",
@@ -1707,7 +1440,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haamada_bimkomo",
-    "level": 3,
     "infinitive": "להעמיד מישהו במקומו",
     "english": "to put someone in their place",
     "verb": "להעמיד",
@@ -1744,7 +1476,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "tfisa_bimilato",
-    "level": 4,
     "infinitive": "לתפוס מישהו במילתו",
     "english": "to take someone at their word",
     "verb": "לתפוס",
@@ -1781,7 +1512,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hachzara_leatzmo",
-    "level": 3,
     "infinitive": "להחזיר מישהו לעצמו",
     "english": "to bring someone back to themselves",
     "verb": "להחזיר",
@@ -1840,7 +1570,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haavara_al_daato",
-    "level": 4,
     "infinitive": "להעביר מישהו על דעתו",
     "english": "to drive someone out of their mind",
     "verb": "להעביר",
@@ -1877,7 +1606,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "hashara_betzarato",
-    "level": 4,
     "infinitive": "להשאיר מישהו בצרתו",
     "english": "to leave someone in the lurch",
     "verb": "להשאיר",
@@ -1914,7 +1642,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "haamada_al_tauto",
-    "level": 4,
     "infinitive": "להעמיד מישהו על טעותו",
     "english": "to set someone straight",
     "verb": "להעמיד",
@@ -1951,7 +1678,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "tfisa_bekilkelato",
-    "level": 4,
     "infinitive": "לתפוס מישהו בקלקלתו",
     "english": "to catch someone red-handed",
     "verb": "לתפוס",
@@ -1988,7 +1714,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "ktia_bidvarav",
-    "level": 3,
     "infinitive": "לקטוע מישהו בדבריו",
     "english": "to cut someone off mid-sentence",
     "verb": "לקטוע",
@@ -2025,7 +1750,6 @@ const HEBREW_IDIOMS = (function () {
   },
   {
     "id": "chizuk_bedaato",
-    "level": 3,
     "infinitive": "לחזק מישהו בדעתו",
     "english": "to reinforce someone's view",
     "verb": "לחזק",
@@ -2058,6 +1782,506 @@ const HEBREW_IDIOMS = (function () {
       "present": { "msg": "מחזק", "fsg": "מחזקת", "mpl": "מחזקים", "fpl": "מחזקות" },
       "past":    { "msg": "חיזק", "fsg": "חיזקה", "mpl": "חיזקו", "fpl": "חיזקו" },
       "future":  { "msg": "יחזק", "fsg": "תחזק", "mpl": "יחזקו", "fpl": "יחזקו" }
+    }
+  },
+  {
+    "id": "srifat_oto",
+    "infinitive": "לשרוף מישהו",
+    "english": "to blow someone's cover",
+    "verb": "לשרוף",
+    "root": "ש.ר.פ",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הוא שרף אותי מול כל הצוות",
+    "negated": false,
+    "literal_sg": "{s} burns {o}",
+    "literal_pl": "{s} burn {o}",
+    "literal_past": "{s} burned {o}",
+    "literal_future": "{s} will burn {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "שורף",
+        "fsg": "שורפת",
+        "mpl": "שורפים",
+        "fpl": "שורפות"
+      },
+      "past": {
+        "msg": "שרף",
+        "fsg": "שרפה",
+        "mpl": "שרפו",
+        "fpl": "שרפו"
+      },
+      "future": {
+        "msg": "ישרוף",
+        "fsg": "תשרוף",
+        "mpl": "ישרפו",
+        "fpl": "ישרפו"
+      }
+    }
+  },
+  {
+    "id": "pitzutz_oto",
+    "infinitive": "לפוצץ מישהו",
+    "english": "to stand someone up",
+    "verb": "לפוצץ",
+    "root": "פ.צ.צ",
+    "binyan": "piel",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "היא פוצצה אותי בלי להתקשר",
+    "negated": false,
+    "literal_sg": "{s} blows {o} up",
+    "literal_pl": "{s} blow {o} up",
+    "literal_past": "{s} blew {o} up",
+    "literal_future": "{s} will blow {o} up",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מפוצץ",
+        "fsg": "מפוצצת",
+        "mpl": "מפוצצים",
+        "fpl": "מפוצצות"
+      },
+      "past": {
+        "msg": "פוצץ",
+        "fsg": "פוצצה",
+        "mpl": "פוצצו",
+        "fpl": "פוצצו"
+      },
+      "future": {
+        "msg": "יפוצץ",
+        "fsg": "תפוצץ",
+        "mpl": "יפוצצו",
+        "fpl": "יפוצצו"
+      }
+    }
+  },
+  {
+    "id": "gmirat_oto",
+    "infinitive": "לגמור מישהו",
+    "english": "to wear someone out completely",
+    "verb": "לגמור",
+    "root": "ג.מ.ר",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "האימון הזה גמר אותי",
+    "negated": false,
+    "literal_sg": "{s} finishes {o}",
+    "literal_pl": "{s} finish {o}",
+    "literal_past": "{s} finished {o}",
+    "literal_future": "{s} will finish {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "גומר",
+        "fsg": "גומרת",
+        "mpl": "גומרים",
+        "fpl": "גומרות"
+      },
+      "past": {
+        "msg": "גמר",
+        "fsg": "גמרה",
+        "mpl": "גמרו",
+        "fpl": "גמרו"
+      },
+      "future": {
+        "msg": "יגמור",
+        "fsg": "תגמור",
+        "mpl": "יגמרו",
+        "fpl": "יגמרו"
+      }
+    }
+  },
+  {
+    "id": "shvirat_oto",
+    "infinitive": "לשבור מישהו",
+    "english": "to break someone down",
+    "verb": "לשבור",
+    "root": "ש.ב.ר",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "החקירה שברה אותו",
+    "negated": false,
+    "literal_sg": "{s} breaks {o}",
+    "literal_pl": "{s} break {o}",
+    "literal_past": "{s} broke {o}",
+    "literal_future": "{s} will break {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "שובר",
+        "fsg": "שוברת",
+        "mpl": "שוברים",
+        "fpl": "שוברות"
+      },
+      "past": {
+        "msg": "שבר",
+        "fsg": "שברה",
+        "mpl": "שברו",
+        "fpl": "שברו"
+      },
+      "future": {
+        "msg": "ישבור",
+        "fsg": "תשבור",
+        "mpl": "ישברו",
+        "fpl": "ישברו"
+      }
+    }
+  },
+  {
+    "id": "harigat_oto",
+    "infinitive": "להרוג מישהו",
+    "english": "to crack someone up",
+    "verb": "להרוג",
+    "root": "ה.ר.ג",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הבדיחה שלו הרגה אותי",
+    "negated": false,
+    "literal_sg": "{s} kills {o}",
+    "literal_pl": "{s} kill {o}",
+    "literal_past": "{s} killed {o}",
+    "literal_future": "{s} will kill {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "הורג",
+        "fsg": "הורגת",
+        "mpl": "הורגים",
+        "fpl": "הורגות"
+      },
+      "past": {
+        "msg": "הרג",
+        "fsg": "הרגה",
+        "mpl": "הרגו",
+        "fpl": "הרגו"
+      },
+      "future": {
+        "msg": "יהרוג",
+        "fsg": "תהרוג",
+        "mpl": "יהרגו",
+        "fpl": "יהרגו"
+      }
+    }
+  },
+  {
+    "id": "schivat_oto",
+    "infinitive": "לסחוב מישהו",
+    "english": "to drag someone around",
+    "verb": "לסחוב",
+    "root": "ס.ח.ב",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "סחבו אותנו בין המשרדים כל היום",
+    "negated": false,
+    "literal_sg": "{s} drags {o}",
+    "literal_pl": "{s} drag {o}",
+    "literal_past": "{s} dragged {o}",
+    "literal_future": "{s} will drag {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "סוחב",
+        "fsg": "סוחבת",
+        "mpl": "סוחבים",
+        "fpl": "סוחבות"
+      },
+      "past": {
+        "msg": "סחב",
+        "fsg": "סחבה",
+        "mpl": "סחבו",
+        "fpl": "סחבו"
+      },
+      "future": {
+        "msg": "יסחב",
+        "fsg": "תסחב",
+        "mpl": "יסחבו",
+        "fpl": "יסחבו"
+      }
+    }
+  },
+  {
+    "id": "prikat_oto",
+    "infinitive": "לפרק מישהו",
+    "english": "to destroy someone emotionally",
+    "verb": "לפרק",
+    "root": "פ.ר.ק",
+    "binyan": "piel",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הפרידה פירקה אותה",
+    "negated": false,
+    "literal_sg": "{s} takes {o} apart",
+    "literal_pl": "{s} take {o} apart",
+    "literal_past": "{s} took {o} apart",
+    "literal_future": "{s} will take {o} apart",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מפרק",
+        "fsg": "מפרקת",
+        "mpl": "מפרקים",
+        "fpl": "מפרקות"
+      },
+      "past": {
+        "msg": "פירק",
+        "fsg": "פירקה",
+        "mpl": "פירקו",
+        "fpl": "פירקו"
+      },
+      "future": {
+        "msg": "יפרק",
+        "fsg": "תפרק",
+        "mpl": "יפרקו",
+        "fpl": "יפרקו"
+      }
+    }
+  },
+  {
+    "id": "dchifat_oto",
+    "infinitive": "לדחוף מישהו",
+    "english": "to pull strings for someone",
+    "verb": "לדחוף",
+    "root": "ד.ח.פ",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הדוד שלו דחף אותו לתפקיד",
+    "negated": false,
+    "literal_sg": "{s} pushes {o}",
+    "literal_pl": "{s} push {o}",
+    "literal_past": "{s} pushed {o}",
+    "literal_future": "{s} will push {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "דוחף",
+        "fsg": "דוחפת",
+        "mpl": "דוחפים",
+        "fpl": "דוחפות"
+      },
+      "past": {
+        "msg": "דחף",
+        "fsg": "דחפה",
+        "mpl": "דחפו",
+        "fpl": "דחפו"
+      },
+      "future": {
+        "msg": "ידחוף",
+        "fsg": "תדחוף",
+        "mpl": "ידחפו",
+        "fpl": "ידחפו"
+      }
+    }
+  },
+  {
+    "id": "haavara_al_midotav",
+    "infinitive": "להעביר מישהו על מידותיו",
+    "english": "to make someone lose their temper",
+    "verb": "להעביר",
+    "root": "ע.ב.ר",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "מידות",
+    "suffix_preposition": "על",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "הרעש הזה מעביר אותי על מידותיי",
+    "negated": false,
+    "literal_sg": "{s} carries {o} past {p} measures",
+    "literal_pl": "{s} carry {o} past {p} measures",
+    "literal_past": "{s} carried {o} past {p} measures",
+    "literal_future": "{s} will carry {o} past {p} measures",
+    "showMeaning": true,
+    "suffix_forms": {
+      "1sg": "על מידותיי",
+      "2msg": "על מידותיך",
+      "2fsg": "על מידותייך",
+      "3msg": "על מידותיו",
+      "3fsg": "על מידותיה",
+      "1pl": "על מידותינו",
+      "2mpl": "על מידותיכם",
+      "2fpl": "על מידותיכן",
+      "3mpl": "על מידותיהם",
+      "3fpl": "על מידותיהן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מעביר",
+        "fsg": "מעבירה",
+        "mpl": "מעבירים",
+        "fpl": "מעבירות"
+      },
+      "past": {
+        "msg": "העביר",
+        "fsg": "העבירה",
+        "mpl": "העבירו",
+        "fpl": "העבירו"
+      },
+      "future": {
+        "msg": "יעביר",
+        "fsg": "תעביר",
+        "mpl": "יעבירו",
+        "fpl": "יעבירו"
+      }
+    }
+  },
+  {
+    "id": "hotzaa_migidro",
+    "infinitive": "להוציא מישהו מגדרו",
+    "english": "to make someone beside themselves",
+    "verb": "להוציא",
+    "root": "י.צ.א",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "גדר",
+    "suffix_preposition": "מ",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "החדשות הוציאו אותו מגדרו",
+    "negated": false,
+    "literal_sg": "{s} takes {o} out of {p} bounds",
+    "literal_pl": "{s} take {o} out of {p} bounds",
+    "literal_past": "{s} took {o} out of {p} bounds",
+    "literal_future": "{s} will take {o} out of {p} bounds",
+    "showMeaning": true,
+    "suffix_forms": {
+      "1sg": "מגדרי",
+      "2msg": "מגדרך",
+      "2fsg": "מגדרך",
+      "3msg": "מגדרו",
+      "3fsg": "מגדרה",
+      "1pl": "מגדרנו",
+      "2mpl": "מגדרכם",
+      "2fpl": "מגדרכן",
+      "3mpl": "מגדרם",
+      "3fpl": "מגדרן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    }
+  },
+  {
+    "id": "hotzaa_meashtonotav",
+    "infinitive": "להוציא מישהו מעשתונותיו",
+    "english": "to make someone lose their composure",
+    "verb": "להוציא",
+    "root": "י.צ.א",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "עשתונות",
+    "suffix_preposition": "מ",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "הלחץ הוציא אותה מעשתונותיה",
+    "negated": false,
+    "literal_sg": "{s} takes {o} out of {p} wits",
+    "literal_pl": "{s} take {o} out of {p} wits",
+    "literal_past": "{s} took {o} out of {p} wits",
+    "literal_future": "{s} will take {o} out of {p} wits",
+    "showMeaning": true,
+    "suffix_forms": {
+      "1sg": "מעשתונותיי",
+      "2msg": "מעשתונותיך",
+      "2fsg": "מעשתונותייך",
+      "3msg": "מעשתונותיו",
+      "3fsg": "מעשתונותיה",
+      "1pl": "מעשתונותינו",
+      "2mpl": "מעשתונותיכם",
+      "2fpl": "מעשתונותיכן",
+      "3mpl": "מעשתונותיהם",
+      "3fpl": "מעשתונותיהן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    }
+  },
+  {
+    "id": "haamada_al_tivo",
+    "infinitive": "להעמיד מישהו על טיבו",
+    "english": "to size someone up for what they are",
+    "verb": "להעמיד",
+    "root": "ע.מ.ד",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "טיב",
+    "suffix_preposition": "על",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "הפגישה הראשונה העמידה אותי על טיבו",
+    "negated": false,
+    "literal_sg": "{s} stands {o} on {p} quality",
+    "literal_pl": "{s} stand {o} on {p} quality",
+    "literal_past": "{s} stood {o} on {p} quality",
+    "literal_future": "{s} will stand {o} on {p} quality",
+    "showMeaning": true,
+    "suffix_forms": {
+      "1sg": "על טיבי",
+      "2msg": "על טיבך",
+      "2fsg": "על טיבך",
+      "3msg": "על טיבו",
+      "3fsg": "על טיבה",
+      "1pl": "על טיבנו",
+      "2mpl": "על טיבכם",
+      "2fpl": "על טיבכן",
+      "3mpl": "על טיבם",
+      "3fpl": "על טיבן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מעמיד",
+        "fsg": "מעמידה",
+        "mpl": "מעמידים",
+        "fpl": "מעמידות"
+      },
+      "past": {
+        "msg": "העמיד",
+        "fsg": "העמידה",
+        "mpl": "העמידו",
+        "fpl": "העמידו"
+      },
+      "future": {
+        "msg": "יעמיד",
+        "fsg": "תעמיד",
+        "mpl": "יעמידו",
+        "fpl": "יעמידו"
+      }
     }
   }
 ];

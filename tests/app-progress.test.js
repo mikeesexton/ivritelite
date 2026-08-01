@@ -476,6 +476,11 @@ globalThis.__appTestExports = {
       getSeedVocabularyEntries() {
         return [];
       },
+      // Real paradigms: advConj joins on these to reach person-marked past and
+      // future forms, so a stub would silently collapse the subject axis.
+      getSeedVerbEntries() {
+        return verbApi.getSeedVerbEntries();
+      },
       buildVerbConjugationDeck() {
         return verbDeck;
       },
@@ -4261,26 +4266,26 @@ test("advanced conjugation English prompts keep number cues while omitting unnec
     past_tense: { msg: "פתח", fsg: "פתחה", mpl: "פתחו", fpl: "פתחו" },
     future_tense: { msg: "יפתח", fsg: "תפתח", mpl: "יפתחו", fpl: "יפתחו" },
   };
-  const { ADV_CONJ_OBJECTS, buildAdvConjEnglishSentence } = loadAppHarness([], [], [], {
+  const { ADV_CONJ_SUBJECTS, ADV_CONJ_OBJECTS, buildAdvConjEnglishSentence } = loadAppHarness([], [], [], {
     idioms: [idiom],
   });
-  const subj = { form: "fpl", en: "they (f.)" };
+  const subj = ADV_CONJ_SUBJECTS.find((entry) => entry.en === "they (f.)");
   const singularYou = ADV_CONJ_OBJECTS.find((obj) => obj.key === "2msg");
   const pluralYou = ADV_CONJ_OBJECTS.find((obj) => obj.key === "2mpl");
 
-  assert.equal(singularYou?.poss, "your (sg.)");
-  assert.equal(pluralYou?.poss, "your (pl.)");
+  assert.equal(singularYou?.poss, "your (m.sg.)");
+  assert.equal(pluralYou?.poss, "your (m.pl.)");
   assert.equal(
     buildAdvConjEnglishSentence(idiom, subj, singularYou, "past"),
-    "they opened your (sg.) eyes"
+    "they opened your (m.sg.) eyes"
   );
   assert.equal(
     buildAdvConjEnglishSentence(idiom, subj, pluralYou, "past"),
-    "they opened your (pl.) eyes"
+    "they opened your (m.pl.) eyes"
   );
   assert.equal(
     buildAdvConjEnglishSentence(idiom, subj, singularYou, "present"),
-    "they (f.) open your (sg.) eyes"
+    "they (f.) open your (m.sg.) eyes"
   );
 });
 
@@ -4306,34 +4311,89 @@ test("advanced conjugation collapses duplicate singular-plural markers when obje
 
   assert.equal(
     buildAdvConjEnglishSentence(idiom, subj, singularYou, "future"),
-    "he will take you out of your mind (sg.)"
+    "he will take you out of your mind (m.sg.)"
   );
   assert.equal(
     buildAdvConjEnglishSentence(idiom, subj, pluralYou, "future"),
-    "he will take you out of your mind (pl.)"
+    "he will take you out of your mind (m.pl.)"
   );
 });
 
-test("advanced conjugation subjects add present-tense you forms without extending past/future beyond available data", () => {
+test("advanced conjugation subjects span all three persons and no longer gate on tense", () => {
   const { ADV_CONJ_SUBJECTS, getAdvConjSubjectsForTense } = loadAppHarness([], [], []);
   const labels = (subjects) => Array.from(subjects, (subject) => subject.en);
 
-  assert.deepEqual(
-    labels(ADV_CONJ_SUBJECTS),
-    ["he", "you (m.sg.)", "she", "you (f.sg.)", "they (m.)", "you (m.pl.)", "they (f.)", "you (f.pl.)"]
-  );
-  assert.deepEqual(
-    labels(getAdvConjSubjectsForTense("present")),
-    ["he", "you (m.sg.)", "she", "you (f.sg.)", "they (m.)", "you (m.pl.)", "they (f.)", "you (f.pl.)"]
-  );
-  assert.deepEqual(
-    labels(getAdvConjSubjectsForTense("past")),
-    ["he", "she", "they (m.)", "they (f.)"]
-  );
-  assert.deepEqual(
-    labels(getAdvConjSubjectsForTense("future")),
-    ["he", "she", "they (m.)", "they (f.)"]
-  );
+  const everySubject = [
+    "I (m.)", "I (f.)", "we (m.)", "we (f.)",
+    "you (m.sg.)", "you (f.sg.)", "you (m.pl.)", "you (f.pl.)",
+    "he", "she", "they (m.)", "they (f.)",
+  ];
+  assert.deepEqual(labels(ADV_CONJ_SUBJECTS), everySubject);
+
+  // The tense gate used to live here as `tenses: ["present"]`, which pinned
+  // second person to the present and left first person out of the game
+  // entirely. It now lives in form resolution, which can consult a verb
+  // paradigm, so this returns the whole list and the deck decides.
+  ["present", "past", "future"].forEach((tense) => {
+    assert.deepEqual(labels(getAdvConjSubjectsForTense(tense)), everySubject, tense);
+  });
+
+  // Every subject carries the slots resolution needs.
+  ADV_CONJ_SUBJECTS.forEach((subject) => {
+    assert.match(subject.personKey, /^[123](sg|pl|msg|fsg|mpl|fpl)$/, subject.en);
+    assert.ok(subject.pastSlot, `${subject.en} needs a pastSlot`);
+    assert.ok(subject.futureSlot, `${subject.en} needs a futureSlot`);
+  });
+});
+
+test("past and future reach beyond third person only when a verb paradigm backs the idiom", () => {
+  const tables = {
+    present_tense: { msg: "מדליק", fsg: "מדליקה", mpl: "מדליקים", fpl: "מדליקות" },
+    past_tense: { msg: "הדליק", fsg: "הדליקה", mpl: "הדליקו", fpl: "הדליקו" },
+    future_tense: { msg: "ידליק", fsg: "תדליק", mpl: "ידליקו", fpl: "ידליקו" },
+  };
+  const base = {
+    object_type: "direct",
+    negated: false,
+    literal_sg: "{s} lights {o} up",
+    literal_pl: "{s} light {o} up",
+    literal_past: "{s} lit {o} up",
+    literal_future: "{s} will light {o} up",
+    english: "to excite someone",
+    english_meaning: "to excite someone",
+    showMeaning: false,
+    ...tables,
+  };
+
+  const personsFor = (deck, tense) =>
+    new Set(deck.filter((item) => item.tense === tense).map((item) => item.subjectLabel));
+
+  // להדליק has a stored paradigm, so its person-marked past and future slots
+  // are available and first and second person become drillable there.
+  const linked = loadAppHarness([], [], [], {
+    idioms: [{ ...base, id: "linked-fixture", verb: "להדליק" }],
+  }).buildAdvConjDeck();
+  ["past", "future"].forEach((tense) => {
+    const persons = personsFor(linked, tense);
+    assert.ok([...persons].some((label) => /^I\b/.test(label)), `${tense} should reach first person`);
+    assert.ok([...persons].some((label) => /^you\b/.test(label)), `${tense} should reach second person`);
+  });
+
+  // A verb with no paradigm keeps the pre-existing behaviour: the idiom's own
+  // four slots are third person, so nobody else may borrow them.
+  const unlinked = loadAppHarness([], [], [], {
+    idioms: [{ ...base, id: "unlinked-fixture", verb: "לאאאא" }],
+  }).buildAdvConjDeck();
+  ["past", "future"].forEach((tense) => {
+    const persons = [...personsFor(unlinked, tense)];
+    assert.ok(persons.length > 0, `${tense} should still build third-person items`);
+    persons.forEach((label) => {
+      assert.match(label, /^(he|she|they)/, `${tense} leaked a non-third-person subject: ${label}`);
+    });
+  });
+
+  // Present is person-neutral in Hebrew, so it never depended on the paradigm.
+  assert.ok([...personsFor(unlinked, "present")].some((label) => /^I\b/.test(label)));
 });
 
 test("advanced conjugation present-tense English uses base verbs for second-person subjects", () => {

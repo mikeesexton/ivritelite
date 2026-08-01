@@ -12,9 +12,9 @@ and retention mechanics are not.
 
 ## Thesis
 
-Content coverage is large and still growing: 1,684 vocabulary cards, 3,780
+Content coverage is large and still growing: 1,693 vocabulary cards, 3,780
 hand-authored verb forms (3,756 of them fully pointed), 608 sentences, 800
-generated preposition items, 282 abbreviations, 100 idioms, 297 binyan tiles, 27
+generated preposition items, 282 abbreviations, 77 idioms, 297 binyan tiles, 27
 letterforms. Recent
 sessions have been spending their effort on niqqud sourcing, word-order audits,
 and character routing — real work with a shrinking learner-visible return.
@@ -439,7 +439,7 @@ Rationale specific to this repo:
   `pos` coexist honestly.
 
 **Ships first and alone: `corpusHits`.** Count each item across the 608
-sentences' `hebrew_tokens` (plus alternates), the 100 idioms, and the 178-entry
+sentences' `hebrew_tokens` (plus alternates), the 77 idioms, and the 178-entry
 verb deck. 100% derivable, deterministic, re-runnable from `scripts/`, zero
 authoring. It replaces `utility` in `data.pickBestWord`'s `utilityBoost` — a value
 currently computed *positionally from authoring order*, i.e. measuring when a word

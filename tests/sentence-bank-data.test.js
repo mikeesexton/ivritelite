@@ -435,7 +435,7 @@ const BIKORET_ENTRY_IDS = ["formal_84", "professional_95", "formal_85"];
 const SHAKHTA_ENTRY_IDS = ["colloquial_161", "colloquial_162"];
 const HITRACHAKUT_ENTRY_IDS = ["everyday_143", "formal_86"];
 const AGAF_ENTRY_IDS = ["formal_87", "everyday_144", "professional_96"];
-const LEHAKIR_ENTRY_IDS = ["everyday_145", "everyday_146", "inbal_96"];
+const LEHAKIR_ENTRY_IDS = ["professional_97", "everyday_146", "inbal_96"];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -857,7 +857,7 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 618 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 627 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
@@ -1762,4 +1762,23 @@ test("gender-variant distractors are either accepted as alternates or removed", 
   });
 
   assert.deepEqual(offenders, []);
+});
+
+// The four register buckets encode their category in the id prefix. This held
+// for 626 of 627 entries; `everyday_145` was authored as `category:
+// "professional"` and drifted unnoticed because the histogram test counts the
+// field, not the prefix. Character-scoped ids (inbal_, inat_, colloquial_vodge_)
+// are deliberately outside this scheme.
+test("register-bucket sentence ids agree with their category", () => {
+  const buckets = new Set(["everyday", "colloquial", "professional", "formal"]);
+  const api = loadSentenceBankApi();
+
+  // Spread out of the vm realm — arrays built there fail strict deepEqual
+  // against a host [] on prototype identity alone.
+  const mismatched = [...api.getSentenceBank()]
+    .map((entry) => ({ entry, prefix: entry.id.match(/^([a-z]+)_\d+$/)?.[1] }))
+    .filter(({ entry, prefix }) => buckets.has(prefix) && prefix !== entry.category)
+    .map(({ entry, prefix }) => `${entry.id} is category ${entry.category}, not ${prefix}`);
+
+  assert.deepEqual(mismatched, []);
 });

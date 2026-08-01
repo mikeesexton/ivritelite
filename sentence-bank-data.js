@@ -9107,18 +9107,19 @@ const SENTENCE_EXPANSION = [
     hebrewTokenPairs: [
       ["תפסתי", "תָּפַסְתִּי"],
       ["אותו", "אוֹתוֹ"],
-      ["משקר,", "מְשַׁקֵּר,"],
+      ["משקר", "מְשַׁקֵּר"],
       ["אבל", "אֲבָל"],
       ["הוא לא", "הוּא לֹא"],
-      ["הודה בזה.", "הוֹדָה בָּזֶה."]
+      ["הודה בזה", "הוֹדָה בָּזֶה"]
     ],
-    englishTokens: ["I caught", "him", "lying,", "but", "he didn't", "admit it."],
+    englishTokens: ["I caught", "him", "lying", "but", "he didn't", "admit it"],
     hebrewDistractorPairs: [
       ["תפס", "תָּפַס"],
       ["היא לא", "הִיא לֹא"],
-      ["להודות", "לְהוֹדוֹת"]
+      ["להודות", "לְהוֹדוֹת"],
+      ["אותה", "אוֹתָהּ"]
     ],
-    englishDistractors: ["he caught", "she didn't", "to admit"],
+    englishDistractors: ["he caught", "she didn't", "to admit", "her"],
     notes: "Teaches לתפוס מישהו meaning 'to catch someone in the act'."
   }),
   buildReviewedSentence({
@@ -9134,18 +9135,19 @@ const SENTENCE_EXPANSION = [
       ["ניסיתי", "נִסִּיתִי"],
       ["לתפוס", "לִתְפֹּס"],
       ["אותך", "אוֹתְךָ"],
-      ["כל הבוקר,", "כָּל הַבֹּקֶר,"],
+      ["כל הבוקר", "כָּל הַבֹּקֶר"],
       ["למה", "לָמָּה"],
       ["אתה לא", "אַתָּה לֹא"],
-      ["עונה?", "עוֹנֶה?"]
+      ["עונה", "עוֹנֶה"]
     ],
-    englishTokens: ["I tried", "to get ahold of", "you", "all morning,", "why", "aren't you", "answering?"],
+    englishTokens: ["I tried", "to get ahold of", "you", "all morning", "why", "aren't you", "answering"],
     hebrewDistractorPairs: [
       ["ניסה", "נִסָּה"],
       ["אתכם", "אֶתְכֶם"],
-      ["עונים?", "עוֹנִים?"]
+      ["עונים", "עוֹנִים"],
+      ["כל הערב", "כָּל הָעֶרֶב"]
     ],
-    englishDistractors: ["he tried", "you (pl.)", "are answering"],
+    englishDistractors: ["he tried", "you (pl.)", "are answering", "all evening"],
     notes: "Teaches לתפוס מישהו meaning 'to get ahold of someone'."
   }),
   buildReviewedSentence({
@@ -9160,18 +9162,19 @@ const SENTENCE_EXPANSION = [
     hebrewTokenPairs: [
       ["אני פשוט", "אֲנִי פָּשׁוּט"],
       ["לא תופס", "לֹא תּוֹפֵס"],
-      ["אותך,", "אוֹתְךָ,"],
+      ["אותך", "אוֹתְךָ"],
       ["לפעמים", "לִפְעָמִים"],
       ["אתה", "אַתָּה"],
-      ["ממש מוזר.", "מַמָּשׁ מוּזָר."]
+      ["ממש מוזר", "מַמָּשׁ מוּזָר"]
     ],
-    englishTokens: ["I just", "don't get", "you,", "sometimes", "you're", "really weird."],
+    englishTokens: ["I just", "don't get", "you", "sometimes", "you're", "really weird"],
     hebrewDistractorPairs: [
       ["תופסת", "תּוֹפֶסֶת"],
-      ["אותו,", "אוֹתוֹ,"],
-      ["הוא", "הוּא"]
+      ["אותו", "אוֹתוֹ"],
+      ["הוא", "הוּא"],
+      ["תמיד", "תָּמִיד"]
     ],
-    englishDistractors: ["she gets", "him,", "he's"],
+    englishDistractors: ["she gets", "him", "he's", "always"],
     notes: "Teaches לתפוס מישהו meaning 'to comprehend / get someone'."
   })
 ];
@@ -9988,6 +9991,8 @@ addReorderedHebrewAlternate("colloquial_46", "הערב לא אצליח להגי�
 addReorderedHebrewAlternate("colloquial_47", "רק תגידו מתי ואיפה; אני בפנים.", "רַק תַּגִּידוּ מָתַי וְאֵיפֹה; אֲנִי בִּפְנִים.", [2, 3, 4, 5, 0, 1]);
 addReorderedHebrewAlternate("colloquial_48", "כשאתה מגיע, תשלח לי מיקום.", "כְּשֶׁאַתָּה מַגִּיעַ, תִּשְׁלַח לִי מִקּוּם.", [3, 4, 0, 1, 2]);
 addReorderedHebrewAlternate("colloquial_48", "כשאת מגיעה, תשלחי לי מיקום.", "כְּשֶׁאַתְּ מַגִּיעָה, תִּשְׁלְחִי לִי מִקּוּם.", [3, 4, 0, 1, 2], 0);
+// קצת can sit before or after the verb it modifies; both orders are equally natural.
+addReorderedHebrewAlternate("colloquial_51", "האמת, נפגעתי קצת ממה שאמרת.", "הָאֱמֶת, נִפְגַּעְתִּי קְצָת מִמַּה שֶׁאָמַרְתָּ.", [0, 2, 1, 3, 4]);
 addReorderedHebrewAlternate("professional_26", "נעבור בקצרה על סדר היום לפני שמתחילים.", "נַעֲבֹר בִּקְצָרָה עַל סֵדֶר הַיּוֹם לִפְנֵי שֶׁמַּתְחִילִים.", [2, 3, 4, 5, 0, 1]);
 addReorderedHebrewAlternate("professional_27", "עד יום רביעי אני יכול לסיים, לא לפני.", "עַד יוֹם רְבִיעִי אֲנִי יָכוֹל לְסַיֵּם, לֹא לִפְנֵי.", [3, 4, 5, 0, 1, 2, 6, 7]);
 addReorderedHebrewAlternate("professional_27", "עד יום רביעי אני יכולה לסיים, לא לפני.", "עַד יוֹם רְבִיעִי אֲנִי יְכוֹלָה לְסַיֵּם, לֹא לִפְנֵי.", [3, 4, 5, 0, 1, 2, 6, 7], 0);
@@ -11244,9 +11249,9 @@ const SENTENCE_EXPANSION_ROUND4 = [
     id: "colloquial_132", emoji: "🏓", category: "colloquial", difficulty: 1,
     hebrew: "אי אפשר לישון על החוף, המטקות האלה בכל מקום.",
     hebrewNiqqud: "אִי אֶפְשָׁר לִישֹׁן עַל הַחוֹף, הַמַּטְקוֹת הָאֵלֶּה בְּכָל מָקוֹם.",
-    english: "It's impossible to sleep on the beach, the matkot are everywhere.",
+    english: "It's impossible to sleep on the beach, these matkot are everywhere.",
     hebrewTokenPairs: [["אי אפשר", "אִי אֶפְשָׁר"], ["לישון", "לִישֹׁן"], ["על", "עַל"], ["החוף", "הַחוֹף"], ["המטקות", "הַמַּטְקוֹת"], ["האלה", "הָאֵלֶּה"], ["בכל", "בְּכָל"], ["מקום", "מָקוֹם"]],
-    englishTokens: ["It's impossible", "to sleep", "on", "the beach", "the matkot", "are everywhere"],
+    englishTokens: ["It's impossible", "to sleep", "on", "the beach", "these matkot", "are everywhere"],
     hebrewDistractorPairs: [["קל", "קַל"], ["לקרוא", "לִקְרֹא"], ["מתחת", "מִתַּחַת"], ["השמשייה", "הַשִּׁמְשִׁיָּה"], ["בשום מקום", "בְּשׁוּם מָקוֹם"]],
     englishDistractors: ["It's easy", "to read", "under", "the umbrella", "the waves", "are quiet"],
     notes: "מטקות — beach paddleball, Israel's unofficial national sport; the thwack is the soundtrack of every Tel Aviv beach. אי אפשר = 'it's impossible'."
@@ -13751,9 +13756,9 @@ const INBAL_SENTENCES = [
       ["עוד לפני", "עוֹד לִפְנֵי"],
       ["שהחלה", "שֶׁהֵחֵלָה"],
       ["לקרוא", "לִקְרֹא"],
-      ["בקלפים.", "בַּקְּלָפִים."]
+      ["בקלפים", "בַּקְּלָפִים"]
     ],
-    englishTokens: ["The fortune teller", "got to know", "her", "in depth", "even before", "she began", "to read", "the cards."],
+    englishTokens: ["The fortune teller", "got to know", "her", "in depth", "even before", "she began", "to read", "the cards"],
     hebrewDistractorPairs: [
       ["הקוראת בקפה", "הַקּוֹרֵאת בַּקָּפֶה"],
       ["גילתה", "גִּלְּתָה"],
@@ -14671,7 +14676,7 @@ const LEVERAGE_SENTENCES = [
       ["גבוה", "גָּבוֹהַ"],
       ["מגדיל", "מַגְדִּיל"],
       ["את הסיכון", "אֶת הַסִּיכּוֹן"],
-      ["הפיננסי", "הַפִּינַנְסִי"]
+      ["הפיננסי", "הַפִינַנְסִי"]
     ],
     englishTokens: ["High", "leverage", "increases", "financial", "risk"],
     hebrewDistractorPairs: [
@@ -14995,7 +15000,7 @@ const HITRACHAKUT_SENTENCES = [
     notes: "Teaches אגף (wing/section) in a building/architectural context."
   }),
   buildReviewedSentence({
-    id: "everyday_145",
+    id: "professional_97",
     emoji: "🤝",
     category: "professional",
     difficulty: 2,
@@ -15007,13 +15012,13 @@ const HITRACHAKUT_SENTENCES = [
       ["אני רוצה", "אֲנִי רוֹצֶה"],
       ["ליצור", "לִיצֹר"],
       ["קשר עסקי", "קֶשֶׁר עִסְקִי"],
-      ["איתו,", "אִתּוֹ,"],
+      ["איתו", "אִתּוֹ"],
       ["תוכל", "תּוּכַל"],
       ["להכיר", "לְהַכִּיר"],
       ["אותו", "אוֹתוֹ"],
       ["לי", "לִי"]
     ],
-    englishTokens: ["I want", "to build", "a business relationship", "with him,", "could you", "introduce", "him", "to me"],
+    englishTokens: ["I want", "to build", "a business relationship", "with him", "could you", "introduce", "him", "to me"],
     hebrewDistractorPairs: [
       ["אותי", "אוֹתִי"],
       ["לו", "לוֹ"],
@@ -15039,13 +15044,13 @@ const HITRACHAKUT_SENTENCES = [
     english: "He seems like an interesting guy, could you introduce him to her?",
     hebrewTokenPairs: [
       ["הוא נראה", "הוּא נִרְאֶה"],
-      ["בחור מעניין,", "בָּחוּר מְעַנְיֵן,"],
+      ["בחור מעניין", "בָּחוּר מְעַנְיֵן"],
       ["תוכלו", "תּוּכְלוּ"],
       ["להכיר", "לְהַכִּיר"],
       ["אותו", "אוֹתוֹ"],
       ["לה", "לָהּ"]
     ],
-    englishTokens: ["He seems like", "an interesting guy,", "could you", "introduce", "him", "to her"],
+    englishTokens: ["He seems like", "an interesting guy", "could you", "introduce", "him", "to her"],
     hebrewDistractorPairs: [
       ["היא נראית", "הִיא נִרְאֵית"],
       ["לו", "לוֹ"],
@@ -15115,6 +15120,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260730e",
+  __build: "20260731a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

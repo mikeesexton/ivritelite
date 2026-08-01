@@ -29,6 +29,7 @@ test("advanced conjugation builds a non-empty deck with the real idiom source fi
   context.globalThis = context;
   vm.createContext(context);
 
+  runScriptInContext(path.join(root, "preposition-data.js"), context);
   runScriptInContext(path.join(root, "app", "constants.js"), context);
   runScriptInContext(path.join(root, "app", "utils.js"), context);
   runScriptInContext(path.join(root, "hebrew-idioms.js"), context);
@@ -54,7 +55,7 @@ function loadIdioms() {
 
 // The object keys advConj actually rotates through. A possessive_suffix idiom
 // missing any of them loses that object silently in buildAdvConjDeck.
-const ADV_CONJ_OBJECT_KEYS = ["1sg", "2msg", "3msg", "3fsg", "1pl", "2mpl", "3mpl"];
+const ADV_CONJ_OBJECT_KEYS = ["1sg", "2msg", "2fsg", "3msg", "3fsg", "1pl", "2mpl", "2fpl", "3mpl", "3fpl"];
 const SUBJECT_FORMS = ["msg", "fsg", "mpl", "fpl"];
 const OBJECT_TYPES = new Set(["direct", "l_dative", "possessive_suffix"]);
 // Every other data file in the repo spells this binyan `paal`. The idiom file
@@ -80,43 +81,29 @@ function consonantalSkeleton(text) {
 test("every idiom carries the fields advConj needs to build an item", () => {
   const idioms = loadIdioms();
 
-  assert.equal(idioms.length, 77);
+  assert.equal(idioms.length, 81);
   assert.equal(new Set(idioms.map((entry) => entry.id)).size, idioms.length);
 
   idioms.forEach((idiom) => {
     const where = `idiom ${idiom.id}`;
 
-    // buildAdvConjDeck skips the whole idiom without literal_sg (or literal_infinitive for infinitive-only), and
+    // buildAdvConjDeck skips the whole idiom without literal_sg, and
     // buildAdvConjEnglishSentence returns "" for whichever tense template is
     // missing — so a gap here silently shrinks the deck instead of failing.
-    const requiredLiterals = idiom.tenses && idiom.tenses.includes("infinitive") && idiom.tenses.length === 1
-      ? ["literal_infinitive"]
-      : ["literal_sg", "literal_pl", "literal_past", "literal_future"];
-    if (idiom.tenses && idiom.tenses.includes("infinitive") && !requiredLiterals.includes("literal_infinitive")) {
-      requiredLiterals.push("literal_infinitive");
-    }
-
-    requiredLiterals.forEach((key) => {
+    ["literal_sg", "literal_pl", "literal_past", "literal_future"].forEach((key) => {
       assert.ok(String(idiom[key] || "").trim(), `${where} needs ${key}`);
-      if (key !== "literal_infinitive") {
-        assert.match(idiom[key], /\{s\}/, `${where} ${key} needs a {s} placeholder`);
-      }
+      assert.match(idiom[key], /\{s\}/, `${where} ${key} needs a {s} placeholder`);
     });
 
     assert.ok(OBJECT_TYPES.has(idiom.object_type), `${where} has object_type ${idiom.object_type}`);
     assert.ok(BINYANIM.has(idiom.binyan), `${where} has binyan ${idiom.binyan}`);
 
-    const requiredTenses = idiom.tenses || ["present", "past", "future"];
-    requiredTenses.forEach((tense) => {
+    ["present", "past", "future"].forEach((tense) => {
       const forms = idiom.conjugations[tense];
       assert.ok(forms, `${where} needs a ${tense} table`);
-      if (tense === "infinitive") {
-        assert.ok(String(forms["infinitive"] || "").trim(), `${where} needs ${tense}.infinitive`);
-      } else {
-        SUBJECT_FORMS.forEach((form) => {
-          assert.ok(String(forms[form] || "").trim(), `${where} needs ${tense}.${form}`);
-        });
-      }
+      SUBJECT_FORMS.forEach((form) => {
+        assert.ok(String(forms[form] || "").trim(), `${where} needs ${tense}.${form}`);
+      });
     });
 
     if (idiom.object_type === "l_dative") {
@@ -141,8 +128,11 @@ test("the idiom pool stays deep enough that a ten-round session does not exhaust
 
   // advConj weights by idiom, not by item, so a session touches at most
   // ADV_CONJ_ROUNDS distinct expressions. At 39 idioms the whole pool was seen
-  // in about four sessions; this floor keeps that regression visible.
-  assert.ok(idioms.length >= 75, `only ${idioms.length} idioms`);
+  // in about four sessions; this floor keeps that regression visible. It was
+  // relaxed to 75 when 23 literal verbs were migrated out and restored once the
+  // pool was rebalanced — migrating a plain verb out is progress, but it should
+  // be paid for with a real idiom, not with a lower bar.
+  assert.ok(idioms.length >= 80, `only ${idioms.length} idioms`);
 
   const byType = idioms.reduce((acc, idiom) => {
     acc[idiom.object_type] = (acc[idiom.object_type] || 0) + 1;
@@ -152,10 +142,24 @@ test("the idiom pool stays deep enough that a ten-round session does not exhaust
   Object.entries(byType).forEach(([type, count]) => {
     assert.ok(count >= 10, `only ${count} ${type} idioms`);
   });
-  assert.ok(byType.l_dative <= idioms.length * 0.7, "l_dative should not dominate the pool");
+  // Every migration out of this file removes a `direct` entry, so the l_dative
+  // share drifts up on its own. Keep the original 0.6 ceiling: the frame is
+  // `<verb> ל<someone> <fixed phrase>` and a pool that is mostly one frame
+  // teaches the frame rather than the expressions.
+  assert.ok(byType.l_dative <= idioms.length * 0.6, "l_dative should not dominate the pool");
+});
 
-  // The ladder reached level 3 and stopped; level 4 is the advanced tier.
-  assert.ok(idioms.some((idiom) => idiom.level === 4), "no level-4 idioms");
+// `level` (1-4) was authored on every entry and read by nothing — advConj
+// selects on per-idiom accuracy alone. The only thing referencing it was a test
+// asserting a level-4 entry existed, which proved the data was there and never
+// that anything consumed it, so the ladder cost an authoring judgement per
+// idiom and silently drifted. Removed rather than wired in: adaptive weighting
+// already models "hard for this learner", which is the better signal.
+test("no idiom carries a difficulty level, which nothing reads", () => {
+  // Spread out of the vm realm — arrays built there fail strict deepEqual
+  // against a host [] on prototype identity alone.
+  const withLevel = [...loadIdioms()].filter((idiom) => "level" in idiom);
+  assert.deepEqual(withLevel.map((idiom) => idiom.id), []);
 });
 
 test("advanced conjugation pointing is explicit, complete, and sourced before runtime use", () => {
@@ -176,27 +180,17 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
     idiom.niqqud_sources.forEach((source) => {
       assert.match(String(source), /^https:\/\//, `${idiom.id} has invalid pointing source ${source}`);
     });
-    const requiredTenses = idiom.tenses || ["present", "past", "future"];
-    requiredTenses.forEach((tense) => {
+    ["present", "past", "future"].forEach((tense) => {
       const forms = idiom.conjugations_niqqud?.[tense];
       assert.ok(forms, `${idiom.id} reviewed pointing needs ${tense} forms`);
-      if (tense === "infinitive") {
-        assert.match(String(forms?.["infinitive"] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed infinitive`);
+      SUBJECT_FORMS.forEach((form) => {
+        assert.match(String(forms?.[form] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed ${tense}.${form}`);
         assert.equal(
-          consonantalSkeleton(forms?.["infinitive"]),
-          consonantalSkeleton(idiom.conjugations[tense]["infinitive"]),
-          `${idiom.id} infinitive pointing changes the consonantal skeleton`,
+          consonantalSkeleton(forms?.[form]),
+          consonantalSkeleton(idiom.conjugations[tense][form]),
+          `${idiom.id} ${tense}.${form} pointing changes the consonantal skeleton`,
         );
-      } else {
-        SUBJECT_FORMS.forEach((form) => {
-          assert.match(String(forms?.[form] || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed ${tense}.${form}`);
-          assert.equal(
-            consonantalSkeleton(forms?.[form]),
-            consonantalSkeleton(idiom.conjugations[tense][form]),
-            `${idiom.id} ${tense}.${form} pointing changes the consonantal skeleton`,
-          );
-        });
-      }
+      });
     });
     if (idiom.object_type === "l_dative") {
       assert.match(String(idiom.fixed_object_niqqud || ""), NIQQUD_PATTERN, `${idiom.id} needs pointed fixed_object`);
@@ -227,7 +221,7 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
     }
   });
 
-  assert.deepEqual(statusCounts, { reviewed: 5, unreviewed: 72 });
+  assert.deepEqual(statusCounts, { reviewed: 5, unreviewed: 76 });
   assert.deepEqual(
     Array.from(idioms)
       .filter((idiom) => idiom.niqqud_status === "reviewed")
@@ -302,6 +296,7 @@ test("advanced conjugation propagates only complete reviewed niqqud into prompts
   context.globalThis = context;
   vm.createContext(context);
 
+  runScriptInContext(path.join(root, "preposition-data.js"), context);
   runScriptInContext(path.join(root, "app", "constants.js"), context);
   runScriptInContext(path.join(root, "app", "utils.js"), context);
   runScriptInContext(path.join(root, "app", "adv-conj.js"), context);
@@ -343,9 +338,13 @@ test("advanced conjugation propagates only complete reviewed niqqud into prompts
     niqqud_sources: ["https://example.test/reviewed-paradigm"],
   }];
 
+  // The builders take the subject entry now, because past and future read a
+  // person-marked slot out of the linked verb paradigm rather than the idiom's
+  // own gender/number table.
+  const HE_SUBJECT = context.IvriQuestApp.constants.ADV_CONJ_SUBJECTS.find((s) => s.en === "he");
   const advConj = context.IvriQuestApp.advConj;
   assert.equal(
-    advConj.buildAdvConjHebrewAnswerNiqqud(context.HEBREW_IDIOMS[0], "msg", "הוא", "1sg", "present"),
+    advConj.buildAdvConjHebrewAnswerNiqqud(context.HEBREW_IDIOMS[0], HE_SUBJECT, "1sg", "present"),
     "כּוֹתֵב אוֹתִי",
   );
 
@@ -365,7 +364,7 @@ test("advanced conjugation propagates only complete reviewed niqqud into prompts
 
   context.HEBREW_IDIOMS[0].niqqud_status = "unreviewed";
   assert.equal(
-    advConj.buildAdvConjHebrewAnswerNiqqud(context.HEBREW_IDIOMS[0], "msg", "הוא", "1sg", "present"),
+    advConj.buildAdvConjHebrewAnswerNiqqud(context.HEBREW_IDIOMS[0], HE_SUBJECT, "1sg", "present"),
     "",
   );
 });
@@ -385,4 +384,30 @@ test("the literal translation for לדרוך על היבלות uses blisters", (
   assert.equal(idiom.literal_pl, "{s} step on {p} blisters");
   assert.equal(idiom.literal_past, "{s} stepped on {p} blisters");
   assert.equal(idiom.literal_future, "{s} will step on {p} blisters");
+});
+
+// Past and future inflect for person; an idiom's own four-slot table does not,
+// so first and second person in those tenses come from the verb's paradigm in
+// hebrew-verbs.js, joined on `verb`. Unlinked idioms still build — they just
+// stay third-person in past and future, the way the whole file used to.
+//
+// This is a real coverage gap, so it is measured rather than left implicit.
+// Authoring a paradigm for any lemma below lights up every idiom using it; the
+// floor should only ever be raised.
+test("the idiom-to-paradigm join keeps its person coverage in past and future", () => {
+  const verbApi = require("../hebrew-verbs.js");
+  const idioms = loadIdioms();
+  const lemmas = new Set(verbApi.getSeedVerbEntries().map((entry) => entry.lemma));
+
+  const linked = idioms.filter((idiom) => lemmas.has(idiom.verb));
+  assert.ok(
+    linked.length >= 81,
+    `only ${linked.length} of ${idioms.length} idioms reach first and second person in past/future`,
+  );
+
+  // Every idiom names a verb, so the join has something to match on even when
+  // no paradigm exists yet.
+  idioms.forEach((idiom) => {
+    assert.ok(String(idiom.verb || "").trim(), `idiom ${idiom.id} needs a verb lemma`);
+  });
 });

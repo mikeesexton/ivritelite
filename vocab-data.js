@@ -1387,8 +1387,6 @@ const RAW = {
     ["determination", "נחישות", "נְחִישׁוּת"],
     ["perseverance", "התמדה", "הַתְמָדָה"],
     ["governability", "משילות", "מְשִׁילוּת"],
-    ["disconnection", "ניתוק", "נִיתּוּק", { idEnglish: "disconnection / alienation / disconnect" }],
-    ["wing", "אגף", "אָגָף", { idEnglish: "wing / division / branch / flank" }],
     ["preparedness", "היערכות", "הֵעָרְכוּת"],
     ["oversight", "פיקוח", "פִּקּוּחַ"],
     ["scope", "היקף", "הֵיקֵף"],
@@ -1426,24 +1424,6 @@ const RAW = {
     ["emphasis", "הדגשה", "הַדְגָּשָׁה"],
   ],
   emotional_psychological_expanded: [
-    ["to disappoint", "לאכזב", "לְאַכְזֵב"],
-    ["to encourage", "לעודד", "לְעוֹדֵד"],
-    ["to humiliate", "להשפיל", "לְהַשְׁפִּיל"],
-    ["to intrigue", "לסקרן", "לְסַקְרֵן"],
-    ["to alarm", "להבהיל", "לְהַבְהִיל"],
-    ["to calm down", "להרגיע", "לְהַרְגִּיעַ"],
-    ["to frighten", "להפחיד", "לְהַפְחִיד"],
-    ["to tire out", "לעייף", "לְעַיֵּף"],
-    ["to bore", "לשעמם", "לְשַׁעֲמֵם"],
-    ["to surprise", "להפתיע", "לְהַפְתִּיעַ"],
-    ["to move deeply", "לרגש", "לְרַגֵּשׁ"],
-    ["to astonish", "להדהים", "לְהַדְהִים"],
-    ["to bother", "להטריד", "לְהַטְרִיד"],
-    ["to confuse", "לבלבל", "לְבַלְבֵּל"],
-    ["to infuriate", "להרגיז", "לְהַרְגִּיז"],
-    ["to stress out", "להלחיץ", "לְהַלְחִיץ"],
-    ["to pamper", "לפנק", "לְפַנֵּק"],
-
     ["self-awareness", "מודעות עצמית", "מוּדָעוּת עַצְמִית"],
     ["emotional regulation", "ויסות רגשי", "וִיסּוּת רִגְשִׁי"],
     ["burnout", "שחיקה", "שְׁחִיקָה"],
@@ -1648,6 +1628,8 @@ const RAW = {
     ["post-army trip", "הטיול הגדול", "הַטִּיּוּל הַגָּדוֹל"],
     ["Tel Aviv bubble", "הבועה התל־אביבית", "הַבּוּעָה הַתֵּל־אָבִיבִית"],
     ["center-periphery gap", "פער בין המרכז לפריפריה", "פַּעַר בֵּין הַמֶּרְכָּז לַפֶּרִיפֶרְיָה"],
+    ["disconnection", "ניתוק", "נִיתּוּק", { idEnglish: "disconnection / alienation / disconnect" }],
+    ["wing", "אגף", "אָגָף", { idEnglish: "wing / division / branch / flank" }],
   ],
   law_legal_systems_expanded: [
     ["constitutional law", "משפט חוקתי", "מִשְׁפָּט חוקתי"],
@@ -1708,7 +1690,6 @@ const RAW = {
     ["risk diversification", "פיזור סיכונים", "פִּיזּוּר סִיכּוּנִים"],
     ["financial leverage", "מינוף פיננסי", "מִינוּף פִינַנְסִי"],
     ["economic leverage", "מנוף כלכלי", "מָנוֹף כַּלְכָּלִי"],
-    ["to leverage", "למנף", "לְמַנֵּף"],
   ],
   science_research_expanded: [
     ["scientific method", "השיטה המדעית", "הַשִּׁיטָה הַמַּדָּעִית"],
@@ -1771,10 +1752,6 @@ const RAW = {
     ["diaspora identity", "זהות תפוצתית", "זֶהוּת תפוצתית"],
   ],
   communication_mastery_expanded: [
-    ["to convince", "לשכנע", "לְשַׁכְנֵעַ"],
-    ["to impress (someone)", "להרשים", "לְהַרְשִׁים"],
-    ["to offend", "להעליב", "לְהַעֲלִיב"],
-
     ["public speaking", "דיבור בפני קהל", "דִּבּוּר בִּפְנֵי קָהָל"],
     ["negotiation tactic", "טקטיקת משא ומתן", "טקטיקת מַשָּׂא וּמַתָּן"],
     ["conflict resolution", "יישוב סכסוכים", "יִישּׁוּב סִכְסוּכִים"],
@@ -1796,9 +1773,6 @@ const RAW = {
     ["critic", "מבקר", "מְבַקֵּר"],
   ],
   everyday_survival_expanded: [
-    ["to save", "להציל", "לְהַצִּיל"],
-    ["to spoil", "לקלקל", "לְקַלְקֵל"],
-
     ["apartment viewing", "צפייה בדירה", "צְפִיָּיה בְּדִירָה"],
     ["lease contract", "חוזה שכירות", "חוֹזֶה שְׂכִירוּת"],
     ["utility meter", "מד שירות", "מַד שֵׁירוּת"],
@@ -2305,6 +2279,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260728a",
+  __build: "20260731a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
