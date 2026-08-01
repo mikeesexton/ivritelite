@@ -507,37 +507,7 @@ ui.setFeedback = ui.setFeedback || function setFeedback(payload, success) {
         structuredTarget.appendChild(result);
       }
 
-      normalized.structured.items.forEach((item) => {
-        const row = doc.createElement("div");
-        row.className = "feedback-item";
-
-        const label = doc.createElement("span");
-        label.className = "feedback-item-label";
-        label.setAttribute("dir", "auto");
-        label.textContent = item.label;
-
-        const content = doc.createElement("span");
-        content.className = "feedback-item-content";
-
-        if (item.value) {
-          const value = doc.createElement("span");
-          value.className = "feedback-item-value";
-          value.setAttribute("dir", item.dir);
-          if (item.lang) value.setAttribute("lang", item.lang);
-          value.textContent = item.value;
-          content.appendChild(value);
-        }
-
-        if (item.meta) {
-          const meta = doc.createElement("span");
-          meta.className = "feedback-item-meta";
-          meta.setAttribute("dir", item.metaDir);
-          if (item.metaLang) meta.setAttribute("lang", item.metaLang);
-          meta.textContent = item.meta;
-          content.appendChild(meta);
-        }
-
-        row.append(label, content);
+      ui.createFieldRows(normalized.structured.items).forEach((row) => {
         structuredTarget.appendChild(row);
       });
     }
@@ -1300,8 +1270,16 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
   const runtime = getRuntime();
   if (!runtime.el?.resultsSummary || !runtime.el?.resultsTitle || !runtime.el?.resultsNote) return;
   const isMissionSummary = runtime.state.summary.game === "characterMission";
+  // Mid-mission the only way forward is Continue -> hub, so the escapes that
+  // would abandon the run are hidden, same as on the mission-results screen.
+  const inMission = isMissionSummary || app.character?.isMissionActive?.() === true;
   runtime.el.resultsSummary.classList.toggle("mission-results-summary", isMissionSummary);
-  runtime.el.resultsHomeBtn?.classList.toggle("hidden", isMissionSummary);
+  runtime.el.resultsHomeBtn?.classList.toggle("hidden", inMission);
+  runtime.el.resultsReviewBtn?.classList.toggle("hidden", inMission && !isMissionSummary);
+  if (runtime.el.resultsContinueBtn && !isMissionSummary) {
+    // "Play Again" would replay the game; mid-mission this hands back to the hub.
+    runtime.el.resultsContinueBtn.textContent = translate(inMission ? "results.continueMission" : "results.continue");
+  }
   const titleText = runtime.state.summary.titleKey
     ? translate(runtime.state.summary.titleKey, runtime.state.summary.titleVars)
     : translate("summary.resultsHeader");
@@ -1362,6 +1340,7 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
         ui.createCompactRow({
           title: item.primary || item.title || "",
           note: item.secondary || item.note || "",
+          fields: item.fields,
           clinic: ui.getMistakeClinicText(item),
           variant: "wrong",
         })
@@ -1380,6 +1359,7 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
         ui.createCompactRow({
           title: item.primary || item.title || "",
           note: item.secondary || item.note || "",
+          fields: item.fields,
           variant: "correct",
         })
       );
@@ -1544,7 +1524,47 @@ ui.renderSettingsState = ui.renderSettingsState || function renderSettingsState(
   ui.renderPromptSpeechButton();
 };
 
-ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, note, clinic, variant }) {
+// Hebrew and English sit on the same line often enough here that each value
+// needs its own direction, or the two runs merge and sentence-final punctuation
+// lands at the wrong end. Shared by the in-game feedback tray and the mistake
+// lists so both read the same way.
+ui.createFieldRows = ui.createFieldRows || function createFieldRows(items) {
+  return (Array.isArray(items) ? items : []).map((item) => {
+    const row = global.document.createElement("div");
+    row.className = "feedback-item";
+
+    const label = global.document.createElement("span");
+    label.className = "feedback-item-label";
+    label.setAttribute("dir", "auto");
+    label.textContent = item.label;
+
+    const content = global.document.createElement("span");
+    content.className = "feedback-item-content";
+
+    if (item.value) {
+      const value = global.document.createElement("span");
+      value.className = "feedback-item-value";
+      value.setAttribute("dir", item.dir || "auto");
+      if (item.lang) value.setAttribute("lang", item.lang);
+      value.textContent = item.value;
+      content.appendChild(value);
+    }
+
+    if (item.meta) {
+      const meta = global.document.createElement("span");
+      meta.className = "feedback-item-meta";
+      meta.setAttribute("dir", item.metaDir || "auto");
+      if (item.metaLang) meta.setAttribute("lang", item.metaLang);
+      meta.textContent = item.meta;
+      content.appendChild(meta);
+    }
+
+    row.append(label, content);
+    return row;
+  });
+};
+
+ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, note, fields, clinic, variant }) {
   const row = global.document.createElement("article");
   row.className = "compact-row";
   if (variant === "correct") {
@@ -1553,18 +1573,28 @@ ui.createCompactRow = ui.createCompactRow || function createCompactRow({ title, 
     row.classList.add("compact-row--wrong");
   }
 
-  const titleNode = global.document.createElement("p");
-  titleNode.className = "compact-row-title";
-  titleNode.textContent = title;
+  const fieldRows = Array.isArray(fields) && fields.length ? ui.createFieldRows(fields) : [];
+  if (fieldRows.length) {
+    row.classList.add("compact-row--fields");
+    fieldRows.forEach((fieldRow) => row.append(fieldRow));
+  } else {
+    const titleNode = global.document.createElement("p");
+    titleNode.className = "compact-row-title";
+    titleNode.setAttribute("dir", "auto");
+    titleNode.textContent = title;
 
-  const noteNode = global.document.createElement("p");
-  noteNode.className = "compact-row-note";
-  noteNode.textContent = note;
+    const noteNode = global.document.createElement("p");
+    noteNode.className = "compact-row-note";
+    noteNode.setAttribute("dir", "auto");
+    noteNode.textContent = note;
 
-  row.append(titleNode, noteNode);
+    row.append(titleNode, noteNode);
+  }
+
   if (clinic) {
     const clinicNode = global.document.createElement("p");
     clinicNode.className = "compact-row-clinic";
+    clinicNode.setAttribute("dir", "auto");
     clinicNode.textContent = clinic;
     row.append(clinicNode);
   }

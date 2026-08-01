@@ -393,6 +393,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
     },
     results: {
       continue: "Play Again",
+      continueMission: "Continue mission",
       correct: "Correct",
       incorrect: "Incorrect",
       time: "Time",
@@ -406,7 +407,9 @@ bootstrapData.I18N = bootstrapData.I18N || {
       mistakeClinic: "Mistake Clinic",
       correctAnswers: "Correct Answers",
       clinic: "{note}",
-      sentenceClinic: "Tip: {note}",
+      // The note is often in the other language, so it is isolated (FSI/PDI) to
+      // keep its own punctuation from drifting to the wrong end of the line.
+      sentenceClinic: "Tip: ⁨{note}⁩",
       prepositionClinic: "Pattern: {trigger} takes {prep}; with {object}, use {answer}.",
       advConjClinic: "Check both parts: subject {subject} in {tense}, object {object}.",
       binyanClinic: "Pattern: {binyan} carries {function} here.",
@@ -836,6 +839,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
     },
     results: {
       continue: "שחק שוב",
+      continueMission: "להמשיך במשימה",
       correct: "נכון",
       incorrect: "שגוי",
       time: "זמן",
@@ -849,7 +853,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       mistakeClinic: "קליניקת טעויות",
       correctAnswers: "תשובות נכונות",
       clinic: "{note}",
-      sentenceClinic: "טיפ: {note}",
+      sentenceClinic: "טיפ: ⁨{note}⁩",
       prepositionClinic: "תבנית: ‏{trigger} מצריך את {prep}; עם {object} משתמשים ב־{answer}.",
       advConjClinic: "בודקים שני חלקים: נושא {subject} בזמן {tense}, ומושא {object}.",
       binyanClinic: "תבנית: ‏{binyan} נושאת כאן {function}.",

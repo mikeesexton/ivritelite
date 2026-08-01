@@ -655,6 +655,17 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
   font-size: 0.84rem;
 }
 
+/* Field rows carry their own direction, so a row holding them drops the plain
+   title/note stack and lets .feedback-item do the alignment. */
+.compact-row--fields {
+  gap: 0.3rem;
+}
+
+.compact-row--fields > .feedback-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
 .compact-row-clinic {
   margin: 0.28rem 0 0;
   padding-top: 0.42rem;
@@ -3377,8 +3388,7 @@ body[data-ui-lang="he"] .character-mission-copy {
   margin: 0 0 0.2rem;
 }
 
-.mission-activity-row,
-.mission-mistake-row {
+.mission-activity-row {
   padding: 0.7rem 0.8rem;
   display: flex;
   justify-content: space-between;
@@ -3388,15 +3398,24 @@ body[data-ui-lang="he"] .character-mission-copy {
   background: var(--surface-bg);
 }
 
-.mission-activity-row span,
-.mission-mistake-row span {
+.mission-activity-row span {
   color: var(--ink-soft);
   text-align: end;
 }
 
-.mission-mistake-row {
-  display: grid;
-  justify-content: stretch;
+/* Names the activity once for the rows beneath it, instead of every row
+   carrying the activity on the end of its own line. */
+.mission-mistake-group-title {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mission-mistake-list > .mission-mistake-group-title:first-of-type {
+  margin-top: 0;
 }
 
 @media (max-width: 720px) {

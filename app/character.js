@@ -195,7 +195,9 @@ function sanitizeCharacterState(saved, today) {
     : "";
   state.pendingChoice = isCharacterChoice(saved?.pendingChoice) ? saved.pendingChoice : "";
   state.lensCharacter = isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "";
-  state.screen = ["picker", "duration", "greeting", "activityIntro", "perfect", "results", "none"].includes(saved?.screen)
+  // "perfect" was its own blocking scene before flawless rounds folded into the
+  // results screen; a save still carrying it falls through to "none".
+  state.screen = ["picker", "duration", "greeting", "activityIntro", "results", "none"].includes(saved?.screen)
     ? saved.screen
     : (state.dailyChoice ? "none" : "picker");
   state.reviewOpen = saved?.reviewOpen === true;
@@ -301,7 +303,7 @@ character.checkDayRollover = character.checkDayRollover || function checkDayRoll
 };
 
 character.isBlocking = character.isBlocking || function isBlocking() {
-  return ["picker", "duration", "greeting", "activityIntro", "perfect"].includes(getState()?.screen);
+  return ["picker", "duration", "greeting", "activityIntro"].includes(getState()?.screen);
 };
 
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
@@ -608,18 +610,6 @@ function renderActivityIntro(target) {
   target.append(layout);
 }
 
-function renderPerfect(target) {
-  const layout = global.document.createElement("div");
-  layout.className = "character-scene-focus";
-  const title = global.document.createElement("h2");
-  title.id = "characterSceneTitle";
-  title.textContent = uiText("Perfect", "מושלם");
-  layout.append(title, createSprite("celebrating", "character-scene-sprite"));
-  renderDialogue(layout, getDialogue("perfect"));
-  layout.append(createSceneButton(uiText("Continue", "להמשיך"), "continue"));
-  target.append(layout);
-}
-
 character.renderScene = character.renderScene || function renderScene() {
   const runtime = getRuntime();
   const scene = runtime.el?.characterScene;
@@ -638,7 +628,6 @@ character.renderScene = character.renderScene || function renderScene() {
   else if (screen === "duration") renderDuration(content);
   else if (screen === "greeting") renderGreeting(content);
   else if (screen === "activityIntro") renderActivityIntro(content);
-  else if (screen === "perfect") renderPerfect(content);
 };
 
 character.renderSettings = character.renderSettings || function renderSettings() {
@@ -999,20 +988,25 @@ character.renderCompanion = character.renderCompanion || function renderCompanio
   }
 };
 
-// The free-play results screen shows the lens character reacting to how the
-// game went. Missions render their own hero sprite in renderMissionResults.
+// The results screen shows the lens character reacting to how the game went,
+// both in free play and after each activity of a mission — a flawless round
+// celebrates here instead of on a scene of its own. The mission-results screen
+// is excluded because renderMissionResults draws its own hero sprite.
 character.renderResultsSprite = character.renderResultsSprite || function renderResultsSprite(target, options = {}) {
   if (!target) return false;
   target.querySelectorAll(".character-results-sprite").forEach((node) => node.remove());
+  target.querySelectorAll(".character-results-dialogue").forEach((node) => node.remove());
   const state = getState();
   const runtime = getRuntime();
-  if (!state?.lensCharacter || state.mission?.active) return false;
+  if (!state?.lensCharacter) return false;
   if (runtime.state?.summary?.game === "characterMission") return false;
   const accuracy = Math.max(0, Math.min(100, Number(options.accuracy || 0)));
-  const frame = options.perfect === true
-    ? "celebrating"
-    : accuracy < 50 ? "struggling" : "neutral";
+  const perfect = options.perfect === true;
+  const frame = perfect ? "celebrating" : accuracy < 50 ? "struggling" : "neutral";
   target.prepend(createSprite(frame, "character-results-sprite"));
+  if (perfect && state.mission?.active) {
+    renderDialogue(target, getDialogue("perfect"), "character-results-dialogue");
+  }
   return true;
 };
 
@@ -1094,23 +1088,34 @@ character.renderMissionResults = character.renderMissionResults || function rend
     const heading = global.document.createElement("h3");
     heading.textContent = uiText("Mistakes", "טעויות");
     mistakeList.append(heading);
-    const allMistakes = played.flatMap((result) =>
-      result.mistakes.map((item) => ({ ...item, activity: isHebrewUi() ? result.nameHe : result.nameEn }))
-    );
-    if (!allMistakes.length) {
+    const groups = played.filter((result) => result.mistakes.length);
+    if (!groups.length) {
       const empty = global.document.createElement("p");
       empty.textContent = uiText("No mistakes in this mission.", "אין טעויות במשימה הזאת.");
       mistakeList.append(empty);
     } else {
-      allMistakes.forEach((item) => {
-        const row = global.document.createElement("article");
-        row.className = "mission-mistake-row";
-        const primary = global.document.createElement("strong");
-        primary.textContent = String(item.primary || item.activity || "");
-        const secondary = global.document.createElement("span");
-        secondary.textContent = [item.secondary, item.activity].filter(Boolean).join(" · ");
-        row.append(primary, secondary);
-        mistakeList.append(row);
+      // The activity name is a heading over its own rows, so it is read once
+      // instead of being repeated on the end of every line.
+      groups.forEach((result) => {
+        const groupTitle = global.document.createElement("h4");
+        groupTitle.className = "mission-mistake-group-title";
+        groupTitle.textContent = isHebrewUi() ? result.nameHe : result.nameEn;
+        mistakeList.append(groupTitle);
+        result.mistakes.forEach((item) => {
+          if (Array.isArray(item.forms)) {
+            mistakeList.append(app.ui.createVerbMistakeGroup(item));
+            return;
+          }
+          mistakeList.append(
+            app.ui.createCompactRow({
+              title: item.primary || item.title || "",
+              note: item.secondary || item.note || "",
+              fields: item.fields,
+              clinic: app.ui.getMistakeClinicText?.(item) || "",
+              variant: "wrong",
+            })
+          );
+        });
       });
     }
   }
@@ -1579,18 +1584,19 @@ character.captureActivitySummary = character.captureActivitySummary || function 
   mission.results.push(result);
   mission.currentIndex += 1;
   mission.currentActivity = "";
-  if (result.incorrectCount === 0 && result.correctCount > 0) {
-    state.screen = "perfect";
-  } else if (mission.currentIndex < mission.activities.length) {
-    state.screen = "none";
-    mission.onHub = true;
-  } else {
+  if (mission.currentIndex >= mission.activities.length) {
+    // The mission-results screen already lists every activity and every
+    // mistake, so the last game goes straight there rather than showing its own
+    // recap first.
     character.finishMission();
     return true;
   }
+  // Returning false lets showSessionSummary fall through and render this game's
+  // own results screen; Continue then hands off to the hub.
+  state.screen = "none";
+  mission.onHub = false;
   saveState();
-  getRuntime().helpers?.renderAll?.();
-  return true;
+  return false;
 };
 
 character.finishMission = character.finishMission || function finishMission() {
@@ -1888,7 +1894,20 @@ character.startCompanionDrag = character.startCompanionDrag || function startCom
 character.handleResultsContinue = character.handleResultsContinue || function handleResultsContinue() {
   const runtime = getRuntime();
   const state = getState();
-  if (runtime.state?.summary?.game !== "characterMission" || !state) return false;
+  if (!state) return false;
+  // A per-activity recap during a live mission: hand back to the hub so the
+  // next activity can be started, rather than dropping out to free play.
+  if (state.mission?.active && runtime.state?.summary?.game !== "characterMission") {
+    app.session?.clearSummaryState?.();
+    state.screen = "none";
+    state.mission.onHub = true;
+    runtime.state.mode = "home";
+    runtime.state.route = "home";
+    saveState();
+    runtime.helpers?.renderAll?.();
+    return true;
+  }
+  if (runtime.state?.summary?.game !== "characterMission") return false;
   app.session?.clearSummaryState?.();
   state.screen = "none";
   state.reviewOpen = false;

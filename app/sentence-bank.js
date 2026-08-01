@@ -1278,18 +1278,24 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
       const hebrewText = runtime.state?.showNiqqudInline && sentence.hebrewNiqqud
         ? sentence.hebrewNiqqud
         : sentence.hebrew;
-      if (direction === "listen") {
-        return {
-          primary: hebrewText,
-          secondary: `${translate("game.shemaName")}: ${sentence.english}`,
-          clinicKey: clinicNote ? "results.sentenceClinic" : "",
-          clinicVars: clinicNote ? { note: clinicNote } : {},
-        };
-      }
-      const toHebrew = direction === "en2he";
+      // Hebrew first in every direction: a mistake list reads better with one
+      // stable column order than with each row mirroring its own prompt.
+      const hebrewField = {
+        label: translate(direction === "listen" ? "feedback.heardLabel" : "feedback.hebrewSentenceLabel"),
+        value: hebrewText,
+        dir: "rtl",
+        lang: "he",
+      };
+      const englishField = {
+        label: translate(direction === "listen" ? "feedback.meaningLabel" : "feedback.englishSentenceLabel"),
+        value: sentence.english,
+        dir: "ltr",
+        lang: "en",
+      };
       return {
-        primary: toHebrew ? hebrewText : sentence.english,
-        secondary: `${translate(toHebrew ? "prompt.toHebrew" : "prompt.toEnglish")}: ${toHebrew ? sentence.english : hebrewText}`,
+        primary: direction === "he2en" ? sentence.english : hebrewText,
+        secondary: direction === "he2en" ? hebrewText : sentence.english,
+        fields: [hebrewField, englishField],
         clinicKey: clinicNote ? "results.sentenceClinic" : "",
         clinicVars: clinicNote ? { note: clinicNote } : {},
       };

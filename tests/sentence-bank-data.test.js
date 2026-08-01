@@ -77,7 +77,11 @@ function buildSentenceFrame(sentenceText, targetTokens) {
 }
 
 function getStaticEnglishWordChunks(entry) {
-  const frame = buildSentenceFrame(entry.english, entry.english_tokens);
+  return getStaticWordChunks(entry.english, entry.english_tokens);
+}
+
+function getStaticWordChunks(text, tokens) {
+  const frame = buildSentenceFrame(text, tokens);
   if (frame.failed) {
     return [{ where: "unmatched", text: "__TOKEN_MISMATCH__" }];
   }
@@ -94,6 +98,18 @@ function getStaticEnglishWordChunks(entry) {
     chunks.push({ where: "trailing", text: frame.trailingText });
   }
   return chunks;
+}
+
+// A distractor that exists only so an accepted alternate can be built is not a
+// wrong answer, so it does not spend the 4-6 authoring budget for the row.
+function getAuthoredHebrewDistractors(entry) {
+  const alternateTokens = new Set(
+    (entry.hebrew_alternates || []).flatMap((alternate) => alternate.tokens || []),
+  );
+  const targetTokens = new Set(entry.hebrew_tokens || []);
+  return (entry.hebrew_distractors || []).filter(
+    (token) => !(alternateTokens.has(token) && !targetTokens.has(token)),
+  );
 }
 
 const NUANCE_GUARDRAILS = [
@@ -983,7 +999,8 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     assert.match(entry.hebrew_niqqud, niqqudPattern, `${id} needs pointed Hebrew`);
     assert.equal(entry.hebrew_tokens.length, entry.hebrew_tokens_niqqud.length, `${id} target niqqud alignment`);
     assert.equal(entry.hebrew_distractors.length, entry.hebrew_distractors_niqqud.length, `${id} distractor niqqud alignment`);
-    assert.ok(entry.hebrew_distractors.length >= 4 && entry.hebrew_distractors.length <= 6, `${id} Hebrew distractor count`);
+    const authoredHebrewDistractors = getAuthoredHebrewDistractors(entry);
+    assert.ok(authoredHebrewDistractors.length >= 4 && authoredHebrewDistractors.length <= 6, `${id} Hebrew distractor count`);
     assert.ok(entry.english_distractors.length >= 4 && entry.english_distractors.length <= 6, `${id} English distractor count`);
     assert.equal(new Set(entry.hebrew_distractors).size, entry.hebrew_distractors.length, `${id} duplicate Hebrew distractor`);
     assert.equal(new Set(entry.english_distractors).size, entry.english_distractors.length, `${id} duplicate English distractor`);
@@ -1003,6 +1020,47 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
 
   EXPANSION_GENDER_ALTERNATE_IDS.forEach((id) => {
     assert.ok(byId.get(id).hebrew_alternates.length > 0, `${id} needs a feminine Hebrew alternative`);
+  });
+});
+
+// An accepted alternate is only worth anything if the player can actually build
+// it: the chips it names have to exist in the tile pool, and they have to spell
+// out its own sentence. This runs over every entry rather than the enumerated
+// tranches so later additions are covered without touching the id lists.
+test("every accepted alternate is spelled by its own chips and buildable from the tile pool", () => {
+  loadSentenceBankApi().getSentenceBank().forEach((entry) => {
+    [
+      ["Hebrew", entry.hebrew_alternates, entry.hebrew_tokens, entry.hebrew_distractors],
+      ["English", entry.english_alternates, entry.english_tokens, entry.english_distractors],
+    ].forEach(([language, alternates, targetTokens, distractors]) => {
+      const pool = new Set([...(targetTokens || []), ...(distractors || [])]);
+      (alternates || []).forEach((alternate) => {
+        assert.equal(
+          alternate.tokens.length,
+          (targetTokens || []).length,
+          `${entry.id} ${language} alternate target length`
+        );
+        assert.equal(
+          buildSentenceFrame(alternate.text, alternate.tokens).failed,
+          false,
+          `${entry.id} ${language} alternate chips do not spell "${alternate.text}"`
+        );
+        const unreachable = alternate.tokens.filter((token) => !pool.has(token));
+        assert.equal(
+          unreachable.join(", "),
+          "",
+          `${entry.id} ${language} alternate needs chips the player is never offered`
+        );
+      });
+    });
+
+    (entry.english_alternates || []).forEach((alternate) => {
+      assert.deepEqual(
+        getStaticWordChunks(alternate.text, alternate.tokens),
+        [],
+        `${entry.id} English alternate leaves words outside selectable chips`
+      );
+    });
   });
 });
 
@@ -1687,6 +1745,35 @@ test("formal_32 accepts the alternate English order for the generalization warni
   entry.english_alternates.forEach((alternate) => {
     assert.equal(alternate.tokens.length, entry.english_tokens.length);
   });
+});
+
+test("formal_40 accepts the alternate English order with fronted prepositional phrase", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "formal_40");
+  assert.ok(entry, "formal_40 exists");
+  assert.ok(Array.isArray(entry.english_alternates));
+  const expectedAlternates = [
+    "In contrast, in the second group an opposite trend was observed.",
+  ];
+  assert.deepEqual(
+    Array.from(entry.english_alternates, (alternate) => alternate.text),
+    expectedAlternates
+  );
+  entry.english_alternates.forEach((alternate) => {
+    assert.equal(alternate.tokens.length, entry.english_tokens.length);
+  });
+});
+
+test("colloquial_105 accepts the reordered Hebrew word order with pre-verbal רק", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "colloquial_105");
+  assert.ok(entry, "colloquial_105 exists");
+  const alternate = entry.hebrew_alternates.find(
+    (variant) => variant.text === "זה רק היה סטוץ, היא לא מחפשת קשר רציני."
+  );
+  assert.ok(alternate, "colloquial_105 has the reordered זה רק היה alternate");
+  assert.equal(alternate.tokens.length, entry.hebrew_tokens.length);
+  assert.equal(alternate.tokens_niqqud.length, alternate.tokens.length);
 });
 
 test("professional_21 accepts feminine מעדיפה when the English speaker gender is unspecified", () => {

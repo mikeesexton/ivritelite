@@ -5,6 +5,91 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-01 13:22 EDT — Per-activity mission results, and a readable mistake list
+
+**Requested:** Show results after each game during a mission rather than only at the end, and improve the end-of-mission results display — the sentence-game rows in particular looked clunky.
+
+**Files changed:**
+- `app/character.js` — `captureActivitySummary` now records the activity result and returns **false** mid-mission, which lets `showSessionSummary` fall through and render that game's own results screen; the last activity still returns true via `finishMission`, since the mission-results screen already covers it. `handleResultsContinue` gained a branch that returns a live mission to its hub. The flawless-round `renderPerfect` scene was deleted along with its `renderScene` branch, and `"perfect"` removed from the `sanitizeCharacterState` whitelist and `isBlocking` so an older save loads as `"none"` instead of blocking on an empty scene. `renderResultsSprite` no longer bails during a mission and renders the character's `perfect` dialogue on a flawless round. The mission mistake list now groups rows under one heading per activity and builds them with `ui.createCompactRow`.
+- `app/ui.js` — extracted the feedback tray's item markup into a shared `ui.createFieldRows(items)`; `ui.createCompactRow` accepts `fields` and renders them through it, and sets `dir="auto"` on the `title`/`note` fallback and the clinic line. `renderSummaryState` hides Home/Review during a mission and labels the continue button `results.continueMission`.
+- `app/sentence-bank.js` — `buildSentenceBankMistakeSummary` emits `fields` (Hebrew then English, each with its own `dir`/`lang`) instead of concatenating a direction label onto the prompt, reusing the existing `feedback.*Label` keys. `primary`/`secondary` are kept as a fallback.
+- `app/bootstrap-data.js` — added `results.continueMission` in both languages, and wrapped `results.sentenceClinic`'s `{note}` in FSI/PDI isolates, matching the explicit bidi marks already used by the Hebrew preposition and binyan clinics.
+- `styles.css` — `.compact-row--fields`, the `.mission-mistake-group-title` heading, and removal of the now-unused `.mission-mistake-row` rules.
+- `index.html` — bumped `?v=20260801c` for `styles.css`, `app/ui.js`, `app/character.js`, `app/sentence-bank.js`, `app/bootstrap-data.js`.
+- `tests/character-mission.test.js`, `tests/app-progress.test.js` — see below.
+
+**Behavior changed:** Finishing a game inside a mission now shows that game's full results screen (score, accuracy ring, mistakes, character sprite) with a "Continue mission" button that returns to the hub; previously the summary was built and discarded. A flawless activity celebrates on that screen instead of on a separate "מושלם" scene. The end-of-mission mistake list groups rows under one heading per activity instead of appending ` · <activity>` to every row, and sentence rows now read as two labeled lines with per-line direction rather than `תרגם לעברית: <english>`.
+
+**Tests run:**
+- `npm test` — **355 pass, 0 fail, 0 skipped** (351 before; +4 new tests, 1 updated).
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail**.
+- Updated `capturing a completed activity advances the mission without shortening the game` to expect `false` / `onHub: false`, which is the behavior change itself. Added: a flawless mid-mission activity opens no blocking scene; Continue from a per-activity recap hands off to the hub with `currentIndex` intact; a save carrying `screen: "perfect"` loads as `"none"`; mistake rows isolate each language and the `primary`/`secondary` fallback now carries `dir="auto"`.
+- Walked a real 3-activity mission in the browser at 375×812 in both languages: per-activity results appear after activities 1 and 2, Continue lands on the hub with the row ticked, a flawless round celebrates on the results screen, the last activity goes straight to the mission results, and the end screen groups mistakes under אוצר מילים / משפטים / שמע with no repeated suffix and no console errors.
+
+**Risks / regressions to check:** `captureActivitySummary`'s return value changed meaning — it now signals "I took over the screen", not "this was a mission activity". Any future caller must treat `false` as "render the summary normally". Mistake payloads freeze their labels at capture time, so switching UI language mid-mission leaves earlier rows labeled in the previous language; the in-game feedback tray already behaved this way. Only the sentence game emits `fields`; every other game still renders through the `title`/`note` fallback, which is now direction-isolated but keeps whatever string it was already emitting — the abbreviation game's `english | expansion` note is the next most awkward one.
+
+
+### 2026-08-01 12:22 EDT — Make every accepted sentence alternate buildable, and guard it
+
+**Requested:** Review the two uncommitted word-order fixes (`formal_40`, `colloquial_105`) made by another agent, then fix the problems the review turned up.
+
+Review result: both edits are correct and ship unchanged. Their token lists are exact reorderings of the primary sets, niqqud is aligned, and `?v=` / `__build` agreed. The `זה רק היה סטוץ` scope shift (`רק` moving in front of `היה`) was raised and accepted as intentional — no change, recorded so it is not re-raised.
+
+The review found two guardrail gaps, and verifying the first uncovered a third, larger problem: **19 entries accepted Hebrew alternates that no player could ever build**, because 25 of their tokens (the feminine gender variants, plus two masculine ones) were in neither the target chips nor the distractor chips, so the tile was never rendered. A female learner was forced to answer in the masculine on those rows.
+
+**Files changed:**
+- `sentence-bank-data.js` — added the missing variant token to the `hebrewDistractorPairs` of 19 entries (`everyday_32/35/41/48/50/54/58/125`, `colloquial_37/38/41/42/48/49/50/52/117`, `professional_27/29`), taking each niqqud form from the alternate that needed it. Added one authored distractor to `everyday_81` (`תעלי`), `everyday_88` (`תביא`) and `colloquial_97` (`מבין`) — see below. Made `addReorderedHebrewAlternate` throw on an unknown id instead of returning silently, and commented why the `colloquial_105` call sits apart from the main block. Bumped `__build` to `20260801c`.
+- `tests/sentence-bank-data.test.js` — new test `every accepted alternate is spelled by its own chips and buildable from the tile pool`, over **all** entries rather than the enumerated tranches, asserting for both languages that an alternate's chips spell its own text and are all present in the tile pool. Extracted `getStaticWordChunks(text, tokens)` out of `getStaticEnglishWordChunks(entry)` (now a one-line delegate, four call sites unchanged) so English alternates get the same leftover-word check. Added `getAuthoredHebrewDistractors` and used it for the 4–6 distractor-count assertion.
+- `tests/app-progress.test.js` — two tests driving the real app DOM against real bank rows: answering `everyday_32` in the feminine, and `colloquial_48`, whose three required feminine chips compete with a 12-tile ceiling. Added `loadRealSentenceBankEntries` / `answerRealSentenceInHebrew` helpers.
+- `index.html` — bumped `sentence-bank-data.js` to `?v=20260801c`.
+
+**Behavior changed:** On 19 Sentence Bank rows the gender-variant chip is now actually offered, so the alternate answer the bank already claimed to accept can be built and is marked correct. Three rows (`everyday_81`, `everyday_88`, `colloquial_97`) gained one new distractor each. No app code changed — `getAlternateRequiredDistractors` (app/sentence-bank.js:933) already pinned these tokens ahead of ordinary distractors under the tile cap; it had simply never had anything to pin.
+
+**Tests run:**
+- `npm test` — **351 pass, 0 fail, 0 skipped** (348 before; +3 new tests).
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail**.
+- Both new guards confirmed to bite, not just pass: reverting `everyday_32`'s new chip makes the invariant test fail naming that entry, and makes the app test fail at the tap because the tile is not rendered. Renaming the id in an `addReorderedHebrewAlternate` call now throws on file load.
+- Live app at `localhost:3000`: loads `./sentence-bank-data.js?v=20260801c`, reports `__build 20260801c`, no console errors, and the sampled rows have their variant chips in the pool.
+
+**Risks / regressions to check:** The distractor budget now counts only *authored* wrong answers — a distractor that exists solely to make an accepted alternate buildable no longer spends the 4–6 allowance. That stricter count is what exposed `everyday_81`, `everyday_88` and `colloquial_97` as having only three real wrong answers; each was given a fourth. In two of the three the English distractor list already had an orphan ("Get on", "Bring") whose Hebrew counterpart was missing, so `תעלי` and `תביא` fill a gap that looks original; `מבין` for `colloquial_97` is a new authoring choice and is the one worth a second read. Rows that gained chips render more tiles — `colloquial_48` now sits at the 12-tile ceiling with 5 targets and 8 distractors, so it is the row to watch on a narrow viewport.
+
+
+### 2026-08-01 11:44 EDT — Accept alternate Hebrew word order for colloquial_105
+
+**Requested:** Fix sentence `colloquial_105` ("It was just a fling, she isn't looking for anything serious.") to accept the natural alternative Hebrew word order ("זה רק היה סטוץ, היא לא מחפשת קשר רציני.").
+
+**Files changed:**
+- `sentence-bank-data.js` — added `addReorderedHebrewAlternate` for `colloquial_105` with text `"זה רק היה סטוץ, היא לא מחפשת קשר רציני."` and token order `[0, 2, 1, 3, 4, 5, 6, 7, 8]`; bumped `__build` to `"20260801b"`.
+- `index.html` — bumped `sentence-bank-data.js` script cache-busting parameter to `?v=20260801b`.
+- `tests/sentence-bank-data.test.js` — added unit test verifying `colloquial_105` accepts the reordered Hebrew word order with pre-verbal רק.
+
+**Behavior changed:** In Sentence Bank English-to-Hebrew translation mode, building `"זה רק היה סטוץ, היא לא מחפשת קשר רציני."` for sentence `colloquial_105` is now accepted as a correct answer alongside `"זה היה רק סטוץ, היא לא מחפשת קשר רציני."`.
+
+**Tests run:**
+- `npm test` — **348 pass, 0 fail, 0 skipped** (347 before; +1 new test for `colloquial_105` alternate order).
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail**.
+
+**Risks / regressions to check:** None. The alternate reorders `רק` before the verb `היה`, which is a common natural adverb placement in Hebrew.
+
+
+### 2026-08-01 11:40 EDT — Accept alternate English word order for formal_40
+
+**Requested:** Fix sentence `formal_40` ("לעומת זאת, בקבוצה השנייה נצפתה מגמה הפוכה.") to accept the accurate alternative English word ordering ("In contrast, in the second group an opposite trend was observed.").
+
+**Files changed:**
+- `sentence-bank-data.js` — added `englishAlternates` to `formal_40` with text `"In contrast, in the second group an opposite trend was observed."` and token order `["In contrast", "in the second", "group", "an opposite", "trend", "was observed"]`; bumped `__build` to `"20260801a"`.
+- `index.html` — bumped `sentence-bank-data.js` cache-busting parameter `?v=20260801a`.
+- `tests/sentence-bank-data.test.js` — added unit test verifying `formal_40` accepts the alternate English word order with the fronted prepositional phrase.
+
+**Behavior changed:** In Sentence Bank Hebrew-to-English translation mode, building `"In contrast, in the second group an opposite trend was observed."` for sentence `formal_40` is now accepted as a correct answer alongside `"In contrast, an opposite trend was observed in the second group."`.
+
+**Tests run:**
+- `npm test` — **347 pass, 0 fail, 0 skipped** (346 before; +1 new test for `formal_40` alternate order).
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail**.
+
+**Risks / regressions to check:** None. The alternate uses the exact same token set as the primary English answer, only reordered into a valid natural English structure.
+
+
 ### 2026-07-31 19:40 EDT — Delete the idiom `level` field
 
 **Requested:** Resolve the last item from the Conjugation+ audit. `level` (1–4) was authored on every idiom and read by nothing; the options were to wire it into selection, delete it, or demote it to documented authoring metadata. The user chose deletion.

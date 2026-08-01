@@ -2469,6 +2469,55 @@ test("sentence builder accepts an explicitly reviewed Hebrew degree-word alterna
   assert.ok(getSentenceSlots(document).every((slot) => slot.classList.contains("correct") && !slot.classList.contains("wrong")));
 });
 
+function loadRealSentenceBankEntries(ids) {
+  const sourcePath = path.join(__dirname, "..", "sentence-bank-data.js");
+  const context = { console, globalThis: null, window: null };
+  context.globalThis = context;
+  context.window = context;
+  vm.createContext(context);
+  vm.runInContext(fs.readFileSync(sourcePath, "utf8"), context, { filename: sourcePath });
+  const byId = new Map(context.IvriQuestSentenceBank.getSentenceBank().map((entry) => [entry.id, entry]));
+  return ids.map((id) => JSON.parse(JSON.stringify(byId.get(id))));
+}
+
+function answerRealSentenceInHebrew(id, tokens) {
+  const harness = loadAppHarness([], [], [], { sentenceBank: loadRealSentenceBankEntries([id]) });
+  const { document, state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "en2he")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  fillSentenceAnswerByTap(document, tokens);
+  document.querySelector("#nextBtn").click();
+  return { document, state };
+}
+
+// The feminine tiles have to be rendered for the tap to land at all, so this
+// covers both halves: the chip reaches the pool, and the answer is accepted.
+test("sentence builder lets a learner answer in the feminine on a gender-alternate row", () => {
+  const { document } = answerRealSentenceInHebrew(
+    "everyday_32",
+    ["אני", "לא", "זוכרת", "איפה", "שמתי", "את", "המפתחות"]
+  );
+
+  assert.match(getFeedbackText(document), /^Correct\. The Hebrew sentence is אני לא זוכרת איפה שמתי את המפתחות\./);
+  assert.ok(getSentenceSlots(document).every((slot) => slot.classList.contains("correct") && !slot.classList.contains("wrong")));
+});
+
+// colloquial_48 needs three separate feminine chips against the 12-tile ceiling,
+// so it is the row where distractor capping is most likely to drop one.
+test("sentence builder keeps every required gender chip when the tile pool is capped", () => {
+  const { document } = answerRealSentenceInHebrew(
+    "colloquial_48",
+    ["תשלחי", "לי", "מיקום", "כשאת", "מגיעה"]
+  );
+
+  assert.match(getFeedbackText(document), /^Correct\. The Hebrew sentence is תשלחי לי מיקום כשאת מגיעה\./);
+  assert.ok(getSentenceSlots(document).every((slot) => slot.classList.contains("correct") && !slot.classList.contains("wrong")));
+});
+
 test("sentence builder rejects unreviewed adjacent modifier swaps", () => {
   const sentenceBank = [
     {
@@ -3625,6 +3674,55 @@ test("handwriting summaries arrange per-letter results in three columns", () => 
   const letterGrid = document.querySelector("#resultsSummary").children[2];
   assert.equal(letterGrid.classList.contains("results-mistakes--letter-grid"), true);
   assert.equal(letterGrid.querySelectorAll(".compact-row").length, 3);
+});
+
+test("mistake rows isolate each language so Hebrew and English stop colliding", () => {
+  const harness = loadAppHarness([]);
+  const { app, document, state } = harness;
+  state.route = "results";
+  Object.assign(state.summary, {
+    active: true,
+    game: "sentenceBank",
+    correctCount: 4,
+    incorrectCount: 2,
+    elapsedSeconds: 40,
+    mistakes: [
+      {
+        primary: "It was just a fling.",
+        secondary: "זה היה רק סטוץ.",
+        fields: [
+          { label: "Hebrew sentence", value: "זה היה רק סטוץ.", dir: "rtl", lang: "he" },
+          { label: "English sentence", value: "It was just a fling.", dir: "ltr", lang: "en" },
+        ],
+      },
+      { primary: "כלב", secondary: "dog" },
+    ],
+  });
+
+  app.ui.renderSummaryState();
+  const rows = document.querySelector("#resultsSummary").children[2].querySelectorAll(".compact-row");
+  assert.equal(rows.length, 2);
+
+  // A row with fields lays each language out on its own line, with its own dir.
+  const fieldRow = rows[0];
+  assert.equal(fieldRow.classList.contains("compact-row--fields"), true);
+  const values = fieldRow.querySelectorAll(".feedback-item-value");
+  assert.deepEqual(
+    Array.from(values, (node) => [node.getAttribute("dir"), node.getAttribute("lang"), node.textContent]),
+    [["rtl", "he", "זה היה רק סטוץ."], ["ltr", "en", "It was just a fling."]]
+  );
+  assert.deepEqual(
+    Array.from(fieldRow.querySelectorAll(".feedback-item-label"), (node) => node.textContent),
+    ["Hebrew sentence", "English sentence"]
+  );
+  // No row should still be gluing a label onto its value.
+  assert.equal(fieldRow.textContent.includes(" · "), false);
+
+  // A row without fields keeps the old shape but is no longer direction-blind.
+  const plainRow = rows[1];
+  assert.equal(plainRow.classList.contains("compact-row--fields"), false);
+  assert.equal(plainRow.querySelector(".compact-row-title").getAttribute("dir"), "auto");
+  assert.equal(plainRow.querySelector(".compact-row-note").getAttribute("dir"), "auto");
 });
 
 test("results promote structured mistake notes into a mistake clinic", () => {

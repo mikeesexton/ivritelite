@@ -489,14 +489,16 @@ test("capturing a completed activity advances the mission without shortening the
     },
   };
 
+  // false hands the screen back to showSessionSummary, which renders this
+  // activity's own results; the hub waits until Continue.
   assert.equal(character.captureActivitySummary({
     correctCount: 20,
     incorrectCount: 2,
     elapsedSeconds: 187,
     mistakes: [{ primary: "test" }],
-  }), true);
+  }), false);
   assert.equal(app.runtime.characterState.screen, "none");
-  assert.equal(app.runtime.characterState.mission.onHub, true);
+  assert.equal(app.runtime.characterState.mission.onHub, false);
   assert.equal(app.runtime.characterState.mission.currentIndex, 1);
   assert.equal(app.runtime.characterState.mission.currentActivity, "");
   assert.deepEqual(
@@ -512,6 +514,96 @@ test("capturing a completed activity advances the mission without shortening the
       skipped: false,
     },
   );
+});
+
+function missionStateForCapture(overrides = {}) {
+  return {
+    dayKey: "2026-08-01",
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true,
+      completed: false,
+      activities: ["lessonMatch", "sentenceBank"],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "lessonMatch",
+      results: [],
+      visible: true,
+      onHub: false,
+      ...overrides,
+    },
+  };
+}
+
+test("a flawless mid-mission activity no longer opens a blocking Perfect scene", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = missionStateForCapture();
+
+  assert.equal(character.captureActivitySummary({
+    correctCount: 12,
+    incorrectCount: 0,
+    elapsedSeconds: 90,
+    mistakes: [],
+  }), false);
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(character.isBlocking(), false);
+  assert.equal(app.runtime.characterState.mission.onHub, false);
+});
+
+test("continuing from a per-activity recap hands off to the mission hub", () => {
+  const { character, app } = loadCharacterModule();
+  let summaryCleared = 0;
+  app.session = { clearSummaryState: () => { summaryCleared += 1; } };
+  app.runtime.characterState = missionStateForCapture();
+
+  character.captureActivitySummary({
+    correctCount: 8,
+    incorrectCount: 2,
+    elapsedSeconds: 120,
+    mistakes: [{ primary: "מילה" }],
+  });
+  // The game's own summary is on screen at this point, not the mission's.
+  app.runtime.state.summary = { active: true, game: "lessonMatch" };
+  app.runtime.state.route = "results";
+
+  assert.equal(character.handleResultsContinue(), true);
+  assert.equal(summaryCleared, 1);
+  assert.equal(app.runtime.characterState.mission.onHub, true);
+  assert.equal(app.runtime.characterState.mission.currentIndex, 1);
+  assert.equal(app.runtime.state.route, "home");
+  assert.equal(character.shouldShowMissionHub(), true);
+});
+
+test("a save written before the Perfect scene was folded in loads as no screen", () => {
+  const now = new Date();
+  const dayKey = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+  const { character, app } = loadCharacterModule({
+    saved: {
+      dayKey,
+      gender: "m",
+      hasChosen: { ido: true },
+      dailyChoice: "ido",
+      screen: "perfect",
+      mission: {
+        active: true,
+        activities: ["lessonMatch"],
+        currentActivity: "lessonMatch",
+        currentIndex: 0,
+        results: [],
+      },
+    },
+  });
+  character.initialize();
+
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(character.isBlocking(), false);
 });
 
 test("an active mission can pause on its home hub without discarding the current game", () => {
