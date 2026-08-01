@@ -54,6 +54,8 @@ const PREPOSITION_INFLECTIONS = {
     "1pl": { plain: "לנו", niqqud: "לָנוּ" },
     "2mp": { plain: "לכם", niqqud: "לָכֶם" },
     "3mp": { plain: "להם", niqqud: "לָהֶם" },
+    "2fp": { plain: "לכן", niqqud: "לָכֶן" },
+    "3fp": { plain: "להן", niqqud: "לָהֶן" },
   },
   // ב — in / with / at
   be: {
@@ -213,6 +215,8 @@ const PREPOSITION_INFLECTIONS = {
     "1pl": { plain: "אותנו", niqqud: "אוֹתָנוּ" },
     "2mp": { plain: "אתכם", niqqud: "אֶתְכֶם" },
     "3mp": { plain: "אותם", niqqud: "אוֹתָם" },
+    "2fp": { plain: "אתכן", niqqud: "אֶתְכֶן" },
+    "3fp": { plain: "אותן", niqqud: "אוֹתָן" },
   },
 };
 

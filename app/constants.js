@@ -60,26 +60,83 @@ constants.MATCH_LONG_LEN = constants.MATCH_LONG_LEN || 16;
 constants.CONJUGATION_MASTER_STREAK = constants.CONJUGATION_MASTER_STREAK || 10;
 constants.VERB_MATCH_MISTAKE_MAX_FORMS = constants.VERB_MATCH_MISTAKE_MAX_FORMS || 6;
 
+// Hebrew present inflects for gender and number but not person, so `form` — the
+// key into an idiom's own 4-slot tense table — is all the present needs, and
+// every subject below works there. Past and future do inflect for person, and
+// those 4 slots hold third-person forms only. `pastSlot`/`futureSlot` name the
+// hebrew-verbs paradigm slot to read instead; an idiom with no linked paradigm
+// falls back to its own table and therefore offers third person alone.
+//
+// `personKey` feeds the coreference guard and uses the same 1/2/3 prefix
+// convention as ADV_CONJ_OBJECT_KEYS.
 constants.ADV_CONJ_SUBJECTS = constants.ADV_CONJ_SUBJECTS || [
-  { form: "msg", pronoun: "הוא", en: "he" },
-  { form: "msg", pronoun: "אתה", en: "you (m.sg.)", tenses: ["present"] },
-  { form: "fsg", pronoun: "היא", en: "she" },
-  { form: "fsg", pronoun: "את", en: "you (f.sg.)", tenses: ["present"] },
-  { form: "mpl", pronoun: "הם", en: "they (m.)" },
-  { form: "mpl", pronoun: "אתם", en: "you (m.pl.)", tenses: ["present"] },
-  { form: "fpl", pronoun: "הן", en: "they (f.)" },
-  { form: "fpl", pronoun: "אתן", en: "you (f.pl.)", tenses: ["present"] },
+  { form: "msg", pronoun: "אני", en: "I (m.)", personKey: "1sg",
+    pastSlot: "first_person_singular", futureSlot: "first_person_singular" },
+  { form: "fsg", pronoun: "אני", en: "I (f.)", personKey: "1sg",
+    pastSlot: "first_person_singular", futureSlot: "first_person_singular" },
+  { form: "mpl", pronoun: "אנחנו", en: "we (m.)", personKey: "1pl",
+    pastSlot: "first_person_plural", futureSlot: "first_person_plural" },
+  { form: "fpl", pronoun: "אנחנו", en: "we (f.)", personKey: "1pl",
+    pastSlot: "first_person_plural", futureSlot: "first_person_plural" },
+  { form: "msg", pronoun: "אתה", en: "you (m.sg.)", personKey: "2msg",
+    pastSlot: "second_person_masculine_singular", futureSlot: "second_person_masculine_singular" },
+  { form: "fsg", pronoun: "את", en: "you (f.sg.)", personKey: "2fsg",
+    pastSlot: "second_person_feminine_singular", futureSlot: "second_person_feminine_singular" },
+  { form: "mpl", pronoun: "אתם", en: "you (m.pl.)", personKey: "2mpl",
+    pastSlot: "second_person_masculine_plural", futureSlot: "second_person_plural" },
+  { form: "fpl", pronoun: "אתן", en: "you (f.pl.)", personKey: "2fpl",
+    pastSlot: "second_person_feminine_plural", futureSlot: "second_person_plural" },
+  { form: "msg", pronoun: "הוא", en: "he", personKey: "3msg",
+    pastSlot: "third_person_masculine_singular", futureSlot: "third_person_masculine_singular" },
+  { form: "fsg", pronoun: "היא", en: "she", personKey: "3fsg",
+    pastSlot: "third_person_feminine_singular", futureSlot: "third_person_feminine_singular" },
+  { form: "mpl", pronoun: "הם", en: "they (m.)", personKey: "3mpl",
+    pastSlot: "third_person_plural", futureSlot: "third_person_plural" },
+  { form: "fpl", pronoun: "הן", en: "they (f.)", personKey: "3mpl",
+    pastSlot: "third_person_plural", futureSlot: "third_person_plural" },
 ];
 
-constants.ADV_CONJ_OBJECTS = constants.ADV_CONJ_OBJECTS || [
-  { key: "1sg",  dirObj: "אותי",  dirObjNiqqud: "אוֹתִי",  lObj: "לי",   lObjNiqqud: "לִי",   en: "me",        poss: "my" },
-  { key: "2msg", dirObj: "אותך",  dirObjNiqqud: "אוֹתְךָ", lObj: "לך",   lObjNiqqud: "לְךָ",   en: "you (sg.)", poss: "your (sg.)" },
-  { key: "3msg", dirObj: "אותו",  dirObjNiqqud: "אוֹתוֹ",  lObj: "לו",   lObjNiqqud: "לוֹ",    en: "him",       poss: "his" },
-  { key: "3fsg", dirObj: "אותה",  dirObjNiqqud: "אוֹתָהּ", lObj: "לה",   lObjNiqqud: "לָהּ",   en: "her",       poss: "her" },
-  { key: "1pl",  dirObj: "אותנו", dirObjNiqqud: "אוֹתָנוּ", lObj: "לנו", lObjNiqqud: "לָנוּ", en: "us",        poss: "our" },
-  { key: "2mpl", dirObj: "אתכם",  dirObjNiqqud: "אֶתְכֶם", lObj: "לכם",  lObjNiqqud: "לָכֶם",  en: "you (pl.)", poss: "your (pl.)" },
-  { key: "3mpl", dirObj: "אותם",  dirObjNiqqud: "אוֹתָם",  lObj: "להם",  lObjNiqqud: "לָהֶם",  en: "them",      poss: "their" },
+// Derived from PREPOSITION_INFLECTIONS rather than hand-copied beside it. The
+// two tables are the same paradigms — `dirObj` is the `et` row and `lObj` is the
+// `le` row — and when they were maintained separately they drifted: this table
+// was missing the feminine-singular addressee entirely, so a learner met לָךְ and
+// אוֹתָךְ in Prepositions and never in Conjugation+.
+//
+// Object keys stay in this file's `2msg`/`3fsg` spelling because idiom
+// `suffix_forms` are authored against them; ADV_CONJ_OBJECT_KEYS maps each to
+// its preposition-table key.
+//
+// Plural labels carry gender because the feminine plurals exist here: a bare
+// "you (pl.)" would read onto both אֶתְכֶם and אֶתְכֶן, which is exactly the
+// ambiguity the singular addressee already had before 2fsg was added.
+constants.ADV_CONJ_OBJECT_KEYS = constants.ADV_CONJ_OBJECT_KEYS || [
+  { key: "1sg",  prepKey: "1sg", en: "me",           poss: "my" },
+  { key: "2msg", prepKey: "2ms", en: "you (m.sg.)",  poss: "your (m.sg.)" },
+  { key: "2fsg", prepKey: "2fs", en: "you (f.sg.)",  poss: "your (f.sg.)" },
+  { key: "3msg", prepKey: "3ms", en: "him",          poss: "his" },
+  { key: "3fsg", prepKey: "3fs", en: "her",          poss: "her" },
+  { key: "1pl",  prepKey: "1pl", en: "us",           poss: "our" },
+  { key: "2mpl", prepKey: "2mp", en: "you (m.pl.)",  poss: "your (m.pl.)" },
+  { key: "2fpl", prepKey: "2fp", en: "you (f.pl.)",  poss: "your (f.pl.)" },
+  { key: "3mpl", prepKey: "3mp", en: "them (m.)",    poss: "their (m.)" },
+  { key: "3fpl", prepKey: "3fp", en: "them (f.)",    poss: "their (f.)" },
 ];
+
+constants.ADV_CONJ_OBJECTS = constants.ADV_CONJ_OBJECTS || (function buildAdvConjObjects() {
+  const inflections = global.PREPOSITION_INFLECTIONS;
+  if (!inflections?.et || !inflections?.le) {
+    throw new Error("ADV_CONJ_OBJECTS needs preposition-data.js loaded first");
+  }
+  return constants.ADV_CONJ_OBJECT_KEYS.map((entry) => ({
+    key: entry.key,
+    dirObj: inflections.et[entry.prepKey].plain,
+    dirObjNiqqud: inflections.et[entry.prepKey].niqqud,
+    lObj: inflections.le[entry.prepKey].plain,
+    lObjNiqqud: inflections.le[entry.prepKey].niqqud,
+    en: entry.en,
+    poss: entry.poss,
+  }));
+})();
 
 constants.HEBREW_FINAL_TO_MEDIAL = constants.HEBREW_FINAL_TO_MEDIAL || Object.freeze({
   ך: "כ",

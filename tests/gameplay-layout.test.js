@@ -184,7 +184,7 @@ function assertFeedbackFooterInFlow(geometry, label) {
   );
 }
 
-test.skip("compact gameplay and safe centering hold in rendered Chrome", { timeout: 30000 }, async (t) => {
+test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 30000 }, async (t) => {
   const chromePath = findChrome();
   if (!chromePath) {
     t.skip("Chrome is not installed on this machine");
