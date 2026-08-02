@@ -6620,3 +6620,209 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** `npm test` — 337 pass, 0 fail, 1 skipped (layout).
 
 **Risks / regressions to check:** Verify that Pi'el and Hif'il special cases (e.g., Lamed Ayin like `מרגיע`) display their unique vowel choices nicely across the game.
+
+### 2026-08-02 10:40 EDT — Normalize Inat sprites and codify the character-icon standard
+
+**Requested:** Reduce Inat's slightly higher effective pixel resolution so her six used sprites match the other characters, retain the higher-resolution art if it does not slow GitHub Pages, write forward-looking character-icon rules ahead of creating Itamar, and flag remaining discrepancies in the current cast.
+
+**Files changed:**
+- `scripts/build-inat-sprites.py` — added a reproducible 256×256 logical-art pass before the existing nearest-neighbor 512×512 export.
+- `assets/inat/*.png` — rebuilt all six production reactions with the normalized pixel grain; combined served size fell from 1,489,304 to 587,813 bytes.
+- `assets/inat/README.md` — documented the logical resize and confirmed the untouched 1254×1254 local masters are not loaded by the site.
+- `assets/SPRITE_STANDARD.md` — expanded the standard to cover filenames/reactions, pixel-art language, identity locking, framing, reaction semantics, transparency, logical resolution, export/performance limits, source/builder rules, a pre-merge checklist, and the 2026-08-02 discrepancy audit for Ido, Inbal, Ivri, and Inat.
+- `styles.css` — cache-busted all six Inat sprite URLs to `20260802a`.
+- `index.html` — cache-busted `styles.css` to `20260802a`.
+- `tests/character-mission.test.js` — extended the sprite contract to require RGBA PNGs below 256 KiB, reject runtime `source/` references, and preserve Inat's 256-pixel logical builder pass.
+
+**Behavior changed:** Inat keeps the same designs, expressions, transparent 512×512 canvas, scale, and positioning, but displays with a coarser pixel grain that is consistent with the approved cast. Her six runtime files are 61% smaller. The high-resolution local sources remain unchanged and ignored by Git, HTML, and CSS, so they add no GitHub Pages requests or page-load bytes.
+
+**Tests run:**
+- Baseline `npm test` — **361 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` after the rebuild — **46 pass, 0 fail**.
+- Final `npm test` — **361 pass, 0 fail**.
+- `git diff --check` — **pass**.
+- Local browser check at desktop and 360×640 — the character picker and Inat mission scene loaded `neutral.png?v=20260802a`, the smallest viewport had no vertical overflow (640px scroll/client height), and there were no console errors.
+
+**Risks / regressions to check:** The resize standardizes effective pixel density but cannot remove Inat's intrinsically finer hair, facial, and tailoring shapes; the standard records that as the upper bound rather than the Itamar target. Other accepted legacy differences remain: Ivri is slightly more detailed than Ido/Inbal, Ido is larger in-frame, Inbal is smaller/narrower, and a few broad gesture poses reach a canvas edge. The high-resolution `source/` directories are intentionally local-only, so they are preserved on this machine but are not backed up in GitHub.
+
+### 2026-08-02 10:59 EDT — Explain why Inat still looks higher-resolution
+
+**Requested:** Explain why the preceding 256-pixel logical resize appears visually unchanged and why Inat still looks higher-resolution than the other characters in the user's screenshot.
+
+**Files changed:**
+- `task-log.md` — recorded the diagnosis and correction to the preceding task's visual claim.
+
+**Behavior changed:** None. The preceding rebuild reduced file weight and made each 2×2 output-pixel block identical, but it did not materially standardize Inat's perceived detail density at the app's rendered sizes.
+
+**Tests run:** None (explanation-only diagnosis). Inspected the production CSS: the screenshot's mission sprite is rendered at 136 CSS pixels from a 512-pixel asset with ordinary browser smoothing and no `image-rendering` override.
+
+**Risks / regressions to check:** At 136 CSS pixels, a 2-pixel block in the 512-pixel PNG occupies only about 0.53 CSS pixels, so Chrome averages the normalization away. Inat's finer linework, larger color vocabulary, hair strands, glasses, facial detail, and tailoring remain baked into the art. A true visual match will require a substantially coarser logical pass (approximately 128 pixels as a starting point) and likely palette/detail simplification or a controlled redraw, followed by comparison in the actual UI.
+
+### 2026-08-02 11:40 EDT — Re-render and standardize all six Inat sprites
+
+**Requested:** Correct the unresolved visual mismatch by re-rendering Inat's six poses in the established cast's coarser pixel-art language, preserve her identity and original high-detail sources, enforce a 128-pixel production pipeline and shared browser pixel rendering, update the sprite rules and discrepancy audit, and leave Itamar untouched.
+
+**Files changed:**
+- `assets/inat/*.png` — replaced all six production reactions with individually re-rendered, transparent, coarse pixel-art sprites while retaining the existing filenames and 512×512 RGBA contract.
+- `assets/inat/source/` (ignored local source) — stored the selected chroma and transparent regenerated masters; archived the superseded high-detail masters under `source/high-detail-original/`. None are referenced at runtime.
+- `scripts/build-inat-sprites.py` — changed the unsuccessful 256-pixel reduction to a deterministic 128×128 logical pass, a 96-color RGBA palette, alpha cleanup, and nearest-neighbor enlargement to 512×512.
+- `styles.css` — applied `crisp-edges`/`pixelated` rendering to the shared `.character-sprite` class and cache-busted all six Inat URLs to `20260802b`.
+- `index.html` — cache-busted the stylesheet to `20260802b`.
+- `assets/inat/README.md` — documented the successful re-render, identity/style lock, source archive, 128-pixel pipeline, and why retained masters add no GitHub Pages load cost.
+- `assets/SPRITE_STANDARD.md` — made the 128-pixel/96-color workflow the forward standard, stated that resizing cannot replace a necessary re-render, and corrected the discrepancy audit to distinguish Inat's approved production sprites from her superseded masters.
+- `tests/character-mission.test.js` — enforced RGBA production images, the 256 KiB budget, no runtime source references, shared pixel rendering, and Inat's 128-pixel/96-color deterministic builder contract.
+- `task-log.md` — recorded the completed correction and validation.
+
+**Behavior changed:** Inat is no longer the previous fine illustration merely reduced in file resolution. Her hair, glasses, face, tailoring, shadows, and gestures have been re-expressed as broader pixel clusters with thicker stepped outlines and a restricted cel-shaded palette. The six runtime files total about 107 KiB, down from about 1.49 MiB before this work. All character sprites now opt into pixel-oriented browser rendering. Inat's identity, outfit, reaction meanings, transparent canvas, public filenames, and runtime interfaces are preserved; Itamar was not created or modified.
+
+**Tests run:**
+- Baseline `npm test` — **361 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` — **46 pass, 0 fail**.
+- Rebuilt all six sprites twice and compared SHA-256 hashes — **identical outputs for all six**.
+- Sprite audit — **6/6 pass** for exact 512×512 RGBA output, transparent corners, and absence of residual vivid magenta/green chroma pixels.
+- Final `npm test` — **361 pass, 0 fail**.
+- `git diff --check` — **pass**.
+- Contact-sheet review — all four characters/all six reactions compared at 136px; neutral also reviewed at 108px, 136px, 160px, and 300px.
+- Live browser checks — character picker, mission hub, companion reactions, activity results, and mission results verified at desktop and 360×640. Cache-busted assets loaded, `image-rendering: pixelated` was active, result sprites fit without horizontal or vertical overflow, and console errors were empty.
+
+**Risks / regressions to check:** The regenerated poses intentionally simplify some small facial and garment detail, and generated expressions vary subtly across reactions despite the identity anchor. The shared `pixelated` rendering rule also applies to Ido, Inbal, and Ivri; this is intentional and was visually checked. The archived high-detail masters remain local-only and therefore are not backed up by GitHub. Remaining accepted cast discrepancies are recorded in `assets/SPRITE_STANDARD.md`: Ivri is the upper detail limit, Ido is broader/larger in-frame, Inbal is narrower/smaller, and a few broad success gestures approach a canvas edge.
+
+### 2026-08-02 12:22 EDT — Re-render and standardize all six Ido sprites
+
+**Requested:** Regenerate Ido's six sprites so his scale, framing, saturation, and proportions match the standardized cast; retain a moderately narrowed but still muscular identity; preserve the exact builder-owned shirt mark; archive the superseded masters; apply the 128-pixel/96-color pipeline; validate every required UI placement; and leave Itamar and the other character art unchanged.
+
+**Files changed:**
+- `assets/ido/*.png` — replaced all six production reactions with individually re-rendered, transparent 512×512 RGBA sprites while retaining the existing filenames and reaction meanings.
+- `assets/ido/source/` (ignored local source) — promoted the selected chroma and transparent regenerated masters and archived the 12 superseded masters under `source/high-detail-original/`. None are runtime-referenced.
+- `scripts/build-ido-sprites.py` — added alpha cleanup, a 128×128 logical-art pass, 96-color RGBA quantization, and nearest-neighbor enlargement before applying the unchanged builder-owned shirt bitmap.
+- `assets/ido/README.md` — documented the re-render, locked identity, moderately narrower silhouette, production pipeline, source archive, and logo policy.
+- `assets/SPRITE_STANDARD.md` — replaced the accepted oversized-Ido exception with the completed standardization and removed Ido from the edge-approaching legacy gesture list.
+- `styles.css` and `index.html` — cache-busted all six Ido assets and the stylesheet to `20260802c`; the shared pixel-rendering rule remains unchanged.
+- `tests/character-mission.test.js` — extended the Ido builder contract to enforce the 128-pixel/96-color deterministic pass while retaining the exact logo scale and per-pose placement checks.
+- `task-log.md` — recorded the implementation and validation.
+
+**Behavior changed:** Ido remains the youthful, dark-haired, sleeveless-shirt athlete and still reads as the cast's broadest character, but his visible silhouette is approximately 10.5% narrower than before. His head scale, eye line, saturation, outline weight, side breathing room, and overall footprint now align with Inbal, Ivri, and Inat. The neutral, nervous-laugh, and frustrated poses do not touch a side edge; success gestures remain fully visible. The generated shirt fronts are blank and the existing deterministic shirt mark is composited by the builder at the same approved pose-specific coordinates. The six runtime files total 75,183 bytes, down from 1,233,375 bytes. No JavaScript interfaces changed, and Itamar was not created or modified.
+
+**Tests run:**
+- Baseline `npm test` — **361 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` — **46 pass, 0 fail**.
+- Rebuilt all six sprites twice and compared SHA-256 hashes — **identical outputs for all six**.
+- Sprite audit — **6/6 pass** for exact 512×512 RGBA output, transparent corners, no residual vivid green chroma pixels, 64–97 production colors, and files below 256 KiB.
+- Contact-sheet review — all four characters and all six reactions compared at 108px and 136px; Ido neutral also reviewed at 160px and 300px.
+- Live browser checks — Ido verified in the character picker, mission picker, mission hub, companion neutral/miss reactions, activity results, and mission results at desktop and 360×640. Every asset loaded with `20260802c`, `image-rendering: pixelated` remained active, the 360×640 screens had no horizontal or vertical overflow, and console errors were empty.
+- Final `npm test` — **361 pass, 0 fail**.
+- `git diff --check` — **pass**.
+
+**Risks / regressions to check:** Regeneration intentionally simplifies some anatomy and shading, and Ido's facial expression varies subtly across the six independently generated poses. The archived masters are local-only and are not backed up by GitHub. The builder-owned shirt mark remains a finer 3× bitmap overlay than the 4× production pixel blocks by design; it was visually checked at every UI size. Remaining accepted cast discrepancies are Inbal's narrower/smaller silhouette, Ivri's upper-limit detail level, and edge-approaching broad gestures for Ivri and Inat.
+
+### 2026-08-02 13:12 EDT — Create Idan as the fifth standardized character
+
+**Requested:** Create the planned fifth character under the new name Idan, use the supplied photograph only as a loose reference for his olive uniform, avoid reproducing the subject's likeness, include no gun or other weapon, match the existing cast's coarse pixel-art standard on the first usable production set, and make the normal embarrassed wrong-answer reaction calm, stern, and disciplined instead.
+
+**Files changed:**
+- `assets/idan/*.png` — added the six transparent 512×512 RGBA production reactions. The shared `nervous-laugh.png` slot depicts Idan's direct gaze, straight mouth, and squared posture rather than embarrassment.
+- `assets/idan/source/` (ignored local source) — retained the selected chroma and transparent generated masters plus rejected candidates. None are referenced at runtime.
+- `scripts/build-idan-sprites.py` — added deterministic alpha cleanup, the shared 128×128 logical-art pass, 96-color RGBA quantization, nearest-neighbor enlargement, transparent-corner and chroma checks, and the 256 KiB production budget.
+- `assets/idan/README.md` — documented the original identity, uniform-only reference boundary, prohibited weapons/insignia, six reaction meanings, stern filename exception, and local source policy.
+- `app/character-data.js` — registered Idan in English and Hebrew with a full dialogue table, nine activity introductions, and an adaptive route that owns no fixed subject shelf.
+- `app/character.js` — made the adaptive route explicitly preserve each activity's existing weak, missed, overdue, and spaced-repetition ordering; updated the live companion container's accessibility label to the selected character.
+- `styles.css` and `index.html` — wired and cache-busted all six Idan production sprites as `20260802d` while retaining the shared pixel-oriented renderer.
+- `tests/character-mission.test.js` — added Idan's dialogue, sprite-builder, adaptive-routing, Settings, and review-picker contracts.
+- `docs/character-gameplay-strategy.md`, `docs/product-roadmap.md`, `assets/SPRITE_STANDARD.md`, and `scripts/character-content-report.js` — replaced the planned Itamar character with implemented Idan, documented his adaptive role and reaction exception, and recorded the final cast discrepancy audit.
+
+**Behavior changed:** Idan is now available as the fifth daily/free-play character. He is an original early-40s character with a broad rectangular face, short side-combed dark-brown hair, hazel-brown eyes, and a squared beard; the supplied image informed only his simplified olive field shirt and vest. He carries no weapon, military insignia, flag, text, or logo. His content lens trains the learner's weakest material across the full course without overriding existing adaptive order. A wrong answer loads his calm stern pose and precise correction line rather than the cast's usual embarrassed reaction.
+
+**Tests run:**
+- Baseline `npm test` — **361 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` — **47 pass, 0 fail**.
+- Rebuilt all six sprites twice and compared SHA-256 hashes — **identical outputs for all six**.
+- Contact-sheet review — all five characters and all six reactions compared at 108px and 136px; Idan neutral also reviewed at 160px and 300px.
+- Live browser checks — Idan appeared in Settings, loaded as the free-play companion, and changed to `nervous-laugh.png?v=20260802d` with the stern wrong-answer dialogue. Desktop and 360×640 layouts showed no clipping or horizontal overflow; browser warnings and errors were empty.
+- Final `npm test` — **362 pass, 0 fail**.
+- `git diff --check` — **pass**.
+
+**Risks / regressions to check:** The runtime filename `nervous-laugh.png` is intentionally semantic-only for Idan and must not cause a future artist to replace the stern art with an embarrassed pose. The ignored source masters and rejected candidates are local-only and are not backed up by GitHub; this also keeps them out of GitHub Pages downloads. Existing accepted cast discrepancies remain Inbal's slightly smaller/narrower apparent scale, Ivri's upper-limit detail, and edge-approaching broad gestures for Ivri and Inat.
+
+### 2026-08-02 14:35 EDT — Give Idan a two-tier security focus and drill everyday security for the whole cast
+
+**Requested:** Rename the planned fifth character Itamar to Idan (already done in the working tree), build his mission flow, and replace his no-topic-focus design with a focus on military, security, and public safety plus the learner's weak points. Split the domain into everyday security terminology a civilian needs during wartime and more advanced military terminology, emphasize both with Idan, and drill the everyday tier regardless of which character the learner picks. Recommend his speech for every place a character has lines.
+
+**Files changed:**
+- `vocab-data.js` — added two categories to `CATEGORY_META` and `RAW`, append-only: `civil_defense_safety` (70 cards — sirens, protected spaces, Home Front Command instructions, alerts, first aid, evacuation, fire safety, general public safety) and `military_operational` (70 cards — ranks, units, service and reserve life, orders, operations, terrain, logistics, reporting). Rows are ordered most-useful-first because `utility` is positional. Every new Hebrew and English string is globally unique; four intentional homographs carry genuinely distinct senses (גיוס conscription vs recruitment, מבצע military operation vs operation, תורנות שמירה, משמעת צבאית). Bumped `__build`-adjacent nothing; no existing row moved.
+- `app/bootstrap-data.js` — assigned `civil_defense_safety` to the `everyday` performance domain and `military_operational` to `professional`. Reusing existing domains avoids new i18n labels and satisfies the one-domain-per-category test.
+- `app/character.js` — **removed both `route.adaptive === true` short-circuits** from `ownsItem` and `buildContentWeigher`; the marker is retired. Extended the `abbreviation` branch with `route.abbrIds` (grant) and `route.abbrExcludeIds` (deny), exclusion checked first so it beats a bucket grant.
+- `app/character-data.js` — rewrote `IDAN_DIALOGUE` so all 21 keys carry his subject instead of generic discipline (tier 1 leads: his first meeting and vocabulary intro are about what a civilian needs). Only `first`, `oneWrong`, and `listening` are gendered, per the shared spelling-differs rule. Added `CIVIL_DEFENSE_ABBR_IDS` (6), `MILITARY_ABBR_IDS` (26), and `POLICE_COMMAND_ABBR_IDS` (2). Replaced Idan's `route: { adaptive: true }` with a real route: both new categories, 25 `vocabWords` reaching security terms that stay on other shelves, `sentenceIdPrefixes: ["idan_"]`, 34 `abbrIds`, and 28 shared-pool `verbIds` routed by register. Added `civil_defense_safety` and the civil-defense `abbrIds` to Ido, Inbal, Ivri, and Inat; added `abbrExcludeIds: MILITARY_ABBR_IDS` to Ivri and Inat.
+- `sentence-bank-data.js` — new `IDAN_SENTENCES` array of 24 `buildReviewedSentence` rows (14 civil-defense, 10 military), tagged `category: "everyday"` and reached only by prefix so they do not become Ivri's or Inat's. Two rows (`idan_12`, `idan_22`) declare `hebrewOrderAlternates` because fronting the time phrase is equally natural; the rest are `fixed`. Bumped `__build` to `20260802e`.
+- `scripts/character-content-report.js` — mirrored the new abbreviation branch in its duplicated matcher and corrected the header comment that claimed Idan owns no topic area.
+- `index.html` — bumped `vocab-data.js`, `sentence-bank-data.js`, `app/bootstrap-data.js`, `app/character-data.js`, and `app/character.js` to `?v=20260802e`. The last two were **already stale** at `20260801d` from the previous uncommitted session.
+- `docs/character-gameplay-strategy.md` — rewrote the Idan mix and cast entry, removed military/security from Ivri's blurb, rewrote the abbreviation split, updated the Ivri/Inat boundary, and documented both the cast-wide `civil_defense_safety` policy and the new `abbrIds`/`abbrExcludeIds` fields.
+- `docs/product-roadmap.md` — replaced the `## Idan` section, which still described the retired adaptive marker.
+- `tests/character-mission.test.js` — replaced "Idan preserves adaptive ordering across every content pool" with four tests: two-tier routing with neutrality elsewhere, every character drilling the everyday tier, military abbreviations belonging to Idan alone, and every routed abbreviation id resolving to a real row. Updated the verbatim dialogue assertions. Cross-realm arrays are copied with spread before `deepEqual`, since VM-context arrays fail `deepStrictEqual` on prototype.
+- `tests/vocab-data.test.js` — 1693→1833 total, 1628→1768 playable.
+- `tests/sentence-bank-data.test.js` — 627→651 in four places including the test title; `everyday` 194→218; added `idan_` to `isCompactTokenPolicyEntry` so the new tranche is held to the same chip policy as Inbal's and Inat's; registered 18 genuine multiword terms in `COMPACT_ENGLISH_MULTIWORD_UNITS`.
+- `tests/fixtures/vocab-id-baseline.json` — regenerated, 1693→1833 ids, additions only (verified no id disappeared before writing).
+
+**Behavior changed:** Idan is no longer content-neutral. Picking him weighs a 164-card vocabulary pool (140 new + 24 reached by `vocabWords`), 24 sentences, 34 abbreviations, and 30 conjugation-deck entries toward the shared 65% owned share; weak/missed/overdue ordering still decides what he serves inside that set, because the boost is uniform across it. His dialogue now names sirens, protected rooms, briefings, debriefs, and צה״ל/פקע״ר/ממ״ד instead of generic discipline. Every character — not only Idan — now drills the 70 civil-defense cards and the six home-front acronyms; measured live, that is 70/70 civil-defense cards and 6/6 acronyms boosted for all five. Military acronyms went from reachable-by-accident to Idan-only: Ivri and Inat now boost 0/26 despite still holding the buckets, and Ivri's abbreviation share dropped 135→113. Police command (המפכ״ל, מג״ב) is granted to Idan without an exclusion, so policing stays Inat's per the strategy doc.
+
+**Tests run:**
+- Baseline `npm test` before editing — **362 pass, 0 fail**.
+- Final `npm test` — **365 pass, 0 fail**.
+- `npm run report:characters` — Idan 252 items (was 0): 164 vocabulary, 24 sentences, 34 abbreviations, 30 conjugation-deck entries. Ido 776, Inbal 433, Ivri 660, Inat 613; spread 252–776 (3.1x), tighter than the 2.0x-of-four it replaced only because Idan joins as the smallest.
+- Suite run 10 consecutive times after the change — 365 pass every run. One earlier run reported a single failure that did not reproduce and whose name was not captured; the adaptive pickers use `Math.random` jitter, so a pre-existing flake is the likely cause. Worth watching rather than assumed fixed.
+- Live browser checks on `ulpango-dev` — no console errors; Idan renders as the fifth picker card; his first-meeting, greeting, and all nine activity intros render RTL with tappable glosses; the gershayim tokens צה״ל/פקע״ר/ממ״ד resolve as single glossed words with correct aria-labels; masculine and feminine `oneWrong` swap correctly (עצור/עצרי, קרא/קראי, תענה/תעני); the reaction machine walks nervous-laugh → struggling → celebrating with the matching `fourWrong` and `recovery` lines; a real Vocabulary round drew security content alongside unowned filler.
+
+**Risks / regressions to check:** Niqqud on the 140 new cards and 24 sentences was authored, not machine-verified — spot-check דיווח, שירת, תישארו, and the construct forms against the Academy. `utility` is positional, so reordering rows inside either new category later would silently change draw weight; append only. The everyday tier reaches roughly 10% of a non-Idan vocabulary draw (70 of Ido's 472 owned cards inside the 65% share), which is a steady drip rather than a guaranteed floor — if a hard per-mission minimum is wanted, that is a separate mechanism. Ivri's blurb and his routed abbreviation count changed together in this commit; splitting them would leave the doc contradicting the data. `civil_defense_safety` will inflate every character's count in `report:characters` forever, which is documented in the script header and the strategy doc so it is not later read as a balance bug. Tier 2 is deliberately terminology rather than tactics; keep future additions descriptive.
+
+### 2026-08-02 16:10 EDT — Close Ivri's device gap and Inbal's lived-religion gap, and write a depth standard
+
+**Requested:** Find where content coverage should be built out so every character feels fully fleshed out, aiming for equal depth or at least a sufficient threshold. Two leads were offered: more everyday computer/phone language for Ivri, and Inbal's content falling short.
+
+**Files changed:**
+- `vocab-data.js` — two new append-only categories in `CATEGORY_META` and `RAW`, ordered most-useful-first because `utility` is positional. `devices_os_apps` (75 cards: hardware, files and file actions, accounts and access, connectivity and OS settings, mail, failure states). `religious_life_practice` (111 cards: holidays and calendar, prayer services, kashrut, lifecycle rites, denominations and institutions, synagogue interior, religious roles, modern ex-religious terms, other faiths). No existing row moved and `religion_magic_spirituality` stays at exactly 138.
+- `app/bootstrap-data.js` — `devices_os_apps` → the `everyday` domain (a person with their own laptop is everyday register; `professional` stays work and institutional language); `religious_life_practice` → `religion_magic`, which previously held one category. Reusing existing domains avoids new i18n labels.
+- `app/character-data.js` — added `devices_os_apps` to Ivri's `route.vocabCategories` and `religious_life_practice` to Inbal's. Gave Ivri a new `vocabWords` list of five genuinely dual device words (`הגדרות`, `עדכון`, `באג`, `סוללה`, `אחסון`) that stay on Ido's shelves and are reached rather than re-shelved. The gesture verbs לגלול/להחליק/להקיש stay Ido's alone.
+- `docs/character-gameplay-strategy.md` — added a **Depth standard** section with two gates: per-mode numeric floors measured on own-domain counts (vocabulary 250, sentences 90, abbreviations 30, verbs 20) plus a per-character domain checklist, because floors alone would have passed Ivri on 341 cards while none of his technology cards named an object a person touches. Recorded the settled decision that Conjugation+, Prepositions, and Binyanim stay character-neutral, with the evidence. Rewrote Ivri's and Inbal's ledger entries. Fixed seven stale numbers (Ido 401→402 cards and 142→148 unrouted rows, Inbal 95→96 sentences, Ivri 336→341, Inat 300→302 and 24→25 sentences) and the balance table, which predated Idan entirely. Replaced the obsolete visual-production and next-decisions sections, which still said Ido's art was paused and routing was unimplemented.
+- `docs/product-roadmap.md` — no change needed; it never carried the device gap.
+- `tests/vocab-data.test.js` — total 1833 → 2019, playable 1768 → 1954. Extended the Inbal/Inat protected-tranche test to cover both new categories, so each gets the same globally-unique-Hebrew-and-English guard, with required-word and exact-count assertions.
+- `tests/fixtures/vocab-id-baseline.json` — regenerated, 1833 → 2019 ids, additions only (verified no id disappeared before writing).
+- `index.html` — bumped `vocab-data.js`, `app/bootstrap-data.js`, and `app/character-data.js` to `?v=20260802f`.
+
+**Behavior changed:** Measured over 600 real draws per character through `data.pickBestWord`: Ivri now draws device vocabulary 44/600 (~7%), his largest technology contribution and roughly double his AI shelves; examples drawn included תיקייה, מסך, כבל, אנטי-וירוס, קוד אימות, התקנה, להדביק. Inbal's religion draw is now 153/600 mysticism against 109/600 lived practice — a 58/42 split where it was previously 100/0; examples drawn included סוכות, פרווה, אורתודוקסי, בימה, כלה, גבאי, חברה קדישא. Ido is unaffected: devices 2/600, and his own `media_digital_life_expanded` still 20/600. Routed totals moved Inbal 433 → 544 and Ivri 660 → 740, with Ido 776, Inat 613, and Idan 252 all unchanged. Own-domain vocabulary (excluding the 70 cast-wide civil-defense cards) took Inbal from 154 to **265**, clearing the 250 floor she previously failed.
+
+**Tests run:**
+- Baseline `npm test` — 365 pass, 0 fail (after isolating one flake, below).
+- Final `npm test` — **365 pass, 0 fail**.
+- Collision checker over all 186 candidate rows before insertion — 4 hits found and fixed, then zero: `התנתקות` collided with Inat's "disengagement" inside the protected politics tranche, `מתאם` with "correlation", `מועד` with work_business "due date", and `בית מדרש` was already one of Inbal's 138 protected cards. The checker also verified every `heNiqqud` carries niqqud marks and has the same consonantal skeleton as its `he`.
+- `npm run report:characters` — confirmed the two intended increases and that three characters did not move.
+- Live browser on `ulpango-dev` — no console errors; played missions as Inbal and Ivri and sampled 600 draws each as above.
+
+**Risks / regressions to check:** Niqqud on 186 new cards was authored and skeleton-checked but not validated against the Academy — spot-check the construct forms (ארון קודש, ברכת המזון, תיבת דואר נכנס, אימות דו-שלבי, ספירת העומר) and the loanwords, where spelling is contested (אפליקציה vs יישומון, בלוטות׳ vs בלוטוט, כרטיס סים). Four homographs were deliberately avoided rather than reused and must not be "corrected" later: תיק is a paper case-file not a digital קובץ, עותק is a photocopy not a clipboard copy, רשות is abstract permission not הרשאות, מתאם is a statistical correlation. `utility` is positional, so reordering rows inside either new category would silently change draw weight — append only. **Pre-existing unrelated flake:** `tests/gameplay-layout.test.js:305` ("compact gameplay and safe centering hold in rendered Chrome") fails intermittently, roughly 1 run in 6, on a Conjugation+ feedback height of 496px against a 488px budget. It measures real headless-Chrome layout, Conjugation+ was not touched by this work, and it reproduced on the pre-change baseline. Not fixed here; worth a separate look.
+
+### 2026-08-02 18:05 EDT — Complete Idan: emergency-response shelf, 66 sentences, and a corrected depth floor
+
+**Requested:** Confirm whether the next tranche is Idan (it was — the two options not picked from the earlier scope question were both his), then close the two floors he still failed: vocabulary and sentences.
+
+**Files changed:**
+- `vocab-data.js` — new `emergency_response` category (67 cards): police procedure a member of the public actually meets (מעצר, חקירה, צו חיפוש, זירת פשע, ניידת, אזיקים, שחרור בערבות), pre-hospital and trauma care (החייאה, מיון נפגעים, דימום, כווייה, מחוסר הכרה), and fire and rescue (כבאי, מכבי אש, חילוץ מגובה, טיהור). Also appended 22 cards to `military_operational` (70 → 92) from the clusters that were at or near zero — adjutancy, the training pipeline, base life, and non-weapon kit. No hardware and no ranks that duplicate the 26 military acronyms he already owns. Append-only; military ids 001–070 unchanged.
+- `sentence-bank-data.js` — 66 new rows, `idan_25`–`idan_90`, all `category: "everyday"` and reached only by prefix. 36 civil-defense (sheltering with neighbours and pets, fragments, evacuation, first aid, fire drills, road/workplace/water/electrical safety, calling emergency services, supplies, outages, anxiety and resilience, screening, the Home Front Command app) and 30 military (reserve life, leave, standing orders, guard duty and handover, equipment issue, reporting, training, adjutancy paperwork, base life). Also appended a fourth distractor to `idan_05/17/18/22/23`, which had only three — see below.
+- `app/character-data.js` — added `emergency_response` to Idan's `route.vocabCategories`; added the trauma cards on the unrouted `health` shelf (חובש, חדר מיון, תחבושת, תפרים, שבר, נקע) to his `vocabWords` rather than re-shelving them. **Removed a dead route entry:** `מחסום` matched no card in the pool (only `מחסום צבאי` exists), so 24 of 25 words had been resolving.
+- `app/bootstrap-data.js` — `emergency_response` → the `professional` domain, alongside `military_operational`.
+- `tests/sentence-bank-data.test.js` — **registered `IDAN_ENTRY_IDS` in the alignment list.** The 24 existing rows had been absent from it and were escaping seven checks (pointed Hebrew, plain/niqqud token parity, the 4–6 distractor budget, duplicate distractors, target reuse). Registering it required topping up the five three-distractor rows first. Updated the five pinned counts: the test title and three assertions 651 → 717, and `everyday: 218` → 284. Registered 27 new glossary terms in `COMPACT_ENGLISH_MULTIWORD_UNITS`.
+- `tests/vocab-data.test.js` — totals 2019 → 2108, playable 1954 → 2043; added `emergency_response` to the protected-tranche test so it gets the globally-unique-he-and-en guard.
+- `tests/character-mission.test.js` — the route now asserts three categories, with an owned sample from the new shelf.
+- `tests/fixtures/vocab-id-baseline.json` — regenerated, 2019 → 2108, additions only.
+- `docs/character-gameplay-strategy.md` — **rewrote the vocabulary floor.** It had been 250 *own-domain* cards, which I set last session; that was fitted to make Inbal pass rather than derived, and the subtraction made it partly unreachable, since growing the cast-wide tier cannot raise anyone's own-domain figure. The floor is now 250 on the **routed** pool, derived from repetition: a session serves 20 words at a 65% owned share, so ~13 come from the character's pool and 250 is ~19 sessions before cycling. Own-domain is still reported as the fair way to compare identity. Also split the policing boundary — Inat keeps brutality, oversight, and occupation framing; Idan gets the procedure — and amended the two lines that had said policing stays hers. Updated Idan's cast entry and Gate 2 checklist, the balance table, the health-cluster figure (135 → 122), and the compact-policy description.
+- `docs/product-roadmap.md` — Idan's section: third shelf and 90 sentences.
+- `index.html` — bumped `vocab-data.js`, `sentence-bank-data.js`, `app/bootstrap-data.js`, and `app/character-data.js` to `?v=20260802g`; `__build` in `sentence-bank-data.js` matches.
+
+**Behavior changed:** Idan's routed vocabulary went 164 → 259 and his sentences 24 → 90, so he clears all four floors and the cast spread closed from 3.1x to **1.9x**. Measured over 600 real draws through `data.pickBestWord`, his three shelves are now about half his vocabulary draw: `emergency_response` 81/600, `military_operational` 113/600, `civil_defense_safety` 109/600. Drawn examples included מעצר, כבאי, סיירת, אירוע רב נפגעים, שאיפת עשן, קנס תנועה. His 90 sentences are exactly 65.0% of his sentence draw, matching `TARGET_OWNED_SHARE`. Handwriting-eligible rows inside the mode's shortest-60% shortlist went 21 → **79**, so Handwriting is now genuinely his-flavoured rather than marginally so. Inat did not acquire trauma vocabulary — she draws `emergency_response` at 6/600, the unowned baseline, and her politics draw is unchanged at 183/600. Ido, Inbal, and Ivri are untouched.
+
+**Tests run:**
+- Baseline `npm test` — 365 pass (see the flake note below).
+- Final `npm test` — **365 pass, 0 fail**.
+- Vocabulary collision checker over all 89 candidate cards — 6 hits found and fixed, then zero: `כתב אישום` duplicated Inat's law card verbatim, and five niqqud spellings carried different consonants from their plain form (החייאה, כווייה, הפניה, ועדה, אוכל).
+- A purpose-built sentence validator mirroring every rule the suite applies to an `idan_` row — chip/sentence spelling, bilingual parity, the 4–6 distractor budget, duplicate and target-reuse checks, Hebrew ≤3 and English ≤5 word caps, one-content-word-per-chip with the glossary escape hatch, niqqud presence and skeleton alignment, terminal punctuation, the standalone-"it" rule, letter count, and permutation validity. Iterated from 8 errors and 61 glossary requests down to **0 errors and 27 terms**, all genuine multiword units.
+- `npm run report:characters` — Idan 413 total, spread 1.9x, other four unchanged.
+- Live browser on `ulpango-dev` — no console errors; played an Idan Full mission, solved `idan_49` in Sentences and confirmed it grades correct with the combo incrementing and the registered terms rendering as single chips.
+
+**Risks / regressions to check:** Niqqud on 89 cards and 66 sentences was authored and skeleton-checked but not Academy-verified — spot-check the construct forms (זירת פשע, שחרור בערבות, תעודת שחרור, ועדה רפואית, טקס השבעה) and the loanword דפיברילטור. The five topped-up rows were appended to, never rewritten, because `idan_17/18/23` are each the sole consumer of a glossary key and the glossary has a bidirectional staleness assert. The police-procedure cards are deliberately descriptive — what a person meets or reads — not investigative technique; keep future additions to that line. `utility` is positional, so both new blocks must stay append-only. **Pre-existing unrelated flake:** `tests/gameplay-layout.test.js:305` fails roughly 1 run in 6 on a Conjugation+ feedback height of 496px against a 488px budget; it measures real headless-Chrome layout, was reproduced on a clean pre-change baseline, and Conjugation+ is untouched by this work.

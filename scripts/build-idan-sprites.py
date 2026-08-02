@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build consistent 512px Inat reaction sprites from transparent source art."""
+"""Build consistent 512px Idan reaction sprites from transparent source art."""
 
 from pathlib import Path
 
@@ -7,7 +7,7 @@ from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ASSET_DIR = ROOT / "assets" / "inat"
+ASSET_DIR = ROOT / "assets" / "idan"
 SOURCE_DIR = ASSET_DIR / "source"
 SOURCE_SIZE = 1254
 LOGICAL_SIZE = 128
@@ -48,7 +48,25 @@ def build_reaction(name: str) -> None:
         (CANVAS_SIZE, CANVAS_SIZE),
         Image.Resampling.NEAREST,
     )
-    sprite.save(ASSET_DIR / f"{name}.png", optimize=True)
+    corners = ((0, 0), (CANVAS_SIZE - 1, 0), (0, CANVAS_SIZE - 1),
+               (CANVAS_SIZE - 1, CANVAS_SIZE - 1))
+    if any(sprite.getpixel(point)[3] != 0 for point in corners):
+        raise RuntimeError(f"{name} must have four transparent corners.")
+    pixels = sprite.load()
+    if any(
+        pixels[x, y][3] and
+        pixels[x, y][0] > 180 and
+        pixels[x, y][2] > 180 and
+        pixels[x, y][1] < 100
+        for y in range(CANVAS_SIZE)
+        for x in range(CANVAS_SIZE)
+    ):
+        raise RuntimeError(f"{name} contains visible chroma-key pixels.")
+
+    output_path = ASSET_DIR / f"{name}.png"
+    sprite.save(output_path, optimize=True)
+    if output_path.stat().st_size >= 256 * 1024:
+        raise RuntimeError(f"{name} exceeds the 256 KiB production budget.")
 
 
 def main() -> None:

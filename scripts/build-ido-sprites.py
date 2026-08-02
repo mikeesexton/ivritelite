@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "ido"
 SOURCE_DIR = ASSET_DIR / "source"
 SOURCE_SIZE = 1254
+LOGICAL_SIZE = 128
+PALETTE_COLORS = 96
 CANVAS_SIZE = 512
 LOGO_SCALE = 3
 LOGO_COLOR = (246, 245, 222, 255)
@@ -91,7 +93,19 @@ def build_reaction(name: str) -> None:
     if not source.getchannel("A").getbbox():
         raise RuntimeError(f"{source_path.name} has no visible pixels.")
 
-    sprite = source.resize(
+    alpha = source.getchannel("A").point(
+        lambda value: 0 if value < 32 else (255 if value > 223 else value)
+    )
+    source.putalpha(alpha)
+    logical_sprite = source.resize(
+        (LOGICAL_SIZE, LOGICAL_SIZE),
+        Image.Resampling.NEAREST,
+    )
+    logical_sprite = logical_sprite.quantize(
+        colors=PALETTE_COLORS,
+        method=Image.Quantize.FASTOCTREE,
+    ).convert("RGBA")
+    sprite = logical_sprite.resize(
         (CANVAS_SIZE, CANVAS_SIZE),
         Image.Resampling.NEAREST,
     )

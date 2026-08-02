@@ -4,8 +4,9 @@
 //
 //   npm run report:characters
 //
-// This is an instrument, not a gate: it never fails on imbalance. Itamar is
-// specified to own no topic area, and a character mid-authoring will read low.
+// This is an instrument, not a gate: it never fails on imbalance. A character
+// mid-authoring will read low, and `civil_defense_safety` is deliberately routed
+// to the whole cast, so it inflates every character's vocabulary count by design.
 
 const fs = require("node:fs");
 const path = require("node:path");
@@ -34,7 +35,13 @@ function ownsItem(route, kind, item) {
     return route.vocabCategories?.includes(item.category) === true ||
       route.vocabWords?.includes(item.he) === true;
   }
-  if (kind === "abbreviation") return route.abbrBuckets?.includes(item.bucket) === true;
+  if (kind === "abbreviation") {
+    // Mirrors app/character.js: an exclusion beats a bucket grant.
+    const abbrId = String(item.id || "");
+    if (route.abbrExcludeIds?.includes(abbrId) === true) return false;
+    return route.abbrIds?.includes(abbrId) === true ||
+      route.abbrBuckets?.includes(item.bucket) === true;
+  }
   if (kind === "verb") {
     const id = String(item.id || "");
     return route.verbIds?.some((verbId) => id === verbId || id.startsWith(`${verbId}--`)) === true;

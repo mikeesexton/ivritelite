@@ -342,7 +342,14 @@ function ownsItem(route, kind, item) {
       route.vocabWords?.includes(item.he) === true;
   }
   if (kind === "abbreviation") {
-    return route.abbrBuckets?.includes(item.bucket) === true;
+    // Buckets are too coarse to split the security acronyms out of Ivri's and
+    // Inat's shelves, so an id list can grant one and an exclusion list can
+    // withhold one. Exclusion is checked first: it has to beat a bucket grant,
+    // which is the whole point of naming it.
+    const abbrId = String(item.id || "");
+    if (route.abbrExcludeIds?.includes(abbrId) === true) return false;
+    return route.abbrIds?.includes(abbrId) === true ||
+      route.abbrBuckets?.includes(item.bucket) === true;
   }
   if (kind === "verb") {
     const id = String(item.id || "");
@@ -991,12 +998,14 @@ character.renderCompanion = character.renderCompanion || function renderCompanio
   const toggle = runtime.el?.characterVisibilityToggle;
   const visible = context.visible !== false;
   const frame = context.sprite || "neutral";
+  const activeName = getActiveCharacter()?.nameEn || "";
 
   companion.classList.toggle("character-companion--hidden", !visible);
+  companion.setAttribute?.("aria-label", activeName);
   if (sprite) {
     sprite.dataset.character = getActiveCharacter()?.id || "";
     sprite.dataset.reaction = frame;
-    sprite.setAttribute("aria-label", getActiveCharacter()?.nameEn || "");
+    sprite.setAttribute("aria-label", activeName);
     sprite.classList.toggle("hidden", !visible);
   }
 
@@ -1008,9 +1017,8 @@ character.renderCompanion = character.renderCompanion || function renderCompanio
   }
 
   if (toggle) {
-    const name = getActiveCharacter()?.nameEn || "";
     toggle.textContent = visible ? "hide" : "show";
-    toggle.setAttribute("aria-label", `${visible ? "Hide" : "Show"} ${name}`.trim());
+    toggle.setAttribute("aria-label", `${visible ? "Hide" : "Show"} ${activeName}`.trim());
     toggle.setAttribute("aria-pressed", String(!visible));
   }
 

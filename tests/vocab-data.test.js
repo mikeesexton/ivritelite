@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 1693);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1628);
+  assert.equal(vocabulary.length, 2108);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2043);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -293,15 +293,31 @@ test("politics and society tranche adds 150 safe, pointed, globally unique cards
   });
 });
 
+// The globally-unique-he-and-en guard at the bottom is the real value here: it is
+// what stops a new tranche from re-coining a word that already exists in another
+// sense. `devices_os_apps` in particular had to dodge תיק (a paper case-file),
+// עותק (a photocopy), רשות (abstract permission), and מתאם (correlation).
 test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", () => {
   const vocabulary = loadVocabulary();
   const expected = new Map([
     ["religion_magic_spirituality", ["קערת השבעה", "קמיע", "עין הרע", "דיבוק", "חוזר בשאלה", "ארמית", "כתר", "מלכות", "תורת הקבלה", "תיקון עולם"]],
     ["literature_arts_cultural_history", ["ביקורת ספרות", "קריאה צמודה", "שיר מחאה", "זיכרון קולקטיבי", "תנועת הפועלים", "סאטירה"]],
+    // Inbal's second shelf: her first one is over-indexed on Kabbalah and folk
+    // magic, and the lived half of her brief had five clusters at literal zero.
+    ["religious_life_practice", ["פסח", "יום כיפור", "כשר", "שחרית", "בר מצווה", "רב", "בית כנסת", "רפורמי", "מסגד"]],
+    // Ivri's device layer. Before this, not one card in his three technology
+    // shelves named a physical object a person touches.
+    ["devices_os_apps", ["מחשב נייד", "סיסמה", "קובץ", "אפליקציה", "מטען", "הרשאות", "גיבוי"]],
+    // Idan's third shelf: professional first-responder and police-procedure
+    // register, distinct from the cast-wide civilian civil-defense tier.
+    ["emergency_response", ["שוטר", "מעצר", "חקירה", "זירת פשע", "החייאה", "כבאי", "מוקדן"]],
   ]);
   const expectedCounts = new Map([
     ["religion_magic_spirituality", 138],
     ["literature_arts_cultural_history", 30],
+    ["religious_life_practice", 111],
+    ["devices_os_apps", 75],
+    ["emergency_response", 67],
   ]);
 
   expected.forEach((requiredHebrew, category) => {

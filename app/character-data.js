@@ -437,6 +437,153 @@ const INAT_DIALOGUE = Object.freeze({
   }),
 });
 
+const IDAN_DIALOGUE = Object.freeze({
+  description: dialogue("בטיחות וביטחון. בלי תירוצים, בלי ניחושים.", {
+    בטיחות: "safety", וביטחון: "and security", בלי: "without",
+    תירוצים: "excuses", ניחושים: "guessing",
+  }),
+  firstM: dialogue("אני עידן. נתחיל במה שחייבים לדעת כשיש אזעקה, ונמשיך משם. מוכן?", {
+    אני: "I am", עידן: "Idan", נתחיל: "we’ll start", במה: "with what",
+    שחייבים: "one must", לדעת: "know", כשיש: "when there is", אזעקה: "a siren",
+    ונמשיך: "and we’ll continue", משם: "from there", מוכן: "ready",
+  }),
+  firstF: dialogue("אני עידן. נתחיל במה שחייבים לדעת כשיש אזעקה, ונמשיך משם. מוכנה?", {
+    אני: "I am", עידן: "Idan", נתחיל: "we’ll start", במה: "with what",
+    שחייבים: "one must", לדעת: "know", כשיש: "when there is", אזעקה: "a siren",
+    ונמשיך: "and we’ll continue", משם: "from there", מוכנה: "ready",
+  }),
+  greeting: dialogue("תדריך קצר ואז עובדים. מילים שמצילות חיים קודם, השאר אחר כך.", {
+    תדריך: "a briefing", קצר: "short", ואז: "and then", עובדים: "we work",
+    מילים: "words", שמצילות: "that save", חיים: "lives", קודם: "first",
+    השאר: "the rest", אחר: "afterwards", כך: "afterwards",
+  }),
+  fourRight: dialogue("ארבע במטרה. ככה נראית מוכנות.", {
+    ארבע: "four", במטרה: "on target", ככה: "this is how", נראית: "looks",
+    מוכנות: "readiness",
+  }),
+  oneWrongM: dialogue("עצור. קרא שוב, ואז תענה.", {
+    עצור: "stop", קרא: "read", שוב: "again", ואז: "and then", תענה: "answer",
+  }),
+  oneWrongF: dialogue("עצרי. קראי שוב, ואז תעני.", {
+    עצרי: "stop", קראי: "read", שוב: "again", ואז: "and then", תעני: "answer",
+  }),
+  fourWrong: dialogue("מפסיקים לנחש. נשימה, ריכוז, וחוזרים לנוהל.", {
+    מפסיקים: "we stop", לנחש: "guessing", נשימה: "a breath", ריכוז: "focus",
+    וחוזרים: "and we return", לנוהל: "to procedure",
+  }),
+  recovery: dialogue("התאוששת. תיקון מדויק — ממשיכים.", {
+    התאוששת: "you recovered", תיקון: "a correction", מדויק: "precise",
+    ממשיכים: "we continue",
+  }),
+  perfect: dialogue("ביצוע נקי, בלי סטייה. זאת הרמה שאני מצפה לה.", {
+    ביצוע: "execution", נקי: "clean", בלי: "without", סטייה: "deviation",
+    זאת: "this is", הרמה: "the standard", שאני: "that I", מצפה: "expect", לה: "it",
+  }),
+  mission: dialogue("המשימה הושלמה. תחקיר קצר, ומחר חוזרים למה שנשאר פתוח.", {
+    המשימה: "the mission", הושלמה: "is complete", תחקיר: "a debrief", קצר: "short",
+    ומחר: "and tomorrow", חוזרים: "we return", למה: "to what", שנשאר: "remained",
+    פתוח: "open",
+  }),
+  vocabulary: dialogue("אוצר מילים של ביטחון ובטיחות. כל מילה כאן שימושית ברגע אמת.", {
+    אוצר: "vocabulary", מילים: "vocabulary", של: "of", ביטחון: "security",
+    ובטיחות: "and safety", כל: "every", מילה: "word", כאן: "here",
+    שימושית: "is useful", ברגע: "in a moment of", אמת: "truth",
+  }),
+  sentences: dialogue("הוראה מגיעה במשפט שלם. קודם קוראים את כולו, אחר כך מחליטים.", {
+    הוראה: "an instruction", מגיעה: "arrives", במשפט: "in a sentence",
+    שלם: "complete", קודם: "first", קוראים: "we read", את: "it",
+    כולו: "all of it", אחר: "then", כך: "then", מחליטים: "we decide",
+  }),
+  listeningM: dialogue("בשטח שומעים פעם אחת. תנצל אותה.", {
+    בשטח: "in the field", שומעים: "you hear", פעם: "once", אחת: "once",
+    תנצל: "make the most of", אותה: "it",
+  }),
+  listeningF: dialogue("בשטח שומעים פעם אחת. תנצלי אותה.", {
+    בשטח: "in the field", שומעים: "you hear", פעם: "once", אחת: "once",
+    תנצלי: "make the most of", אותה: "it",
+  }),
+  conjugation: dialogue("פקודה בזמן הלא נכון היא פקודה שגויה. זמן, גוף, בניין.", {
+    פקודה: "an order", בזמן: "in the tense", הלא: "wrong", נכון: "wrong",
+    היא: "is", שגויה: "incorrect", זמן: "tense", גוף: "person", בניין: "binyan",
+  }),
+  abbreviations: dialogue("צה״ל, פקע״ר, ממ״ד. במצב חירום מדברים בקיצורים — ואין זמן לשאול.", {
+    "צה״ל": "IDF", "פקע״ר": "Home Front Command", "ממ״ד": "safe room",
+    במצב: "in a state of", חירום: "emergency", מדברים: "people speak",
+    בקיצורים: "in abbreviations", ואין: "and there is no", זמן: "time",
+    לשאול: "to ask",
+  }),
+  advConj: dialogue("נושא, פועל, מושא — כמו דיווח. שום חלק לא זז בלי סיבה.", {
+    נושא: "subject", פועל: "verb", מושא: "object", כמו: "like", דיווח: "a report",
+    שום: "no", חלק: "part", לא: "does not", זז: "move", בלי: "without",
+    סיבה: "a reason",
+  }),
+  prepositions: dialogue("מתי, לאן, עם מי. מילות יחס הן הפרטים שמצילים.", {
+    מתי: "when", לאן: "where to", עם: "with", מי: "whom", מילות: "prepositions",
+    יחס: "prepositions", הן: "are", הפרטים: "the details", שמצילים: "that save you",
+  }),
+  binyanim: dialogue("שורש אחד, שבעה בניינים. מזהים את התבנית ולא מנחשים.", {
+    שורש: "root", אחד: "one", שבעה: "seven", בניינים: "binyanim",
+    מזהים: "we identify", את: "the", התבנית: "pattern", ולא: "and do not",
+    מנחשים: "guess",
+  }),
+  handwriting: dialogue("טופס לא קריא הוא טופס חסר תועלת. אות אחרי אות.", {
+    טופס: "a form", לא: "not", קריא: "legible", הוא: "is", חסר: "useless",
+    תועלת: "useless", אות: "a letter", אחרי: "after",
+  }),
+});
+
+// Home-front acronyms every resident needs regardless of whose day it is. These
+// are granted to all five characters, the same way `civil_defense_safety` is:
+// the everyday security tier is course policy, not one character's shelf.
+const CIVIL_DEFENSE_ABBR_IDS = Object.freeze([
+  "abbr-155", // פקע״ר — Home Front Command
+  "abbr-172", // מד״א — Magen David Adom
+  "abbr-184", // ממ״ד — safe room (apartment)
+  "abbr-185", // ממ״ק — floor shelter
+  "abbr-186", // ממ״מ — institutional shelter
+  "abbr-260", // כב״א — the fire service
+]);
+
+// Idan's alone. Ivri and Inat hold the buckets these sit in, so they name the
+// same list under `abbrExcludeIds`: the military register belongs to one voice
+// rather than arriving incidentally through "Ideas, Science & Tech".
+const MILITARY_ABBR_IDS = Object.freeze([
+  "abbr-144", // צה״ל
+  "abbr-145", // רמטכ״ל
+  "abbr-146", // אמ״ן
+  "abbr-147", // שב״כ
+  "abbr-151", // מל״ל
+  "abbr-152", // פצ״ר
+  "abbr-153", // חה״א
+  "abbr-154", // חה״י
+  "abbr-156", // אכ״א
+  "abbr-157", // אג״ת
+  "abbr-158", // קמ״ן
+  "abbr-159", // קמב״ץ
+  "abbr-160", // מש״ק
+  "abbr-161", // מ״פ
+  "abbr-162", // סמ״פ
+  "abbr-163", // מג״ד
+  "abbr-164", // סמג״ד
+  "abbr-165", // מח״ט
+  "abbr-166", // מ״צ
+  "abbr-167", // אב״כ
+  "abbr-168", // נב״ק
+  "abbr-169", // מכ״ם
+  "abbr-170", // רק״ם
+  "abbr-171", // נגמ״ש
+  "abbr-215", // דו״צ
+  "abbr-283", // תא״ל
+]);
+
+// Police command reads as security rather than military, and the strategy doc
+// gives policing to Inat. Idan is granted these without an exclusion, so Ivri
+// and Inat keep them through their buckets.
+const POLICE_COMMAND_ABBR_IDS = Object.freeze([
+  "abbr-148", // המפכ״ל — Police Commissioner
+  "abbr-150", // מג״ב — Border Police
+]);
+
 // Lines the engine can request for any character. A character's own table wins;
 // these cover copy that belongs to the app rather than to one voice.
 characterData.SHARED_DIALOGUE = characterData.SHARED_DIALOGUE || Object.freeze({
@@ -492,10 +639,13 @@ characterData.characters = characterData.characters || Object.freeze({
         "home_everyday_life",
         "groceries_food",
         "everyday_survival_expanded",
+        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
+        "civil_defense_safety",
       ]),
       sentenceCategories: Object.freeze(["colloquial"]),
       sentenceStyles: Object.freeze(["whatsapp"]),
       abbrBuckets: Object.freeze(["Daily Life & Home"]),
+      abbrIds: CIVIL_DEFENSE_ABBR_IDS,
       // Authored for Ido, then routed from the shared pool. The pool verbs are
       // his by register rather than by topic — going out, making plans, texting,
       // laughing — so they stay available to everyone and simply weigh more here.
@@ -546,7 +696,15 @@ characterData.characters = characterData.characters || Object.freeze({
     order: 2,
     dialogue: INBAL_DIALOGUE,
     route: Object.freeze({
-      vocabCategories: Object.freeze(["religion_magic_spirituality"]),
+      vocabCategories: Object.freeze([
+        "religion_magic_spirituality",
+        // Her existing shelf is over-indexed on Kabbalah and folk magic; this one
+        // carries the lived half of the same brief — the calendar, kashrut,
+        // services, lifecycle rites, denominations, and other faiths.
+        "religious_life_practice",
+        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
+        "civil_defense_safety",
+      ]),
       // Words squarely in her territory that live in other categories. Several
       // sit in categories Ido owns; the strategy doc sanctions multi-owner
       // routing for genuinely cross-cutting items, so he keeps them too.
@@ -570,6 +728,7 @@ characterData.characters = characterData.characters || Object.freeze({
       ]),
       sentenceIdPrefixes: Object.freeze(["inbal_"]),
       abbrBuckets: Object.freeze(["People, Health & Culture"]),
+      abbrIds: CIVIL_DEFENSE_ABBR_IDS,
       verbIds: Object.freeze([
         "character-verb-levarech",
         "character-verb-lehitpalel",
@@ -626,9 +785,32 @@ characterData.characters = characterData.characters || Object.freeze({
         "bureaucracy",
         "scientific_analytical",
         "science_research_expanded",
+        // His three technology shelves were all abstract AI/startup/infosec
+        // register with no card for anything a person touches. Ido keeps the
+        // social and gesture layer in `media_digital_life_expanded`; the split is
+        // that Ido uses the phone and Ivri administers the machine.
+        "devices_os_apps",
+        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
+        "civil_defense_safety",
+      ]),
+      // Device words that already sit on Ido's shelves and are genuinely both
+      // readings. Matched on `he`, never re-shelved: a card stays on its own
+      // topic shelf and is reached from here. The gesture verbs — לגלול, להחליק,
+      // להקיש — stay Ido's alone, because swiping is his register, not admin.
+      vocabWords: Object.freeze([
+        "הגדרות",
+        "עדכון",
+        "באג",
+        "סוללה",
+        "אחסון",
       ]),
       sentenceCategories: Object.freeze(["professional"]),
       abbrBuckets: Object.freeze(["Civics, Law & Work", "Ideas, Science & Tech"]),
+      abbrIds: CIVIL_DEFENSE_ABBR_IDS,
+      // His blurb used to claim military terminology, but nothing was routed and
+      // the register now belongs to Idan. He keeps defense as an industry through
+      // the technology shelves; the uniformed acronyms leave his buckets here.
+      abbrExcludeIds: MILITARY_ABBR_IDS,
       verbIds: Object.freeze([
         "starter-verb-laavod",
         "starter-verb-letachnen",
@@ -677,6 +859,8 @@ characterData.characters = characterData.characters || Object.freeze({
         "philosophy_intellectual_expanded",
         "high_level_discourse_expanded",
         "abstract_concepts_expanded",
+        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
+        "civil_defense_safety",
       ]),
       // Words on her lens that sit on someone else's shelf. תחרותי is a
       // work_business card Ivri also owns; ספורים is unrouted core_advanced and
@@ -692,6 +876,10 @@ characterData.characters = characterData.characters || Object.freeze({
       // regulatory acronyms with her parties, courts, and rights bodies, and the
       // strategy doc sanctions multi-owner routing rather than an arbitrary cut.
       abbrBuckets: Object.freeze(["Civics, Law & Work"]),
+      abbrIds: CIVIL_DEFENSE_ABBR_IDS,
+      // She keeps policing — the doc gives her police brutality and occupation
+      // vocabulary — but the uniformed military acronyms in this bucket are Idan's.
+      abbrExcludeIds: MILITARY_ABBR_IDS,
       verbIds: Object.freeze([
         "character-verb-lefaresh",
         "character-verb-limchot",
@@ -720,6 +908,107 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-laanot",
         "advanced-verb-lehasbir",
         "common-verb-lehavin",
+      ]),
+    }),
+  }),
+  idan: Object.freeze({
+    id: "idan",
+    nameEn: "Idan",
+    nameHe: "עידן",
+    order: 5,
+    dialogue: IDAN_DIALOGUE,
+    // Three shelves. `civil_defense_safety` is what a civilian needs and is
+    // shared with the whole cast; `military_operational` and `emergency_response`
+    // are his alone. The boost stays uniform across the owned subset, so each
+    // mode's weak, missed, and overdue ordering still decides what he drills
+    // inside it.
+    route: Object.freeze({
+      vocabCategories: Object.freeze([
+        "civil_defense_safety",
+        "military_operational",
+        // Professional first-responder and police-procedure register. Inat keeps
+        // the critical reading of policing — brutality, oversight, occupation —
+        // and he gets the procedure, the same perspective split the Ivri/Inat
+        // boundary section already uses for defense.
+        "emergency_response",
+      ]),
+      // Security words that live on other shelves. Matched on `he`, never moved:
+      // vocabulary ids embed a positional index. Several are cards the new
+      // categories deliberately did not duplicate; the trailing group is the
+      // trauma vocabulary that already sits on the unrouted `health` shelf, which
+      // stays where it is rather than being re-shelved.
+      vocabWords: Object.freeze([
+        "אבטחה",
+        "בטיחות",
+        "אזהרה",
+        "חזית",
+        "ביטחון לאומי",
+        "מחסום צבאי",
+        "פיגוע",
+        "הפסקת אש",
+        "כיבוש",
+        "חוק הגיוס",
+        "פטור מגיוס",
+        "שירות צבאי",
+        "שירות מילואים",
+        "דוקטרינת ביטחון",
+        "מדד התרעה מוקדמת",
+        "חירום",
+        "תיקון חירום",
+        "יירוט",
+        "עזרה ראשונה",
+        "אמבולנס",
+        "הנחיות",
+        "היערכות",
+        "נוהל",
+        "משמעת",
+        // Trauma cards on the unrouted `health` shelf. The rest of that shelf is
+        // chronic care, pharmacy, and diagnostics and stays unowned.
+        "חובש",
+        "חדר מיון",
+        "תחבושת",
+        "תפרים",
+        "שבר",
+        "נקע",
+      ]),
+      sentenceIdPrefixes: Object.freeze(["idan_"]),
+      abbrIds: Object.freeze([
+        ...CIVIL_DEFENSE_ABBR_IDS,
+        ...MILITARY_ABBR_IDS,
+        ...POLICE_COMMAND_ABBR_IDS,
+      ]),
+      // Routed from the shared pool by register rather than by topic, the same
+      // way Ido's nightlife verbs and Ivri's process verbs are: the verbs an
+      // instruction, a warning, or a report runs on.
+      verbIds: Object.freeze([
+        "starter-verb-lishmor",
+        "advanced-verb-lehizaher",
+        "advanced-verb-lehazhir",
+        "advanced-verb-lehatsil",
+        "advanced-verb-lehafsik",
+        "common-verb-lehikanes",
+        "starter-verb-lisgor",
+        "starter-verb-liftoach",
+        "starter-verb-larutz",
+        "starter-verb-laamod",
+        "common-verb-lechakot",
+        "advanced-verb-lehakshiv",
+        "common-verb-lishmoa",
+        "advanced-verb-lehargia",
+        "advanced-verb-lehavhil",
+        "advanced-verb-lehafchid",
+        "starter-verb-lekhabot",
+        "advanced-verb-lisrof",
+        "common-verb-livdok",
+        "advanced-verb-lechazek",
+        "advanced-verb-lehitamen",
+        "advanced-verb-litfos",
+        "advanced-verb-lehaamid",
+        "advanced-verb-limrot",
+        "advanced-verb-lehitnaheg",
+        "advanced-verb-laharog",
+        "advanced-verb-lechasel",
+        "advanced-verb-lefotzetz",
       ]),
     }),
   }),
