@@ -437,6 +437,23 @@ const INAT_DIALOGUE = Object.freeze({
   }),
 });
 
+// Lines the engine can request for any character. A character's own table wins;
+// these cover copy that belongs to the app rather than to one voice.
+characterData.SHARED_DIALOGUE = characterData.SHARED_DIALOGUE || Object.freeze({
+  quitM: dialogue("בטוח שאתה רוצה לפרוש מהמשימה? אפשר לבחור דמות חדשה בהגדרות או בעמוד הסקירה.", {
+    בטוח: "sure", שאתה: "that you", רוצה: "want", לפרוש: "to quit",
+    מהמשימה: "from the mission", אפשר: "you can", לבחור: "to choose",
+    דמות: "a character", חדשה: "new", בהגדרות: "in settings", או: "or",
+    בעמוד: "on the page", הסקירה: "review",
+  }),
+  quitF: dialogue("בטוחה שאת רוצה לפרוש מהמשימה? אפשר לבחור דמות חדשה בהגדרות או בעמוד הסקירה.", {
+    בטוחה: "sure", שאת: "that you", רוצה: "want", לפרוש: "to quit",
+    מהמשימה: "from the mission", אפשר: "you can", לבחור: "to choose",
+    דמות: "a character", חדשה: "new", בהגדרות: "in settings", או: "or",
+    בעמוד: "on the page", הסקירה: "review",
+  }),
+});
+
 // Missing keys resolve through this chain so a character with an incomplete
 // dialogue table degrades to a sensible line instead of rendering nothing.
 characterData.DIALOGUE_FALLBACKS = characterData.DIALOGUE_FALLBACKS || Object.freeze({

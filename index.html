@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260801c" />
+    <link rel="stylesheet" href="./styles.css?v=20260801d" />
   </head>
   <body data-theme="dark" data-display-font="heebo">
     <div class="ambient ambient-a" aria-hidden="true"></div>
@@ -111,7 +111,10 @@
                   <aside id="characterCompanion" class="character-companion hidden" aria-label="Ido">
                     <div id="characterCompanionBubble" class="character-companion-copy hidden" dir="rtl"></div>
                     <div id="characterCompanionSprite" class="character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
-                    <button id="characterVisibilityToggle" type="button" class="quiet character-visibility-toggle" aria-pressed="false">hide</button>
+                    <div class="character-companion-actions">
+                      <button id="characterQuitMission" type="button" class="quiet character-quit-button hidden" aria-label="Quit mission" title="Quit mission"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.4"/><path d="M6.1 17.9 17.9 6.1"/></svg></button>
+                      <button id="characterVisibilityToggle" type="button" class="quiet character-visibility-toggle" aria-pressed="false">hide</button>
+                    </div>
                   </aside>
                   <header class="lesson-header">
                     <div class="lesson-header-main">
@@ -287,6 +290,7 @@
                     <section class="review-section">
                       <h3 class="review-section-title" data-i18n="review.charactersTitle">Your characters</h3>
                       <div id="reviewCharacterBonds" class="character-bond-grid"></div>
+                      <p id="reviewCharacterLensNote" class="small-note character-lens-note hidden"></p>
                     </section>
                   </div>
 
@@ -653,7 +657,7 @@
     <script defer src="./app/handwriting-core.js?v=20260705a"></script>
     <script defer src="./app/bootstrap-data.js?v=20260801c"></script>
     <script defer src="./app/content-sources.js?v=20260324a"></script>
-    <script defer src="./app/bootstrap-runtime.js?v=20260726d"></script>
+    <script defer src="./app/bootstrap-runtime.js?v=20260801d"></script>
     <script defer src="./app/audio.js?v=20260725a"></script>
     <script defer src="./app/speech.js?v=20260728a"></script>
     <script defer src="./app/persistence.js?v=20260725a"></script>
@@ -671,8 +675,8 @@
     <script defer src="./app/word-match.js?v=20260729c"></script>
     <script defer src="./app/binyan-board.js?v=20260729c"></script>
     <script defer src="./app/handwriting.js?v=20260729c"></script>
-    <script defer src="./app/character-data.js?v=20260728f"></script>
-    <script defer src="./app/character.js?v=20260801c"></script>
+    <script defer src="./app/character-data.js?v=20260801d"></script>
+    <script defer src="./app/character.js?v=20260801d"></script>
     <script defer src="./app/controller.js?v=20260726d"></script>
     <script defer src="./app.js?v=20260725a"></script>
   </body>

@@ -1147,6 +1147,7 @@ function createStubElement(tag) {
     dataset: {},
     children: [],
     attributes: {},
+    style: {},
     parentNode: null,
     classList: {
       toggle(name, force) {
@@ -1157,6 +1158,7 @@ function createStubElement(tag) {
       },
     },
     setAttribute(name, value) { this.attributes[name] = String(value); },
+    addEventListener() {},
     append(...nodes) { nodes.forEach((node) => { node.parentNode = this; }); this.children.push(...nodes); },
     prepend(...nodes) { nodes.forEach((node) => { node.parentNode = this; }); this.children.unshift(...nodes); },
     remove() {
@@ -1245,6 +1247,219 @@ test("free-play results show the lens character reacting to the score", () => {
   app.runtime.state.summary.game = "characterMission";
   assert.equal(character.renderResultsSprite(head, { accuracy: 80 }), false);
   assert.equal(head.children.length, 0);
+});
+
+function liveMissionState(character, overrides = {}) {
+  return {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: { ido: true },
+    dailyChoice: "ido", pendingChoice: "", lensCharacter: "ido",
+    freePlay: { correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
+      reactionTransient: false, reactionQuestionKey: "", visible: true, companionPosition: null },
+    screen: "none", reviewOpen: false,
+    mission: {
+      active: true, completed: false, onHub: false, tier: "short",
+      activities: ["sentenceBank"], skippedActivities: [], currentIndex: 0,
+      currentActivity: "sentenceBank", results: [], correctStreak: 0, wrongStreak: 0,
+      sprite: "neutral", dialogueKey: "", reactionTransient: false, reactionQuestionKey: "",
+      visible: true, companionPosition: null, startedAt: Date.now(), ...overrides,
+    },
+  };
+}
+
+test("quitting a mission confirms first, resumes on cancel, and frees the day on confirm", () => {
+  const { character, app } = loadCharacterModule();
+  const calls = [];
+  app.session = {
+    hasActiveLearnSession: () => true,
+    stopVerbMatchTimer: () => {},
+    stopLessonTimer: () => {},
+    stopSentenceBankTimer: () => calls.push("pause"),
+    stopAbbreviationTimer: () => {},
+    stopWordMatchTimer: () => {},
+    resumeActiveTimers: () => calls.push("resume"),
+    endSessionAndNavigate: (route) => calls.push(`end:${route}`),
+  };
+  app.runtime.state.sentenceBank = { active: true, elapsedSeconds: 12 };
+  app.runtime.characterState = liveMissionState(character);
+  const state = app.runtime.characterState;
+
+  assert.equal(character.requestQuitMission(), true);
+  assert.equal(state.screen, "quitConfirm");
+  // The prompt is a blocking scene, so the running game is paused behind it.
+  assert.equal(character.isBlocking(), true);
+  assert.ok(calls.includes("pause"));
+
+  // Backing out puts the learner back into the same activity, timer and all.
+  assert.equal(character.cancelQuitMission(), true);
+  assert.equal(state.screen, "none");
+  assert.equal(state.mission.active, true);
+  assert.equal(state.mission.currentActivity, "sentenceBank");
+  assert.ok(calls.includes("resume"));
+  // A second cancel has nothing to close.
+  assert.equal(character.cancelQuitMission(), false);
+
+  character.requestQuitMission();
+  assert.equal(character.confirmQuitMission(), true);
+  assert.equal(state.mission, null);
+  assert.equal(state.dailyChoice, "free");
+  assert.equal(state.screen, "none");
+  assert.equal(character.isBlocking(), false);
+  assert.equal(character.isMissionActive(), false);
+  // The character stays on as the free-play companion, now swappable.
+  assert.equal(state.lensCharacter, "ido");
+  assert.equal(character.canChangeLens(), true);
+  assert.ok(calls.includes("end:home"));
+
+  // With no mission left there is nothing to quit.
+  assert.equal(character.requestQuitMission(), false);
+});
+
+test("the quit prompt is unreachable without a mission to leave", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = freePlayState(character, "ido");
+  assert.equal(character.requestQuitMission(), false);
+
+  // Mid-scene the companion is not on screen, so the prompt cannot stack.
+  app.runtime.characterState = liveMissionState(character);
+  app.runtime.characterState.screen = "activityIntro";
+  assert.equal(character.requestQuitMission(), false);
+});
+
+test("a saved quit prompt without a live mission loads as no screen", () => {
+  const now = new Date();
+  const dayKey = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+  const { character, app } = loadCharacterModule({
+    saved: { dayKey, gender: "m", dailyChoice: "free", screen: "quitConfirm", mission: null },
+  });
+  character.initialize();
+
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(character.isBlocking(), false);
+});
+
+test("the quit scene asks in the character's Hebrew and offers both ways out", () => {
+  const document = {
+    createElement: createStubElement,
+    createTextNode: (text) => ({ textContent: text, children: [] }),
+  };
+  const { character, characterData, app } = loadCharacterModule({ document });
+  app.runtime.characterState = liveMissionState(character);
+  app.runtime.characterState.screen = "quitConfirm";
+  app.runtime.characterState.gender = "f";
+  const scene = createStubElement("div");
+  const content = createStubElement("div");
+  app.runtime.el = { characterScene: scene, characterSceneContent: content };
+
+  character.renderScene();
+  assert.equal(scene.className.includes("hidden"), false);
+  const layout = content.children[0];
+  assert.equal(layout.children[0].textContent, "Quit the mission?");
+  assert.equal(layout.children[1].dataset.reaction, "nervous-laugh");
+  assert.equal(layout.children[1].dataset.character, "ido");
+
+  // Nobody owns this line, so it resolves through the shared table, gendered,
+  // and its words stay tappable for glosses like any other character line.
+  const dialogueWrap = layout.children[2];
+  assert.equal(dialogueWrap.className, "character-dialogue-wrap");
+  const glossedWords = dialogueWrap.children[0].children
+    .map((node) => node.children?.[0]?.children?.[0]?.textContent)
+    .filter(Boolean);
+  assert.ok(glossedWords.includes("לפרוש"));
+  assert.ok(glossedWords.includes("שאת"));
+  assert.equal(
+    characterData.SHARED_DIALOGUE.quitF.text,
+    "בטוחה שאת רוצה לפרוש מהמשימה? אפשר לבחור דמות חדשה בהגדרות או בעמוד הסקירה.",
+  );
+  assert.equal(
+    characterData.SHARED_DIALOGUE.quitM.text,
+    "בטוח שאתה רוצה לפרוש מהמשימה? אפשר לבחור דמות חדשה בהגדרות או בעמוד הסקירה.",
+  );
+  assert.equal(characterData.SHARED_DIALOGUE.quitF.glosses["לפרוש"], "to quit");
+
+  const actions = layout.children[3];
+  assert.deepEqual(
+    actions.children.map((button) => button.dataset.characterAction),
+    ["keepGoing", "quitMission"],
+  );
+  assert.deepEqual(actions.children.map((button) => button.textContent), ["Keep going", "Quit mission"]);
+});
+
+test("the companion carries a quit control beside the hide toggle only on a mission", () => {
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  assert.match(markup, /class="character-companion-actions">\s*<button id="characterQuitMission"/);
+  assert.match(markup, /id="characterQuitMission"[^>]*class="quiet character-quit-button hidden"/);
+  assert.match(css, /\.character-companion-actions\s*\{[^}]*grid-area:\s*toggle;/s);
+  assert.match(css, /\.character-quit-button\s*\{[^}]*border-radius:\s*999px;/s);
+
+  const { character, app } = loadCharacterModule();
+  const quitClasses = {};
+  const quitAttributes = {};
+  app.session = { hasActiveLearnSession: () => true };
+  app.runtime.characterState = liveMissionState(character);
+  app.runtime.el = {
+    characterCompanion: {
+      classList: { toggle: () => {} },
+      style: { removeProperty: () => {} },
+    },
+    characterCompanionSprite: { dataset: {}, classList: { toggle: () => {} }, setAttribute: () => {} },
+    characterQuitMission: {
+      classList: { toggle: (name, enabled) => { quitClasses[name] = enabled; } },
+      setAttribute: (name, value) => { quitAttributes[name] = value; },
+    },
+  };
+
+  character.renderCompanion();
+  assert.equal(quitClasses.hidden, false);
+  assert.equal(quitAttributes["aria-label"], "Quit mission");
+
+  // Free play has no mission to leave, so the control goes away with it.
+  app.runtime.characterState = freePlayState(character, "ido");
+  character.renderCompanion();
+  assert.equal(quitClasses.hidden, true);
+});
+
+test("the review character panel picks the free-play companion like Settings does", () => {
+  const characterSource = fs.readFileSync(path.join(PROJECT_ROOT, "app/character.js"), "utf8");
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  assert.match(markup, /id="reviewCharacterLensNote"/);
+  assert.match(characterSource, /bindLensPicker\(runtime\.el\?\.reviewCharacterBonds\)/);
+
+  const document = { createElement: createStubElement };
+  const { character, app } = loadCharacterModule({ document });
+  app.runtime.characterState = freePlayState(character, "inbal");
+  const bonds = createStubElement("div");
+  const note = createStubElement("p");
+  app.runtime.el = { reviewCharacterBonds: bonds, reviewCharacterLensNote: note };
+
+  const readChoices = () => bonds.children.map((card) => card.children[1].children.at(-1));
+  character.renderBondPanel();
+  assert.deepEqual(
+    readChoices().map((button) => button.dataset.characterLens),
+    ["ido", "inbal", "ivri", "inat"],
+  );
+  assert.deepEqual(
+    readChoices().map((button) => button.textContent),
+    ["Choose as companion", "Current companion", "Choose as companion", "Choose as companion"],
+  );
+  assert.deepEqual(readChoices().map((button) => button.disabled), [false, true, false, false]);
+  assert.equal(note.className.includes("hidden"), true);
+
+  // Choosing from Review is the same lens the Settings picker sets.
+  assert.equal(character.setLensCharacter("ivri"), true);
+  character.renderBondPanel();
+  assert.deepEqual(readChoices().map((button) => button.disabled), [false, false, true, false]);
+
+  // A running mission owns the lens here exactly as it does in Settings.
+  app.runtime.characterState.mission = { active: true };
+  character.renderBondPanel();
+  assert.deepEqual(readChoices().map((button) => button.disabled), [true, true, true, true]);
+  assert.equal(note.className.includes("hidden"), false);
+  assert.equal(note.textContent, "Finish today’s mission to change your companion.");
 });
 
 test("Settings character names and address labels follow the UI language", () => {

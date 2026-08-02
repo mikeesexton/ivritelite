@@ -3086,13 +3086,73 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   cursor: grabbing;
 }
 
-.character-visibility-toggle {
+.character-companion-actions {
   grid-area: toggle;
   justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.character-visibility-toggle {
   min-height: 30px;
   padding: 0.22rem 0.55rem;
   font-size: 0.72rem;
   pointer-events: auto;
+}
+
+.character-quit-button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border-radius: 999px;
+  color: var(--error);
+  pointer-events: auto;
+}
+
+.character-quit-button:hover:not(:disabled) {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.character-quit-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.55rem;
+  width: min(100%, 420px);
+}
+
+.character-quit-confirm {
+  color: var(--error);
+  border-color: var(--error-border);
+}
+
+.character-quit-confirm:hover:not(:disabled) {
+  background: var(--error-bg);
+  color: var(--error);
+}
+
+.character-bond-choose {
+  justify-self: start;
+  min-height: 30px;
+  margin-top: 0.15rem;
+  padding: 0.22rem 0.6rem;
+  font-size: 0.75rem;
+}
+
+.character-bond-choose:disabled {
+  opacity: 0.65;
+}
+
+.character-bond-choose[aria-pressed="true"] {
+  border-color: var(--brand);
+  color: var(--brand);
+  opacity: 1;
 }
 
 .character-companion .character-word {
