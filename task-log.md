@@ -5,6 +5,27 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-01 14:25 EDT — Quit a mission, and pick a companion from Review
+
+**Requested:** Add a way to quit a mission: an icon beside the companion's "hide" button that opens a screen where the character asks in Hebrew whether you're sure, noting you can pick a new character from Settings or Review; confirming ends the mission. Second half of the request: let the Review page choose a character, which it could not do before.
+
+**Files changed:**
+- `app/character-data.js` — new `characterData.SHARED_DIALOGUE` holding the gendered `quitM`/`quitF` lines with per-word glosses. It is the app's own voice rather than any one character's, so it lives beside the registry instead of being duplicated into four dialogue tables.
+- `app/character.js` — `getDialogue` falls through to `SHARED_DIALOGUE` after the per-character table and the `DIALOGUE_FALLBACKS` chain, so a character can still override `quit` later. New `quitConfirm` screen: added to `isBlocking` and to the `sanitizeCharacterState` whitelist, with a repair that drops it to `"none"` when the save carries no live mission. `renderQuitConfirm` draws the nervous-laugh sprite, the shared line, and Keep going / Quit mission. `requestQuitMission` pauses the running activity's timers and opens the scene; `cancelQuitMission` rebases the timer and resumes; `confirmQuitMission` nulls the mission, sets `dailyChoice: "free"`, resets the free-play reaction and calls `session.endSessionAndNavigate("home")`. `renderCompanion` shows the quit control only while a mission is active. `renderBondPanel` now renders a `data-character-lens` button per card plus the mission-locked note, and the Settings lens click handler was generalized into `bindLensPicker` so Review shares it.
+- `index.html` — companion markup wraps the quit button and the hide toggle in `.character-companion-actions`; the quit button is an inline circle-slash SVG. Added `#reviewCharacterLensNote` under the bond grid. Bumped `?v=20260801d` for `styles.css`, `app/bootstrap-runtime.js`, `app/character-data.js`, `app/character.js`.
+- `app/bootstrap-runtime.js` — `characterQuitMission` and `reviewCharacterLensNote` element refs.
+- `styles.css` — `.character-companion-actions` (takes over the old `toggle` grid area), `.character-quit-button`, `.character-quit-actions`, `.character-quit-confirm`, `.character-bond-choose`.
+- `tests/character-mission.test.js` — see below; the stub element gained `style`, `addEventListener`, and the stub document in one test gained `createTextNode`, which is what renders a dialogue line.
+
+**Behavior changed:** During a mission the companion carries a red circle-slash button next to hide/show. It opens a blocking scene titled "Quit the mission?" where the character asks (gendered Hebrew, words tappable for glosses) whether you're sure and points at Settings or Review for a new character. Keep going returns to the exact activity with its timer resumed; Quit mission ends the mission with no completion bonus, drops the day into free play, and leaves that character as the free-play companion. The Review page's Characters tab now has a "Choose as companion" button on every bond card — the same lens Settings sets — disabled with a note while a mission is running.
+
+**Tests run:**
+- `npm test` — **361 pass, 0 fail** (355 before; +6 new tests).
+- New tests: the quit confirm/cancel/resume cycle and the free-play landing; the prompt is unreachable off-mission or mid-scene; a saved `quitConfirm` without a live mission loads as `"none"`; the quit scene's title, sprite, glossed Hebrew and two actions; the companion's quit control appears only on a mission; the Review picker's labels, disabled states, mission-locked note, and agreement with the Settings lens.
+- Browser walkthrough at 1280×720 and 375×812: ran a real Short mission, opened the prompt mid-Vocabulary, cancelled (game and timer resumed, `wordMatch.active` true), reopened and confirmed (mission null, `dailyChoice` free, lens kept, free-play home rendered), checked the Hebrew UI rendering of the scene, and confirmed hiding the character keeps both controls in place. Review tab verified in both the changeable and mission-locked states. No console errors.
+
+**Risks / regressions to check:** `getDialogue` now resolves shared keys even when no character is active — only `quit` is shared today, and it only renders behind a live mission, but any future shared key inherits that reach. The quit button sits inside the new actions wrapper, so `holdVisibilityToggleInPlace` measures a toggle that is no longer the grid item; it still holds position (2px drift, same as before) but is worth re-checking if that row grows again. Quitting deliberately writes `dailyChoice: "free"`, so the daily picker does not return that day — the character is changed from Settings or Review instead.
+
 ### 2026-08-01 13:22 EDT — Per-activity mission results, and a readable mistake list
 
 **Requested:** Show results after each game during a mission rather than only at the end, and improve the end-of-mission results display — the sentence-game rows in particular looked clunky.

@@ -197,11 +197,16 @@ function sanitizeCharacterState(saved, today) {
   state.lensCharacter = isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "";
   // "perfect" was its own blocking scene before flawless rounds folded into the
   // results screen; a save still carrying it falls through to "none".
-  state.screen = ["picker", "duration", "greeting", "activityIntro", "results", "none"].includes(saved?.screen)
+  state.screen = ["picker", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
     ? saved.screen
     : (state.dailyChoice ? "none" : "picker");
   state.reviewOpen = saved?.reviewOpen === true;
   state.mission = sanitizeMission(saved?.mission);
+  // The quit prompt only exists on top of a running mission; without one it
+  // would block the app on a scene whose buttons have nothing to act on.
+  if (state.screen === "quitConfirm" && !state.mission?.active) {
+    state.screen = "none";
+  }
   if (isCharacterChoice(state.dailyChoice) && !state.mission) {
     state.dailyChoice = "";
     state.screen = "picker";
@@ -262,6 +267,10 @@ character.bindUi = character.bindUi || function bindUi() {
       character.chooseTier(button.dataset.tier);
     } else if (action === "continue") {
       character.continueScene();
+    } else if (action === "keepGoing") {
+      character.cancelQuitMission();
+    } else if (action === "quitMission") {
+      character.confirmQuitMission();
     }
   });
 
@@ -271,17 +280,22 @@ character.bindUi = character.bindUi || function bindUi() {
     character.openMissionActivity(button.dataset.missionActivity);
   });
   runtime.el?.characterVisibilityToggle?.addEventListener("click", () => character.toggleVisibility());
+  runtime.el?.characterQuitMission?.addEventListener("click", () => character.requestQuitMission());
   runtime.el?.characterCompanionSprite?.addEventListener("pointerdown", (event) => character.startCompanionDrag(event));
   runtime.el?.characterGenderToggle?.addEventListener("click", () => {
     const state = getState();
     character.setGender(state?.gender === "m" ? "f" : "m");
   });
 
-  runtime.el?.characterLensOptions?.addEventListener("click", (event) => {
-    const option = event.target?.closest?.("[data-character-lens]");
-    if (!option || option.disabled) return;
-    character.setLensCharacter(option.dataset.characterLens);
-  });
+  const bindLensPicker = (container) => {
+    container?.addEventListener("click", (event) => {
+      const option = event.target?.closest?.("[data-character-lens]");
+      if (!option || option.disabled) return;
+      character.setLensCharacter(option.dataset.characterLens);
+    });
+  };
+  bindLensPicker(runtime.el?.characterLensOptions);
+  bindLensPicker(runtime.el?.reviewCharacterBonds);
 
   global.addEventListener("focus", () => character.checkDayRollover());
   global.document?.addEventListener("visibilitychange", () => {
@@ -303,7 +317,7 @@ character.checkDayRollover = character.checkDayRollover || function checkDayRoll
 };
 
 character.isBlocking = character.isBlocking || function isBlocking() {
-  return ["picker", "duration", "greeting", "activityIntro"].includes(getState()?.screen);
+  return ["picker", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
 };
 
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
@@ -368,13 +382,15 @@ character.buildContentWeigher = character.buildContentWeigher || function buildC
 };
 
 function getDialogue(key, characterId) {
-  const table = (characterId ? getCharacterById(characterId) : getActiveCharacter())?.dialogue;
-  if (!table) return null;
+  const table = (characterId ? getCharacterById(characterId) : getActiveCharacter())?.dialogue || {};
+  const shared = getCharacterData().SHARED_DIALOGUE || {};
   const suffix = getState()?.gender === "f" ? "F" : "M";
   const fallbackKey = getCharacterData().DIALOGUE_FALLBACKS?.[key];
   return table[key + suffix] ||
     table[key] ||
     (fallbackKey ? table[fallbackKey + suffix] || table[fallbackKey] : null) ||
+    shared[key + suffix] ||
+    shared[key] ||
     null;
 }
 
@@ -610,6 +626,24 @@ function renderActivityIntro(target) {
   target.append(layout);
 }
 
+function renderQuitConfirm(target) {
+  const layout = global.document.createElement("div");
+  layout.className = "character-scene-focus";
+  const title = global.document.createElement("h2");
+  title.id = "characterSceneTitle";
+  title.textContent = uiText("Quit the mission?", "לפרוש מהמשימה?");
+  layout.append(title, createSprite("nervous-laugh", "character-scene-sprite"));
+  renderDialogue(layout, getDialogue("quit"));
+  const actions = global.document.createElement("div");
+  actions.className = "character-quit-actions";
+  actions.append(
+    createSceneButton(uiText("Keep going", "להמשיך במשימה"), "keepGoing"),
+    createSceneButton(uiText("Quit mission", "לפרוש"), "quitMission", "quiet character-quit-confirm")
+  );
+  layout.append(actions);
+  target.append(layout);
+}
+
 character.renderScene = character.renderScene || function renderScene() {
   const runtime = getRuntime();
   const scene = runtime.el?.characterScene;
@@ -628,6 +662,7 @@ character.renderScene = character.renderScene || function renderScene() {
   else if (screen === "duration") renderDuration(content);
   else if (screen === "greeting") renderGreeting(content);
   else if (screen === "activityIntro") renderActivityIntro(content);
+  else if (screen === "quitConfirm") renderQuitConfirm(content);
 };
 
 character.renderSettings = character.renderSettings || function renderSettings() {
@@ -978,6 +1013,16 @@ character.renderCompanion = character.renderCompanion || function renderCompanio
     toggle.setAttribute("aria-label", `${visible ? "Hide" : "Show"} ${name}`.trim());
     toggle.setAttribute("aria-pressed", String(!visible));
   }
+
+  // Quitting only means something while a mission is running; in free play the
+  // companion is just a lens and there is nothing to leave.
+  const quit = runtime.el?.characterQuitMission;
+  if (quit) {
+    const quitLabel = uiText("Quit mission", "לפרוש מהמשימה");
+    quit.classList.toggle("hidden", mission?.active !== true);
+    quit.setAttribute("aria-label", quitLabel);
+    quit.setAttribute("title", quitLabel);
+  }
   if (!context.companionPosition) {
     companion.style.removeProperty("left");
     companion.style.removeProperty("top");
@@ -1149,6 +1194,7 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
   if (!target) return;
   target.innerHTML = "";
   const lensId = getState()?.lensCharacter || "";
+  const changeable = character.canChangeLens();
 
   character.getAllBondProgress().forEach((bond) => {
     const entry = getCharacterById(bond.id);
@@ -1197,10 +1243,34 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
       `${bond.xpIntoLevel}/${bond.xpForNextLevel} נק׳ · ${bond.daysInteracted} ימים יחד · ${bond.missions} משימות`
     );
 
-    body.append(heading, level, track, stats);
+    // The same lens the Settings picker sets, offered where the learner is
+    // already reading about the characters.
+    const choose = global.document.createElement("button");
+    choose.type = "button";
+    choose.className = "quiet character-bond-choose";
+    choose.dataset.characterLens = bond.id;
+    const selected = bond.id === lensId;
+    choose.textContent = selected
+      ? uiText("Current companion", "הדמות הנוכחית")
+      : uiText("Choose as companion", "לבחור כדמות");
+    choose.disabled = selected || !changeable;
+    choose.setAttribute("aria-pressed", String(selected));
+
+    body.append(heading, level, track, stats, choose);
     card.append(body);
     target.append(card);
   });
+
+  const note = getRuntime().el?.reviewCharacterLensNote;
+  if (note) {
+    note.classList.toggle("hidden", changeable);
+    note.textContent = changeable
+      ? ""
+      : uiText(
+        "Finish today’s mission to change your companion.",
+        "אפשר לשנות את הדמות בסיום המשימה של היום."
+      );
+  }
 };
 
 function normalizeCompletedResultsState() {
@@ -1827,6 +1897,57 @@ character.openMissionActivity = character.openMissionActivity || function openMi
   }
   saveState();
   runtime.helpers?.renderAll?.();
+  return true;
+};
+
+// Quitting is a three-step scene so the confirm can be backed out of: the
+// prompt pauses the running activity, cancelling resumes it where it stood, and
+// confirming tears the session down and drops the day into free play.
+character.requestQuitMission = character.requestQuitMission || function requestQuitMission() {
+  const state = getState();
+  if (!state?.mission?.active || state.screen !== "none") return false;
+  if (app.session?.hasActiveLearnSession?.()) {
+    pauseMissionTimers();
+  }
+  state.screen = "quitConfirm";
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+  return true;
+};
+
+character.cancelQuitMission = character.cancelQuitMission || function cancelQuitMission() {
+  const state = getState();
+  if (state?.screen !== "quitConfirm") return false;
+  const mission = state.mission;
+  state.screen = "none";
+  if (mission?.active && mission.currentActivity && !mission.onHub &&
+    app.session?.hasActiveLearnSession?.()) {
+    rebaseMissionTimer(mission.currentActivity);
+    app.session?.resumeActiveTimers?.();
+  }
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+  return true;
+};
+
+// The abandoned mission earns no completion bonus, and the day is not offered
+// the picker again: the character stays on as the free-play companion until one
+// is chosen from Settings or Review.
+character.confirmQuitMission = character.confirmQuitMission || function confirmQuitMission() {
+  const state = getState();
+  if (!state?.mission) return false;
+  state.mission = null;
+  state.dailyChoice = "free";
+  state.pendingChoice = "";
+  state.screen = "none";
+  state.reviewOpen = false;
+  saveState();
+  character.resetFreePlayReaction();
+  if (app.session?.endSessionAndNavigate) {
+    app.session.endSessionAndNavigate("home");
+  } else {
+    getRuntime().helpers?.renderAll?.();
+  }
   return true;
 };
 
