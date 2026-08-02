@@ -917,18 +917,26 @@ characterData.characters = characterData.characters || Object.freeze({
     nameHe: "עידן",
     order: 5,
     dialogue: IDAN_DIALOGUE,
-    // Two tiers on purpose. `civil_defense_safety` is what a civilian needs and
-    // is shared with the whole cast; `military_operational` is his alone. The
-    // boost stays uniform across the owned subset, so each mode's weak, missed,
-    // and overdue ordering still decides what he drills inside it.
+    // Three shelves. `civil_defense_safety` is what a civilian needs and is
+    // shared with the whole cast; `military_operational` and `emergency_response`
+    // are his alone. The boost stays uniform across the owned subset, so each
+    // mode's weak, missed, and overdue ordering still decides what he drills
+    // inside it.
     route: Object.freeze({
       vocabCategories: Object.freeze([
         "civil_defense_safety",
         "military_operational",
+        // Professional first-responder and police-procedure register. Inat keeps
+        // the critical reading of policing — brutality, oversight, occupation —
+        // and he gets the procedure, the same perspective split the Ivri/Inat
+        // boundary section already uses for defense.
+        "emergency_response",
       ]),
       // Security words that live on other shelves. Matched on `he`, never moved:
-      // vocabulary ids embed a positional index. The last four are the cards the
-      // new categories deliberately did not duplicate.
+      // vocabulary ids embed a positional index. Several are cards the new
+      // categories deliberately did not duplicate; the trailing group is the
+      // trauma vocabulary that already sits on the unrouted `health` shelf, which
+      // stays where it is rather than being re-shelved.
       vocabWords: Object.freeze([
         "אבטחה",
         "בטיחות",
@@ -936,7 +944,6 @@ characterData.characters = characterData.characters || Object.freeze({
         "חזית",
         "ביטחון לאומי",
         "מחסום צבאי",
-        "מחסום",
         "פיגוע",
         "הפסקת אש",
         "כיבוש",
@@ -955,6 +962,14 @@ characterData.characters = characterData.characters || Object.freeze({
         "היערכות",
         "נוהל",
         "משמעת",
+        // Trauma cards on the unrouted `health` shelf. The rest of that shelf is
+        // chronic care, pharmacy, and diagnostics and stays unowned.
+        "חובש",
+        "חדר מיון",
+        "תחבושת",
+        "תפרים",
+        "שבר",
+        "נקע",
       ]),
       sentenceIdPrefixes: Object.freeze(["idan_"]),
       abbrIds: Object.freeze([

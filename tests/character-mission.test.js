@@ -421,13 +421,17 @@ test("Idan routes both security tiers and stays neutral elsewhere", () => {
   const { character, characterData, app } = loadCharacterModule();
   const idan = characterData.characters.idan;
   assert.equal(idan.route.adaptive, undefined, "the adaptive short-circuit is retired");
-  assert.deepEqual([...idan.route.vocabCategories], ["civil_defense_safety", "military_operational"]);
+  assert.deepEqual(
+    [...idan.route.vocabCategories],
+    ["civil_defense_safety", "military_operational", "emergency_response"],
+  );
   assert.deepEqual([...idan.route.sentenceIdPrefixes], ["idan_"]);
 
   app.runtime.characterState = { dailyChoice: "idan", mission: { active: true } };
   const owned = [
     ["vocab", { he: "אזעקה", category: "civil_defense_safety" }],
     ["vocab", { he: "גדוד", category: "military_operational" }],
+    ["vocab", { he: "שוטר", category: "emergency_response" }],
     // Reached through vocabWords while staying on its own shelf.
     ["vocab", { he: "פיגוע", category: "politics_society_expanded" }],
     ["sentence", { id: "idan_01", category: "everyday" }],

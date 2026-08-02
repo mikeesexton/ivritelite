@@ -963,6 +963,9 @@ bootstrapData.PERFORMANCE_DOMAINS = bootstrapData.PERFORMANCE_DOMAINS || [
       // Ranks, orders, and reporting are occupational vocabulary, so the
       // military shelf reports alongside the other professional registers.
       "military_operational",
+      // First-responder and police-procedure language is occupational too: this
+      // is the register of the people doing the job, not of the bystander.
+      "emergency_response",
     ]),
   },
   {

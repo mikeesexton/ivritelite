@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2019);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 1954);
+  assert.equal(vocabulary.length, 2108);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2043);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -308,12 +308,16 @@ test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", ()
     // Ivri's device layer. Before this, not one card in his three technology
     // shelves named a physical object a person touches.
     ["devices_os_apps", ["מחשב נייד", "סיסמה", "קובץ", "אפליקציה", "מטען", "הרשאות", "גיבוי"]],
+    // Idan's third shelf: professional first-responder and police-procedure
+    // register, distinct from the cast-wide civilian civil-defense tier.
+    ["emergency_response", ["שוטר", "מעצר", "חקירה", "זירת פשע", "החייאה", "כבאי", "מוקדן"]],
   ]);
   const expectedCounts = new Map([
     ["religion_magic_spirituality", 138],
     ["literature_arts_cultural_history", 30],
     ["religious_life_practice", 111],
     ["devices_os_apps", 75],
+    ["emergency_response", 67],
   ]);
 
   expected.forEach((requiredHebrew, category) => {

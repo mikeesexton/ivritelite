@@ -78,7 +78,9 @@ Owns security, safety, and the military, in two deliberately separate tiers:
 - **Tier 1 — everyday security a civilian needs during wartime.** `civil_defense_safety` (70 cards): sirens, protected spaces, Home Front Command instructions, alerts, first aid, evacuation, fire safety, and general public safety. Six home-front acronyms belong here too. **This tier is routed to every character**, so a learner who never picks Idan still drills it.
 - **Tier 2 — advanced military terminology.** `military_operational` (70 cards): ranks, units, service and reserve life, orders, operations, terrain, logistics, and reporting. Twenty-six military acronyms are his alone, withheld from Ivri and Inat by `abbrExcludeIds`.
 
-He also carries 24 `idan_` sentences split across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
+He also carries 90 `idan_` sentences across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
+
+- **A third shelf — `emergency_response` (67 cards):** professional first-responder and police register. Pre-hospital and trauma care (החייאה, מיון נפגעים, דימום, כווייה), fire and rescue (כבאי, מכבי אש, חילוץ מגובה, טיהור), and police procedure (מעצר, חקירה, צו חיפוש, זירת פשע, ניידת). This is the working register of the people doing the job, distinct from the civilian tier 1 above. He also reaches the trauma cards on the unrouted `health` shelf — חובש, חדר מיון, תחבושת, שבר, נקע — through `route.vocabWords` rather than re-shelving them.
 
 Tier 2 is terminology, not tactics: ranks, procedures, and reporting language, never anything operationally instructional. The sprite standard already bars weapons from his art, and the same restraint governs the word lists.
 
@@ -95,6 +97,7 @@ The split is coherent if it is based on perspective rather than topic.
 - Inat asks who holds power, whose experience is omitted, how culture remembers an event, and how policy affects people.
 - Shared current-events items should carry both routes when both readings are useful. Examples include the Supreme Court, military service, policing, elections, budgets, protests, and the occupation.
 - Security hardware, defense-tech procurement, and bureaucratic process lean Ivri. Human-rights framing, protest language, historical narrative, police brutality, and occupation vocabulary lean Inat. Formal military language is no longer Ivri's — it is Idan's, and the operational/home-front reading of an item is his even when the institutional reading is Ivri's.
+- **Policing splits the same way.** Inat keeps the critical reading — brutality, oversight, administrative detention, the occupation — and Idan owns the procedure a member of the public actually meets: מעצר, חקירה, צו חיפוש, זירת פשע, ניידת, אזיקים, שחרור בערבות. Her policing cards were never procedural, so nothing moved from her shelf; his `emergency_response` category is new material. This is the same perspective split the two bullets above already use, and the dual-routing rule sanctions it.
 
 ## Abbreviation and acronym split
 
@@ -104,7 +107,7 @@ Abbreviations need explicit multi-owner routing; forcing every abbreviation into
 - Ivri: government bodies, defense technology as an industry, legal procedure, finance, business, and bureaucracy. The uniformed military acronyms in his two buckets are excluded and belong to Idan.
 - Inbal: religious texts, religious institutions, ritual references, and traditional formulae.
 - Inat: political parties and movements, rights organizations, activist groups, cultural institutions, media, and historical abbreviations.
-- Idan: the military register exclusively (צה״ל, רמטכ״ל, אמ״ן, שב״כ, ranks, corps, and דו״צ), plus the six home-front acronyms he shares with the whole cast (פקע״ר, מד״א, ממ״ד, ממ״ק, ממ״מ, כב״א). Police command (המפכ״ל, מג״ב) is granted to him without an exclusion, because policing stays Inat's.
+- Idan: the military register exclusively (צה״ל, רמטכ״ל, אמ״ן, שב״כ, ranks, corps, and דו״צ), plus the six home-front acronyms he shares with the whole cast (פקע״ר, מד״א, ממ״ד, ממ״ק, ממ״מ, כב״א). Police command (המפכ״ל, מג״ב) is granted to him without an exclusion, because the two readings of policing are split rather than assigned — see below.
 - Unclear or genuinely cross-cutting items should route to two or more characters.
 
 ## Balance after the practical-life routing
@@ -118,12 +121,12 @@ so the measured spread widened rather than closed:
 | Inbal | 284 | 284 | 349 | 544 |
 | Ivri | 418 | 577 | 577 | 740 |
 | Inat | 458 | 524 | 524 | 613 |
-| Idan | — | — | — | 252 |
-| spread | 1.6x | 2.3x | 1.9x | 3.1x |
+| Idan | — | — | — | 413 |
+| spread | 1.6x | 2.3x | 1.9x | 1.9x |
 
-The current column includes Idan, who is new and deliberately narrow, and the 70 cast-wide
-`civil_defense_safety` cards that lift every character equally. Without Idan the spread is
-1.4x. Routing alone widened the spread, and that was expected rather than a regression. Nothing
+The current column includes the 70 cast-wide `civil_defense_safety` cards that lift every
+character equally. Idan closed most of the gap by authoring his own material rather than by
+redistribution, which is what the policy below asks for. Routing alone widened the spread, and that was expected rather than a regression. Nothing
 was taken from Inbal, and none of the routed shelves are plausibly hers — she owns
 religion, folk practice, and ritual, and the orphans were home, food, bureaucracy,
 science, and philosophy. Evenness can only come from authoring her material, not from
@@ -145,22 +148,35 @@ well-covered characters beats 1.0x reached by padding.
 "Fleshed out" is two gates, and a character has to pass both. Neither is a parity target: a
 character may exceed a floor by 3x without that being a problem.
 
-**Gate 1 — per-mode floors.** Measured on *own-domain* counts, so the 70 cast-wide
-`civil_defense_safety` cards cannot flatter anyone. Subtract them from the vocabulary figure
-`npm run report:characters` prints.
+**Gate 1 — per-mode floors**, measured on the **routed** pool — the set the picker actually
+draws from, exactly as `npm run report:characters` prints it.
 
 | pool | floor | Ido | Inbal | Ivri | Inat | Idan |
 |---|---|---|---|---|---|---|
-| vocabulary (own-domain) | **250** | 402 | 265 | 421 | 302 | **94** |
-| sentences | **90** | 202 | 96 | 113 | 132 | **24** |
+| vocabulary | **250** | 472 | 335 | 491 | 372 | 259 |
+| sentences | **90** | 202 | 96 | 113 | 132 | 90 |
 | abbreviations | **30** | 68 | 87 | 113 | 85 | 34 |
 | verbs | **20** | 34 | 26 | 23 | 24 | 30 |
 
-Idan currently fails vocabulary and sentences. He is the newest character and has no sentence
-register of his own; Inbal solved the identical problem by authoring 95 prefix rows. His
-vocabulary floor may warrant lowering rather than filling — his domain may not hold 156 more
-cards without drifting from terminology into tactics, and that is a content judgement to make
-with the words in hand.
+All five characters now clear all four floors.
+
+The vocabulary floor is derived, not chosen. A vocabulary session serves
+`WORD_MATCH_SESSION_SIZE = 20` words and the owned share is `TARGET_OWNED_SHARE = 0.65`, so
+about 13 of them come from the character's own pool. 250 cards is therefore roughly 19 sessions
+before the pool starts cycling — about three weeks of daily play. Measured today: Ido 36
+sessions, Ivri 38, Inat 29, Inbal 26, Idan 20.
+
+An earlier version of this section set the floor at 250 *own-domain* cards, meaning the routed
+total minus the 70 cast-wide `civil_defense_safety` cards. That was a fitted number — it was
+chosen so Inbal passed after her tranche — and the subtraction made it partly unreachable:
+growing the shared tier cannot raise anyone's own-domain figure, and Idan would have needed ~156
+more cards when his honest headroom was ~130 before drifting from terminology into tactics.
+Repetition is what a learner feels, and repetition is a function of the routed pool, so that is
+what the floor measures.
+
+Own-domain is still worth reporting, because it is the fair way to compare *identity* rather
+than pool size: Ido 402, Ivri 421, Inat 302, Inbal 265, Idan 189. Gate 2 is what actually proves
+a domain is covered.
 
 **Gate 2 — domain checklist.** Gate 1 alone is not enough: it would have passed Ivri on 341
 cards while every one of his technology cards was abstract AI register and none named an object
@@ -182,8 +198,10 @@ covered or open.
   activism and protest ✓, academic and abstract register ✓, policing and occupation ✓.
   No open clusters.
 - **Idan** — civil defense and home front ✓, public safety ✓, military structure and ranks ✓,
-  service and reserve life ✓, operations and reporting ✓. *Open:* sentence coverage, and
-  vocabulary depth pending the floor judgement above.
+  service and reserve life ✓, operations and reporting ✓, adjutancy and base life ✓,
+  pre-hospital and trauma care ✓, fire and rescue ✓, police procedure ✓. No open clusters. He
+  owns three shelves: `civil_defense_safety` (cast-wide), `military_operational`, and
+  `emergency_response`.
 
 ### Conjugation+, Prepositions, and Binyanim stay character-neutral
 
@@ -311,7 +329,7 @@ covers `בלי חרטות`, `לקלוט` in both its colloquial and technical se
 
 Use plain `<bank>_<number>` ids for rows like these, not slugged ids. The
 compact-token policy in `tests/sentence-bank-data.test.js` only matches
-`^(colloquial|everyday|professional|formal)_\d+$` and `^(inbal|inat)_\d+$`, so a
+`^(colloquial|everyday|professional|formal)_\d+$` and `^(inbal|inat|idan)_\d+$`, so a
 slugged id such as `colloquial_charatot_01` silently opts out of the chip review.
 The older `colloquial_vodge_01`-style rows predate that policy and are not
 authoring precedent. Register any new tranche in the alignment test's id lists as
@@ -347,15 +365,14 @@ All five characters are built and integrated, so this section is now a record ra
 
 ## Next decisions
 
-1. Author Idan's sentence tranche — he fails the sentence floor at 24 rows, and he is the only
-   character with neither a register of his own nor a large prefix tranche. Target ~90, following
-   the `inbal_` precedent, and keep rows inside the 6-34 Hebrew-letter handwriting window.
-2. Decide Idan's vocabulary floor: author toward 250 own-domain cards, or document a lower floor
-   for a deliberately narrow domain. Judge with candidate words in hand.
-3. Consider a verb pass. Verbs are the thinnest pool app-wide — 48.2% of the 247-item conjugation
+1. Consider a verb pass. Verbs are the thinnest pool app-wide — 48.2% of the 247-item conjugation
    deck is unrouted and no character exceeds 34. Every character clears the floor of 20, so this
    is not urgent, but it is the largest structural deficit left.
-4. Leave the health cluster shared. `health`, `pharmacy_personal_care`, and `health_body_expanded`
-   are 135 unowned cards and the largest coherent unowned domain, but the balance policy above
+2. Leave the health cluster shared. `health`, `pharmacy_personal_care`, and `health_body_expanded`
+   are 122 unowned cards and the largest coherent unowned domain, but the balance policy above
    forbids routing them to Inbal, the cast is capped at five, and no other character plausibly
-   owns them. Recorded here so it is not rediscovered as a bug.
+   owns them. Idan reaches only the trauma subset, through `vocabWords`. Recorded here so it is
+   not rediscovered as a bug.
+3. Every character now clears every floor in the depth standard, so there is no outstanding
+   coverage debt. The next content work should be driven by what a learner is missing, not by
+   the report.

@@ -871,8 +871,9 @@ Recorded so they are not re-proposed:
 
 The fifth character is implemented as Idan. He owns security, safety, and the
 military in two tiers — `civil_defense_safety` and `military_operational`, 70
-cards each — plus 24 `idan_` sentences, 34 abbreviations, and 28 shared-pool
-verbs. He has a complete dialogue table and six-pose production sprite set. His
+cards each, plus a third `emergency_response` shelf of 67 — first responders,
+pre-hospital care, fire and rescue, and police procedure — plus 90 `idan_`
+sentences, 34 abbreviations, and 28 shared-pool verbs. He has a complete dialogue table and six-pose production sprite set. His
 wrong-answer asset retains the shared `nervous-laugh.png` filename for runtime
 compatibility but depicts calm, stern discipline rather than embarrassment.
 

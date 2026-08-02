@@ -428,6 +428,10 @@ const POLITICAL_ENTRY_IDS = [
 const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
 const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 95).map((id) => id.replace(/_(\d)$/, "_0$1"));
 const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 25).map((id) => id.replace(/_(\d)$/, "_0$1"));
+// Idan's tranche. Registering it here switches on the seven alignment checks the
+// rows had been escaping — pointed Hebrew, plain/niqqud token parity, the 4-6
+// distractor budget, duplicate distractors, and target reuse.
+const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 90).map((id) => id.replace(/_(\d)$/, "_0$1"));
 // One-word-focus rows added alongside the תחרותי / ספורים / בלי חרטות cards and
 // the לקלוט, להגיש, להקליט conjugation entries. Registered here so the alignment
 // checks below cover them; the compact-token policy already does, via their
@@ -724,6 +728,40 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
   ...compactUnitMap(`
     home front command
   `, "proper-name: geographic, legal, or institutional name"),
+  // The idan_25-90 batch. Same rule as above: each is a Hebrew compound met as a
+  // single unit — תרגיל שריפה, תעודת שחרור, שק שינה, טקס השבעה — so splitting the
+  // English would teach the wrong boundary.
+  ...compactUnitMap(`
+    fire drill
+    defense drill
+    safety briefing
+    security check
+    security guard
+    police officer
+    safe room
+    power outage
+    water outage
+    support line
+    resilience center
+    temporary housing
+    sleeping bag
+    dog tag
+    field rations
+    mess hall
+    kitchen duty
+    guard duty
+    standing orders
+    live fire
+    basic training
+    officers course
+    swearing ceremony
+    medical board
+    service deferral
+    discharge certificate
+  `, "term: recognized multiword vocabulary unit"),
+  ...compactUnitMap(`
+    wet hands
+  `, "fixed-expression: lexicalized English idiom"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -898,15 +936,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 651 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 717 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 651);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 651);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 651);
+  assert.equal(entries.length, 717);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 717);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 717);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -934,10 +972,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   });
 
   // everyday carries the prefix-owned character tranches as well as the
-  // everyday_ rows: Inbal's, Inat's, and Idan's 24 civil-defense/military rows.
+  // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
     colloquial: 202,
-    everyday: 218,
+    everyday: 284,
     professional: 113,
     formal: 118,
   });
@@ -1011,6 +1049,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...REQUESTED_ENTRY_IDS,
     ...INBAL_ENTRY_IDS,
     ...INAT_ENTRY_IDS,
+    ...IDAN_ENTRY_IDS,
     ...LEXICAL_FOCUS_ENTRY_IDS,
     ...RUMOR_ENTRY_IDS,
     ...CONTEXT_BRIDGE_ENTRY_IDS,
