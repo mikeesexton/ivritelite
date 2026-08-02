@@ -15108,9 +15108,283 @@ const HITRACHAKUT_SENTENCES = [
   })
 ];
 
+const IDAN_SENTENCES = [
+  buildReviewedSentence({
+    id: "idan_01", emoji: "🚨", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "יש אזעקה. כולם למרחב המוגן.", hebrewNiqqud: "יֵשׁ אַזְעָקָה. כֻּלָּם לַמֶּרְחָב הַמּוּגָן.",
+    english: "There's a siren. Everyone to the protected space.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["אזעקה", "אַזְעָקָה"], ["כולם", "כֻּלָּם"], ["למרחב המוגן", "לַמֶּרְחָב הַמּוּגָן"]],
+    englishTokens: ["There's", "a siren", "Everyone", "to the protected space"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["הפוגה", "הֲפוּגָה"], ["הילדים", "הַיְלָדִים"], ["לחדר המדרגות", "לַחֲדַר הַמַּדְרֵגוֹת"]],
+    englishDistractors: ["There isn't", "a lull", "The children", "to the stairwell"],
+    notes: "מרחב מוגן is the official term for a protected space; מקלט is the older communal shelter."
+  }),
+  buildReviewedSentence({
+    id: "idan_02", emoji: "⏱️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "יש לנו תשעים שניות להיכנס.", hebrewNiqqud: "יֵשׁ לָנוּ תִּשְׁעִים שְׁנִיּוֹת לְהִיכָּנֵס.",
+    english: "We have ninety seconds to enter.",
+    hebrewTokenPairs: [["יש לנו", "יֵשׁ לָנוּ"], ["תשעים", "תִּשְׁעִים"], ["שניות", "שְׁנִיּוֹת"], ["להיכנס", "לְהִיכָּנֵס"]],
+    englishTokens: ["We have", "ninety", "seconds", "to enter"],
+    hebrewDistractorPairs: [["אין לנו", "אֵין לָנוּ"], ["שלושים", "שְׁלוֹשִׁים"], ["דקות", "דַּקּוֹת"], ["לצאת", "לָצֵאת"]],
+    englishDistractors: ["We need", "thirty", "minutes", "to leave"],
+    notes: "זמן התרעה, the warning time, differs by area; this is how it is announced."
+  }),
+  buildReviewedSentence({
+    id: "idan_03", emoji: "🚪", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הדלת של המרחב המוגן צריכה להיות סגורה.", hebrewNiqqud: "הַדֶּלֶת שֶׁל הַמֶּרְחָב הַמּוּגָן צְרִיכָה לִהְיוֹת סְגוּרָה.",
+    english: "The door of the protected space needs to be closed.",
+    hebrewTokenPairs: [["הדלת", "הַדֶּלֶת"], ["של המרחב המוגן", "שֶׁל הַמֶּרְחָב הַמּוּגָן"], ["צריכה", "צְרִיכָה"], ["להיות סגורה", "לִהְיוֹת סְגוּרָה"]],
+    englishTokens: ["The door", "of the protected space", "needs", "to be closed"],
+    hebrewDistractorPairs: [["החלון", "הַחַלּוֹן"], ["של חדר המדרגות", "שֶׁל חֲדַר הַמַּדְרֵגוֹת"], ["יכולה", "יְכוֹלָה"], ["להישאר פתוחה", "לְהִישָּׁאֵר פְּתוּחָה"]],
+    englishDistractors: ["The window", "of the stairwell", "can", "to open"],
+    notes: "A blast door only works closed; Home Front Command repeats this in every briefing."
+  }),
+  buildReviewedSentence({
+    id: "idan_04", emoji: "📱", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "פיקוד העורף שלח התרעה לאזור שלנו.", hebrewNiqqud: "פִּיקּוּד הָעֹרֶף שָׁלַח הַתְרָעָה לָאֵזוֹר שֶׁלָּנוּ.",
+    english: "Home Front Command sent an alert to our area.",
+    hebrewTokenPairs: [["פיקוד העורף", "פִּיקּוּד הָעֹרֶף"], ["שלח", "שָׁלַח"], ["התרעה", "הַתְרָעָה"], ["לאזור שלנו", "לָאֵזוֹר שֶׁלָּנוּ"]],
+    englishTokens: ["Home Front Command", "sent", "an alert", "to our area"],
+    hebrewDistractorPairs: [["מוקד החירום", "מוֹקֵד הַחֵירוּם"], ["ביטל", "בִּיטֵּל"], ["הודעה", "הוֹדָעָה"], ["לעיר אחרת", "לְעִיר אַחֶרֶת"]],
+    englishDistractors: ["The emergency center", "cancelled", "a message", "to another city"],
+    notes: "התרעה is the forewarning; אזעקה is the siren itself."
+  }),
+  buildReviewedSentence({
+    id: "idan_05", emoji: "🕙", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "תישארו במרחב המוגן עד ההודעה.", hebrewNiqqud: "תִּישָּׁאֲרוּ בַּמֶּרְחָב הַמּוּגָן עַד הַהוֹדָעָה.",
+    english: "Stay in the protected space until the announcement.",
+    hebrewTokenPairs: [["תישארו", "תִּישָּׁאֲרוּ"], ["במרחב המוגן", "בַּמֶּרְחָב הַמּוּגָן"], ["עד ההודעה", "עַד הַהוֹדָעָה"]],
+    englishTokens: ["Stay", "in the protected space", "until the announcement"],
+    hebrewDistractorPairs: [["תצאו", "תֵּצְאוּ"], ["בחדר המדרגות", "בַּחֲדַר הַמַּדְרֵגוֹת"], ["לפני האזעקה", "לִפְנֵי הָאַזְעָקָה"]],
+    englishDistractors: ["Go out", "in the stairwell", "before the siren"],
+    notes: "Home Front Command asks you to stay in the protected space for ten minutes after the siren, because of falling fragments."
+  }),
+  buildReviewedSentence({
+    id: "idan_06", emoji: "🚑", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "צריך לקרוא לאמבולנס עכשיו.", hebrewNiqqud: "צָרִיךְ לִקְרֹא לְאַמְבּוּלַנְס עַכְשָׁיו.",
+    english: "We need to call an ambulance now.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לקרוא", "לִקְרֹא"], ["לאמבולנס", "לְאַמְבּוּלַנְס"], ["עכשיו", "עַכְשָׁיו"]],
+    englishTokens: ["We need", "to call", "an ambulance", "now"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["לחכות", "לְחַכּוֹת"], ["לחבלן", "לְחַבְּלָן"], ["מחר", "מָחָר"]],
+    englishDistractors: ["It's forbidden", "to wait", "for a bomb technician", "tomorrow"],
+    notes: "צריך used impersonally is the ordinary way to say that someone needs to act."
+  }),
+  buildReviewedSentence({
+    id: "idan_07", emoji: "🧯", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "יש מטף ליד יציאת החירום.", hebrewNiqqud: "יֵשׁ מַטָּף לְיַד יְצִיאַת הַחֵירוּם.",
+    english: "There's a fire extinguisher next to the emergency exit.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["מטף", "מַטָּף"], ["ליד", "לְיַד"], ["יציאת החירום", "יְצִיאַת הַחֵירוּם"]],
+    englishTokens: ["There's", "a fire extinguisher", "next to", "the emergency exit"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["מסכה", "מַסֵּיכָה"], ["מתחת", "מִתַּחַת"], ["למרחב המוגן", "לַמֶּרְחָב הַמּוּגָן"]],
+    englishDistractors: ["There isn't", "a mask", "under", "the protected space"],
+    notes: "מטף is the handheld extinguisher; the sign on the wall reads מטף כיבוי."
+  }),
+  buildReviewedSentence({
+    id: "idan_08", emoji: "⚠️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "אם אתם רואים חפץ חשוד, אל תתקרבו.", hebrewNiqqud: "אִם אַתֶּם רוֹאִים חֵפֶץ חָשׁוּד, אַל תִּתְקָרְבוּ.",
+    english: "If you see a suspicious object, do not approach.",
+    hebrewTokenPairs: [["אם", "אִם"], ["אתם רואים", "אַתֶּם רוֹאִים"], ["חפץ חשוד", "חֵפֶץ חָשׁוּד"], ["אל", "אַל"], ["תתקרבו", "תִּתְקָרְבוּ"]],
+    englishTokens: ["If", "you see", "a suspicious object", "do not", "approach"],
+    hebrewDistractorPairs: [["כאשר", "כַּאֲשֶׁר"], ["אתם מוצאים", "אַתֶּם מוֹצְאִים"], ["תיק פתוח", "תִּיק פָּתוּחַ"], ["כן", "כֵּן"], ["תרימו", "תָּרִימוּ"]],
+    englishDistractors: ["When", "you find", "a bag", "yes", "pick up"],
+    notes: "אל followed by the future is the standard negative imperative in safety notices."
+  }),
+  buildReviewedSentence({
+    id: "idan_09", emoji: "🚗", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "תחגרו חגורת בטיחות לפני הנסיעה.", hebrewNiqqud: "תַּחְגְּרוּ חֲגוֹרַת בְּטִיחוּת לִפְנֵי הַנְּסִיעָה.",
+    english: "Fasten a seatbelt before the drive.",
+    hebrewTokenPairs: [["תחגרו", "תַּחְגְּרוּ"], ["חגורת בטיחות", "חֲגוֹרַת בְּטִיחוּת"], ["לפני", "לִפְנֵי"], ["הנסיעה", "הַנְּסִיעָה"]],
+    englishTokens: ["Fasten", "a seatbelt", "before", "the drive"],
+    hebrewDistractorPairs: [["תפתחו", "תִּפְתְּחוּ"], ["דלת אחורית", "דֶּלֶת אֲחוֹרִית"], ["אחרי", "אַחֲרֵי"], ["החנייה", "הַחֲנָיָיה"]],
+    englishDistractors: ["Open", "a door", "after", "the parking"],
+    notes: "לחגור is used for belts and, in the army, for strapping on equipment."
+  }),
+  buildReviewedSentence({
+    id: "idan_10", emoji: "📻", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "ההנחיות מתעדכנות כל הזמן, אז כדאי להקשיב.", hebrewNiqqud: "הַהַנְחָיוֹת מִתְעַדְכְּנוֹת כָּל הַזְּמַן, אָז כְּדַאי לְהַקְשִׁיב.",
+    english: "The guidelines are updated all the time, so it's worth listening.",
+    hebrewTokenPairs: [["ההנחיות", "הַהַנְחָיוֹת"], ["מתעדכנות", "מִתְעַדְכְּנוֹת"], ["כל הזמן", "כָּל הַזְּמַן"], ["אז כדאי", "אָז כְּדַאי"], ["להקשיב", "לְהַקְשִׁיב"]],
+    englishTokens: ["The guidelines", "are updated", "all the time", "so it's worth", "listening"],
+    hebrewDistractorPairs: [["הכללים", "הַכְּלָלִים"], ["נשארים", "נִשְׁאָרִים"], ["לרגע אחד", "לְרֶגַע אֶחָד"], ["ולכן אסור", "וְלָכֵן אָסוּר"], ["לקרוא", "לִקְרֹא"]],
+    englishDistractors: ["The rules", "stay", "for one moment", "so it's forbidden", "reading"],
+    notes: "הנחיות is official guidance; הוראה is a direct instruction."
+  }),
+  buildReviewedSentence({
+    id: "idan_11", emoji: "🏢", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "בבניין הזה אין מרחב מוגן, המקלט בחצר.", hebrewNiqqud: "בַּבִּנְיָן הַזֶּה אֵין מֶרְחָב מוּגָן, הַמִּקְלָט בֶּחָצֵר.",
+    english: "In this building there is no protected space, the shelter is in the yard.",
+    hebrewTokenPairs: [["בבניין הזה", "בַּבִּנְיָן הַזֶּה"], ["אין", "אֵין"], ["מרחב מוגן", "מֶרְחָב מוּגָן"], ["המקלט", "הַמִּקְלָט"], ["בחצר", "בֶּחָצֵר"]],
+    englishTokens: ["In this building", "there is no", "protected space", "the shelter", "is in the yard"],
+    hebrewDistractorPairs: [["בדירה שלי", "בַּדִּירָה שֶׁלִּי"], ["יש", "יֵשׁ"], ["חדר נוסף", "חֶדֶר נוֹסָף"], ["המרתף", "הַמַּרְתֵּף"], ["בקומה", "בַּקּוֹמָה"]],
+    englishDistractors: ["In my apartment", "there is", "another room", "the basement", "is on the floor"],
+    notes: "A מקלט is a communal shelter, often a separate structure; older buildings predate the safe-room requirement."
+  }),
+  buildReviewedSentence({
+    id: "idan_12", emoji: "🔔", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "אנחנו בכוננות מאז אתמול.", hebrewNiqqud: "אֲנַחְנוּ בְּכוֹנְנוּת מֵאָז אֶתְמוֹל.",
+    english: "We are on alert since yesterday.",
+    hebrewTokenPairs: [["אנחנו", "אֲנַחְנוּ"], ["בכוננות", "בְּכוֹנְנוּת"], ["מאז", "מֵאָז"], ["אתמול", "אֶתְמוֹל"]],
+    englishTokens: ["We", "are on alert", "since", "yesterday"],
+    hebrewDistractorPairs: [["הם", "הֵם"], ["בחופשה", "בְּחוּפְשָׁה"], ["עד", "עַד"], ["מחר", "מָחָר"]],
+    englishDistractors: ["They", "are on vacation", "until", "tomorrow"],
+    hebrewOrderAlternates: [
+      { text: "מאז אתמול אנחנו בכוננות.", textNiqqud: "מֵאָז אֶתְמוֹל אֲנַחְנוּ בְּכוֹנְנוּת.", order: [2, 3, 0, 1] },
+    ],
+    notes: "כוננות covers military readiness and civilian standby alike. Fronting מאז אתמול is equally natural."
+  }),
+  buildReviewedSentence({
+    id: "idan_13", emoji: "👧", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "תסבירו לילדים מה עושים כשיש אזעקה.", hebrewNiqqud: "תַּסְבִּירוּ לַיְלָדִים מָה עוֹשִׂים כְּשֶׁיֵּשׁ אַזְעָקָה.",
+    english: "Explain to the children what to do when there is a siren.",
+    hebrewTokenPairs: [["תסבירו", "תַּסְבִּירוּ"], ["לילדים", "לַיְלָדִים"], ["מה עושים", "מָה עוֹשִׂים"], ["כשיש אזעקה", "כְּשֶׁיֵּשׁ אַזְעָקָה"]],
+    englishTokens: ["Explain", "to the children", "what to do", "when there is a siren"],
+    hebrewDistractorPairs: [["תשאלו", "תִּשְׁאֲלוּ"], ["לשכנים", "לַשְּׁכֵנִים"], ["מה קרה", "מָה קָרָה"], ["כשנגמרה ההפוגה", "כְּשֶׁנִּגְמְרָה הַהֲפוּגָה"]],
+    englishDistractors: ["Ask", "to the neighbours", "what happened", "after the lull"],
+    notes: "מה עושים, literally what one does, is how Hebrew phrases what to do."
+  }),
+  buildReviewedSentence({
+    id: "idan_14", emoji: "🎒", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "תכינו תיק חירום עם מים ותרופות.", hebrewNiqqud: "תָּכִינוּ תִּיק חֵירוּם עִם מַיִם וּתְרוּפוֹת.",
+    english: "Prepare an emergency bag with water and medicine.",
+    hebrewTokenPairs: [["תכינו", "תָּכִינוּ"], ["תיק חירום", "תִּיק חֵירוּם"], ["עם מים", "עִם מַיִם"], ["ותרופות", "וּתְרוּפוֹת"]],
+    englishTokens: ["Prepare", "an emergency bag", "with water", "and medicine"],
+    hebrewDistractorPairs: [["תשאירו", "תַּשְׁאִירוּ"], ["ארון סגור", "אָרוֹן סָגוּר"], ["בלי אוכל", "בְּלִי אֹוכֶל"], ["ובגדים", "וּבְגָדִים"]],
+    englishDistractors: ["Leave", "a cupboard", "without food", "and clothes"],
+    notes: "תיק חירום is the standard name for a go-bag in Home Front Command guidance."
+  }),
+  buildReviewedSentence({
+    id: "idan_15", emoji: "🎖️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מפקד הפלוגה נתן תדריך לפני היציאה.", hebrewNiqqud: "מְפַקֵּד הַפְּלוּגָה נָתַן תַּדְרִיךְ לִפְנֵי הַיְּצִיאָה.",
+    english: "The company commander gave a briefing before departure.",
+    hebrewTokenPairs: [["מפקד הפלוגה", "מְפַקֵּד הַפְּלוּגָה"], ["נתן", "נָתַן"], ["תדריך", "תַּדְרִיךְ"], ["לפני היציאה", "לִפְנֵי הַיְּצִיאָה"]],
+    englishTokens: ["The company commander", "gave", "a briefing", "before departure"],
+    hebrewDistractorPairs: [["סמל המחלקה", "סַמָּל הַמַּחְלָקָה"], ["קיבל", "קִיבֵּל"], ["תחקיר", "תַּחְקִיר"], ["אחרי החזרה", "אַחֲרֵי הַחֲזָרָה"]],
+    englishDistractors: ["The platoon sergeant", "received", "a debrief", "after the return"],
+    notes: "תדריך comes before an action and תחקיר after it; the pair is central to army speech."
+  }),
+  buildReviewedSentence({
+    id: "idan_16", emoji: "📋", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "אחרי התרגיל עשו תחקיר ארוך.", hebrewNiqqud: "אַחֲרֵי הַתַּרְגִּיל עָשׂוּ תַּחְקִיר אָרֹךְ.",
+    english: "After the exercise they held a long debrief.",
+    hebrewTokenPairs: [["אחרי התרגיל", "אַחֲרֵי הַתַּרְגִּיל"], ["עשו", "עָשׂוּ"], ["תחקיר", "תַּחְקִיר"], ["ארוך", "אָרֹךְ"]],
+    englishTokens: ["After the exercise", "they held", "a long", "debrief"],
+    hebrewDistractorPairs: [["לפני המבצע", "לִפְנֵי הַמִּבְצָע"], ["ביטלו", "בִּיטְּלוּ"], ["דיווח", "דִּיווּחַ"], ["קצר", "קָצָר"]],
+    englishDistractors: ["Before the operation", "they cancelled", "a short", "report"],
+    notes: "תחקיר has entered civilian Hebrew for any structured post-mortem."
+  }),
+  buildReviewedSentence({
+    id: "idan_17", emoji: "📄", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "קיבלתי צו שמונה הבוקר.", hebrewNiqqud: "קִיבַּלְתִּי צַו שְׁמוֹנֶה הַבֹּקֶר.",
+    english: "I got an emergency call-up order this morning.",
+    hebrewTokenPairs: [["קיבלתי", "קִיבַּלְתִּי"], ["צו שמונה", "צַו שְׁמוֹנֶה"], ["הבוקר", "הַבֹּקֶר"]],
+    englishTokens: ["I got", "an emergency call-up order", "this morning"],
+    hebrewDistractorPairs: [["שלחתי", "שָׁלַחְתִּי"], ["פטור רפואי", "פְּטוֹר רְפוּאִי"], ["בלילה", "בַּלַּיְלָה"]],
+    englishDistractors: ["I sent", "a medical exemption", "at night"],
+    notes: "צו 8 is the emergency reserve call-up, read צו שמונה rather than spelled out."
+  }),
+  buildReviewedSentence({
+    id: "idan_18", emoji: "🪖", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "הוא בשירות מילואים החודש.", hebrewNiqqud: "הוּא בְּשֵׁירוּת מִילּוּאִים הַחֹדֶשׁ.",
+    english: "He is on reserve duty this month.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["בשירות מילואים", "בְּשֵׁירוּת מִילּוּאִים"], ["החודש", "הַחֹדֶשׁ"]],
+    englishTokens: ["He", "is on reserve duty", "this month"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["בשירות סדיר", "בְּשֵׁירוּת סָדִיר"], ["בשנה", "בַּשָּׁנָה"]],
+    englishDistractors: ["She", "is in regular service", "in the year"],
+    notes: "מילואים is always plural; שירות סדיר is the mandatory service that precedes it."
+  }),
+  buildReviewedSentence({
+    id: "idan_19", emoji: "🗺️", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "הכוח נשאר בגזרה עד יום שישי.", hebrewNiqqud: "הַכֹּחַ נִשְׁאַר בַּגִּזְרָה עַד יוֹם שִׁישִּׁי.",
+    english: "The force stayed in the sector until Friday.",
+    hebrewTokenPairs: [["הכוח", "הַכֹּחַ"], ["נשאר", "נִשְׁאַר"], ["בגזרה", "בַּגִּזְרָה"], ["עד יום שישי", "עַד יוֹם שִׁישִּׁי"]],
+    englishTokens: ["The force", "stayed", "in the sector", "until Friday"],
+    hebrewDistractorPairs: [["הגדוד", "הַגְּדוּד"], ["יצא", "יָצָא"], ["מהציר", "מֵהַצִּיר"], ["מאז יום ראשון", "מֵאָז יוֹם רִאשׁוֹן"]],
+    englishDistractors: ["The battalion", "left", "the route", "from Sunday"],
+    notes: "גזרה is an assigned sector of responsibility; ציר is a movement route."
+  }),
+  buildReviewedSentence({
+    id: "idan_20", emoji: "📞", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הוא דיווח למפקד על מה שראה.", hebrewNiqqud: "הוּא דִּיוֵּוחַ לַמְּפַקֵּד עַל מָה שֶׁרָאָה.",
+    english: "He reported to the commander what he saw.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["דיווח", "דִּיוֵּוחַ"], ["למפקד", "לַמְּפַקֵּד"], ["על מה שראה", "עַל מָה שֶׁרָאָה"]],
+    englishTokens: ["He", "reported", "to the commander", "what he saw"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["שכחה", "שָׁכְחָה"], ["לחייל", "לְחַיָּיל"], ["את מה שאמרו", "אֶת מָה שֶׁאָמְרוּ"]],
+    englishDistractors: ["She", "forgot", "to the soldier", "what they said"],
+    notes: "לדווח takes ל for the recipient and על for the subject matter."
+  }),
+  buildReviewedSentence({
+    id: "idan_21", emoji: "🚫", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "חייל לא יכול לסרב לפקודה.", hebrewNiqqud: "חַיָּיל לֹא יָכוֹל לְסָרֵב לִפְקוּדָּה.",
+    english: "A soldier cannot refuse an order.",
+    hebrewTokenPairs: [["חייל", "חַיָּיל"], ["לא יכול", "לֹא יָכוֹל"], ["לסרב", "לְסָרֵב"], ["לפקודה", "לִפְקוּדָּה"]],
+    englishTokens: ["A soldier", "cannot", "refuse", "an order"],
+    hebrewDistractorPairs: [["קצין", "קָצִין"], ["לא חייב", "לֹא חַיָּיב"], ["להסכים", "לְהַסְכִּים"], ["להצעה", "לְהַצָּעָה"]],
+    englishDistractors: ["An officer", "does not have to", "agree", "to a proposal"],
+    notes: "לסרב takes ל. פקודה is a military order, distinct from הוראה for an instruction."
+  }),
+  buildReviewedSentence({
+    id: "idan_22", emoji: "🧭", category: "everyday", difficulty: 2,
+    wordOrderDecision: "alternates",
+    hebrew: "הסיור יצא לפני עלות השחר.", hebrewNiqqud: "הַסִּיּוּר יָצָא לִפְנֵי עֲלוֹת הַשַּׁחַר.",
+    english: "The patrol set out before dawn.",
+    hebrewTokenPairs: [["הסיור", "הַסִּיּוּר"], ["יצא", "יָצָא"], ["לפני עלות השחר", "לִפְנֵי עֲלוֹת הַשַּׁחַר"]],
+    englishTokens: ["The patrol", "set out", "before dawn"],
+    hebrewDistractorPairs: [["המבצע", "הַמִּבְצָע"], ["הסתיים", "הִסְתַּיֵּים"], ["אחרי שקיעת השמש", "אַחֲרֵי שְׁקִיעַת הַשֶּׁמֶשׁ"]],
+    englishDistractors: ["The operation", "ended", "after sunset"],
+    hebrewOrderAlternates: [
+      { text: "לפני עלות השחר יצא הסיור.", textNiqqud: "לִפְנֵי עֲלוֹת הַשַּׁחַר יָצָא הַסִּיּוּר.", order: [2, 1, 0] },
+    ],
+    notes: "עלות השחר is the fixed expression for first light. Fronting the time phrase inverts verb and subject."
+  }),
+  buildReviewedSentence({
+    id: "idan_23", emoji: "🎯", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "הערכת המצב השתנתה אחרי הדיווח.", hebrewNiqqud: "הַעֲרָכַת הַמַּצָּב הִשְׁתַּנְּתָה אַחֲרֵי הַדִּיווּחַ.",
+    english: "The situation assessment changed after the report.",
+    hebrewTokenPairs: [["הערכת המצב", "הַעֲרָכַת הַמַּצָּב"], ["השתנתה", "הִשְׁתַּנְּתָה"], ["אחרי הדיווח", "אַחֲרֵי הַדִּיווּחַ"]],
+    englishTokens: ["The situation assessment", "changed", "after the report"],
+    hebrewDistractorPairs: [["רמת הכוננות", "רָמַת הַכּוֹנְנוּת"], ["נשארה", "נִשְׁאֲרָה"], ["לפני התדריך", "לִפְנֵי הַתַּדְרִיךְ"]],
+    englishDistractors: ["The alert level", "stayed", "before the briefing"],
+    notes: "הערכת מצב is standard in military and civilian planning alike."
+  }),
+  buildReviewedSentence({
+    id: "idan_24", emoji: "🏅", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הוא שירת שלוש שנים ביחידה קרבית.", hebrewNiqqud: "הוּא שֵׁירֵת שָׁלוֹשׁ שָׁנִים בִּיחִידָה קְרָבִית.",
+    english: "He served three years in a combat unit.",
+    hebrewTokenPairs: [["הוא שירת", "הוּא שֵׁירֵת"], ["שלוש", "שָׁלוֹשׁ"], ["שנים", "שָׁנִים"], ["ביחידה קרבית", "בִּיחִידָה קְרָבִית"]],
+    englishTokens: ["He served", "three", "years", "in a combat unit"],
+    hebrewDistractorPairs: [["היא למדה", "הִיא לָמְדָה"], ["שני", "שְׁנֵי"], ["חודשים", "חוֹדָשִׁים"], ["במכללה צבאית", "בְּמִכְלָלָה צְבָאִית"]],
+    englishDistractors: ["She studied", "two", "months", "in a military college"],
+    notes: "קרבי contrasts with the slang label for a non-combat desk role."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
+  ...IDAN_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -15136,6 +15410,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260801c",
+  __build: "20260802e",
 };
 })(typeof window !== "undefined" ? window : globalThis);

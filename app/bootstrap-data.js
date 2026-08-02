@@ -937,6 +937,13 @@ bootstrapData.PERFORMANCE_DOMAINS = bootstrapData.PERFORMANCE_DOMAINS || [
       "bureaucracy",
       "groceries_food",
       "pharmacy_personal_care",
+      // Home-front safety is everyday functional language, not a specialist
+      // register: it is what a resident needs during an ordinary bad week.
+      "civil_defense_safety",
+      // Ivri's shelf by routing, but the register is everyday: this is a person
+      // with their own laptop, not an institution. `professional` stays work and
+      // institutional language.
+      "devices_os_apps",
     ]),
   },
   {
@@ -953,6 +960,9 @@ bootstrapData.PERFORMANCE_DOMAINS = bootstrapData.PERFORMANCE_DOMAINS || [
       "communication_mastery_expanded",
       "technology_ai",
       "technology_ai_expanded",
+      // Ranks, orders, and reporting are occupational vocabulary, so the
+      // military shelf reports alongside the other professional registers.
+      "military_operational",
     ]),
   },
   {
@@ -961,6 +971,7 @@ bootstrapData.PERFORMANCE_DOMAINS = bootstrapData.PERFORMANCE_DOMAINS || [
     label: "Religion & Magic",
     categories: new Set([
       "religion_magic_spirituality",
+      "religious_life_practice",
     ]),
   },
   {

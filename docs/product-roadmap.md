@@ -230,7 +230,7 @@ that is the payoff.
 
 Palette directions consistent with the existing "Hebrew Editorial" register: Ido
 magenta/coral (nightlife), Inbal violet (mystic), Ivri steel-cyan (hi-tech), Inat
-deep crimson (political/academic), Itamar slate-grey (unsentimental).
+deep crimson (political/academic), Idan slate-grey (unsentimental).
 
 Also worth doing: accent the dialogue bubble border, and make
 `.character-sprite`'s hardcoded `drop-shadow` (`styles.css:2652`) a
@@ -867,17 +867,33 @@ Recorded so they are not re-proposed:
 - CEFR banding (unfalsifiable without a corpus).
 - New function-word vocabulary cards (see the positioning policy in Tranche C).
 
-## Itamar
+## Idan
 
-`docs/character-gameplay-strategy.md:70-79` specifies a fifth character who owns
-no subject area and drills the learner's weakest material. He is unbuilt:
-`grep -ri itamar app/ index.html styles.css` returns zero hits. He has no sprites,
-no dialogue table, and `character.ownsItem` has no representation for an adaptive
-route as opposed to a subject route — that is a genuine design gap, not just
-missing content.
+The fifth character is implemented as Idan. He owns security, safety, and the
+military in two tiers — `civil_defense_safety` and `military_operational`, 70
+cards each — plus 24 `idan_` sentences, 34 abbreviations, and 28 shared-pool
+verbs. He has a complete dialogue table and six-pose production sprite set. His
+wrong-answer asset retains the shared `nervous-laugh.png` filename for runtime
+compatibility but depicts calm, stern discipline rather than embarrassment.
 
-Do not block Tranche E on him. Build scenes for Ido, who has 672 routed items and
-is the best-supplied character.
+He was first built with a `route.adaptive` marker that short-circuited all
+content weighting to neutral. That marker is **gone**: he weighs content like
+every other character. Weak-point emphasis survives anyway, because
+`buildContentWeigher` applies a *uniform* boost across the owned subset, so each
+mode's weak, missed, overdue, and spaced-repetition ordering still decides what
+he serves inside it.
+
+Two things about his routing are worth knowing before touching it:
+
+- `civil_defense_safety` is routed to the **entire cast**, not just to him. The
+  everyday security tier is course policy, so it inflates every character's
+  vocabulary count in `npm run report:characters` by design.
+- Abbreviations gained `route.abbrIds` and `route.abbrExcludeIds`, because the
+  four buckets could not separate the military register from Ivri's and Inat's
+  shelves. An exclusion beats a bucket grant. Ivri's abbreviation share dropped
+  from 135 to 113 as a result, which is intended.
+
+Scene authoring can include Idan without a routing or asset prerequisite.
 
 ## Recommended sequencing
 

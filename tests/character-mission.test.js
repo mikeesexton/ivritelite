@@ -164,6 +164,7 @@ test("approved character copy and gender labels come from the registry", () => {
   const ido = characterData.characters.ido.dialogue;
   const inbal = characterData.characters.inbal.dialogue;
   const ivri = characterData.characters.ivri.dialogue;
+  const idan = characterData.characters.idan.dialogue;
 
   assert.equal(ido.description.text, "הוא גיי");
   assert.equal(ido.description.glosses["גיי"], "gay");
@@ -187,6 +188,15 @@ test("approved character copy and gender labels come from the registry", () => {
   assert.equal(inat.fourWrong.text, "אולי כדאי להתחיל טיוטה חדשה.");
   assert.equal(inat.perfect.text, "עבודה יוצאת מן הכלל. רמת דוקטורט. שקלת לימודי משפטים?");
   assert.equal(inat.abbreviationsM.glosses["מר״ת"], "abbreviations");
+  assert.equal(idan.description.text, "בטיחות וביטחון. בלי תירוצים, בלי ניחושים.");
+  assert.equal(idan.oneWrongM.text, "עצור. קרא שוב, ואז תענה.");
+  assert.equal(idan.oneWrongF.text, "עצרי. קראי שוב, ואז תעני.");
+  assert.equal(idan.fourWrong.text, "מפסיקים לנחש. נשימה, ריכוז, וחוזרים לנוהל.");
+  assert.equal(idan.mission.text, "המשימה הושלמה. תחקיר קצר, ומחר חוזרים למה שנשאר פתוח.");
+  // His signature line: it names the three acronyms his abbreviation route owns.
+  assert.equal(idan.abbreviations.glosses["\u05e6\u05d4\u05f4\u05dc"], "IDF");
+  assert.equal(idan.abbreviations.glosses["\u05e4\u05e7\u05e2\u05f4\u05e8"], "Home Front Command");
+  assert.equal(idan.abbreviations.glosses["\u05de\u05de\u05f4\u05d3"], "safe room");
 
   // The markup carries the English default (the app's default language);
   // renderSettings swaps in זכר/נקבה when the UI language is Hebrew.
@@ -248,6 +258,17 @@ test("gendered lines resolve per character and ungendered lines are shared", () 
     assert.ok(inat[key], `inat ${key} should exist unsuffixed`);
     assert.equal(inat[`${key}M`], undefined, `inat ${key} should not be gendered`);
   });
+
+  const idan = characterData.characters.idan.dialogue;
+  assert.equal(idan.firstM.text, "אני עידן. נתחיל במה שחייבים לדעת כשיש אזעקה, ונמשיך משם. מוכן?");
+  assert.equal(idan.firstF.text, "אני עידן. נתחיל במה שחייבים לדעת כשיש אזעקה, ונמשיך משם. מוכנה?");
+  assert.equal(idan.listeningM.text, "בשטח שומעים פעם אחת. תנצל אותה.");
+  assert.equal(idan.listeningF.text, "בשטח שומעים פעם אחת. תנצלי אותה.");
+  ["description", "greeting", "fourRight", "fourWrong", "recovery", "perfect", "mission"]
+    .forEach((key) => {
+      assert.ok(idan[key], `idan ${key} should exist unsuffixed`);
+      assert.equal(idan[`${key}M`], undefined, `idan ${key} should not be gendered`);
+    });
 });
 
 test("sprite CSS and assets exist for every character reaction", () => {
@@ -272,8 +293,15 @@ test("sprite CSS and assets exist for every character reaction", () => {
       assert.equal(sprite.subarray(1, 4).toString(), "PNG");
       assert.equal(sprite.readUInt32BE(16), 512, `${id}/${reaction}.png width`);
       assert.equal(sprite.readUInt32BE(20), 512, `${id}/${reaction}.png height`);
+      assert.equal(sprite[25], 6, `${id}/${reaction}.png must be RGBA`);
+      assert.ok(
+        sprite.length < 256 * 1024,
+        `${id}/${reaction}.png must stay below the 256 KiB production budget`,
+      );
     });
   });
+  assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
+  assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
     path.join(PROJECT_ROOT, "scripts/build-ido-sprites.py"),
@@ -284,6 +312,11 @@ test("sprite CSS and assets exist for every character reaction", () => {
     /f"\{name\}-transparent\.png"/,
   );
   assert.match(idoBuilder, /LOGO_SCALE = 3/);
+  assert.match(idoBuilder, /LOGICAL_SIZE = 128/);
+  assert.match(idoBuilder, /PALETTE_COLORS = 96/);
+  assert.match(idoBuilder, /\(LOGICAL_SIZE, LOGICAL_SIZE\)/);
+  assert.match(idoBuilder, /Image\.Quantize\.FASTOCTREE/);
+  assert.match(idoBuilder, /logical_sprite\.resize/);
   reactions.forEach((reaction) => {
     assert.match(
       idoBuilder,
@@ -291,6 +324,27 @@ test("sprite CSS and assets exist for every character reaction", () => {
       `${reaction} needs its own logo placement`,
     );
   });
+  const inatBuilder = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts/build-inat-sprites.py"),
+    "utf8",
+  );
+  assert.match(inatBuilder, /LOGICAL_SIZE = 128/);
+  assert.match(inatBuilder, /PALETTE_COLORS = 96/);
+  assert.match(inatBuilder, /\(LOGICAL_SIZE, LOGICAL_SIZE\)/);
+  assert.match(inatBuilder, /Image\.Quantize\.FASTOCTREE/);
+  assert.match(inatBuilder, /logical_sprite\.resize/);
+  const idanBuilder = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts/build-idan-sprites.py"),
+    "utf8",
+  );
+  assert.match(idanBuilder, /LOGICAL_SIZE = 128/);
+  assert.match(idanBuilder, /PALETTE_COLORS = 96/);
+  assert.match(idanBuilder, /\(LOGICAL_SIZE, LOGICAL_SIZE\)/);
+  assert.match(idanBuilder, /Image\.Quantize\.FASTOCTREE/);
+  assert.match(idanBuilder, /logical_sprite\.resize/);
+  assert.match(idanBuilder, /transparent corners/);
+  assert.match(idanBuilder, /visible chroma-key pixels/);
+  assert.match(idanBuilder, /256 KiB production budget/);
 });
 
 test("character routing boosts owned content and stays neutral otherwise", () => {
@@ -357,6 +411,131 @@ test("the content weigher solves for the target owned share and stays neutral of
   assert.equal(character.buildContentWeigher("vocab", items)(items[0]), 1);
   app.runtime.characterState = { dailyChoice: "inbal", mission: null };
   assert.equal(character.buildContentWeigher("vocab", items)(items[0]), 1);
+});
+
+// Idan owns security in two tiers: `civil_defense_safety` is shared with the
+// whole cast, `military_operational` is his alone. The `adaptive` marker he was
+// first built with is gone — he weighs content like every other character, and
+// weak/missed ordering survives because the boost is uniform inside the owned set.
+test("Idan routes both security tiers and stays neutral elsewhere", () => {
+  const { character, characterData, app } = loadCharacterModule();
+  const idan = characterData.characters.idan;
+  assert.equal(idan.route.adaptive, undefined, "the adaptive short-circuit is retired");
+  assert.deepEqual([...idan.route.vocabCategories], ["civil_defense_safety", "military_operational"]);
+  assert.deepEqual([...idan.route.sentenceIdPrefixes], ["idan_"]);
+
+  app.runtime.characterState = { dailyChoice: "idan", mission: { active: true } };
+  const owned = [
+    ["vocab", { he: "אזעקה", category: "civil_defense_safety" }],
+    ["vocab", { he: "גדוד", category: "military_operational" }],
+    // Reached through vocabWords while staying on its own shelf.
+    ["vocab", { he: "פיגוע", category: "politics_society_expanded" }],
+    ["sentence", { id: "idan_01", category: "everyday" }],
+    ["verb", { id: "advanced-verb-lehazhir" }],
+    ["abbreviation", { id: "abbr-144", bucket: "Ideas, Science & Tech" }],
+    ["abbreviation", { id: "abbr-184", bucket: "Daily Life & Home" }],
+  ];
+  owned.forEach(([kind, item]) => {
+    assert.equal(character.getContentWeight(kind, item), 2, `${kind} ${item.he || item.id} should be owned`);
+  });
+
+  const unowned = [
+    ["vocab", { he: "אמונה", category: "religion_magic_spirituality" }],
+    ["sentence", { id: "colloquial_01", category: "colloquial", style: "whatsapp" }],
+    ["verb", { id: "character-verb-lirkod" }],
+    ["abbreviation", { id: "abbr-001", bucket: "Daily Life & Home" }],
+  ];
+  unowned.forEach(([kind, item]) => {
+    assert.equal(character.getContentWeight(kind, item), 1, `${kind} ${item.he || item.id} should stay neutral`);
+  });
+});
+
+// The everyday tier is course policy rather than one character's shelf, so it
+// has to reach a learner who never picks Idan.
+test("every character drills the everyday security tier", () => {
+  const { character, characterData, app } = loadCharacterModule();
+  const ids = characterData.getCharacterIds();
+  assert.deepEqual([...ids], ["ido", "inbal", "ivri", "inat", "idan"]);
+
+  ids.forEach((id) => {
+    assert.ok(
+      characterData.characters[id].route.vocabCategories?.includes("civil_defense_safety"),
+      `${id} should drill civil_defense_safety`,
+    );
+    app.runtime.characterState = { dailyChoice: id, mission: { active: true } };
+    assert.equal(
+      character.getContentWeight("vocab", { he: "אזעקה", category: "civil_defense_safety" }),
+      2,
+      `${id} should weigh the civil-defense shelf`,
+    );
+    // ממ״ד reaches everyone by id, even out of its bucket owner's hands.
+    assert.equal(
+      character.getContentWeight("abbreviation", { id: "abbr-184", bucket: "Daily Life & Home" }),
+      2,
+      `${id} should weigh the safe-room acronym`,
+    );
+  });
+});
+
+// An exclusion has to beat a bucket grant, or Ivri and Inat keep the military
+// register by accident through "Ideas, Science & Tech" and "Civics, Law & Work".
+test("military abbreviations belong to Idan alone", () => {
+  const { character, characterData, app } = loadCharacterModule();
+  const military = [
+    { id: "abbr-144", bucket: "Ideas, Science & Tech" },  // צה״ל
+    { id: "abbr-163", bucket: "Ideas, Science & Tech" },  // מג״ד
+    { id: "abbr-152", bucket: "Civics, Law & Work" },     // פצ״ר
+  ];
+
+  ["ivri", "inat"].forEach((id) => {
+    const excluded = [...characterData.characters[id].route.abbrExcludeIds];
+    const granted = [...characterData.characters.idan.route.abbrIds];
+    assert.ok(excluded.length > 0, `${id} should exclude the military register`);
+    assert.deepEqual(
+      excluded.filter((abbrId) => !granted.includes(abbrId)),
+      [],
+      `${id} may only exclude ids Idan is granted`,
+    );
+    app.runtime.characterState = { dailyChoice: id, mission: { active: true } };
+    military.forEach((item) => {
+      assert.equal(character.getContentWeight("abbreviation", item), 1, `${id} must not own ${item.id}`);
+    });
+  });
+
+  app.runtime.characterState = { dailyChoice: "idan", mission: { active: true } };
+  military.forEach((item) => {
+    assert.equal(character.getContentWeight("abbreviation", item), 2, `idan should own ${item.id}`);
+  });
+
+  // Policing is Inat's per the strategy doc, so it is granted without exclusion.
+  app.runtime.characterState = { dailyChoice: "inat", mission: { active: true } };
+  assert.equal(
+    character.getContentWeight("abbreviation", { id: "abbr-150", bucket: "Civics, Law & Work" }),
+    2,
+    "Border Police stays with Inat",
+  );
+});
+
+// Every routed abbreviation id must name a real row, the same guard the verb
+// route already has. A typo here silently routes nothing.
+test("every routed abbreviation id resolves to a real abbreviation", () => {
+  const { characterData } = loadCharacterModule();
+  const abbrContext = { console };
+  abbrContext.window = abbrContext;
+  abbrContext.globalThis = abbrContext;
+  vm.createContext(abbrContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "abbreviation-data.js"), "utf8"),
+    abbrContext,
+    { filename: "abbreviation-data.js" },
+  );
+  const ids = new Set(abbrContext.IvriQuestAbbreviations.getAbbreviations().map((row) => row.id));
+
+  Object.values(characterData.characters).forEach((entry) => {
+    [...(entry.route.abbrIds || []), ...(entry.route.abbrExcludeIds || [])].forEach((abbrId) => {
+      assert.ok(ids.has(abbrId), `${entry.id} routes unknown abbreviation ${abbrId}`);
+    });
+  });
 });
 
 test("every vocabulary category belongs to exactly one performance domain", () => {
@@ -1440,24 +1619,24 @@ test("the review character panel picks the free-play companion like Settings doe
   character.renderBondPanel();
   assert.deepEqual(
     readChoices().map((button) => button.dataset.characterLens),
-    ["ido", "inbal", "ivri", "inat"],
+    ["ido", "inbal", "ivri", "inat", "idan"],
   );
   assert.deepEqual(
     readChoices().map((button) => button.textContent),
-    ["Choose as companion", "Current companion", "Choose as companion", "Choose as companion"],
+    ["Choose as companion", "Current companion", "Choose as companion", "Choose as companion", "Choose as companion"],
   );
-  assert.deepEqual(readChoices().map((button) => button.disabled), [false, true, false, false]);
+  assert.deepEqual(readChoices().map((button) => button.disabled), [false, true, false, false, false]);
   assert.equal(note.className.includes("hidden"), true);
 
   // Choosing from Review is the same lens the Settings picker sets.
   assert.equal(character.setLensCharacter("ivri"), true);
   character.renderBondPanel();
-  assert.deepEqual(readChoices().map((button) => button.disabled), [false, false, true, false]);
+  assert.deepEqual(readChoices().map((button) => button.disabled), [false, false, true, false, false]);
 
   // A running mission owns the lens here exactly as it does in Settings.
   app.runtime.characterState.mission = { active: true };
   character.renderBondPanel();
-  assert.deepEqual(readChoices().map((button) => button.disabled), [true, true, true, true]);
+  assert.deepEqual(readChoices().map((button) => button.disabled), [true, true, true, true, true]);
   assert.equal(note.className.includes("hidden"), false);
   assert.equal(note.textContent, "Finish today’s mission to change your companion.");
 });
@@ -1492,7 +1671,7 @@ test("Settings character names and address labels follow the UI language", () =>
   character.renderSettings();
   assert.deepEqual(read(), {
     gender: ["Male", "Female"],
-    lens: ["None", "Ido", "Inbal", "Ivri", "Inat"],
+    lens: ["None", "Ido", "Inbal", "Ivri", "Inat", "Idan"],
     label: "Free-play companion",
   });
 
@@ -1500,7 +1679,7 @@ test("Settings character names and address labels follow the UI language", () =>
   character.renderSettings();
   assert.deepEqual(read(), {
     gender: ["זכר", "נקבה"],
-    lens: ["ללא", "עידו", "ענבל", "עברי", "עינת"],
+    lens: ["ללא", "עידו", "ענבל", "עברי", "עינת", "עידן"],
     label: "דמות למשחק חופשי",
   });
 });

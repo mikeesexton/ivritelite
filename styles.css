@@ -2673,31 +2673,33 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.28));
 }
 
 .character-sprite[data-character="ido"][data-reaction="neutral"] {
-  background-image: url("./assets/ido/neutral.png?v=20260728e");
+  background-image: url("./assets/ido/neutral.png?v=20260802c");
 }
 
 .character-sprite[data-character="ido"][data-reaction="frustrated"] {
-  background-image: url("./assets/ido/frustrated.png?v=20260728e");
+  background-image: url("./assets/ido/frustrated.png?v=20260802c");
 }
 
 .character-sprite[data-character="ido"][data-reaction="celebrating"] {
-  background-image: url("./assets/ido/celebrating.png?v=20260728e");
+  background-image: url("./assets/ido/celebrating.png?v=20260802c");
 }
 
 .character-sprite[data-character="ido"][data-reaction="struggling"] {
-  background-image: url("./assets/ido/struggling.png?v=20260728e");
+  background-image: url("./assets/ido/struggling.png?v=20260802c");
 }
 
 .character-sprite[data-character="ido"][data-reaction="mission-complete"] {
-  background-image: url("./assets/ido/mission-complete.png?v=20260728e");
+  background-image: url("./assets/ido/mission-complete.png?v=20260802c");
 }
 
 .character-sprite[data-character="ido"][data-reaction="nervous-laugh"] {
-  background-image: url("./assets/ido/nervous-laugh.png?v=20260728e");
+  background-image: url("./assets/ido/nervous-laugh.png?v=20260802c");
 }
 
 .character-sprite[data-character="inbal"][data-reaction="neutral"] {
@@ -2749,27 +2751,51 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 }
 
 .character-sprite[data-character="inat"][data-reaction="neutral"] {
-  background-image: url("./assets/inat/neutral.png?v=20260726a");
+  background-image: url("./assets/inat/neutral.png?v=20260802b");
 }
 
 .character-sprite[data-character="inat"][data-reaction="frustrated"] {
-  background-image: url("./assets/inat/frustrated.png?v=20260726a");
+  background-image: url("./assets/inat/frustrated.png?v=20260802b");
 }
 
 .character-sprite[data-character="inat"][data-reaction="celebrating"] {
-  background-image: url("./assets/inat/celebrating.png?v=20260726a");
+  background-image: url("./assets/inat/celebrating.png?v=20260802b");
 }
 
 .character-sprite[data-character="inat"][data-reaction="struggling"] {
-  background-image: url("./assets/inat/struggling.png?v=20260726a");
+  background-image: url("./assets/inat/struggling.png?v=20260802b");
 }
 
 .character-sprite[data-character="inat"][data-reaction="mission-complete"] {
-  background-image: url("./assets/inat/mission-complete.png?v=20260726a");
+  background-image: url("./assets/inat/mission-complete.png?v=20260802b");
 }
 
 .character-sprite[data-character="inat"][data-reaction="nervous-laugh"] {
-  background-image: url("./assets/inat/nervous-laugh.png?v=20260726a");
+  background-image: url("./assets/inat/nervous-laugh.png?v=20260802b");
+}
+
+.character-sprite[data-character="idan"][data-reaction="neutral"] {
+  background-image: url("./assets/idan/neutral.png?v=20260802d");
+}
+
+.character-sprite[data-character="idan"][data-reaction="frustrated"] {
+  background-image: url("./assets/idan/frustrated.png?v=20260802d");
+}
+
+.character-sprite[data-character="idan"][data-reaction="celebrating"] {
+  background-image: url("./assets/idan/celebrating.png?v=20260802d");
+}
+
+.character-sprite[data-character="idan"][data-reaction="struggling"] {
+  background-image: url("./assets/idan/struggling.png?v=20260802d");
+}
+
+.character-sprite[data-character="idan"][data-reaction="mission-complete"] {
+  background-image: url("./assets/idan/mission-complete.png?v=20260802d");
+}
+
+.character-sprite[data-character="idan"][data-reaction="nervous-laugh"] {
+  background-image: url("./assets/idan/nervous-laugh.png?v=20260802d");
 }
 
 .character-scene {

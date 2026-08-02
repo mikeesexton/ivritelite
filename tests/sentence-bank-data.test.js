@@ -699,6 +699,31 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
   ...compactUnitMap(`
     sleight hand
   `, "fixed-expression: lexicalized English idiom"),
+  // Idan's civil-defense and military tranche. Each of these is a Hebrew
+  // compound the learner meets as one unit — מרחב מוגן, פיקוד העורף, תיק חירום,
+  // מפקד פלוגה — so splitting the English would teach the wrong boundary.
+  ...compactUnitMap(`
+    protected space
+    emergency exit
+    emergency bag
+    emergency center
+    fire extinguisher
+    suspicious object
+    bomb technician
+    alert level
+    situation assessment
+    company commander
+    platoon sergeant
+    combat unit
+    military college
+    reserve duty
+    regular service
+    medical exemption
+    emergency call order
+  `, "term: recognized multiword vocabulary unit"),
+  ...compactUnitMap(`
+    home front command
+  `, "proper-name: geographic, legal, or institutional name"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -712,7 +737,7 @@ const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
 const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map();
 
 function isCompactTokenPolicyEntry(entry) {
-  if (/^(?:inbal|inat)_\d+$/.test(String(entry?.id || ""))) return true;
+  if (/^(?:inbal|inat|idan)_\d+$/.test(String(entry?.id || ""))) return true;
   const match = /^(colloquial|everyday|professional|formal)_(\d+)$/.exec(String(entry?.id || ""));
   return Boolean(match) && Number(match[2]) >= COMPACT_TOKEN_POLICY_START[match[1]];
 }
@@ -873,15 +898,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 627 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 651 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 627);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 627);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 627);
+  assert.equal(entries.length, 651);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 651);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 651);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -908,9 +933,11 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
     categoryCounts[entry.category] = (categoryCounts[entry.category] || 0) + 1;
   });
 
+  // everyday carries the prefix-owned character tranches as well as the
+  // everyday_ rows: Inbal's, Inat's, and Idan's 24 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
     colloquial: 202,
-    everyday: 194,
+    everyday: 218,
     professional: 113,
     formal: 118,
   });
