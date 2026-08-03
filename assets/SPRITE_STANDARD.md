@@ -1,95 +1,73 @@
 # Locked character sprite standard
 
-The production cast has exactly six transparent RGBA reactions per character,
-all on a 512×512 canvas:
+The final five-character set was visually approved on 2026-08-03. Ido and
+Inbal are frozen byte-for-byte. Inat, Ivri, and Idan were freshly redrawn as 18
+independent images and approved beside the frozen references at native 512px.
+Inbal is the sole visual style and effective-grain authority. Ido is the second
+spatial measurement control, never a generation-style reference.
 
-- `neutral.png`
-- `nervous-laugh.png`
-- `celebrating.png`
-- `struggling.png`
-- `mission-complete.png`
-- `frustrated.png`
+All 30 transparent masters are tracked at
+`assets/sprite-masters/<character>/<reaction>-transparent.png`. All 30
+production sprites are tracked at `assets/<character>/<reaction>.png`. Exact
+hashes, dimensions, alpha statistics, framing boxes, file sizes, spatial
+signatures, and the user-approved provisional-band deviations are locked in
+`assets/sprite-lock.json`.
 
-The app loads only `assets/<character>/<reaction>.png`. It never loads a
-master, chroma image, prompt, preview, contact sheet, or rejected candidate.
-
-## Frozen authority
-
-Ivri alone is the visual authority for pixel medium, contour treatment,
-multi-tone cel shading, mature anatomy, scale, framing, and final detail
-density. Do not average Ivri with another character. A character's own approved
-neutral controls identity and wardrobe; its approved equivalent reaction
-controls only pose semantics. Never copy Ivri's face, body, hair, clothing, or
-colors.
-
-Ido, Inat, and Inbal were independently redrawn and approved as complete sets
-on 2026-08-03. Their exact generation prompts and reference order are frozen in
-`docs/sprite-prompts/`. Their 18 approved transparent masters are tracked at
-`assets/sprite-masters/<character>/<reaction>-transparent.png`.
-
-No future edit is routine maintenance. Replacing a locked sprite requires an
-explicit request to replace the character set, independent generation calls,
-native-size and live-size review, user approval, and an intentional
-`sprites:audit --write-lock` update.
+No sprite edit is routine maintenance. A deliberate replacement requires an
+explicit request, independent generation calls, the full visual review, and an
+intentional `npm run sprites:audit -- --write-lock` update.
 
 ## Direct export contract
 
-For Ido, Inat, and Inbal, each production image is exactly one direct
-nearest-neighbor resize from its 1254×1254 RGBA master to 512×512 RGBA. There
-is no 128px or 256px logical canvas, palette quantization, posterization, blur,
-sharpening, or intermediate enlargement. A 128px or 256px nearest-neighbor
-round trip must not reproduce an approved production image.
+Every builder performs exactly one 1254×1254 RGBA to 512×512 RGBA
+nearest-neighbor resize and writes the result through `scripts/sprite_png.py`.
+There is no logical 128px or 256px canvas, palette reduction, posterization,
+blur, sharpening, smoothing, or intermediate enlargement.
 
-Ido's deterministic shirt mark is the sole post-export exception. The builder
-composites the existing 38×26 bitmap at 3× scale after the direct resize, using
-the six audited positions in `docs/sprite-prompts/ido-logo-placements.json`.
-The generated shirt must stay blank.
+Ido's deterministic shirt mark is the sole post-export exception. His builder
+composites the existing 38×26 bitmap at 3× scale after the direct resize using
+the frozen reaction-specific coordinates in
+`docs/sprite-prompts/ido-logo-placements.json`. Generated Ido art must leave
+the shirt front blank.
 
-Idan remains a frozen legacy exception on the earlier 128px/96-color builder;
-the user accepted him without requesting another regeneration. Ivri's direct
-builder and assets remain unchanged.
+## Effective-resolution detector
+
+Effective resolution means the spatial size and arrangement of visible color
+clusters—not file dimensions and not the number of unique RGBA values. The
+audit applies this deterministic measurement to every 512px production file:
+
+1. Treat only pixels with alpha greater than zero as subject pixels.
+2. Build independent 32-color and 64-color median-cut palettes from those
+   visible RGB pixels only, without dithering.
+3. At logical sizes 96, 128, 192, and 256, resize the measurement labels down
+   and back to 512 using nearest-neighbor sampling.
+4. Record the fraction of visible labels that survive unchanged.
+5. Record the pixel-weighted median area of four-connected equal-label
+   clusters and the adjacent visible-pixel boundary rate.
+6. Reject exact reproduction through either a 128px or 256px round trip.
+
+The provisional band for each reaction is the corresponding Ido/Inbal range
+plus or minus 0.03 at each survival size. Cluster area runs from 75% of the
+smaller reference through 125% of the larger; boundary rate uses the reference
+range plus or minus 0.03. Unique RGBA count is informational only.
+
+The approved 2026-08-03 set contains visible-review exceptions to some
+provisional bands. Those exceptions are listed verbatim in the lock and are
+now protected by exact hashes and exact spatial signatures. They are not new
+tolerances and cannot justify a future approximate replacement.
 
 ## Immutable generation rules
 
-Generate one independent square reaction per call. Never generate sheets,
-grids, collages, or crops from a sheet. Start with the common prompt recorded
-in the character's prompt file, then append exactly one reaction block. The
-reference hierarchy is:
+The executable prompt, reference order, identity blocks, reaction blocks, and
+rejection rules are frozen in
+`docs/sprite-prompts/final-inbal-grain-standard.md`.
 
-1. Approved neutral master — identity and wardrobe only.
-2. Approved outgoing equivalent master — gesture and emotion only.
-3. Ivri equivalent source master — source-art style, shading, scale, framing.
-4. Ivri equivalent 512px production image — final pixel density.
-
-Draw native high-density pixel art with crisp square steps, near-black outer
-contours, controlled one-to-three-pixel internal detail, clustered highlights,
-and multi-tone cel shading. Use mature chest-up proportions. Keep the face,
-hair, identity accessories, and essential gesture legible. Use a perfectly flat
-`#FF00FF` background and never use that color in the subject. No gradients,
-airbrushing, vector-smooth curves, glossy 3D rendering, dithering noise,
-hair-thin lines, watermark, text, scenery, glow, or debris.
-
-Reject identity drift, reaction ambiguity, clipped essential features, visible
-chroma, matte fringe, stray opaque pixels, and any attempt to rescue the art by
-resizing or palette manipulation. The prompt files contain the hardcoded
-identity and reaction wording that must be reasserted in full.
-
-## Approved metrics and exceptions
-
-The exact approved hashes and measured metrics are in
-`assets/sprite-lock.json`; they are the objective acceptance record. The user
-approved the visible sets with these deliberate exceptions to the earlier
-provisional numeric gates:
-
-- Ido: 18,946–22,118 unique RGBA values; `nervous-laugh` reaches the
-  bottom-right corner.
-- Inat: 38,982–42,488 unique RGBA values; four files exceed 256 KiB under the
-  fixed deterministic lossless encoder.
-- Inbal: 27,010–29,134 unique RGBA values; her approved long hair starts above
-  row 12 and makes every lossless PNG larger than 256 KiB.
-
-These are not invitations for approximate future replacements. Exact hashes
-freeze the accepted files, and the universal absolute ceiling is 384 KiB.
+Generate exactly one independent image per call. Never generate a sheet, grid,
+collage, or crop from a sheet. Use a perfectly flat `#FF00FF` background. A
+failed drawing is rejected; resizing, pixelation, palette reduction, or other
+processing may never rescue it. Normal rectangular pixel clusters are required
+pixel-art geometry. What is prohibited is a repeated 2×2/4×4 macro-pixel
+lattice or coarse enlarged tiles across facial and clothing features.
 
 ## Deterministic commands
 
@@ -101,13 +79,15 @@ npm run sprites:audit
 npm test
 ```
 
-`sprites:audit` validates all 30 production hashes, all 18 tracked master
-hashes, dimensions, RGBA mode, alpha, chroma, density metrics, framing metrics,
-file sizes, anti-round-trip behavior, direct-builder structure, and two clean
-rebuilds of all 18 approved outputs. Normal tests also verify every locked hash,
-so accidental drift fails without requiring Pillow in the JavaScript test
-environment.
+`sprites:build` rebuilds all 30 production files. `sprites:audit` validates all
+60 locked PNGs, the visible-only multiscale spatial signatures, dimensions,
+RGBA mode, alpha, chroma, framing, file ceiling, anti-round-trip behavior,
+builder structure, and two clean deterministic rebuilds of every production
+sprite. Normal tests also verify every locked hash.
 
-The three approved builders use `scripts/sprite_png.py` to choose PNG filters
-and compression deterministically. This preserves the exact approved pixels
-while avoiding version-dependent byte changes from Pillow's optimizer.
+## Browser cache contract
+
+Every runtime sprite URL and the stylesheet URL in `index.html` carry the same
+release cache key. Any approved sprite replacement must advance both keys in
+the same commit. This forces GitHub Pages clients to request the new stylesheet
+and then the new sprite URLs instead of reusing an older cached image.

@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Build consistent 512px Ivri reaction sprites from transparent source art."""
+"""Build the locked 512px Ivri reactions from tracked transparent masters."""
 
+import argparse
 from pathlib import Path
 
 from PIL import Image
 
+from sprite_png import save_rgba_png
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "ivri"
-SOURCE_DIR = ASSET_DIR / "source"
+SOURCE_DIR = ROOT / "assets" / "sprite-masters" / "ivri"
 SOURCE_SIZE = 1254
 CANVAS_SIZE = 512
 
@@ -22,7 +25,7 @@ REACTIONS = (
 )
 
 
-def build_reaction(name: str) -> None:
+def build_reaction(name: str, output_dir: Path = ASSET_DIR) -> Path:
     source_path = SOURCE_DIR / f"{name}-transparent.png"
     source = Image.open(source_path).convert("RGBA")
     if source.size != (SOURCE_SIZE, SOURCE_SIZE):
@@ -34,13 +37,18 @@ def build_reaction(name: str) -> None:
         (CANVAS_SIZE, CANVAS_SIZE),
         Image.Resampling.NEAREST,
     )
-    sprite.save(ASSET_DIR / f"{name}.png", optimize=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"{name}.png"
+    save_rgba_png(sprite, output_path)
+    return output_path
 
 
 def main() -> None:
-    ASSET_DIR.mkdir(parents=True, exist_ok=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", type=Path, default=ASSET_DIR)
+    args = parser.parse_args()
     for reaction in REACTIONS:
-        build_reaction(reaction)
+        build_reaction(reaction, args.output_dir)
 
 
 if __name__ == "__main__":
