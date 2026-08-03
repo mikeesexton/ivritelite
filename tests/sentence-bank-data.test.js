@@ -963,6 +963,81 @@ test("sentence bank data exposes 717 complete entries with notes, distractors, a
   });
 });
 
+// The pointed/plain alignment check above is scoped to POLITICAL_ENTRY_IDS, which
+// is how 90 idan_ rows shipped with nothing stronger than "one mark exists
+// somewhere in the sentence". This runs over every row instead, the way
+// tests/hebrew-verbs.test.js:1426 does for all ~3,780 verb forms.
+//
+// The skeleton helper drops vav and yod, so it deliberately tolerates a plene
+// (ktiv male) plain spelling against defective (ktiv haser) pointing — the house
+// convention on 231 vocabulary cards. What it catches is a pointed form that
+// silently loses or gains a consonant, which is how three pre-existing rows were
+// found dropping an alef or a definite he.
+test("every pointed Hebrew string keeps the plain consonantal skeleton", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const mismatches = [];
+  const compare = (label, plain, pointed) => {
+    if (!pointed) return;
+    if (hebrewConsonantalSkeleton(pointed) !== hebrewConsonantalSkeleton(plain)) {
+      mismatches.push(`${label}: ${plain} vs ${pointed}`);
+    }
+  };
+
+  entries.forEach((entry) => {
+    compare(`${entry.id} sentence`, entry.hebrew, entry.hebrew_niqqud);
+    entry.hebrew_tokens.forEach((token, index) => {
+      compare(`${entry.id} token ${index}`, token, entry.hebrew_tokens_niqqud[index]);
+    });
+    entry.hebrew_distractors.forEach((token, index) => {
+      compare(`${entry.id} distractor ${index}`, token, entry.hebrew_distractors_niqqud[index]);
+    });
+    (entry.hebrew_alternates || []).forEach((alternate, order) => {
+      compare(`${entry.id} alternate ${order}`, alternate.text, alternate.text_niqqud);
+      (alternate.tokens || []).forEach((token, index) => {
+        compare(`${entry.id} alternate ${order} token ${index}`, token, alternate.tokens_niqqud?.[index]);
+      });
+    });
+  });
+
+  assert.deepEqual(mismatches, []);
+});
+
+// Three mechanical pointing faults, each at zero. They are cheap, need no Hebrew
+// judgement, and the first one is why this test exists: 32 records placed the
+// holam on the consonant instead of on the following vav (לִשְׁטֹוף for
+// לִשְׁטוֹף). Both spellings carry marks and the skeleton helper strips vav, so
+// nothing in the suite could see it.
+test("pointed Hebrew avoids mechanically impossible mark placements", () => {
+  const entries = loadSentenceBankApi().getSentenceBank();
+  const HOLAM = "\u05B9";
+  const DAGESH = "\u05BC";
+  const holamBeforeVav = new RegExp(`(?:${DAGESH}?${HOLAM}${DAGESH}?)\u05D5`);
+  // Dagesh cannot sit on these letters. Final he is excluded: word-final mappiq
+  // (אוֹתָהּ, שֶׁלָּהּ) is legitimate and common.
+  const dageshOnGuttural = new RegExp(`[\u05D0\u05D7\u05E2\u05E8]${DAGESH}`);
+  // Final forms take no vowel, except a final kaf which takes qamats or shva.
+  const vowelOnFinal = new RegExp(`[\u05DD\u05DF\u05E3\u05E5][\u05B0-\u05BB\u05C7]`);
+  const vowelOnFinalKaf = new RegExp(`\u05DA[\u05B1-\u05B7\u05B9\u05BB]`);
+
+  const faults = [];
+  const check = (label, pointed) => {
+    if (!pointed) return;
+    const text = String(pointed).normalize("NFC");
+    if (holamBeforeVav.test(text)) faults.push(`${label} holam before vav: ${text}`);
+    if (dageshOnGuttural.test(text)) faults.push(`${label} dagesh on a guttural: ${text}`);
+    if (vowelOnFinal.test(text)) faults.push(`${label} vowel on a final letter: ${text}`);
+    if (vowelOnFinalKaf.test(text)) faults.push(`${label} bad vowel on final kaf: ${text}`);
+  };
+
+  entries.forEach((entry) => {
+    check(`${entry.id} sentence`, entry.hebrew_niqqud);
+    entry.hebrew_tokens_niqqud.forEach((token, index) => check(`${entry.id} token ${index}`, token));
+    entry.hebrew_distractors_niqqud.forEach((token, index) => check(`${entry.id} distractor ${index}`, token));
+  });
+
+  assert.deepEqual(faults, []);
+});
+
 test("sentence bank expansion adds the planned category and difficulty mix", () => {
   const entries = loadSentenceBankApi().getSentenceBank();
   const byId = new Map(entries.map((entry) => [entry.id, entry]));

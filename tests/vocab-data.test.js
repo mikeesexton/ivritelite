@@ -438,6 +438,52 @@ test("every vocabulary card carries real niqqud, apart from documented acronyms"
 // Translation Match board, where the grader keys on pair id — so matching the
 // first Hebrew to the second English is marked wrong although it is correct.
 // Homographs with distinct glosses (אחריות, תור, הנחה) are fine and expected.
+// The politics tranche asserts byte-exact plain/pointed identity, which only holds
+// there: 231 cards across the deck deliberately pair a plene (ktiv male) plain
+// spelling with defective (ktiv haser) pointing — תקשורת / תִּקְשֹׁרֶת — which is
+// standard Hebrew, not an error. So this uses the vav/yod-tolerant skeleton the
+// sentence bank and verb deck use, which still catches a pointed form that loses
+// or gains a real consonant. Three cards were found dropping one.
+test("every pointed vocabulary card keeps the plain consonantal skeleton", () => {
+  const vocabulary = loadVocabulary();
+  const skeleton = (text) => String(text || "")
+    .normalize("NFC")
+    .replace(/[֑-ׇֽֿׁׂׅׄ]/g, "")
+    .replace(/[וי]/g, "");
+
+  const mismatches = vocabulary
+    .filter((word) => word.heNiqqud !== word.he)
+    .filter((word) => skeleton(word.heNiqqud) !== skeleton(word.he))
+    .map((word) => `${word.id}: ${word.he} vs ${word.heNiqqud}`);
+
+  // Spread first: loadVocabulary returns a VM-context array, and deepStrictEqual
+  // compares prototypes across realms.
+  assert.deepEqual([...mismatches], []);
+});
+
+// Same three mechanical faults the sentence bank now gates on. Kept in both files
+// because the two decks are authored independently.
+test("pointed vocabulary avoids mechanically impossible mark placements", () => {
+  const vocabulary = loadVocabulary();
+  const HOLAM = "ֹ";
+  const DAGESH = "ּ";
+  const holamBeforeVav = new RegExp(`(?:${DAGESH}?${HOLAM}${DAGESH}?)ו`);
+  const dageshOnGuttural = new RegExp(`[אחער]${DAGESH}`);
+  const vowelOnFinal = new RegExp(`[םןףץ][ְ-ׇֻ]`);
+  const vowelOnFinalKaf = new RegExp(`ך[ֱ-ַֹֻ]`);
+
+  const faults = [];
+  vocabulary.forEach((word) => {
+    const text = String(word.heNiqqud || "").normalize("NFC");
+    if (holamBeforeVav.test(text)) faults.push(`${word.id} holam before vav: ${text}`);
+    if (dageshOnGuttural.test(text)) faults.push(`${word.id} dagesh on a guttural: ${text}`);
+    if (vowelOnFinal.test(text)) faults.push(`${word.id} vowel on a final letter: ${text}`);
+    if (vowelOnFinalKaf.test(text)) faults.push(`${word.id} bad vowel on final kaf: ${text}`);
+  });
+
+  assert.deepEqual(faults, []);
+});
+
 test("no two playable cards share both their Hebrew and their English", () => {
   const playable = loadVocabulary().filter((word) => word.availability?.translationQuiz);
   const seen = new Map();

@@ -161,6 +161,21 @@ const GAMEPLAY_GEOMETRY = `(() => {
   };
 })()`;
 
+// The feedback tray animates in with `feedbackTrayIn 180ms` (styles.css), and a
+// transformed descendant still contributes to an ancestor's scrollable overflow
+// in Chrome. Measuring at t=0 therefore reports up to 6px of phantom
+// scrollHeight — the animation's starting translateY. Settle first, and re-check
+// fonts: the boot-time `document.fonts.ready` only settles loads pending on the
+// home screen, and the Hebrew display faces used by .choice-btn load later.
+async function measureGeometry(cdp) {
+  await evaluate(cdp, `(async () => {
+    await document.fonts.ready;
+    await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {})));
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  })()`);
+  return evaluate(cdp, GAMEPLAY_GEOMETRY);
+}
+
 function assertNoGameplayScroll(geometry, label) {
   assert.ok(
     geometry.body.scrollHeight <= geometry.body.clientHeight + 1,
@@ -239,7 +254,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
       IvriQuestApp.binyanBoard.startBinyanBoard();
       IvriQuestApp.binyanBoard.beginBinyanBoardFromIntro();
     })()`);
-    const boardGeometry = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    const boardGeometry = await measureGeometry(pageCdp);
     assertNoGameplayScroll(boardGeometry, "Binyanim board");
     const compactRootTiles = await evaluate(pageCdp, `(() => {
       const tiles = [...document.querySelectorAll('.binyan-root-tile')];
@@ -258,7 +273,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
       const board = IvriQuestApp.runtime.state.binyanBoard;
       IvriQuestApp.binyanBoard.openRoot(board.deck[0].id);
     })()`);
-    const questionGeometry = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    const questionGeometry = await measureGeometry(pageCdp);
     assertNoGameplayScroll(questionGeometry, "Binyanim question");
     assertChoicesClearFooter(questionGeometry, "Binyanim question");
     const promptSymmetry = await evaluate(pageCdp, `(() => {
@@ -290,18 +305,56 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
       question.selectedOptionId = question.options.find((option) => !option.isCorrect).id;
       IvriQuestApp.binyanBoard.applyBinyanBoardAnswer();
     })()`);
-    const feedbackGeometry = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    const feedbackGeometry = await measureGeometry(pageCdp);
     assertNoGameplayScroll(feedbackGeometry, "Binyanim feedback");
     assertChoicesClearFooter(feedbackGeometry, "Binyanim feedback");
 
-    await evaluate(pageCdp, `(() => {
-      IvriQuestApp.advConj.startAdvConj();
-      IvriQuestApp.advConj.beginAdvConjFromIntro();
+    // Conjugation+ used to draw at random from a 22,000-entry deck, so this
+    // assertion was a coin flip: it failed intermittently at 496px against a
+    // 488px body while every passing run reported a flush 488, because
+    // .shell-body centers content and so reports no slack whenever it fits.
+    //
+    // Pin the draw the way the Shema block below does — monkey-patch, start,
+    // restore — so the measurement is reproducible. Math.random is stubbed
+    // because buildAdvConjDeck picks a direction per entry with
+    // `Math.random() < 0.5`, and the answer is deliberately wrong so the longer
+    // "לא בדיוק" feedback prefix is the one measured.
+    //
+    // This pins the longest-*text* question, which is a proxy: rendered height
+    // is driven by line count, and a shorter string can wrap to more lines. It
+    // buys determinism, not a proof that the tallest case is covered. The
+    // headroom rule in styles.css is what actually bounds the height.
+    const advConjWorstCase = await evaluate(pageCdp, `(() => {
+      const originalRandom = Math.random;
+      const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
+      const cost = (question) => (
+        String(question?.promptText || '').length
+        + String(question?.correctAnswer || '').length
+        + (question?.showMeaning ? String(question?.colloquialMeaning || '').length : 0)
+        + Math.max(0, ...(question?.options || []).map((option) => String(option.text || '').length))
+      );
+      try {
+        // buildAdvConjDeck picks a direction per entry with Math.random() < 0.5.
+        Math.random = () => 0;
+        IvriQuestApp.utils.weightedRandomWord = (items) => items.reduce(
+          (worst, item) => (cost(item.word) > cost(worst.word) ? item : worst),
+          items[0],
+        ).word;
+        IvriQuestApp.advConj.startAdvConj();
+        IvriQuestApp.advConj.beginAdvConjFromIntro();
+      } finally {
+        Math.random = originalRandom;
+        IvriQuestApp.utils.weightedRandomWord = originalWeightedRandomWord;
+      }
+
       const question = IvriQuestApp.runtime.state.advConj.currentQuestion;
-      question.selectedOptionId = question.options[0].id;
+      const wrong = question.options.find((option) => !option.isCorrect) || question.options[0];
+      question.selectedOptionId = wrong.id;
       IvriQuestApp.advConj.applyAdvConjAnswer();
+      return { idiomId: question.idiomId, direction: question.direction, cost: cost(question) };
     })()`);
-    const advConjFeedback = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    assert.ok(advConjWorstCase.cost > 0, "Conjugation+ worst case should resolve a question");
+    const advConjFeedback = await measureGeometry(pageCdp);
     assertNoGameplayScroll(advConjFeedback, "Conjugation+ feedback");
     assertChoicesClearFooter(advConjFeedback, "Conjugation+ feedback");
     assertFeedbackFooterInFlow(advConjFeedback, "Conjugation+ feedback");
@@ -313,7 +366,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
       question.selectedOptionId = question.options[0].id;
       IvriQuestApp.prepositions.applyPrepositionsAnswer();
     })()`);
-    const prepositionsFeedback = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    const prepositionsFeedback = await measureGeometry(pageCdp);
     assertNoGameplayScroll(prepositionsFeedback, "Prepositions feedback");
     assertChoicesClearFooter(prepositionsFeedback, "Prepositions feedback");
     assertFeedbackFooterInFlow(prepositionsFeedback, "Prepositions feedback");
@@ -395,7 +448,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
       handwriting.currentStrokes = [[{ x: 0.05, y: 0.05 }, { x: 0.08, y: 0.08 }]];
       IvriQuestApp.handwriting.checkHandwritingAttempt();
     })()`);
-    const handwritingFeedback = await evaluate(pageCdp, GAMEPLAY_GEOMETRY);
+    const handwritingFeedback = await measureGeometry(pageCdp);
     assertNoGameplayScroll(handwritingFeedback, "Handwriting feedback");
     const handwritingFeedbackCanvas = await evaluate(pageCdp, `(() => {
       const box = document.querySelector('.handwriting-canvas').getBoundingClientRect();
@@ -517,8 +570,14 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
   } finally {
     pageCdp?.close();
     browserCdp?.close();
+    // SIGTERM only asks. Chrome keeps writing to its profile directory for a
+    // moment after, so removing it immediately raced and threw ENOTEMPTY on
+    // roughly one run in fifteen. Wait for the process to actually exit, then
+    // let rmSync retry — it handles ENOTEMPTY/EBUSY when given maxRetries.
+    const exited = new Promise((resolve) => chrome.once("exit", resolve));
     chrome.kill("SIGTERM");
+    await Promise.race([exited, new Promise((resolve) => setTimeout(resolve, 5000))]);
     await new Promise((resolve) => server.close(resolve));
-    fs.rmSync(userDataDir, { recursive: true, force: true });
+    fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
   }
 });
