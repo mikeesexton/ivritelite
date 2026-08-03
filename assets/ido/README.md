@@ -1,9 +1,8 @@
 # Ido reaction assets
 
-All runtime sprites use a transparent 512×512 canvas so changing reactions
-does not move or resize the companion. Ido's approved masters are reduced to a
-128×128 logical canvas, simplified to a 96-color RGBA palette, and then
-nearest-neighbor enlarged to 512×512.
+All runtime sprites use a transparent 512×512 canvas. Each is one direct
+nearest-neighbor export from its tracked 1254×1254 RGBA master in
+`assets/sprite-masters/ido/`; there is no logical-canvas or palette pass.
 
 | File | Runtime use |
 | --- | --- |
@@ -14,16 +13,10 @@ nearest-neighbor enlarged to 512×512.
 | `mission-complete.png` | Final mission results |
 | `frustrated.png` | Alternate negative reaction |
 
-The six poses were re-rendered as independent square images using Ido's
-original identity and gestures plus Inbal, Ivri, and the corrected Inat as
-style references. His youthful face, dark tousled hair, black sleeveless shirt,
-and athletic identity remain locked, while his shoulders and arms are about
-10–15% narrower and his head, eye line, saturation, and framing now match the
-shared cast. Each pose has a 1254×1254 chroma-key source and transparent master
-in `source/`, named `<reaction>-chroma.png` and
-`<reaction>-transparent.png`. The superseded high-detail masters are preserved
-under the ignored local `source/high-detail-original/` archive. No source file
-is referenced by the site, so the archive adds no GitHub Pages load cost.
+The six independently generated poses lock Ido's youthful modeled face, larger
+adult eyes, dark tousled hair, black sleeveless shirt, and athletic build. Ivri
+alone is the style and density authority. Exact prompts are stored in
+`docs/sprite-prompts/ido.md`.
 
 The shirt front stays blank in every generated master. The exact mark is
 encoded as a 38×26 logical-pixel bitmap in `scripts/build-ido-sprites.py`,
@@ -31,8 +24,9 @@ nearest-neighbor scaled to 114×78, and composited at a pose-specific chest
 position after each production resize. This keeps generated lettering out of
 the asset pipeline and preserves the same crisp mark across all six torsos.
 
-Rebuild the six runtime PNGs with:
+Rebuild and verify with a Pillow-enabled Python environment:
 
 ```sh
-python3 scripts/build-ido-sprites.py
+python scripts/build-ido-sprites.py
+python scripts/audit-sprites.py
 ```

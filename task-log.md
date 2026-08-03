@@ -6859,3 +6859,146 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - Live browser at 360×640 — no console errors; the pinned worst-case Conjugation+ question renders its full feedback with no scroll.
 
 **Risks / regressions to check:** **I got one thing wrong mid-task and reverted it.** The plan called for normalising four "ktiv-haser" vocabulary cards so their pointing stripped back to the plain form. That was based on the politics tranche's byte-exact rule, which turns out to be the outlier: **231 cards deliberately pair a plene plain spelling with defective pointing** (`תקשורת` / `תִּקְשֹׁרֶת`), which is standard Hebrew. My edit also corrupted two vowels (`גַּז` → `גָּז`, and it inserted a vav into `הָאֲוִיר`). All four were reverted, and the new vocabulary gate uses the vav/yod-tolerant skeleton instead — so it passes on all 231 and still caught the 3 real letter-level errors. **Do not un-allowlist the byte-exact check at `tests/vocab-data.test.js:286`; it would fail on 231 legitimate cards.** Separately: Binyanim's tallest teaching notes are now clipped to 72px and scroll internally, a real UX change; shva/qamats correctness remains unverifiable mechanically and was not attempted; and 14 older multi-word vocabulary cards are only partially pointed (e.g. `relationships_dating_expanded-007` = `קשר מֵרָחוֹק`), which is pre-existing and still unaddressed.
+
+### 2026-08-03 13:00 EDT — Stop the Ivri-locked regeneration at the neutral acceptance gate
+
+**Requested:** Execute the approved final sprite-regeneration protocol: make Ivri the sole style/density authority, redraw Ido, Inat, and Idan from locked identities, approve neutral anchors before generating reactions, then install direct 1254→512 builders, tracked masters, audits, and hash locks only after the artwork passes every hard gate.
+
+**Files changed:**
+- `tmp/imagegen/final-ivri-lock-neutrals/` — untracked staging only: the three initial neutral generations, one permitted targeted correction per character, chroma and transparent working files, direct 512px previews, metrics, and dark/light/UI-size comparison sheets. No production sprite, builder, stylesheet, test, standard, or runtime file was changed.
+- `task-log.md` — records the required stop at the pre-install acceptance gate.
+
+**Behavior changed:** None. The app still serves the existing locked production sprites. The new candidates were not installed because all three failed objective requirements after their one allowed correction.
+
+**Tests run:**
+- Baseline/final `npm test` — **369 pass, 0 fail**.
+- Direct neutral audit after the single correction: Ido 430×490 visible at `(74,22)` with 18,592 RGBA values; Inat 432×494 at `(78,18)` with 38,982 values; Idan 424×474 at `(55,38)` with 23,105 values. Ivri is 444×496 at `(59,16)` with 24,549 values. All three reject exact 256px and 128px nearest-neighbor round trips, reach the bottom row, remain below 256 KiB, and contain no visible pixels matching the magenta-key predicate.
+- Dark- and light-background inspection plus generated previews at 72, 104, 108, 110, 124, 128, 132, 136, 150, 160, 200, 210, 220, and 300px.
+
+**Risks / regressions to check:** The immutable protocol explicitly permits one correction and then requires a stop instead of spending more inference. Ido remains below the 24,000-color floor; Inat remains above the 31,000 ceiling; Idan remains below the density floor and outside the top/width framing gates. The built-in generator also produced a slightly varying magenta background; soft-matte/despill visibly corrupted Inat's colors, so the staged comparison uses the helper's hard `#ff00ff` key at tolerance 80. The resulting transparent masters retain a thin magenta edge in some source pixels even though the 512px audit's vivid-magenta predicate is zero; they are not production-ready.
+
+### 2026-08-03 13:35 EDT — Correct Ido's neutral face without touching Inat or Idan
+
+**Requested:** Work on Ido only. Replace the flat monochrome/anime facial treatment with the modeled look used by the other characters, and change the expression to neutral or a gentle smile. Leave Inat and Idan alone.
+
+**Files changed:**
+- `tmp/imagegen/final-ivri-lock-neutrals/ido-neutral-facefix-*` — untracked staging only: two independent image-generator passes (the initial redraw and the one allowed targeted eye correction), the hard-chroma transparent master, and the direct 512px preview with the deterministic existing shirt mark composited afterward.
+- `tmp/imagegen/final-ivri-lock-neutrals/ido-facefix-comparison-dark.png` — untracked visual comparison against the prior Ido candidate, Ivri, Inat, and Idan.
+- `task-log.md` — this record. No production sprite or builder was changed.
+
+**Behavior changed:** None yet. The corrected candidate visibly adds cheek, brow, nose, jaw, chin, ear, and neck color planes; replaces the oversized anime eyes with narrower adult eyes; and gives Ido a restrained closed-mouth smile. It remains staged pending acceptance because the immutable density gate still fails.
+
+**Checks run:**
+- Corrected transparent master: exactly 1254×1254 RGBA, bbox `(180,50,1244,1254)`, no partial alpha, no visible magenta-like pixels.
+- Direct 512px preview: bbox `(73,20,508,512)` = 435×492 visible pixels; 20,433 unique RGBA values; 209,892 bytes; all corners transparent; content reaches row 511; exact 256px and 128px nearest-neighbor round trips both differ from the original.
+- Compared with Ivri at 512px and in the staged dark-background cast sheet. Previous Ido was 18,592 colors; this correction increases measured density by 1,841 colors while preserving Ido's silhouette, build, and wardrobe.
+
+**Risks / regressions to check:** The face and expression now satisfy the requested visual correction, but the candidate is still 3,567 colors below the protocol's hard 24,000-color production floor. The protocol allows one targeted correction and then requires a stop, so no third generation was spent and the candidate was not installed. The hard chroma key has no partial-alpha matte; inspect the hair outline at native size before any approval.
+
+### 2026-08-03 14:20 EDT — Generate Ido's five remaining reactions from the approved larger-eyed neutral
+
+**Requested:** Accept the larger-eyed Ido shown in the supplied screenshot as the neutral identity anchor, then generate his other poses.
+
+**Files changed:**
+- `tmp/imagegen/ido-approved-set/` — untracked staging only: the approved neutral chroma source, five separately generated reaction sources, six hard-key transparent 1254px masters, six direct 512px previews with the existing deterministic shirt mark, a six-pose dark-background review sheet, and the exact saved prompt/reference specification in `generation-prompts.md`.
+- `tmp/imagegen/ido-approved-set/nervous-laugh-rejected-framing-correction-chroma.png` — the one permitted targeted correction, retained only as a rejected candidate because it made Ido substantially too small in-frame.
+- `task-log.md` — this record. No production sprite, source master, builder, cache key, or runtime file was changed.
+
+**Behavior changed:** None yet. The staged Ido set now contains neutral, nervous-laugh, celebrating, struggling, mission-complete, and frustrated. All five new reactions preserve the approved larger-eyed face, hair, skin, build, and blank sleeveless shirt; the deterministic shirt mark is added only to the direct 512px previews. Celebrating/mission-complete and struggling/frustrated remain visually distinct.
+
+**Checks run:**
+- All six staged transparent masters are exactly 1254×1254 RGBA; all six previews are exactly 512×512 RGBA, use one direct nearest-neighbor resize, reject exact 256px and 128px round trips, contain no visible magenta-like pixels, and remain under 256 KiB.
+- Production-preview metrics: neutral 20,433 colors / bbox `(73,20,508,512)`; nervous-laugh 20,226 / `(2,20,512,512)`; celebrating 21,580 / `(0,15,509,512)`; struggling 18,946 / `(70,18,507,512)`; mission-complete 22,118 / `(7,20,507,512)`; frustrated 19,960 / `(75,20,508,512)`.
+- Visual inspection at 512px and on the staged 320px-per-pose dark-background contact sheet. Exact deterministic Ido mark placements were applied after resize from the existing builder constants.
+
+**Risks / regressions to check:** The user-approved neutral establishes a practical Ido density exception, but the immutable 24,000-color floor is still not met by any of these images (18,946–22,118). Nervous-laugh also occupies the bottom-right corner; its sole framing correction cleared the corner only by shrinking the character far outside the locked scale, so it was rejected and no further generation was spent. The originals remain staged rather than installed pending complete-set approval and an explicit decision about those two hard-gate conflicts.
+
+### 2026-08-03 14:35 EDT — Center Ido's deterministic shirt mark on every new torso
+
+**Requested:** Fix the visibly blind logo placement and center the mark on the shirt in every pose.
+
+**Files changed:**
+- `tmp/imagegen/ido-approved-set/*-512.png` — regenerated all six staged previews from their transparent masters with corrected mark coordinates.
+- `tmp/imagegen/ido-approved-set/ido-six-pose-preview-dark.png` and `ido-six-pose-preview-160-dark.png` — refreshed native-review and live-UI-size sheets.
+- `tmp/imagegen/ido-approved-set/logo-placements.json` — saved the exact deterministic placements and derivation rule.
+- `tmp/imagegen/ido-approved-set/generation-prompts.md` — documented that the shirt stays blank during generation and the mark is centered post-export from the saved placement manifest.
+- `task-log.md` — this record. Production assets and the production builder remain unchanged pending artwork approval.
+
+**Behavior changed:** Staged previews only. The 114×78 mark is now centered on the measured visible dark-shirt front panel for each reaction instead of inheriting coordinates from the discarded sprites. Final top-left coordinates are neutral `(197,408)`, nervous-laugh `(209,408)`, celebrating `(204,408)`, struggling `(195,408)`, mission-complete `(198,407)`, and frustrated `(200,408)`.
+
+**Checks run:** Rebuilt and visually inspected all six poses at 512px, 320px review scale, and 160px live UI scale. The logo remains crisp nearest-neighbor pixel art, is not clipped, does not overlap skin or the neckline, and stays clear of the mission-complete hand.
+
+**Risks / regressions to check:** These positions are locked to the staged direct 512px sprites and must replace `LOGO_PLACEMENTS` only when this approved set is installed. Running the current production builder before that install still uses the legacy coordinates against the legacy sources.
+
+### 2026-08-03 15:05 EDT — Generate Inat's corrected five-reaction set
+
+**Requested:** Generate Inat's corrected sprites after completing the corrected Ido set.
+
+**Files changed:**
+- `tmp/imagegen/inat-approved-set/` — untracked staging only: the previously accepted corrected neutral, five separately generated reaction chroma sources, six hard-key transparent 1254px masters, six direct nearest-neighbor 512px previews, dark-background review sheets at 320px and 160px, and the exact prompt/reference specification.
+- `task-log.md` — this record. No production sprite, production source master, builder, cache key, or runtime file was changed.
+
+**Behavior changed:** None yet. The staged set now contains neutral, nervous-laugh, celebrating, struggling, mission-complete, and frustrated. All five generated reactions retain the accepted neutral's mature angular face, apparent age, rectangular tortoiseshell glasses, swept-back honey-blonde hair, mustard blazer, cream blouse, earrings, and brooch. Celebrating/mission-complete and struggling/frustrated remain unambiguous and distinct.
+
+**Checks run:**
+- All six transparent masters are exactly 1254×1254 RGBA; all six previews are exactly 512×512 RGBA, use one direct nearest-neighbor resize, reject exact 256px and 128px round trips, have four transparent corners, contain no visible magenta-like pixels, and reach row 511.
+- Preview metrics: neutral 38,982 colors / bbox `(78,18,510,512)` / 225,802 bytes; nervous-laugh 39,147 / `(12,15,502,512)` / 249,612; celebrating 40,699 / `(19,16,494,512)` / 258,440; struggling 42,343 / `(71,17,501,512)` / 249,729; mission-complete 42,488 / `(10,15,511,512)` / 262,966; frustrated 40,111 / `(87,20,508,512)` / 227,132.
+- Visual inspection at native 512px, 320px review scale, and 160px live UI scale confirmed stable identity, mature age, glasses, brooch, wardrobe, unclipped gestures, and distinct reaction semantics.
+
+**Risks / regressions to check:** The accepted neutral already established a practical Inat density exception, and every reaction remains above the immutable 31,000-color ceiling (38,982–42,488). Mission-complete is also 822 bytes over the 256 KiB file budget. No palette reduction, resizing trick, or other prohibited rescue was applied; the set remains staged pending visual approval and an explicit decision on those hard-gate conflicts.
+
+### 2026-08-03 15:30 EDT — Redraw Inbal's main neutral sprite
+
+**Requested:** Generate Inbal's main sprite after the corrected Ido and Inat sets.
+
+**Files changed:**
+- `tmp/imagegen/inbal-main/` — untracked staging only: the selected chroma source, hard-key transparent 1254px master, direct 512px preview, rejected smaller first pass, 320px/160px comparison sheets against current Inbal and Ivri, and the saved prompt/reference specification.
+- `task-log.md` — this record. No production sprite, source master, builder, cache key, or runtime file was changed.
+
+**Behavior changed:** None yet. The selected candidate preserves Inbal's long wavy dark-brown hair, warm medium-tan skin, mature face, dark eyes, silver earring, silver chain and rectangular pendant, olive cardigan, dark plum top, and gentle neutral expression while adding modeled facial planes and Ivri-scale native detail.
+
+**Checks run:**
+- First pass: 512px bbox `(62,31,477,512)`, 415×481 visible, 26,665 colors, 249,243 bytes. It passed density and file size but failed the width gate and missed the top band by two rows.
+- One targeted framing correction: 1254×1254 RGBA master; direct 512×512 preview; bbox `(51,6,480,512)` = 429×506 visible; 28,352 colors; 289,398 bytes; four transparent corners; zero visible magenta-like pixels; no partial alpha; reaches row 511; exact 256px and 128px round trips both differ.
+- Visual comparison at native 512px, 320px review scale, and 160px live UI scale against current Inbal and Ivri.
+
+**Risks / regressions to check:** The selected correction passes the 24,000–31,000 density band and 428–464 width gate, but its topmost pixel is row 6 rather than the immutable 12–29 band and its lossless PNG is 27,254 bytes over the 256 KiB file budget. The single correction allowance is exhausted, so no third generation, resize rescue, or palette reduction was used. The sprite remains staged pending approval.
+
+### 2026-08-03 16:00 EDT — Generate Inbal's five remaining reactions
+
+**Requested:** After approving the corrected Inbal neutral, generate the rest of her sprites.
+
+**Files changed:**
+- `tmp/imagegen/inbal-approved-set/` — untracked staging only: the approved neutral plus five separately generated reaction chroma sources, six hard-key transparent 1254px masters, six direct nearest-neighbor 512px previews, dark-background review sheets at 320px and 160px, and the saved prompt/reference specification.
+- `task-log.md` — this record. No production sprite, production source master, builder, cache key, or runtime file was changed.
+
+**Behavior changed:** None yet. The staged set now contains neutral, nervous-laugh, celebrating, struggling, mission-complete, and frustrated. All reactions preserve the approved face, long wavy hair, earring, silver chain and rectangular pendant, olive cardigan, and plum top. Celebrating/mission-complete and struggling/frustrated are visually distinct.
+
+**Checks run:**
+- All six masters are exactly 1254×1254 RGBA; all six previews are exactly 512×512 RGBA, use one direct nearest-neighbor resize, reject exact 256px and 128px round trips, have four transparent corners, contain no visible magenta-like pixels, and reach row 511.
+- Metrics: neutral 28,352 colors / bbox `(51,6,480,512)` / 289,398 bytes; nervous-laugh 27,010 / `(32,10,469,512)` / 279,096; celebrating 29,134 / `(1,4,499,512)` / 343,236; struggling 27,824 / `(54,7,475,512)` / 290,623; mission-complete 28,981 / `(7,10,489,512)` / 294,407; frustrated 27,709 / `(64,9,471,512)` / 277,913.
+- Visual inspection at native 512px, 320px review scale, and 160px live UI scale confirmed stable identity, jewelry, clothing, long-hair silhouette, unclipped essential gestures, and distinct reactions.
+
+**Risks / regressions to check:** All six pass the 24,000–31,000 density band. Their topmost pixels remain above the immutable row-12 minimum, consistent with the approved neutral's tighter hair framing, and every lossless PNG exceeds 256 KiB because of the long detailed hair. Celebrating and mission-complete exceed the neutral-width band because their gestures broaden the silhouette, which is expected. No palette reduction, resize rescue, or corrective regeneration was applied; the set remains staged pending approval.
+
+### 2026-08-03 15:34 EDT — Install, organize, and freeze the approved Ido, Inat, and Inbal sets
+
+**Requested:** After visually approving all three complete sets, organize the image files, publish the finished work to GitHub, and merge it into `main`.
+
+**Files changed:**
+- `assets/ido/*.png`, `assets/inat/*.png`, and `assets/inbal/*.png` — installed the 18 approved 512×512 RGBA production sprites under the six existing semantic filenames.
+- `assets/sprite-masters/{ido,inat,inbal}/*-transparent.png` — added exactly 18 tracked 1254×1254 RGBA transparent masters so the approved art no longer depends on local generator output.
+- `scripts/build-{ido,inat,inbal}-sprites.py` — replaced the 128px/96-color reductions for Ido and Inat and the old local-source paths with one direct 1254→512 nearest-neighbor export from tracked masters. Ido's unchanged 38×26 bitmap remains the only post-export overlay; its six positions now match the user-approved centered placements.
+- `scripts/build-approved-sprites.py`, `scripts/sprite_png.py`, `scripts/audit-sprites.py`, `assets/sprite-lock.json`, and `tests/sprite-lock.test.js` — added the deterministic three-character rebuild, a fixed-filter metadata-free PNG writer, full 30-production/18-master hash and metric lock, two-clean-build audit, direct-builder guard, and a Node hash test that runs without Pillow. The fixed writer was verified byte-for-byte under Pillow 12.1 and 12.2 after their built-in optimizers produced different byte streams for identical pixels.
+- `assets/SPRITE_STANDARD.md`, the three character READMEs, `docs/sprite-prompts/*.md`, and `docs/sprite-prompts/ido-logo-placements.json` — replaced the obsolete coarse 128px standard with the Ivri-authoritative direct-export contract and permanently saved the exact prompts, reference order, identity/reaction rules, rejection policy, logo coordinates, and approved metric exceptions.
+- `styles.css` and `index.html` — bumped all 18 changed sprite URLs and the stylesheet to `20260803a` so returning browsers cannot retain the superseded art.
+- `tests/character-mission.test.js` — updated the builder contract and replaced the provisional 256 KiB warning threshold with the approved 384 KiB absolute ceiling; exact per-file sizes remain frozen in the hash/metric manifest.
+- `.gitignore` — ignores the repository `tmp/` staging root.
+- Local cleanup — moved the superseded ignored `assets/{ido,inat,inbal}/source/` trees, rejected candidates, chroma outputs, previews, contact sheets, and `.DS_Store` clutter out of the repository to `/tmp/ulpango-superseded-sprite-files-20260803`. Ivri and Idan's local sources remain because their unchanged builders still use them.
+- Test-process cleanup — stopped eight orphaned CPU-saturation workers left by an earlier layout stress command; each had consumed roughly 80% CPU for almost 20 hours and was preventing Chrome teardown from completing.
+
+**Behavior changed:** Ido, Inat, and Inbal now display the complete user-approved reaction sets everywhere in the app. All runtime filenames and interfaces are unchanged. Ido's shirt mark is centered on each torso. The artwork is frozen: accidental changes to any of the cast's 30 production sprites or the 18 new masters fail tests, and deliberate replacement requires an explicit lock update after another approval cycle.
+
+**Tests run:** Baseline `npm test` — **369 pass, 0 fail**. Final `npm test` after installation and stale-worker cleanup — **371 pass, 0 fail, 0 cancelled**. Focused `node --test tests/sprite-lock.test.js` — **2 pass, 0 fail**. Isolated rendered layout test — **1 pass, 0 fail**. `scripts/audit-sprites.py` — **pass**: 30 production files, 18 tracked masters, no visible chroma in the new masters/outputs, no prohibited 128px or 256px round-trip reproduction in the 18 approved outputs, direct-builder structure intact, and two clean builds producing identical SHA-256 hashes for all 18 outputs. Fixed PNG output was also compared byte-for-byte across Pillow 12.1 and 12.2. `git diff --check` — **pass**.
+
+**Risks / regressions to check:** The user's visual approval intentionally settles three conflicts with the earlier provisional numeric gates: Ido's accepted density is 18,946–22,118 colors and his nervous-laugh silhouette reaches the lower-right corner; Inat's accepted density is 38,982–42,488 and four files exceed 256 KiB under the fixed deterministic encoder; Inbal's long hair begins above row 12 and makes all six files larger than 256 KiB. These are recorded as exact locked metrics, not loose future tolerances. Idan remains on his accepted legacy 128px/96-color build and was not changed. The moved local staging archive is recoverable from `/tmp` during this machine session; the approved transparent masters are now permanently tracked in Git.

@@ -1,8 +1,8 @@
 # Inbal reaction assets
 
-All runtime sprites use the same transparent 512×512 canvas and the same coarse
-pixel-art treatment as Ido, so changing reactions does not move, resize, or
-visually sharpen the companion.
+All runtime sprites use the same transparent 512×512 canvas. Each is one direct
+nearest-neighbor export from its tracked 1254×1254 RGBA master in
+`assets/sprite-masters/inbal/`; there is no logical-canvas or palette pass.
 
 | File | Intended runtime use |
 | --- | --- |
@@ -13,16 +13,17 @@ visually sharpen the companion.
 | `mission-complete.png` | Final mission results |
 | `frustrated.png` | Alternate negative reaction |
 
-The six final reactions are generated individually on a flat blue chroma-key
-background, converted to transparent 1254×1254 masters in `source/`, and then
-normalized to 512×512 runtime PNGs. The intentionally unused surprised pose from
-Ido's set is omitted.
+The six final reactions were independently generated on flat magenta chroma-key
+backgrounds and approved as a set. Ivri alone is the style and density
+authority. Exact prompts are stored in `docs/sprite-prompts/inbal.md`.
 
-Inbal's locked design is long dark-brown hair, a muted purple shirt, moss-green
-cardigan, silver hoop earrings, and a small crescent pendant.
+Inbal's locked design is long wavy dark-brown hair, warm medium-tan skin, a dark
+plum top, olive cardigan, small silver earring, and silver chain with a vertical
+rectangular pendant.
 
 Rebuild the runtime sprites with:
 
 ```sh
 python scripts/build-inbal-sprites.py
+python scripts/audit-sprites.py
 ```
