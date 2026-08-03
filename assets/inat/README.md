@@ -1,10 +1,8 @@
 # Inat reaction assets
 
-All runtime sprites use the same transparent 512×512 canvas and coarse
-pixel-art treatment as Ido, Inbal, and Ivri. Inat's approved masters are reduced
-to a 128×128 logical canvas, simplified to a 96-color RGBA palette, and then
-nearest-neighbor enlarged to 512×512. This keeps her displayed pixel grain
-visible at the app's 108–136px placements instead of being smoothed away.
+All runtime sprites use the same transparent 512×512 canvas. Each is one direct
+nearest-neighbor export from its tracked 1254×1254 RGBA master in
+`assets/sprite-masters/inat/`; there is no logical-canvas or palette pass.
 
 | File | Intended runtime use |
 | --- | --- |
@@ -22,20 +20,13 @@ gold brooch, adult facial lines, and restrained expressions are locked design
 details. She should remain authoritative and warm rather than cute, doll-like,
 or glossy.
 
-The six reactions were re-rendered individually from the locked neutral design,
-using Ido, Inbal, and Ivri as style references, on flat chroma-key backgrounds
-and converted to transparent 1254×1254 masters in the local `source/`
-directory. The superseded high-detail masters are preserved under
-`source/high-detail-original/`. No source file is referenced by the site, so
-retaining either set has no effect on GitHub Pages load time.
-
-The production style contract is visibly chunky logical pixels, a limited
-cel-shaded palette, strong near-black outlines, mature proportions, chest-up
-framing, simplified hair and garment shapes, crisp hard pixel steps, and no
-smooth high-resolution illustration detail.
+The six reactions were generated independently from the approved neutral. Ivri
+alone is the style and density authority. Exact prompts are stored in
+`docs/sprite-prompts/inat.md`.
 
 Rebuild the runtime sprites with:
 
 ```sh
 python scripts/build-inat-sprites.py
+python scripts/audit-sprites.py
 ```

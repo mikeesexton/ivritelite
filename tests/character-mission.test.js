@@ -295,8 +295,8 @@ test("sprite CSS and assets exist for every character reaction", () => {
       assert.equal(sprite.readUInt32BE(20), 512, `${id}/${reaction}.png height`);
       assert.equal(sprite[25], 6, `${id}/${reaction}.png must be RGBA`);
       assert.ok(
-        sprite.length < 256 * 1024,
-        `${id}/${reaction}.png must stay below the 256 KiB production budget`,
+        sprite.length < 384 * 1024,
+        `${id}/${reaction}.png must stay below the approved 384 KiB hard ceiling`,
       );
     });
   });
@@ -312,11 +312,10 @@ test("sprite CSS and assets exist for every character reaction", () => {
     /f"\{name\}-transparent\.png"/,
   );
   assert.match(idoBuilder, /LOGO_SCALE = 3/);
-  assert.match(idoBuilder, /LOGICAL_SIZE = 128/);
-  assert.match(idoBuilder, /PALETTE_COLORS = 96/);
-  assert.match(idoBuilder, /\(LOGICAL_SIZE, LOGICAL_SIZE\)/);
-  assert.match(idoBuilder, /Image\.Quantize\.FASTOCTREE/);
-  assert.match(idoBuilder, /logical_sprite\.resize/);
+  assert.match(idoBuilder, /"sprite-masters" \/ "ido"/);
+  assert.match(idoBuilder, /source\.resize/);
+  assert.match(idoBuilder, /Image\.Resampling\.NEAREST/);
+  assert.doesNotMatch(idoBuilder, /LOGICAL_SIZE|PALETTE_COLORS|\.quantize\(/);
   reactions.forEach((reaction) => {
     assert.match(
       idoBuilder,
@@ -328,11 +327,10 @@ test("sprite CSS and assets exist for every character reaction", () => {
     path.join(PROJECT_ROOT, "scripts/build-inat-sprites.py"),
     "utf8",
   );
-  assert.match(inatBuilder, /LOGICAL_SIZE = 128/);
-  assert.match(inatBuilder, /PALETTE_COLORS = 96/);
-  assert.match(inatBuilder, /\(LOGICAL_SIZE, LOGICAL_SIZE\)/);
-  assert.match(inatBuilder, /Image\.Quantize\.FASTOCTREE/);
-  assert.match(inatBuilder, /logical_sprite\.resize/);
+  assert.match(inatBuilder, /"sprite-masters" \/ "inat"/);
+  assert.match(inatBuilder, /source\.resize/);
+  assert.match(inatBuilder, /Image\.Resampling\.NEAREST/);
+  assert.doesNotMatch(inatBuilder, /LOGICAL_SIZE|PALETTE_COLORS|\.quantize\(/);
   const idanBuilder = fs.readFileSync(
     path.join(PROJECT_ROOT, "scripts/build-idan-sprites.py"),
     "utf8",

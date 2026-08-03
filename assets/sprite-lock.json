@@ -1,0 +1,1130 @@
+{
+  "approvedExceptions": {
+    "idan": "Frozen legacy 128px/96-color build; not regenerated in this approved set.",
+    "ido": "User-approved density is 18,946\u201322,118 colors; nervous-laugh reaches the bottom-right corner.",
+    "inat": "User-approved density is 38,982\u201342,488 colors; four deterministic lossless files exceed 256 KiB.",
+    "inbal": "User-approved tight hair framing begins above row 12 and long-hair files exceed 256 KiB."
+  },
+  "masters": {
+    "assets/sprite-masters/ido/celebrating-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1254279,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "2a2fd3f1ba6d27c111b60cb415ecaece132a21ab31af40a3ad9f3c17fb88543e",
+      "uniqueRgba": 55750,
+      "visibleBbox": [
+        0,
+        37,
+        1247,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ido/frustrated-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1107748,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "6e3a5ba42523461aca50efd20b3a9c31fdbfda13a8e6d15e9de04e96c01894ce",
+      "uniqueRgba": 50030,
+      "visibleBbox": [
+        183,
+        50,
+        1244,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ido/mission-complete-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1223050,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "f06c420373a3906803ecd6f6999bf65fe3135237906357d000cb100716c3f307",
+      "uniqueRgba": 57065,
+      "visibleBbox": [
+        16,
+        50,
+        1241,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ido/nervous-laugh-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "fileBytes": 1187530,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "4cd21b57add0900a6b11ecdcd92bd4618ff030cec137dac02a72cb1e6a4047fa",
+      "uniqueRgba": 50230,
+      "visibleBbox": [
+        6,
+        48,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ido/neutral-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1102528,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "1d45c5e843559e84a3e5ded594d721bb6cbcb5ae9a50890122db7d072e8aea52",
+      "uniqueRgba": 52815,
+      "visibleBbox": [
+        180,
+        50,
+        1244,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ido/struggling-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1177617,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "47e89dbf916ef07d6c32769c9f2091c5b1a554b1b3ca6d1b3ed2a0a2b57e5fa2",
+      "uniqueRgba": 50037,
+      "visibleBbox": [
+        172,
+        45,
+        1242,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inat/celebrating-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1291996,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "2c750026dd7a31eb84d5c802b85058f2a60ffe97c8b95760d0e6ca733fe8c7c3",
+      "uniqueRgba": 110507,
+      "visibleBbox": [
+        46,
+        39,
+        1210,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inat/frustrated-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1111979,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "0099e07e07e6a1bd4ff13051fb29ae0ab410c248faf565ea7c601d55ae5b09c3",
+      "uniqueRgba": 106471,
+      "visibleBbox": [
+        213,
+        50,
+        1244,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inat/mission-complete-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "fileBytes": 1334588,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "4fa0d3c4611a46e4f028642933fdc77d8ef11f5054eb5c99a895bc34c9d91e54",
+      "uniqueRgba": 114031,
+      "visibleBbox": [
+        24,
+        37,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inat/nervous-laugh-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1246762,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "4327e59bc61a15a89e9dcae4573bc05230fc80b0e413713b55e31f4a2d23b366",
+      "uniqueRgba": 104685,
+      "visibleBbox": [
+        30,
+        37,
+        1229,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inat/neutral-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "fileBytes": 1108632,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "93d529c417741e91610cd6cfc7b94f283f828d7f4bd9b7ec3a35379afaa8cb2b",
+      "uniqueRgba": 103225,
+      "visibleBbox": [
+        190,
+        43,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inat/struggling-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1271200,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "f95effa64723c7361e2eb5c21ca7f021ef9e79adb5a621aa6b01b13c82e141ad",
+      "uniqueRgba": 112374,
+      "visibleBbox": [
+        174,
+        41,
+        1227,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inbal/celebrating-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1849470,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "720df46b3b2fe16d29ce987ae36ba612592254e5db967b4959ab25e8eff4300e",
+      "uniqueRgba": 72906,
+      "visibleBbox": [
+        3,
+        10,
+        1221,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inbal/frustrated-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1486161,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "5da32e0da84471ee7f936b34fbf98d0d0374ddfc9122ccbd1dfbc532f160f04c",
+      "uniqueRgba": 67929,
+      "visibleBbox": [
+        157,
+        21,
+        1153,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inbal/mission-complete-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1556711,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "4b34acaffe5258b13dcf737bec0ac3e634f01a05a4a98ebf09d059de95b95856",
+      "uniqueRgba": 70705,
+      "visibleBbox": [
+        18,
+        25,
+        1198,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inbal/nervous-laugh-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1477757,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "3ab8ef1274e9f925e8226ad97a8e1ac08e2e6babc54f5aa123b96f1df3fe3d3d",
+      "uniqueRgba": 68463,
+      "visibleBbox": [
+        79,
+        24,
+        1148,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inbal/neutral-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1573513,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "1364f12148fc0d11950696897606a2a2ec14221207d4af3289a7edf498ea12c6",
+      "uniqueRgba": 71840,
+      "visibleBbox": [
+        125,
+        14,
+        1175,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/inbal/struggling-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1559920,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "e57442973d724d2eadaf4444426b7341443868cb7e6134a23dd4424d05849d43",
+      "uniqueRgba": 67390,
+      "visibleBbox": [
+        132,
+        18,
+        1164,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    }
+  },
+  "policy": "Exact hashes lock every production sprite and approved master. Metrics document the approved pixels; changing any value requires an explicit lock update.",
+  "production": {
+    "assets/idan/celebrating.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": true,
+      "equals256RoundTrip": true,
+      "fileBytes": 14410,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 128,
+      "sha256": "6cc18dd00857474283ff4352ef656dbae48b89368b1a2c87208192ebc967e46e",
+      "uniqueRgba": 71,
+      "visibleBbox": [
+        16,
+        40,
+        496,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/idan/frustrated.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": true,
+      "equals256RoundTrip": true,
+      "fileBytes": 15200,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 144,
+      "sha256": "a18b42d2f1df328707c4fe3e8e74866a2efcc9505ec7a05665ff3865f68a1553",
+      "uniqueRgba": 70,
+      "visibleBbox": [
+        20,
+        52,
+        492,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/idan/mission-complete.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": true,
+      "equals256RoundTrip": true,
+      "fileBytes": 14660,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 80,
+      "sha256": "a23e72bd95f76fac59f0ab6e41c4cadb96b99b0d9127116decc7f873968c9fe3",
+      "uniqueRgba": 69,
+      "visibleBbox": [
+        24,
+        28,
+        488,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/idan/nervous-laugh.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": true,
+      "equals256RoundTrip": true,
+      "fileBytes": 13623,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 208,
+      "sha256": "ddbb3359f113c589b696d38b53319f54efb1c3b50617a1f8f9c31dbe790cb98e",
+      "uniqueRgba": 66,
+      "visibleBbox": [
+        44,
+        40,
+        472,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/idan/neutral.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": true,
+      "equals256RoundTrip": true,
+      "fileBytes": 13287,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 464,
+      "sha256": "4bda5cce1dc30cc9b0c67ed6467cc9214a2d77a3b35227ae1df9cb1bac1189b6",
+      "uniqueRgba": 55,
+      "visibleBbox": [
+        48,
+        40,
+        464,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/idan/struggling.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": true,
+      "equals256RoundTrip": true,
+      "fileBytes": 14240,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 64,
+      "sha256": "fd99baa6300d3180f6cde87cc7a0d22179498461990fd4f71ea5b01b990d8418",
+      "uniqueRgba": 68,
+      "visibleBbox": [
+        32,
+        40,
+        480,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ido/celebrating.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 250384,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "c424d2fac9499d17e96b22431495773262bd2a140d23d7f664bc744690b3234a",
+      "uniqueRgba": 21579,
+      "visibleBbox": [
+        0,
+        15,
+        509,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ido/frustrated.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 223048,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "4026fee4501806b85e5485748ede1c578fdb7a994e506ddd019a6ee7d85813a5",
+      "uniqueRgba": 19969,
+      "visibleBbox": [
+        75,
+        20,
+        508,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ido/mission-complete.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 245463,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "d513b16b452a5ad9a4e799e068da84fb6e031dd3547b96bd2e8cd8de8f33bee7",
+      "uniqueRgba": 22139,
+      "visibleBbox": [
+        7,
+        20,
+        507,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ido/nervous-laugh.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 239021,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "43e7982ef5ea56fc85de33bd3405e972c1667271fd3671285b4eb480ccb3f4cd",
+      "uniqueRgba": 20233,
+      "visibleBbox": [
+        2,
+        20,
+        512,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ido/neutral.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 220527,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "e01b4484272b6a9fc51759b280a3bc0802704625f41873759e3fde50843e9d74",
+      "uniqueRgba": 20452,
+      "visibleBbox": [
+        73,
+        20,
+        508,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ido/struggling.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 230868,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "92cca088694bd4cba3ed5786b081018d852fdd4af94e7dfcf76f7bf88ddf68b5",
+      "uniqueRgba": 19058,
+      "visibleBbox": [
+        70,
+        18,
+        507,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inat/celebrating.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 270749,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "63e12e7df2a4f925e32b7128535fe297bbfc5f4e3b7509fd40ff4f3b45ab01b8",
+      "uniqueRgba": 40699,
+      "visibleBbox": [
+        19,
+        16,
+        494,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inat/frustrated.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 238705,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "5713e860b45ba9070ae5f64abd03d9491d5680ba02f5e4a41ed09b1aa7a54664",
+      "uniqueRgba": 40111,
+      "visibleBbox": [
+        87,
+        20,
+        508,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inat/mission-complete.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 276080,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "e9def16b1b18dbf96e29dfb18d60c4d946d30be3b743006091618ff9b59ab750",
+      "uniqueRgba": 42488,
+      "visibleBbox": [
+        10,
+        15,
+        511,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inat/nervous-laugh.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 261612,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "59d1164c8458715126e89bc3d06ef96a54d1afec80a8d71d0a26ce5a2d2bf39a",
+      "uniqueRgba": 39147,
+      "visibleBbox": [
+        12,
+        15,
+        502,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inat/neutral.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 236220,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "3de7fce0c4b23c95b1016e09d10dc4f699358f81dba0e9f0474d8247074bc0dc",
+      "uniqueRgba": 38982,
+      "visibleBbox": [
+        78,
+        18,
+        510,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inat/struggling.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 262518,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "5f9138da2d69ed6fa0c8dff7fec0d383f6d2a883afeffc8286edbb9f43e9d17f",
+      "uniqueRgba": 42343,
+      "visibleBbox": [
+        71,
+        17,
+        501,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inbal/celebrating.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 356620,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "090692ea4e7a161d17b533910467507635d10d845d1a66bca411de299b1ec7a6",
+      "uniqueRgba": 29134,
+      "visibleBbox": [
+        1,
+        4,
+        499,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inbal/frustrated.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 291439,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "d84b7d12c49520aa5c298a624753e94b8f1be48ec0a47c71afda725eb8c7ef9d",
+      "uniqueRgba": 27709,
+      "visibleBbox": [
+        64,
+        9,
+        471,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inbal/mission-complete.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 307375,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "84a5ffad572f08d2993231ca2d554ee1db1de0abc87b0f35befdba7547b04a30",
+      "uniqueRgba": 28981,
+      "visibleBbox": [
+        7,
+        10,
+        489,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inbal/nervous-laugh.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 292180,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "68edb16907fda09a491c76612886f6c795b33f46dd89ba20616e8de54c070b19",
+      "uniqueRgba": 27010,
+      "visibleBbox": [
+        32,
+        10,
+        469,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inbal/neutral.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 302777,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "4375622ad30593c46542c4af1d1563533402eace06e2ba2e853abc88b54317e9",
+      "uniqueRgba": 28352,
+      "visibleBbox": [
+        51,
+        6,
+        480,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/inbal/struggling.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 303868,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "2eb22cd75affaaf4b11dd6b3249fd44075773f797750cb14d8d05db0d3051046",
+      "uniqueRgba": 27824,
+      "visibleBbox": [
+        54,
+        7,
+        475,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ivri/celebrating.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 219141,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 979,
+      "sha256": "470a28d66a7b3348280c59faf882986eb32e7469e415a9fe7cf0924e54d31eb3",
+      "uniqueRgba": 28263,
+      "visibleBbox": [
+        0,
+        16,
+        509,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ivri/frustrated.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 192539,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 1160,
+      "sha256": "7007d4205447d5928fa11adda84af97a7ce01d46d8c358e7d9410d42f2745a11",
+      "uniqueRgba": 25096,
+      "visibleBbox": [
+        59,
+        21,
+        503,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ivri/mission-complete.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        255,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 209268,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "5a69499c7288fd330cb1b3abeef5e0fa0c99222cb2152ccb1dc41808f9f07b6e",
+      "uniqueRgba": 29303,
+      "visibleBbox": [
+        0,
+        16,
+        502,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ivri/nervous-laugh.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 219590,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 1125,
+      "sha256": "4934ec9e9e0e503b89aad0bfc91d4ac5072cb1eab48123fe34fce1f56cffc9e9",
+      "uniqueRgba": 27885,
+      "visibleBbox": [
+        0,
+        16,
+        503,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ivri/neutral.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 191992,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 1062,
+      "sha256": "e7135d161ec08cdbc834cc24d18c2cad633b29c002da69384bc199a7388b0b06",
+      "uniqueRgba": 24549,
+      "visibleBbox": [
+        59,
+        16,
+        503,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    },
+    "assets/ivri/struggling.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 202590,
+      "height": 512,
+      "mode": "RGBA",
+      "partialAlphaPixels": 1001,
+      "sha256": "01bb0869fda36b281b4eb6a2040b29c00d05bdac68c10ffebb6481aaa94b0b8b",
+      "uniqueRgba": 26619,
+      "visibleBbox": [
+        56,
+        16,
+        503,
+        512
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 512
+    }
+  },
+  "version": 1
+}

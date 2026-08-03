@@ -1,0 +1,12 @@
+{
+  "logoSize": [114, 78],
+  "method": "Center the deterministic 114x78 mark on the visible dark-shirt front-panel centroid measured from each direct 512px sprite.",
+  "placements": {
+    "neutral": [197, 408],
+    "nervous-laugh": [209, 408],
+    "celebrating": [204, 408],
+    "struggling": [195, 408],
+    "mission-complete": [198, 407],
+    "frustrated": [200, 408]
+  }
+}
