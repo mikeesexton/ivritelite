@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rebuild the three user-approved character sets without touching legacy sets."""
+"""Rebuild all five locked character sets from their tracked masters."""
 
 import subprocess
 import sys
@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CHARACTERS = ("ido", "inat", "inbal")
+CHARACTERS = ("ido", "inbal", "inat", "ivri", "idan")
 
 
 def main() -> None:

@@ -274,6 +274,7 @@ test("gendered lines resolve per character and ungendered lines are shared", () 
 test("sprite CSS and assets exist for every character reaction", () => {
   const { characterData } = loadCharacterModule();
   const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  const indexHtml = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
   const reactions = ["neutral", "frustrated", "celebrating", "struggling", "mission-complete", "nervous-laugh"];
   const expectedFiles = reactions.map((reaction) => `${reaction}.png`).sort();
 
@@ -286,7 +287,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     );
     reactions.forEach((reaction) => {
       assert.match(css, new RegExp(
-        `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png`,
+        `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png\\?v=20260803b`,
         "s",
       ));
       const sprite = fs.readFileSync(path.join(assetDir, `${reaction}.png`));
@@ -301,6 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
+  assert.match(indexHtml, /styles\.css\?v=20260803b/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -335,14 +337,12 @@ test("sprite CSS and assets exist for every character reaction", () => {
     path.join(PROJECT_ROOT, "scripts/build-idan-sprites.py"),
     "utf8",
   );
-  assert.match(idanBuilder, /LOGICAL_SIZE = 128/);
-  assert.match(idanBuilder, /PALETTE_COLORS = 96/);
-  assert.match(idanBuilder, /\(LOGICAL_SIZE, LOGICAL_SIZE\)/);
-  assert.match(idanBuilder, /Image\.Quantize\.FASTOCTREE/);
-  assert.match(idanBuilder, /logical_sprite\.resize/);
-  assert.match(idanBuilder, /transparent corners/);
-  assert.match(idanBuilder, /visible chroma-key pixels/);
-  assert.match(idanBuilder, /256 KiB production budget/);
+  assert.match(idanBuilder, /"sprite-masters" \/ "idan"/);
+  assert.match(idanBuilder, /SOURCE_SIZE = 1254/);
+  assert.match(idanBuilder, /CANVAS_SIZE = 512/);
+  assert.match(idanBuilder, /source\.resize/);
+  assert.match(idanBuilder, /Image\.Resampling\.NEAREST/);
+  assert.doesNotMatch(idanBuilder, /LOGICAL_SIZE|PALETTE_COLORS|\.quantize\(/);
 });
 
 test("character routing boosts owned content and stays neutral otherwise", () => {

@@ -348,12 +348,12 @@ All five characters are built and integrated, so this section is now a record ra
 
 - Each character has the six production reactions in `assets/<id>/` — `neutral`,
   `nervous-laugh`, `celebrating`, `struggling`, `mission-complete`, `frustrated` — as
-  transparent 512x512 RGBA PNGs under 256 KiB.
-- The binding contract is `assets/SPRITE_STANDARD.md`: coarse pixel art normalized through a
-  128-pixel logical canvas and a 96-color palette, then enlarged with nearest-neighbor sampling.
-  Read it before touching any character art.
-- High-resolution masters live in each character's git-ignored `source/` directory and are never
-  referenced by HTML or CSS, so retaining them costs nothing at load time.
+  transparent 512x512 RGBA PNGs.
+- The binding contract is `assets/SPRITE_STANDARD.md`: every tracked 1254x1254 RGBA master is
+  exported directly to 512x512 with nearest-neighbor sampling and deterministic PNG encoding.
+  Logical-canvas reduction and palette quantization are forbidden.
+- All 30 high-resolution transparent masters are tracked in `assets/sprite-masters/`. Neither
+  masters nor staging files are referenced by HTML or CSS.
 - Runtime wiring is one generic interface: `styles.css` holds six
   `.character-sprite[data-character][data-reaction]` rules per character, and `app/character.js`
   sets those attributes. Adding a character needs no new rendering code.

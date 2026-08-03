@@ -1,11 +1,144 @@
 {
   "approvedExceptions": {
-    "idan": "Frozen legacy 128px/96-color build; not regenerated in this approved set.",
-    "ido": "User-approved density is 18,946\u201322,118 colors; nervous-laugh reaches the bottom-right corner.",
-    "inat": "User-approved density is 38,982\u201342,488 colors; four deterministic lossless files exceed 256 KiB.",
-    "inbal": "User-approved tight hair framing begins above row 12 and long-hair files exceed 256 KiB."
+    "idan": "User approved the complete fresh-redraw set after native 512px cross-cast review, including recorded spatial-band deviations and the stern nervous-laugh filename exception.",
+    "ido": "Frozen byte-for-byte; deterministic shirt mark remains the sole post-export density exception.",
+    "inat": "User approved the complete fresh-redraw set after native 512px cross-cast review, including recorded spatial-band deviations.",
+    "inbal": "Frozen byte-for-byte and sole visual style/grain authority.",
+    "ivri": "User approved the complete fresh-redraw set after native 512px cross-cast review, including recorded spatial-band deviations."
   },
   "masters": {
+    "assets/sprite-masters/idan/celebrating-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        255,
+        0
+      ],
+      "fileBytes": 1393342,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "ecdd10e4067ef25a0a4e2ee92810d1087b2b9d693d9b32c1d26f7950588618d6",
+      "uniqueRgba": 64833,
+      "visibleBbox": [
+        0,
+        66,
+        1239,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/idan/frustrated-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1191115,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "94a8a679108d4d69509311da62076ef9fe32cde4b80885e26008eeb76e5de2ff",
+      "uniqueRgba": 56933,
+      "visibleBbox": [
+        123,
+        68,
+        1197,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/idan/mission-complete-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1271710,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "570f3cb8ca40337285814a0edc0e5a88f90886b2af46619a6cec48a29f4066b7",
+      "uniqueRgba": 62528,
+      "visibleBbox": [
+        16,
+        71,
+        1235,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/idan/nervous-laugh-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1069426,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "63b0849598b88f89f2ba648d6f5e307684cf74dc83dde1ab18a8972a50299241",
+      "uniqueRgba": 53524,
+      "visibleBbox": [
+        140,
+        78,
+        1190,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/idan/neutral-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1157986,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "1c98bea96cd3ed7310144ba101bb736d7772ae6b0f6394b807a8b18ec0a922da",
+      "uniqueRgba": 54096,
+      "visibleBbox": [
+        121,
+        75,
+        1173,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/idan/struggling-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "fileBytes": 1293078,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "3c525382fb091f5fd88e94ba07b51a34a991eb140d4fcac53ddf1184c508f5a8",
+      "uniqueRgba": 58699,
+      "visibleBbox": [
+        128,
+        88,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
     "assets/sprite-masters/ido/celebrating-transparent.png": {
       "cornerAlpha": [
         0,
@@ -145,16 +278,16 @@
         0,
         0
       ],
-      "fileBytes": 1291996,
+      "fileBytes": 1628496,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "2c750026dd7a31eb84d5c802b85058f2a60ffe97c8b95760d0e6ca733fe8c7c3",
-      "uniqueRgba": 110507,
+      "sha256": "99607497f7694246ff80eae4ee3d08948ef616d4e3dcf80480fdb8ebf1d3b4d4",
+      "uniqueRgba": 126826,
       "visibleBbox": [
-        46,
         39,
-        1210,
+        54,
+        1231,
         1254
       ],
       "visibleMagentaPixels": 0,
@@ -165,18 +298,18 @@
         0,
         0,
         0,
-        0
+        255
       ],
-      "fileBytes": 1111979,
+      "fileBytes": 1519665,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "0099e07e07e6a1bd4ff13051fb29ae0ab410c248faf565ea7c601d55ae5b09c3",
-      "uniqueRgba": 106471,
+      "sha256": "e56139543cc4e34cdf5fadf47425c8c090b9697e43e8c145cb9bc23660a7e3d7",
+      "uniqueRgba": 115027,
       "visibleBbox": [
-        213,
-        50,
-        1244,
+        177,
+        30,
+        1254,
         1254
       ],
       "visibleMagentaPixels": 0,
@@ -187,18 +320,18 @@
         0,
         0,
         0,
-        255
+        0
       ],
-      "fileBytes": 1334588,
+      "fileBytes": 1651786,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "4fa0d3c4611a46e4f028642933fdc77d8ef11f5054eb5c99a895bc34c9d91e54",
-      "uniqueRgba": 114031,
+      "sha256": "56b6b87797a9087e6bd66d632300ee8ebdcf91a7d434b9b5866f8e452af97b19",
+      "uniqueRgba": 121618,
       "visibleBbox": [
-        24,
-        37,
-        1254,
+        32,
+        31,
+        1224,
         1254
       ],
       "visibleMagentaPixels": 0,
@@ -209,18 +342,18 @@
         0,
         0,
         0,
-        0
+        255
       ],
-      "fileBytes": 1246762,
+      "fileBytes": 1638112,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "4327e59bc61a15a89e9dcae4573bc05230fc80b0e413713b55e31f4a2d23b366",
-      "uniqueRgba": 104685,
+      "sha256": "fe3d43ca2f1e065fe718b84c8b47ec6558ff733e73fffa12fa9567e6262a0a52",
+      "uniqueRgba": 113136,
       "visibleBbox": [
-        30,
-        37,
-        1229,
+        16,
+        42,
+        1254,
         1254
       ],
       "visibleMagentaPixels": 0,
@@ -233,15 +366,15 @@
         0,
         255
       ],
-      "fileBytes": 1108632,
+      "fileBytes": 1470675,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "93d529c417741e91610cd6cfc7b94f283f828d7f4bd9b7ec3a35379afaa8cb2b",
-      "uniqueRgba": 103225,
+      "sha256": "0aa448484c2aa4eefc762d3bc46e698ed3621c8f5272ab86d15d7ea41b95f1fa",
+      "uniqueRgba": 114198,
       "visibleBbox": [
-        190,
-        43,
+        175,
+        50,
         1254,
         1254
       ],
@@ -255,16 +388,16 @@
         0,
         0
       ],
-      "fileBytes": 1271200,
+      "fileBytes": 1572283,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "f95effa64723c7361e2eb5c21ca7f021ef9e79adb5a621aa6b01b13c82e141ad",
-      "uniqueRgba": 112374,
+      "sha256": "f186632439092df34df675f08085192ef7b7bb3222031775619de32da2bb5abc",
+      "uniqueRgba": 113557,
       "visibleBbox": [
-        174,
-        41,
-        1227,
+        208,
+        49,
+        1159,
         1254
       ],
       "visibleMagentaPixels": 0,
@@ -401,29 +534,183 @@
       ],
       "visibleMagentaPixels": 0,
       "width": 1254
-    }
-  },
-  "policy": "Exact hashes lock every production sprite and approved master. Metrics document the approved pixels; changing any value requires an explicit lock update.",
-  "production": {
-    "assets/idan/celebrating.png": {
+    },
+    "assets/sprite-masters/ivri/celebrating-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "fileBytes": 1587895,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "c56fd8e6eaddb3b75868ea973dd5e40ae05c341a4bff2a3706654f0ad0a88e7b",
+      "uniqueRgba": 107608,
+      "visibleBbox": [
+        0,
+        17,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ivri/frustrated-transparent.png": {
       "cornerAlpha": [
         0,
         0,
         0,
         0
       ],
-      "equals128RoundTrip": true,
-      "equals256RoundTrip": true,
-      "fileBytes": 14410,
+      "fileBytes": 1292950,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "a937c582a23f447b5f24e1905113b2b8598afe4c0df0cae5a8a11c3913c85920",
+      "uniqueRgba": 92767,
+      "visibleBbox": [
+        157,
+        60,
+        1229,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ivri/mission-complete-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "fileBytes": 1490270,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "98a2bf8d8c07bbe8472b678b9d407e72f3e28acd03a72623301034853738ebe8",
+      "uniqueRgba": 105188,
+      "visibleBbox": [
+        0,
+        32,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ivri/nervous-laugh-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        255,
+        255
+      ],
+      "fileBytes": 1672562,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "425b025e7116b5dc091c278f3b971e29c940e6da810ab02f20e6e3818969553d",
+      "uniqueRgba": 99273,
+      "visibleBbox": [
+        0,
+        38,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ivri/neutral-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        255
+      ],
+      "fileBytes": 1368927,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "6bc4a9ace56d4d26c95930a1bc6638400d25403b996aa0d2cc9b9f7164ec1125",
+      "uniqueRgba": 94431,
+      "visibleBbox": [
+        147,
+        39,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    },
+    "assets/sprite-masters/ivri/struggling-transparent.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "fileBytes": 1487047,
+      "height": 1254,
+      "mode": "RGBA",
+      "partialAlphaPixels": 0,
+      "sha256": "9e4548ffa0d74e2e07fdbecc8df267779149e24b8ad75ddbe66cf00905cd0a41",
+      "uniqueRgba": 99361,
+      "visibleBbox": [
+        122,
+        49,
+        1254,
+        1254
+      ],
+      "visibleMagentaPixels": 0,
+      "width": 1254
+    }
+  },
+  "policy": "Exact hashes lock all 30 production sprites and all 30 transparent masters. Spatial signatures use only visible pixels and are informational acceptance records; changing any pixel or metric requires explicit artwork approval and an intentional lock update.",
+  "production": {
+    "assets/idan/celebrating.png": {
+      "cornerAlpha": [
+        0,
+        0,
+        255,
+        0
+      ],
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 269595,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 128,
-      "sha256": "6cc18dd00857474283ff4352ef656dbae48b89368b1a2c87208192ebc967e46e",
-      "uniqueRgba": 71,
+      "partialAlphaPixels": 0,
+      "sha256": "2c6b3baa8489f7588855139acf02f22fb11b6010b19bb94f0f06e1a87e070a47",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.502053,
+          "pixelWeightedMedianClusterArea": 11,
+          "roundTripSurvival": {
+            "128": 0.447285,
+            "192": 0.532682,
+            "256": 0.60212,
+            "96": 0.389382
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.606709,
+          "pixelWeightedMedianClusterArea": 5,
+          "roundTripSurvival": {
+            "128": 0.357772,
+            "192": 0.445189,
+            "256": 0.526853,
+            "96": 0.304804
+          }
+        }
+      },
+      "uniqueRgba": 25760,
       "visibleBbox": [
-        16,
-        40,
-        496,
+        0,
+        27,
+        506,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -436,18 +723,40 @@
         0,
         0
       ],
-      "equals128RoundTrip": true,
-      "equals256RoundTrip": true,
-      "fileBytes": 15200,
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 230902,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 144,
-      "sha256": "a18b42d2f1df328707c4fe3e8e74866a2efcc9505ec7a05665ff3865f68a1553",
-      "uniqueRgba": 70,
+      "partialAlphaPixels": 0,
+      "sha256": "d2905371204b260bca0aefe29aeccaaf564146a88740a80f848eaa546880e17e",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.48658,
+          "pixelWeightedMedianClusterArea": 13,
+          "roundTripSurvival": {
+            "128": 0.450272,
+            "192": 0.544054,
+            "256": 0.612675,
+            "96": 0.412133
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.613611,
+          "pixelWeightedMedianClusterArea": 5,
+          "roundTripSurvival": {
+            "128": 0.344493,
+            "192": 0.440782,
+            "256": 0.520331,
+            "96": 0.303605
+          }
+        }
+      },
+      "uniqueRgba": 23315,
       "visibleBbox": [
-        20,
-        52,
-        492,
+        50,
+        28,
+        488,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -460,18 +769,40 @@
         0,
         0
       ],
-      "equals128RoundTrip": true,
-      "equals256RoundTrip": true,
-      "fileBytes": 14660,
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 247148,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 80,
-      "sha256": "a23e72bd95f76fac59f0ab6e41c4cadb96b99b0d9127116decc7f873968c9fe3",
-      "uniqueRgba": 69,
+      "partialAlphaPixels": 0,
+      "sha256": "19025daaa62a2d365c8c9b4a317490a5da7323119d3fa840023c3777ae333c59",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.468905,
+          "pixelWeightedMedianClusterArea": 15,
+          "roundTripSurvival": {
+            "128": 0.477204,
+            "192": 0.560189,
+            "256": 0.626183,
+            "96": 0.421541
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.579223,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.379787,
+            "192": 0.46722,
+            "256": 0.544279,
+            "96": 0.324998
+          }
+        }
+      },
+      "uniqueRgba": 25397,
       "visibleBbox": [
-        24,
-        28,
-        488,
+        7,
+        29,
+        504,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -484,18 +815,40 @@
         0,
         0
       ],
-      "equals128RoundTrip": true,
-      "equals256RoundTrip": true,
-      "fileBytes": 13623,
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 211136,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 208,
-      "sha256": "ddbb3359f113c589b696d38b53319f54efb1c3b50617a1f8f9c31dbe790cb98e",
-      "uniqueRgba": 66,
+      "partialAlphaPixels": 0,
+      "sha256": "bace6d367b50888d240ec91a41a167a9a8c149431666d5ba9f354d6525ae68f1",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.434888,
+          "pixelWeightedMedianClusterArea": 22,
+          "roundTripSurvival": {
+            "128": 0.491729,
+            "192": 0.586394,
+            "256": 0.646164,
+            "96": 0.446402
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.532285,
+          "pixelWeightedMedianClusterArea": 9,
+          "roundTripSurvival": {
+            "128": 0.411252,
+            "192": 0.506368,
+            "256": 0.575257,
+            "96": 0.36257
+          }
+        }
+      },
+      "uniqueRgba": 21435,
       "visibleBbox": [
-        44,
-        40,
-        472,
+        58,
+        32,
+        486,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -508,18 +861,40 @@
         0,
         0
       ],
-      "equals128RoundTrip": true,
-      "equals256RoundTrip": true,
-      "fileBytes": 13287,
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 221261,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 464,
-      "sha256": "4bda5cce1dc30cc9b0c67ed6467cc9214a2d77a3b35227ae1df9cb1bac1189b6",
-      "uniqueRgba": 55,
+      "partialAlphaPixels": 0,
+      "sha256": "4f1186ea8fff0a137cfba105ab462955945de92e05d279af13c18de1008d72dd",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.487663,
+          "pixelWeightedMedianClusterArea": 13,
+          "roundTripSurvival": {
+            "128": 0.455358,
+            "192": 0.543868,
+            "256": 0.610011,
+            "96": 0.402651
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.592054,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.362899,
+            "192": 0.458477,
+            "256": 0.533169,
+            "96": 0.313531
+          }
+        }
+      },
+      "uniqueRgba": 21274,
       "visibleBbox": [
-        48,
-        40,
-        464,
+        49,
+        31,
+        479,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -530,20 +905,42 @@
         0,
         0,
         0,
-        0
+        255
       ],
-      "equals128RoundTrip": true,
-      "equals256RoundTrip": true,
-      "fileBytes": 14240,
+      "equals128RoundTrip": false,
+      "equals256RoundTrip": false,
+      "fileBytes": 247839,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 64,
-      "sha256": "fd99baa6300d3180f6cde87cc7a0d22179498461990fd4f71ea5b01b990d8418",
-      "uniqueRgba": 68,
+      "partialAlphaPixels": 0,
+      "sha256": "39a622e351793edad556cad6d077a111db7dee50f46719a5fd679d8fc638ea20",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.483009,
+          "pixelWeightedMedianClusterArea": 13,
+          "roundTripSurvival": {
+            "128": 0.462954,
+            "192": 0.551794,
+            "256": 0.614064,
+            "96": 0.412019
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.61092,
+          "pixelWeightedMedianClusterArea": 5,
+          "roundTripSurvival": {
+            "128": 0.349506,
+            "192": 0.443475,
+            "256": 0.520883,
+            "96": 0.304777
+          }
+        }
+      },
+      "uniqueRgba": 24018,
       "visibleBbox": [
-        32,
-        40,
-        480,
+        52,
+        36,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -563,6 +960,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "c424d2fac9499d17e96b22431495773262bd2a140d23d7f664bc744690b3234a",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.361535,
+          "pixelWeightedMedianClusterArea": 213,
+          "roundTripSurvival": {
+            "128": 0.587401,
+            "192": 0.65919,
+            "256": 0.709377,
+            "96": 0.542778
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.439623,
+          "pixelWeightedMedianClusterArea": 30,
+          "roundTripSurvival": {
+            "128": 0.514186,
+            "192": 0.591764,
+            "256": 0.650369,
+            "96": 0.469374
+          }
+        }
+      },
       "uniqueRgba": 21579,
       "visibleBbox": [
         0,
@@ -587,6 +1006,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "4026fee4501806b85e5485748ede1c578fdb7a994e506ddd019a6ee7d85813a5",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.384128,
+          "pixelWeightedMedianClusterArea": 66,
+          "roundTripSurvival": {
+            "128": 0.567056,
+            "192": 0.640788,
+            "256": 0.692188,
+            "96": 0.518548
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.487507,
+          "pixelWeightedMedianClusterArea": 14,
+          "roundTripSurvival": {
+            "128": 0.469159,
+            "192": 0.554452,
+            "256": 0.6139,
+            "96": 0.420961
+          }
+        }
+      },
       "uniqueRgba": 19969,
       "visibleBbox": [
         75,
@@ -611,6 +1052,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "d513b16b452a5ad9a4e799e068da84fb6e031dd3547b96bd2e8cd8de8f33bee7",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.409615,
+          "pixelWeightedMedianClusterArea": 39,
+          "roundTripSurvival": {
+            "128": 0.539638,
+            "192": 0.618798,
+            "256": 0.673504,
+            "96": 0.494318
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.530376,
+          "pixelWeightedMedianClusterArea": 9,
+          "roundTripSurvival": {
+            "128": 0.429721,
+            "192": 0.516047,
+            "256": 0.583375,
+            "96": 0.384965
+          }
+        }
+      },
       "uniqueRgba": 22139,
       "visibleBbox": [
         7,
@@ -635,6 +1098,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "43e7982ef5ea56fc85de33bd3405e972c1667271fd3671285b4eb480ccb3f4cd",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.338336,
+          "pixelWeightedMedianClusterArea": 118,
+          "roundTripSurvival": {
+            "128": 0.608319,
+            "192": 0.681684,
+            "256": 0.727527,
+            "96": 0.562483
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.463137,
+          "pixelWeightedMedianClusterArea": 17,
+          "roundTripSurvival": {
+            "128": 0.492562,
+            "192": 0.574513,
+            "256": 0.634747,
+            "96": 0.446905
+          }
+        }
+      },
       "uniqueRgba": 20233,
       "visibleBbox": [
         2,
@@ -659,6 +1144,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "e01b4484272b6a9fc51759b280a3bc0802704625f41873759e3fde50843e9d74",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.403726,
+          "pixelWeightedMedianClusterArea": 36,
+          "roundTripSurvival": {
+            "128": 0.555343,
+            "192": 0.626013,
+            "256": 0.678822,
+            "96": 0.504647
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.478856,
+          "pixelWeightedMedianClusterArea": 13,
+          "roundTripSurvival": {
+            "128": 0.484025,
+            "192": 0.563003,
+            "256": 0.622581,
+            "96": 0.434007
+          }
+        }
+      },
       "uniqueRgba": 20452,
       "visibleBbox": [
         73,
@@ -683,6 +1190,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "92cca088694bd4cba3ed5786b081018d852fdd4af94e7dfcf76f7bf88ddf68b5",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.447224,
+          "pixelWeightedMedianClusterArea": 20,
+          "roundTripSurvival": {
+            "128": 0.501238,
+            "192": 0.586644,
+            "256": 0.64483,
+            "96": 0.460097
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.512193,
+          "pixelWeightedMedianClusterArea": 11,
+          "roundTripSurvival": {
+            "128": 0.441476,
+            "192": 0.531628,
+            "256": 0.59573,
+            "96": 0.403518
+          }
+        }
+      },
       "uniqueRgba": 19058,
       "visibleBbox": [
         70,
@@ -702,16 +1231,38 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 270749,
+      "fileBytes": 318489,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "63e12e7df2a4f925e32b7128535fe297bbfc5f4e3b7509fd40ff4f3b45ab01b8",
-      "uniqueRgba": 40699,
+      "sha256": "200eaf8a42bae0cfe8301334e6a7e5a63d79659c66a33cb80dcecb4279225fa8",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.450884,
+          "pixelWeightedMedianClusterArea": 14,
+          "roundTripSurvival": {
+            "128": 0.475817,
+            "192": 0.575918,
+            "256": 0.634704,
+            "96": 0.425526
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.580825,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.363233,
+            "192": 0.465829,
+            "256": 0.53849,
+            "96": 0.311917
+          }
+        }
+      },
+      "uniqueRgba": 47720,
       "visibleBbox": [
-        19,
         16,
-        494,
+        22,
+        503,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -722,20 +1273,42 @@
         0,
         0,
         0,
-        0
+        255
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 238705,
+      "fileBytes": 300319,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "5713e860b45ba9070ae5f64abd03d9491d5680ba02f5e4a41ed09b1aa7a54664",
-      "uniqueRgba": 40111,
+      "sha256": "35599ea3f5fa0d3c4824aa05ef7bbfd061aca3ce1fafe7c9f754d8c4bf49df42",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.431232,
+          "pixelWeightedMedianClusterArea": 16,
+          "roundTripSurvival": {
+            "128": 0.570244,
+            "192": 0.608368,
+            "256": 0.664013,
+            "96": 0.438293
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.533756,
+          "pixelWeightedMedianClusterArea": 8,
+          "roundTripSurvival": {
+            "128": 0.468087,
+            "192": 0.522106,
+            "256": 0.584047,
+            "96": 0.353456
+          }
+        }
+      },
+      "uniqueRgba": 46612,
       "visibleBbox": [
-        87,
-        20,
-        508,
+        73,
+        12,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -750,16 +1323,38 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 276080,
+      "fileBytes": 321691,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "e9def16b1b18dbf96e29dfb18d60c4d946d30be3b743006091618ff9b59ab750",
-      "uniqueRgba": 42488,
+      "sha256": "0f4b6eb96db69f7492230a12d37ce5c1a9835efa0951d090ee31f74871becfb1",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.481739,
+          "pixelWeightedMedianClusterArea": 12,
+          "roundTripSurvival": {
+            "128": 0.453725,
+            "192": 0.547161,
+            "256": 0.61269,
+            "96": 0.395821
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.59054,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.360452,
+            "192": 0.455975,
+            "256": 0.532629,
+            "96": 0.305408
+          }
+        }
+      },
+      "uniqueRgba": 46746,
       "visibleBbox": [
-        10,
-        15,
-        511,
+        13,
+        13,
+        500,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -774,16 +1369,38 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 261612,
+      "fileBytes": 320706,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "59d1164c8458715126e89bc3d06ef96a54d1afec80a8d71d0a26ce5a2d2bf39a",
-      "uniqueRgba": 39147,
+      "sha256": "01a972646e729759cd6c1cd5d0ce737e91e0bf22cabe77eeaefff14340388ea7",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.440052,
+          "pixelWeightedMedianClusterArea": 15,
+          "roundTripSurvival": {
+            "128": 0.495419,
+            "192": 0.58624,
+            "256": 0.647928,
+            "96": 0.446812
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.583354,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.367812,
+            "192": 0.465923,
+            "256": 0.541858,
+            "96": 0.321483
+          }
+        }
+      },
+      "uniqueRgba": 43158,
       "visibleBbox": [
-        12,
-        15,
-        502,
+        7,
+        17,
+        510,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -794,20 +1411,42 @@
         0,
         0,
         0,
-        0
+        255
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 236220,
+      "fileBytes": 291873,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "3de7fce0c4b23c95b1016e09d10dc4f699358f81dba0e9f0474d8247074bc0dc",
-      "uniqueRgba": 38982,
+      "sha256": "b3ff4dd5878e840243a5f96118d22f5c72fc2b08eee1f6a9269d6e117b1cb937",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.381988,
+          "pixelWeightedMedianClusterArea": 19,
+          "roundTripSurvival": {
+            "128": 0.636036,
+            "192": 0.654742,
+            "256": 0.710038,
+            "96": 0.4852
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.540947,
+          "pixelWeightedMedianClusterArea": 8,
+          "roundTripSurvival": {
+            "128": 0.476794,
+            "192": 0.517143,
+            "256": 0.58433,
+            "96": 0.343855
+          }
+        }
+      },
+      "uniqueRgba": 45319,
       "visibleBbox": [
-        78,
-        18,
-        510,
+        71,
+        20,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -822,16 +1461,38 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 262518,
+      "fileBytes": 305607,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "5f9138da2d69ed6fa0c8dff7fec0d383f6d2a883afeffc8286edbb9f43e9d17f",
-      "uniqueRgba": 42343,
+      "sha256": "e2be92e1e2a531c4361329f5b1a454da5ecd37ef8ddbe5cb25c22daa6b406481",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.416127,
+          "pixelWeightedMedianClusterArea": 21,
+          "roundTripSurvival": {
+            "128": 0.506276,
+            "192": 0.599789,
+            "256": 0.66097,
+            "96": 0.458424
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.592737,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.353881,
+            "192": 0.453283,
+            "256": 0.530812,
+            "96": 0.30173
+          }
+        }
+      },
+      "uniqueRgba": 45128,
       "visibleBbox": [
-        71,
-        17,
-        501,
+        85,
+        20,
+        473,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -851,6 +1512,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "090692ea4e7a161d17b533910467507635d10d845d1a66bca411de299b1ec7a6",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.519397,
+          "pixelWeightedMedianClusterArea": 8,
+          "roundTripSurvival": {
+            "128": 0.431888,
+            "192": 0.519174,
+            "256": 0.588124,
+            "96": 0.382231
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.652888,
+          "pixelWeightedMedianClusterArea": 4,
+          "roundTripSurvival": {
+            "128": 0.317045,
+            "192": 0.407639,
+            "256": 0.490647,
+            "96": 0.270691
+          }
+        }
+      },
       "uniqueRgba": 29134,
       "visibleBbox": [
         1,
@@ -875,6 +1558,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "d84b7d12c49520aa5c298a624753e94b8f1be48ec0a47c71afda725eb8c7ef9d",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.447012,
+          "pixelWeightedMedianClusterArea": 16,
+          "roundTripSurvival": {
+            "128": 0.480905,
+            "192": 0.575074,
+            "256": 0.636339,
+            "96": 0.426657
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.560974,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.387693,
+            "192": 0.481935,
+            "256": 0.555232,
+            "96": 0.338153
+          }
+        }
+      },
       "uniqueRgba": 27709,
       "visibleBbox": [
         64,
@@ -899,6 +1604,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "84a5ffad572f08d2993231ca2d554ee1db1de0abc87b0f35befdba7547b04a30",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.409495,
+          "pixelWeightedMedianClusterArea": 21,
+          "roundTripSurvival": {
+            "128": 0.525896,
+            "192": 0.611408,
+            "256": 0.668102,
+            "96": 0.460384
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.503868,
+          "pixelWeightedMedianClusterArea": 9,
+          "roundTripSurvival": {
+            "128": 0.43952,
+            "192": 0.530195,
+            "256": 0.597831,
+            "96": 0.379338
+          }
+        }
+      },
       "uniqueRgba": 28981,
       "visibleBbox": [
         7,
@@ -923,6 +1650,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "68edb16907fda09a491c76612886f6c795b33f46dd89ba20616e8de54c070b19",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.42352,
+          "pixelWeightedMedianClusterArea": 20,
+          "roundTripSurvival": {
+            "128": 0.504126,
+            "192": 0.597134,
+            "256": 0.654677,
+            "96": 0.452004
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.527359,
+          "pixelWeightedMedianClusterArea": 8,
+          "roundTripSurvival": {
+            "128": 0.415714,
+            "192": 0.510152,
+            "256": 0.578897,
+            "96": 0.365505
+          }
+        }
+      },
       "uniqueRgba": 27010,
       "visibleBbox": [
         32,
@@ -947,6 +1696,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "4375622ad30593c46542c4af1d1563533402eace06e2ba2e853abc88b54317e9",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.431231,
+          "pixelWeightedMedianClusterArea": 19,
+          "roundTripSurvival": {
+            "128": 0.494582,
+            "192": 0.591548,
+            "256": 0.649059,
+            "96": 0.442815
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.544752,
+          "pixelWeightedMedianClusterArea": 7,
+          "roundTripSurvival": {
+            "128": 0.402187,
+            "192": 0.497035,
+            "256": 0.566381,
+            "96": 0.352841
+          }
+        }
+      },
       "uniqueRgba": 28352,
       "visibleBbox": [
         51,
@@ -971,6 +1742,28 @@
       "mode": "RGBA",
       "partialAlphaPixels": 0,
       "sha256": "2eb22cd75affaaf4b11dd6b3249fd44075773f797750cb14d8d05db0d3051046",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.449387,
+          "pixelWeightedMedianClusterArea": 16,
+          "roundTripSurvival": {
+            "128": 0.487283,
+            "192": 0.58303,
+            "256": 0.636195,
+            "96": 0.435625
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.548089,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.406778,
+            "192": 0.50077,
+            "256": 0.563855,
+            "96": 0.355342
+          }
+        }
+      },
       "uniqueRgba": 27824,
       "visibleBbox": [
         54,
@@ -985,21 +1778,43 @@
       "cornerAlpha": [
         0,
         0,
-        0,
-        0
+        255,
+        255
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 219141,
+      "fileBytes": 308956,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 979,
-      "sha256": "470a28d66a7b3348280c59faf882986eb32e7469e415a9fe7cf0924e54d31eb3",
-      "uniqueRgba": 28263,
+      "partialAlphaPixels": 0,
+      "sha256": "a177bad76f358030f7eb3353bb93421d731e50139fde58dbb196c3fac3c4fecd",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.431286,
+          "pixelWeightedMedianClusterArea": 20,
+          "roundTripSurvival": {
+            "128": 0.520625,
+            "192": 0.596903,
+            "256": 0.656589,
+            "96": 0.476311
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.570415,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.394056,
+            "192": 0.478067,
+            "256": 0.5514,
+            "96": 0.347511
+          }
+        }
+      },
+      "uniqueRgba": 37056,
       "visibleBbox": [
         0,
-        16,
-        509,
+        7,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -1014,16 +1829,38 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 192539,
+      "fileBytes": 254988,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 1160,
-      "sha256": "7007d4205447d5928fa11adda84af97a7ce01d46d8c358e7d9410d42f2745a11",
-      "uniqueRgba": 25096,
+      "partialAlphaPixels": 0,
+      "sha256": "d06972aca3c67fbb1b689163683f13b80ed25988ef1599cb962e7a8ddec4fbc9",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.426966,
+          "pixelWeightedMedianClusterArea": 21,
+          "roundTripSurvival": {
+            "128": 0.521466,
+            "192": 0.601899,
+            "256": 0.659167,
+            "96": 0.479348
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.573396,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.384064,
+            "192": 0.475582,
+            "256": 0.548335,
+            "96": 0.335972
+          }
+        }
+      },
+      "uniqueRgba": 32517,
       "visibleBbox": [
-        59,
-        21,
-        503,
+        64,
+        24,
+        502,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -1034,20 +1871,42 @@
         0,
         0,
         255,
-        0
+        255
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 209268,
+      "fileBytes": 294441,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "5a69499c7288fd330cb1b3abeef5e0fa0c99222cb2152ccb1dc41808f9f07b6e",
-      "uniqueRgba": 29303,
+      "sha256": "e1110a7ae67564ae1c48cc0e27f9bc84e157f129b67f503fc8d8ebf3e6609521",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.456564,
+          "pixelWeightedMedianClusterArea": 17,
+          "roundTripSurvival": {
+            "128": 0.494236,
+            "192": 0.57648,
+            "256": 0.63701,
+            "96": 0.449334
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.585384,
+          "pixelWeightedMedianClusterArea": 6,
+          "roundTripSurvival": {
+            "128": 0.38114,
+            "192": 0.466386,
+            "256": 0.539826,
+            "96": 0.335112
+          }
+        }
+      },
+      "uniqueRgba": 36860,
       "visibleBbox": [
         0,
-        16,
-        502,
+        13,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -1058,20 +1917,42 @@
         0,
         0,
         0,
-        0
+        255
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 219590,
+      "fileBytes": 320327,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 1125,
-      "sha256": "4934ec9e9e0e503b89aad0bfc91d4ac5072cb1eab48123fe34fce1f56cffc9e9",
-      "uniqueRgba": 27885,
+      "partialAlphaPixels": 0,
+      "sha256": "84a43902bb7132f8acfd639101686e9d1eb57b35259fc14fb9abb3fab2d3003d",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.45159,
+          "pixelWeightedMedianClusterArea": 16,
+          "roundTripSurvival": {
+            "128": 0.512701,
+            "192": 0.583359,
+            "256": 0.645874,
+            "96": 0.467181
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.606141,
+          "pixelWeightedMedianClusterArea": 5,
+          "roundTripSurvival": {
+            "128": 0.367973,
+            "192": 0.45077,
+            "256": 0.529376,
+            "96": 0.322215
+          }
+        }
+      },
+      "uniqueRgba": 35005,
       "visibleBbox": [
         0,
         16,
-        503,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -1082,20 +1963,42 @@
         0,
         0,
         0,
-        0
+        255
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 191992,
+      "fileBytes": 264531,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 1062,
-      "sha256": "e7135d161ec08cdbc834cc24d18c2cad633b29c002da69384bc199a7388b0b06",
-      "uniqueRgba": 24549,
+      "partialAlphaPixels": 0,
+      "sha256": "8f4d3ccf883e494d2f1a72748b1ddd35dda32753ffb94a96a4b1387a5485c3b8",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.446541,
+          "pixelWeightedMedianClusterArea": 21,
+          "roundTripSurvival": {
+            "128": 0.503797,
+            "192": 0.584688,
+            "256": 0.643942,
+            "96": 0.455402
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.564275,
+          "pixelWeightedMedianClusterArea": 7,
+          "roundTripSurvival": {
+            "128": 0.394343,
+            "192": 0.48243,
+            "256": 0.553885,
+            "96": 0.344577
+          }
+        }
+      },
+      "uniqueRgba": 32569,
       "visibleBbox": [
-        59,
+        60,
         16,
-        503,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
@@ -1110,21 +2013,254 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 202590,
+      "fileBytes": 288952,
       "height": 512,
       "mode": "RGBA",
-      "partialAlphaPixels": 1001,
-      "sha256": "01bb0869fda36b281b4eb6a2040b29c00d05bdac68c10ffebb6481aaa94b0b8b",
-      "uniqueRgba": 26619,
+      "partialAlphaPixels": 0,
+      "sha256": "94707263f17cd53d281859f70d877310a2d54e74efc1e8bb3e030daf21f7d2fc",
+      "spatialSignature": {
+        "32": {
+          "adjacentBoundaryRate": 0.436417,
+          "pixelWeightedMedianClusterArea": 18,
+          "roundTripSurvival": {
+            "128": 0.512503,
+            "192": 0.59464,
+            "256": 0.652994,
+            "96": 0.461489
+          }
+        },
+        "64": {
+          "adjacentBoundaryRate": 0.557207,
+          "pixelWeightedMedianClusterArea": 7,
+          "roundTripSurvival": {
+            "128": 0.398363,
+            "192": 0.487524,
+            "256": 0.560351,
+            "96": 0.343941
+          }
+        }
+      },
+      "uniqueRgba": 35037,
       "visibleBbox": [
-        56,
-        16,
-        503,
+        50,
+        20,
+        512,
         512
       ],
       "visibleMagentaPixels": 0,
       "width": 512
     }
   },
-  "version": 1
+  "spatialGate": {
+    "assets/idan/celebrating.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/idan/frustrated.png": {
+      "approvedFailures": [
+        "32 colors/128px survival 0.450272 outside 0.450905..0.597056",
+        "32 colors/192px survival 0.544054 outside 0.545074..0.670788",
+        "32 colors boundary 0.486580 outside 0.354128..0.477012",
+        "64 colors/96px survival 0.303605 outside 0.308153..0.450961",
+        "64 colors/128px survival 0.344493 outside 0.357693..0.499159",
+        "64 colors/192px survival 0.440782 outside 0.451935..0.584452",
+        "64 colors/256px survival 0.520331 outside 0.525232..0.643900",
+        "64 colors boundary 0.613611 outside 0.457507..0.590974"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/idan/mission-complete.png": {
+      "approvedFailures": [
+        "32 colors/96px survival 0.421541 outside 0.430384..0.524318",
+        "32 colors/128px survival 0.477204 outside 0.495896..0.569638",
+        "32 colors/192px survival 0.560189 outside 0.581408..0.648798",
+        "32 colors/256px survival 0.626183 outside 0.638102..0.703504",
+        "32 colors cluster area 15 outside 15.75..48.75",
+        "32 colors boundary 0.468905 outside 0.379495..0.439615",
+        "64 colors/96px survival 0.324998 outside 0.349338..0.414965",
+        "64 colors/128px survival 0.379787 outside 0.399721..0.469520",
+        "64 colors/192px survival 0.467220 outside 0.486047..0.560195",
+        "64 colors/256px survival 0.544279 outside 0.553375..0.627831",
+        "64 colors cluster area 6 outside 6.75..11.25",
+        "64 colors boundary 0.579223 outside 0.473868..0.560376"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/idan/nervous-laugh.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/idan/neutral.png": {
+      "approvedFailures": [
+        "32 colors/96px survival 0.402651 outside 0.412815..0.534647",
+        "32 colors/128px survival 0.455358 outside 0.464582..0.585343",
+        "32 colors/192px survival 0.543868 outside 0.561548..0.656013",
+        "32 colors/256px survival 0.610011 outside 0.619059..0.708822",
+        "32 colors cluster area 13 outside 14.25..45.00",
+        "32 colors boundary 0.487663 outside 0.373726..0.461231",
+        "64 colors/96px survival 0.313531 outside 0.322841..0.464007",
+        "64 colors/128px survival 0.362899 outside 0.372187..0.514025",
+        "64 colors/192px survival 0.458477 outside 0.467035..0.593003",
+        "64 colors/256px survival 0.533169 outside 0.536381..0.652581",
+        "64 colors boundary 0.592054 outside 0.448856..0.574752"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/idan/struggling.png": {
+      "approvedFailures": [
+        "32 colors/192px survival 0.551794 outside 0.553030..0.616644",
+        "32 colors boundary 0.483009 outside 0.417224..0.479387",
+        "64 colors/96px survival 0.304777 outside 0.325342..0.433518",
+        "64 colors/128px survival 0.349506 outside 0.376778..0.471476",
+        "64 colors/192px survival 0.443475 outside 0.470770..0.561628",
+        "64 colors/256px survival 0.520883 outside 0.533855..0.625730",
+        "64 colors boundary 0.610920 outside 0.482193..0.578089"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/ido/celebrating.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ido/frustrated.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ido/mission-complete.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ido/nervous-laugh.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ido/neutral.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ido/struggling.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inat/celebrating.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inat/frustrated.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inat/mission-complete.png": {
+      "approvedFailures": [
+        "32 colors/96px survival 0.395821 outside 0.430384..0.524318",
+        "32 colors/128px survival 0.453725 outside 0.495896..0.569638",
+        "32 colors/192px survival 0.547161 outside 0.581408..0.648798",
+        "32 colors/256px survival 0.612690 outside 0.638102..0.703504",
+        "32 colors cluster area 12 outside 15.75..48.75",
+        "32 colors boundary 0.481739 outside 0.379495..0.439615",
+        "64 colors/96px survival 0.305408 outside 0.349338..0.414965",
+        "64 colors/128px survival 0.360452 outside 0.399721..0.469520",
+        "64 colors/192px survival 0.455975 outside 0.486047..0.560195",
+        "64 colors/256px survival 0.532629 outside 0.553375..0.627831",
+        "64 colors cluster area 6 outside 6.75..11.25",
+        "64 colors boundary 0.590540 outside 0.473868..0.560376"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/inat/nervous-laugh.png": {
+      "approvedFailures": [
+        "64 colors/96px survival 0.321483 outside 0.335505..0.476905",
+        "64 colors/128px survival 0.367812 outside 0.385714..0.522562",
+        "64 colors/192px survival 0.465923 outside 0.480152..0.604513",
+        "64 colors/256px survival 0.541858 outside 0.548897..0.664747",
+        "64 colors boundary 0.583354 outside 0.433137..0.557359"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/inat/neutral.png": {
+      "approvedFailures": [
+        "32 colors/128px survival 0.636036 outside 0.464582..0.585343",
+        "32 colors/256px survival 0.710038 outside 0.619059..0.708822"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/inat/struggling.png": {
+      "approvedFailures": [
+        "32 colors boundary 0.416127 outside 0.417224..0.479387",
+        "64 colors/96px survival 0.301730 outside 0.325342..0.433518",
+        "64 colors/128px survival 0.353881 outside 0.376778..0.471476",
+        "64 colors/192px survival 0.453283 outside 0.470770..0.561628",
+        "64 colors/256px survival 0.530812 outside 0.533855..0.625730",
+        "64 colors boundary 0.592737 outside 0.482193..0.578089"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/inbal/celebrating.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inbal/frustrated.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inbal/mission-complete.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inbal/nervous-laugh.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inbal/neutral.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/inbal/struggling.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ivri/celebrating.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ivri/frustrated.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ivri/mission-complete.png": {
+      "approvedFailures": [
+        "32 colors/128px survival 0.494236 outside 0.495896..0.569638",
+        "32 colors/192px survival 0.576480 outside 0.581408..0.648798",
+        "32 colors/256px survival 0.637010 outside 0.638102..0.703504",
+        "32 colors boundary 0.456564 outside 0.379495..0.439615",
+        "64 colors/96px survival 0.335112 outside 0.349338..0.414965",
+        "64 colors/128px survival 0.381140 outside 0.399721..0.469520",
+        "64 colors/192px survival 0.466386 outside 0.486047..0.560195",
+        "64 colors/256px survival 0.539826 outside 0.553375..0.627831",
+        "64 colors cluster area 6 outside 6.75..11.25",
+        "64 colors boundary 0.585384 outside 0.473868..0.560376"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/ivri/nervous-laugh.png": {
+      "approvedFailures": [
+        "64 colors/96px survival 0.322215 outside 0.335505..0.476905",
+        "64 colors/128px survival 0.367973 outside 0.385714..0.522562",
+        "64 colors/192px survival 0.450770 outside 0.480152..0.604513",
+        "64 colors/256px survival 0.529376 outside 0.548897..0.664747",
+        "64 colors cluster area 5 outside 6.00..21.25",
+        "64 colors boundary 0.606141 outside 0.433137..0.557359"
+      ],
+      "passesProvisionalBand": false
+    },
+    "assets/ivri/neutral.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    },
+    "assets/ivri/struggling.png": {
+      "approvedFailures": [],
+      "passesProvisionalBand": true
+    }
+  },
+  "version": 2
 }

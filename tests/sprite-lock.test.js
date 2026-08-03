@@ -24,14 +24,23 @@ function assertPngContract(relativePath, record) {
 
 test("all production sprites and approved masters match the frozen sprite lock", () => {
   const lock = JSON.parse(fs.readFileSync(LOCK_PATH, "utf8"));
-  assert.equal(lock.version, 1);
+  assert.equal(lock.version, 2);
   assert.equal(Object.keys(lock.production).length, 30);
-  assert.equal(Object.keys(lock.masters).length, 18);
+  assert.equal(Object.keys(lock.masters).length, 30);
+  assert.equal(Object.keys(lock.spatialGate).length, 30);
 
   Object.entries(lock.production).forEach(([relativePath, record]) => {
     assert.equal(record.width, 512);
     assert.equal(record.height, 512);
     assert.equal(record.mode, "RGBA");
+    assert.equal(record.equals128RoundTrip, false);
+    assert.equal(record.equals256RoundTrip, false);
+    assert.deepEqual(Object.keys(record.spatialSignature), ["32", "64"]);
+    assert.deepEqual(
+      Object.keys(record.spatialSignature["32"].roundTripSurvival),
+      ["96", "128", "192", "256"],
+    );
+    assert.ok(lock.spatialGate[relativePath], `${relativePath} needs a spatial gate record`);
     assertPngContract(relativePath, record);
   });
   Object.entries(lock.masters).forEach(([relativePath, record]) => {
@@ -42,8 +51,8 @@ test("all production sprites and approved masters match the frozen sprite lock",
   });
 });
 
-test("approved builders retain the direct 1254-to-512 export structure", () => {
-  for (const character of ["ido", "inat", "inbal"]) {
+test("all locked builders retain the direct 1254-to-512 export structure", () => {
+  for (const character of ["ido", "inbal", "inat", "ivri", "idan"]) {
     const source = fs.readFileSync(
       path.join(PROJECT_ROOT, "scripts", `build-${character}-sprites.py`),
       "utf8",
