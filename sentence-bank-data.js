@@ -9951,6 +9951,12 @@ const SENTENCE_EXPANSION_ROUND2 = [
     english: "These measures are likely to help in the short term only.",
     hebrewTokenPairs: [["הצעדים", "הַצְּעָדִים"], ["הללו", "הַלָּלוּ"], ["עשויים", "עֲשׂוּיִים"], ["להועיל", "לְהוֹעִיל"], ["בטווח הקצר", "בַּטְּוָח הַקָּצָר"], ["בלבד", "בִּלְבַד"]],
     englishTokens: ["These", "measures", "are likely", "to help", "in the short term", "only"],
+    englishAlternates: [
+      {
+        text: "These measures are likely to help only in the short term.",
+        tokens: ["These", "measures", "are likely", "to help", "only", "in the short term"]
+      }
+    ],
     hebrewDistractorPairs: [["עלולים", "עֲלוּלִים"], ["להזיק", "לְהַזִּיק"], ["בטווח הארוך", "בַּטְּוָח הָאָרֹךְ"], ["האלה", "הָאֵלֶּה"], ["המהלכים", "הַמַּהֲלָכִים"]],
     englishDistractors: ["are liable", "to harm", "in the long term", "those", "moves"],
     notes: "עשוי signals a likely positive outcome while עלול signals a feared negative one — a nuance pair worth drilling. בטווח הקצר (the short term) is one chip vs בטווח הארוך (the long term)."

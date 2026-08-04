@@ -7022,3 +7022,29 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** Baseline `npm test` before installation — **371 pass, 0 fail, 0 cancelled**. `python3 -m py_compile scripts/audit-sprites.py scripts/build-approved-sprites.py scripts/build-ido-sprites.py scripts/build-inbal-sprites.py scripts/build-inat-sprites.py scripts/build-ivri-sprites.py scripts/build-idan-sprites.py scripts/sprite_png.py` — **pass**. `git diff --check` — **pass**. `node --test tests/sprite-lock.test.js` — **2 pass, 0 fail**. `npm run sprites:audit` — **pass: 30 production files, 30 tracked masters, and two direct deterministic rebuilds of all 30 outputs**. The first post-change `npm test` exposed one obsolete Idan-pipeline assertion (**370 pass, 1 fail**); after correcting that contract, `node --test tests/character-mission.test.js tests/sprite-lock.test.js` — **52 pass, 0 fail**, and final `npm test` — **371 pass, 0 fail, 0 cancelled**, including the rendered Chrome layout regression at 360×640. `shasum -a 256 -c /tmp/ulpango-frozen-ido-inbal.sha256` — **24/24 OK**, proving all Ido/Inbal production sprites and masters remained byte-for-byte unchanged.
 
 **Risks / regressions to check:** Ten visually approved sprites sit outside at least one provisional Ido/Inbal detector tolerance; these are recorded as explicit accepted deviations and then frozen by exact hash and full spatial signature, so the gate cannot silently normalize or drift them later. The production ceiling remains the previously approved 384 KiB because deterministic lossless output for detailed long hair exceeds the original provisional 256 KiB target. Browser caches holding old unversioned files are bypassed by the new HTML→CSS→sprite query-key chain; the deployed Pages files must still be checked against local SHA-256 values after the merge workflow completes.
+
+### 2026-08-03 20:50 EDT — Fix missing speech bubble style on mission perfect screen
+
+**Requested:** Investigate why Idan's character's speech at the end of a perfect game during a mission doesn't appear in a speech bubble like all the other characters.
+
+**Files changed:**
+- `styles.css` — added `.character-results-dialogue` and `.character-results-dialogue-wrap` to the existing comma-separated selectors that define the shared speech bubble styles (background color, border, text color, padding, and layout grid).
+
+**Behavior changed:** All characters' perfect game speech on the mid-mission screen now correctly displays inside a speech bubble instead of as plain text on the dark background.
+
+**Tests run:** `npm test` after changes — **371 pass, 0 fail**.
+
+**Risks / regressions to check:** None. This was a missing CSS class being appended to the style list; it only affects the mid-mission perfect speech screen (`character-results-dialogue`) which had no styles applied previously.
+
+### 2026-08-03 20:59 EDT — Add alternate English ordering for formal_47
+
+**Requested:** Accept the alternate correct ordering ("only in the short term") for the sentence "הצעדים הללו עשויים להועיל בטווח הקצר בלבד."
+
+**Files changed:**
+- `sentence-bank-data.js` — added an `englishAlternates` block to `formal_47` to accept the chip order `["These", "measures", "are likely", "to help", "only", "in the short term"]`.
+
+**Behavior changed:** The Sentences game now accepts both "in the short term only" and "only in the short term" as correct translations for this sentence.
+
+**Tests run:** `npm test` after fixing alternate format — **371 pass, 0 fail**.
+
+**Risks / regressions to check:** None. The alternate exactly uses existing chips and correctly tests valid grammatical flexibility.

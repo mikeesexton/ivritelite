@@ -2967,6 +2967,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 .character-dialogue-wrap,
 .character-card-dialogue-wrap,
 .character-companion-dialogue-wrap,
+.character-results-dialogue-wrap,
 .mission-results-dialogue-wrap {
   display: grid;
   gap: 0.35rem;
@@ -2975,6 +2976,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 .character-dialogue,
 .character-card-dialogue,
 .character-companion-dialogue,
+.character-results-dialogue,
 .mission-results-dialogue {
   margin: 0;
   font-family: var(--display-font);
@@ -2983,6 +2985,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 }
 
 .character-dialogue,
+.character-results-dialogue,
 .mission-results-dialogue {
   padding: 0.9rem 1rem;
   border: 1px solid var(--line);
