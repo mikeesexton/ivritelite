@@ -103,12 +103,21 @@ verbMatch.pickVerbMatchQueue = verbMatch.pickVerbMatchQueue || function pickVerb
   }
 
   const masterStreak = Math.max(1, Number(runtime.constants?.CONJUGATION_MASTER_STREAK || 10));
+  // Only the three violent paradigms are reserved today, so this filter is close
+  // to a no-op — `verbIds` never fences on its own, because most of it is
+  // shared-pool register no character should be denied. Wired anyway so that
+  // naming a verb in `verbReserveIds` later actually fences instead of silently
+  // doing nothing.
+  const allowed = app.character?.filterWithheldContent?.("verb", deck, {
+    getItem: (entry) => ({ id: entry?.id || entry?.word?.id || "" }),
+    isSeen: (entry) => data.hasWordProgress?.(entry?.id || entry?.word?.id || "") === true,
+  }) || deck;
   const characterWeigher = app.character?.buildContentWeigher?.(
     "verb",
-    deck,
+    allowed,
     (entry) => ({ id: entry?.id || entry?.word?.id || "" }),
   ) || (() => 1);
-  const weighted = deck.map((entry) => {
+  const weighted = allowed.map((entry) => {
     const wordId = entry?.id || entry?.word?.id || "";
     const rec = data.getProgressRecord?.(wordId) || {};
     const streak = Math.max(0, Math.min(masterStreak, Number(rec.conjugationStreak || 0)));

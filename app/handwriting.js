@@ -189,8 +189,16 @@ function buildSentenceRounds() {
 
   if (!usable.length) return [];
 
-  const count = Math.min(target, usable.length);
-  const sorted = usable.slice().sort((a, b) => a.letterCount - b.letterCount);
+  // Filtered here rather than on the shortlist below: `usable` is the whole
+  // letter-window set, so the safety valve inside filterWithheldContent stays far
+  // from firing even though this is the narrowest pool in the app.
+  const allowed = app.character?.filterWithheldContent?.("sentence", usable, {
+    getItem: (entry) => entry.source,
+    isSeen: (entry) => app.sentenceBank?.hasSentenceProgress?.(entry.sentenceId) === true,
+  }) || usable;
+
+  const count = Math.min(target, allowed.length);
+  const sorted = allowed.slice().sort((a, b) => a.letterCount - b.letterCount);
   const shortlist = sorted.slice(0, Math.max(count, Math.ceil(sorted.length * 0.6)));
   // This picker sorts rather than weights, so an active character biases the
   // draw by preference, and only when enough of its own sentences qualify.

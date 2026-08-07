@@ -518,6 +518,215 @@ test("military abbreviations belong to Idan alone", () => {
   );
 });
 
+// Routing has two layers: a boost, tested above, and a fence. Content strongly
+// coded to one character is withheld from the rest as new material, so a siren
+// or a coalition row stops arriving as neutral filler in someone else's mission.
+test("strongly coded content is withheld from the rest of the cast", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "ido", mission: { active: true } };
+
+  const siren = { id: "idan_01", category: "everyday" };
+  const ritual = { id: "inbal_01", category: "everyday" };
+  const protest = { id: "inat_19", category: "formal" };
+  assert.equal(character.isContentWithheld("sentence", siren), true);
+  assert.equal(character.isContentWithheld("sentence", ritual), true);
+  assert.equal(character.isContentWithheld("sentence", protest), true);
+  assert.equal(character.isContentWithheld("vocab", { category: "military_operational" }), true);
+  assert.equal(character.isContentWithheld("vocab", { category: "emergency_response" }), true);
+  assert.equal(character.isContentWithheld("vocab", { category: "politics_society_expanded" }), true);
+  assert.equal(character.isContentWithheld("abbreviation", { id: "abbr-144" }), true);
+  assert.equal(character.isContentWithheld("verb", { id: "advanced-verb-laharog--sense-1" }), true);
+
+  // An owner is never fenced from their own material.
+  app.runtime.characterState.dailyChoice = "idan";
+  assert.equal(character.isContentWithheld("sentence", siren), false);
+  assert.equal(character.isContentWithheld("vocab", { category: "military_operational" }), false);
+  assert.equal(character.isContentWithheld("verb", { id: "advanced-verb-laharog--sense-1" }), false);
+});
+
+// The counterpart guarantee, and the one that keeps the pools from collapsing:
+// register, style, buckets, verbs and ordinary topic shelves never fence. A
+// blanket rule over them would leave each character little more than its own bank.
+test("register, style and ordinary topic shelves are never withheld", () => {
+  const { character, app } = loadCharacterModule();
+  const shared = [
+    ["sentence", { id: "colloquial_01", category: "colloquial" }],
+    ["sentence", { id: "everyday_15", category: "everyday" }],
+    ["sentence", { id: "professional_01", category: "professional" }],
+    ["sentence", { id: "formal_03", category: "formal" }],
+    ["sentence", { id: "colloquial_120", category: "colloquial", style: "whatsapp" }],
+    ["vocab", { category: "groceries_food", he: "מלפפון" }],
+    ["vocab", { category: "religion_magic_spirituality", he: "קליפה" }],
+    ["vocab", { category: "technology_ai", he: "אלגוריתם" }],
+    ["abbreviation", { id: "abbr-001", bucket: "Daily Life & Home" }],
+    ["verb", { id: "starter-verb-lishmor--sense-1" }],
+    ["verb", { id: "character-verb-lirkod--sense-1" }],
+  ];
+
+  ["ido", "inbal", "ivri", "inat", "idan"].forEach((id) => {
+    app.runtime.characterState = { dailyChoice: id, mission: { active: true } };
+    shared.forEach(([kind, item]) => {
+      assert.equal(
+        character.isContentWithheld(kind, item),
+        false,
+        `${id} must still reach ${kind} ${item.id || item.he}`,
+      );
+    });
+  });
+});
+
+// A mild row inside a fenced tranche is opted back out by id, because Idan's bank
+// mixes "the shelter is in the yard" with sirens and casualties.
+test("the cast-wide allow-list un-fences the ordinary safety register", () => {
+  const { character, characterData, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "ido", mission: { active: true } };
+
+  assert.equal(character.isContentWithheld("sentence", { id: "idan_11", category: "everyday" }), false);
+  assert.equal(character.isContentWithheld("sentence", { id: "idan_60", category: "everyday" }), false);
+  assert.equal(character.isContentWithheld("sentence", { id: "idan_45", category: "everyday" }), false);
+  // The alarming neighbours of those rows stay fenced.
+  assert.equal(character.isContentWithheld("sentence", { id: "idan_29", category: "everyday" }), true);
+  assert.equal(character.isContentWithheld("sentence", { id: "idan_33", category: "everyday" }), true);
+
+  // The allow-list and the reserve lists must not disagree about a row.
+  const shared = new Set(characterData.SHARED_ITEM_IDS.sentence);
+  Object.values(characterData.characters).forEach((entry) => {
+    (entry.route.sentenceReserveIds || []).forEach((id) => {
+      assert.equal(shared.has(id), false, `${id} is both reserved and cast-wide`);
+    });
+  });
+});
+
+// The political tranche was authored into other characters' register banks, so it
+// needs an explicit reserve: a register grant alone cannot fence anything.
+test("a reserved row in a shared register bank becomes its reserver's alone", () => {
+  const { character, app } = loadCharacterModule();
+  const political = [
+    { id: "colloquial_140", category: "colloquial" },
+    { id: "everyday_129", category: "everyday" },
+    { id: "professional_81", category: "professional" },
+    { id: "formal_74", category: "formal" },
+  ];
+
+  ["ido", "inbal", "ivri", "idan"].forEach((id) => {
+    app.runtime.characterState = { dailyChoice: id, mission: { active: true } };
+    political.forEach((item) => {
+      assert.equal(character.isContentWithheld("sentence", item), true, `${id} must not reach ${item.id}`);
+    });
+  });
+
+  // Reserving must also grant: a row nobody owns would be fenced from everyone.
+  app.runtime.characterState = { dailyChoice: "inat", mission: { active: true } };
+  political.forEach((item) => {
+    assert.equal(character.isContentWithheld("sentence", item), false);
+    assert.equal(character.getContentWeight("sentence", item), 2, `${item.id} should be Inat's`);
+  });
+});
+
+// The strategy doc deliberately shares Inbal's colloquial rows with Ido: a
+// sentence about the evil eye is his register and her subject at once. The fence
+// derives its audience from every owner, not just the prefix holder, so that
+// case survives without a hand-authored exception.
+test("a deliberately multi-owner row stays available to both owners", () => {
+  const { character, app } = loadCharacterModule();
+  const evilEye = { id: "inbal_35", category: "colloquial" };
+
+  app.runtime.characterState = { dailyChoice: "ido", mission: { active: true } };
+  assert.equal(character.isContentWithheld("sentence", evilEye), false);
+  app.runtime.characterState.dailyChoice = "inbal";
+  assert.equal(character.isContentWithheld("sentence", evilEye), false);
+  app.runtime.characterState.dailyChoice = "ivri";
+  assert.equal(character.isContentWithheld("sentence", evilEye), true);
+  app.runtime.characterState.dailyChoice = "idan";
+  assert.equal(character.isContentWithheld("sentence", evilEye), true);
+});
+
+// Withholding applies to new material only. A row the learner already met keeps
+// its Leitner interval and may return under any character.
+test("already-met content is exempt from withholding", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = { dailyChoice: "ido", mission: { active: true } };
+  const rows = [{ id: "idan_01", category: "everyday" }, { id: "colloquial_01", category: "colloquial" }];
+
+  assert.deepEqual(
+    character.filterWithheldContent("sentence", rows, { isSeen: () => false }).map((row) => row.id),
+    ["colloquial_01"],
+  );
+  assert.deepEqual(
+    character.filterWithheldContent("sentence", rows, { isSeen: () => true }).map((row) => row.id),
+    ["idan_01", "colloquial_01"],
+  );
+
+  // A pool with nothing left must fall back rather than starve the mode.
+  const fenced = [{ id: "idan_01", category: "everyday" }, { id: "idan_29", category: "everyday" }];
+  assert.deepEqual(character.filterWithheldContent("sentence", fenced), fenced);
+
+  // Free play draws the whole course.
+  app.runtime.characterState.dailyChoice = "free";
+  assert.deepEqual(character.filterWithheldContent("sentence", rows), rows);
+  assert.equal(character.isContentWithheld("sentence", rows[0]), false);
+  app.runtime.characterState = { dailyChoice: "ido", mission: null, lensCharacter: "" };
+  assert.equal(character.isContentWithheld("sentence", rows[0]), false);
+});
+
+// Every id in the allow-list and every reserve list must name a real row; a typo
+// silently fences nothing, or fences a row that does not exist.
+test("every cast-wide and reserved sentence id resolves to a real sentence", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const ids = new Set(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => row.id));
+
+  characterData.SHARED_ITEM_IDS.sentence.forEach((id) => {
+    assert.ok(ids.has(id), `cast-wide list names unknown sentence ${id}`);
+  });
+  Object.values(characterData.characters).forEach((entry) => {
+    (entry.route.sentenceReserveIds || []).forEach((id) => {
+      assert.ok(ids.has(id), `${entry.id} reserves unknown sentence ${id}`);
+    });
+  });
+});
+
+// A canary, not a gate: reservation must never fence a mode into the ground. The
+// worst current values are far above these floors, so a failure here means a new
+// tranche was reserved without the shared pool growing to match.
+test("no character's draw pool is fenced below a playable floor", () => {
+  const { buildReport } = require("../scripts/character-content-report.js");
+  const floors = { vocab: 900, sentence: 400, abbreviation: 150, verb: 200 };
+  const { rows } = buildReport();
+
+  rows.forEach((row) => {
+    Object.entries(floors).forEach(([kind, floor]) => {
+      assert.ok(
+        row.available[kind] >= floor,
+        `${row.nameEn} can only draw ${row.available[kind]} ${kind} items, below ${floor}`,
+      );
+    });
+  });
+});
+
+// The fence has to be wired at every draw site, and the app-progress harness does
+// not load the character modules, so this is what pins the integration.
+test("every content draw site applies the withholding filter", () => {
+  [
+    "app/data.js",
+    "app/sentence-bank.js",
+    "app/abbreviation.js",
+    "app/verb-match.js",
+    "app/handwriting.js",
+  ].forEach((modulePath) => {
+    const source = fs.readFileSync(path.join(PROJECT_ROOT, modulePath), "utf8");
+    assert.match(source, /filterWithheldContent\?\.\(/, `${modulePath} must filter withheld content`);
+  });
+});
+
 // Every routed abbreviation id must name a real row, the same guard the verb
 // route already has. A typo here silently routes nothing.
 test("every routed abbreviation id resolves to a real abbreviation", () => {

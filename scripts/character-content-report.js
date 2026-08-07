@@ -29,32 +29,6 @@ function loadInSandbox(relativePaths) {
   return context;
 }
 
-function ownsItem(route, kind, item) {
-  if (!route || !item) return false;
-  if (kind === "vocab") {
-    return route.vocabCategories?.includes(item.category) === true ||
-      route.vocabWords?.includes(item.he) === true;
-  }
-  if (kind === "abbreviation") {
-    // Mirrors app/character.js: an exclusion beats a bucket grant.
-    const abbrId = String(item.id || "");
-    if (route.abbrExcludeIds?.includes(abbrId) === true) return false;
-    return route.abbrIds?.includes(abbrId) === true ||
-      route.abbrBuckets?.includes(item.bucket) === true;
-  }
-  if (kind === "verb") {
-    const id = String(item.id || "");
-    return route.verbIds?.some((verbId) => id === verbId || id.startsWith(`${verbId}--`)) === true;
-  }
-  if (kind === "sentence") {
-    const id = String(item.id || "");
-    return route.sentenceIdPrefixes?.some((prefix) => id.startsWith(prefix)) === true ||
-      route.sentenceCategories?.includes(item.category) === true ||
-      route.sentenceStyles?.includes(item.style) === true;
-  }
-  return false;
-}
-
 function buildReport() {
   const registry = loadInSandbox(["app/character-data.js"]).IvriQuestApp.characterData;
   const vocab = loadInSandbox(["vocab-data.js"]).IvriQuestVocab.getBaseVocabulary();
@@ -73,6 +47,7 @@ function buildReport() {
     { kind: "verb", label: "Verbs", items: verbs },
   ];
 
+  const { ownsItem, getItemAudience } = registry;
   const characters = Object.values(registry.characters).sort((a, b) => a.order - b.order);
   const rows = characters.map((entry) => ({
     id: entry.id,
@@ -80,6 +55,15 @@ function buildReport() {
     counts: Object.fromEntries(pools.map((pool) => [
       pool.kind,
       pool.items.filter((item) => ownsItem(entry.route, pool.kind, item)).length,
+    ])),
+    // What the picker may actually draw for this character as new material:
+    // the pool minus everything reserved to somebody else.
+    available: Object.fromEntries(pools.map((pool) => [
+      pool.kind,
+      pool.items.filter((item) => {
+        const audience = getItemAudience(pool.kind, item);
+        return !Array.isArray(audience) || audience.includes(entry.id);
+      }).length,
     ])),
   }));
 
@@ -91,8 +75,14 @@ function buildReport() {
     pool.kind,
     pool.items.filter((item) => characters.filter((entry) => ownsItem(entry.route, pool.kind, item)).length > 1).length,
   ]));
+  // Items with a restricted audience. `castWide` is the complement: everything a
+  // learner can meet whoever they picked today.
+  const fenced = Object.fromEntries(pools.map((pool) => [
+    pool.kind,
+    pool.items.filter((item) => Array.isArray(getItemAudience(pool.kind, item))).length,
+  ]));
 
-  return { pools, rows, unowned, multiOwned };
+  return { pools, rows, unowned, multiOwned, fenced };
 }
 
 function pad(value, width, alignRight = false) {
@@ -100,7 +90,7 @@ function pad(value, width, alignRight = false) {
   return alignRight ? text.padStart(width) : text.padEnd(width);
 }
 
-function render({ pools, rows, unowned, multiOwned }) {
+function render({ pools, rows, unowned, multiOwned, fenced }) {
   const nameWidth = Math.max(9, ...rows.map((row) => row.nameEn.length));
   const colWidth = Math.max(13, ...pools.map((pool) => pool.label.length + 2));
   const lines = [];
@@ -124,6 +114,25 @@ function render({ pools, rows, unowned, multiOwned }) {
   lines.push([pad("pool size", nameWidth), ...pools.map((p) => pad(p.items.length, colWidth, true)), pad("", 8)].join("  "));
   lines.push([pad("unrouted", nameWidth), ...pools.map((p) => pad(unowned[p.kind], colWidth, true)), pad("", 8)].join("  "));
   lines.push([pad("multi-owner", nameWidth), ...pools.map((p) => pad(multiOwned[p.kind], colWidth, true)), pad("", 8)].join("  "));
+  lines.push([pad("reserved", nameWidth), ...pools.map((p) => pad(fenced[p.kind], colWidth, true)), pad("", 8)].join("  "));
+
+  // The counts above are ownership, which is what the depth-standard floors in
+  // docs/character-gameplay-strategy.md are measured on. This second table is the
+  // draw pool: what the picker may serve as new material once content reserved to
+  // another character is withheld. Watch it for a character being starved.
+  lines.push("");
+  lines.push("Draw pool after withholding");
+  lines.push("");
+  lines.push([pad("Character", nameWidth), ...pools.map((p) => pad(p.label, colWidth, true)), pad("", 8)].join("  "));
+  lines.push("-".repeat(nameWidth + (colWidth + 2) * pools.length + 10));
+  rows.forEach((row) => {
+    const cells = pools.map((pool) => {
+      const count = row.available[pool.kind];
+      const share = pool.items.length ? ((count / pool.items.length) * 100).toFixed(1) : "0.0";
+      return pad(`${count} (${share}%)`, colWidth, true);
+    });
+    lines.push([pad(row.nameEn, nameWidth), ...cells, pad("", 8)].join("  "));
+  });
 
   const active = totals.filter((total) => total > 0);
   if (active.length > 1) {
@@ -141,4 +150,4 @@ if (require.main === module) {
   console.log(render(buildReport()));
 }
 
-module.exports = { buildReport, ownsItem };
+module.exports = { buildReport };

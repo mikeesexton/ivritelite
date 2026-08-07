@@ -332,37 +332,47 @@ function getActiveRoute() {
   return getCharacterById(getRoutingCharacterId())?.route || null;
 }
 
+// Delegated to app/character-data.js so this module, the content report, and the
+// audience derivation cannot disagree about who owns what.
 function ownsItem(route, kind, item) {
-  if (!route || !item) return false;
-  if (kind === "vocab") {
-    // Matched on `he`, not `id`: vocabulary ids embed a positional index
-    // (social_cultural-0NN-secular) that shifts when a row is inserted into the
-    // same category, so id matching would silently rot.
-    return route.vocabCategories?.includes(item.category) === true ||
-      route.vocabWords?.includes(item.he) === true;
-  }
-  if (kind === "abbreviation") {
-    // Buckets are too coarse to split the security acronyms out of Ivri's and
-    // Inat's shelves, so an id list can grant one and an exclusion list can
-    // withhold one. Exclusion is checked first: it has to beat a bucket grant,
-    // which is the whole point of naming it.
-    const abbrId = String(item.id || "");
-    if (route.abbrExcludeIds?.includes(abbrId) === true) return false;
-    return route.abbrIds?.includes(abbrId) === true ||
-      route.abbrBuckets?.includes(item.bucket) === true;
-  }
-  if (kind === "verb") {
-    const id = String(item.id || "");
-    return route.verbIds?.some((verbId) => id === verbId || id.startsWith(`${verbId}--`)) === true;
-  }
-  if (kind === "sentence") {
-    const id = String(item.id || "");
-    return route.sentenceIdPrefixes?.some((prefix) => id.startsWith(prefix)) === true ||
-      route.sentenceCategories?.includes(item.category) === true ||
-      route.sentenceStyles?.includes(item.style) === true;
-  }
-  return false;
+  return getCharacterData().ownsItem?.(route, kind, item) === true;
 }
+
+// Content strongly coded to one character is withheld from the rest as *new*
+// material, per docs/character-gameplay-strategy.md. Free play draws the whole
+// course: an empty routing id means no lens, and choosing a lens is deliberate.
+character.isContentWithheld = character.isContentWithheld || function isContentWithheld(kind, item) {
+  // Must name a real character, not merely be non-empty: `dailyChoice` carries
+  // the "free" sentinel on a free-play day, the same reason getActiveRoute
+  // resolves through the registry rather than trusting the id.
+  const id = getRoutingCharacterId();
+  if (!getCharacterById(id)) return false;
+  const audience = getCharacterData().getItemAudience?.(kind, item);
+  return Array.isArray(audience) && !audience.includes(id);
+};
+
+// A hard pool filter rather than a weight of zero. `app/utils.js` treats a
+// zero-weight list as unweighted — `weightedRandomWord` falls back to a uniform
+// pick over everything when the total weight is zero, and `pickWeightedSubset`
+// re-draws until it has its count — so a zero weight is a preference here, not a
+// fence. Filtering also keeps withheld rows out of the due/fresh split and out
+// of the denominator `buildContentWeigher` solves the boost from.
+//
+// `isSeen` is the review exemption: once a learner has met an item it stays
+// eligible under any character, so its Leitner interval is preserved. Each mode
+// owns the definition, because progress lives in that mode's own record shape.
+character.filterWithheldContent = character.filterWithheldContent || function filterWithheldContent(kind, items, options = {}) {
+  if (!Array.isArray(items) || !items.length || !getCharacterById(getRoutingCharacterId())) return items;
+  const resolve = typeof options.getItem === "function" ? options.getItem : (entry) => entry;
+  const isSeen = typeof options.isSeen === "function" ? options.isSeen : () => false;
+  const kept = items.filter(
+    (entry) => !character.isContentWithheld(kind, resolve(entry)) || isSeen(entry) === true,
+  );
+  // Withholding must never empty a pool: a mode with nothing to draw is a worse
+  // failure than one leaked row. A character's own material is never withheld
+  // from them, so this can only fire on a pool a caller has already narrowed.
+  return kept.length ? kept : items;
+};
 
 character.getContentWeight = character.getContentWeight || function getContentWeight(kind, item) {
   return ownsItem(getActiveRoute(), kind, item) ? 2 : 1;

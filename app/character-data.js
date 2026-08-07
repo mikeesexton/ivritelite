@@ -584,6 +584,42 @@ const POLICE_COMMAND_ABBR_IDS = Object.freeze([
   "abbr-150", // מג״ב — Border Police
 ]);
 
+// Rows a character-specific signal reaches but which carry no scenario of their
+// own: the ordinary civilian-safety register any resident narrates, with nothing
+// alarming in it. Same policy as CIVIL_DEFENSE_ABBR_IDS, one level down — the
+// grant is per row rather than per shelf, because Idan's bank mixes "the shelter
+// is in the yard" with sirens and casualties. Anything naming an azaka, an
+// injury, a burn, smoke, an interception or army service stays reserved.
+const CAST_WIDE_SENTENCE_IDS = Object.freeze([
+  "idan_07", // fire extinguisher next to the emergency exit
+  "idan_09", // fasten a seatbelt
+  "idan_10", // the guidelines are updated all the time
+  "idan_11", // no protected space in the building, the shelter is in the yard
+  "idan_14", // an emergency bag with water and medicine
+  "idan_37", // a fire drill at the office
+  "idan_40", // crossing at a crosswalk
+  "idan_41", // a helmet on a site
+  "idan_42", // swimming where there is a lifeguard
+  "idan_43", // electricity with wet hands
+  "idan_44", // giving the address when calling the centre
+  "idan_45", // the police number
+  "idan_46", // keeping water for three days
+  "idan_47", // batteries and a radio
+  "idan_48", // documents and medicine in one bag
+  "idan_49", // the power outage
+  "idan_50", // the municipality announced a water outage
+  "idan_54", // a security check at the mall entrance
+  "idan_55", // the guard asked to open the bag
+  "idan_56", // installing the Home Front Command app
+  "idan_60", // checking the safe room monthly
+]);
+
+// Keyed by kind so the audience rule needs no per-kind branch. Only sentences
+// need an exception today; another kind means another key.
+characterData.SHARED_ITEM_IDS = characterData.SHARED_ITEM_IDS || Object.freeze({
+  sentence: CAST_WIDE_SENTENCE_IDS,
+});
+
 // Lines the engine can request for any character. A character's own table wins;
 // these cover copy that belongs to the app rather than to one voice.
 characterData.SHARED_DIALOGUE = characterData.SHARED_DIALOGUE || Object.freeze({
@@ -862,6 +898,12 @@ characterData.characters = characterData.characters || Object.freeze({
         // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
         "civil_defense_safety",
       ]),
+      // Withheld from the rest of the cast as new material. Only the partisan
+      // shelf is named: her literature, law, and philosophy shelves are
+      // distinctive rather than sensitive, and fencing a topic shelf merely
+      // because one character owns it would put 72% of the vocabulary deck out
+      // of reach on any given day.
+      vocabReserveCategories: Object.freeze(["politics_society_expanded"]),
       // Words on her lens that sit on someone else's shelf. תחרותי is a
       // work_business card Ivri also owns; ספורים is unrouted core_advanced and
       // is hers by register — it is journalistic rather than conversational.
@@ -872,6 +914,24 @@ characterData.characters = characterData.characters || Object.freeze({
       // The academic/analytical register is hers; Ivri keeps `professional`.
       sentenceCategories: Object.freeze(["formal"]),
       sentenceIdPrefixes: Object.freeze(["inat_"]),
+      // A political tranche authored into the shared register banks before the
+      // withholding layer existed, so occupation terminology and settler
+      // violence were arriving as neutral filler in Ido's and Ivri's missions.
+      // Naming a row here makes it hers *and* fences it: unlike a register
+      // grant, a reserve id is a character-specific signal. The `formal_` rows
+      // are already hers through the category and are listed so the fence is
+      // stated rather than inferred.
+      sentenceReserveIds: Object.freeze([
+        "colloquial_140", "colloquial_142", "colloquial_144", "colloquial_147",
+        "colloquial_148", "colloquial_151",
+        "everyday_126", "everyday_127", "everyday_128", "everyday_129",
+        "everyday_130", "everyday_131",
+        "professional_74", "professional_75", "professional_77", "professional_80",
+        "professional_81", "professional_82", "professional_83", "professional_84",
+        "formal_64", "formal_65", "formal_66", "formal_67", "formal_68",
+        "formal_69", "formal_70", "formal_71", "formal_72", "formal_73",
+        "formal_74", "formal_75", "formal_86", "formal_87",
+      ]),
       // Shared with Ivri on purpose: the bucket mixes his corporate and
       // regulatory acronyms with her parties, courts, and rights bodies, and the
       // strategy doc sanctions multi-owner routing rather than an arbitrary cut.
@@ -977,6 +1037,56 @@ characterData.characters = characterData.characters || Object.freeze({
         ...MILITARY_ABBR_IDS,
         ...POLICE_COMMAND_ABBR_IDS,
       ]),
+      // Withheld from the rest of the cast as new material. His two own shelves
+      // are named; `civil_defense_safety` deliberately is not, because a single
+      // card carries no scenario and the everyday security tier is course policy.
+      vocabReserveCategories: Object.freeze([
+        "military_operational",
+        "emergency_response",
+      ]),
+      // The hard-security and trauma subset of `vocabWords` above. The rest of
+      // that list — אבטחה, בטיחות, אזהרה, הנחיות, נוהל, עזרה ראשונה, אמבולנס —
+      // is ordinary vocabulary any resident needs and stays shared. Several of
+      // these sit on shelves someone else owns, which is exactly why they need
+      // naming: an explicit reserve beats a co-owner's grant.
+      vocabReserveWords: Object.freeze([
+        "פיגוע",
+        "כיבוש",
+        "מחסום צבאי",
+        "הפסקת אש",
+        "חוק הגיוס",
+        "פטור מגיוס",
+        "שירות צבאי",
+        "שירות מילואים",
+        "ביטחון לאומי",
+        "חזית",
+        "יירוט",
+        // Trauma cards on the unrouted `health` shelf.
+        "חובש",
+        "חדר מיון",
+        "תחבושת",
+        "תפרים",
+        "שבר",
+        "נקע",
+      ]),
+      // The uniformed register only. `abbrExcludeIds` on Ivri and Inat already
+      // keeps MILITARY_ABBR_IDS off their shelves; this is what additionally
+      // keeps it out of Ido's and Inbal's draws, where it was arriving as
+      // weight-1 filler because neither of them holds the buckets it sits in.
+      //
+      // POLICE_COMMAND_ABBR_IDS is deliberately *not* reserved. The strategy doc
+      // splits policing by perspective rather than assigning it — Inat keeps the
+      // critical reading — and המפכ״ל and מג״ב are civic institutions rather than
+      // the military register. A reserve here would fence them from her.
+      abbrReserveIds: Object.freeze([...MILITARY_ABBR_IDS]),
+      // Only the violent paradigms. The rest of his verb route is shared-pool
+      // register — לשמור, לבדוק, לחכות, להקשיב — which no character should be
+      // denied, so `verbIds` never fences on its own.
+      verbReserveIds: Object.freeze([
+        "advanced-verb-laharog",
+        "advanced-verb-lechasel",
+        "advanced-verb-lefotzetz",
+      ]),
       // Routed from the shared pool by register rather than by topic, the same
       // way Ido's nightlife verbs and Ivri's process verbs are: the verbs an
       // instruction, a warning, or a report runs on.
@@ -1013,6 +1123,113 @@ characterData.characters = characterData.characters || Object.freeze({
     }),
   }),
 });
+
+// Ownership decides weight: an owned item is boosted so roughly
+// TARGET_OWNED_SHARE of a draw lands in the active character's pool. It lives
+// here rather than in app/character.js because scripts/character-content-report.js
+// needs the same answer, and a second copy of this predicate drifts.
+characterData.ownsItem = characterData.ownsItem || function ownsItem(route, kind, item) {
+  if (!route || !item) return false;
+  if (kind === "vocab") {
+    // Matched on `he`, not `id`: vocabulary ids embed a positional index
+    // (social_cultural-0NN-secular) that shifts when a row is inserted into the
+    // same category, so id matching would silently rot.
+    return route.vocabCategories?.includes(item.category) === true ||
+      route.vocabWords?.includes(item.he) === true;
+  }
+  if (kind === "abbreviation") {
+    // Buckets are too coarse to split the security acronyms out of Ivri's and
+    // Inat's shelves, so an id list can grant one and an exclusion list can
+    // withhold one. Exclusion is checked first: it has to beat a bucket grant,
+    // which is the whole point of naming it.
+    const abbrId = String(item.id || "");
+    if (route.abbrExcludeIds?.includes(abbrId) === true) return false;
+    return route.abbrIds?.includes(abbrId) === true ||
+      route.abbrBuckets?.includes(item.bucket) === true;
+  }
+  if (kind === "verb") {
+    const id = String(item.id || "");
+    return route.verbIds?.some((verbId) => id === verbId || id.startsWith(`${verbId}--`)) === true;
+  }
+  if (kind === "sentence") {
+    const id = String(item.id || "");
+    return route.sentenceIdPrefixes?.some((prefix) => id.startsWith(prefix)) === true ||
+      route.sentenceReserveIds?.includes(id) === true ||
+      route.sentenceCategories?.includes(item.category) === true ||
+      route.sentenceStyles?.includes(item.style) === true;
+  }
+  return false;
+};
+
+// The route fields that mark an item as belonging to one voice rather than to a
+// register or a topic shelf. Only these fence. `sentenceCategories`,
+// `sentenceStyles`, `vocabCategories`, `abbrBuckets` and `verbIds` deliberately
+// do not: they carry register and grammar, which every character needs, and a
+// blanket rule over them would leave each character with little more than its
+// own bank.
+const RESERVE_FIELDS = Object.freeze({
+  sentence: Object.freeze(["sentenceReserveIds"]),
+  vocab: Object.freeze(["vocabReserveCategories", "vocabReserveWords"]),
+  abbreviation: Object.freeze(["abbrReserveIds"]),
+  verb: Object.freeze(["verbReserveIds"]),
+});
+
+function reservesItem(route, kind, item) {
+  if (!route || !item) return false;
+  if (kind === "sentence") {
+    return route.sentenceReserveIds?.includes(String(item.id || "")) === true;
+  }
+  if (kind === "vocab") {
+    return route.vocabReserveCategories?.includes(item.category) === true ||
+      route.vocabReserveWords?.includes(item.he) === true;
+  }
+  if (kind === "abbreviation") {
+    return route.abbrReserveIds?.includes(String(item.id || "")) === true;
+  }
+  if (kind === "verb") {
+    const id = String(item.id || "");
+    return route.verbReserveIds?.some((verbId) => id === verbId || id.startsWith(`${verbId}--`)) === true;
+  }
+  return false;
+}
+
+// Which characters may be shown an item the learner has not met yet. `null` means
+// everyone, which is the ordinary case — register, style, buckets, verbs, topic
+// shelves and the cast-wide security tier are all shared.
+//
+// Precedence, mirroring the abbrExcludeIds convention that an explicit list is
+// checked before a derived one:
+//
+//   1. SHARED_ITEM_IDS un-fences a named row outright.
+//   2. An explicit `<kind>Reserve*` field is decisive — it beats a co-owner's
+//      grant, which is how a strongly coded row sitting on someone else's shelf
+//      gets fenced at all.
+//   3. Otherwise a character-specific signal (today only sentence id prefixes)
+//      fences to *every* character that owns the row by any signal. The union
+//      rather than the prefix holder alone is what preserves the deliberate
+//      multi-owner cases — Inbal's colloquial rows stay available to Ido.
+characterData.getItemAudience = characterData.getItemAudience || function getItemAudience(kind, item) {
+  if (!item) return null;
+  if (characterData.SHARED_ITEM_IDS?.[kind]?.includes(String(item.id || "")) === true) return null;
+
+  const entries = Object.values(characterData.characters);
+  const reservers = entries
+    .filter((entry) => reservesItem(entry.route, kind, item))
+    .map((entry) => entry.id);
+  if (reservers.length) return reservers;
+
+  if (kind !== "sentence") return null;
+  const id = String(item.id || "");
+  const prefixed = entries.some(
+    (entry) => entry.route?.sentenceIdPrefixes?.some((prefix) => id.startsWith(prefix)) === true,
+  );
+  if (!prefixed) return null;
+  return entries
+    .filter((entry) => characterData.ownsItem(entry.route, kind, item))
+    .map((entry) => entry.id);
+};
+
+characterData.RESERVE_FIELDS = characterData.RESERVE_FIELDS || RESERVE_FIELDS;
 
 characterData.getCharacter = characterData.getCharacter || function getCharacter(id) {
   return characterData.characters[String(id || "")] || null;

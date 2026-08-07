@@ -920,6 +920,17 @@ function updateSentenceProgress(sentenceId, direction, isCorrect) {
   setSentenceProgressRecord(sentenceId, direction, record);
 }
 
+// Whether the learner has already met this sentence, in either direction or in
+// listening. Deliberately per sentence rather than per pair: the withholding
+// layer is about meeting the content, so admitting he2en while withholding en2he
+// on the same row would be incoherent. Checks the three known direction keys
+// rather than scanning the progress map.
+sentenceBank.hasSentenceProgress = sentenceBank.hasSentenceProgress || function hasSentenceProgress(sentenceId) {
+  return ["he2en", "en2he", "listen"].some(
+    (direction) => getSentenceProgressRecord(sentenceId, direction).attempts > 0,
+  );
+};
+
 function getDuePairs(pairs, now = Date.now()) {
   return pairs.filter((pair) => {
     const record = getSentenceProgressRecord(pair.sentence.id, pair.direction);
@@ -1113,13 +1124,19 @@ function getCorrectAnswerDisplayText(question, options = {}) {
 }
 
 function buildCandidatePairs(pool, askedSentenceIds) {
-  const freshPool = askedSentenceIds.length < pool.length
-    ? pool.filter((sentence) => !askedSentenceIds.includes(sentence.id))
-    : pool;
+  // Applied before the asked-ids narrowing so both fallbacks below fall back to
+  // the *allowed* pool. Pointing them at `pool` would open the fence late in a
+  // long session, once every allowed row had already been asked.
+  const allowed = app.character?.filterWithheldContent?.("sentence", pool, {
+    isSeen: (sentence) => sentenceBank.hasSentenceProgress(sentence.id),
+  }) || pool;
+  const freshPool = askedSentenceIds.length < allowed.length
+    ? allowed.filter((sentence) => !askedSentenceIds.includes(sentence.id))
+    : allowed;
   if (getRuntime().state?.sentenceBank?.shemaMode) {
-    return (freshPool.length ? freshPool : pool).map((sentence) => ({ sentence, direction: "listen" }));
+    return (freshPool.length ? freshPool : allowed).map((sentence) => ({ sentence, direction: "listen" }));
   }
-  return (freshPool.length ? freshPool : pool).flatMap((sentence) => ([
+  return (freshPool.length ? freshPool : allowed).flatMap((sentence) => ([
     { sentence, direction: "he2en" },
     { sentence, direction: "en2he" },
   ]));
@@ -1425,6 +1442,10 @@ sentenceBank.buildSentenceBankQuestion = sentenceBank.buildSentenceBankQuestion 
   return buildQuestionFromPair(pair, { isReview: false });
 };
 
+// Deliberately not filtered by the character withholding layer: this is the
+// in-session second-chance queue, so every row in it was just asked and is met by
+// construction. Filtering here could drop a queued row and silently shorten the
+// review phase.
 sentenceBank.buildSentenceBankReviewQuestion = sentenceBank.buildSentenceBankReviewQuestion || function buildSentenceBankReviewQuestion(pool) {
   const runtime = getRuntime();
   while (runtime.state.sentenceBank.reviewQueue.length) {

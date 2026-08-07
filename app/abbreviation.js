@@ -154,8 +154,13 @@ abbreviation.pickBestAbbreviationEntry = abbreviation.pickBestAbbreviationEntry 
   const runtime = getRuntime();
   const now = Date.now();
   const freshPool = usedEntryIds.length < pool.length ? pool.filter((entry) => !usedEntryIds.includes(entry.id)) : pool;
-  const due = abbreviation.getDueAbbreviationEntries(freshPool, now);
-  const set = due.length ? due : freshPool;
+  // Before the due split: an unmet entry counts as due. Abbreviation progress
+  // shares the vocabulary progress map, so the same "already met" test applies.
+  const allowed = app.character?.filterWithheldContent?.("abbreviation", freshPool, {
+    isSeen: (entry) => data.hasWordProgress?.(entry.id) === true,
+  }) || freshPool;
+  const due = abbreviation.getDueAbbreviationEntries(allowed, now);
+  const set = due.length ? due : allowed;
   const maxLevel = runtime.constants.LEITNER_INTERVALS.length - 1;
 
   const characterWeigher = app.character?.buildContentWeigher?.("abbreviation", set) || (() => 1);
