@@ -4,6 +4,11 @@ Sentence chips test translation units, not memorized clauses. This standard
 applies to target chips, distractors, and alternate answers in both language
 directions.
 
+For which character a new row reaches, and when a strongly coded row has to be
+fenced off from the rest of the cast, see the "Content withholding" section of
+`docs/character-gameplay-strategy.md`. A row authored into a shared register bank
+is reachable by every character unless it is named in a reserve list.
+
 ## Core rule: one compact meaning per chip
 
 Default to one meaning-bearing lexical item per chip on both sides. English

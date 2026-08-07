@@ -6,7 +6,7 @@ Status: live working document. Update this file as character content, visual des
 
 Each day the learner chooses a Tel Aviv character. The choice changes the day's emphasis and voice without locking the learner out of the rest of the course.
 
-- Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review.
+- Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review. The shared tier draws from the un-fenced pool — see "Content withholding" below.
 - Idan mix: security, safety, and military material in two tiers, plus the learner's weak points. He weighs content like everyone else, so the 65% boost is uniform across his owned set and each mode's weak/missed/overdue ordering still decides what he drills inside it. He has no protected comfort zone because his shelf is small and hard, not because he is exempt from routing.
 - Character assignment is a lens, not an exclusive taxonomy. A word or sentence may belong to multiple characters.
 - Routing works on existing item fields, never on a `character` tag in the content files. Keep a word on its true topic shelf and reach it through `route.vocabWords`; never move it between vocabulary categories, because vocabulary ids embed a positional index and re-shelving orphans learner progress.
@@ -14,6 +14,81 @@ Each day the learner chooses a Tel Aviv character. The choice changes the day's 
 - Keep the initial cast at five. Ido's practical-life coverage closes the largest remaining gap without adding a sixth character.
 - `civil_defense_safety` is the one vocabulary category routed to the **entire cast** by policy. Everyday security is something a resident needs regardless of whose day it is, so it is not a balance bug when it lifts every character's vocabulary count in `npm run report:characters`. The same rule covers six home-front acronyms (`CIVIL_DEFENSE_ABBR_IDS`).
 - Abbreviations can also be routed by id. `route.abbrIds` grants one and `route.abbrExcludeIds` withholds one; an exclusion is checked first, so it beats a bucket grant. This exists because the four buckets are too coarse to lift the military register out of Ivri's and Inat's shelves.
+- **Routing has two layers: a boost and a fence.** Ownership decides weight, as above. A second, narrower rule decides *audience*: content strongly coded to one character is withheld from the rest as new material, so it stops arriving as neutral filler in someone else's mission. See "Content withholding".
+
+## Content withholding
+
+Before this layer existed, routing was additive only. All 90 `idan_` sentences carry
+`category: "everyday"`, so they were *unowned* by the other four characters rather than
+*withheld* from them: sirens, shrapnel, a call-up order and pressing on a wound all
+surfaced during Ido's and Inbal's missions. A political tranche authored into other
+characters' register banks leaked the same way, and Ido and Inbal drew צה״ל because
+`abbrExcludeIds` had only ever been applied to the two bucket holders.
+
+`characterData.getItemAudience(kind, item)` answers who may be shown an item the learner
+has not met yet. `null` means everyone, which is the ordinary case. Precedence, mirroring
+the convention that an explicit list is checked before a derived one:
+
+1. `SHARED_ITEM_IDS[kind]` un-fences a named row outright.
+2. An explicit `route.<kind>Reserve*` field is decisive — it beats a co-owner's grant,
+   which is the only way to fence a strongly coded row that sits on someone else's shelf.
+   The fields are `sentenceReserveIds`, `vocabReserveCategories`, `vocabReserveWords`,
+   `abbrReserveIds` and `verbReserveIds`. Reserving also **grants**: a reserved row nobody
+   owns would be fenced from everybody.
+3. Otherwise a character-specific signal — today only `sentenceIdPrefixes` — fences to
+   *every* character that owns the row by any signal. The union rather than the prefix
+   holder alone is what preserves the deliberate multi-owner cases: Inbal's colloquial rows
+   stay available to Ido with no hand-authored exception.
+
+What deliberately does **not** fence: `sentenceCategories`, `sentenceStyles`,
+`vocabCategories`, `vocabWords`, `abbrBuckets` and `verbIds`. Those carry register, topic
+and grammar, which every character needs. Two measurements decided this. A blanket rule
+over the four sentence registers would leave each character with only its own bank plus the
+148 unrouted `everyday_` rows. A blanket rule over vocabulary categories would fence 1511
+of 2108 cards — 72% — because nearly every topic shelf has exactly one owner, so Idan would
+never meet `groceries_food` or `dating_relationships`. The named reserve lists fence 341
+cards, 16%, which is precisely the sensitive material.
+
+Two policies follow from this rather than needing carve-outs:
+
+- **`civil_defense_safety` is not reserved.** A single card carries no scenario — `אזעקה` as
+  a word is something any resident needs — and the everyday security tier is course policy.
+  Fencing happens at sentence level, where the register and the scenario actually land.
+- **Review ignores reservation.** Withholding applies to new material only, defined as a
+  progress record with `attempts > 0` (`data.hasWordProgress`,
+  `sentenceBank.hasSentenceProgress`). Once a learner has met an item it stays eligible under
+  any character and its Leitner interval is preserved. The in-session second-chance queue in
+  `buildSentenceBankReviewQuestion` is unfiltered for the same reason.
+
+`abbrExcludeIds` is **not** subsumed by this layer and must stay. It is the *input* to rule 3:
+`MILITARY_ABBR_IDS` is fenceable only because the exclusions reduce it to a single owner.
+Delete the exclusions and the military register becomes three-owner and shared again.
+`POLICE_COMMAND_ABBR_IDS` is deliberately not reserved — the doc splits policing by
+perspective, and המפכ״ל and מג״ב are civic institutions rather than the uniformed register.
+
+Implementation notes for whoever extends this:
+
+- The fence is a **hard pool filter**, never a weight of zero. `app/utils.js` treats a
+  zero-weight list as unweighted: `weightedRandomWord` falls back to a uniform pick over
+  everything when the total weight is zero, and `pickWeightedSubset` re-draws until it has
+  its count. It is applied **before** each mode's due/fresh split, because an unmet item
+  counts as due.
+- `filterWithheldContent` never returns an empty array — a mode with nothing to draw is a
+  worse failure than one leaked row.
+- Reservation data cannot live on the content row. `prepareSentenceBankDeck` whitelists the
+  fields it copies, so a new field on a sentence would be silently dropped before the picker
+  ever saw it — and a `character` tag in a content file is forbidden regardless.
+- A new prefixed row is fenced automatically. A strongly coded row authored into a shared
+  register bank needs a reserve entry or it leaks. A mild row inside a fenced tranche is
+  opted back out through `SHARED_ITEM_IDS`.
+- Adding a sixth character instantly un-fences anything they co-own. That is the intended
+  lever, not a bug.
+- `npm run report:characters` prints a `reserved` footer row and a second
+  "Draw pool after withholding" table. The depth-standard floors below are still measured on
+  **ownership**, which the fence does not change; the second table is the instrument for
+  watching a character being starved. One consequence to read carefully: Ivri still *owns*
+  the eleven `professional_` political rows by register while Inat reserves them, so his
+  ownership column reads eleven higher than what he can actually draw.
 
 ## Cast and routing
 
@@ -79,6 +154,19 @@ Owns security, safety, and the military, in two deliberately separate tiers:
 - **Tier 2 — advanced military terminology.** `military_operational` (70 cards): ranks, units, service and reserve life, orders, operations, terrain, logistics, and reporting. Twenty-six military acronyms are his alone, withheld from Ivri and Inat by `abbrExcludeIds`.
 
 He also carries 90 `idan_` sentences across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
+
+His material is the main thing the withholding layer fences. All 90 sentences are reserved
+by prefix except the 21 in `CAST_WIDE_SENTENCE_IDS`: the ordinary civilian-safety register
+any resident narrates, with nothing alarming in it — where the fire extinguisher is, the
+shelter being in the yard rather than the building, the crosswalk, the lifeguard, the
+municipal water outage, the bag check at the mall, checking the safe room monthly. Anything
+naming an azaka, an injury, a burn, smoke, an interception or army service stays his alone.
+`military_operational` and `emergency_response` are reserved; `civil_defense_safety` is not.
+The hard-security and trauma subset of his `vocabWords` is reserved — פיגוע, כיבוש, שירות
+מילואים, חובש, שבר — while אבטחה, בטיחות, אזהרה, הנחיות, נוהל, עזרה ראשונה and אמבולנס stay
+shared as ordinary vocabulary. Three verbs are reserved, the violent paradigms only:
+`להרוג`, `לחסל`, `לפוצץ`. The rest of his verb route is shared-pool register no character
+should be denied.
 
 - **A third shelf — `emergency_response` (67 cards):** professional first-responder and police register. Pre-hospital and trauma care (החייאה, מיון נפגעים, דימום, כווייה), fire and rescue (כבאי, מכבי אש, חילוץ מגובה, טיהור), and police procedure (מעצר, חקירה, צו חיפוש, זירת פשע, ניידת). This is the working register of the people doing the job, distinct from the civilian tier 1 above. He also reaches the trauma cards on the unrouted `health` shelf — חובש, חדר מיון, תחבושת, שבר, נקע — through `route.vocabWords` rather than re-shelving them.
 
@@ -305,7 +393,16 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   `ספורים` reached individually through `vocabWords` — 302 cards in total. Both of those sit on someone else's shelf
   (`work_business` and the unrouted `core_advanced`) and were deliberately not
   re-shelved.
-- Sentences: 25 entries, `inat_01` through `inat_25`, plus the `formal` register.
+- Sentences: 25 entries, `inat_01` through `inat_25`, plus the `formal` register, plus the
+  34-row political tranche named in `route.sentenceReserveIds` — 152 owned in total. That
+  tranche (`SENTENCE_EXPANSION_POLITICS` and its neighbours) was authored into the
+  `colloquial`, `everyday`, `professional` and `formal` banks before the withholding layer
+  existed, which put occupation terminology, settler violence, an assassination row and a
+  named living politician into Ido's and Ivri's draws. Reserving the rows makes them hers and
+  fences them at once. The `formal_` members are already hers by register and are listed so
+  the fence is stated rather than inferred.
+- Her literature, law and philosophy shelves are **not** reserved: they are distinctive
+  rather than sensitive. Only `politics_society_expanded` is.
 - Conjugation verbs: 22 route entries. `לפרש` and `למחות`, with stored present, past,
   and future forms, plus `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, `ללמד`, and a
   reading-and-memory tranche — `לכתוב`, `לקרוא`, `לזכור`, `לשכוח`, `להשתתף`, `לשנות`,
@@ -365,6 +462,22 @@ All five characters are built and integrated, so this section is now a record ra
 
 ## Next decisions
 
+0. **Authoring priority after the fence.** Withholding shrinks the shared tier for everyone,
+   so the next content work is driven by that rather than by the ownership report:
+   1. **A shareable civil-defense tranche for Idan, ~25 rows.** The cast-wide
+      `civil_defense_safety` vocabulary policy now has sentence-level support only through the
+      21 allow-listed rows. Authoring ordinary-register safety sentences *designed* to be
+      shareable keeps that policy honest and gives the other four back what they lost. Idan is
+      also at exactly the 90 sentence floor and draws 65% from it, so he cycles fastest.
+   2. **A `professional` tranche for Ivri, ~25 rows.** He is the one character whose drawable
+      own pool shrinks — to 102 — because the political rows in his bank were doing work his
+      own register should do. Contracts, briefings, procurement, forms, product.
+   3. **Neutral `everyday_` rows, ~40.** The 142 unrouted rows are the connective tissue all
+      five draw the shared tier from, and that tier is what the fence shrinks. The cheapest
+      way to lift every character at once.
+   4. **A non-partisan tranche for Inat, ~20 rows.** She reads healthiest on count but is now
+      the most fenced on identity. Literature, cultural memory, archives, close reading.
+   5. Inbal needs nothing: 96 rows across two well-covered shelves.
 1. Consider a verb pass. Verbs are the thinnest pool app-wide — 48.2% of the 247-item conjugation
    deck is unrouted and no character exceeds 34. Every character clears the floor of 20, so this
    is not urgent, but it is the largest structural deficit left.
