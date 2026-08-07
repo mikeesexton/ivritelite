@@ -431,7 +431,9 @@ const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 25).map((id) => id.replace(/_(
 // Idan's tranche. Registering it here switches on the seven alignment checks the
 // rows had been escaping — pointed Hebrew, plain/niqqud token parity, the 4-6
 // distractor budget, duplicate distractors, and target reuse.
-const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 90).map((id) => id.replace(/_(\d)$/, "_0$1"));
+// Extended to 115 by the civil-defense tranche: idan_91-110 carry the cast-wide
+// shelf and are listed in CAST_WIDE_SENTENCE_IDS, idan_111-115 stay his own.
+const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 115).map((id) => id.replace(/_(\d)$/, "_0$1"));
 // One-word-focus rows added alongside the תחרותי / ספורים / בלי חרטות cards and
 // the לקלוט, להגיש, להקליט conjugation entries. Registered here so the alignment
 // checks below cover them; the compact-token policy already does, via their
@@ -456,6 +458,12 @@ const SHAKHTA_ENTRY_IDS = ["colloquial_161", "colloquial_162"];
 const HITRACHAKUT_ENTRY_IDS = ["everyday_143", "formal_86"];
 const AGAF_ENTRY_IDS = ["formal_87", "everyday_144", "professional_96"];
 const LEHAKIR_ENTRY_IDS = ["professional_97", "everyday_146", "inbal_96"];
+// Ivri's tranche: contracts, compliance, formal logic, bureaucracy, defence as
+// an industry, employment terms, capital structure, and the meeting record —
+// the clusters his bank had at or near zero. Registered here so the alignment
+// checks below cover them; the compact-token policy already does, via
+// COMPACT_TOKEN_POLICY_START.professional.
+const IVRI_ENTRY_IDS = sentenceIdRange("professional", 98, 122);
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -762,6 +770,49 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
   ...compactUnitMap(`
     wet hands
   `, "fixed-expression: lexicalized English idiom"),
+  // idan_91-115. Every one of these is a `civil_defense_safety` vocabulary card
+  // that had no sentence behind it, which is why the tranche exists; splitting
+  // the English would teach the wrong boundary for a term the learner meets
+  // whole on its card.
+  ...compactUnitMap(`
+    safety instructions
+    safety hazard
+    public announcement
+    portable radio
+    smoke detector
+    fire service
+    road closure
+    identity check
+    metal detector
+    emergency supplies
+    reinforced room
+    safe distance
+    emergency preparedness
+    civil defense
+    street shelter
+    warning time
+    rescue forces
+    relief aid
+  `, "term: recognized multiword vocabulary unit"),
+  // professional_98-122. Contract, compliance, procurement and payroll terms
+  // that Ivri's bank had no row for at all. Each is a term of art a learner
+  // needs whole — splitting "power of attorney" or "due diligence" teaches a
+  // boundary that does not exist.
+  ...compactUnitMap(`
+    counter example
+    post office
+    tax authority
+    missing field
+    power attorney
+    business licence
+    technical specification
+    approved supplier
+    export licence
+    quality control
+    probation period
+    notice period
+    cash flow
+  `, "term: recognized multiword vocabulary unit"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -936,15 +987,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 717 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 767 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 717);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 717);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 717);
+  assert.equal(entries.length, 767);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 767);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 767);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1050,8 +1101,8 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
     colloquial: 202,
-    everyday: 284,
-    professional: 113,
+    everyday: 309,
+    professional: 138,
     formal: 118,
   });
 
@@ -1134,6 +1185,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...HITRACHAKUT_ENTRY_IDS,
     ...AGAF_ENTRY_IDS,
     ...LEHAKIR_ENTRY_IDS,
+    ...IVRI_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

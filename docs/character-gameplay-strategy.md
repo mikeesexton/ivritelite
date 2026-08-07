@@ -88,7 +88,8 @@ Implementation notes for whoever extends this:
   **ownership**, which the fence does not change; the second table is the instrument for
   watching a character being starved. One consequence to read carefully: Ivri still *owns*
   the eleven `professional_` political rows by register while Inat reserves them, so his
-  ownership column reads eleven higher than what he can actually draw.
+  ownership column reads eleven higher than what he can actually draw — 138 owned against
+  127 drawable.
 
 ## Cast and routing
 
@@ -153,14 +154,32 @@ Owns security, safety, and the military, in two deliberately separate tiers:
 - **Tier 1 — everyday security a civilian needs during wartime.** `civil_defense_safety` (70 cards): sirens, protected spaces, Home Front Command instructions, alerts, first aid, evacuation, fire safety, and general public safety. Six home-front acronyms belong here too. **This tier is routed to every character**, so a learner who never picks Idan still drills it.
 - **Tier 2 — advanced military terminology.** `military_operational` (70 cards): ranks, units, service and reserve life, orders, operations, terrain, logistics, and reporting. Twenty-six military acronyms are his alone, withheld from Ivri and Inat by `abbrExcludeIds`.
 
-He also carries 90 `idan_` sentences across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
+He also carries 115 `idan_` sentences across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
 
-His material is the main thing the withholding layer fences. All 90 sentences are reserved
-by prefix except the 21 in `CAST_WIDE_SENTENCE_IDS`: the ordinary civilian-safety register
+His material is the main thing the withholding layer fences. All 115 sentences are reserved
+by prefix except the 43 in `CAST_WIDE_SENTENCE_IDS`: the ordinary civilian-safety register
 any resident narrates, with nothing alarming in it — where the fire extinguisher is, the
 shelter being in the yard rather than the building, the crosswalk, the lifeguard, the
 municipal water outage, the bag check at the mall, checking the safe room monthly. Anything
 naming an azaka, an injury, a burn, smoke, an interception or army service stays his alone.
+
+`idan_91`–`110` were authored specifically to carry that cast-wide half, because the shelf
+had sentence support from 21 rows for 70 cards and **49 of the 70 had none at all**. Each of
+the twenty is anchored on a card that had none — הוראות בטיחות, מפגע בטיחותי, חדר מדרגות,
+מרתף, קו חירום, הודעה לציבור, רדיו נייד, גלאי עשן, כיבוי אש, חסימת כביש, בדיקת זהות, מגלה
+מתכות, מלאי חירום, חדר מוגן, מרחק בטוח, מוכנות לחירום, הגנה אזרחית, קו תמיכה, מיגונית,
+תרגיל התגוננות. Six are questions and two are conditionals: the first 90 rows contained not
+one question mark, so a learner never practised the most useful safety utterance a resident
+makes. `idan_111`–`115` stay his, on the alarming tier and still terminology rather than
+tactics — זמן התרעה, הפוגה, כוחות ההצלה, פרמדיק, מפונה.
+
+The dividing line is lexical, not grammatical, and that is what makes the register
+teachable: `idan_28` ("during a siren we do not use the elevator") has the same impersonal
+grammar as the shared `idan_40` and is fenced on the single word אזעקה. Shared rows describe
+infrastructure **statically** — where a thing is, not what happened at it — so the noun is
+allowed and the scenario is not. `idan_26` and `idan_58` were later un-fenced on that test:
+helping a neighbour downstairs and the shelter key being with the building committee carry
+no alarming word at all.
 `military_operational` and `emergency_response` are reserved; `civil_defense_safety` is not.
 The hard-security and trauma subset of his `vocabWords` is reserved — פיגוע, כיבוש, שירות
 מילואים, חובש, שבר — while אבטחה, בטיחות, אזהרה, הנחיות, נוהל, עזרה ראשונה and אמבולנס stay
@@ -242,11 +261,17 @@ draws from, exactly as `npm run report:characters` prints it.
 | pool | floor | Ido | Inbal | Ivri | Inat | Idan |
 |---|---|---|---|---|---|---|
 | vocabulary | **250** | 472 | 335 | 491 | 372 | 259 |
-| sentences | **90** | 202 | 96 | 113 | 132 | 90 |
+| sentences | **90** | 202 | 96 | 138 | 162 | 115 |
 | abbreviations | **30** | 68 | 87 | 113 | 85 | 34 |
 | verbs | **20** | 34 | 26 | 23 | 24 | 30 |
 
 All five characters now clear all four floors.
+
+Read the sentence row against the fence, not only against the floor. Ivri owns 138 and can
+draw 127, because Inat reserves eleven `professional_` rows that are still his by register.
+Idan owns 115 and can draw all of them; 43 of those are also cast-wide, so the other four
+reach them too. The second table in `npm run report:characters` is the authority on what a
+character may actually be served.
 
 The vocabulary floor is derived, not chosen. A vocabulary session serves
 `WORD_MATCH_SESSION_SIZE = 20` words and the owned share is `TARGET_OWNED_SHARE = 0.65`, so
@@ -361,7 +386,21 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   `scientific_analytical`, and `science_research_expanded` — 341 cards. Bureaucracy is
   named in his blurb above and was simply never routed; the two science shelves follow
   the abbreviation split, which already gives him the `Ideas, Science & Tech` bucket.
-- Sentences: the `professional` register.
+- Sentences: the `professional` register — 138 rows, of which he can draw 127. `professional_98`–`122`
+  were authored against the clusters his bank had at or near zero, after an audit found 47 of
+  his 97 rows were internal meeting-and-email choreography: contracts as objects (5 rows —
+  **zero** rows had contained `חוזה`, `הסכם` or `סעיף`), regulation and compliance (4),
+  formal logic (4 — the register his own `fourWrong` line lives in), bureaucracy beyond the
+  tender (4), defence as an industry (3 — **zero** before, and the doc reserves that framing
+  for him), employment terms (2), capital structure (2), and the meeting record (1 — no row
+  had contained `פרוטוקול`). The tranche is deliberately short, 16–25 Hebrew letters against
+  a bank median of 34, and deliberately weighted 8/10/7 by difficulty because he had two
+  level-1 rows in 97. Handwriting eligibility went 53/97 to 78/122.
+- The defence rows stay procurement and engineering framing — a technical spec, an approved
+  supplier, an export licence, a milestone. They must never reach for the fenced military
+  vocabulary: that boundary is the whole point of the Ivri/Inat/Idan split. The compliance
+  rows stay commercial for the same reason — "the auditor checked the report" is his, while
+  "the monitoring team verified reports of settler violence" is Inat's and is reserved.
 - Conjugation verbs: 23 route entries. `לעבוד`, `לתכנן`, `לנתח`, `לקנות`, `למכור`,
   `להחליט`, `לעדכן`, `לאשר`, plus a process tranche from the shared pool —
   `לתקן`, `להשתמש`, `לבטל`, `לצרף`, `לברר`, `להסכים`, `להספיק`, `להבהיר`, `להזהיר`,
@@ -394,13 +433,22 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   (`work_business` and the unrouted `core_advanced`) and were deliberately not
   re-shelved.
 - Sentences: 25 entries, `inat_01` through `inat_25`, plus the `formal` register, plus the
-  34-row political tranche named in `route.sentenceReserveIds` — 152 owned in total. That
+  46-row political tranche named in `route.sentenceReserveIds` — 162 owned in total. That
   tranche (`SENTENCE_EXPANSION_POLITICS` and its neighbours) was authored into the
   `colloquial`, `everyday`, `professional` and `formal` banks before the withholding layer
   existed, which put occupation terminology, settler violence, an assassination row and a
   named living politician into Ido's and Ivri's draws. Reserving the rows makes them hers and
   fences them at once. The `formal_` members are already hers by register and are listed so
   the fence is stated rather than inferred.
+- The list started at 34 ids and missed twelve charged rows, which kept circulating cast-wide
+  for one release: `professional_76`, `78`, `79`, `colloquial_141`, `143`, `149`, `150`,
+  `everyday_125`, `135`, `136`, `formal_76` and `77`. The lesson is that a tranche has to be
+  triaged row by row rather than by contiguous id range — the first pass took
+  `professional_74`–`84` as a block and silently skipped three of its members.
+- Six rows from the same tranche stay shared **on purpose** and should not be swept in later:
+  `colloquial_145`, `146`, `everyday_132`, `133`, `134` and `professional_73`. Those are
+  LGBTQ+ community life, cost-of-living gripes, civic literacy, and a municipal housing plan —
+  everyday register, and the housing plan is good Ivri bureaucracy material.
 - Her literature, law and philosophy shelves are **not** reserved: they are distinctive
   rather than sensitive. Only `politics_society_expanded` is.
 - Conjugation verbs: 22 route entries. `לפרש` and `למחות`, with stored present, past,
@@ -462,21 +510,20 @@ All five characters are built and integrated, so this section is now a record ra
 
 ## Next decisions
 
-0. **Authoring priority after the fence.** Withholding shrinks the shared tier for everyone,
-   so the next content work is driven by that rather than by the ownership report:
-   1. **A shareable civil-defense tranche for Idan, ~25 rows.** The cast-wide
-      `civil_defense_safety` vocabulary policy now has sentence-level support only through the
-      21 allow-listed rows. Authoring ordinary-register safety sentences *designed* to be
-      shareable keeps that policy honest and gives the other four back what they lost. Idan is
-      also at exactly the 90 sentence floor and draws 65% from it, so he cycles fastest.
-   2. **A `professional` tranche for Ivri, ~25 rows.** He is the one character whose drawable
-      own pool shrinks — to 102 — because the political rows in his bank were doing work his
-      own register should do. Contracts, briefings, procurement, forms, product.
-   3. **Neutral `everyday_` rows, ~40.** The 142 unrouted rows are the connective tissue all
+0. **Authoring priority after the fence.** Withholding shrank the shared tier for everyone, so
+   the content work below was driven by that rather than by the ownership report. Items 1 and 2
+   are **done**; 3 and 4 are open.
+   1. ~~A shareable civil-defense tranche for Idan.~~ **Done** — `idan_91`–`115`. Twenty are
+      cast-wide, taking the allow-list from 21 to 43 and giving the shelf real sentence support;
+      five stay his. His bank went 90 → 115.
+   2. ~~A `professional` tranche for Ivri.~~ **Done** — `professional_98`–`122`. His bank went
+      113 → 138 owned, 127 drawable.
+   3. **Neutral `everyday_` rows, ~40.** The 139 unrouted rows are the connective tissue all
       five draw the shared tier from, and that tier is what the fence shrinks. The cheapest
-      way to lift every character at once.
-   4. **A non-partisan tranche for Inat, ~20 rows.** She reads healthiest on count but is now
-      the most fenced on identity. Literature, cultural memory, archives, close reading.
+      way to lift every character at once. Still open.
+   4. **A non-partisan tranche for Inat, ~20 rows.** She reads healthiest on count but is the
+      most fenced on identity — 46 reserved rows. Literature, cultural memory, archives, close
+      reading. Still open.
    5. Inbal needs nothing: 96 rows across two well-covered shelves.
 1. Consider a verb pass. Verbs are the thinnest pool app-wide — 48.2% of the 247-item conjugation
    deck is unrouted and no character exceeds 34. Every character clears the floor of 20, so this
