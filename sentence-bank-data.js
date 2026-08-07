@@ -16111,12 +16111,581 @@ const IDAN_SENTENCES = [
     englishDistractors: ["The briefing", "cancelled", "the order", "the parade"],
     notes: "A תחקיר that changes a נוהל is the whole point of holding one."
   }),
+  // idan_91–110 carry the cast-wide `civil_defense_safety` shelf, which had
+  // sentence support from 21 rows for 70 cards. Each row is anchored on a card
+  // that had none, and each is registered in CAST_WIDE_SENTENCE_IDS. Register:
+  // standing rules and static infrastructure, never an event — the noun is
+  // allowed, the scenario is not. Six are questions and two are conditionals,
+  // both shapes the first 90 rows had at zero.
+  buildReviewedSentence({
+    id: "idan_91", emoji: "📋", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "הוראות הבטיחות תלויות בכניסה.", hebrewNiqqud: "הוֹרָאוֹת הַבְּטִיחוּת תְּלוּיוֹת בַּכְּנִיסָה.",
+    english: "The safety instructions are posted at the entrance.",
+    hebrewTokenPairs: [["הוראות הבטיחות", "הוֹרָאוֹת הַבְּטִיחוּת"], ["תלויות", "תְּלוּיוֹת"], ["בכניסה", "בַּכְּנִיסָה"]],
+    englishTokens: ["The safety instructions", "are posted", "at the entrance"],
+    hebrewDistractorPairs: [["ההנחיות", "הַהַנְחָיוֹת"], ["כתובות", "כְּתוּבוֹת"], ["במעלית", "בַּמַּעֲלִית"], ["במטבח", "בַּמִּטְבָּח"]],
+    englishDistractors: ["The guidelines", "are written", "in the elevator", "in the kitchen"],
+    notes: "תלוי here is 'hung up on a wall', not 'dependent on'."
+  }),
+  buildReviewedSentence({
+    id: "idan_92", emoji: "⚠️", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "אם יש מפגע בטיחותי, מדווחים לעירייה.", hebrewNiqqud: "אִם יֵשׁ מִפְגָּע בְּטִיחוּתִי, מְדַוְּוחִים לָעִירִיָּיה.",
+    english: "If there is a safety hazard, you notify the municipality.",
+    hebrewTokenPairs: [["אם", "אִם"], ["יש", "יֵשׁ"], ["מפגע בטיחותי", "מִפְגָּע בְּטִיחוּתִי"], ["מדווחים", "מְדַוְּוחִים"], ["לעירייה", "לָעִירִיָּיה"]],
+    englishTokens: ["If", "there is", "a safety hazard", "you notify", "the municipality"],
+    hebrewDistractorPairs: [["כאשר", "כַּאֲשֶׁר"], ["אין", "אֵין"], ["מטף", "מַטָּף"], ["שואלים", "שׁוֹאֲלִים"], ["את השכן", "אֶת הַשָּׁכֵן"]],
+    englishDistractors: ["When", "there isn't", "a fire extinguisher", "you ask", "the neighbour"],
+    notes: "מדווחים is the impersonal plural — Hebrew says who does it by not saying it."
+  }),
+  buildReviewedSentence({
+    id: "idan_93", emoji: "💡", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מדליקים את האור בחדר המדרגות.", hebrewNiqqud: "מַדְלִיקִים אֶת הָאוֹר בַּחֲדַר הַמַּדְרֵגוֹת.",
+    english: "You turn on the light in the stairwell.",
+    hebrewTokenPairs: [["מדליקים", "מַדְלִיקִים"], ["את האור", "אֶת הָאוֹר"], ["בחדר המדרגות", "בַּחֲדַר הַמַּדְרֵגוֹת"]],
+    englishTokens: ["You turn on", "the light", "in the stairwell"],
+    hebrewDistractorPairs: [["מכבים", "מְכַבִּים"], ["את המאוורר", "אֶת הַמְּאַוְורֵר"], ["במרפסת", "בַּמִּרְפֶּסֶת"], ["בחניה", "בַּחֲנָיָה"]],
+    englishDistractors: ["You turn off", "the fan", "on the balcony", "in the parking"],
+    notes: "חדר מדרגות is one unit — the stairwell of a building, not a room with stairs."
+  }),
+  buildReviewedSentence({
+    id: "idan_94", emoji: "🚪", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "המחסן נמצא במרתף.", hebrewNiqqud: "הַמַּחְסָן נִמְצָא בַּמַּרְתֵּף.",
+    english: "The storeroom is located in the basement.",
+    hebrewTokenPairs: [["המחסן", "הַמַּחְסָן"], ["נמצא", "נִמְצָא"], ["במרתף", "בַּמַּרְתֵּף"]],
+    englishDistractors: ["The elevator", "is broken", "on the roof", "in the yard"],
+    englishTokens: ["The storeroom", "is located", "in the basement"],
+    hebrewDistractorPairs: [["המעלית", "הַמַּעֲלִית"], ["מקולקלת", "מְקוּלְקֶלֶת"], ["בגג", "בַּגַּג"], ["בגינה", "בַּגִּינָה"]],
+    notes: "נמצא is the everyday 'is located', not 'was found'."
+  }),
+  buildReviewedSentence({
+    id: "idan_95", emoji: "📞", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "מה מספר קו החירום?", hebrewNiqqud: "מָה מִסְפַּר קַו הַחִירוּם?",
+    english: "What is the number of the hotline?",
+    hebrewTokenPairs: [["מה", "מָה"], ["מספר", "מִסְפַּר"], ["קו החירום", "קַו הַחִירוּם"]],
+    englishTokens: ["What is", "the number", "of the hotline"],
+    hebrewDistractorPairs: [["איפה", "אֵיפֹה"], ["הכתובת", "הַכְּתוֹבֶת"], ["של המוקד", "שֶׁל הַמּוֹקֵד"], ["של הוועד", "שֶׁל הַוַּעַד"]],
+    englishDistractors: ["Where is", "the address", "of the centre", "of the committee"],
+    notes: "קו חירום is the hotline itself; מוקד is the call centre behind it."
+  }),
+  buildReviewedSentence({
+    id: "idan_96", emoji: "📣", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "העירייה פרסמה הודעה לציבור.", hebrewNiqqud: "הָעִירִיָּיה פִּרְסְמָה הוֹדָעָה לַצִּיבּוּר.",
+    english: "The municipality published a public announcement.",
+    hebrewTokenPairs: [["העירייה", "הָעִירִיָּיה"], ["פרסמה", "פִּרְסְמָה"], ["הודעה לציבור", "הוֹדָעָה לַצִּיבּוּר"]],
+    englishTokens: ["The municipality", "published", "a public announcement"],
+    hebrewDistractorPairs: [["הוועדה", "הַוַּעֲדָה"], ["ביטלה", "בִּיטְּלָה"], ["את הכנס", "אֶת הַכֶּנֶס"], ["את הטופס", "אֶת הַטּוֹפֶס"]],
+    englishDistractors: ["The committee", "cancelled", "the conference", "the form"],
+    notes: "הודעה לציבור is the official register; a הודעה on its own is any message."
+  }),
+  buildReviewedSentence({
+    id: "idan_97", emoji: "📻", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "בארון יש רדיו נייד וסוללות.", hebrewNiqqud: "בָּאָרוֹן יֵשׁ רַדְיוֹ נַיָּיד וְסוֹלְלוֹת.",
+    english: "In the cupboard there is a portable radio and batteries.",
+    hebrewTokenPairs: [["בארון", "בָּאָרוֹן"], ["יש", "יֵשׁ"], ["רדיו נייד", "רַדְיוֹ נַיָּיד"], ["וסוללות", "וְסוֹלְלוֹת"]],
+    englishTokens: ["In the cupboard", "there is", "a portable radio", "and batteries"],
+    hebrewDistractorPairs: [["במגירה", "בַּמְּגֵירָה"], ["אין", "אֵין"], ["פנס", "פַּנָּס"], ["ומטען", "וּמַטְעֵן"]],
+    englishDistractors: ["In the drawer", "there isn't", "a torch", "and a charger"],
+    notes: "נייד is 'portable' here; the same word is the everyday noun for a mobile phone."
+  }),
+  buildReviewedSentence({
+    id: "idan_98", emoji: "🔥", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "בודקים את גלאי העשן פעם בשנה.", hebrewNiqqud: "בּוֹדְקִים אֶת גַּלַּאי הֶעָשָׁן פַּעַם בְּשָׁנָה.",
+    english: "You check the smoke detector once a year.",
+    hebrewTokenPairs: [["בודקים", "בּוֹדְקִים"], ["את גלאי העשן", "אֶת גַּלַּאי הֶעָשָׁן"], ["פעם", "פַּעַם"], ["בשנה", "בְּשָׁנָה"]],
+    englishTokens: ["You check", "the smoke detector", "once", "a year"],
+    hebrewDistractorPairs: [["מנקים", "מְנַקִּים"], ["את המסנן", "אֶת הַמְּסַנֵּן"], ["פעמיים", "פַּעֲמַיִים"], ["בחודש", "בַּחוֹדֶשׁ"]],
+    englishDistractors: ["You clean", "the filter", "twice", "a month"],
+    notes: "גלאי is a detector of any kind; גלאי עשן is the household one."
+  }),
+  buildReviewedSentence({
+    id: "idan_99", emoji: "🚒", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "למכבי אש מתקשרים למאה ושתיים.", hebrewNiqqud: "לְמַכַּבֵּי אֵשׁ מִתְקַשְּׁרִים לְמֵאָה וּשְׁתַּיִים.",
+    english: "For the fire service you call one hundred and two.",
+    hebrewTokenPairs: [["למכבי אש", "לְמַכַּבֵּי אֵשׁ"], ["מתקשרים", "מִתְקַשְּׁרִים"], ["למאה", "לְמֵאָה"], ["ושתיים", "וּשְׁתַּיִים"]],
+    englishTokens: ["For the fire service", "you call", "one hundred", "and two"],
+    hebrewDistractorPairs: [["למשטרה", "לַמִּשְׁטָרָה"], ["כותבים", "כּוֹתְבִים"], ["לאלף", "לְאֶלֶף"], ["ושלוש", "וְשָׁלוֹשׁ"]],
+    englishDistractors: ["For the police", "you write", "a thousand", "and three"],
+    notes: "מכבי אש is the fire service as a body; the number itself is 102."
+  }),
+  buildReviewedSentence({
+    id: "idan_100", emoji: "🚧", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "אם יש חסימת כביש, נוסעים בדרך אחרת.", hebrewNiqqud: "אִם יֵשׁ חֲסִימַת כְּבִישׁ, נוֹסְעִים בְּדֶרֶךְ אַחֶרֶת.",
+    english: "If there is a road closure, you drive a different way.",
+    hebrewTokenPairs: [["אם", "אִם"], ["יש", "יֵשׁ"], ["חסימת כביש", "חֲסִימַת כְּבִישׁ"], ["נוסעים", "נוֹסְעִים"], ["בדרך", "בְּדֶרֶךְ"], ["אחרת", "אַחֶרֶת"]],
+    englishTokens: ["If", "there is", "a road closure", "you drive", "a different", "way"],
+    hebrewDistractorPairs: [["כאשר", "כַּאֲשֶׁר"], ["אין", "אֵין"], ["שלט", "שֶׁלֶט"], ["הולכים", "הוֹלְכִים"], ["ברחוב", "בָּרְחוֹב"], ["ראשי", "רָאשִׁי"]],
+    englishDistractors: ["When", "there isn't", "a sign", "you walk", "a main", "street"],
+    notes: "חסימת כביש is the official closure; פקק is the jam that results from one."
+  }),
+  buildReviewedSentence({
+    id: "idan_101", emoji: "🪪", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "בקבלה עושים בדיקת זהות.", hebrewNiqqud: "בַּקַּבָּלָה עוֹשִׂים בְּדִיקַת זֶהוּת.",
+    english: "At reception they do an identity check.",
+    hebrewTokenPairs: [["בקבלה", "בַּקַּבָּלָה"], ["עושים", "עוֹשִׂים"], ["בדיקת זהות", "בְּדִיקַת זֶהוּת"]],
+    englishTokens: ["At reception", "they do", "an identity check"],
+    hebrewDistractorPairs: [["בכניסה", "בַּכְּנִיסָה"], ["מבקשים", "מְבַקְּשִׁים"], ["תעודה", "תְּעוּדָה"], ["חתימה", "חֲתִימָה"]],
+    englishDistractors: ["At the entrance", "they ask for", "a certificate", "a signature"],
+    notes: "בדיקת זהות is the procedure; תעודת זהות is the card it checks."
+  }),
+  buildReviewedSentence({
+    id: "idan_102", emoji: "🔎", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "יש מגלה מתכות בכניסה?", hebrewNiqqud: "יֵשׁ מְגַלֵּה מַתָּכוֹת בַּכְּנִיסָה?",
+    english: "Is there a metal detector at the entrance?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["מגלה מתכות", "מְגַלֵּה מַתָּכוֹת"], ["בכניסה", "בַּכְּנִיסָה"]],
+    englishTokens: ["Is there", "a metal detector", "at the entrance"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["מצלמה", "מַצְלֵמָה"], ["מאבטח", "מְאַבְטֵחַ"], ["בגינה", "בַּגִּינָה"]],
+    englishDistractors: ["There isn't", "a camera", "a security guard", "in the garden"],
+    notes: "מגלה is a participle used as a noun — 'a thing that reveals'."
+  }),
+  buildReviewedSentence({
+    id: "idan_103", emoji: "📦", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מה יש במלאי החירום?", hebrewNiqqud: "מָה יֵשׁ בִּמְלַאי הַחִירוּם?",
+    english: "What is there in the emergency supplies?",
+    hebrewTokenPairs: [["מה", "מָה"], ["יש", "יֵשׁ"], ["במלאי החירום", "בִּמְלַאי הַחִירוּם"]],
+    englishTokens: ["What", "is there", "in the emergency supplies"],
+    hebrewDistractorPairs: [["מי", "מִי"], ["אין", "אֵין"], ["במקרר", "בַּמְּקָרֵר"], ["בארון", "בָּאָרוֹן"]],
+    englishDistractors: ["Who", "isn't there", "in the fridge", "in the cupboard"],
+    notes: "מלאי is stock or inventory; מלאי חירום is what a household keeps ready."
+  }),
+  buildReviewedSentence({
+    id: "idan_104", emoji: "🏠", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "איפה החדר המוגן בדירה?", hebrewNiqqud: "אֵיפֹה הַחֶדֶר הַמּוּגָן בַּדִּירָה?",
+    english: "Where is the reinforced room in the apartment?",
+    hebrewTokenPairs: [["איפה", "אֵיפֹה"], ["החדר המוגן", "הַחֶדֶר הַמּוּגָן"], ["בדירה", "בַּדִּירָה"]],
+    englishTokens: ["Where is", "the reinforced room", "in the apartment"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["המחסן", "הַמַּחְסָן"], ["המרפסת", "הַמִּרְפֶּסֶת"], ["בבניין", "בַּבִּנְיָין"]],
+    englishDistractors: ["When is", "the storeroom", "the balcony", "in the building"],
+    notes: "חדר מוגן and ממ״ד are the same room; the acronym is what people actually say."
+  }),
+  buildReviewedSentence({
+    id: "idan_105", emoji: "🚗", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "שומרים מרחק בטוח מהרכב מלפנים.", hebrewNiqqud: "שׁוֹמְרִים מֶרְחָק בָּטוּחַ מֵהָרֶכֶב מִלְּפָנִים.",
+    english: "You keep a safe distance from the car in front.",
+    hebrewTokenPairs: [["שומרים", "שׁוֹמְרִים"], ["מרחק בטוח", "מֶרְחָק בָּטוּחַ"], ["מהרכב", "מֵהָרֶכֶב"], ["מלפנים", "מִלְּפָנִים"]],
+    englishTokens: ["You keep", "a safe distance", "from the car", "in front"],
+    hebrewDistractorPairs: [["מודדים", "מוֹדְדִים"], ["דקה", "דַּקָּה"], ["מהאופניים", "מֵהָאוֹפַנַּיִים"], ["מאחור", "מֵאָחוֹר"]],
+    englishDistractors: ["You measure", "a minute", "from the bicycle", "behind"],
+    notes: "מלפנים is 'in front' as a position; לפני is 'before' in time."
+  }),
+  buildReviewedSentence({
+    id: "idan_106", emoji: "🎒", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מוכנות לחירום מתחילה בבית.", hebrewNiqqud: "מוּכָנוּת לְחִירוּם מַתְחִילָה בַּבַּיִת.",
+    english: "Emergency preparedness starts at home.",
+    hebrewTokenPairs: [["מוכנות לחירום", "מוּכָנוּת לְחִירוּם"], ["מתחילה", "מַתְחִילָה"], ["בבית", "בַּבַּיִת"]],
+    englishTokens: ["Emergency preparedness", "starts", "at home"],
+    hebrewDistractorPairs: [["השגרה", "הַשִּׁגְרָה"], ["נגמרת", "נִגְמֶרֶת"], ["במשרד", "בַּמִּשְׂרָד"], ["בעבודה", "בַּעֲבוֹדָה"]],
+    englishDistractors: ["The routine", "ends", "at the office", "at work"],
+    notes: "מוכנות is readiness as a state; הכנה is the act of preparing."
+  }),
+  buildReviewedSentence({
+    id: "idan_107", emoji: "🛡️", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "מי אחראי על ההגנה האזרחית?", hebrewNiqqud: "מִי אַחְרָאִי עַל הַהֲגַנָּה הָאֶזְרָחִית?",
+    english: "Who is responsible for civil defense?",
+    hebrewTokenPairs: [["מי", "מִי"], ["אחראי", "אַחְרָאִי"], ["על", "עַל"], ["ההגנה האזרחית", "הַהֲגַנָּה הָאֶזְרָחִית"]],
+    englishTokens: ["Who", "is responsible", "for", "civil defense"],
+    hebrewDistractorPairs: [["מה", "מָה"], ["חשוב", "חָשׁוּב"], ["בלי", "בְּלִי"], ["התוכנית", "הַתּוֹכְנִית"]],
+    englishDistractors: ["What", "is important", "without", "the plan"],
+    notes: "אחראי על is the fixed pairing — responsibility takes על, not בשביל."
+  }),
+  buildReviewedSentence({
+    id: "idan_108", emoji: "☎️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "קו התמיכה פתוח בלילה?", hebrewNiqqud: "קַו הַתְּמִיכָה פָּתוּחַ בַּלַּיְלָה?",
+    english: "Is the support line open at night?",
+    hebrewTokenPairs: [["קו התמיכה", "קַו הַתְּמִיכָה"], ["פתוח", "פָּתוּחַ"], ["בלילה", "בַּלַּיְלָה"]],
+    englishTokens: ["Is the support line", "open", "at night"],
+    hebrewDistractorPairs: [["המשרד", "הַמִּשְׂרָד"], ["סגור", "סָגוּר"], ["בבוקר", "בַּבּוֹקֶר"], ["בשבת", "בְּשַׁבָּת"]],
+    englishDistractors: ["Is the office", "closed", "in the morning", "on Saturday"],
+    notes: "קו תמיכה is a helpline; תמיכה alone is support of any kind."
+  }),
+  buildReviewedSentence({
+    id: "idan_109", emoji: "🧱", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "בפינת הרחוב יש מיגונית.", hebrewNiqqud: "בְּפִינַּת הָרְחוֹב יֵשׁ מִיגוּנִית.",
+    english: "On the corner of the street there is a street shelter.",
+    hebrewTokenPairs: [["בפינת", "בְּפִינַּת"], ["הרחוב", "הָרְחוֹב"], ["יש", "יֵשׁ"], ["מיגונית", "מִיגוּנִית"]],
+    englishTokens: ["On the corner", "of the street", "there is", "a street shelter"],
+    hebrewDistractorPairs: [["בסוף", "בְּסוֹף"], ["השדרה", "הַשְּׂדֵרָה"], ["אין", "אֵין"], ["ספסל", "סַפְסָל"]],
+    englishDistractors: ["At the end", "of the boulevard", "there isn't", "a bench"],
+    notes: "מיגונית is the small concrete street shelter, distinct from a building's מקלט."
+  }),
+  buildReviewedSentence({
+    id: "idan_110", emoji: "🏫", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "בבית הספר היה תרגיל התגוננות.", hebrewNiqqud: "בְּבֵית הַסֵּפֶר הָיָה תַּרְגִּיל הִתְגוֹנְנוּת.",
+    english: "At school there was a defense drill.",
+    hebrewTokenPairs: [["בבית הספר", "בְּבֵית הַסֵּפֶר"], ["היה", "הָיָה"], ["תרגיל התגוננות", "תַּרְגִּיל הִתְגוֹנְנוּת"]],
+    englishTokens: ["At school", "there was", "a defense drill"],
+    hebrewDistractorPairs: [["בגן", "בַּגַּן"], ["אין", "אֵין"], ["טיול", "טִיּוּל"], ["מסיבה", "מְסִיבָּה"]],
+    englishDistractors: ["At kindergarten", "there isn't", "a trip", "a party"],
+    notes: "תרגיל is a drill or an exercise; the התגוננות half is what makes it civil defense."
+  }),
+  // idan_111–115 stay Idan's own: the alarming tier, kept to terminology and
+  // roles rather than anything operationally instructional, per the sprite and
+  // word-list restraint in docs/character-gameplay-strategy.md.
+  buildReviewedSentence({
+    id: "idan_111", emoji: "⏱️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "זמן ההתרעה כאן קצר מאוד.", hebrewNiqqud: "זְמַן הַהַתְרָעָה כָּאן קָצָר מְאוֹד.",
+    english: "The warning time here is very short.",
+    hebrewTokenPairs: [["זמן ההתרעה", "זְמַן הַהַתְרָעָה"], ["כאן", "כָּאן"], ["קצר", "קָצָר"], ["מאוד", "מְאוֹד"]],
+    englishTokens: ["The warning time", "here", "is very", "short"],
+    hebrewDistractorPairs: [["הנסיעה", "הַנְּסִיעָה"], ["שם", "שָׁם"], ["ארוך", "אָרוֹךְ"], ["במיוחד", "בִּמְיוּחָד"]],
+    englishDistractors: ["The trip", "there", "is quite", "long"],
+    notes: "זמן התרעה is the interval between the alert and what follows it."
+  }),
+  buildReviewedSentence({
+    id: "idan_112", emoji: "🕊️", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "בהפוגה אפשר לצאת לרגע.", hebrewNiqqud: "בַּהֲפוּגָה אֶפְשָׁר לָצֵאת לְרֶגַע.",
+    english: "During a lull you can go out for a moment.",
+    hebrewTokenPairs: [["בהפוגה", "בַּהֲפוּגָה"], ["אפשר", "אֶפְשָׁר"], ["לצאת", "לָצֵאת"], ["לרגע", "לְרֶגַע"]],
+    englishTokens: ["During a lull", "you can", "go out", "for a moment"],
+    hebrewDistractorPairs: [["בהפסקה", "בַּהַפְסָקָה"], ["אסור", "אָסוּר"], ["להיכנס", "לְהִיכָּנֵס"], ["לשעה", "לְשָׁעָה"]],
+    englishDistractors: ["During a break", "you must not", "come in", "for an hour"],
+    notes: "הפוגה is a lull in something ongoing; הפסקה is an ordinary break."
+  }),
+  buildReviewedSentence({
+    id: "idan_113", emoji: "🚑", category: "everyday", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "כוחות ההצלה הגיעו מהר.", hebrewNiqqud: "כּוֹחוֹת הַהַצָּלָה הִגִּיעוּ מַהֵר.",
+    english: "The rescue forces arrived quickly.",
+    hebrewTokenPairs: [["כוחות ההצלה", "כּוֹחוֹת הַהַצָּלָה"], ["הגיעו", "הִגִּיעוּ"], ["מהר", "מַהֵר"]],
+    englishTokens: ["The rescue forces", "arrived", "quickly"],
+    hebrewDistractorPairs: [["השכנים", "הַשְּׁכֵנִים"], ["יצאו", "יָצְאוּ"], ["לאט", "לְאַט"], ["אתמול", "אֶתְמוֹל"]],
+    englishDistractors: ["The neighbours", "left", "slowly", "yesterday"],
+    notes: "כוחות ההצלה covers every responding service at once — fire, medical and rescue."
+  }),
+  buildReviewedSentence({
+    id: "idan_114", emoji: "🩺", category: "everyday", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "הפרמדיק שאל מה קרה.", hebrewNiqqud: "הַפָּרָמֶדִיק שָׁאַל מָה קָרָה.",
+    english: "The paramedic asked what happened.",
+    hebrewTokenPairs: [["הפרמדיק", "הַפָּרָמֶדִיק"], ["שאל", "שָׁאַל"], ["מה", "מָה"], ["קרה", "קָרָה"]],
+    englishTokens: ["The paramedic", "asked", "what", "happened"],
+    hebrewDistractorPairs: [["המאבטח", "הַמְּאַבְטֵחַ"], ["ענה", "עָנָה"], ["מי", "מִי"], ["הגיע", "הִגִּיעַ"]],
+    englishDistractors: ["The security guard", "answered", "who", "arrived"],
+    notes: "פרמדיק is the loanword; חובש is the medic in a military or first-response setting."
+  }),
+  buildReviewedSentence({
+    id: "idan_115", emoji: "🧳", category: "everyday", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "המפונים קיבלו אוכל וסיוע.", hebrewNiqqud: "הַמְּפוּנִים קִיבְּלוּ אוֹכֶל וְסִיּוּעַ.",
+    english: "The evacuees received food and relief aid.",
+    hebrewTokenPairs: [["המפונים", "הַמְּפוּנִים"], ["קיבלו", "קִיבְּלוּ"], ["אוכל", "אוֹכֶל"], ["וסיוע", "וְסִיּוּעַ"]],
+    englishTokens: ["The evacuees", "received", "food", "and relief aid"],
+    hebrewDistractorPairs: [["התלמידים", "הַתַּלְמִידִים"], ["ביקשו", "בִּיקְּשׁוּ"], ["מים", "מַיִים"], ["והסבר", "וְהֶסְבֵּר"]],
+    englishDistractors: ["The students", "requested", "water", "and an explanation"],
+    notes: "מפונה is someone who was evacuated; סיוע is aid as assistance rather than charity."
+  }),
+];
+
+// Ivri's register, authored against the clusters his bank had at or near zero:
+// contracts as objects, regulation and compliance, formal logic, bureaucracy
+// beyond the tender, defence as an industry, employment terms, capital
+// structure, and the meeting record. Deliberately short — his median row was 34
+// Hebrew letters and only 55% of his bank fell inside the handwriting window —
+// and deliberately weighted toward difficulty 1, of which he had two in 97.
+const IVRI_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_98", emoji: "✍️", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "החוזה נחתם אתמול בבוקר.", hebrewNiqqud: "הַחוֹזֶה נֶחְתַּם אֶתְמוֹל בַּבּוֹקֶר.",
+    english: "The contract was signed yesterday in the morning.",
+    hebrewTokenPairs: [["החוזה", "הַחוֹזֶה"], ["נחתם", "נֶחְתַּם"], ["אתמול", "אֶתְמוֹל"], ["בבוקר", "בַּבּוֹקֶר"]],
+    englishTokens: ["The contract", "was signed", "yesterday", "in the morning"],
+    hebrewDistractorPairs: [["ההסכם", "הַהֶסְכֵּם"], ["בוטל", "בּוּטַּל"], ["מחר", "מָחָר"], ["בערב", "בָּעֶרֶב"]],
+    englishDistractors: ["The agreement", "was cancelled", "tomorrow", "in the evening"],
+    notes: "חוזה is the signed instrument; הסכם is the understanding behind it."
+  }),
+  buildReviewedSentence({
+    id: "professional_99", emoji: "📄", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מה כתוב בסעיף השלישי?", hebrewNiqqud: "מָה כָּתוּב בַּסָּעִיף הַשְּׁלִישִׁי?",
+    english: "What is written in the third clause?",
+    hebrewTokenPairs: [["מה", "מָה"], ["כתוב", "כָּתוּב"], ["בסעיף", "בַּסָּעִיף"], ["השלישי", "הַשְּׁלִישִׁי"]],
+    englishTokens: ["What", "is written", "in the third", "clause"],
+    hebrewDistractorPairs: [["מי", "מִי"], ["חתם", "חָתַם"], ["בנספח", "בַּנִּסְפָּח"], ["הראשון", "הָרִאשׁוֹן"]],
+    englishDistractors: ["Who", "signed", "in the first", "appendix"],
+    notes: "סעיף is a clause in a contract or a law; פסקה is a paragraph of prose."
+  }),
+  buildReviewedSentence({
+    id: "professional_100", emoji: "📆", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "ההסכם בתוקף עד סוף השנה.", hebrewNiqqud: "הַהֶסְכֵּם בְּתוֹקֶף עַד סוֹף הַשָּׁנָה.",
+    english: "The agreement is valid until the end of the year.",
+    hebrewTokenPairs: [["ההסכם", "הַהֶסְכֵּם"], ["בתוקף", "בְּתוֹקֶף"], ["עד", "עַד"], ["סוף", "סוֹף"], ["השנה", "הַשָּׁנָה"]],
+    englishTokens: ["The agreement", "is valid", "until", "the end", "of the year"],
+    hebrewDistractorPairs: [["החוזה", "הַחוֹזֶה"], ["פג", "פָּג"], ["מאז", "מֵאָז"], ["תחילת", "תְּחִילַּת"], ["החודש", "הַחוֹדֶשׁ"]],
+    englishDistractors: ["The contract", "expired", "since", "the start", "of the month"],
+    notes: "בתוקף is 'in force'; פג תוקף is what happens when it stops being so."
+  }),
+  buildReviewedSentence({
+    id: "professional_101", emoji: "⚖️", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "הפרת החוזה תגרור קנס.", hebrewNiqqud: "הֲפָרַת הַחוֹזֶה תִּגְרוֹר קְנָס.",
+    english: "A breach of the contract will incur a fine.",
+    hebrewTokenPairs: [["הפרת", "הֲפָרַת"], ["החוזה", "הַחוֹזֶה"], ["תגרור", "תִּגְרוֹר"], ["קנס", "קְנָס"]],
+    englishTokens: ["A breach", "of the contract", "will incur", "a fine"],
+    hebrewDistractorPairs: [["חתימת", "חֲתִימַת"], ["המסמך", "הַמִּסְמָךְ"], ["תמנע", "תִּמְנַע"], ["עיכוב", "עִיכּוּב"]],
+    englishDistractors: ["A signing", "of the document", "will prevent", "a delay"],
+    notes: "לגרור is 'to drag'; in legal register it is what a breach brings after it."
+  }),
+  buildReviewedSentence({
+    id: "professional_102", emoji: "📎", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "צירפנו נספח חדש להסכם.", hebrewNiqqud: "צֵירַפְנוּ נִסְפָּח חָדָשׁ לַהֶסְכֵּם.",
+    english: "We attached a new appendix to the agreement.",
+    hebrewTokenPairs: [["צירפנו", "צֵירַפְנוּ"], ["נספח", "נִסְפָּח"], ["חדש", "חָדָשׁ"], ["להסכם", "לַהֶסְכֵּם"]],
+    englishTokens: ["We attached", "a new", "appendix", "to the agreement"],
+    hebrewDistractorPairs: [["ביטלנו", "בִּיטַּלְנוּ"], ["סעיף", "סָעִיף"], ["ישן", "יָשָׁן"], ["לחוזה", "לַחוֹזֶה"]],
+    englishDistractors: ["We cancelled", "an old", "clause", "to the contract"],
+    notes: "נספח is an appendix to a document; the same root gives צירף, to attach."
+  }),
+  buildReviewedSentence({
+    id: "professional_103", emoji: "📊", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "הרגולציה מחייבת דיווח רבעוני.", hebrewNiqqud: "הָרֶגוּלַצְיָה מְחַיֶּיבֶת דִּיוּוּחַ רִבְעוֹנִי.",
+    english: "The regulation requires quarterly reporting.",
+    hebrewTokenPairs: [["הרגולציה", "הָרֶגוּלַצְיָה"], ["מחייבת", "מְחַיֶּיבֶת"], ["דיווח", "דִּיוּוּחַ"], ["רבעוני", "רִבְעוֹנִי"]],
+    englishTokens: ["The regulation", "requires", "quarterly", "reporting"],
+    hebrewDistractorPairs: [["ההנהלה", "הַהַנְהָלָה"], ["אוסרת", "אוֹסֶרֶת"], ["פרסום", "פִּרְסוּם"], ["חודשי", "חוֹדְשִׁי"]],
+    englishDistractors: ["The management", "forbids", "monthly", "publication"],
+    notes: "מחייב is 'obliges' — the regulation is the subject doing the obliging."
+  }),
+  buildReviewedSentence({
+    id: "professional_104", emoji: "🔍", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "המבקר בדק את הדוח לפני האישור.", hebrewNiqqud: "הַמְּבַקֵּר בָּדַק אֶת הַדּוּחַ לִפְנֵי הָאִישּׁוּר.",
+    english: "The auditor checked the report before the approval.",
+    hebrewTokenPairs: [["המבקר", "הַמְּבַקֵּר"], ["בדק", "בָּדַק"], ["את הדוח", "אֶת הַדּוּחַ"], ["לפני", "לִפְנֵי"], ["האישור", "הָאִישּׁוּר"]],
+    englishTokens: ["The auditor", "checked", "the report", "before", "the approval"],
+    hebrewDistractorPairs: [["היועץ", "הַיּוֹעֵץ"], ["כתב", "כָּתַב"], ["את הסיכום", "אֶת הַסִּיכּוּם"], ["אחרי", "אַחֲרֵי"], ["הפגישה", "הַפְּגִישָׁה"]],
+    englishDistractors: ["The consultant", "wrote", "the summary", "after", "the meeting"],
+    notes: "מבקר is an auditor here; the same word is a critic in Inat's register."
+  }),
+  buildReviewedSentence({
+    id: "professional_105", emoji: "🗂️", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "איזה היתר צריך מהרשות?", hebrewNiqqud: "אֵיזֶה הֶיתֵּר צָרִיךְ מֵהָרָשׁוּת?",
+    english: "Which permit is needed from the authority?",
+    hebrewTokenPairs: [["איזה", "אֵיזֶה"], ["היתר", "הֶיתֵּר"], ["צריך", "צָרִיךְ"], ["מהרשות", "מֵהָרָשׁוּת"]],
+    englishTokens: ["Which", "permit", "is needed", "from the authority"],
+    hebrewDistractorPairs: [["כמה", "כַּמָּה"], ["רישיונות", "רִישְׁיוֹנוֹת"], ["חסר", "חָסֵר"], ["מהעירייה", "מֵהָעִירִיָּיה"]],
+    englishDistractors: ["How many", "licences", "is missing", "from the municipality"],
+    notes: "היתר is a one-off permission; רישיון is a licence you hold and renew."
+  }),
+  buildReviewedSentence({
+    id: "professional_106", emoji: "⏳", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "מתי הוגש הדוח לרשות?", hebrewNiqqud: "מָתַי הוּגַּשׁ הַדּוּחַ לָרָשׁוּת?",
+    english: "When was the report submitted to the authority?",
+    hebrewTokenPairs: [["מתי", "מָתַי"], ["הוגש", "הוּגַּשׁ"], ["הדוח", "הַדּוּחַ"], ["לרשות", "לָרָשׁוּת"]],
+    englishTokens: ["When", "was the report", "submitted", "to the authority"],
+    hebrewDistractorPairs: [["למה", "לָמָּה"], ["נדחה", "נִדְחָה"], ["הטופס", "הַטּוֹפֶס"], ["לוועדה", "לַוַּעֲדָה"]],
+    englishDistractors: ["Why", "was the form", "rejected", "to the committee"],
+    notes: "הוגש is the passive of להגיש — the verb a form, a tender, or a report runs on."
+  }),
+  buildReviewedSentence({
+    id: "professional_107", emoji: "🧩", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "הטיעון סותר את הנחת היסוד.", hebrewNiqqud: "הַטִּיעוּן סוֹתֵר אֶת הַנָּחַת הַיְסוֹד.",
+    english: "The argument contradicts the premise.",
+    hebrewTokenPairs: [["הטיעון", "הַטִּיעוּן"], ["סותר", "סוֹתֵר"], ["את הנחת היסוד", "אֶת הַנָּחַת הַיְסוֹד"]],
+    englishTokens: ["The argument", "contradicts", "the premise"],
+    hebrewDistractorPairs: [["המסקנה", "הַמַּסְקָנָה"], ["מחזקת", "מְחַזֶּקֶת"], ["את הטענה", "אֶת הַטַּעֲנָה"], ["את הדוגמה", "אֶת הַדֻּגְמָה"]],
+    englishDistractors: ["The conclusion", "strengthens", "the claim", "the example"],
+    notes: "הנחת יסוד is the premise you argue from; מסקנה is where you arrive."
+  }),
+  buildReviewedSentence({
+    id: "professional_108", emoji: "📈", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "מתאם אינו מעיד על סיבתיות.", hebrewNiqqud: "מִתְאָם אֵינוֹ מֵעִיד עַל סִיבָּתִיּוּת.",
+    english: "Correlation does not indicate causation.",
+    hebrewTokenPairs: [["מתאם", "מִתְאָם"], ["אינו", "אֵינוֹ"], ["מעיד", "מֵעִיד"], ["על סיבתיות", "עַל סִיבָּתִיּוּת"]],
+    englishTokens: ["Correlation", "does not", "indicate", "causation"],
+    hebrewDistractorPairs: [["ניסוי", "נִיסּוּי"], ["תמיד", "תָּמִיד"], ["מוכיח", "מוֹכִיחַ"], ["על תוצאה", "עַל תּוֹצָאָה"]],
+    englishDistractors: ["An experiment", "always", "proves", "a result"],
+    notes: "מתאם is the statistical sense; the everyday מתאם is a coordinator."
+  }),
+  buildReviewedSentence({
+    id: "professional_109", emoji: "🔬", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "יש דוגמה נגדית לכלל הזה.", hebrewNiqqud: "יֵשׁ דֻּגְמָה נֶגְדִּית לַכְּלָל הַזֶּה.",
+    english: "There is a counter-example to this rule.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["דוגמה נגדית", "דֻּגְמָה נֶגְדִּית"], ["לכלל", "לַכְּלָל"], ["הזה", "הַזֶּה"]],
+    englishTokens: ["There is", "a counter-example", "to this", "rule"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["הסבר", "הֶסְבֵּר"], ["לחוק", "לַחוֹק"], ["ההוא", "הַהוּא"]],
+    englishDistractors: ["There isn't", "an explanation", "to that", "law"],
+    notes: "כלל is a rule or a generalization; חוק is a law of the state or of nature."
+  }),
+  buildReviewedSentence({
+    id: "professional_110", emoji: "🧮", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "הנתונים אינם מוכיחים את הטענה.", hebrewNiqqud: "הַנְּתוּנִים אֵינָם מוֹכִיחִים אֶת הַטַּעֲנָה.",
+    english: "The data do not prove the claim.",
+    hebrewTokenPairs: [["הנתונים", "הַנְּתוּנִים"], ["אינם", "אֵינָם"], ["מוכיחים", "מוֹכִיחִים"], ["את הטענה", "אֶת הַטַּעֲנָה"]],
+    englishTokens: ["The data", "do not", "prove", "the claim"],
+    hebrewDistractorPairs: [["המספרים", "הַמִּסְפָּרִים"], ["תמיד", "תָּמִיד"], ["מסבירים", "מַסְבִּירִים"], ["את התוצאה", "אֶת הַתּוֹצָאָה"]],
+    englishDistractors: ["The numbers", "always", "explain", "the result"],
+    notes: "אינם is the formal negator for a plural subject; לא נתונים would be wrong here."
+  }),
+  buildReviewedSentence({
+    id: "professional_111", emoji: "🏤", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "שילמתי את האגרה בדואר.", hebrewNiqqud: "שִׁילַּמְתִּי אֶת הָאַגְרָה בַּדּוֹאַר.",
+    english: "I paid the fee at the post office.",
+    hebrewTokenPairs: [["שילמתי", "שִׁילַּמְתִּי"], ["את האגרה", "אֶת הָאַגְרָה"], ["בדואר", "בַּדּוֹאַר"]],
+    englishTokens: ["I paid", "the fee", "at the post office"],
+    hebrewDistractorPairs: [["ביקשתי", "בִּיקַּשְׁתִּי"], ["את הטופס", "אֶת הַטּוֹפֶס"], ["בבנק", "בַּבַּנְק"], ["בעירייה", "בָּעִירִיָּיה"]],
+    englishDistractors: ["I requested", "the form", "at the bank", "at the municipality"],
+    notes: "אגרה is a statutory fee to an authority; עמלה is a commercial commission."
+  }),
+  buildReviewedSentence({
+    id: "professional_112", emoji: "🎫", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "זימנתי תור ברשות המסים.", hebrewNiqqud: "זִימַּנְתִּי תּוֹר בְּרָשׁוּת הַמִּיסִּים.",
+    english: "I booked an appointment at the tax authority.",
+    hebrewTokenPairs: [["זימנתי", "זִימַּנְתִּי"], ["תור", "תּוֹר"], ["ברשות המסים", "בְּרָשׁוּת הַמִּיסִּים"]],
+    englishTokens: ["I booked", "an appointment", "at the tax authority"],
+    hebrewDistractorPairs: [["ביטלתי", "בִּיטַּלְתִּי"], ["פגישה", "פְּגִישָׁה"], ["בבנק", "בַּבַּנְק"], ["במשרד", "בַּמִּשְׂרָד"]],
+    englishDistractors: ["I cancelled", "a meeting", "at the bank", "at the office"],
+    notes: "תור is both the queue and the slot you book in it."
+  }),
+  buildReviewedSentence({
+    id: "professional_113", emoji: "↩️", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "הטופס חזר בגלל שדה חסר.", hebrewNiqqud: "הַטּוֹפֶס חָזַר בִּגְלַל שָׂדֶה חָסֵר.",
+    english: "The form returned because of a missing field.",
+    hebrewTokenPairs: [["הטופס", "הַטּוֹפֶס"], ["חזר", "חָזַר"], ["בגלל", "בִּגְלַל"], ["שדה חסר", "שָׂדֶה חָסֵר"]],
+    englishTokens: ["The form", "returned", "because of", "a missing field"],
+    hebrewDistractorPairs: [["המכתב", "הַמִּכְתָּב"], ["נשלח", "נִשְׁלַח"], ["למרות", "לַמְרוֹת"], ["חתימה", "חֲתִימָה"]],
+    englishDistractors: ["The letter", "was sent", "despite", "a signature"],
+    notes: "שדה is a field on a form as well as a field of land."
+  }),
+  buildReviewedSentence({
+    id: "professional_114", emoji: "🖊️", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "מי חתום על ייפוי הכוח?", hebrewNiqqud: "מִי חָתוּם עַל יִיפּוּי הַכּוֹחַ?",
+    english: "Who signed the power of attorney?",
+    hebrewTokenPairs: [["מי", "מִי"], ["חתום על", "חָתוּם עַל"], ["ייפוי הכוח", "יִיפּוּי הַכּוֹחַ"]],
+    englishTokens: ["Who", "signed", "the power of attorney"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["אחראי על", "אַחְרָאִי עַל"], ["רישיון העסק", "רִישָׁיוֹן הָעֵסֶק"], ["ההסכם", "הַהֶסְכֵּם"]],
+    englishDistractors: ["When", "is responsible", "the business licence", "the agreement"],
+    notes: "חתום על is the state of having signed; חתם is the act."
+  }),
+  buildReviewedSentence({
+    id: "professional_115", emoji: "📐", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "המפרט הטכני נשלח לספק.", hebrewNiqqud: "הַמִּפְרָט הַטֶּכְנִי נִשְׁלַח לַסַּפָּק.",
+    english: "The technical specification was sent to the supplier.",
+    hebrewTokenPairs: [["המפרט הטכני", "הַמִּפְרָט הַטֶּכְנִי"], ["נשלח", "נִשְׁלַח"], ["לספק", "לַסַּפָּק"]],
+    englishTokens: ["The technical specification", "was sent", "to the supplier"],
+    hebrewDistractorPairs: [["ההצעה", "הַהַצָּעָה"], ["הוחזרה", "הוּחְזְרָה"], ["למפעל", "לַמִּפְעָל"], ["לקבלן", "לַקַּבְּלָן"]],
+    englishDistractors: ["The proposal", "was returned", "to the factory", "to the contractor"],
+    notes: "מפרט is the spec document; the root also gives פירוט, itemized detail."
+  }),
+  buildReviewedSentence({
+    id: "professional_116", emoji: "🏗️", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "קבלן המשנה עמד באבן הדרך.", hebrewNiqqud: "קַבְּלָן הַמִּשְׁנֶה עָמַד בְּאֶבֶן הַדֶּרֶךְ.",
+    english: "The subcontractor met the milestone.",
+    hebrewTokenPairs: [["קבלן המשנה", "קַבְּלָן הַמִּשְׁנֶה"], ["עמד", "עָמַד"], ["באבן הדרך", "בְּאֶבֶן הַדֶּרֶךְ"]],
+    englishTokens: ["The subcontractor", "met", "the milestone"],
+    hebrewDistractorPairs: [["הספק המאושר", "הַסַּפָּק הַמְּאוּשָּׁר"], ["איחר", "אִיחֵר"], ["בתשלום", "בַּתַּשְׁלוּם"], ["בבדיקה", "בַּבְּדִיקָה"]],
+    englishDistractors: ["The approved supplier", "was late", "in the payment", "in the inspection"],
+    notes: "לעמוד ב is 'to meet' an obligation — the same verb as standing."
+  }),
+  buildReviewedSentence({
+    id: "professional_117", emoji: "🛃", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "רישיון הייצוא עוד לא אושר.", hebrewNiqqud: "רִישָׁיוֹן הַיִּיצוּא עוֹד לֹא אוּשַּׁר.",
+    english: "The export licence has not been approved yet.",
+    hebrewTokenPairs: [["רישיון הייצוא", "רִישָׁיוֹן הַיִּיצוּא"], ["עוד", "עוֹד"], ["לא", "לֹא"], ["אושר", "אוּשַּׁר"]],
+    englishTokens: ["The export licence", "has not", "been approved", "yet"],
+    hebrewDistractorPairs: [["בקרת האיכות", "בַּקָּרַת הָאֵיכוּת"], ["בינתיים", "בֵּינְתַיִים"], ["הסתיימה", "הִסְתַּיְּימָה"], ["אתמול", "אֶתְמוֹל"]],
+    englishDistractors: ["The quality control", "meanwhile", "was finished", "yesterday"],
+    notes: "ייצוא is export, ייבוא is import — one letter apart and easy to swap."
+  }),
+  buildReviewedSentence({
+    id: "professional_118", emoji: "🧾", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "קיבלתי את תלוש השכר בזמן.", hebrewNiqqud: "קִיבַּלְתִּי אֶת תְּלוּשׁ הַשָּׂכָר בַּזְּמַן.",
+    english: "I received the payslip on time.",
+    hebrewTokenPairs: [["קיבלתי", "קִיבַּלְתִּי"], ["את תלוש השכר", "אֶת תְּלוּשׁ הַשָּׂכָר"], ["בזמן", "בַּזְּמַן"]],
+    englishTokens: ["I received", "the payslip", "on time"],
+    hebrewDistractorPairs: [["שלחתי", "שָׁלַחְתִּי"], ["את החוזה", "אֶת הַחוֹזֶה"], ["באיחור", "בְּאִיחוּר"], ["מחר", "מָחָר"]],
+    englishDistractors: ["I sent", "the contract", "late", "tomorrow"],
+    notes: "תלוש שכר is the payslip; שכר is the wage itself."
+  }),
+  buildReviewedSentence({
+    id: "professional_119", emoji: "📋", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "תקופת הניסיון נמשכת חצי שנה.", hebrewNiqqud: "תְּקוּפַת הַנִּיסָּיוֹן נִמְשֶׁכֶת חֲצִי שָׁנָה.",
+    english: "The probation period lasts half a year.",
+    hebrewTokenPairs: [["תקופת הניסיון", "תְּקוּפַת הַנִּיסָּיוֹן"], ["נמשכת", "נִמְשֶׁכֶת"], ["חצי", "חֲצִי"], ["שנה", "שָׁנָה"]],
+    englishTokens: ["The probation period", "lasts", "half", "a year"],
+    hebrewDistractorPairs: [["הודעה מוקדמת", "הוֹדָעָה מוּקְדֶּמֶת"], ["מסתיימת", "מִסְתַּיֶּימֶת"], ["רבע", "רֶבַע"], ["חודש", "חוֹדֶשׁ"]],
+    englishDistractors: ["The notice period", "ends", "a quarter", "a month"],
+    notes: "ניסיון is both a trial period and experience — context separates them."
+  }),
+  buildReviewedSentence({
+    id: "professional_120", emoji: "🕵️", category: "professional", difficulty: 3,
+    wordOrderDecision: "fixed",
+    hebrew: "בדיקת הנאותות חשפה סיכון.", hebrewNiqqud: "בְּדִיקַת הַנָּאוּתוּת חָשְׂפָה סִיכּוּן.",
+    english: "The due diligence revealed a risk.",
+    hebrewTokenPairs: [["בדיקת הנאותות", "בְּדִיקַת הַנָּאוּתוּת"], ["חשפה", "חָשְׂפָה"], ["סיכון", "סִיכּוּן"]],
+    englishTokens: ["The due diligence", "revealed", "a risk"],
+    hebrewDistractorPairs: [["הישיבה", "הַיְשִׁיבָה"], ["הסתירה", "הִסְתִּירָה"], ["הזדמנות", "הִזְדַּמְּנוּת"], ["בעיה", "בְּעָיָה"]],
+    englishDistractors: ["The meeting", "concealed", "an opportunity", "a problem"],
+    notes: "בדיקת נאותות is the fixed Hebrew for due diligence, literally a propriety check."
+  }),
+  buildReviewedSentence({
+    id: "professional_121", emoji: "💵", category: "professional", difficulty: 2,
+    wordOrderDecision: "fixed",
+    hebrew: "תזרים המזומנים השתפר ברבעון.", hebrewNiqqud: "תַּזְרִים הַמְּזוּמָּנִים הִשְׁתַּפֵּר בָּרִבְעוֹן.",
+    english: "The cash flow improved in the quarter.",
+    hebrewTokenPairs: [["תזרים המזומנים", "תַּזְרִים הַמְּזוּמָּנִים"], ["השתפר", "הִשְׁתַּפֵּר"], ["ברבעון", "בָּרִבְעוֹן"]],
+    englishTokens: ["The cash flow", "improved", "in the quarter"],
+    hebrewDistractorPairs: [["הריבית", "הָרִיבִּית"], ["ירדה", "יָרְדָה"], ["בשנה", "בַּשָּׁנָה"], ["בחודש", "בַּחוֹדֶשׁ"]],
+    englishDistractors: ["The interest", "dropped", "in the year", "in the month"],
+    notes: "תזרים מזומנים is cash flow; מזומן on its own is cash in hand."
+  }),
+  buildReviewedSentence({
+    id: "professional_122", emoji: "🗒️", category: "professional", difficulty: 1,
+    wordOrderDecision: "fixed",
+    hebrew: "מי כותב את הפרוטוקול?", hebrewNiqqud: "מִי כּוֹתֵב אֶת הַפְּרוֹטוֹקוֹל?",
+    english: "Who is writing the minutes?",
+    hebrewTokenPairs: [["מי", "מִי"], ["כותב", "כּוֹתֵב"], ["את הפרוטוקול", "אֶת הַפְּרוֹטוֹקוֹל"]],
+    englishTokens: ["Who", "is writing", "the minutes"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["מאשר", "מְאַשֵּׁר"], ["את הסיכום", "אֶת הַסִּיכּוּם"], ["את ההחלטה", "אֶת הַהַחְלָטָה"]],
+    englishDistractors: ["When", "approves", "the summary", "the decision"],
+    notes: "פרוטוקול is the formal minutes; סיכום is the informal write-up after a meeting."
+  }),
 ];
 
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
   ...IDAN_SENTENCES,
+  ...IVRI_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -16142,6 +16711,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260802h",
+  __build: "20260807b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

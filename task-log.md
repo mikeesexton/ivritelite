@@ -5,6 +5,28 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-07 17:55 EDT — Sentence tranches for Idan and Ivri, and a correction to the fence
+
+**Requested:** Write and then execute a plan for the new Idan and Ivri sentences — the two holes the withholding layer opened earlier the same day.
+
+**Files changed:**
+- `sentence-bank-data.js` — 50 new rows, all via `buildReviewedSentence` below the append-only marker. `idan_91`–`115` appended inside `IDAN_SENTENCES`: twenty cast-wide rows each anchored on a `civil_defense_safety` card that had **no** sentence support (49 of the shelf's 70 cards had none), plus five that stay fenced on the alarming tier and stay terminology rather than tactics (זמן התרעה, הפוגה, כוחות ההצלה, פרמדיק, מפונה). Six of the twenty are questions and two are conditionals — the first 90 `idan_` rows contained not one question mark. New `IVRI_SENTENCES` const holding `professional_98`–`122`, added to the `SENTENCE_BANK.push(...)` block, against the clusters his bank had at or near zero: contracts (5), regulation and compliance (4), formal logic (4), bureaucracy beyond the tender (4), defence as an industry (3), employment terms (2), capital structure (2), the meeting record (1). `__build` bumped to `20260807b`.
+- `app/character-data.js` — `CAST_WIDE_SENTENCE_IDS` 21 → 43: the twenty new mild rows plus `idan_26` and `idan_58`, un-fenced because neither carries an alarming word (helping a neighbour downstairs; the shelter key being with the building committee). Inat's `route.sentenceReserveIds` 34 → 46: the twelve charged rows the first pass missed.
+- `tests/sentence-bank-data.test.js` — `IDAN_ENTRY_IDS` widened to 1–115; new `IVRI_ENTRY_IDS` for `professional_98`–`122`, spread into the alignment array so the new rows are actually checked rather than silently skipping the niqqud, distractor-budget, duplicate and target-reuse checks. Entry-count literals 717 → 767, category histogram `everyday` 284 → 309 and `professional` 113 → 138. 31 additions to `COMPACT_ENGLISH_MULTIWORD_UNITS`, every one a term of art used by exactly one of the new rows.
+- `docs/character-gameplay-strategy.md` — Depth-standard table, Idan's and Ivri's and Inat's ledger entries, and the priority list under "Next decisions" with items 1 and 2 struck. Two stale figures corrected.
+- `index.html` — `?v=20260807b` for `sentence-bank-data.js` and `app/character-data.js`.
+
+**Behavior changed:** Idan's sentences 90 → 115 owned, all drawable; the cast-wide allow-list 21 → 43, so the other four regain a real shared civil-defense register instead of the 21 rows they were left with. Ivri's 113 → 138 owned and 127 drawable. Inat's 132 → 162. Every character's drawable sentence pool rose: Ido 521 → 556, Inbal 589 → 624, Ivri 509 → 544, Inat 572 → 619, Idan 562 → 600. Twelve charged rows that were still cast-wide — police-brutality documentation, coalition polling, tax distribution, Shabbat transport, an assassination and its political consequences — are now Inat's alone. Handwriting eligibility for `professional_` went 53/97 → 78/122; Idan stays 115/115.
+
+**Tests run:**
+- `npm test` — **380 pass, 0 fail**, before and after (baseline recorded at the start of the session; the new rows add no new test cases, they widen existing ones).
+- `node --test tests/sentence-bank-data.test.js` — 40 pass, run after each tranche in isolation.
+- `npm run report:characters` — before/after recorded above; spread narrowed 1.9x → 1.8x.
+- Authoring was validated against a scratch checker for the mechanical constraints (chip width, bilingual parity, distractor budget, frame tiling, skeleton parity, niqqud mechanics, letter window) before the suite was run, which is what caught two genuine bugs: a distractor in `idan_99` that reused a target chip, and `idan_111` English tokens that did not tile the sentence in order.
+- Browser walkthrough on `npm start` — see the verification note below.
+
+**Risks / regressions to check:** The twelve-row miss is the thing to learn from — the first pass treated `professional_74`–`84` as a contiguous block and skipped `76`, `78` and `79` inside it, so a tranche must be triaged row by row rather than by id range. Six rows from that same tranche stay shared deliberately (`colloquial_145`, `146`, `everyday_132`, `133`, `134`, `professional_73`) and are recorded in the doc so a later sweep does not take them. Ivri's defence rows are the boundary most likely to drift: they must stay procurement and engineering framing and must never reach for the fenced military vocabulary. The 31 glossary additions are each used exactly once, and the registry is checked for exactness, so rewording any of those chips will fail the staleness assertion until the entry is removed too.
+
 ### 2026-08-07 11:36 EDT — Withhold strongly character-coded content from other characters
 
 **Requested:** Hew each character's game content, especially sentences, closer to the character, without shrinking pools into repetitiveness. Everyday-register words and sentences are fine in anyone's pool; what must stop is content strongly coded to one character being served in another's game. Inat's political register in other characters' games reads as gauche, and anything remotely triggering — azaka, injury, explosion — should be limited to Idan. Second half of the request: should we build more content per character, and who is the priority?

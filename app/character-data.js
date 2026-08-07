@@ -596,6 +596,7 @@ const CAST_WIDE_SENTENCE_IDS = Object.freeze([
   "idan_10", // the guidelines are updated all the time
   "idan_11", // no protected space in the building, the shelter is in the yard
   "idan_14", // an emergency bag with water and medicine
+  "idan_26", // helping the neighbour downstairs — no alarming word in the row
   "idan_37", // a fire drill at the office
   "idan_40", // crossing at a crosswalk
   "idan_41", // a helmet on a site
@@ -611,7 +612,32 @@ const CAST_WIDE_SENTENCE_IDS = Object.freeze([
   "idan_54", // a security check at the mall entrance
   "idan_55", // the guard asked to open the bag
   "idan_56", // installing the Home Front Command app
+  "idan_58", // the shelter key is with the building committee — idan_11's twin
   "idan_60", // checking the safe room monthly
+  // The tranche authored to carry the cast-wide `civil_defense_safety` shelf,
+  // which had sentence support from only 21 rows for 70 cards. Each one is
+  // anchored on a card that had none. Same register as the rows above: standing
+  // rules and static infrastructure, never an event.
+  "idan_91", // the safety instructions are posted at the entrance
+  "idan_92", // reporting a safety hazard to the municipality
+  "idan_93", // the light in the stairwell
+  "idan_94", // the storeroom in the basement
+  "idan_95", // the emergency hotline number on the fridge
+  "idan_96", // the municipality published a public announcement
+  "idan_97", // a portable radio in the drawer
+  "idan_98", // testing the smoke detector once a year
+  "idan_99", // the fire service number
+  "idan_100", // a road closure because of works
+  "idan_101", // an identity check at reception
+  "idan_102", // a metal detector at the entrance
+  "idan_103", // what is in the emergency supplies cupboard
+  "idan_104", // where the reinforced room is in the flat
+  "idan_105", // keeping a safe distance from the car in front
+  "idan_106", // emergency preparedness starts at home
+  "idan_107", // civil defense as a system
+  "idan_108", // the support line is open around the clock
+  "idan_109", // there is a street shelter at the corner
+  "idan_110", // a defense drill at the school
 ]);
 
 // Keyed by kind so the audience rule needs no per-kind branch. Only sentences
@@ -922,15 +948,18 @@ characterData.characters = characterData.characters || Object.freeze({
       // are already hers through the category and are listed so the fence is
       // stated rather than inferred.
       sentenceReserveIds: Object.freeze([
-        "colloquial_140", "colloquial_142", "colloquial_144", "colloquial_147",
-        "colloquial_148", "colloquial_151",
-        "everyday_126", "everyday_127", "everyday_128", "everyday_129",
-        "everyday_130", "everyday_131",
-        "professional_74", "professional_75", "professional_77", "professional_80",
-        "professional_81", "professional_82", "professional_83", "professional_84",
+        "colloquial_140", "colloquial_141", "colloquial_142", "colloquial_143",
+        "colloquial_144", "colloquial_147", "colloquial_148", "colloquial_149",
+        "colloquial_150", "colloquial_151",
+        "everyday_125", "everyday_126", "everyday_127", "everyday_128",
+        "everyday_129", "everyday_130", "everyday_131", "everyday_135",
+        "everyday_136",
+        "professional_74", "professional_75", "professional_76", "professional_77",
+        "professional_78", "professional_79", "professional_80", "professional_81",
+        "professional_82", "professional_83", "professional_84",
         "formal_64", "formal_65", "formal_66", "formal_67", "formal_68",
         "formal_69", "formal_70", "formal_71", "formal_72", "formal_73",
-        "formal_74", "formal_75", "formal_86", "formal_87",
+        "formal_74", "formal_75", "formal_76", "formal_77", "formal_86", "formal_87",
       ]),
       // Shared with Ivri on purpose: the bucket mixes his corporate and
       // regulatory acronyms with her parties, courts, and rights bodies, and the
