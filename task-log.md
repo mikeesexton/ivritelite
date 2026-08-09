@@ -7148,3 +7148,16 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** Baseline `npm test` — **380 pass, 0 fail**. Final `npm test` — **387 pass, 0 fail, 0 cancelled**, including sentence authoring, vocabulary uniqueness/id stability, conjugation form alignment, Binyan semantics, character routing, and rendered gameplay layout. Focused `node --test tests/sentence-bank-data.test.js` — **40 pass, 0 fail**. Focused `node --test tests/vocab-data.test.js tests/content-coverage.test.js tests/hebrew-verbs.test.js` — **66 pass, 0 fail** before the final coverage assertion was added; subsequent full suite covers it. `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail** at the required 360×640 floor. `npm run report:coverage` and `npm run report:characters` — **pass** with the totals above. `git diff --check` — **pass**.
 
 **Risks / regressions to check:** Character-owned sentence counts are measurably closer for Ivri and Inat and each character received the same five-row cast tranche, but the inherited bank is still uneven: Inbal (101) and Idan (120) remain below Ido (207). The new coverage report makes the next catch-up tranche explicit rather than guessing, and its reviewed-alias table is intentionally empty until an inflected or construct-state match is manually justified. Technology verbs intentionally remain available in Conjugation and sentence hints but are hidden from Translation Match when an identical dedicated vocabulary card would otherwise produce a duplicate. The smartphone interface vocabulary follows the official Hebrew terminology reviewed during the preceding planning audit, but platform labels can evolve and should be rechecked when Apple or Android changes Hebrew UI copy.
+
+### 2026-08-08 22:10 EDT — Publish and merge the content expansion
+
+**Requested:** Push the completed cast and technology content expansion to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded the publication workflow. The content itself was committed as `c564498` on `agent/expand-game-content` and opened as ready PR #62 targeting `main`.
+
+**Behavior changed:** The previously verified content expansion is published through GitHub PR #62 and merged into the repository's default branch. No additional runtime behavior was changed during publication.
+
+**Tests run:** The publication used the immediately preceding final `npm test` result — **387 pass, 0 fail, 0 cancelled** — plus the standalone rendered 360×640 layout regression (**1 pass, 0 fail**), both coverage reports, and `git diff --check` (**pass**). GitHub reported the PR mergeable with no required status checks configured.
+
+**Risks / regressions to check:** None specific to publication. The feature-level follow-ups and remaining character-content imbalance are recorded in the implementation entry directly above.
