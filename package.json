@@ -5,6 +5,7 @@
     "start": "python3 -m http.server 3000 --bind 0.0.0.0",
     "test": "node --test",
     "sprites:build": "python scripts/build-approved-sprites.py",
+    "sprites:clean-edges": "python scripts/clean-sprite-edges.py",
     "sprites:audit": "python scripts/audit-sprites.py",
     "report:characters": "node ./scripts/character-content-report.js",
     "migrate:verbs": "node ./migrate-hebrew-verbs.mjs"
