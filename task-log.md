@@ -7190,3 +7190,155 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** The publication used the immediately preceding final `npm test` result — **387 pass, 0 fail, 0 cancelled** — plus the passing deterministic sprite audit, focused sprite-lock test (**2 pass, 0 fail**), alpha-mask comparison, 512px visual review, and `git diff --check` (**pass**).
 
 **Risks / regressions to check:** None specific to publication. The expression-level small-rendering consideration remains recorded in the artwork entry directly above.
+
+### 2026-08-09 09:18 EDT — Accept duration-final wording for colloquial_72
+
+**Requested:** Mark the pictured English answer “You went on and on at me about your new diet for an hour.” as correct for the Hebrew sentence חפרת לי שעה על הדיאטה החדשה שלך.
+
+**Files changed:**
+- `sentence-bank-data.js` — added the requested duration-final English order as an authored six-chip alternate for `colloquial_72`, updated the teaching note, and advanced the data build key to `20260809a`.
+- `tests/sentence-bank-data.test.js` — pinned the exact alternate wording, chip order, and chip-count alignment.
+- `tests/app-progress.test.js` — added an end-to-end grading regression that builds the pictured answer from the real sentence data and verifies it is marked correct.
+- `index.html` — advanced the sentence-bank cache key so browsers fetch the corrected data.
+- `task-log.md` — recorded this task.
+
+**Behavior changed:** Sentence Builder now accepts both “You went on and on at me for an hour about your new diet.” and “You went on and on at me about your new diet for an hour.” for `colloquial_72`; the latter was previously marked incorrect.
+
+**Tests run:**
+- Baseline `npm test` — **387 pass, 0 fail**.
+- `node --test --test-name-pattern='colloquial_72 accepts the English duration after the topic' tests/sentence-bank-data.test.js` — **1 pass, 0 fail**.
+- `node --test --test-name-pattern="sentence builder marks colloquial_72's duration-final English wording correct" tests/app-progress.test.js` — **1 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — **41 pass, 0 fail**.
+- Final `npm test` — **389 pass, 0 fail, 0 cancelled**, including the rendered 360×640 gameplay layout regression.
+- `git diff --check` — **pass** before the task-log entry.
+
+**Risks / regressions to check:** Low risk: this is an exact per-sentence alternate using the existing six answer chips, so it does not broaden grading elsewhere or alter the tile pool. A browser with the prior cached sentence data must load the new `20260809a` cache key; `index.html` now requests it.
+
+### 2026-08-09 09:36 EDT — Redo Ido's neutral smile and remove facial artifacts
+
+**Requested:** Redo Ido's neutral smile because the prior mouth sat unnaturally high with turned-up ends, and remove a black chin blotch on the viewer's right plus a small white patch beyond the jaw on the viewer's left.
+
+**Files changed:**
+- `assets/sprite-masters/ido/neutral-transparent.png` — rebuilt the neutral expression from the clean pre-smile master, preserving the original 1254×1254 alpha silhouette and restricting RGB changes to the mouth-area box `(524, 532, 681, 581)`; the mouth is lower and restrained, and both reported chin/jaw artifacts are absent.
+- `assets/ido/neutral.png` — deterministically rebuilt the 512×512 runtime sprite, including the existing shirt logo.
+- `assets/sprite-lock.json` — intentionally refreshed hashes and measured sprite metadata for the approved neutral master/runtime pair.
+- `styles.css` and `index.html` — advanced the stylesheet and sprite cache key from `20260808a` to `20260809a` so browsers request the corrected art.
+- `tests/character-mission.test.js` — advanced the pinned sprite/cache-key expectation to `20260809a`.
+- `task-log.md` — recorded this task.
+
+**Behavior changed:** Ido's neutral/picker/greeting sprite now uses a lower, subtle closed-mouth smile with naturally tapered ends. The prior black chin blotch and stray white jaw-edge patch are gone. His identity, face angle, pose, clothing, silhouette, transparency, reaction routing, and other reaction sprites are unchanged.
+
+**Tests run:**
+- Baseline `npm test` — **389 pass, 0 fail**.
+- Initial `python scripts/audit-sprites.py` after the artwork rebuild — **expected fail** on the frozen `assets/ido/neutral.png` hash only.
+- `python scripts/audit-sprites.py --write-lock` — **pass; approved lock refreshed**.
+- Final `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 deterministic rebuilds**.
+- `node --test tests/sprite-lock.test.js` — **2 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` — **59 pass, 0 fail**.
+- Final `npm test` — **389 pass, 0 fail, 0 cancelled**.
+- Programmatic master validation — **1254×1254 RGBA, identical alpha channel and transparent corners; 5,864 RGB pixels changed only inside `(524, 532, 681, 581)` relative to the clean pre-smile master**.
+- Visual review of the 1254px master, zoomed face crop, and rebuilt 512px runtime sprite — **pass**.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** The smile is deliberately subtle so neutral remains distinct from Ido's celebrating reactions. The built-in image editor was used for the mouth design, but only its localized mouth patch was composited onto the clean original; the editor's altered background and all pixels outside that patch were discarded. The cache-key update is broad across the sprite URLs but does not change the other sprite files.
+
+### 2026-08-09 09:58 EDT — Rebuild Ido's neutral smile in the cast's pixel style
+
+**Requested:** Stop using the unnatural, barely visible or smoothly patched smile attempts and give Ido a normal, natural, clearly visible smile that matches the pixel-art construction used by the other characters.
+
+**Files changed:**
+- `assets/sprite-masters/ido/neutral-transparent.png` — replaced the prior mouth with a compact hard-edged pixel construction modeled on Inbal and Inat: one shallow continuous seam plus warm upper/lower-lip clusters, with the curvature distributed across the full mouth instead of isolated upturned corner marks. The final transfer changes only sampled mouth-area pixels and preserves the alpha channel exactly.
+- `assets/ido/neutral.png` — deterministically rebuilt the 512×512 runtime sprite from the revised master through the existing nearest-neighbor builder.
+- `assets/sprite-lock.json` — intentionally refreshed the approved master/runtime hashes and derived sprite measurements.
+- `styles.css` and `index.html` — advanced the asset/stylesheet cache key to `20260809b` so clients load the revised sprite; the sentence-bank script uses the same current-day cache key.
+- `tests/character-mission.test.js` — advanced the pinned sprite and stylesheet cache-key expectations.
+- `task-log.md` — recorded this corrective artwork pass.
+
+**Behavior changed:** Ido's neutral/picker/greeting art now shows a visible closed-mouth smile at a natural lower position. The smile is formed from discrete pixel clusters like the other cast members, without a smooth oval patch, detached upturned ends, a chin blotch, or a stray jaw-edge pixel. Pose, identity, face angle, clothing, transparency, and every other reaction sprite remain unchanged.
+
+**Tests run:**
+- Baseline `npm test` — **389 pass, 0 fail**.
+- `python scripts/audit-sprites.py --write-lock` — **pass; approved sprite lock refreshed**.
+- `python scripts/audit-sprites.py` — **pass: all production sprites, tracked masters, and deterministic rebuilds verified**.
+- `node --test tests/sprite-lock.test.js tests/character-mission.test.js` — **pass**.
+- Final `npm test` — **389 pass, 0 fail, 0 cancelled**, including the rendered 360×640 gameplay layout regression.
+- Programmatic transfer validation — **0 runtime-mouth round-trip mismatches; master alpha identical; 1,463 edited master pixels confined to `(540, 535, 672, 598)` relative to the preceding neutral master**.
+- Visual review at the actual 512px runtime size and an 8× nearest-neighbor mouth crop — **pass**.
+
+**Risks / regressions to check:** The final mouth is deliberately closed rather than toothy so it stays consistent with the cast's neutral sprites. The built-in image editor was used only to explore the intended expression; its raster output was rejected. The committed asset was reconstructed deterministically from hard pixel clusters on the existing transparent master, so no generated background or smoothed facial patch remains. Recheck only if future sprite scaling stops using nearest-neighbor rendering.
+
+### 2026-08-09 10:20 EDT — Enforce Ido's neutral-mouth pixel scale
+
+**Requested:** Fully remediate the prior failure to match the cast's pixel aesthetic: rebuild Ido's neutral smile at the same native cluster scale as the other characters, use no generated-image pixels, add a hard audit gate that cannot be bypassed by refreshing the sprite lock, and document the root cause.
+
+**Files changed:**
+- `assets/sprite-masters/ido/neutral-transparent.png` — deterministically rebuilt only the mouth band from the existing transparent master. The smile now uses a 51px connected seam with a four-pixel native thickness, broad four-pixel terminal blocks, a maximum three-pixel bow, and a connected warm lower lip. The original alpha, chin, jaw, identity, pose, and clothing are unchanged.
+- `assets/ido/neutral.png` — rebuilt through the existing direct 1254→512 nearest-neighbor Ido builder.
+- `scripts/audit-sprites.py` — added a hard pre-lock-refresh Ido-neutral mouth gate over `(220, 220, 280, 242)`. It requires one connected dark component, at least 44px span, 3–5px median thickness, no more than 20% one-pixel columns, and terminal seven-column blocks at least three pixels thick. `--check-ido-neutral-mouth` runs this gate alone.
+- `tests/sprite-lock.test.js` — added a focused regression pinning the approved 51px span, 4px median/terminal thickness, zero one-pixel columns, and one connected component.
+- `assets/sprite-lock.json` — intentionally refreshed hashes, measurements, and policy text after the hard gate passed.
+- `styles.css`, `index.html`, and `tests/character-mission.test.js` — advanced the asset/stylesheet cache key to `20260809c` and updated its test expectation.
+- `task-log.md` — recorded the corrective work and root cause. Existing sentence-bank changes and their tests were preserved unchanged.
+
+**Behavior changed:** Ido's neutral/picker/greeting sprite now has a visibly smiling, closed mouth built at the cast's native pixel scale rather than as a one-pixel line. The entire mouth carries a shallow curve; there are no isolated upturned corners, antialiasing, generated skin patches, black chin blotches, or white jaw spill. Future lock refreshes refuse a return to the rejected thin-mouth construction.
+
+**Tests run:**
+- `python scripts/audit-sprites.py --check-ido-neutral-mouth` — **pass:** span 51px, median thickness 4px, one-pixel share 0, terminal minimum 4px, one dark component.
+- Direct negative invocation of `validate_ido_neutral_mouth` against the prior one-pixel candidate — **expected rejection** for disconnected dark corner/tail pixels.
+- `python scripts/audit-sprites.py --write-lock` — **pass; approved lock refreshed after the hard gate**.
+- `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 direct deterministic rebuilds**.
+- `node --test tests/sprite-lock.test.js tests/character-mission.test.js` — **62 pass, 0 fail**.
+- Final `npm test` — **390 pass, 0 fail, 0 cancelled**, including the rendered 360×640 gameplay layout regression.
+- Programmatic transfer validation — **0 deterministic runtime mismatches; master alpha identical to Git `HEAD`; 3,508 master pixels changed only inside `(554, 534, 685, 599)` relative to the prior thin master; 585 runtime pixels changed only inside `(226, 218, 279, 244)`; no changes at or below runtime y=245**.
+- Visual review — **pass** at native 512px, 8× nearest-neighbor mouth zoom, normalized 256px side-by-side with Inbal and Inat, and the app's 104px, 132px, and 160px sprite presentations.
+
+**Risks / regressions to check:** The hard gate deliberately encodes Ido's approved mouth position, dark-palette bounds, and native scale. A future intentional redesign that moves or recolors his mouth must revise the gate explicitly before the lock can be refreshed. This is the intended safeguard against technically valid but visually under-pixelated replacements.
+
+### 2026-08-09 10:38 EDT — Restore Ido neutral and reject the mouth-only workflow
+
+**Requested:** Diagnose why repeated Ido-smile attempts became less natural despite explicit feedback, reassess the remediation plan five times, stop wasting image-generation credits, restore a safe baseline, and determine whether a new thread or another generator would solve the problem.
+
+**Files changed:**
+- `assets/sprite-masters/ido/neutral-transparent.png` — restored byte-for-byte to the clean pre-smile transparent master (`be7b062d…e4134`), removing the rejected thick U-shaped mouth while retaining the previously clean chin, jaw edge, identity, pose, clothing, and alpha silhouette.
+- `assets/ido/neutral.png` — deterministically rebuilt from the restored master through the existing Ido sprite builder.
+- `assets/sprite-lock.json` — refreshed for the restored master/runtime pair after the full sprite audit passed.
+- `scripts/audit-sprites.py` and `tests/sprite-lock.test.js` — removed the rejected mouth-thickness gate and its test. The gate measured line weight but could not validate a natural smile and had encouraged optimization toward an anatomically bad U shape; both files are back to their prior tracked contents.
+- `styles.css`, `index.html`, and `tests/character-mission.test.js` — advanced the sprite/style cache key to `20260809d` so clients fetch the restored neutral sprite while preserving the existing sentence-bank cache change and tests.
+- `task-log.md` — recorded the rollback, root cause, failed preview, and verification. Earlier entries remain as historical records rather than being rewritten.
+
+**Behavior changed:** Ido's neutral/picker/greeting art is back to the clean pre-smile neutral instead of any of the rejected smile constructions. A single full-face generated expression preview was created outside the repository and rejected before promotion because it still changed essentially the mouth line without convincing cheek or lower-eyelid participation. No generated pixels enter the app. Unrelated sentence-bank alternate-answer work remains intact.
+
+**Tests run:**
+- `python scripts/audit-sprites.py --write-lock` — **pass; restored sprite lock written**.
+- `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 direct deterministic rebuilds**.
+- `node --test tests/sprite-lock.test.js tests/character-mission.test.js` — **61 pass, 0 fail**.
+- `npm test` — **389 pass, 0 fail, 0 cancelled**, including the existing sentence-alternate and sprite-lock coverage.
+- `shasum -a 256 assets/sprite-masters/ido/neutral-transparent.png /tmp/ulpango-ido-smile.HMz2NM/before.png` — **pass: identical SHA-256 (`be7b062d…e4134`)**.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** A natural visible smile is not yet approved or installed; this session intentionally ends on the safe neutral baseline. The repeated failure was a workflow/tool mismatch: a generative editor repeatedly treated the request as a local mouth redraw, while the prior deterministic pass reduced anatomy to thickness metrics. Future work should not continue generating variants in this thread or promote any result without a native-size visual approval. The reliable next path is a human-authored pixel-art full-face expression edit (for example in Aseprite) using Ido's face and cast references, followed by the existing deterministic builder and sprite audit; no image generator can be honestly guaranteed to preserve identity, three-quarter anatomy, and exact production pixel clusters in one pass.
+
+### 2026-08-09 10:47 EDT — Promote the approved Ido smile and shirt logo
+
+**Requested:** Use the newest generated Ido image as his neutral picture, put the established logo back on his shirt, and publish and merge the completed work to GitHub `main`.
+
+**Files changed:**
+- `assets/sprite-masters/ido/neutral-transparent.png` — promoted the user-approved 1254×1254 generated RGB image as Ido's neutral master while retaining the tracked transparent alpha silhouette and transparent canvas corners.
+- `assets/ido/neutral.png` — rebuilt from the promoted master through the existing direct nearest-neighbor builder. The builder adds the established hard-edged cream shirt-logo bitmap at Ido's pose-specific neutral placement; the approved face is not regenerated or otherwise edited.
+- `assets/sprite-lock.json` — refreshed the frozen hashes and measured sprite metadata for the approved master/runtime pair after the deterministic audit passed.
+- `index.html`, `styles.css`, and `tests/character-mission.test.js` — retain the `20260809d` cache key added during the restoration pass, which now serves the final approved neutral sprite.
+- `sentence-bank-data.js`, `tests/app-progress.test.js`, and `tests/sentence-bank-data.test.js` — preserved the earlier requested `colloquial_72` duration-final English alternate and its grading/data coverage in the same intended worktree.
+- `task-log.md` — recorded the final promotion and publication verification.
+
+**Behavior changed:** Ido's neutral/picker/greeting picture now uses the user-approved natural-smile image with the existing pixel-art shirt logo visible in the runtime sprite. The canvas remains transparent, the final app asset remains 512×512 RGBA, and unrelated reaction sprites are unchanged. The alternate “You went on and on at me about your new diet for an hour.” is also accepted as correct.
+
+**Tests run:**
+- `python scripts/audit-sprites.py --write-lock` — **pass; approved sprite lock refreshed**.
+- `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 direct deterministic rebuilds**.
+- `node --test tests/sprite-lock.test.js tests/character-mission.test.js` — **61 pass, 0 fail**.
+- `npm test` — **389 pass, 0 fail, 0 cancelled**.
+- Image validation — **pass: 1254×1254 RGBA master, 512×512 RGBA runtime, retained alpha bbox `(181, 51, 1244, 1254)`, and four transparent master corners**.
+- Visual inspection of `assets/ido/neutral.png` at native resolution — **pass: approved smile preserved and established shirt logo visible with crisp nearest-neighbor pixels**.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** The approved generated RGB is paired with the prior tracked alpha silhouette so the app continues to use a transparent sprite rather than the generated black background. The runtime logo is intentionally added by `scripts/build-ido-sprites.py` instead of being baked into the master, preserving the project's existing deterministic sprite architecture. Future rebuilds must continue through that builder or the logo will not be present in a direct master resize.

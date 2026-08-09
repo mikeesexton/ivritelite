@@ -244,12 +244,12 @@
         0,
         0
       ],
-      "fileBytes": 1097180,
+      "fileBytes": 1272626,
       "height": 1254,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "cff73d455095a155a9ff163afba88bba10e2a4d6c46b529655be8e10bf2bf450",
-      "uniqueRgba": 50962,
+      "sha256": "ee6f9a1cba03509e5dfa6d881c4acf1c2053428063e31f4cc6f22f20f8537069",
+      "uniqueRgba": 51337,
       "visibleBbox": [
         181,
         51,
@@ -1179,34 +1179,34 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 219720,
+      "fileBytes": 273432,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "7d173bea40283353c78c17a9d5f2bde77cd42023db8dd25fe4c819e0c0ccc7ea",
+      "sha256": "af6f8d9ab9c62bb854cbd4a31f7bc3431fdc65d1cb28a0e8bbef765883b8ff52",
       "spatialSignature": {
         "32": {
-          "adjacentBoundaryRate": 0.404006,
-          "pixelWeightedMedianClusterArea": 36,
+          "adjacentBoundaryRate": 0.30797,
+          "pixelWeightedMedianClusterArea": 163,
           "roundTripSurvival": {
-            "128": 0.555549,
-            "192": 0.626092,
-            "256": 0.67875,
-            "96": 0.504833
+            "128": 0.637412,
+            "192": 0.704381,
+            "256": 0.751449,
+            "96": 0.593822
           }
         },
         "64": {
-          "adjacentBoundaryRate": 0.47804,
-          "pixelWeightedMedianClusterArea": 13,
+          "adjacentBoundaryRate": 0.417587,
+          "pixelWeightedMedianClusterArea": 27,
           "roundTripSurvival": {
-            "128": 0.484895,
-            "192": 0.563879,
-            "256": 0.623633,
-            "96": 0.434984
+            "128": 0.532606,
+            "192": 0.610902,
+            "256": 0.667282,
+            "96": 0.483773
           }
         }
       },
-      "uniqueRgba": 20160,
+      "uniqueRgba": 21159,
       "visibleBbox": [
         74,
         21,
@@ -2153,18 +2153,18 @@
     },
     "assets/idan/neutral.png": {
       "approvedFailures": [
-        "32 colors/96px survival 0.394602 outside 0.413496..0.534833",
-        "32 colors/128px survival 0.444346 outside 0.465064..0.585549",
-        "32 colors/192px survival 0.533546 outside 0.562170..0.656092",
-        "32 colors/256px survival 0.600466 outside 0.619714..0.708750",
-        "32 colors cluster area 11 outside 15.00..45.00",
-        "32 colors boundary 0.500709 outside 0.374006..0.460780",
-        "64 colors/96px survival 0.305190 outside 0.334540..0.464984",
-        "64 colors/128px survival 0.353252 outside 0.383426..0.514895",
-        "64 colors/192px survival 0.447842 outside 0.478210..0.593879",
-        "64 colors/256px survival 0.522929 outside 0.546024..0.653633",
-        "64 colors cluster area 5 outside 6.00..16.25",
-        "64 colors boundary 0.605837 outside 0.448040..0.561798"
+        "32 colors/96px survival 0.394602 outside 0.413496..0.623822",
+        "32 colors/128px survival 0.444346 outside 0.465064..0.667412",
+        "32 colors/192px survival 0.533546 outside 0.562170..0.734381",
+        "32 colors/256px survival 0.600466 outside 0.619714..0.781449",
+        "32 colors cluster area 11 outside 15.00..203.75",
+        "32 colors boundary 0.500709 outside 0.277970..0.460780",
+        "64 colors/96px survival 0.305190 outside 0.334540..0.513773",
+        "64 colors/128px survival 0.353252 outside 0.383426..0.562606",
+        "64 colors/192px survival 0.447842 outside 0.478210..0.640902",
+        "64 colors/256px survival 0.522929 outside 0.546024..0.697282",
+        "64 colors cluster area 5 outside 6.00..33.75",
+        "64 colors boundary 0.605837 outside 0.387587..0.561798"
       ],
       "passesProvisionalBand": false
     },
@@ -2248,10 +2248,8 @@
       "passesProvisionalBand": false
     },
     "assets/inat/neutral.png": {
-      "approvedFailures": [
-        "32 colors/128px survival 0.631836 outside 0.465064..0.585549"
-      ],
-      "passesProvisionalBand": false
+      "approvedFailures": [],
+      "passesProvisionalBand": true
     },
     "assets/inat/struggling.png": {
       "approvedFailures": [
@@ -2320,7 +2318,7 @@
     },
     "assets/ivri/neutral.png": {
       "approvedFailures": [
-        "64 colors boundary 0.568154 outside 0.448040..0.561798"
+        "64 colors boundary 0.568154 outside 0.387587..0.561798"
       ],
       "passesProvisionalBand": false
     },
