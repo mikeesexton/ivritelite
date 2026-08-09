@@ -25,8 +25,12 @@ REACTIONS = (
 )
 
 
-def build_reaction(name: str, output_dir: Path = ASSET_DIR) -> Path:
-    source_path = SOURCE_DIR / f"{name}-transparent.png"
+def build_reaction(
+    name: str,
+    output_dir: Path = ASSET_DIR,
+    source_dir: Path = SOURCE_DIR,
+) -> Path:
+    source_path = source_dir / f"{name}-transparent.png"
     source = Image.open(source_path).convert("RGBA")
     if source.size != (SOURCE_SIZE, SOURCE_SIZE):
         raise RuntimeError(f"{source_path.name} must be {SOURCE_SIZE}×{SOURCE_SIZE}.")
@@ -45,10 +49,11 @@ def build_reaction(name: str, output_dir: Path = ASSET_DIR) -> Path:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--source-dir", type=Path, default=SOURCE_DIR)
     parser.add_argument("--output-dir", type=Path, default=ASSET_DIR)
     args = parser.parse_args()
     for reaction in REACTIONS:
-        build_reaction(reaction, args.output_dir)
+        build_reaction(reaction, args.output_dir, args.source_dir)
 
 
 if __name__ == "__main__":

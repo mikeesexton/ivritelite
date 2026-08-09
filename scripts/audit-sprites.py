@@ -12,6 +12,8 @@ from pathlib import Path
 
 from PIL import Image
 
+from sprite_edges import count_magenta_edge_pixels
+
 
 ROOT = Path(__file__).resolve().parents[1]
 LOCK_PATH = ROOT / "assets" / "sprite-lock.json"
@@ -183,6 +185,7 @@ def image_record(path: Path, expected_size: tuple[int, int]) -> dict:
         "cornerAlpha": corners,
         "partialAlphaPixels": partial_alpha,
         "visibleMagentaPixels": magenta,
+        "visibleMagentaEdgePixels": count_magenta_edge_pixels(rgba),
         "uniqueRgba": len(set(pixels)),
     }
     if expected_size == (512, 512):
@@ -327,6 +330,8 @@ def validate_locked_metrics(actual: dict, locked: dict) -> None:
     for path, record in actual["production"].items():
         if record["visibleMagentaPixels"]:
             raise RuntimeError(f"{path} contains visible magenta-key pixels")
+        if record["visibleMagentaEdgePixels"]:
+            raise RuntimeError(f"{path} contains visible magenta edge spill")
         if record["equals256RoundTrip"] or record["equals128RoundTrip"]:
             raise RuntimeError(f"{path} reproduces through a prohibited logical-size round trip")
         if record["fileBytes"] >= 384 * 1024:
@@ -335,6 +340,8 @@ def validate_locked_metrics(actual: dict, locked: dict) -> None:
     for path, record in actual["masters"].items():
         if record["visibleMagentaPixels"]:
             raise RuntimeError(f"{path} contains visible magenta-key pixels")
+        if record["visibleMagentaEdgePixels"]:
+            raise RuntimeError(f"{path} contains visible magenta edge spill")
         if record["partialAlphaPixels"]:
             raise RuntimeError(f"{path} contains partial-alpha matte pixels")
 

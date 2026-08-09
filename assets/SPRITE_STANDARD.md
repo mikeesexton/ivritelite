@@ -17,6 +17,23 @@ No sprite edit is routine maintenance. A deliberate replacement requires an
 explicit request, independent generation calls, the full visual review, and an
 intentional `npm run sprites:audit -- --write-lock` update.
 
+## Magenta edge cleanup
+
+The tracked masters use hard binary alpha. If a generated magenta background
+leaves a visible exterior fringe, build non-destructive candidates with:
+
+```sh
+npm run sprites:clean-edges
+```
+
+The command writes cleaned masters, exact 512px production builds, a JSON
+report, and native-resolution black/white contact sheets under
+`tmp/sprite-edge-cleanup/`. It removes only edge-connected pixels matching the
+locked magenta-spill predicate; it never recolors, feathers, smooths, or adds
+partial alpha. After visual approval, promote the same validated candidates
+with `npm run sprites:clean-edges -- --apply`, update the lock intentionally,
+and advance the shared browser cache key.
+
 ## Direct export contract
 
 Every builder performs exactly one 1254×1254 RGBA to 512×512 RGBA
@@ -81,7 +98,8 @@ npm test
 
 `sprites:build` rebuilds all 30 production files. `sprites:audit` validates all
 60 locked PNGs, the visible-only multiscale spatial signatures, dimensions,
-RGBA mode, alpha, chroma, framing, file ceiling, anti-round-trip behavior,
+RGBA mode, alpha, strict chroma, edge-connected magenta spill, framing, file
+ceiling, anti-round-trip behavior,
 builder structure, and two clean deterministic rebuilds of every production
 sprite. Normal tests also verify every locked hash.
 

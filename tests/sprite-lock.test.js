@@ -35,6 +35,7 @@ test("all production sprites and approved masters match the frozen sprite lock",
     assert.equal(record.mode, "RGBA");
     assert.equal(record.equals128RoundTrip, false);
     assert.equal(record.equals256RoundTrip, false);
+    assert.equal(record.visibleMagentaEdgePixels, 0);
     assert.deepEqual(Object.keys(record.spatialSignature), ["32", "64"]);
     assert.deepEqual(
       Object.keys(record.spatialSignature["32"].roundTripSurvival),
@@ -47,6 +48,7 @@ test("all production sprites and approved masters match the frozen sprite lock",
     assert.equal(record.width, 1254);
     assert.equal(record.height, 1254);
     assert.equal(record.mode, "RGBA");
+    assert.equal(record.visibleMagentaEdgePixels, 0);
     assertPngContract(relativePath, record);
   });
 });
@@ -62,6 +64,7 @@ test("all locked builders retain the direct 1254-to-512 export structure", () =>
     assert.match(source, /CANVAS_SIZE = 512/);
     assert.match(source, /source\.resize\(/);
     assert.match(source, /Image\.Resampling\.NEAREST/);
+    assert.match(source, /--source-dir/);
     assert.doesNotMatch(
       source,
       /LOGICAL_SIZE|PALETTE_COLORS|\.quantize\(|BILINEAR|BICUBIC/,
