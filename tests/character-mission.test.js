@@ -287,7 +287,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     );
     reactions.forEach((reaction) => {
       assert.match(css, new RegExp(
-        `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png\\?v=20260809d`,
+        `\\.character-sprite\\[data-character="${id}"\\]\\[data-reaction="${reaction}"\\]\\s*\\{[^}]*assets/${id}/${reaction}\\.png\\?v=20260809e`,
         "s",
       ));
       const sprite = fs.readFileSync(path.join(assetDir, `${reaction}.png`));
@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260809d/);
+  assert.match(indexHtml, /styles\.css\?v=20260809e/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(

@@ -1179,34 +1179,34 @@
       ],
       "equals128RoundTrip": false,
       "equals256RoundTrip": false,
-      "fileBytes": 273432,
+      "fileBytes": 273495,
       "height": 512,
       "mode": "RGBA",
       "partialAlphaPixels": 0,
-      "sha256": "af6f8d9ab9c62bb854cbd4a31f7bc3431fdc65d1cb28a0e8bbef765883b8ff52",
+      "sha256": "ac72d300087b0bf27ca667af86b6adf06ab23f8287bb1362ae17d2cf421c746b",
       "spatialSignature": {
         "32": {
-          "adjacentBoundaryRate": 0.30797,
-          "pixelWeightedMedianClusterArea": 163,
+          "adjacentBoundaryRate": 0.310906,
+          "pixelWeightedMedianClusterArea": 142,
           "roundTripSurvival": {
-            "128": 0.637412,
-            "192": 0.704381,
-            "256": 0.751449,
-            "96": 0.593822
+            "128": 0.63327,
+            "192": 0.701686,
+            "256": 0.749485,
+            "96": 0.589141
           }
         },
         "64": {
-          "adjacentBoundaryRate": 0.417587,
-          "pixelWeightedMedianClusterArea": 27,
+          "adjacentBoundaryRate": 0.40999,
+          "pixelWeightedMedianClusterArea": 29,
           "roundTripSurvival": {
-            "128": 0.532606,
-            "192": 0.610902,
-            "256": 0.667282,
-            "96": 0.483773
+            "128": 0.539156,
+            "192": 0.616633,
+            "256": 0.67285,
+            "96": 0.490736
           }
         }
       },
-      "uniqueRgba": 21159,
+      "uniqueRgba": 21176,
       "visibleBbox": [
         74,
         21,
@@ -2153,18 +2153,18 @@
     },
     "assets/idan/neutral.png": {
       "approvedFailures": [
-        "32 colors/96px survival 0.394602 outside 0.413496..0.623822",
-        "32 colors/128px survival 0.444346 outside 0.465064..0.667412",
-        "32 colors/192px survival 0.533546 outside 0.562170..0.734381",
-        "32 colors/256px survival 0.600466 outside 0.619714..0.781449",
-        "32 colors cluster area 11 outside 15.00..203.75",
-        "32 colors boundary 0.500709 outside 0.277970..0.460780",
-        "64 colors/96px survival 0.305190 outside 0.334540..0.513773",
-        "64 colors/128px survival 0.353252 outside 0.383426..0.562606",
-        "64 colors/192px survival 0.447842 outside 0.478210..0.640902",
-        "64 colors/256px survival 0.522929 outside 0.546024..0.697282",
-        "64 colors cluster area 5 outside 6.00..33.75",
-        "64 colors boundary 0.605837 outside 0.387587..0.561798"
+        "32 colors/96px survival 0.394602 outside 0.413496..0.619141",
+        "32 colors/128px survival 0.444346 outside 0.465064..0.663270",
+        "32 colors/192px survival 0.533546 outside 0.562170..0.731686",
+        "32 colors/256px survival 0.600466 outside 0.619714..0.779485",
+        "32 colors cluster area 11 outside 15.00..177.50",
+        "32 colors boundary 0.500709 outside 0.280906..0.460780",
+        "64 colors/96px survival 0.305190 outside 0.334540..0.520736",
+        "64 colors/128px survival 0.353252 outside 0.383426..0.569156",
+        "64 colors/192px survival 0.447842 outside 0.478210..0.646633",
+        "64 colors/256px survival 0.522929 outside 0.546024..0.702850",
+        "64 colors cluster area 5 outside 6.00..36.25",
+        "64 colors boundary 0.605837 outside 0.379990..0.561798"
       ],
       "passesProvisionalBand": false
     },
@@ -2318,7 +2318,7 @@
     },
     "assets/ivri/neutral.png": {
       "approvedFailures": [
-        "64 colors boundary 0.568154 outside 0.387587..0.561798"
+        "64 colors boundary 0.568154 outside 0.379990..0.561798"
       ],
       "passesProvisionalBand": false
     },
