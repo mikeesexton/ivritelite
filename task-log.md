@@ -7161,3 +7161,32 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** The publication used the immediately preceding final `npm test` result — **387 pass, 0 fail, 0 cancelled** — plus the standalone rendered 360×640 layout regression (**1 pass, 0 fail**), both coverage reports, and `git diff --check` (**pass**). GitHub reported the PR mergeable with no required status checks configured.
 
 **Risks / regressions to check:** None specific to publication. The feature-level follow-ups and remaining character-content imbalance are recorded in the implementation entry directly above.
+
+### 2026-08-08 22:22 EDT — Give Ido friendlier neutral and thumbs-up smiles
+
+**Requested:** Edit Ido's neutral and thumbs-up expressions so he is visibly smiling and no longer reads as standoffish.
+
+**Files changed:**
+- `assets/sprite-masters/ido/neutral-transparent.png` and `assets/sprite-masters/ido/mission-complete-transparent.png` — replaced the nearly straight mouths with clear, friendly closed-mouth smiles while preserving the original 1254×1254 canvas, binary alpha mask, silhouette, identity, pose, clothing, and all pixels outside the localized mouth region.
+- `assets/ido/neutral.png` and `assets/ido/mission-complete.png` — rebuilt the 512×512 runtime sprites from the edited masters through the existing nearest-neighbor Ido builder, retaining the deterministic shirt-logo composition.
+- `assets/sprite-lock.json` — intentionally refreshed the hashes and measured sprite metadata for the four approved changed files.
+- `task-log.md` — this record.
+
+**Behavior changed:** Ido now visibly smiles in his picker/greeting/neutral gameplay art and in his final-results thumbs-up pose. His pose, styling, transparency, reaction routing, and every other reaction remain unchanged.
+
+**Tests run:** Initial `npm test` after the artwork rebuild — **386 pass, 1 fail**, with only the expected frozen sprite-lock hash drift. `python scripts/audit-sprites.py --write-lock` — **pass; approved lock refreshed**. Final `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 deterministic rebuilds**. `node --test tests/sprite-lock.test.js` — **2 pass, 0 fail**. Final `npm test` — **387 pass, 0 fail, 0 cancelled**. Visual comparison at the actual 512px runtime size — **pass**. Programmatic alpha comparison against Git `HEAD` — **identical alpha masks for both edited masters**; RGB changes are confined to `(510, 510, 700, 615)` on each 1254px master.
+
+**Risks / regressions to check:** The smiles are deliberately friendly and closed-mouth rather than broad grins, so they preserve Ido's established reserved personality. Recheck at unusually small companion render sizes if future CSS reduces the character below its current presentation; no layout or code changed in this task.
+
+### 2026-08-08 22:25 EDT — Publish and merge Ido's friendlier expressions
+
+**Requested:** Push the completed Ido neutral and thumbs-up smile edits to GitHub and merge them into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded the publication workflow. The artwork and lock update were committed as `6c46da6` on `agent/warm-ido-smiles` and opened as ready PR #63 targeting `main`.
+
+**Behavior changed:** The approved friendlier neutral and mission-complete/thumbs-up expressions are published through GitHub PR #63 and merged into the repository's default branch. No additional runtime behavior changed during publication.
+
+**Tests run:** The publication used the immediately preceding final `npm test` result — **387 pass, 0 fail, 0 cancelled** — plus the passing deterministic sprite audit, focused sprite-lock test (**2 pass, 0 fail**), alpha-mask comparison, 512px visual review, and `git diff --check` (**pass**).
+
+**Risks / regressions to check:** None specific to publication. The expression-level small-rendering consideration remains recorded in the artwork entry directly above.
