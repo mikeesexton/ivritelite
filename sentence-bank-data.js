@@ -16681,11 +16681,329 @@ const IVRI_SENTENCES = [
   }),
 ];
 
+const IVRI_TECH_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_123", emoji: "♿", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אפשר להפעיל נגישות מתוך ההגדרות.", hebrewNiqqud: "אֶפְשָׁר לְהַפְעִיל נְגִישׁוּת מִתּוֹךְ הַהַגְדָּרוֹת.",
+    english: "You can enable accessibility in Settings.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להפעיל", "לְהַפְעִיל"], ["נגישות", "נְגִישׁוּת"], ["מתוך ההגדרות", "מִתּוֹךְ הַהַגְדָּרוֹת"]],
+    englishTokens: ["You can", "enable", "accessibility", "in Settings"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "מתוך ההגדרות אפשר להפעיל נגישות.", textNiqqud: "מִתּוֹךְ הַהַגְדָּרוֹת אֶפְשָׁר לְהַפְעִיל נְגִישׁוּת.", order: [3, 0, 1, 2] }],
+    notes: "נגישות is the interface label for accessibility; הגדרות is Settings."
+  }),
+  buildReviewedSentence({
+    id: "professional_124", emoji: "📍", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "שירותי מיקום דורשים הרשאה נפרדת.", hebrewNiqqud: "שֵׁרוּתֵי מִקּוּם דּוֹרְשִׁים הַרְשָׁאָה נִפְרֶדֶת.", english: "Location services require a separate permission.",
+    hebrewTokenPairs: [["שירותי מיקום", "שֵׁרוּתֵי מִקּוּם"], ["דורשים", "דּוֹרְשִׁים"], ["הרשאה", "הַרְשָׁאָה"], ["נפרדת", "נִפְרֶדֶת"]], englishTokens: ["Location services", "require", "a separate", "permission"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "שירותי מיקום is the standard settings label for location services."
+  }),
+  buildReviewedSentence({
+    id: "professional_125", emoji: "📶", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "נתונים סלולריים כבויים בזמן נדידת נתונים.", hebrewNiqqud: "נְתוּנִים סֵלוּלָרִיִּים כְּבוּיִים בִּזְמַן נְדִידַת נְתוּנִים.", english: "Cellular data is off during data roaming.",
+    hebrewTokenPairs: [["נתונים סלולריים", "נְתוּנִים סֵלוּלָרִיִּים"], ["כבויים", "כְּבוּיִים"], ["בזמן", "בִּזְמַן"], ["נדידת נתונים", "נְדִידַת נְתוּנִים"]], englishTokens: ["Cellular data", "is off", "during", "data roaming"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "בזמן נדידת נתונים, נתונים סלולריים כבויים.", textNiqqud: "בִּזְמַן נְדִידַת נְתוּנִים, נְתוּנִים סֵלוּלָרִיִּים כְּבוּיִים.", order: [2, 3, 0, 1] }], notes: "נדידת נתונים is data roaming; כבויים agrees with plural נתונים."
+  }),
+  buildReviewedSentence({
+    id: "professional_126", emoji: "☀️", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "בהירות המסך גבוהה מדי.", hebrewNiqqud: "בְּהִירוּת הַמָּסָךְ גְּבוֹהָה מִדַּי.", english: "The screen brightness is too high.",
+    hebrewTokenPairs: [["בהירות המסך", "בְּהִירוּת הַמָּסָךְ"], ["גבוהה", "גְּבוֹהָה"], ["מדי", "מִדַּי"]], englishTokens: ["The screen brightness", "is too", "high"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "בהירות המסך is screen brightness; בהירות is feminine, hence גבוהה."
+  }),
+  buildReviewedSentence({
+    id: "professional_127", emoji: "🖼️", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "החלפתי את תמונת הרקע במסך הבית.", hebrewNiqqud: "הֶחֱלַפְתִּי אֶת תְּמוּנַת הָרֶקַע בְּמָסַךְ הַבַּיִת.", english: "I changed the wallpaper on the home screen.",
+    hebrewTokenPairs: [["החלפתי", "הֶחֱלַפְתִּי"], ["את", "אֶת"], ["תמונת הרקע", "תְּמוּנַת הָרֶקַע"], ["במסך הבית", "בְּמָסַךְ הַבַּיִת"]], englishTokens: ["I changed", "the wallpaper", "on", "the home screen"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "במסך הבית החלפתי את תמונת הרקע.", textNiqqud: "בְּמָסַךְ הַבַּיִת הֶחֱלַפְתִּי אֶת תְּמוּנַת הָרֶקַע.", order: [3, 0, 1, 2] }], notes: "תמונת רקע is wallpaper and מסך הבית is the home screen."
+  }),
+  buildReviewedSentence({
+    id: "professional_128", emoji: "🔐", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "קוד הגישה מגן על המכשיר המקושר.", hebrewNiqqud: "קוֹד הַגִּישָׁה מֵגֵן עַל הַמַּכְשִׁיר הַמְקֻשָּׁר.", english: "The passcode protects the paired device.",
+    hebrewTokenPairs: [["קוד הגישה", "קוֹד הַגִּישָׁה"], ["מגן על", "מֵגֵן עַל"], ["המכשיר המקושר", "הַמַּכְשִׁיר הַמְקֻשָּׁר"]], englishTokens: ["The passcode", "protects", "the paired device"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "קוד גישה is passcode; מכשיר מקושר is a paired or linked device."
+  }),
+  buildReviewedSentence({
+    id: "professional_129", emoji: "🧩", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הווידג׳ט מופיע מעל שורת החיפוש.", hebrewNiqqud: "הַוִּידְגֶ׳ט מוֹפִיעַ מֵעַל שׁוּרַת הַחִפּוּשׂ.", english: "The widget appears above the search bar.",
+    hebrewTokenPairs: [["הווידג׳ט", "הַוִּידְגֶ׳ט"], ["מופיע", "מוֹפִיעַ"], ["מעל", "מֵעַל"], ["שורת החיפוש", "שׁוּרַת הַחִפּוּשׂ"]], englishTokens: ["The widget", "appears", "above", "the search bar"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "וידג׳ט is the established loanword; שורת חיפוש is search bar."
+  }),
+  buildReviewedSentence({
+    id: "professional_130", emoji: "🎛️", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מרכז הבקרה מציג את מצב הריכוז.", hebrewNiqqud: "מֶרְכַּז הַבַּקָּרָה מַצִּיג אֶת מַצַּב הָרִכּוּז.", english: "The control center shows focus mode.",
+    hebrewTokenPairs: [["מרכז הבקרה", "מֶרְכַּז הַבַּקָּרָה"], ["מציג את", "מַצִּיג אֶת"], ["מצב הריכוז", "מַצַּב הָרִכּוּז"]], englishTokens: ["The control center", "shows", "focus mode"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "מרכז הבקרה and מצב ריכוז are standard interface labels."
+  }),
+  buildReviewedSentence({
+    id: "professional_131", emoji: "🔔", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מרכז העדכונים מלא בהתראות.", hebrewNiqqud: "מֶרְכַּז הָעִדְכּוּנִים מָלֵא בְּהַתְרָאוֹת.", english: "The notification center is full of alerts.",
+    hebrewTokenPairs: [["מרכז העדכונים", "מֶרְכַּז הָעִדְכּוּנִים"], ["מלא", "מָלֵא"], ["בהתראות", "בְּהַתְרָאוֹת"]], englishTokens: ["The notification center", "is full", "of alerts"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "מרכז העדכונים is notification center; התראה is an alert or notification."
+  }),
+  buildReviewedSentence({
+    id: "professional_132", emoji: "🔕", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "נא לא להפריע משתיק את הצלצול.", hebrewNiqqud: "נָא לֹא לְהַפְרִיעַ מַשְׁתִּיק אֶת הַצִּלְצוּל.", english: "Do not disturb mutes the ringtone.",
+    hebrewTokenPairs: [["נא לא להפריע", "נָא לֹא לְהַפְרִיעַ"], ["משתיק את", "מַשְׁתִּיק אֶת"], ["הצלצול", "הַצִּלְצוּל"]], englishTokens: ["Do not disturb", "mutes", "the ringtone"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "נא לא להפריע is the familiar interface label for Do Not Disturb."
+  }),
+  buildReviewedSentence({
+    id: "professional_133", emoji: "🪫", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מצב חיסכון בסוללה מפחית את בהירות המסך.", hebrewNiqqud: "מַצַּב חִסָּכוֹן בַּסּוֹלְלָה מַפְחִית אֶת בְּהִירוּת הַמָּסָךְ.", english: "Battery saver reduces the screen brightness.",
+    hebrewTokenPairs: [["מצב חיסכון בסוללה", "מַצַּב חִסָּכוֹן בַּסּוֹלְלָה"], ["מפחית את", "מַפְחִית אֶת"], ["בהירות המסך", "בְּהִירוּת הַמָּסָךְ"]], englishTokens: ["Battery saver", "reduces", "the screen brightness"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "מצב חיסכון בסוללה is battery-saver or low-power mode."
+  }),
+  buildReviewedSentence({
+    id: "professional_134", emoji: "🔋", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "בריאות הסוללה מופיעה בהגדרות.", hebrewNiqqud: "בְּרִיאוּת הַסּוֹלְלָה מוֹפִיעָה בַּהַגְדָּרוֹת.", english: "Battery health appears in Settings.",
+    hebrewTokenPairs: [["בריאות הסוללה", "בְּרִיאוּת הַסּוֹלְלָה"], ["מופיעה", "מוֹפִיעָה"], ["בהגדרות", "בַּהַגְדָּרוֹת"]], englishTokens: ["Battery health", "appears", "in Settings"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "בהגדרות מופיעה בריאות הסוללה.", textNiqqud: "בַּהַגְדָּרוֹת מוֹפִיעָה בְּרִיאוּת הַסּוֹלְלָה.", order: [2, 1, 0] }], notes: "בריאות הסוללה is battery health; the feminine verb agrees with בריאות."
+  }),
+  buildReviewedSentence({
+    id: "professional_135", emoji: "⏺️", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הקלטת מסך נשמרת כקובץ.", hebrewNiqqud: "הַקְלָטַת מָסָךְ נִשְׁמֶרֶת כְּקוֹבֶץ.", english: "A screen recording is saved as a file.",
+    hebrewTokenPairs: [["הקלטת מסך", "הַקְלָטַת מָסָךְ"], ["נשמרת", "נִשְׁמֶרֶת"], ["כקובץ", "כְּקוֹבֶץ"]], englishTokens: ["A screen recording", "is saved", "as a file"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "הקלטת מסך is screen recording; נשמרת agrees with the feminine construct head הקלטה."
+  }),
+  buildReviewedSentence({
+    id: "professional_136", emoji: "📚", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "ספריית היישומים מסדרת את כל האפליקציות.", hebrewNiqqud: "סִפְרִיַּת הַיִּשּׂוּמִים מְסַדֶּרֶת אֶת כָּל הָאַפְּלִיקַצְיוֹת.", english: "The app library organizes all the apps.",
+    hebrewTokenPairs: [["ספריית היישומים", "סִפְרִיַּת הַיִּשּׂוּמִים"], ["מסדרת", "מְסַדֶּרֶת"], ["את", "אֶת"], ["כל האפליקציות", "כָּל הָאַפְּלִיקַצְיוֹת"]], englishTokens: ["The app library", "organizes", "all", "the apps"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "ספריית היישומים is the App Library; יישום is the formal term for app."
+  }),
+  buildReviewedSentence({
+    id: "professional_137", emoji: "📊", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "שורת המצב מציגה את מצב הטיסה.", hebrewNiqqud: "שׁוּרַת הַמַּצָּב מַצִּיגָה אֶת מַצַּב הַטִּיסָה.", english: "The status bar shows airplane mode.",
+    hebrewTokenPairs: [["שורת המצב", "שׁוּרַת הַמַּצָּב"], ["מציגה את", "מַצִּיגָה אֶת"], ["מצב הטיסה", "מַצַּב הַטִּיסָה"]], englishTokens: ["The status bar", "shows", "airplane mode"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "שורת מצב is status bar; מצב טיסה is airplane mode."
+  }),
+  buildReviewedSentence({
+    id: "professional_138", emoji: "↩️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ברירות המחדל שוחזרו אחרי האיפוס.", hebrewNiqqud: "בְּרֵרוֹת הַמֶּחְדָּל שֻׁחְזְרוּ אַחֲרֵי הָאִפּוּס.", english: "The default settings returned after the reset.",
+    hebrewTokenPairs: [["ברירות המחדל", "בְּרֵרוֹת הַמֶּחְדָּל"], ["שוחזרו", "שֻׁחְזְרוּ"], ["אחרי", "אַחֲרֵי"], ["האיפוס", "הָאִפּוּס"]], englishTokens: ["The default settings", "returned", "after", "the reset"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "ברירות מחדל are defaults; שוחזרו means were restored."
+  }),
+  buildReviewedSentence({
+    id: "professional_139", emoji: "🔄", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "עדכונים אוטומטיים מתקינים כל עדכון תוכנה.", hebrewNiqqud: "עִדְכּוּנִים אוֹטוֹמָטִיִּים מַתְקִינִים כָּל עִדְכּוּן תּוֹכְנָה.", english: "Automatic updates install every software update.",
+    hebrewTokenPairs: [["עדכונים אוטומטיים", "עִדְכּוּנִים אוֹטוֹמָטִיִּים"], ["מתקינים", "מַתְקִינִים"], ["כל", "כָּל"], ["עדכון תוכנה", "עִדְכּוּן תּוֹכְנָה"]], englishTokens: ["Automatic updates", "install", "every", "software update"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "עדכונים אוטומטיים and עדכון תוכנה are standard update labels."
+  }),
+  buildReviewedSentence({
+    id: "professional_140", emoji: "🛍️", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "חנות היישומים בודקת הרשאות לפני ההתקנה.", hebrewNiqqud: "חֲנוּת הַיִּשּׂוּמִים בּוֹדֶקֶת הַרְשָׁאוֹת לִפְנֵי הַהַתְקָנָה.", english: "The app store checks permissions before installation.",
+    hebrewTokenPairs: [["חנות היישומים", "חֲנוּת הַיִּשּׂוּמִים"], ["בודקת", "בּוֹדֶקֶת"], ["הרשאות", "הַרְשָׁאוֹת"], ["לפני ההתקנה", "לִפְנֵי הַהַתְקָנָה"]], englishTokens: ["The app store", "checks", "permissions", "before installation"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "לפני ההתקנה חנות היישומים בודקת הרשאות.", textNiqqud: "לִפְנֵי הַהַתְקָנָה חֲנוּת הַיִּשּׂוּמִים בּוֹדֶקֶת הַרְשָׁאוֹת.", order: [3, 0, 1, 2] }], notes: "חנות יישומים is app store; הרשאות are permissions."
+  }),
+  buildReviewedSentence({
+    id: "professional_141", emoji: "💾", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אין מספיק שטח אחסון לגיבוי.", hebrewNiqqud: "אֵין מַסְפִּיק שֶׁטַח אִחְסוּן לַגִּבּוּי.", english: "There is not enough storage space for the backup.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["מספיק", "מַסְפִּיק"], ["שטח אחסון", "שֶׁטַח אִחְסוּן"], ["לגיבוי", "לַגִּבּוּי"]], englishTokens: ["There is", "not enough", "storage space", "for the backup"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "שטח אחסון is storage space; גיבוי is a backup."
+  }),
+  buildReviewedSentence({
+    id: "professional_142", emoji: "🧹", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ניקיתי את המטמון והאפליקציה נפתחה.", hebrewNiqqud: "נִקִּיתִי אֶת הַמַּטְמוֹן וְהָאַפְּלִיקַצְיָה נִפְתְּחָה.", english: "I cleared the cache and the app opened.",
+    hebrewTokenPairs: [["ניקיתי", "נִקִּיתִי"], ["את המטמון", "אֶת הַמַּטְמוֹן"], ["והאפליקציה", "וְהָאַפְּלִיקַצְיָה"], ["נפתחה", "נִפְתְּחָה"]], englishTokens: ["I cleared", "the cache", "and the app", "opened"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "מטמון is cache; ניקיתי את המטמון is the ordinary troubleshooting action."
+  }),
+  buildReviewedSentence({
+    id: "professional_143", emoji: "🔗", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הצימוד הצליח והמכשיר מקושר.", hebrewNiqqud: "הַצִּמּוּד הִצְלִיחַ וְהַמַּכְשִׁיר מְקֻשָּׁר.", english: "Pairing succeeded and the device is paired.",
+    hebrewTokenPairs: [["הצימוד", "הַצִּמּוּד"], ["הצליח", "הִצְלִיחַ"], ["והמכשיר", "וְהַמַּכְשִׁיר"], ["מקושר", "מְקֻשָּׁר"]], englishTokens: ["Pairing", "succeeded", "and the device", "is paired"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "צימוד is pairing; מקושר is paired or linked."
+  }),
+  buildReviewedSentence({
+    id: "professional_144", emoji: "📡", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הרשת הסלולרית זמינה בלי נדידת נתונים.", hebrewNiqqud: "הָרֶשֶׁת הַסֵּלוּלָרִית זְמִינָה בְּלִי נְדִידַת נְתוּנִים.", english: "The mobile network is available without data roaming.",
+    hebrewTokenPairs: [["הרשת הסלולרית", "הָרֶשֶׁת הַסֵּלוּלָרִית"], ["זמינה", "זְמִינָה"], ["בלי", "בְּלִי"], ["נדידת נתונים", "נְדִידַת נְתוּנִים"]], englishTokens: ["The mobile network", "is available", "without", "data roaming"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "רשת סלולרית is mobile network; נדידת נתונים is data roaming."
+  }),
+  buildReviewedSentence({
+    id: "professional_145", emoji: "💬", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "כתוביות בזמן אמת עוזרות בשיחת וידאו.", hebrewNiqqud: "כְּתוּבִיּוֹת בִּזְמַן אֱמֶת עוֹזְרוֹת בְּשִׂיחַת וִידֵאוֹ.", english: "Live captions help during a video call.",
+    hebrewTokenPairs: [["כתוביות בזמן אמת", "כְּתוּבִיּוֹת בִּזְמַן אֱמֶת"], ["עוזרות", "עוֹזְרוֹת"], ["בשיחת וידאו", "בְּשִׂיחַת וִידֵאוֹ"]], englishTokens: ["Live captions", "help", "during a video call"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "בשיחת וידאו עוזרות כתוביות בזמן אמת.", textNiqqud: "בְּשִׂיחַת וִידֵאוֹ עוֹזְרוֹת כְּתוּבִיּוֹת בִּזְמַן אֱמֶת.", order: [2, 1, 0] }], notes: "כתוביות בזמן אמת are live captions; the plural feminine verb is עוזרות."
+  }),
+  buildReviewedSentence({
+    id: "professional_146", emoji: "🎙️", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "שליטה קולית פותחת את זכוכית המגדלת.", hebrewNiqqud: "שְׁלִיטָה קוֹלִית פּוֹתַחַת אֶת זְכוּכִית הַמַּגְדֶּלֶת.", english: "Voice control opens the magnifier.",
+    hebrewTokenPairs: [["שליטה קולית", "שְׁלִיטָה קוֹלִית"], ["פותחת את", "פּוֹתַחַת אֶת"], ["זכוכית המגדלת", "זְכוּכִית הַמַּגְדֶּלֶת"]], englishTokens: ["Voice control", "opens", "the magnifier"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "שליטה קולית is voice control; זכוכית מגדלת is the magnifier tool."
+  }),
+  buildReviewedSentence({
+    id: "professional_147", emoji: "📋", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "לוח הגזירים שומר את הקישור שהעתקתי.", hebrewNiqqud: "לוּחַ הַגְּזִירִים שׁוֹמֵר אֶת הַקִּשּׁוּר שֶׁהֶעְתַּקְתִּי.", english: "The clipboard keeps the link I copied.",
+    hebrewTokenPairs: [["לוח הגזירים", "לוּחַ הַגְּזִירִים"], ["שומר", "שׁוֹמֵר"], ["את הקישור", "אֶת הַקִּשּׁוּר"], ["שהעתקתי", "שֶׁהֶעְתַּקְתִּי"]], englishTokens: ["The clipboard", "keeps", "the link", "I copied"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "לוח גזירים is clipboard; the copied item remains there temporarily."
+  }),
+  buildReviewedSentence({
+    id: "professional_148", emoji: "🗑️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כדאי להסיר התקנה של אפליקציה ישנה.", hebrewNiqqud: "כְּדַאי לְהָסִיר הַתְקָנָה שֶׁל אַפְּלִיקַצְיָה יְשָׁנָה.", english: "It is advisable to uninstall an old app.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["להסיר התקנה", "לְהָסִיר הַתְקָנָה"], ["של", "שֶׁל"], ["אפליקציה", "אַפְּלִיקַצְיָה"], ["ישנה", "יְשָׁנָה"]], englishTokens: ["It is advisable", "to uninstall", "an", "old", "app"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "להסיר התקנה is the ordinary interface wording for uninstalling an app."
+  }),
+  buildReviewedSentence({
+    id: "professional_149", emoji: "🧽", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "צריך לנקות את המטמון לפני העדכון.", hebrewNiqqud: "צָרִיךְ לְנַקּוֹת אֶת הַמַּטְמוֹן לִפְנֵי הָעִדְכּוּן.", english: "You need to clear the cache before the update.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לנקות את המטמון", "לְנַקּוֹת אֶת הַמַּטְמוֹן"], ["לפני", "לִפְנֵי"], ["העדכון", "הָעִדְכּוּן"]], englishTokens: ["You need", "to clear the cache", "before", "the update"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"],
+    hebrewOrderAlternates: [{ text: "לפני העדכון צריך לנקות את המטמון.", textNiqqud: "לִפְנֵי הָעִדְכּוּן צָרִיךְ לְנַקּוֹת אֶת הַמַּטְמוֹן.", order: [2, 3, 0, 1] }], notes: "לנקות את המטמון means to clear the cache."
+  }),
+  buildReviewedSentence({
+    id: "professional_150", emoji: "🎧", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר לצמד אוזניות ולשתף קובץ.", hebrewNiqqud: "אֶפְשָׁר לְצַמֵּד אָזְנִיּוֹת וּלְשַׁתֵּף קוֹבֶץ.", english: "You can pair headphones and share a file.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לצמד", "לְצַמֵּד"], ["אוזניות", "אָזְנִיּוֹת"], ["ולשתף", "וּלְשַׁתֵּף"], ["קובץ", "קוֹבֶץ"]], englishTokens: ["You can", "pair", "headphones", "and share", "a file"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "לצמד is to pair devices; לשתף is to share a file."
+  }),
+  buildReviewedSentence({
+    id: "professional_151", emoji: "☁️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "צריך לגבות את הטלפון ולשחזר את החשבון.", hebrewNiqqud: "צָרִיךְ לְגַבּוֹת אֶת הַטֶּלֶפוֹן וּלְשַׁחְזֵר אֶת הַחֶשְׁבּוֹן.", english: "You should back up the phone and restore the account.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לגבות", "לְגַבּוֹת"], ["את הטלפון", "אֶת הַטֶּלֶפוֹן"], ["ולשחזר", "וּלְשַׁחְזֵר"], ["את החשבון", "אֶת הַחֶשְׁבּוֹן"]], englishTokens: ["You should", "back up", "the phone", "and restore", "the account"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "לגבות and לשחזר form the standard backup-and-restore pair."
+  }),
+  buildReviewedSentence({
+    id: "professional_152", emoji: "👤", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר להתחבר, להתנתק או למחוק את החשבון.", hebrewNiqqud: "אֶפְשָׁר לְהִתְחַבֵּר, לְהִתְנַתֵּק אוֹ לִמְחֹק אֶת הַחֶשְׁבּוֹן.", english: "You can sign in, sign out, or delete the account.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להתחבר", "לְהִתְחַבֵּר"], ["להתנתק", "לְהִתְנַתֵּק"], ["או למחוק", "אוֹ לִמְחֹק"], ["את החשבון", "אֶת הַחֶשְׁבּוֹן"]], englishTokens: ["You can", "sign in", "sign out", "or delete", "the account"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["לאט", "לְאַט"], ["הודעה", "הוֹדָעָה"], ["נכשל", "נִכְשַׁל"]], englishDistractors: ["tomorrow", "slowly", "a message", "failed"], notes: "להתחבר, להתנתק, and למחוק are sign in, sign out, and delete."
+  }),
+];
+
+const CAST_VOCAB_SENTENCES = [
+  buildReviewedSentence({
+    id: "colloquial_163", emoji: "🎤", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "שלחתי לך הודעה קולית מהאוטובוס.", hebrewNiqqud: "שָׁלַחְתִּי לְךָ הוֹדָעָה קוֹלִית מֵהָאוֹטוֹבּוּס.", english: "I sent you a voice message from the bus.",
+    hebrewTokenPairs: [["שלחתי לך", "שָׁלַחְתִּי לְךָ"], ["הודעה קולית", "הוֹדָעָה קוֹלִית"], ["מהאוטובוס", "מֵהָאוֹטוֹבּוּס"]], englishTokens: ["I sent you", "a voice message", "from the bus"],
+    hebrewDistractorPairs: [["מחר", "מָחָר"], ["תמונה", "תְּמוּנָה"], ["בשקט", "בְּשֶׁקֶט"], ["מהבית", "מֵהַבַּיִת"]], englishDistractors: ["tomorrow", "a photo", "quietly", "from home"], notes: "הודעה קולית is a voice message, a common messaging-app label."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_164", emoji: "🤣", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הצ׳אט הקבוצתי שוב התמלא בבדיחות.", hebrewNiqqud: "הַצֶ׳אט הַקְּבוּצָתִי שׁוּב הִתְמַלֵּא בִּבְדִיחוֹת.", english: "The group chat filled up with jokes again.",
+    hebrewTokenPairs: [["הצ׳אט הקבוצתי", "הַצֶ׳אט הַקְּבוּצָתִי"], ["שוב", "שׁוּב"], ["התמלא", "הִתְמַלֵּא"], ["בבדיחות", "בִּבְדִיחוֹת"]], englishTokens: ["The group chat", "filled up", "with jokes", "again"],
+    hebrewDistractorPairs: [["הפיד", "הַפִּיד"], ["מיד", "מִיָּד"], ["התרוקן", "הִתְרוֹקֵן"], ["בתמונות", "בִּתְמוּנוֹת"]], englishDistractors: ["The feed", "immediately", "emptied", "with photos"], notes: "צ׳אט קבוצתי is a group chat; התמלא describes a chat filling up with posts or jokes."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_165", emoji: "✉️", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "עדיף לכתוב לי בהודעה פרטית.", hebrewNiqqud: "עָדִיף לִכְתֹּב לִי בְּהוֹדָעָה פְּרָטִית.", english: "It is better to write to me in a private message.",
+    hebrewTokenPairs: [["עדיף", "עָדִיף"], ["לכתוב לי", "לִכְתֹּב לִי"], ["בהודעה פרטית", "בְּהוֹדָעָה פְּרָטִית"]], englishTokens: ["It is better", "to write to me", "in a private message"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["לצלם אותי", "לְצַלֵּם אוֹתִי"], ["בקבוצה", "בַּקְּבוּצָה"], ["מחר", "מָחָר"]], englishDistractors: ["It is forbidden", "to photograph me", "in the group", "tomorrow"], notes: "הודעה פרטית is a private or direct message."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_166", emoji: "👀", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "העוקב החדש מגיב לכל סטורי.", hebrewNiqqud: "הָעוֹקֵב הֶחָדָשׁ מֵגִיב לְכָל סְטוֹרִי.", english: "The new follower responds to every story.",
+    hebrewTokenPairs: [["העוקב", "הָעוֹקֵב"], ["החדש", "הֶחָדָשׁ"], ["מגיב", "מֵגִיב"], ["לכל סטורי", "לְכָל סְטוֹרִי"]], englishTokens: ["The new", "follower", "responds", "to every story"],
+    hebrewDistractorPairs: [["היוצר", "הַיּוֹצֵר"], ["הוותיק", "הַוָּתִיק"], ["מתעלם", "מִתְעַלֵּם"], ["מכל פוסט", "מִכָּל פּוֹסְט"]], englishDistractors: ["The creator", "veteran", "ignores", "every post"], notes: "עוקב is a social-media follower; סטורי is the usual loanword for a story post."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_167", emoji: "🏷️", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "כדאי לתייג אותי בתמונה.", hebrewNiqqud: "כְּדַאי לְתַיֵּג אוֹתִי בַּתְּמוּנָה.", english: "You should tag me in the photo.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לתייג אותי", "לְתַיֵּג אוֹתִי"], ["בתמונה", "בַּתְּמוּנָה"]], englishTokens: ["You should", "tag me", "in the photo"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["למחוק אותי", "לִמְחֹק אוֹתִי"], ["בהודעה", "בַּהוֹדָעָה"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["You must not", "delete me", "in the message", "now"], notes: "לתייג is to tag a person in a post or photo."
+  }),
+  buildReviewedSentence({
+    id: "inbal_97", emoji: "🎶", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הפיוט העתיק מושר במנגינה מוכרת.", hebrewNiqqud: "הַפִּיּוּט הָעַתִּיק מוּשָׁר בְּמַנְגִּינָה מֻכֶּרֶת.", english: "The ancient liturgical poem is sung to a familiar melody.",
+    hebrewTokenPairs: [["הפיוט", "הַפִּיּוּט"], ["העתיק", "הָעַתִּיק"], ["מושר", "מוּשָׁר"], ["במנגינה", "בְּמַנְגִּינָה"], ["מוכרת", "מֻכֶּרֶת"]], englishTokens: ["The ancient", "liturgical poem", "is sung", "to a familiar", "melody"],
+    hebrewDistractorPairs: [["הסיפור", "הַסִּפּוּר"], ["החדש", "הֶחָדָשׁ"], ["נקרא", "נִקְרָא"], ["בערבית", "בַּעֲרָבִית"]], englishDistractors: ["The story", "new", "is read", "in Arabic"], notes: "פיוט is a liturgical poem sung in prayer or at the table."
+  }),
+  buildReviewedSentence({
+    id: "inbal_98", emoji: "📜", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "פרשת השבוע נקראת בשבת בבוקר.", hebrewNiqqud: "פָּרָשַׁת הַשָּׁבוּעַ נִקְרֵאת בְּשַׁבָּת בַּבֹּקֶר.", english: "The weekly Torah portion is read on Saturday morning.",
+    hebrewTokenPairs: [["פרשת השבוע", "פָּרָשַׁת הַשָּׁבוּעַ"], ["נקראת", "נִקְרֵאת"], ["בשבת", "בְּשַׁבָּת"], ["בבוקר", "בַּבֹּקֶר"]], englishTokens: ["The weekly Torah portion", "is read", "on Saturday", "morning"],
+    hebrewDistractorPairs: [["המגילה", "הַמְּגִלָּה"], ["נכתבת", "נִכְתֶּבֶת"], ["ביום ראשון", "בְּיוֹם רִאשׁוֹן"], ["בערב", "בָּעֶרֶב"]], englishDistractors: ["The scroll", "is written", "on Sunday", "evening"], notes: "פרשת השבוע is the weekly Torah portion read publicly on Shabbat."
+  }),
+  buildReviewedSentence({
+    id: "inbal_99", emoji: "📰", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "עלון שבת מחכה ליד הכניסה.", hebrewNiqqud: "עָלוֹן שַׁבָּת מְחַכֶּה לְיַד הַכְּנִיסָה.", english: "The Sabbath bulletin is waiting near the entrance.",
+    hebrewTokenPairs: [["עלון שבת", "עָלוֹן שַׁבָּת"], ["מחכה", "מְחַכֶּה"], ["ליד", "לְיַד"], ["הכניסה", "הַכְּנִיסָה"]], englishTokens: ["The Sabbath bulletin", "is waiting", "near", "the entrance"],
+    hebrewDistractorPairs: [["סידור תפילה", "סִדּוּר תְּפִלָּה"], ["מונח", "מֻנָּח"], ["מעל", "מֵעַל"], ["החלון", "הַחַלּוֹן"]], englishDistractors: ["A prayer book", "is placed", "above", "the window"], notes: "עלון שבת is a synagogue or community Sabbath bulletin."
+  }),
+  buildReviewedSentence({
+    id: "inbal_100", emoji: "📖", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הבאתי תיק טלית לבית הכנסת.", hebrewNiqqud: "הֵבֵאתִי תִּיק טַלִּית לְבֵית הַכְּנֶסֶת.", english: "I brought a prayer shawl bag to the synagogue.",
+    hebrewTokenPairs: [["הבאתי", "הֵבֵאתִי"], ["תיק טלית", "תִּיק טַלִּית"], ["לבית הכנסת", "לְבֵית הַכְּנֶסֶת"]], englishTokens: ["I brought", "a prayer shawl bag", "to the synagogue"],
+    hebrewDistractorPairs: [["השארתי", "הִשְׁאַרְתִּי"], ["עלון שבת", "עָלוֹן שַׁבָּת"], ["בבית", "בַּבַּיִת"], ["אתמול", "אֶתְמוֹל"]], englishDistractors: ["I left", "a Sabbath bulletin", "at home", "yesterday"], notes: "תיק טלית is the bag used to carry a prayer shawl."
+  }),
+  buildReviewedSentence({
+    id: "inbal_101", emoji: "🕎", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "החנוכייה עומדת ליד החלון.", hebrewNiqqud: "הַחֲנֻכִּיָּה עוֹמֶדֶת לְיַד הַחַלּוֹן.", english: "The Hanukkah menorah stands by the window.",
+    hebrewTokenPairs: [["החנוכייה", "הַחֲנֻכִּיָּה"], ["עומדת", "עוֹמֶדֶת"], ["ליד החלון", "לְיַד הַחַלּוֹן"]], englishTokens: ["The Hanukkah menorah", "stands", "by the window"],
+    hebrewDistractorPairs: [["הנר", "הַנֵּר"], ["כבוי", "כָּבוּי"], ["על השולחן", "עַל הַשֻּׁלְחָן"], ["בחוץ", "בַּחוּץ"]], englishDistractors: ["The candle", "is out", "on the table", "outside"], notes: "חנוכייה is the nine-branched lamp used for Hanukkah."
+  }),
+  buildReviewedSentence({
+    id: "inat_26", emoji: "📝", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המסה הספרותית בוחנת זיכרון קולקטיבי.", hebrewNiqqud: "הַמַּסָּה הַסִּפְרוּתִית בּוֹחֶנֶת זִכָּרוֹן קוֹלֶקְטִיבִי.", english: "The literary essay examines collective memory.",
+    hebrewTokenPairs: [["המסה הספרותית", "הַמַּסָּה הַסִּפְרוּתִית"], ["בוחנת", "בּוֹחֶנֶת"], ["זיכרון קולקטיבי", "זִכָּרוֹן קוֹלֶקְטִיבִי"]], englishTokens: ["The literary essay", "examines", "collective memory"],
+    hebrewDistractorPairs: [["הכתבה", "הַכַּתָּבָה"], ["מתעלמת", "מִתְעַלֶּמֶת"], ["מהעלילה", "מֵהָעֲלִילָה"], ["בקצרה", "בִּקְצָרָה"]], englishDistractors: ["The article", "ignores", "the plot", "briefly"], notes: "מסה ספרותית is a literary essay; זיכרון קולקטיבי is collective memory."
+  }),
+  buildReviewedSentence({
+    id: "inat_27", emoji: "👁️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "נקודת המבט משתנה בפרק האחרון.", hebrewNiqqud: "נְקֻדַּת הַמַּבָּט מִשְׁתַּנָּה בַּפֶּרֶק הָאַחֲרוֹן.", english: "The point of view changes in the final chapter.",
+    hebrewTokenPairs: [["נקודת המבט", "נְקֻדַּת הַמַּבָּט"], ["משתנה", "מִשְׁתַּנָּה"], ["בפרק", "בַּפֶּרֶק"], ["האחרון", "הָאַחֲרוֹן"]], englishTokens: ["The point of view", "changes", "in the final", "chapter"],
+    hebrewDistractorPairs: [["העלילה", "הָעֲלִילָה"], ["נשארת", "נִשְׁאֶרֶת"], ["בבית", "בַּבַּיִת"], ["הראשון", "הָרִאשׁוֹן"]], englishDistractors: ["The plot", "remains", "at home", "first"], notes: "נקודת מבט is point of view in literary analysis."
+  }),
+  buildReviewedSentence({
+    id: "inat_28", emoji: "🗣️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדובר הלירי פונה אל הקורא.", hebrewNiqqud: "הַדּוֹבֵר הַלִּירִי פּוֹנֶה אֶל הַקּוֹרֵא.", english: "The lyrical speaker addresses the reader.",
+    hebrewTokenPairs: [["הדובר הלירי", "הַדּוֹבֵר הַלִּירִי"], ["פונה אל", "פּוֹנֶה אֶל"], ["הקורא", "הַקּוֹרֵא"]], englishTokens: ["The lyrical speaker", "addresses", "the reader"],
+    hebrewDistractorPairs: [["המספר", "הַמְסַפֵּר"], ["מתעלם מן", "מִתְעַלֵּם מִן"], ["המחבר", "הַמְחַבֵּר"], ["ישירות", "יְשִׁירוֹת"]], englishDistractors: ["The narrator", "ignores", "the author", "directly"], notes: "דובר לירי is the voice speaking in a poem, not necessarily its author."
+  }),
+  buildReviewedSentence({
+    id: "inat_29", emoji: "📏", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כל בית שיר מסתיים בחרוז אחר.", hebrewNiqqud: "כָּל בֵּית שִׁיר מִסְתַּיֵּם בְּחָרוּז אַחֵר.", english: "Each stanza ends with a different rhyme.",
+    hebrewTokenPairs: [["כל", "כָּל"], ["בית שיר", "בֵּית שִׁיר"], ["מסתיים", "מִסְתַּיֵּם"], ["בחרוז", "בְּחָרוּז"], ["אחר", "אַחֵר"]], englishTokens: ["Each", "stanza", "ends", "with a different", "rhyme"],
+    hebrewDistractorPairs: [["אותו", "אוֹתוֹ"], ["פרק", "פֶּרֶק"], ["מתחיל", "מַתְחִיל"], ["בפרוזה", "בִּפְרוֹזָה"]], englishDistractors: ["The same", "chapter", "begins", "with prose"], notes: "בית שיר is a stanza; חרוז is a rhyme."
+  }),
+  buildReviewedSentence({
+    id: "inat_30", emoji: "📚", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הסוגה משפיעה על הציפיות.", hebrewNiqqud: "הַסּוּגָה מַשְׁפִּיעָה עַל הַצִּפִּיּוֹת.", english: "The genre shapes expectations.",
+    hebrewTokenPairs: [["הסוגה", "הַסּוּגָה"], ["משפיעה על", "מַשְׁפִּיעָה עַל"], ["הציפיות", "הַצִּפִּיּוֹת"]], englishTokens: ["The genre", "shapes", "expectations"],
+    hebrewDistractorPairs: [["הכותרת", "הַכּוֹתֶרֶת"], ["מסתירה את", "מַסְתִּירָה אֶת"], ["ההיסטוריה", "הַהִיסְטוֹרְיָה"], ["לגמרי", "לְגַמְרֵי"]], englishDistractors: ["The title", "hides", "history", "completely"], notes: "סוגה is the formal Hebrew term for genre."
+  }),
+  buildReviewedSentence({
+    id: "idan_116", emoji: "☎️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המוקדנית העבירה את הקריאה לצוות.", hebrewNiqqud: "הַמּוֹקְדָנִית הֶעֱבִירָה אֶת הַקְּרִיאָה לַצֶּוֶות.", english: "The dispatcher passed the call to the team.",
+    hebrewTokenPairs: [["המוקדנית", "הַמּוֹקְדָנִית"], ["העבירה את", "הֶעֱבִירָה אֶת"], ["הקריאה", "הַקְּרִיאָה"], ["לצוות", "לַצֶּוֶות"]], englishTokens: ["The dispatcher", "passed", "the call", "to the team"],
+    hebrewDistractorPairs: [["השוטרת", "הַשּׁוֹטֶרֶת"], ["סגרה את", "סָגְרָה אֶת"], ["התחנה", "הַתַּחֲנָה"], ["למחר", "לְמָחָר"]], englishDistractors: ["The officer", "closed", "the station", "until tomorrow"], notes: "מוקדנית is a female emergency dispatcher; מוקדן is the masculine form."
+  }),
+  buildReviewedSentence({
+    id: "idan_117", emoji: "😷", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מסכת החמצן נמצאת בתיק הרפואי.", hebrewNiqqud: "מַסֵּכַת הַחַמְצָן נִמְצֵאת בַּתִּיק הָרְפוּאִי.", english: "The oxygen mask is in the medical bag.",
+    hebrewTokenPairs: [["מסכת החמצן", "מַסֵּכַת הַחַמְצָן"], ["נמצאת", "נִמְצֵאת"], ["בתיק הרפואי", "בַּתִּיק הָרְפוּאִי"]], englishTokens: ["The oxygen mask", "is", "in the medical bag"],
+    hebrewDistractorPairs: [["התחבושת", "הַתַּחְבֹּשֶׁת"], ["חסרה", "חֲסֵרָה"], ["ברכב", "בָּרֶכֶב"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["The bandage", "is missing", "in the vehicle", "now"], notes: "מסכת חמצן is an oxygen mask carried with medical equipment."
+  }),
+  buildReviewedSentence({
+    id: "idan_118", emoji: "🛣️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כביש הגישה נשאר פתוח לאמבולנסים.", hebrewNiqqud: "כְּבִישׁ הַגִּישָׁה נִשְׁאַר פָּתוּחַ לְאַמְבּוּלַנְסִים.", english: "The access road remained open to ambulances.",
+    hebrewTokenPairs: [["כביש הגישה", "כְּבִישׁ הַגִּישָׁה"], ["נשאר", "נִשְׁאַר"], ["פתוח", "פָּתוּחַ"], ["לאמבולנסים", "לְאַמְבּוּלַנְסִים"]], englishTokens: ["The access road", "remained", "open", "to ambulances"],
+    hebrewDistractorPairs: [["נתיב הפינוי", "נְתִיב הַפִּנּוּי"], ["נסגר", "נִסְגַּר"], ["חסום", "חָסוּם"], ["למכוניות", "לִמְכוֹנִיּוֹת"]], englishDistractors: ["The evacuation route", "closed", "blocked", "to cars"], notes: "כביש גישה is an access road used by emergency vehicles."
+  }),
+  buildReviewedSentence({
+    id: "idan_119", emoji: "⏱️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "זמן התגובה השתפר במהלך התרגיל.", hebrewNiqqud: "זְמַן הַתְּגוּבָה הִשְׁתַּפֵּר בְּמַהֲלַךְ הַתַּרְגִּיל.", english: "Response time improved during the drill.",
+    hebrewTokenPairs: [["זמן התגובה", "זְמַן הַתְּגוּבָה"], ["השתפר", "הִשְׁתַּפֵּר"], ["במהלך התרגיל", "בְּמַהֲלַךְ הַתַּרְגִּיל"]], englishTokens: ["Response time", "improved", "during the drill"],
+    hebrewDistractorPairs: [["רמת הכוננות", "רָמַת הַכּוֹנְנוּת"], ["ירדה", "יָרְדָה"], ["אחרי האירוע", "אַחֲרֵי הָאֵרוּעַ"], ["מאוד", "מְאֹד"]], englishDistractors: ["The alert level", "dropped", "after the incident", "greatly"], notes: "זמן תגובה is response time, a standard operational measure."
+  }),
+  buildReviewedSentence({
+    id: "idan_120", emoji: "🚁", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הצוות ביקש פינוי מוסק מהשטח.", hebrewNiqqud: "הַצֶּוֶות בִּקֵּשׁ פִּנּוּי מוּסָק מֵהַשֶּׁטַח.", english: "The team requested air evacuation from the field.",
+    hebrewTokenPairs: [["הצוות", "הַצֶּוֶות"], ["ביקש", "בִּקֵּשׁ"], ["פינוי מוסק", "פִּנּוּי מוּסָק"], ["מהשטח", "מֵהַשֶּׁטַח"]], englishTokens: ["The team", "requested", "air evacuation", "from the field"],
+    hebrewDistractorPairs: [["המוקדן", "הַמּוֹקְדָן"], ["ביטל", "בִּטֵּל"], ["פינוי רפואי", "פִּנּוּי רְפוּאִי"], ["מהעיר", "מֵהָעִיר"]], englishDistractors: ["The dispatcher", "cancelled", "medical evacuation", "from the city"], notes: "פינוי מוסק is evacuation by helicopter or aircraft."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
   ...IDAN_SENTENCES,
   ...IVRI_SENTENCES,
+  ...IVRI_TECH_SENTENCES,
+  ...CAST_VOCAB_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -16711,6 +17029,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260807b",
+  __build: "20260808b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

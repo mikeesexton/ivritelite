@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 231);
+  assert.equal(entries.length, 241);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -569,6 +569,39 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
 
   const giveUp = deck.find((entry) => entry.word.he === "לוותר");
   assert.equal(giveUp.forms.find((form) => form.id === "past_first_person_singular")?.englishText, "I gave up");
+});
+
+test("technology verbs add two reviewed senses and ten authoritative paradigms", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  assert.equal(entries.length, 241);
+  assert.equal(deck.length, 259);
+
+  const expected = new Map([
+    ["technology-verb-lehatkin", ["להתקין", "התקנתי", "אתקין"]],
+    ["technology-verb-lehasir", ["להסיר", "הסרתי", "אסיר"]],
+    ["technology-verb-limchok", ["למחוק", "מחקתי", "אמחק"]],
+    ["technology-verb-leshatef", ["לשתף", "שיתפתי", "אשתף"]],
+    ["technology-verb-lesankhren", ["לסנכרן", "סנכרנתי", "אסנכרן"]],
+    ["technology-verb-legabot", ["לגבות", "גיביתי", "אגבה"]],
+    ["technology-verb-leshachzer", ["לשחזר", "שחזרתי", "אשחזר"]],
+    ["technology-verb-lehitchaber", ["להתחבר", "התחברתי", "אתחבר"]],
+    ["technology-verb-lehitnatek", ["להתנתק", "התנתקתי", "אתנתק"]],
+    ["technology-verb-leafes", ["לאפס", "איפסתי", "אאפס"]],
+  ]);
+  expected.forEach(([lemma, past, future], id) => {
+    const seed = entries.find((entry) => entry.id === id);
+    const item = deck.find((entry) => entry.id === `${id}--sense-1`);
+    assert.equal(seed?.lemma, lemma);
+    assert.equal(item?.formSource, "authoritative");
+    assert.equal(item?.forms.length, 21);
+    assert.ok(item.forms.every((form) => /[\u0591-\u05c7]/.test(form.valueNiqqud)));
+    assert.ok(item.forms.some((form) => form.valuePlain === past), `${lemma} missing ${past}`);
+    assert.ok(item.forms.some((form) => form.valuePlain === future), `${lemma} missing ${future}`);
+  });
+
+  assert.equal(deck.find((item) => item.id === "advanced-verb-lehaalot--sense-2")?.word.en, "to upload");
+  assert.equal(deck.find((item) => item.id === "advanced-verb-lehorid--sense-2")?.word.en, "to download");
 });
 
 test("Inbal and Inat verbs expose verified pointed paradigms in conjugation", () => {

@@ -4,7 +4,7 @@
 // AUTHORED, VERIFIED DATA. The app only shuffles and displays these forms — it
 // must never generate, infer, or conjugate verb forms. Ported verbatim from
 // verbs_seed.json (see verb_game_schema.json for the data contract).
-const VERSION = "1.0";
+const VERSION = "1.1";
 
 const DISTRACTOR_STRATEGY = "Build 3 distractors per question from the OTHER existing binyan forms of the SAME root (related-but-wrong is the most instructive). Only when a root has fewer than 4 existing forms, top up from a cross-root gloss pool. In 'identify the function' mode, distractors are sibling forms of the same root whose function differs from the answer.";
 
@@ -1242,6 +1242,164 @@ const ROOTS = [
       hifil:    { exists: true, actual_binyan: "hifil", form_vocalized: "הִטְעִין", form_plain: "הטעין", translit: "hit'in", gloss: "loaded, charged (a battery)", function: "causative", voice: "active", valence: "transitive" },
       hufal:    { exists: true, actual_binyan: "hufal", form_vocalized: "הֻטְעַן", form_plain: "הוטען", translit: "hut'an", gloss: "was charged up", function: "passive", voice: "passive", valence: "intransitive" },
       hitpael:  { exists: false },
+    },
+  },
+  {
+    id: "a-l-h", root: "ע־ל־ה", root_letters: ["ע", "ל", "ה"], gizra: "lamed_he", gizra_label: "ל\"ה", difficulty: "hard",
+    difficulty_reason: "The final ה disappears across the active forms, while the technology sense lives in hif'il and its passive.",
+    core_meaning: "rising and uploading", emoji: "📤",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "עָלָה", form_plain: "עלה", translit: "ala", gloss: "went up, rose", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: false }, piel: { exists: false }, pual: { exists: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הֶעֱלָה", form_plain: "העלה", translit: "he'ela", gloss: "raised, uploaded", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הוּעֲלָה", form_plain: "הועלה", translit: "hu'ala", gloss: "was uploaded", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְעַלָּה", form_plain: "התעלה", translit: "hit'ala", gloss: "rose above, improved", function: "reflexive", voice: "middle", valence: "intransitive" },
+    },
+  },
+  {
+    id: "y-r-d", root: "י־ר־ד", root_letters: ["י", "ר", "ד"], gizra: "pe_yod", gizra_label: "פ\"י", difficulty: "medium",
+    difficulty_reason: "A compact three-branch family whose hif'il supplies the everyday technology verb for downloading.",
+    core_meaning: "descending and downloading", emoji: "📥",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "יָרַד", form_plain: "ירד", translit: "yarad", gloss: "went down, descended", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: false }, piel: { exists: false }, pual: { exists: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הוֹרִיד", form_plain: "הוריד", translit: "horid", gloss: "lowered, downloaded", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הוּרַד", form_plain: "הורד", translit: "hurad", gloss: "was downloaded", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "t-k-n", root: "ת־ק־ן", root_letters: ["ת", "ק", "ן"], gizra: "shlemim", gizra_label: "שלמים", difficulty: "medium",
+    difficulty_reason: "Repair belongs to pi'el, while software installation moves to hif'il; both have useful passives.",
+    core_meaning: "repairing and installing", emoji: "🛠️",
+    forms: {
+      paal: { exists: false }, nifal: { exists: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "תִּקֵּן", form_plain: "תיקן", translit: "tiken", gloss: "repaired, corrected", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "תֻּקַּן", form_plain: "תוקן", translit: "tukan", gloss: "was repaired", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִתְקִין", form_plain: "התקין", translit: "hitkin", gloss: "installed", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻתְקַן", form_plain: "הותקן", translit: "hutkan", gloss: "was installed", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "sh-t-f", root: "ש־ת־ף", root_letters: ["ש", "ת", "ף"], gizra: "shlemim", gizra_label: "שלמים", difficulty: "medium",
+    difficulty_reason: "The common active, passive, and reciprocal branches cover sharing, inclusion, and participation.",
+    core_meaning: "sharing and participating", emoji: "🔗",
+    forms: {
+      paal: { exists: false }, nifal: { exists: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "שִׁתֵּף", form_plain: "שיתף", translit: "shitef", gloss: "shared, included", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "שֻׁתַּף", form_plain: "שותף", translit: "shutaf", gloss: "was included", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: false }, hufal: { exists: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִשְׁתַּתֵּף", form_plain: "השתתף", translit: "hishtatef", gloss: "participated", function: "reciprocal", voice: "middle", valence: "intransitive" },
+    },
+  },
+  {
+    id: "d-f-s", root: "ד־פ־ס", root_letters: ["ד", "פ", "ס"], gizra: "shlemim", gizra_label: "שלמים", difficulty: "medium",
+    difficulty_reason: "Modern Hebrew uses the passive nif'al and the causative hif'il/huf'al pair, with no everyday pa'al.",
+    core_meaning: "printing and appearing in print", emoji: "🖨️",
+    forms: {
+      paal: { exists: false },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִדְפַּס", form_plain: "נדפס", translit: "nidpas", gloss: "appeared in print", function: "passive", voice: "middle", valence: "intransitive" },
+      piel: { exists: false }, pual: { exists: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִדְפִּיס", form_plain: "הדפיס", translit: "hidpis", gloss: "printed something", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻדְפַּס", form_plain: "הודפס", translit: "hudpas", gloss: "was sent to a printer", function: "passive", voice: "passive", valence: "intransitive", distractor_eligible: false, register: "technical" },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "g-b-h", root: "ג־ב־ה", root_letters: ["ג", "ב", "ה"], gizra: "lamed_he", gizra_label: "ל\"ה", difficulty: "hard",
+    difficulty_reason: "One spelling family spans collection, digital backup, and physical elevation across six productive slots.",
+    core_meaning: "collecting, backing up, and raising", emoji: "☁️",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "גָּבָה", form_plain: "גבה", translit: "gava", gloss: "collected a payment", function: "simple", voice: "active", valence: "transitive" },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִגְבָּה", form_plain: "נגבה", translit: "nigba", gloss: "was collected", function: "passive", voice: "passive", valence: "intransitive" },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "גִּבָּה", form_plain: "גיבה", translit: "giba", gloss: "backed up, supported", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "גֻּבָּה", form_plain: "גובה", translit: "guba", gloss: "was backed up", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִגְבִּיהַ", form_plain: "הגביה", translit: "higbia", gloss: "raised, made higher", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻגְבַּה", form_plain: "הוגבה", translit: "hugba", gloss: "was raised higher", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "kh-l-f", root: "ח־ל־ף", root_letters: ["ח", "ל", "ף"], gizra: "pe_guttural", gizra_label: "פ\"ח", difficulty: "hard",
+    difficulty_reason: "Seven living branches distinguish passing, replacement, exchange, and alternation while the guttural reshapes prefixes.",
+    core_meaning: "passing and replacing", emoji: "🔄",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "חָלַף", form_plain: "חלף", translit: "chalaf", gloss: "passed, went by", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נֶחֱלַף", form_plain: "נחלף", translit: "nechelaf", gloss: "was superseded", function: "passive", voice: "passive", valence: "intransitive", distractor_eligible: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "חִלֵּף", form_plain: "חילף", translit: "chilef", gloss: "changed components", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "חֻלַּף", form_plain: "חולף", translit: "chulaf", gloss: "had a component replaced", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הֶחֱלִיף", form_plain: "החליף", translit: "hechelif", gloss: "replaced, exchanged", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻחְלַף", form_plain: "הוחלף", translit: "huchlaf", gloss: "was exchanged", function: "passive", voice: "passive", valence: "intransitive", distractor_eligible: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְחַלֵּף", form_plain: "התחלף", translit: "hitchalef", gloss: "changed over, alternated", function: "middle", voice: "middle", valence: "intransitive" },
+    },
+  },
+  {
+    id: "b-t-l", root: "ב־ט־ל", root_letters: ["ב", "ט", "ל"], gizra: "shlemim", gizra_label: "שלמים", difficulty: "medium",
+    difficulty_reason: "A clean contrast between ceasing, actively canceling, passive cancellation, and a middle event being called off.",
+    core_meaning: "ceasing and canceling", emoji: "🚫",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "בָּטַל", form_plain: "בטל", translit: "batal", gloss: "ceased, became idle", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "בִּטֵּל", form_plain: "ביטל", translit: "bitel", gloss: "canceled something", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "בֻּטַּל", form_plain: "בוטל", translit: "butal", gloss: "was formally canceled", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: false }, hufal: { exists: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְבַּטֵּל", form_plain: "התבטל", translit: "hitbatel", gloss: "got called off", function: "middle", voice: "middle", valence: "intransitive" },
+    },
+  },
+  {
+    id: "p-s-k", root: "פ־ס־ק", root_letters: ["פ", "ס", "ק"], gizra: "shlemim", gizra_label: "שלמים", difficulty: "medium",
+    difficulty_reason: "Stopping, legal rulings, punctuation, and causative interruption occupy six sharply different branches.",
+    core_meaning: "stopping and separating", emoji: "⏹️",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "פָּסַק", form_plain: "פסק", translit: "pasak", gloss: "stopped; ruled", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִפְסַק", form_plain: "נפסק", translit: "nifsak", gloss: "was interrupted", function: "passive", voice: "passive", valence: "intransitive" },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "פִּסֵּק", form_plain: "פיסק", translit: "pisek", gloss: "punctuated a text", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "פֻּסַּק", form_plain: "פוסק", translit: "pusak", gloss: "was punctuated", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִפְסִיק", form_plain: "הפסיק", translit: "hifsik", gloss: "stopped something", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻפְסַק", form_plain: "הופסק", translit: "hufsak", gloss: "was discontinued", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "n-t-k", root: "נ־ת־ק", root_letters: ["נ", "ת", "ק"], gizra: "shlemim", gizra_label: "שלמים", difficulty: "medium",
+    difficulty_reason: "Physical separation in pa'al becomes deliberate disconnection in pi'el and self-disconnection in hitpa'el.",
+    core_meaning: "disconnecting and breaking away", emoji: "🔌",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "נָתַק", form_plain: "נתק", translit: "natak", gloss: "broke away, tore free", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "נִתֵּק", form_plain: "ניתק", translit: "nitek", gloss: "disconnected something", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "נֻתַּק", form_plain: "נותק", translit: "nutak", gloss: "was disconnected", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: false }, hufal: { exists: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְנַתֵּק", form_plain: "התנתק", translit: "hitnatek", gloss: "signed out, disconnected", function: "middle", voice: "middle", valence: "intransitive" },
+    },
+  },
+  {
+    id: "sh-kh-kh", root: "ש־כ־ח", root_letters: ["ש", "כ", "ח"], gizra: "lamed_guttural", gizra_label: "ל\"ח", difficulty: "hard",
+    difficulty_reason: "The final guttural affects vowels while active and passive branches distinguish forgetting from causing something to be forgotten.",
+    core_meaning: "forgetting and obscuring", emoji: "🧠",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "שָׁכַח", form_plain: "שכח", translit: "shachach", gloss: "forgot", function: "simple", voice: "active", valence: "transitive" },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִשְׁכַּח", form_plain: "נשכח", translit: "nishkach", gloss: "was forgotten", function: "passive", voice: "passive", valence: "intransitive" },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "שִׁכֵּחַ", form_plain: "שיכח", translit: "shikeach", gloss: "made someone forget", function: "intensive", voice: "active", valence: "transitive", register: "literary", distractor_eligible: false },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "שֻׁכַּח", form_plain: "שוכח", translit: "shukach", gloss: "was made to forget", function: "passive", voice: "passive", valence: "intransitive", register: "rare", distractor_eligible: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִשְׁכִּיחַ", form_plain: "השכיח", translit: "hishkiach", gloss: "caused to fade from memory", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻשְׁכַּח", form_plain: "הושכח", translit: "hushkach", gloss: "was deliberately obscured", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "l-kh-m", root: "ל־ח־ם", root_letters: ["ל", "ח", "ם"], gizra: "ayin_guttural", gizra_label: "ע\"ח", difficulty: "hard",
+    difficulty_reason: "The same written root crosses fighting, soldering, and welding, with the guttural ח changing the vowel patterns.",
+    core_meaning: "fighting and joining materials", emoji: "🧰",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "לָחַם", form_plain: "לחם", translit: "lacham", gloss: "fought", function: "simple", voice: "active", valence: "intransitive" },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִלְחַם", form_plain: "נלחם", translit: "nilcham", gloss: "struggled, fought against", function: "middle", voice: "middle", valence: "intransitive" },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "לִחֵּם", form_plain: "ליחם", translit: "lichem", gloss: "soldered", function: "intensive", voice: "active", valence: "transitive" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "לֻחַּם", form_plain: "לוחם", translit: "lucham", gloss: "was soldered", function: "passive", voice: "passive", valence: "intransitive" },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִלְחִים", form_plain: "הלחים", translit: "hilchim", gloss: "welded together", function: "causative", voice: "active", valence: "transitive" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻלְחַם", form_plain: "הולחם", translit: "hulcham", gloss: "was welded together", function: "passive", voice: "passive", valence: "intransitive" },
+      hitpael: { exists: false },
     },
   },
 ];

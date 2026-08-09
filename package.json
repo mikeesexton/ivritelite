@@ -8,6 +8,7 @@
     "sprites:clean-edges": "python scripts/clean-sprite-edges.py",
     "sprites:audit": "python scripts/audit-sprites.py",
     "report:characters": "node ./scripts/character-content-report.js",
+    "report:coverage": "node ./scripts/content-coverage-report.js",
     "migrate:verbs": "node ./migrate-hebrew-verbs.mjs"
   }
 }
