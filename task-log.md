@@ -7177,3 +7177,16 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Tests run:** Initial `npm test` after the artwork rebuild — **386 pass, 1 fail**, with only the expected frozen sprite-lock hash drift. `python scripts/audit-sprites.py --write-lock` — **pass; approved lock refreshed**. Final `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 deterministic rebuilds**. `node --test tests/sprite-lock.test.js` — **2 pass, 0 fail**. Final `npm test` — **387 pass, 0 fail, 0 cancelled**. Visual comparison at the actual 512px runtime size — **pass**. Programmatic alpha comparison against Git `HEAD` — **identical alpha masks for both edited masters**; RGB changes are confined to `(510, 510, 700, 615)` on each 1254px master.
 
 **Risks / regressions to check:** The smiles are deliberately friendly and closed-mouth rather than broad grins, so they preserve Ido's established reserved personality. Recheck at unusually small companion render sizes if future CSS reduces the character below its current presentation; no layout or code changed in this task.
+
+### 2026-08-08 22:25 EDT — Publish and merge Ido's friendlier expressions
+
+**Requested:** Push the completed Ido neutral and thumbs-up smile edits to GitHub and merge them into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded the publication workflow. The artwork and lock update were committed as `6c46da6` on `agent/warm-ido-smiles` and opened as ready PR #63 targeting `main`.
+
+**Behavior changed:** The approved friendlier neutral and mission-complete/thumbs-up expressions are published through GitHub PR #63 and merged into the repository's default branch. No additional runtime behavior changed during publication.
+
+**Tests run:** The publication used the immediately preceding final `npm test` result — **387 pass, 0 fail, 0 cancelled** — plus the passing deterministic sprite audit, focused sprite-lock test (**2 pass, 0 fail**), alpha-mask comparison, 512px visual review, and `git diff --check` (**pass**).
+
+**Risks / regressions to check:** None specific to publication. The expression-level small-rendering consideration remains recorded in the artwork entry directly above.
