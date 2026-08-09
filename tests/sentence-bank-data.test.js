@@ -2014,6 +2014,25 @@ test("formal_40 accepts the alternate English order with fronted prepositional p
   });
 });
 
+test("colloquial_72 accepts the English duration after the topic", () => {
+  const api = loadSentenceBankApi();
+  const entry = api.getSentenceBank().find((sentence) => sentence.id === "colloquial_72");
+  assert.ok(entry, "colloquial_72 exists");
+  const alternate = entry.english_alternates.find(
+    (variant) => variant.text === "You went on and on at me about your new diet for an hour."
+  );
+  assert.ok(alternate, "colloquial_72 has the requested duration-final English alternate");
+  assert.deepEqual(Array.from(alternate.tokens), [
+    "You went on and on",
+    "at me",
+    "about",
+    "your",
+    "new diet",
+    "for an hour",
+  ]);
+  assert.equal(alternate.tokens.length, entry.english_tokens.length);
+});
+
 test("colloquial_105 accepts the reordered Hebrew word order with pre-verbal רק", () => {
   const api = loadSentenceBankApi();
   const entry = api.getSentenceBank().find((sentence) => sentence.id === "colloquial_105");

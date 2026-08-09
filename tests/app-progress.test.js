@@ -2494,6 +2494,32 @@ function answerRealSentenceInHebrew(id, tokens) {
   return { document, state };
 }
 
+test("sentence builder marks colloquial_72's duration-final English wording correct", () => {
+  const harness = loadAppHarness([], [], [], { sentenceBank: loadRealSentenceBankEntries(["colloquial_72"]) });
+  const { document, state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "he2en")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  fillSentenceAnswerByTap(document, [
+    "You went on and on",
+    "at me",
+    "about",
+    "your",
+    "new diet",
+    "for an hour",
+  ]);
+  document.querySelector("#nextBtn").click();
+
+  assert.equal(state.sentenceBank.currentQuestion.wasLastAnswerCorrect, true);
+  assert.match(
+    getFeedbackText(document),
+    /^Correct\. The English sentence is You went on and on at me about your new diet for an hour\./
+  );
+});
+
 // The feminine tiles have to be rendered for the tap to land at all, so this
 // covers both halves: the chip reaches the pool, and the answer is accepted.
 test("sentence builder lets a learner answer in the feminine on a gender-alternate row", () => {

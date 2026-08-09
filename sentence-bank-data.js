@@ -9673,7 +9673,13 @@ const SENTENCE_EXPANSION_ROUND2 = [
         tokenPairs: [["חפרת", "חָפַרְתָּ"], ["לי", "לִי"], ["על", "עַל"], ["הדיאטה", "הַדִּיאֵטָה"], ["החדשה", "הַחֲדָשָׁה"], ["שלך", "שֶׁלְּךָ"], ["שעה", "שָׁעָה"]],
       },
     ],
-    notes: "לחפור — literally 'to dig' — is slang for talking someone's ear off. סיפרת (you told) is the neutral verb it replaces. The duration שעה may sit right after the verb phrase or trail at the end of the clause; both orders are accepted."
+    englishAlternates: [
+      {
+        text: "You went on and on at me about your new diet for an hour.",
+        tokens: ["You went on and on", "at me", "about", "your", "new diet", "for an hour"],
+      },
+    ],
+    notes: "לחפור — literally 'to dig' — is slang for talking someone's ear off. סיפרת (you told) is the neutral verb it replaces. The duration may appear before or after the topic in both languages; both orders are accepted."
   }),
   buildExpandedSentence({
     id: "colloquial_73", emoji: "💪", category: "colloquial", difficulty: 3,
@@ -17029,6 +17035,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260808b",
+  __build: "20260809a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
