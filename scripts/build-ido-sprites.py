@@ -57,7 +57,7 @@ LOGO_BITMAP = (
 
 # Coordinates are pose-specific top-left positions on the final 512px canvas.
 LOGO_PLACEMENTS = {
-    "neutral": (197, 408),
+    "neutral": (197, 424),
     "nervous-laugh": (209, 408),
     "celebrating": (204, 408),
     "struggling": (195, 408),

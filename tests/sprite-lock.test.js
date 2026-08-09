@@ -72,3 +72,11 @@ test("all locked builders retain the direct 1254-to-512 export structure", () =>
     );
   }
 });
+
+test("Ido's neutral shirt logo stays centered below the collar", () => {
+  const source = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts", "build-ido-sprites.py"),
+    "utf8",
+  );
+  assert.match(source, /"neutral": \(197, 424\),/);
+});

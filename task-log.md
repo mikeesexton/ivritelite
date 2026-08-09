@@ -7342,3 +7342,29 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - `git diff --check` — **pass** before this log entry.
 
 **Risks / regressions to check:** The approved generated RGB is paired with the prior tracked alpha silhouette so the app continues to use a transparent sprite rather than the generated black background. The runtime logo is intentionally added by `scripts/build-ido-sprites.py` instead of being baked into the master, preserving the project's existing deterministic sprite architecture. Future rebuilds must continue through that builder or the logo will not be present in a direct master resize.
+
+### 2026-08-09 11:01 EDT — Lower Ido's neutral shirt logo and retain the visual lesson
+
+**Requested:** Fix the shirt logo because it sat too high beneath Ido's collar, and preserve project memory that improves future character-art review.
+
+**Files changed:**
+- `scripts/build-ido-sprites.py` — moved only the neutral pose's unchanged logo bitmap from `(197, 408)` to `(197, 424)`, 16 native runtime pixels lower; all other Ido reaction placements remain unchanged.
+- `assets/ido/neutral.png` — deterministically rebuilt with the corrected logo placement. The approved face, body source, alpha silhouette, logo scale, logo palette, and horizontal position are unchanged.
+- `assets/sprite-lock.json` — refreshed the approved neutral runtime hash and measured metadata after the corrected rebuild passed the audit.
+- `tests/sprite-lock.test.js` — added an explicit regression assertion pinning the approved neutral placement `(197, 424)` below the collar.
+- `AGENTS.md` — added required character-sprite visual-review instructions: inspect the final composite at native and actual app sizes, do not treat technical audits as aesthetic validation, do not reuse overlay coordinates without pose-specific visual confirmation, and retain explicit placement regressions.
+- `styles.css`, `index.html`, and `tests/character-mission.test.js` — advanced the sprite/style cache key from `20260809d` to `20260809e` so clients request the corrected asset.
+- `task-log.md` — recorded the placement correction, persistent project instruction, measurements, and verification.
+
+**Behavior changed:** Ido's neutral/picker/greeting logo now sits visibly below the collar and is centered on the shirt rather than appearing attached to the neckline. No image generation was used. The project now contains both a coordinate regression and persistent agent instructions addressing the review failure that allowed the high placement.
+
+**Tests run:**
+- `python scripts/audit-sprites.py --write-lock` — **pass; corrected runtime lock refreshed**.
+- `python scripts/audit-sprites.py` — **pass: 30 production files, 30 tracked masters, and 30 direct deterministic rebuilds**.
+- `node --test tests/sprite-lock.test.js tests/character-mission.test.js` — **62 pass, 0 fail**.
+- `npm test` — **390 pass, 0 fail, 0 cancelled**.
+- Programmatic comparison to Git `HEAD` — **pass: alpha identical; changed RGB confined to the old/new logo band `(197, 408, 311, 502)`**.
+- Visual inspection of `assets/ido/neutral.png` at native 512px and 160px, 132px, and 104px companion sizes — **pass: clear gap below the collar, centered chest placement, and crisp unchanged logo pixels**.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** The neutral logo now extends close to the lower edge of the 512px crop, but its visible pixels remain fully inside the canvas. If Ido's neutral torso is replaced again, the pinned coordinate must not be updated from geometry alone: review the actual composite at both required sizes first. `AGENTS.md` is repository-scoped memory for future agents; it does not create global model memory outside this project.

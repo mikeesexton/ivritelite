@@ -24,6 +24,20 @@ Do not skip the log entry even for small or documentation-only tasks.
 - Do not add comments or docstrings to code you did not write.
 - Run `npm test` before and after non-trivial code changes and record the result in the log.
 
+## Character sprite visual review (required)
+
+- Inspect the final composited runtime sprite, not only its source master or an
+  isolated overlay, before accepting any character-art change.
+- Review the sprite at native 512px and at the app's actual companion size.
+  File hashes, deterministic rebuilding, alpha checks, and pixel measurements
+  do not establish visually correct composition.
+- For pose-specific overlays such as Ido's shirt logo, confirm placement against
+  the current body and clothing before refreshing the sprite lock. Never reuse
+  coordinates from another reaction or an earlier body image without visual
+  confirmation.
+- Keep an explicit regression assertion for an approved pose-specific overlay
+  placement so a later rebuild cannot silently restore a rejected position.
+
 ## Gameplay viewport floor (required)
 
 - Gameplay UI changes must keep all active, answer, and feedback states usable without vertical scrolling or footer overlap at 360×640 CSS pixels.
