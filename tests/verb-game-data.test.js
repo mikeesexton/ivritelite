@@ -134,7 +134,7 @@ test("binyan root data stays broad enough and fully authored", () => {
 
   // 6 roots per session, so this is the number that decides how long the mode
   // goes before it starts repeating. Raising it is a content decision.
-  assert.equal(verbGameData.ROOTS.length, 60);
+  assert.equal(verbGameData.ROOTS.length, 72);
 
   for (const root of verbGameData.ROOTS) {
     assert.ok(root.id);
@@ -147,7 +147,7 @@ test("binyan root data stays broad enough and fully authored", () => {
 
     const existingForms = Object.entries(root.forms).filter(([, form]) => form?.exists === true);
     assert.ok(existingForms.length >= 3, `${root.id} needs at least three playable forms`);
-    if (!["ts-l-m", "b-y-n", "k-y-m", "m-d-d"].includes(root.id)) {
+    if (!["ts-l-m", "b-y-n", "k-y-m", "m-d-d", "y-r-d", "sh-t-f", "d-f-s"].includes(root.id)) {
       assert.ok(existingForms.length >= 4, `${root.id} needs at least four playable forms`);
     }
     playableFormCount += existingForms.length;

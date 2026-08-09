@@ -426,14 +426,14 @@ const POLITICAL_ENTRY_IDS = [
 ];
 
 const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
-const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 95).map((id) => id.replace(/_(\d)$/, "_0$1"));
-const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 25).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 101).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 30).map((id) => id.replace(/_(\d)$/, "_0$1"));
 // Idan's tranche. Registering it here switches on the seven alignment checks the
 // rows had been escaping — pointed Hebrew, plain/niqqud token parity, the 4-6
 // distractor budget, duplicate distractors, and target reuse.
-// Extended to 115 by the civil-defense tranche: idan_91-110 carry the cast-wide
-// shelf and are listed in CAST_WIDE_SENTENCE_IDS, idan_111-115 stay his own.
-const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 115).map((id) => id.replace(/_(\d)$/, "_0$1"));
+// Extended to 120: idan_91-110 carry the cast-wide shelf and are listed in
+// CAST_WIDE_SENTENCE_IDS; idan_111-120 stay his own.
+const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 120).map((id) => id.replace(/_(\d)$/, "_0$1"));
 // One-word-focus rows added alongside the תחרותי / ספורים / בלי חרטות cards and
 // the לקלוט, להגיש, להקליט conjugation entries. Registered here so the alignment
 // checks below cover them; the compact-token policy already does, via their
@@ -464,6 +464,8 @@ const LEHAKIR_ENTRY_IDS = ["professional_97", "everyday_146", "inbal_96"];
 // checks below cover them; the compact-token policy already does, via
 // COMPACT_TOKEN_POLICY_START.professional.
 const IVRI_ENTRY_IDS = sentenceIdRange("professional", 98, 122);
+const IVRI_TECH_ENTRY_IDS = sentenceIdRange("professional", 123, 152);
+const IDO_CAST_VOCAB_ENTRY_IDS = sentenceIdRange("colloquial", 163, 167);
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -813,6 +815,59 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     notice period
     cash flow
   `, "term: recognized multiword vocabulary unit"),
+  // professional_123-152. These are labels and actions learners encounter as
+  // whole units in a Hebrew smartphone interface, mirrored by dedicated cards.
+  ...compactUnitMap(`
+    location services
+    cellular data
+    data roaming
+    screen brightness
+    home screen
+    paired device
+    search bar
+    control center
+    focus mode
+    notification center
+    battery saver
+    battery health
+    screen recording
+    app library
+    status bar
+    airplane mode
+    default settings
+    automatic updates
+    software update
+    app store
+    storage space
+    mobile network
+    live captions
+    video call
+    voice control
+    clear cache
+  `, "term: recognized multiword smartphone interface unit"),
+  // The five-card cast additions and closely related distractors are also
+  // dedicated vocabulary units rather than convenient phrase grouping.
+  ...compactUnitMap(`
+    voice message
+    group chat
+    private message
+    liturgical poem
+    weekly torah portion
+    sabbath bulletin
+    prayer book
+    prayer shawl bag
+    hanukkah menorah
+    literary essay
+    point view
+    lyrical speaker
+    oxygen mask
+    medical bag
+    access road
+    response time
+    air evacuation
+    evacuation route
+    medical evacuation
+  `, "term: recognized multiword vocabulary unit"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -987,15 +1042,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 767 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 817 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 767);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 767);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 767);
+  assert.equal(entries.length, 817);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 817);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 817);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1100,10 +1155,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
-    colloquial: 202,
-    everyday: 309,
-    professional: 138,
-    formal: 118,
+    colloquial: 207,
+    everyday: 319,
+    professional: 168,
+    formal: 123,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1186,6 +1241,8 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...AGAF_ENTRY_IDS,
     ...LEHAKIR_ENTRY_IDS,
     ...IVRI_ENTRY_IDS,
+    ...IVRI_TECH_ENTRY_IDS,
+    ...IDO_CAST_VOCAB_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
@@ -1263,8 +1320,8 @@ test("Inbal and Inat sentence tranches stay aligned and exercise their conjugati
   const inbal = INBAL_ENTRY_IDS.map((id) => byId.get(id));
   const inat = INAT_ENTRY_IDS.map((id) => byId.get(id));
 
-  assert.equal(inbal.length, 95);
-  assert.equal(inat.length, 25);
+  assert.equal(inbal.length, 101);
+  assert.equal(inat.length, 30);
   assert.ok([...inbal, ...inat].every(Boolean));
   [...inbal, ...inat].forEach((entry) => {
     assert.equal(entry.hebrew_tokens.length, entry.english_tokens.length, `${entry.id} bilingual target count`);

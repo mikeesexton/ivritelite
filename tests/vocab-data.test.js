@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2108);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2043);
+  assert.equal(vocabulary.length, 2168);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2103);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -314,10 +314,10 @@ test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", ()
   ]);
   const expectedCounts = new Map([
     ["religion_magic_spirituality", 138],
-    ["literature_arts_cultural_history", 30],
-    ["religious_life_practice", 111],
-    ["devices_os_apps", 75],
-    ["emergency_response", 67],
+    ["literature_arts_cultural_history", 35],
+    ["religious_life_practice", 116],
+    ["devices_os_apps", 115],
+    ["emergency_response", 72],
   ]);
 
   expected.forEach((requiredHebrew, category) => {
@@ -393,6 +393,21 @@ test("the rumor card is playable, pointed, and unique", () => {
   assert.equal(word.availability?.translationQuiz, true);
   assert.equal(vocabulary.filter((entry) => entry.he === word.he).length, 1);
   assert.equal(vocabulary.filter((entry) => entry.en === word.en).length, 1);
+});
+
+test("Ivri smartphone-interface tranche adds 40 pointed append-only cards", () => {
+  const vocabulary = loadVocabulary();
+  const additions = vocabulary.filter((word) => (
+    word.category === "devices_os_apps" && Number(word.id.split("-")[1]) >= 76
+  ));
+  assert.equal(additions.length, 40);
+  assert.ok(additions.every((word) => word.availability.translationQuiz));
+  assert.ok(additions.every((word) => /[\u0591-\u05c7]/.test(word.heNiqqud)));
+  const byHebrew = new Map(additions.map((word) => [word.he, word]));
+  [
+    "נגישות", "שירותי מיקום", "קוד גישה", "מצב ריכוז", "הקלטת מסך",
+    "עדכון תוכנה", "מטמון", "לגבות", "לשחזר", "למחוק",
+  ].forEach((hebrew) => assert.ok(byHebrew.has(hebrew), `missing ${hebrew}`));
 });
 
 // A card whose heNiqqud is just a copy of its plain form renders unpointed with
