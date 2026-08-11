@@ -15198,7 +15198,7 @@ const IDAN_SENTENCES = [
     english: "There's a fire extinguisher next to the emergency exit.",
     hebrewTokenPairs: [["יש", "יֵשׁ"], ["מטף", "מַטָּף"], ["ליד", "לְיַד"], ["יציאת החירום", "יְצִיאַת הַחֵירוּם"]],
     englishTokens: ["There's", "a fire extinguisher", "next to", "the emergency exit"],
-    hebrewDistractorPairs: [["אין", "אֵין"], ["מסכה", "מַסֵּיכָה"], ["מתחת", "מִתַּחַת"], ["למרחב המוגן", "לַמֶּרְחָב הַמּוּגָן"]],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["מסכה", "מַסֵּכָה"], ["מתחת", "מִתַּחַת"], ["למרחב המוגן", "לַמֶּרְחָב הַמּוּגָן"]],
     englishDistractors: ["There isn't", "a mask", "under", "the protected space"],
     notes: "מטף is the handheld extinguisher; the sign on the wall reads מטף כיבוי."
   }),
@@ -15673,9 +15673,9 @@ const IDAN_SENTENCES = [
   buildReviewedSentence({
     id: "idan_50", emoji: "🚰", category: "everyday", difficulty: 1,
     wordOrderDecision: "fixed",
-    hebrew: "העירייה הודיעה על הפסקת מים.", hebrewNiqqud: "הָעִירִייָּה הוֹדִיעָה עַל הַפְסָקַת מַיִם.",
+    hebrew: "העירייה הודיעה על הפסקת מים.", hebrewNiqqud: "הָעִירִיָּה הוֹדִיעָה עַל הַפְסָקַת מַיִם.",
     english: "The municipality announced a water outage.",
-    hebrewTokenPairs: [["העירייה", "הָעִירִייָּה"], ["הודיעה", "הוֹדִיעָה"], ["על הפסקת מים", "עַל הַפְסָקַת מַיִם"]],
+    hebrewTokenPairs: [["העירייה", "הָעִירִיָּה"], ["הודיעה", "הוֹדִיעָה"], ["על הפסקת מים", "עַל הַפְסָקַת מַיִם"]],
     englishTokens: ["The municipality", "announced", "a water outage"],
     hebrewDistractorPairs: [["המשטרה", "הַמִּשְׁטָרָה"], ["ביטלה", "בִּיטְּלָה"], ["את הסגר", "אֶת הַסֶּגֶר"], ["את העוצר", "אֶת הָעוֹצֶר"]],
     englishDistractors: ["The police", "cancelled", "the lockdown", "the curfew"],
@@ -15743,7 +15743,7 @@ const IDAN_SENTENCES = [
     english: "I installed the app of Home Front Command.",
     hebrewTokenPairs: [["התקנתי", "הִתְקַנְתִּי"], ["את האפליקציה", "אֶת הָאַפְלִיקַצְיָה"], ["של פיקוד העורף", "שֶׁל פִּיקּוּד הָעֹרֶף"]],
     englishTokens: ["I installed", "the app", "of Home Front Command"],
-    hebrewDistractorPairs: [["מחקתי", "מָחַקְתִּי"], ["את ההתראה", "אֶת הַהַתְרָאָה"], ["של העירייה", "שֶׁל הָעִירִייָּה"], ["של המוקד", "שֶׁל הַמּוֹקֵד"]],
+    hebrewDistractorPairs: [["מחקתי", "מָחַקְתִּי"], ["את ההתראה", "אֶת הַהַתְרָאָה"], ["של העירייה", "שֶׁל הָעִירִיָּה"], ["של המוקד", "שֶׁל הַמּוֹקֵד"]],
     englishDistractors: ["I deleted", "the notification", "of the municipality", "of the center"],
     notes: "The app pushes a התרעה before the physical אזעקה reaches your area."
   }),
@@ -15805,9 +15805,9 @@ const IDAN_SENTENCES = [
   buildReviewedSentence({
     id: "idan_62", emoji: "🏡", category: "everyday", difficulty: 2,
     wordOrderDecision: "fixed",
-    hebrew: "אשתי נשארה לבד עם הילדים.", hebrewNiqqud: "אִישְׁתִּי נִשְׁאֲרָה לְבַד עִם הַיְלָדִים.",
+    hebrew: "אשתי נשארה לבד עם הילדים.", hebrewNiqqud: "אִשְׁתִּי נִשְׁאֲרָה לְבַד עִם הַיְלָדִים.",
     english: "My wife stayed alone with the children.",
-    hebrewTokenPairs: [["אשתי", "אִישְׁתִּי"], ["נשארה", "נִשְׁאֲרָה"], ["לבד", "לְבַד"], ["עם הילדים", "עִם הַיְלָדִים"]],
+    hebrewTokenPairs: [["אשתי", "אִשְׁתִּי"], ["נשארה", "נִשְׁאֲרָה"], ["לבד", "לְבַד"], ["עם הילדים", "עִם הַיְלָדִים"]],
     englishTokens: ["My wife", "stayed", "alone", "with the children"],
     hebrewDistractorPairs: [["אחי", "אָחִי"], ["חזר", "חָזַר"], ["מהר", "מַהֵר"], ["עם השכנים", "עִם הַשְּׁכֵנִים"]],
     englishDistractors: ["My brother", "returned", "quickly", "with the neighbours"],
@@ -15948,9 +15948,9 @@ const IDAN_SENTENCES = [
   buildReviewedSentence({
     id: "idan_75", emoji: "🗂️", category: "everyday", difficulty: 2,
     wordOrderDecision: "fixed",
-    hebrew: "בשלישות מלאתי טופס וחתמתי.", hebrewNiqqud: "בַּשְּׁלִישׁוּת מִילֵּאתִי טוֹפֶס וְחָתַמְתִּי.",
+    hebrew: "בשלישות מלאתי טופס וחתמתי.", hebrewNiqqud: "בַּשְּׁלִישׁוּת מִלֵּאתִי טוֹפֶס וְחָתַמְתִּי.",
     english: "At the adjutancy I filled a form and signed.",
-    hebrewTokenPairs: [["בשלישות", "בַּשְּׁלִישׁוּת"], ["מלאתי", "מִילֵּאתִי"], ["טופס", "טוֹפֶס"], ["וחתמתי", "וְחָתַמְתִּי"]],
+    hebrewTokenPairs: [["בשלישות", "בַּשְּׁלִישׁוּת"], ["מלאתי", "מִלֵּאתִי"], ["טופס", "טוֹפֶס"], ["וחתמתי", "וְחָתַמְתִּי"]],
     englishTokens: ["At the adjutancy", "I filled", "a form", "and signed"],
     hebrewDistractorPairs: [["באפסנאות", "בָּאַפְסְנָאוּת"], ["איבדתי", "אִיבַּדְתִּי"], ["מפתח", "מַפְתֵּחַ"], ["וחיכיתי", "וְחִיכִּיתִי"]],
     englishDistractors: ["At the stores", "I lost", "a key", "and waited"],
@@ -16141,9 +16141,9 @@ const IDAN_SENTENCES = [
   buildReviewedSentence({
     id: "idan_92", emoji: "⚠️", category: "everyday", difficulty: 3,
     wordOrderDecision: "fixed",
-    hebrew: "אם יש מפגע בטיחותי, מדווחים לעירייה.", hebrewNiqqud: "אִם יֵשׁ מִפְגָּע בְּטִיחוּתִי, מְדַוְּוחִים לָעִירִיָּיה.",
+    hebrew: "אם יש מפגע בטיחותי, מדווחים לעירייה.", hebrewNiqqud: "אִם יֵשׁ מִפְגָּע בְּטִיחוּתִי, מְדַוְּוחִים לָעִירִיָּה.",
     english: "If there is a safety hazard, you notify the municipality.",
-    hebrewTokenPairs: [["אם", "אִם"], ["יש", "יֵשׁ"], ["מפגע בטיחותי", "מִפְגָּע בְּטִיחוּתִי"], ["מדווחים", "מְדַוְּוחִים"], ["לעירייה", "לָעִירִיָּיה"]],
+    hebrewTokenPairs: [["אם", "אִם"], ["יש", "יֵשׁ"], ["מפגע בטיחותי", "מִפְגָּע בְּטִיחוּתִי"], ["מדווחים", "מְדַוְּוחִים"], ["לעירייה", "לָעִירִיָּה"]],
     englishTokens: ["If", "there is", "a safety hazard", "you notify", "the municipality"],
     hebrewDistractorPairs: [["כאשר", "כַּאֲשֶׁר"], ["אין", "אֵין"], ["מטף", "מַטָּף"], ["שואלים", "שׁוֹאֲלִים"], ["את השכן", "אֶת הַשָּׁכֵן"]],
     englishDistractors: ["When", "there isn't", "a fire extinguisher", "you ask", "the neighbour"],
@@ -16185,9 +16185,9 @@ const IDAN_SENTENCES = [
   buildReviewedSentence({
     id: "idan_96", emoji: "📣", category: "everyday", difficulty: 2,
     wordOrderDecision: "fixed",
-    hebrew: "העירייה פרסמה הודעה לציבור.", hebrewNiqqud: "הָעִירִיָּיה פִּרְסְמָה הוֹדָעָה לַצִּיבּוּר.",
+    hebrew: "העירייה פרסמה הודעה לציבור.", hebrewNiqqud: "הָעִירִיָּה פִּרְסְמָה הוֹדָעָה לַצִּיבּוּר.",
     english: "The municipality published a public announcement.",
-    hebrewTokenPairs: [["העירייה", "הָעִירִיָּיה"], ["פרסמה", "פִּרְסְמָה"], ["הודעה לציבור", "הוֹדָעָה לַצִּיבּוּר"]],
+    hebrewTokenPairs: [["העירייה", "הָעִירִיָּה"], ["פרסמה", "פִּרְסְמָה"], ["הודעה לציבור", "הוֹדָעָה לַצִּיבּוּר"]],
     englishTokens: ["The municipality", "published", "a public announcement"],
     hebrewDistractorPairs: [["הוועדה", "הַוַּעֲדָה"], ["ביטלה", "בִּיטְּלָה"], ["את הכנס", "אֶת הַכֶּנֶס"], ["את הטופס", "אֶת הַטּוֹפֶס"]],
     englishDistractors: ["The committee", "cancelled", "the conference", "the form"],
@@ -16401,7 +16401,7 @@ const IDAN_SENTENCES = [
     english: "The evacuees received food and relief aid.",
     hebrewTokenPairs: [["המפונים", "הַמְּפוּנִים"], ["קיבלו", "קִיבְּלוּ"], ["אוכל", "אוֹכֶל"], ["וסיוע", "וְסִיּוּעַ"]],
     englishTokens: ["The evacuees", "received", "food", "and relief aid"],
-    hebrewDistractorPairs: [["התלמידים", "הַתַּלְמִידִים"], ["ביקשו", "בִּיקְּשׁוּ"], ["מים", "מַיִים"], ["והסבר", "וְהֶסְבֵּר"]],
+    hebrewDistractorPairs: [["התלמידים", "הַתַּלְמִידִים"], ["ביקשו", "בִּיקְּשׁוּ"], ["מים", "מַיִם"], ["והסבר", "וְהֶסְבֵּר"]],
     englishDistractors: ["The students", "requested", "water", "and an explanation"],
     notes: "מפונה is someone who was evacuated; סיוע is aid as assistance rather than charity."
   }),
@@ -16498,7 +16498,7 @@ const IVRI_SENTENCES = [
     english: "Which permit is needed from the authority?",
     hebrewTokenPairs: [["איזה", "אֵיזֶה"], ["היתר", "הֶיתֵּר"], ["צריך", "צָרִיךְ"], ["מהרשות", "מֵהָרָשׁוּת"]],
     englishTokens: ["Which", "permit", "is needed", "from the authority"],
-    hebrewDistractorPairs: [["כמה", "כַּמָּה"], ["רישיונות", "רִישְׁיוֹנוֹת"], ["חסר", "חָסֵר"], ["מהעירייה", "מֵהָעִירִיָּיה"]],
+    hebrewDistractorPairs: [["כמה", "כַּמָּה"], ["רישיונות", "רִישְׁיוֹנוֹת"], ["חסר", "חָסֵר"], ["מהעירייה", "מֵהָעִירִיָּה"]],
     englishDistractors: ["How many", "licences", "is missing", "from the municipality"],
     notes: "היתר is a one-off permission; רישיון is a licence you hold and renew."
   }),
@@ -16564,16 +16564,16 @@ const IVRI_SENTENCES = [
     english: "I paid the fee at the post office.",
     hebrewTokenPairs: [["שילמתי", "שִׁילַּמְתִּי"], ["את האגרה", "אֶת הָאַגְרָה"], ["בדואר", "בַּדּוֹאַר"]],
     englishTokens: ["I paid", "the fee", "at the post office"],
-    hebrewDistractorPairs: [["ביקשתי", "בִּיקַּשְׁתִּי"], ["את הטופס", "אֶת הַטּוֹפֶס"], ["בבנק", "בַּבַּנְק"], ["בעירייה", "בָּעִירִיָּיה"]],
+    hebrewDistractorPairs: [["ביקשתי", "בִּיקַּשְׁתִּי"], ["את הטופס", "אֶת הַטּוֹפֶס"], ["בבנק", "בַּבַּנְק"], ["בעירייה", "בָּעִירִיָּה"]],
     englishDistractors: ["I requested", "the form", "at the bank", "at the municipality"],
     notes: "אגרה is a statutory fee to an authority; עמלה is a commercial commission."
   }),
   buildReviewedSentence({
     id: "professional_112", emoji: "🎫", category: "professional", difficulty: 2,
     wordOrderDecision: "fixed",
-    hebrew: "זימנתי תור ברשות המסים.", hebrewNiqqud: "זִימַּנְתִּי תּוֹר בְּרָשׁוּת הַמִּיסִּים.",
+    hebrew: "זימנתי תור ברשות המסים.", hebrewNiqqud: "זִימַּנְתִּי תּוֹר בְּרָשׁוּת הַמִּסִּים.",
     english: "I booked an appointment at the tax authority.",
-    hebrewTokenPairs: [["זימנתי", "זִימַּנְתִּי"], ["תור", "תּוֹר"], ["ברשות המסים", "בְּרָשׁוּת הַמִּיסִּים"]],
+    hebrewTokenPairs: [["זימנתי", "זִימַּנְתִּי"], ["תור", "תּוֹר"], ["ברשות המסים", "בְּרָשׁוּת הַמִּסִּים"]],
     englishTokens: ["I booked", "an appointment", "at the tax authority"],
     hebrewDistractorPairs: [["ביטלתי", "בִּיטַּלְתִּי"], ["פגישה", "פְּגִישָׁה"], ["בבנק", "בַּבַּנְק"], ["במשרד", "בַּמִּשְׂרָד"]],
     englishDistractors: ["I cancelled", "a meeting", "at the bank", "at the office"],
@@ -16977,8 +16977,8 @@ const CAST_VOCAB_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "idan_116", emoji: "☎️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
-    hebrew: "המוקדנית העבירה את הקריאה לצוות.", hebrewNiqqud: "הַמּוֹקְדָנִית הֶעֱבִירָה אֶת הַקְּרִיאָה לַצֶּוֶות.", english: "The dispatcher passed the call to the team.",
-    hebrewTokenPairs: [["המוקדנית", "הַמּוֹקְדָנִית"], ["העבירה את", "הֶעֱבִירָה אֶת"], ["הקריאה", "הַקְּרִיאָה"], ["לצוות", "לַצֶּוֶות"]], englishTokens: ["The dispatcher", "passed", "the call", "to the team"],
+    hebrew: "המוקדנית העבירה את הקריאה לצוות.", hebrewNiqqud: "הַמּוֹקְדָנִית הֶעֱבִירָה אֶת הַקְּרִיאָה לַצֶּוֶת.", english: "The dispatcher passed the call to the team.",
+    hebrewTokenPairs: [["המוקדנית", "הַמּוֹקְדָנִית"], ["העבירה את", "הֶעֱבִירָה אֶת"], ["הקריאה", "הַקְּרִיאָה"], ["לצוות", "לַצֶּוֶת"]], englishTokens: ["The dispatcher", "passed", "the call", "to the team"],
     hebrewDistractorPairs: [["השוטרת", "הַשּׁוֹטֶרֶת"], ["סגרה את", "סָגְרָה אֶת"], ["התחנה", "הַתַּחֲנָה"], ["למחר", "לְמָחָר"]], englishDistractors: ["The officer", "closed", "the station", "until tomorrow"], notes: "מוקדנית is a female emergency dispatcher; מוקדן is the masculine form."
   }),
   buildReviewedSentence({
@@ -17169,8 +17169,8 @@ const NEUTRAL_EVERYDAY_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "everyday_172", emoji: "📦", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
-    hebrew: "יש לי חשש שהחבילה לא תגיע היום.", hebrewNiqqud: "יֵשׁ לִי חֲשָׁשׁ שֶׁהַחֲבִילָה לֹא תַגִּיעַ הַיּוֹם.", english: "I'm worried that the package won't arrive today.",
-    hebrewTokenPairs: [["יש לי", "יֵשׁ לִי"], ["חשש", "חֲשָׁשׁ"], ["שהחבילה", "שֶׁהַחֲבִילָה"], ["לא", "לֹא"], ["תגיע", "תַגִּיעַ"], ["היום", "הַיּוֹם"]], englishTokens: ["I'm", "worried", "that the package", "won't", "arrive", "today"],
+    hebrew: "יש לי חשש שהחבילה לא תגיע היום.", hebrewNiqqud: "יֵשׁ לִי חֲשָׁשׁ שֶׁהַחֲבִילָה לֹא תַּגִּיעַ הַיּוֹם.", english: "I'm worried that the package won't arrive today.",
+    hebrewTokenPairs: [["יש לי", "יֵשׁ לִי"], ["חשש", "חֲשָׁשׁ"], ["שהחבילה", "שֶׁהַחֲבִילָה"], ["לא", "לֹא"], ["תגיע", "תַּגִּיעַ"], ["היום", "הַיּוֹם"]], englishTokens: ["I'm", "worried", "that the package", "won't", "arrive", "today"],
     hebrewDistractorPairs: [["יש לו", "יֵשׁ לוֹ"], ["ביטחון", "בִּטָּחוֹן"], ["שהמכתב", "שֶׁהַמִּכְתָּב"], ["כבר נשלח", "כְּבָר נִשְׁלַח"], ["אתמול", "אֶתְמוֹל"]], englishDistractors: ["He's", "confident", "that the letter", "was sent", "yesterday"],
     notes: "יש לי חשש is a natural noun-based way to express concern."
   }),
@@ -17646,8 +17646,8 @@ const KITCHEN_ACTION_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "everyday_223", emoji: "🍋", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
-    hebrew: "קל לגרד קליפה של לימון במגרדת הדרים.", hebrewNiqqud: "קַל לְגָרֵד קְלִיפָּה שֶׁל לִימוֹן בְּמְגָרֶדֶת הֲדָרִים.", english: "It's easy to grate the peel of a lemon with a citrus zester.",
-    hebrewTokenPairs: [["קל", "קַל"], ["לגרד", "לְגָרֵד"], ["קליפה", "קְלִיפָּה"], ["של לימון", "שֶׁל לִימוֹן"], ["במגרדת הדרים", "בְּמְגָרֶדֶת הֲדָרִים"]], englishTokens: ["It's easy", "to grate", "the peel", "of a lemon", "with a citrus zester"],
+    hebrew: "קל לגרד קליפה של לימון במגרדת הדרים.", hebrewNiqqud: "קַל לְגָרֵד קְלִיפָּה שֶׁל לִימוֹן בִּמְגָרֶדֶת הֲדָרִים.", english: "It's easy to grate the peel of a lemon with a citrus zester.",
+    hebrewTokenPairs: [["קל", "קַל"], ["לגרד", "לְגָרֵד"], ["קליפה", "קְלִיפָּה"], ["של לימון", "שֶׁל לִימוֹן"], ["במגרדת הדרים", "בִּמְגָרֶדֶת הֲדָרִים"]], englishTokens: ["It's easy", "to grate", "the peel", "of a lemon", "with a citrus zester"],
     hebrewDistractorPairs: [["קשה", "קָשֶׁה"], ["לקלף", "לְקַלֵּף"], ["בצל", "בָּצָל"], ["בלי", "בְּלִי"], ["סכין", "סַכִּין"], ["בקולפן", "בְּקוֹלְפָן"]], englishDistractors: ["It's hard", "to peel", "an onion", "without", "a knife", "with a peeler"],
     notes: "לגרד can mean to grate; מגרדת הדרים is a tool for removing citrus peel."
   }),
@@ -18261,8 +18261,8 @@ const IVRI_AI_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "professional_154", emoji: "🧠", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
-    hebrew: "רשת עצבית כוללת שכבה עצבית נוספת.", hebrewNiqqud: "רֶשֶׁת עַצַּבִּית כּוֹלֶלֶת שִׁכְבָה עַצַּבִּית נוֹסֶפֶת.", english: "A neural network includes an additional neural layer.",
-    hebrewTokenPairs: [["רשת עצבית", "רֶשֶׁת עַצַּבִּית"], ["כוללת", "כּוֹלֶלֶת"], ["שכבה עצבית", "שִׁכְבָה עַצַּבִּית"], ["נוספת", "נוֹסֶפֶת"]], englishTokens: ["A neural network", "includes", "an additional", "neural layer"],
+    hebrew: "רשת עצבית כוללת שכבה עצבית נוספת.", hebrewNiqqud: "רֶשֶׁת עֲצַבִּית כּוֹלֶלֶת שִׁכְבָה עֲצַבִּית נוֹסֶפֶת.", english: "A neural network includes an additional neural layer.",
+    hebrewTokenPairs: [["רשת עצבית", "רֶשֶׁת עֲצַבִּית"], ["כוללת", "כּוֹלֶלֶת"], ["שכבה עצבית", "שִׁכְבָה עֲצַבִּית"], ["נוספת", "נוֹסֶפֶת"]], englishTokens: ["A neural network", "includes", "an additional", "neural layer"],
     hebrewDistractorPairs: [["מסד נתונים", "מְסַד נְתוּנִים"], ["מכיל", "מֵכִיל"], ["רשומה", "רְשׁוּמָה"], ["ישנה", "יְשָׁנָה"]], englishDistractors: ["A database", "contains", "an old", "record"],
     notes: "רשת עצבית is a neural network; שכבה עצבית is one neural layer within it."
   }),
@@ -18389,8 +18389,8 @@ const IVRI_AI_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "professional_172", emoji: "💰", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
-    hebrew: "הון סיכון מממן מסלול מזומנים לסטארטאפ.", hebrewNiqqud: "הוֹן סִיכּוּן מְמַמֵּן מַסְלוּל מְזוּמָנִים לְסְטַארְטְאַפּ.", english: "Venture capital funds a startup's cash runway.",
-    hebrewTokenPairs: [["הון סיכון", "הוֹן סִיכּוּן"], ["מממן", "מְמַמֵּן"], ["מסלול מזומנים לסטארטאפ", "מַסְלוּל מְזוּמָנִים לְסְטַארְטְאַפּ"]], englishTokens: ["Venture capital", "funds", "a startup's cash runway"],
+    hebrew: "הון סיכון מממן מסלול מזומנים לסטארטאפ.", hebrewNiqqud: "הוֹן סִיכּוּן מְמַמֵּן מַסְלוּל מְזוּמָנִים לִסְטַארְטְאַפּ.", english: "Venture capital funds a startup's cash runway.",
+    hebrewTokenPairs: [["הון סיכון", "הוֹן סִיכּוּן"], ["מממן", "מְמַמֵּן"], ["מסלול מזומנים לסטארטאפ", "מַסְלוּל מְזוּמָנִים לִסְטַארְטְאַפּ"]], englishTokens: ["Venture capital", "funds", "a startup's cash runway"],
     hebrewDistractorPairs: [["הלוואה", "הַלְוָאָה"], ["קטנה", "קְטַנָּה"], ["מכסה", "מְכַסָּה"], ["הוצאה", "הוֹצָאָה"], ["חודשית", "חוֹדְשִׁית"]], englishDistractors: ["A small", "loan", "covers", "a monthly", "expense"],
     notes: "הון סיכון is venture capital; מסלול מזומנים לסטארטאפ is the startup runway funded by available cash."
   }),
@@ -18453,7 +18453,7 @@ const SHARED_GRAMMAR_SENTENCES = [
     hebrew: "מונחי בלשנות כוללים תחביר ופרגמטיקה.", hebrewNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים תַּחְבִּיר וּפְרַגְמָטִיקָה.", english: "Linguistic terminology includes syntax and pragmatics.",
     hebrewTokenPairs: [["מונחי בלשנות", "מוּנְחֵי בַּלְשָׁנוּת"], ["כוללים", "כּוֹלְלִים"], ["תחביר", "תַּחְבִּיר"], ["ו", "וּ"], ["פרגמטיקה", "פְּרַגְמָטִיקָה"]], englishTokens: ["Linguistic terminology", "includes", "syntax", "and", "pragmatics"],
     hebrewDistractorPairs: [["ספרי לימוד", "סִפְרֵי לִמּוּד"], ["משמיטים", "מַשְׁמִיטִים"], ["הגייה", "הֲגִיָּה"], ["או", "אוֹ"], ["כתיב", "כְּתִיב"]], englishDistractors: ["Textbooks", "omit", "pronunciation", "or", "spelling"],
-    hebrewOrderAlternates: [{ text: "מונחי בלשנות כוללים פרגמטיקה ותחביר.", textNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים פְּרַגְמָטִיקָה וְתַחְבִּיר.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["מוּנְחֵי בַּלְשָׁנוּת", "כּוֹלְלִים", "פְּרַגְמָטִיקָה", "וְ", "תַחְבִּיר"] }],
+    hebrewOrderAlternates: [{ text: "מונחי בלשנות כוללים פרגמטיקה ותחביר.", textNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים פְּרַגְמָטִיקָה וְתַּחְבִּיר.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["מוּנְחֵי בַּלְשָׁנוּת", "כּוֹלְלִים", "פְּרַגְמָטִיקָה", "וְ", "תַּחְבִּיר"] }],
     notes: "מונחי בלשנות is linguistic terminology; תחביר studies sentence structure, while פרגמטיקה studies meaning in use."
   }),
   buildReviewedSentence({
@@ -18674,9 +18674,9 @@ const IVRI_FINANCE_SENTENCES = [
   buildReviewedSentence({
     id: "professional_178", emoji: "🛡️", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
     hebrew: "גידור ופיזור סיכונים מפחיתים חשיפה.", hebrewNiqqud: "גִּדּוּר וּפִזּוּר סִכּוּנִים מַפְחִיתִים חֲשִׂיפָה.", english: "Hedging and risk diversification reduce exposure.",
-    hebrewTokenPairs: [["גידור", "גִּדּוּר"], ["ו", "וּ"], ["פיזור סיכונים", "פִזּוּר סִכּוּנִים"], ["מפחיתים", "מַפְחִיתִים"], ["חשיפה", "חֲשִׂיפָה"]], englishTokens: ["Hedging", "and", "risk diversification", "reduce", "exposure"],
+    hebrewTokenPairs: [["גידור", "גִּדּוּר"], ["ו", "וּ"], ["פיזור סיכונים", "פִּזּוּר סִכּוּנִים"], ["מפחיתים", "מַפְחִיתִים"], ["חשיפה", "חֲשִׂיפָה"]], englishTokens: ["Hedging", "and", "risk diversification", "reduce", "exposure"],
     hebrewDistractorPairs: [["מינוף", "מִינוּף"], ["או", "אוֹ"], ["ריכוז נכסים", "רִכּוּז נְכָסִים"], ["מגדילים", "מַגְדִּילִים"], ["תנודתיות", "תְּנוּדָתִיּוּת"]], englishDistractors: ["Leverage", "or", "asset concentration", "increase", "volatility"],
-    hebrewOrderAlternates: [{ text: "פיזור סיכונים וגידור מפחיתים חשיפה.", textNiqqud: "פִזּוּר סִכּוּנִים וְגִדּוּר מַפְחִיתִים חֲשִׂיפָה.", order: [2, 1, 0, 3, 4], tokensNiqqud: ["פִזּוּר סִכּוּנִים", "וְ", "גִּדּוּר", "מַפְחִיתִים", "חֲשִׂיפָה"] }],
+    hebrewOrderAlternates: [{ text: "פיזור סיכונים וגידור מפחיתים חשיפה.", textNiqqud: "פִּזּוּר סִכּוּנִים וְגִדּוּר מַפְחִיתִים חֲשִׂיפָה.", order: [2, 1, 0, 3, 4], tokensNiqqud: ["פִּזּוּר סִכּוּנִים", "וְ", "גִּדּוּר", "מַפְחִיתִים", "חֲשִׂיפָה"] }],
     notes: "גידור is hedging; פיזור סיכונים is risk diversification. The coordinated strategies may appear in either order."
   }),
   buildReviewedSentence({
@@ -18710,9 +18710,9 @@ const IVRI_FINANCE_SENTENCES = [
   buildReviewedSentence({
     id: "professional_183", emoji: "🧮", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
     hebrew: "התקציב כולל פנסיה ופרמיית ביטוח.", hebrewNiqqud: "הַתַּקְצִיב כּוֹלֵל פֶּנְסְיָה וּפְרֶמְיַת בִּיטּוּחַ.", english: "The budget includes pension and an insurance premium.",
-    hebrewTokenPairs: [["התקציב", "הַתַּקְצִיב"], ["כולל", "כּוֹלֵל"], ["פנסיה", "פֶּנְסְיָה"], ["ו", "וּ"], ["פרמיית ביטוח", "פְרֶמְיַת בִּיטּוּחַ"]], englishTokens: ["The budget", "includes", "pension", "and", "an insurance premium"],
+    hebrewTokenPairs: [["התקציב", "הַתַּקְצִיב"], ["כולל", "כּוֹלֵל"], ["פנסיה", "פֶּנְסְיָה"], ["ו", "וּ"], ["פרמיית ביטוח", "פְּרֶמְיַת בִּיטּוּחַ"]], englishTokens: ["The budget", "includes", "pension", "and", "an insurance premium"],
     hebrewDistractorPairs: [["הדוח", "הַדּוּחַ"], ["משמיט", "מַשְׁמִיט"], ["משכנתה", "מַשְׁכַּנְתָּה"], ["או", "אוֹ"], ["החזר הלוואה", "הֶחְזֵר הַלְוָאָה"]], englishDistractors: ["The report", "omits", "a mortgage", "or", "a loan repayment"],
-    hebrewOrderAlternates: [{ text: "התקציב כולל פרמיית ביטוח ופנסיה.", textNiqqud: "הַתַּקְצִיב כּוֹלֵל פְרֶמְיַת בִּיטּוּחַ וּפֶנְסְיָה.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["הַתַּקְצִיב", "כּוֹלֵל", "פְרֶמְיַת בִּיטּוּחַ", "וּ", "פֶּנְסְיָה"] }],
+    hebrewOrderAlternates: [{ text: "התקציב כולל פרמיית ביטוח ופנסיה.", textNiqqud: "הַתַּקְצִיב כּוֹלֵל פְּרֶמְיַת בִּיטּוּחַ וּפֶנְסְיָה.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["הַתַּקְצִיב", "כּוֹלֵל", "פְּרֶמְיַת בִּיטּוּחַ", "וּ", "פֶּנְסְיָה"] }],
     notes: "פנסיה is pension; פרמיית ביטוח is an insurance premium. The coordinated costs may appear in either order."
   }),
   buildReviewedSentence({
@@ -18794,8 +18794,8 @@ const IVRI_FINANCE_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "professional_195", emoji: "🧩", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
-    hebrew: "נזילות נמוכה מגבילה פיזור סיכונים.", hebrewNiqqud: "נְזִילוּת נְמוּכָה מַגְבִּילָה פִזּוּר סִכּוּנִים.", english: "Low liquidity limits risk diversification.",
-    hebrewTokenPairs: [["נזילות", "נְזִילוּת"], ["נמוכה", "נְמוּכָה"], ["מגבילה", "מַגְבִּילָה"], ["פיזור סיכונים", "פִזּוּר סִכּוּנִים"]], englishTokens: ["Low", "liquidity", "limits", "risk diversification"],
+    hebrew: "נזילות נמוכה מגבילה פיזור סיכונים.", hebrewNiqqud: "נְזִילוּת נְמוּכָה מַגְבִּילָה פִּזּוּר סִכּוּנִים.", english: "Low liquidity limits risk diversification.",
+    hebrewTokenPairs: [["נזילות", "נְזִילוּת"], ["נמוכה", "נְמוּכָה"], ["מגבילה", "מַגְבִּילָה"], ["פיזור סיכונים", "פִּזּוּר סִכּוּנִים"]], englishTokens: ["Low", "liquidity", "limits", "risk diversification"],
     hebrewDistractorPairs: [["תשואה", "תְּשׂוּאָה"], ["גבוהה", "גְּבוֹהָה"], ["מאפשרת", "מְאַפְשֶׁרֶת"], ["ריכוז נכסים", "רִכּוּז נְכָסִים"]], englishDistractors: ["High", "yield", "allows", "asset concentration"],
     notes: "The row connects low liquidity with constraints on פיזור סיכונים, risk diversification."
   }),
@@ -18850,6 +18850,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260811i",
+  __build: "20260811j",
 };
 })(typeof window !== "undefined" ? window : globalThis);

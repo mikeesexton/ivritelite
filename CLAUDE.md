@@ -41,3 +41,22 @@ Do not skip the log entry even for small or documentation-only tasks.
 - Data files: `vocab-data.js` (vocabulary), `hebrew-verbs.js` (verb conjugations), `abbreviation-data.js` (abbreviations), `sentence-bank-data.js` (sentences), `verb-game-data.js` (binyan game), `hebrew-idioms.js` (idioms)
 - `tests/` — Node built-in test suite (`npm test`)
 - `task-log.md` — shared AI task log (Claude Code + Codex)
+
+## Hebrew pointing convention (data files)
+
+Hebrew words are stored as `[plain, pointed]` pairs, e.g. `["קיבלתי", "קִבַּלְתִּי"]`. The two columns use **different spellings of the same word**, and this is deliberate:
+
+- **Plain column — *ktiv male* (full spelling).** No vowel marks, so ו and י are inserted as vowel hints. This is everyday written Hebrew: `קיבלתי`.
+- **Pointed column — *ktiv chaser* (defective spelling).** The marks carry the vowels, so the helper ו / י is **dropped**: `קִבַּלְתִּי`.
+
+**Mark each vowel once, never twice.** Keeping the helper letter *and* adding the mark (`קִיבַּלְתִּי`) double-marks the vowel and is what these tranches keep drifting into. Corollary: the pointed form must never contain a letter that is absent from the plain form.
+
+Exceptions — these look like violations but are correct, so do not "fix" them:
+
+- **Consonantal ו is real and stays.** `צוות` → `צֶוֶת`, `ועדה` → `וַעֲדָה`, `תוכנית` → `תָּכְנִית`. The plain `וו` legitimately collapses to one pointed `ו`.
+- **/f/ loanwords take no dagesh:** `פָלָאפֶל`, `פִינַנְסִי`, `פִילוֹסוֹפִית`, `פְרָאיֶיר`, `פְלִרְטוּט`. Word-initial בג״דכפ״ת takes a dagesh only where the sound is /p/, /t/, /k/.
+- **After the prefix וּ, בג״דכפ״ת goes soft** in the assembled sentence but keeps its dagesh as a standalone token — compare `וּפֶנְסְיָה` in `hebrewNiqqud` with `פֶּנְסְיָה` in `hebrewTokenPairs` (`professional_183`).
+
+Two mark placements are outright impossible and should never appear: a prefix with shva attached to a consonant that also carries shva (write `בִּמְגָרֶדֶת`, not `בְּמְגָרֶדֶת`), and a dagesh in a letter following a mater lectionis yod.
+
+Note: `sentence-bank-data.js` has ~186 legacy words that predate this rule and are pointed inconsistently. Leave them; the rule applies to new and edited content.
