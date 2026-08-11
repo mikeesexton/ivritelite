@@ -7410,3 +7410,19 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - Local browser reload through `npm start` — changed cache-key assets returned successfully and the console had **0 warnings/errors**.
 
 **Risks / regressions to check:** Abbreviation result lists are intentionally taller on narrow phones because each item now uses one full-width, three-row card; the results page remains vertically scrollable. The mission-card selector uses `:has()`, which is supported by the current iOS/Safari baseline but should be revisited if the app must support older WebKit. At 360×640, long Sentence/Shema feedback keeps its existing bounded internal scroll so the gameplay page itself still does not scroll or overlap the footer.
+
+### 2026-08-10 22:02 EDT — Publish and merge the mobile feedback fixes
+
+**Requested:** Push the completed work to GitHub and merge it into `main`, including the pre-existing `AGENTS.md` character-art safeguards.
+
+**Files changed:**
+- `task-log.md` — recorded the publication and merge of the already-tested application, test, cache-key, and project-instruction changes.
+
+**Behavior changed:** None beyond the changes already recorded in the preceding two entries. PR #66 merged commit `8294a15` through merge commit `2f45b5a` into `main`.
+
+**Tests run:**
+- `npm test` — **391 pass, 0 fail** before publication, as recorded in the preceding entry.
+- `git diff --cached --check` — **pass** before the application commit.
+- GitHub reported PR #66 **cleanly mergeable** with no pending checks; post-merge verification reported state **MERGED**.
+
+**Risks / regressions to check:** This follow-up is documentation-only. The remote feature branch remains available after merge unless repository branch-cleanup settings remove it.
