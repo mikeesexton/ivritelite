@@ -7368,3 +7368,45 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - `git diff --check` — **pass** before this log entry.
 
 **Risks / regressions to check:** The neutral logo now extends close to the lower edge of the 512px crop, but its visible pixels remain fully inside the canvas. If Ido's neutral torso is replaced again, the pinned coordinate must not be updated from geometry alone: review the actual composite at both required sizes first. `AGENTS.md` is repository-scoped memory for future agents; it does not create global model memory outside this project.
+
+### 2026-08-09 11:05 EDT — Add character-art approval and cost controls
+
+**Requested:** Determine whether more persistent project instructions should be added to prevent a repeat of the wasteful Ido artwork process.
+
+**Files changed:**
+- `AGENTS.md` — added a required character-art approval and cost-control section. It distinguishes assistant review from user approval, scopes approval to the exact image shown, requires explicit approval of the final composite after overlays and before locks or publication, limits generation to one call before user review, makes rejection/stop instructions terminal for that approach, prohibits using invented aesthetic metrics as a substitute for approval, and requires candid escalation when the image tool is not reliable enough.
+- `task-log.md` — recorded the policy update and its intended effect.
+
+**Behavior changed:** None in the running app. Future agents working in this repository must pause for explicit approval of the exact final composited character sprite before locking, committing, pushing, or merging it. They must also stop after one generated preview until the user requests another, reducing the risk of repeated credit expenditure.
+
+**Tests run:**
+- `git diff --check` — **pass**.
+- `npm test` — **not run; documentation-only policy change with no runtime or test code changes**.
+
+**Risks / regressions to check:** The mandatory final-composite approval checkpoint adds a user round trip to subjective character-art publication, including when the user requested an unseen overlay and immediate publishing in one instruction. That friction is intentional because approval of a base image does not establish approval of the later composite. The memory is repository-scoped through `AGENTS.md`; it cannot change model behavior globally or in unrelated projects.
+
+### 2026-08-10 21:53 EDT — Polish mobile feedback and mission completion layouts
+
+**Requested:** Fix the cramped bottom edge below wrapped English sentence feedback, clean up the poor-looking mobile acronym feedback/results cards, and remove the large apparent gap between the completion title and the character hero on the final mission review page.
+
+**Files changed:**
+- `styles.css` — added a small optical bottom buffer to structured Sentence/Shema feedback, made abbreviation result cards one full-width column at 480px and below, and explicitly start-aligned the mobile mission-results card and hero with a tighter title-to-summary gap.
+- `app/word-match.js` — abbreviation mistake/correct summaries now emit three direction-aware fields (abbreviation, English meaning, and full Hebrew) instead of concatenating English and Hebrew with a pipe.
+- `app/bootstrap-data.js` — added localized English and Hebrew labels for the abbreviation and full-Hebrew fields.
+- `app/ui.js` — marks abbreviation summaries with a mode-specific layout class.
+- `index.html` — advanced cache keys for the changed stylesheet and runtime modules.
+- `tests/app-progress.test.js` — added a behavior regression for the labeled abbreviation summary payload and layout class.
+- `tests/gameplay-layout.test.js` — added rendered mobile checks for feedback bottom space at 360×720, full-width single-column abbreviation cards at 360×640, and a maximum 8px title-to-hero gap on Idan's mission completion summary.
+- `tests/character-mission.test.js` — advanced the expected stylesheet cache key.
+
+**Behavior changed:** Wrapped bilingual sentence feedback no longer sits visually against the bottom border. Acronym recap cards are readable bilingual field cards rather than cramped two-column strings, with explicit labels and per-value direction. Mobile mission completion starts the character/dialogue hero directly below the title instead of allowing a large empty band.
+
+**Tests run:**
+- `npm test` — baseline **390 pass, 0 fail**; first post-change full run **390 pass, 1 fail** because the sprite/cache regression still expected the old stylesheet query key; final run **391 pass, 0 fail** after advancing that assertion.
+- `node --test tests/app-progress.test.js` — final **135 pass, 0 fail** (one intermediate failure while the fake-DOM assertion was being calibrated).
+- `node --test tests/gameplay-layout.test.js` — final **1 pass, 0 fail** at the required 360×640 viewport plus the 360×720 feedback-spacing check (one intermediate failure while the spacing measurement was still taken inside the intentional 640px feedback height cap).
+- `node --test tests/character-mission.test.js` — **59 pass, 0 fail**.
+- `git diff --check` — **pass** before the log entry.
+- Local browser reload through `npm start` — changed cache-key assets returned successfully and the console had **0 warnings/errors**.
+
+**Risks / regressions to check:** Abbreviation result lists are intentionally taller on narrow phones because each item now uses one full-width, three-row card; the results page remains vertically scrollable. The mission-card selector uses `:has()`, which is supported by the current iOS/Safari baseline but should be revisited if the app must support older WebKit. At 360×640, long Sentence/Shema feedback keeps its existing bounded internal scroll so the gameplay page itself still does not scroll or overlap the footer.

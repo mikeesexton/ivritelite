@@ -38,6 +38,30 @@ Do not skip the log entry even for small or documentation-only tasks.
 - Keep an explicit regression assertion for an approved pose-specific overlay
   placement so a later rebuild cannot silently restore a rejected position.
 
+## Character artwork approval and cost control (required)
+
+- Assistant visual review is not user approval. Do not describe character art
+  as approved unless the user has explicitly approved that exact final image.
+- Approval is scoped to what the user saw. If a logo, mask, crop, transparency
+  treatment, resize, or other overlay is added afterward, the resulting final
+  composite is unapproved until the user sees and approves it.
+- Before refreshing the sprite lock, committing, pushing, or merging subjective
+  character artwork, show the exact final runtime composite at native 512px and
+  actual companion size and wait for explicit approval. An instruction to add
+  an unseen overlay and publish does not waive this final-composite checkpoint.
+- Make at most one image-generation call before showing the result. Do not spend
+  another generation call on revisions unless the user explicitly requests it
+  after seeing the previous output.
+- When the user rejects an artwork or says to stop, stop that approach. Do not
+  promote the rejected image, reuse its pixels, or generate another variant in
+  the same turn unless the user explicitly reverses that instruction.
+- Do not invent or tighten aesthetic pixel metrics to force a subjective result.
+  Add hashes, coordinates, or geometry regressions only after the user approves
+  the final composite; those checks preserve approval but cannot create it.
+- If the available image tool cannot reliably satisfy identity, anatomy, or
+  pixel-style constraints, say so before further generation spending and offer
+  a deterministic edit or human-art workflow instead of continuing by trial.
+
 ## Gameplay viewport floor (required)
 
 - Gameplay UI changes must keep all active, answer, and feedback states usable without vertical scrolling or footer overlap at 360×640 CSS pixels.

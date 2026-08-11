@@ -420,6 +420,29 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
       ],
     );
 
+    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
+      width: 360,
+      height: 720,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    await measureGeometry(pageCdp);
+    const mobileFeedbackBottomSpace = await evaluate(pageCdp, `(() => {
+      const tray = document.querySelector('#feedbackTray').getBoundingClientRect();
+      const lastRow = document.querySelector('#feedbackItems .feedback-item:last-child').getBoundingClientRect();
+      return tray.bottom - lastRow.bottom;
+    })()`);
+    assert.ok(
+      mobileFeedbackBottomSpace >= 10,
+      `wrapped feedback keeps visible space above the tray edge (${mobileFeedbackBottomSpace}px)`,
+    );
+    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
+      width: 360,
+      height: 640,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+
     await evaluate(pageCdp, `(() => {
       IvriQuestApp.handwriting.startHandwriting();
       IvriQuestApp.handwriting.beginHandwritingFromIntro();
@@ -502,6 +525,101 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     assert.equal(handwritingResultsGrid.overflowsHorizontally, false);
     assert.ok(handwritingResultsGrid.minimumRowWidth >= 85);
     assert.equal(handwritingResultsGrid.headingsSpanGrid, true);
+
+    await evaluate(pageCdp, `(() => {
+      IvriQuestApp.session.showSessionSummary({
+        game: 'abbrMatch',
+        correctCount: 17,
+        incorrectCount: 3,
+        elapsedSeconds: 95,
+        mistakes: [{
+          fields: [
+            { label: 'קיצור', value: 'מפכ״ל', dir: 'rtl', lang: 'he' },
+            { label: 'משמעות', value: 'Police Commissioner (Israel)', dir: 'ltr', lang: 'en' },
+            { label: 'הניסוח המלא', value: 'המפקח הכללי', dir: 'rtl', lang: 'he' },
+          ],
+        }],
+        corrects: [{
+          fields: [
+            { label: 'קיצור', value: 'יו״ש', dir: 'rtl', lang: 'he' },
+            { label: 'משמעות', value: 'Judea & Samaria / West Bank', dir: 'ltr', lang: 'en' },
+            { label: 'הניסוח המלא', value: 'יהודה ושומרון', dir: 'rtl', lang: 'he' },
+          ],
+        }],
+      });
+    })()`);
+    const abbreviationResults = await evaluate(pageCdp, `(() => {
+      const grid = document.querySelector('.results-mistakes--abbreviation');
+      const cards = [...grid.querySelectorAll('.compact-row')];
+      return {
+        columns: getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
+        overflowsHorizontally: grid.scrollWidth > grid.clientWidth + 1,
+        cardWidths: cards.map((card) => card.getBoundingClientRect().width),
+        gridWidth: grid.getBoundingClientRect().width,
+        fieldCounts: cards.map((card) => card.querySelectorAll('.feedback-item').length),
+      };
+    })()`);
+    assert.equal(abbreviationResults.columns, 1);
+    assert.equal(abbreviationResults.overflowsHorizontally, false);
+    assert.ok(abbreviationResults.cardWidths.every((width) => Math.abs(width - abbreviationResults.gridWidth) <= 0.5));
+    assert.deepEqual(abbreviationResults.fieldCounts, [3, 3]);
+
+    const missionResultsGeometry = await evaluate(pageCdp, `(() => {
+      IvriQuestApp.runtime.characterState = {
+        dayKey: IvriQuestApp.character.getTodayKey(),
+        gender: 'm',
+        dailyChoice: 'idan',
+        lensCharacter: 'idan',
+        screen: 'results',
+        reviewOpen: false,
+        mission: {
+          active: false,
+          completed: true,
+          activities: ['lessonMatch', 'sentenceBank'],
+          skippedActivities: [],
+          currentIndex: 2,
+          currentActivity: '',
+          results: [
+            { nameEn: 'Vocabulary', nameHe: 'אוצר מילים', correctCount: 20, incorrectCount: 4, elapsedSeconds: 101, mistakes: [] },
+            { nameEn: 'Sentences', nameHe: 'משפטים', correctCount: 10, incorrectCount: 1, elapsedSeconds: 136, mistakes: [] },
+          ],
+          visible: true,
+          sprite: 'mission-complete',
+          dialogueKey: 'mission',
+        },
+      };
+      Object.assign(IvriQuestApp.runtime.state.summary, {
+        active: true,
+        game: 'characterMission',
+        correctCount: 30,
+        incorrectCount: 5,
+        elapsedSeconds: 237,
+        mistakes: [],
+      });
+      IvriQuestApp.runtime.state.route = 'results';
+      IvriQuestApp.runtime.helpers.renderAll();
+      const box = (selector) => {
+        const rect = document.querySelector(selector).getBoundingClientRect();
+        return { top: rect.top, bottom: rect.bottom, height: rect.height };
+      };
+      return {
+        head: box('.results-head'),
+        summary: box('.mission-results-summary'),
+        hero: box('.mission-results-hero'),
+        character: box('.mission-results-character'),
+        dialogue: box('.mission-results-dialogue'),
+        sprite: box('.mission-results-sprite'),
+        metrics: box('.mission-results-metrics'),
+      };
+    })()`);
+    assert.ok(
+      missionResultsGeometry.summary.top - missionResultsGeometry.head.bottom <= 8,
+      `mission title leaves too much space before its hero: ${JSON.stringify(missionResultsGeometry)}`,
+    );
+    assert.ok(
+      Math.abs(missionResultsGeometry.character.top - missionResultsGeometry.hero.top) <= 0.5,
+      "mission character starts at the top of the completion hero",
+    );
 
     await pageCdp.send("Emulation.setDeviceMetricsOverride", {
       width: 1366,
