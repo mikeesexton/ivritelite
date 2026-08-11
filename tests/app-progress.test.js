@@ -3679,6 +3679,41 @@ test("all game summaries now use only score accuracy and time metrics", () => {
   });
 });
 
+test("abbreviation results separate the acronym, meaning, and full Hebrew into labeled fields", () => {
+  const abbreviations = [
+    { id: "abbr-1", abbr: "מפכ״ל", expansionHe: "המפקח הכללי", english: "Police Commissioner (Israel)" },
+    { id: "abbr-2", abbr: "יו״ש", expansionHe: "יהודה ושומרון", english: "Judea & Samaria / West Bank" },
+  ];
+  const harness = loadAppHarness([], abbreviations);
+  const { app, document, state } = harness;
+  Object.assign(state.wordMatch, {
+    game: "abbrMatch",
+    matchedCount: 2,
+    totalPairs: 2,
+    bestCombo: 2,
+    mismatchCount: 1,
+    elapsedSeconds: 12,
+    sessionMistakeIds: ["abbr-1"],
+    matchedPairIds: ["abbr-1", "abbr-2"],
+  });
+
+  app.wordMatch.finishWordMatch();
+
+  assert.equal(state.summary.game, "abbrMatch");
+  assert.equal(state.summary.mistakes.length, 1);
+  assert.equal(state.summary.corrects.length, 1);
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(state.summary.mistakes[0].fields)),
+    [
+      { label: "Abbreviation", value: "מפכ״ל", dir: "rtl", lang: "he" },
+      { label: "Meaning", value: "Police Commissioner (Israel)", dir: "ltr", lang: "en" },
+      { label: "Full Hebrew", value: "המפקח הכללי", dir: "rtl", lang: "he" },
+    ],
+  );
+  const results = document.querySelector(".results-mistakes--abbreviation");
+  assert.ok(results);
+});
+
 test("handwriting summaries arrange per-letter results in three columns", () => {
   const harness = loadAppHarness([]);
   const { app, document, state } = harness;

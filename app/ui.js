@@ -1316,6 +1316,9 @@ ui.renderSummaryState = ui.renderSummaryState || function renderSummaryState() {
   if (gridSummaryGames.has(runtime.state.summary.game)) {
     mistakesWrap.classList.add("results-mistakes--grid");
   }
+  if (runtime.state.summary.game === "abbreviation" || runtime.state.summary.game === "abbrMatch") {
+    mistakesWrap.classList.add("results-mistakes--abbreviation");
+  }
   if (runtime.state.summary.game === "handwriting") {
     mistakesWrap.classList.add("results-mistakes--letter-grid");
   }

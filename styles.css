@@ -1768,6 +1768,12 @@ body[data-theme="light"] .sentence-answer-line {
   gap: 0.34rem;
 }
 
+/* Wrapped final lines need a little optical breathing room beyond the tray's
+   compact mobile padding. */
+.lesson-shell.mode-sentence-bank .feedback-items:not(.hidden) {
+  padding-bottom: 0.12rem;
+}
+
 .feedback-items.hidden {
   display: none;
 }
@@ -3411,6 +3417,10 @@ body[data-ui-lang="he"] .character-mission-copy {
   gap: 1rem;
 }
 
+.results-card:has(.mission-results-summary) {
+  align-content: start;
+}
+
 .mission-results-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(180px, 0.45fr);
@@ -3562,6 +3572,11 @@ body[data-ui-lang="he"] .character-mission-copy {
   .mission-results-hero {
     grid-template-columns: minmax(0, 1fr);
     gap: 0.7rem;
+    align-content: start;
+  }
+
+  .results-card:has(.mission-results-summary) {
+    gap: 0.45rem;
   }
 
   .mission-results-character {
@@ -3651,6 +3666,14 @@ body[data-ui-lang="he"] .character-mission-copy {
   .mission-results-dialogue {
     padding: 0.55rem 0.6rem;
     font-size: 0.85rem;
+  }
+
+  .results-mistakes--abbreviation {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .results-mistakes--abbreviation .compact-row {
+    padding: 0.72rem 0.78rem;
   }
 
   .character-mission-hero {

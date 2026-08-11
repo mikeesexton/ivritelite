@@ -282,7 +282,27 @@ function buildMistakes(game, ids) {
     .filter(Boolean)
     .map((entry) => ({
       primary: entry.abbr,
-      secondary: `${entry.english} | ${app.abbreviation?.getExpansionText?.(entry, runtime.state.showNiqqudInline) || entry.expansionHe}`,
+      secondary: entry.english,
+      fields: [
+        {
+          label: translate("feedback.abbreviationLabel"),
+          value: entry.abbr,
+          dir: "rtl",
+          lang: "he",
+        },
+        {
+          label: translate("feedback.meaningLabel"),
+          value: entry.english,
+          dir: "ltr",
+          lang: "en",
+        },
+        {
+          label: translate("feedback.expansionLabel"),
+          value: app.abbreviation?.getExpansionText?.(entry, runtime.state.showNiqqudInline) || entry.expansionHe,
+          dir: "rtl",
+          lang: "he",
+        },
+      ],
     }));
 }
 
