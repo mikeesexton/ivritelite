@@ -17003,6 +17003,299 @@ const CAST_VOCAB_SENTENCES = [
   }),
 ];
 
+const NEUTRAL_EVERYDAY_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_150", emoji: "🥣", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המטרפה נמצאת במגירה ליד הכיריים.", hebrewNiqqud: "הַמַּטְרֵפָה נִמְצֵאת בַּמְּגֵרָה לְיַד הַכִּירַיִם.", english: "The whisk is in the drawer next to the stove.",
+    hebrewTokenPairs: [["המטרפה", "הַמַּטְרֵפָה"], ["נמצאת", "נִמְצֵאת"], ["במגירה", "בַּמְּגֵרָה"], ["ליד", "לְיַד"], ["הכיריים", "הַכִּירַיִם"]], englishTokens: ["The whisk", "is", "in the drawer", "next to", "the stove"],
+    hebrewDistractorPairs: [["המצקת", "הַמַּצֶּקֶת"], ["חסרה", "חֲסֵרָה"], ["בארון", "בָּאָרוֹן"], ["מעל", "מֵעַל"], ["השיש", "הַשַּׁיִשׁ"]], englishDistractors: ["The ladle", "is missing", "in the cabinet", "above", "the counter"],
+    notes: "מטרפה is a whisk; כיריים is a stovetop or cooking range."
+  }),
+  buildReviewedSentence({
+    id: "everyday_151", emoji: "🍳", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אפשר להעביר לי את המרית, בבקשה?", hebrewNiqqud: "אֶפְשָׁר לְהַעֲבִיר לִי אֶת הַמָּרִית, בְּבַקָּשָׁה?", english: "Could you pass me the spatula, please?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להעביר לי", "לְהַעֲבִיר לִי"], ["את המרית", "אֶת הַמָּרִית"], ["בבקשה", "בְּבַקָּשָׁה"]], englishTokens: ["Could you", "pass me", "the spatula", "please"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["להחזיר לך", "לְהַחֲזִיר לְךָ"], ["את הקולפן", "אֶת הַקּוֹלְפָן"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["You should", "return to me", "the peeler", "now"],
+    hebrewOrderAlternates: [{ text: "אפשר בבקשה להעביר לי את המרית?", textNiqqud: "אֶפְשָׁר בְּבַקָּשָׁה לְהַעֲבִיר לִי אֶת הַמָּרִית?", order: [0, 3, 1, 2] }],
+    notes: "מרית is a spatula; both placements of בבקשה are neutral polite requests."
+  }),
+  buildReviewedSentence({
+    id: "everyday_152", emoji: "🥄", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הגשנו את המרק עם מצקת גדולה.", hebrewNiqqud: "הִגַּשְׁנוּ אֶת הַמָּרָק עִם מַצֶּקֶת גְּדוֹלָה.", english: "We served the soup with a large ladle.",
+    hebrewTokenPairs: [["הגשנו", "הִגַּשְׁנוּ"], ["את המרק", "אֶת הַמָּרָק"], ["עם", "עִם"], ["מצקת", "מַצֶּקֶת"], ["גדולה", "גְּדוֹלָה"]], englishTokens: ["We served", "the soup", "with", "a large", "ladle"],
+    hebrewDistractorPairs: [["בישלנו", "בִּשַּׁלְנוּ"], ["את הרוטב", "אֶת הָרֹטֶב"], ["בלי", "בְּלִי"], ["כף", "כַּף"], ["קטנה", "קְטַנָּה"]], englishDistractors: ["We cooked", "the sauce", "without", "a small", "spoon"],
+    notes: "מצקת is a ladle used for serving soup or sauce."
+  }),
+  buildReviewedSentence({
+    id: "everyday_153", emoji: "🥕", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הקולפן הזה לא מספיק חד.", hebrewNiqqud: "הַקּוֹלְפָן הַזֶּה לֹא מַסְפִּיק חַד.", english: "This peeler isn't sharp enough.",
+    hebrewTokenPairs: [["הקולפן", "הַקּוֹלְפָן"], ["הזה", "הַזֶּה"], ["לא", "לֹא"], ["מספיק", "מַסְפִּיק"], ["חד", "חַד"]], englishTokens: ["This", "peeler", "isn't", "sharp", "enough"],
+    hebrewDistractorPairs: [["הסכין", "הַסַּכִּין"], ["הזאת", "הַזֹּאת"], ["נראית", "נִרְאֵית"], ["קהה", "קֵהָה"], ["מאוד", "מְאֹד"]], englishDistractors: ["That", "knife", "looks", "very", "blunt"],
+    notes: "קולפן is a vegetable peeler; חד describes a sharp blade."
+  }),
+  buildReviewedSentence({
+    id: "everyday_154", emoji: "🧀", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "צריך פומפייה בשביל הגבינה.", hebrewNiqqud: "צָרִיךְ פּוּמְפִּיָּה בִּשְׁבִיל הַגְּבִינָה.", english: "We need a grater for the cheese.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["פומפייה", "פּוּמְפִּיָּה"], ["בשביל", "בִּשְׁבִיל"], ["הגבינה", "הַגְּבִינָה"]], englishTokens: ["We need", "a grater", "for", "the cheese"],
+    hebrewDistractorPairs: [["חסרה", "חֲסֵרָה"], ["מסננת", "מְסַנֶּנֶת"], ["ליד", "לְיַד"], ["הפסטה", "הַפַּסְטָה"]], englishDistractors: ["We're missing", "a strainer", "beside", "the pasta"],
+    notes: "פומפייה is a kitchen grater."
+  }),
+  buildReviewedSentence({
+    id: "everyday_155", emoji: "🪥", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "משחת השיניים נגמרה, צריך לקנות עוד.", hebrewNiqqud: "מִשְׁחַת הַשִּׁנַּיִם נִגְמְרָה, צָרִיךְ לִקְנוֹת עוֹד.", english: "The toothpaste ran out; we need to buy more.",
+    hebrewTokenPairs: [["משחת השיניים", "מִשְׁחַת הַשִּׁנַּיִם"], ["נגמרה", "נִגְמְרָה"], ["צריך", "צָרִיךְ"], ["לקנות", "לִקְנוֹת"], ["עוד", "עוֹד"]], englishTokens: ["The toothpaste", "ran out", "we need", "to buy", "more"],
+    hebrewDistractorPairs: [["השמפו", "הַשַּׁמְפּוּ"], ["נשאר", "נִשְׁאַר"], ["אפשר", "אֶפְשָׁר"], ["לקחת", "לָקַחַת"], ["קצת", "קְצָת"]], englishDistractors: ["The shampoo", "is left", "you can", "take", "some"],
+    notes: "משחת שיניים is toothpaste; נגמרה agrees with the feminine construct phrase."
+  }),
+  buildReviewedSentence({
+    id: "everyday_156", emoji: "🧴", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "השמפו במקלחת כמעט נגמר.", hebrewNiqqud: "הַשַּׁמְפּוּ בַּמִּקְלַחַת כִּמְעַט נִגְמַר.", english: "The shampoo in the shower is almost gone.",
+    hebrewTokenPairs: [["השמפו", "הַשַּׁמְפּוּ"], ["במקלחת", "בַּמִּקְלַחַת"], ["כמעט", "כִּמְעַט"], ["נגמר", "נִגְמַר"]], englishTokens: ["The shampoo", "in the shower", "is almost", "gone"],
+    hebrewDistractorPairs: [["הסבון", "הַסַּבּוֹן"], ["במטבח", "בַּמִּטְבָּח"], ["עדיין", "עֲדַיִן"], ["מלא", "מָלֵא"]], englishDistractors: ["The soap", "in the kitchen", "is still", "full"],
+    notes: "שמפו is shampoo; נגמר describes a supply running out."
+  }),
+  buildReviewedSentence({
+    id: "everyday_157", emoji: "🧻", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "נשאר נייר טואלט בארון?", hebrewNiqqud: "נִשְׁאַר נְיָר טוּאָלֶט בָּאָרוֹן?", english: "Is there any toilet paper left in the cabinet?",
+    hebrewTokenPairs: [["נשאר", "נִשְׁאַר"], ["נייר טואלט", "נְיָר טוּאָלֶט"], ["בארון", "בָּאָרוֹן"]], englishTokens: ["Is there any toilet paper", "left", "in the cabinet"],
+    hebrewDistractorPairs: [["נגמר", "נִגְמַר"], ["סבון", "סַבּוֹן"], ["במקלחת", "בַּמִּקְלַחַת"], ["חדש", "חָדָשׁ"]], englishDistractors: ["Is there any soap", "gone", "in the shower", "new"],
+    hebrewOrderAlternates: [{ text: "בארון נשאר נייר טואלט?", textNiqqud: "בָּאָרוֹן נִשְׁאַר נְיָר טוּאָלֶט?", order: [2, 0, 1] }],
+    notes: "נייר טואלט is toilet paper; the location may appear first or last in this neutral question."
+  }),
+  buildReviewedSentence({
+    id: "everyday_158", emoji: "🤧", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "יש לי חבילת טישו בתיק.", hebrewNiqqud: "יֵשׁ לִי חֲבִילַת טִישּׁוּ בַּתִּיק.", english: "I have a pack of tissues in my bag.",
+    hebrewTokenPairs: [["יש לי", "יֵשׁ לִי"], ["חבילת", "חֲבִילַת"], ["טישו", "טִישּׁוּ"], ["בתיק", "בַּתִּיק"]], englishTokens: ["I have", "a pack", "of tissues", "in my bag"],
+    hebrewDistractorPairs: [["אין לו", "אֵין לוֹ"], ["בקבוק", "בַּקְבּוּק"], ["מים", "מַיִם"], ["במכונית", "בַּמְּכוֹנִית"]], englishDistractors: ["He lacks", "a bottle", "of water", "in the car"],
+    notes: "טישו is the common loanword for tissues."
+  }),
+  buildReviewedSentence({
+    id: "everyday_159", emoji: "🧴", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "יש ג׳ל לחיטוי ידיים ליד הקופה.", hebrewNiqqud: "יֵשׁ גֶ׳ל לְחִיטּוּי יָדַיִם לְיַד הַקֻּפָּה.", english: "There's hand sanitizer by the register.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["ג׳ל לחיטוי ידיים", "גֶ׳ל לְחִיטּוּי יָדַיִם"], ["ליד", "לְיַד"], ["הקופה", "הַקֻּפָּה"]], englishTokens: ["There's", "hand sanitizer", "by", "the register"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["תחליב גוף", "תַּחְלִיב גּוּף"], ["מעל", "מֵעַל"], ["המדף", "הַמַּדָּף"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["There isn't", "body lotion", "above", "the shelf", "now"],
+    hebrewOrderAlternates: [{ text: "ליד הקופה יש ג׳ל לחיטוי ידיים.", textNiqqud: "לְיַד הַקֻּפָּה יֵשׁ גֶ׳ל לְחִיטּוּי יָדַיִם.", order: [2, 3, 0, 1] }],
+    notes: "ג׳ל לחיטוי ידיים is hand sanitizer; the locative may be initial or final."
+  }),
+  buildReviewedSentence({
+    id: "everyday_160", emoji: "🪪", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בדקתי מה מכסה ביטוח הבריאות שלי.", hebrewNiqqud: "בָּדַקְתִּי מַה מְכַסֶּה בִּטּוּחַ הַבְּרִיאוּת שֶׁלִּי.", english: "I checked what my health insurance covers.",
+    hebrewTokenPairs: [["בדקתי", "בָּדַקְתִּי"], ["מה", "מַה"], ["מכסה", "מְכַסֶּה"], ["ביטוח הבריאות שלי", "בִּטּוּחַ הַבְּרִיאוּת שֶׁלִּי"]], englishTokens: ["I checked", "what", "my health insurance", "covers"],
+    hebrewDistractorPairs: [["שאלתי", "שָׁאַלְתִּי"], ["מתי", "מָתַי"], ["מחריג", "מַחֲרִיג"], ["הביטוח שלהם", "הַבִּטּוּחַ שֶׁלָּהֶם"]], englishDistractors: ["I asked", "when", "their insurance", "excludes"],
+    notes: "ביטוח בריאות is health insurance; מכסה means covers in the insurance sense."
+  }),
+  buildReviewedSentence({
+    id: "everyday_161", emoji: "🏥", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המרפאה נפתחת בשבע וחצי.", hebrewNiqqud: "הַמִּרְפָּאָה נִפְתַּחַת בְּשֶׁבַע וָחֵצִי.", english: "The clinic opens at seven thirty.",
+    hebrewTokenPairs: [["המרפאה", "הַמִּרְפָּאָה"], ["נפתחת", "נִפְתַּחַת"], ["בשבע וחצי", "בְּשֶׁבַע וָחֵצִי"]], englishTokens: ["The clinic", "opens", "at seven thirty"],
+    hebrewDistractorPairs: [["הספרייה", "הַסִּפְרִיָּה"], ["נסגרת", "נִסְגֶּרֶת"], ["בתשע", "בְּתֵשַׁע"], ["מחר", "מָחָר"]], englishDistractors: ["The library", "closes", "at nine", "tomorrow"],
+    notes: "מרפאה is a clinic; שבע וחצי is seven thirty."
+  }),
+  buildReviewedSentence({
+    id: "everyday_162", emoji: "💊", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אספתי את התרופה מבית המרקחת.", hebrewNiqqud: "אָסַפְתִּי אֶת הַתְּרוּפָה מִבֵּית הַמִּרְקַחַת.", english: "I picked up the medicine from the pharmacy.",
+    hebrewTokenPairs: [["אספתי", "אָסַפְתִּי"], ["את התרופה", "אֶת הַתְּרוּפָה"], ["מבית המרקחת", "מִבֵּית הַמִּרְקַחַת"]], englishTokens: ["I picked up", "the medicine", "from the pharmacy"],
+    hebrewDistractorPairs: [["השארתי", "הִשְׁאַרְתִּי"], ["את המרשם", "אֶת הַמִּרְשָׁם"], ["במרפאה", "בַּמִּרְפָּאָה"], ["אתמול", "אֶתְמוֹל"]], englishDistractors: ["I left", "the prescription", "at the clinic", "yesterday"],
+    notes: "לאסוף תרופה is to pick up medicine from a pharmacy."
+  }),
+  buildReviewedSentence({
+    id: "everyday_163", emoji: "🧾", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הרוקחת בדקה את המינון על המרשם.", hebrewNiqqud: "הָרוֹקַחַת בָּדְקָה אֶת הַמִּינוּן עַל הַמִּרְשָׁם.", english: "The pharmacist checked the dosage on the prescription.",
+    hebrewTokenPairs: [["הרוקחת", "הָרוֹקַחַת"], ["בדקה", "בָּדְקָה"], ["את המינון", "אֶת הַמִּינוּן"], ["על המרשם", "עַל הַמִּרְשָׁם"]], englishTokens: ["The pharmacist", "checked", "the dosage", "on the prescription"],
+    hebrewDistractorPairs: [["האחות", "הָאָחוֹת"], ["שינתה", "שִׁנְּתָה"], ["את התאריך", "אֶת הַתַּאֲרִיךְ"], ["על הטופס", "עַל הַטֹּפֶס"]], englishDistractors: ["The nurse", "changed", "the date", "on the form"],
+    notes: "מינון is dosage; מרשם is a prescription."
+  }),
+  buildReviewedSentence({
+    id: "everyday_164", emoji: "🩺", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ד״ר יעל שאלה מתי התחיל התסמין.", hebrewNiqqud: "ד״ר יָעֵל שָׁאֲלָה מָתַי הִתְחִיל הַתַּסְמִין.", english: "Dr. Yael asked when the symptom began.",
+    hebrewTokenPairs: [["ד״ר", "ד״ר"], ["יעל", "יָעֵל"], ["שאלה", "שָׁאֲלָה"], ["מתי", "מָתַי"], ["התחיל", "הִתְחִיל"], ["התסמין", "הַתַּסְמִין"]], englishTokens: ["Dr.", "Yael", "asked", "when", "the symptom", "began"],
+    hebrewDistractorPairs: [["מר", "מַר"], ["נועם", "נֹעַם"], ["ענה", "עָנָה"], ["למה", "לָמָּה"], ["נגמר", "נִגְמַר"], ["הטיפול", "הַטִּפּוּל"]], englishDistractors: ["Mr.", "Noam", "answered", "why", "the treatment", "ended"],
+    notes: "תסמין is a symptom; the name Yael makes the doctor's feminine agreement explicit."
+  }),
+  buildReviewedSentence({
+    id: "everyday_165", emoji: "🏃", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אני עושה פעילות גופנית שלוש פעמים בשבוע.", hebrewNiqqud: "אֲנִי עוֹשֶׂה פְּעִילוּת גּוּפָנִית שָׁלוֹשׁ פְּעָמִים בַּשָּׁבוּעַ.", english: "I exercise three times a week.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["עושה", "עוֹשֶׂה"], ["פעילות גופנית", "פְּעִילוּת גּוּפָנִית"], ["שלוש פעמים", "שָׁלוֹשׁ פְּעָמִים"], ["בשבוע", "בַּשָּׁבוּעַ"]], englishTokens: ["I", "exercise", "three times", "a week"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["מפסיקה", "מַפְסִיקָה"], ["מנוחה", "מְנוּחָה"], ["פעמיים", "פַּעֲמַיִם"], ["בחודש", "בַּחֹדֶשׁ"]], englishDistractors: ["She", "rests", "twice", "a month", "outside"],
+    hebrewOrderAlternates: [{ text: "שלוש פעמים בשבוע אני עושה פעילות גופנית.", textNiqqud: "שָׁלוֹשׁ פְּעָמִים בַּשָּׁבוּעַ אֲנִי עוֹשֶׂה פְּעִילוּת גּוּפָנִית.", order: [3, 4, 0, 1, 2] }],
+    notes: "פעילות גופנית is physical exercise; the frequency phrase may be initial or final."
+  }),
+  buildReviewedSentence({
+    id: "everyday_166", emoji: "🏋️", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "האימון היום היה קצר אבל קשה.", hebrewNiqqud: "הָאִמּוּן הַיּוֹם הָיָה קָצָר אֲבָל קָשֶׁה.", english: "Today's workout was short but hard.",
+    hebrewTokenPairs: [["האימון", "הָאִמּוּן"], ["היום", "הַיּוֹם"], ["היה", "הָיָה"], ["קצר", "קָצָר"], ["אבל", "אֲבָל"], ["קשה", "קָשֶׁה"]], englishTokens: ["Today's", "workout", "was", "short", "but", "hard"],
+    hebrewDistractorPairs: [["השיעור", "הַשִּׁעוּר"], ["אתמול", "אֶתְמוֹל"], ["נשאר", "נִשְׁאַר"], ["ארוך", "אָרֹךְ"], ["וגם", "וְגַם"], ["קל", "קַל"]], englishDistractors: ["Yesterday's", "lesson", "remained", "long", "and", "easy"],
+    hebrewOrderAlternates: [{ text: "היום האימון היה קצר אבל קשה.", textNiqqud: "הַיּוֹם הָאִמּוּן הָיָה קָצָר אֲבָל קָשֶׁה.", order: [1, 0, 2, 3, 4, 5] }],
+    notes: "אימון is a workout; היום may precede or follow the subject neutrally."
+  }),
+  buildReviewedSentence({
+    id: "everyday_167", emoji: "🚶", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הפיזיותרפיה עזרה לי ללכת שוב בלי כאב.", hebrewNiqqud: "הַפִּיזְיוֹתֶּרַפְּיָה עָזְרָה לִי לָלֶכֶת שׁוּב בְּלִי כְּאֵב.", english: "Physiotherapy helped me walk again without pain.",
+    hebrewTokenPairs: [["הפיזיותרפיה", "הַפִּיזְיוֹתֶּרַפְּיָה"], ["עזרה לי", "עָזְרָה לִי"], ["ללכת", "לָלֶכֶת"], ["שוב", "שׁוּב"], ["בלי כאב", "בְּלִי כְּאֵב"]], englishTokens: ["Physiotherapy", "helped me", "walk", "again", "without pain"],
+    hebrewDistractorPairs: [["המנוחה", "הַמְּנוּחָה"], ["מנעה ממנו", "מָנְעָה מִמֶּנּוּ"], ["לרוץ", "לָרוּץ"], ["היום", "הַיּוֹם"], ["עם קושי", "עִם קֹשִׁי"]], englishDistractors: ["Rest", "stopped him", "running", "today", "with difficulty"],
+    notes: "פיזיותרפיה is physiotherapy or physical therapy."
+  }),
+  buildReviewedSentence({
+    id: "everyday_168", emoji: "🥗", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תזונה מאוזנת עדיפה על דיאטה קיצונית.", hebrewNiqqud: "תְּזוּנָה מְאֻזֶּנֶת עֲדִיפָה עַל דִּיאֵטָה קִיצוֹנִית.", english: "A balanced diet is preferable to an extreme diet.",
+    hebrewTokenPairs: [["תזונה", "תְּזוּנָה"], ["מאוזנת", "מְאֻזֶּנֶת"], ["עדיפה על", "עֲדִיפָה עַל"], ["דיאטה", "דִּיאֵטָה"], ["קיצונית", "קִיצוֹנִית"]], englishTokens: ["A balanced", "diet", "is preferable to", "an extreme", "diet"],
+    hebrewDistractorPairs: [["ארוחה", "אֲרוּחָה"], ["כבדה", "כְּבֵדָה"], ["דומה ל", "דּוֹמָה לְ"], ["תוכנית", "תּוֹכְנִית"], ["זמנית", "זְמַנִּית"]], englishDistractors: ["A heavy", "meal", "is similar to", "a temporary", "plan"],
+    notes: "תזונה is nutrition or diet; מאוזנת means balanced."
+  }),
+  buildReviewedSentence({
+    id: "everyday_169", emoji: "😴", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "נדודי שינה מקשים עליי להתרכז.", hebrewNiqqud: "נְדוּדֵי שֵׁנָה מַקְשִׁים עָלַי לְהִתְרַכֵּז.", english: "Insomnia makes it hard for me to concentrate.",
+    hebrewTokenPairs: [["נדודי שינה", "נְדוּדֵי שֵׁנָה"], ["מקשים", "מַקְשִׁים"], ["עליי", "עָלַי"], ["להתרכז", "לְהִתְרַכֵּז"]], englishTokens: ["Insomnia", "makes", "it hard for me", "to concentrate"],
+    hebrewDistractorPairs: [["שינה", "שֵׁנָה"], ["עמוקה", "עֲמֻקָּה"], ["עוזרת", "עוֹזֶרֶת"], ["לה", "לָהּ"], ["להירגע", "לְהֵרָגַע"]], englishDistractors: ["Deep", "sleep", "helps", "her", "to relax"],
+    notes: "נדודי שינה is insomnia; the Hebrew construction literally says it makes concentrating difficult for me."
+  }),
+  buildReviewedSentence({
+    id: "everyday_170", emoji: "🌱", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "זאת הזדמנות טובה ללמוד משהו חדש.", hebrewNiqqud: "זֹאת הִזְדַּמְּנוּת טוֹבָה לִלְמֹד מַשֶּׁהוּ חָדָשׁ.", english: "This is a good opportunity to learn something new.",
+    hebrewTokenPairs: [["זאת", "זֹאת"], ["הזדמנות", "הִזְדַּמְּנוּת"], ["טובה", "טוֹבָה"], ["ללמוד", "לִלְמֹד"], ["משהו", "מַשֶּׁהוּ"], ["חדש", "חָדָשׁ"]], englishTokens: ["This is", "a good", "opportunity", "to learn", "something", "new"],
+    hebrewDistractorPairs: [["זו", "זוֹ"], ["בעיה", "בְּעָיָה"], ["קטנה", "קְטַנָּה"], ["לשכוח", "לִשְׁכֹּחַ"], ["הכול", "הַכֹּל"], ["ישן", "יָשָׁן"]], englishDistractors: ["That is", "a small", "problem", "to forget", "everything", "old"],
+    notes: "הזדמנות is an opportunity."
+  }),
+  buildReviewedSentence({
+    id: "everyday_171", emoji: "⏰", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדרישה היחידה היא להגיע בזמן.", hebrewNiqqud: "הַדְּרִישָׁה הַיְּחִידָה הִיא לְהַגִּיעַ בַּזְּמַן.", english: "The only requirement is to arrive on time.",
+    hebrewTokenPairs: [["הדרישה", "הַדְּרִישָׁה"], ["היחידה", "הַיְּחִידָה"], ["היא", "הִיא"], ["להגיע", "לְהַגִּיעַ"], ["בזמן", "בַּזְּמַן"]], englishTokens: ["The only", "requirement", "is", "to arrive", "on time"],
+    hebrewDistractorPairs: [["ההצעה", "הַהַצָּעָה"], ["הראשונה", "הָרִאשׁוֹנָה"], ["הייתה", "הָיְתָה"], ["לעזוב", "לַעֲזֹב"], ["מוקדם", "מֻקְדָּם"]], englishDistractors: ["The first", "suggestion", "was", "to leave", "early"],
+    notes: "דרישה is a requirement; בזמן means on time."
+  }),
+  buildReviewedSentence({
+    id: "everyday_172", emoji: "📦", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "יש לי חשש שהחבילה לא תגיע היום.", hebrewNiqqud: "יֵשׁ לִי חֲשָׁשׁ שֶׁהַחֲבִילָה לֹא תַגִּיעַ הַיּוֹם.", english: "I'm worried that the package won't arrive today.",
+    hebrewTokenPairs: [["יש לי", "יֵשׁ לִי"], ["חשש", "חֲשָׁשׁ"], ["שהחבילה", "שֶׁהַחֲבִילָה"], ["לא", "לֹא"], ["תגיע", "תַגִּיעַ"], ["היום", "הַיּוֹם"]], englishTokens: ["I'm", "worried", "that the package", "won't", "arrive", "today"],
+    hebrewDistractorPairs: [["יש לו", "יֵשׁ לוֹ"], ["ביטחון", "בִּטָּחוֹן"], ["שהמכתב", "שֶׁהַמִּכְתָּב"], ["כבר נשלח", "כְּבָר נִשְׁלַח"], ["אתמול", "אֶתְמוֹל"]], englishDistractors: ["He's", "confident", "that the letter", "was sent", "yesterday"],
+    notes: "יש לי חשש is a natural noun-based way to express concern."
+  }),
+  buildReviewedSentence({
+    id: "everyday_173", emoji: "🧳", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הציפייה לטיול הייתה כמעט טובה כמו הטיול עצמו.", hebrewNiqqud: "הַצִּפִּיָּה לַטִּיּוּל הָיְתָה כִּמְעַט טוֹבָה כְּמוֹ הַטִּיּוּל עַצְמוֹ.", english: "The anticipation of the trip was almost as good as the trip itself.",
+    hebrewTokenPairs: [["הציפייה", "הַצִּפִּיָּה"], ["לטיול", "לַטִּיּוּל"], ["הייתה", "הָיְתָה"], ["כמעט", "כִּמְעַט"], ["טובה", "טוֹבָה"], ["כמו", "כְּמוֹ"], ["הטיול", "הַטִּיּוּל"], ["עצמו", "עַצְמוֹ"]], englishTokens: ["The anticipation", "of the trip", "was", "almost", "as good", "as", "the trip", "itself"],
+    hebrewDistractorPairs: [["האכזבה", "הָאַכְזָבָה"], ["מהביטול", "מֵהַבִּטּוּל"], ["נשארה", "נִשְׁאֲרָה"], ["הרבה", "הַרְבֵּה"], ["גרועה", "גְּרוּעָה"], ["מאשר", "מֵאֲשֶׁר"]], englishDistractors: ["The disappointment", "from cancellation", "remained", "much", "worse", "than"],
+    notes: "ציפייה can mean expectation or pleasurable anticipation."
+  }),
+  buildReviewedSentence({
+    id: "everyday_174", emoji: "⌛", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אין לי סבלנות לחכות עוד שעה.", hebrewNiqqud: "אֵין לִי סַבְלָנוּת לְחַכּוֹת עוֹד שָׁעָה.", english: "I don't have the patience to wait another hour.",
+    hebrewTokenPairs: [["אין לי", "אֵין לִי"], ["סבלנות", "סַבְלָנוּת"], ["לחכות", "לְחַכּוֹת"], ["עוד", "עוֹד"], ["שעה", "שָׁעָה"]], englishTokens: ["I don't have", "the patience", "to wait", "another", "hour"],
+    hebrewDistractorPairs: [["יש לה", "יֵשׁ לָהּ"], ["זמן", "זְמַן"], ["להישאר", "לְהִשָּׁאֵר"], ["רק", "רַק"], ["דקה", "דַּקָּה"]], englishDistractors: ["She has", "the time", "to stay", "only", "a minute"],
+    notes: "סבלנות is patience."
+  }),
+  buildReviewedSentence({
+    id: "everyday_175", emoji: "🕰️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "יש גמישות בשעת ההגעה.", hebrewNiqqud: "יֵשׁ גְּמִישׁוּת בִּשְׁעַת הַהַגָּעָה.", english: "The arrival time is flexible.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["גמישות", "גְּמִישׁוּת"], ["בשעת ההגעה", "בִּשְׁעַת הַהַגָּעָה"]], englishTokens: ["The arrival", "time", "is flexible"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["ודאות", "וַדָּאוּת"], ["במועד היציאה", "בְּמוֹעֵד הַיְּצִיאָה"], ["מחר", "מָחָר"]], englishDistractors: ["The departure", "date", "is certain", "tomorrow"],
+    notes: "גמישות בשעת ההגעה means flexibility in the arrival time."
+  }),
+  buildReviewedSentence({
+    id: "everyday_176", emoji: "🚌", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "האמינות של האוטובוסים משתנה לפי השעה.", hebrewNiqqud: "הָאֲמִינוּת שֶׁל הָאוֹטוֹבּוּסִים מִשְׁתַּנָּה לְפִי הַשָּׁעָה.", english: "The reliability of the buses varies by time of day.",
+    hebrewTokenPairs: [["האמינות", "הָאֲמִינוּת"], ["של", "שֶׁל"], ["האוטובוסים", "הָאוֹטוֹבּוּסִים"], ["משתנה", "מִשְׁתַּנָּה"], ["לפי", "לְפִי"], ["השעה", "הַשָּׁעָה"]], englishTokens: ["The reliability", "of", "the buses", "varies", "by", "time of day"],
+    hebrewDistractorPairs: [["מחיר", "מְחִיר"], ["המוניות", "הַמּוֹנִיּוֹת"], ["נשאר", "נִשְׁאַר"], ["במשך", "בְּמֶשֶׁךְ"], ["השבוע", "הַשָּׁבוּעַ"]], englishDistractors: ["Taxi", "prices", "remain", "during", "the week"],
+    notes: "אמינות is reliability; לפי השעה means depending on the time of day."
+  }),
+  buildReviewedSentence({
+    id: "everyday_177", emoji: "📅", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "צריך לבדוק זמינות לפני שקובעים תור.", hebrewNiqqud: "צָרִיךְ לִבְדֹּק זְמִינוּת לִפְנֵי שֶׁקּוֹבְעִים תּוֹר.", english: "You need to check availability before making an appointment.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לבדוק", "לִבְדֹּק"], ["זמינות", "זְמִינוּת"], ["לפני", "לִפְנֵי"], ["שקובעים", "שֶׁקּוֹבְעִים"], ["תור", "תּוֹר"]], englishTokens: ["You need", "to check", "availability", "before", "making", "an appointment"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לבטל", "לְבַטֵּל"], ["דרישה", "דְּרִישָׁה"], ["אחרי", "אַחֲרֵי"], ["שדוחים", "שֶׁדּוֹחִים"], ["פגישה", "פְּגִישָׁה"]], englishDistractors: ["You can", "cancel", "a requirement", "after", "postponing", "a meeting"],
+    hebrewOrderAlternates: [{ text: "לפני שקובעים תור, צריך לבדוק זמינות.", textNiqqud: "לִפְנֵי שֶׁקּוֹבְעִים תּוֹר, צָרִיךְ לִבְדֹּק זְמִינוּת.", order: [3, 4, 5, 0, 1, 2] }],
+    notes: "זמינות is availability; the before-clause may come first or last."
+  }),
+  buildReviewedSentence({
+    id: "everyday_178", emoji: "🏷️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "האיכות טובה, אבל המחיר גבוה מדי.", hebrewNiqqud: "הָאֵיכוּת טוֹבָה, אֲבָל הַמְּחִיר גָּבוֹהַּ מִדַּי.", english: "The quality is good, but the price is too high.",
+    hebrewTokenPairs: [["האיכות", "הָאֵיכוּת"], ["טובה", "טוֹבָה"], ["אבל", "אֲבָל"], ["המחיר", "הַמְּחִיר"], ["גבוה", "גָּבוֹהַּ"], ["מדי", "מִדַּי"]], englishTokens: ["The quality", "is good", "but", "the price", "is too", "high"],
+    hebrewDistractorPairs: [["הכמות", "הַכַּמּוּת"], ["קטנה", "קְטַנָּה"], ["לכן", "לָכֵן"], ["המוצר", "הַמּוּצָר"], ["נמוך", "נָמוּךְ"], ["מספיק", "מַסְפִּיק"]], englishDistractors: ["The amount", "is small", "therefore", "the product", "is low", "enough"],
+    notes: "איכות is quality; גבוה מדי means too high."
+  }),
+  buildReviewedSentence({
+    id: "everyday_179", emoji: "🍽️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הכמות הזאת תספיק לארבעה אנשים.", hebrewNiqqud: "הַכַּמּוּת הַזֹּאת תַּסְפִּיק לְאַרְבָּעָה אֲנָשִׁים.", english: "This amount will be enough for four people.",
+    hebrewTokenPairs: [["הכמות", "הַכַּמּוּת"], ["הזאת", "הַזֹּאת"], ["תספיק", "תַּסְפִּיק"], ["לארבעה", "לְאַרְבָּעָה"], ["אנשים", "אֲנָשִׁים"]], englishTokens: ["This", "amount", "will be enough", "for four", "people"],
+    hebrewDistractorPairs: [["האיכות", "הָאֵיכוּת"], ["ההיא", "הַהִיא"], ["תחסר", "תֶּחְסַר"], ["לחמישה", "לַחֲמִשָּׁה"], ["ילדים", "יְלָדִים"]], englishDistractors: ["That", "quality", "will be short", "for five", "children"],
+    notes: "כמות is an amount or quantity; להספיק means to be enough."
+  }),
+  buildReviewedSentence({
+    id: "everyday_180", emoji: "😞", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הביטול היה אכזבה גדולה לכולם.", hebrewNiqqud: "הַבִּטּוּל הָיָה אַכְזָבָה גְּדוֹלָה לְכֻלָּם.", english: "The cancellation was a big disappointment to everyone.",
+    hebrewTokenPairs: [["הביטול", "הַבִּטּוּל"], ["היה", "הָיָה"], ["אכזבה", "אַכְזָבָה"], ["גדולה", "גְּדוֹלָה"], ["לכולם", "לְכֻלָּם"]], englishTokens: ["The cancellation", "was", "a big", "disappointment", "to everyone"],
+    hebrewDistractorPairs: [["האישור", "הָאִשּׁוּר"], ["נשאר", "נִשְׁאַר"], ["הצלחה", "הַצְלָחָה"], ["קטנה", "קְטַנָּה"], ["לאיש", "לְאִישׁ"]], englishDistractors: ["The approval", "remained", "a small", "success", "to nobody"],
+    notes: "אכזבה is disappointment."
+  }),
+  buildReviewedSentence({
+    id: "everyday_181", emoji: "💻", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "התסכול שלי גדל בכל פעם שהאתר נתקע.", hebrewNiqqud: "הַתִּסְכּוּל שֶׁלִּי גָּדֵל בְּכָל פַּעַם שֶׁהָאֲתָר נִתְקָע.", english: "My frustration grows every time the website freezes.",
+    hebrewTokenPairs: [["התסכול", "הַתִּסְכּוּל"], ["שלי", "שֶׁלִּי"], ["גדל", "גָּדֵל"], ["בכל פעם", "בְּכָל פַּעַם"], ["שהאתר", "שֶׁהָאֲתָר"], ["נתקע", "נִתְקָע"]], englishTokens: ["My", "frustration", "grows", "every time", "the website", "freezes"],
+    hebrewDistractorPairs: [["הסבלנות", "הַסַּבְלָנוּת"], ["שלו", "שֶׁלּוֹ"], ["חוזרת", "חוֹזֶרֶת"], ["לפעמים", "לִפְעָמִים"], ["שהטלפון", "שֶׁהַטֶּלֶפוֹן"], ["עובד", "עוֹבֵד"]], englishDistractors: ["His", "patience", "returns", "sometimes", "the phone", "works"],
+    hebrewOrderAlternates: [{ text: "בכל פעם שהאתר נתקע, התסכול שלי גדל.", textNiqqud: "בְּכָל פַּעַם שֶׁהָאֲתָר נִתְקָע, הַתִּסְכּוּל שֶׁלִּי גָּדֵל.", order: [3, 4, 5, 0, 1, 2] }],
+    notes: "תסכול is frustration; the repeated-time clause may precede or follow the main clause."
+  }),
+  buildReviewedSentence({
+    id: "everyday_182", emoji: "🤝", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "היא גילתה חמלה כלפי השכן המבוגר.", hebrewNiqqud: "הִיא גִּלְּתָה חֶמְלָה כְּלַפֵּי הַשָּׁכֵן הַמְּבֻגָּר.", english: "She showed compassion toward the elderly neighbor.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["גילתה", "גִּלְּתָה"], ["חמלה", "חֶמְלָה"], ["כלפי", "כְּלַפֵּי"], ["השכן", "הַשָּׁכֵן"], ["המבוגר", "הַמְּבֻגָּר"]], englishTokens: ["She", "showed", "compassion", "toward", "the elderly", "neighbor"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["הסתיר", "הִסְתִּיר"], ["טינה", "טִינָה"], ["מפני", "מִפְּנֵי"], ["החבר", "הֶחָבֵר"], ["הצעיר", "הַצָּעִיר"]], englishDistractors: ["He", "hid", "resentment", "from", "the young", "friend"],
+    notes: "חמלה is compassion; כלפי means toward."
+  }),
+  buildReviewedSentence({
+    id: "everyday_183", emoji: "🫱🏻‍🫲🏽", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "קשה לבנות אמון אחרי שקר.", hebrewNiqqud: "קָשֶׁה לִבְנוֹת אֱמוּן אַחֲרֵי שֶׁקֶר.", english: "It's hard to build trust after a lie.",
+    hebrewTokenPairs: [["קשה", "קָשֶׁה"], ["לבנות", "לִבְנוֹת"], ["אמון", "אֱמוּן"], ["אחרי", "אַחֲרֵי"], ["שקר", "שֶׁקֶר"]], englishTokens: ["It's hard", "to build", "trust", "after", "a lie"],
+    hebrewDistractorPairs: [["קל", "קַל"], ["לאבד", "לְאַבֵּד"], ["סבלנות", "סַבְלָנוּת"], ["לפני", "לִפְנֵי"], ["שיחה", "שִׂיחָה"]], englishDistractors: ["It's easy", "to lose", "patience", "before", "a conversation"],
+    hebrewOrderAlternates: [{ text: "אחרי שקר קשה לבנות אמון.", textNiqqud: "אַחֲרֵי שֶׁקֶר קָשֶׁה לִבְנוֹת אֱמוּן.", order: [3, 4, 0, 1, 2] }],
+    notes: "לבנות אמון is to build trust; the after-phrase may come first or last."
+  }),
+  buildReviewedSentence({
+    id: "everyday_184", emoji: "🏠", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "הגעגוע הביתה התחזק אחרי חודש בחו״ל.", hebrewNiqqud: "הַגַּעְגּוּעַ הַבַּיְתָה הִתְחַזֵּק אַחֲרֵי חֹדֶשׁ בְּחוּ״ל.", english: "The longing for home grew stronger after a month abroad.",
+    hebrewTokenPairs: [["הגעגוע", "הַגַּעְגּוּעַ"], ["הביתה", "הַבַּיְתָה"], ["התחזק", "הִתְחַזֵּק"], ["אחרי", "אַחֲרֵי"], ["חודש", "חֹדֶשׁ"], ["בחו״ל", "בְּחוּ״ל"]], englishTokens: ["The longing", "for home", "grew stronger", "after", "a month", "abroad"],
+    hebrewDistractorPairs: [["הקשר", "הַקֶּשֶׁר"], ["לעבודה", "לָעֲבוֹדָה"], ["נחלש", "נֶחְלַשׁ"], ["לפני", "לִפְנֵי"], ["שבוע", "שָׁבוּעַ"], ["בארץ", "בָּאָרֶץ"]], englishDistractors: ["The connection", "to work", "grew weaker", "before", "a week", "at home"],
+    hebrewOrderAlternates: [{ text: "אחרי חודש בחו״ל הגעגוע הביתה התחזק.", textNiqqud: "אַחֲרֵי חֹדֶשׁ בְּחוּ״ל הַגַּעְגּוּעַ הַבַּיְתָה הִתְחַזֵּק.", order: [3, 4, 5, 0, 1, 2] }],
+    notes: "געגוע is longing; the elapsed-time phrase may precede or follow the main clause."
+  }),
+  buildReviewedSentence({
+    id: "everyday_185", emoji: "🌱", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מה השורש של המילה הזאת?", hebrewNiqqud: "מַה הַשֹּׁרֶשׁ שֶׁל הַמִּלָּה הַזֹּאת?", english: "What is the root of this word?",
+    hebrewTokenPairs: [["מה", "מַה"], ["השורש", "הַשֹּׁרֶשׁ"], ["של", "שֶׁל"], ["המילה", "הַמִּלָּה"], ["הזאת", "הַזֹּאת"]], englishTokens: ["What is", "the root", "of", "this", "word"],
+    hebrewDistractorPairs: [["איפה", "אֵיפֹה"], ["הסיומת", "הַסִּיּוֹמֶת"], ["בתוך", "בְּתוֹךְ"], ["המשפט", "הַמִּשְׁפָּט"], ["ההוא", "הַהוּא"]], englishDistractors: ["Where is", "the suffix", "inside", "that", "sentence"],
+    notes: "שורש is a linguistic root."
+  }),
+  buildReviewedSentence({
+    id: "everyday_186", emoji: "⏳", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "באיזה זמן דקדוקי נמצא הפועל הזה?", hebrewNiqqud: "בְּאֵיזֶה זְמַן דִּקְדּוּקִי נִמְצָא הַפֹּעַל הַזֶּה?", english: "What tense is this verb in?",
+    hebrewTokenPairs: [["באיזה", "בְּאֵיזֶה"], ["זמן דקדוקי", "זְמַן דִּקְדּוּקִי"], ["נמצא", "נִמְצָא"], ["הפועל", "הַפֹּעַל"], ["הזה", "הַזֶּה"]], englishTokens: ["What", "tense", "is", "this", "verb in"],
+    hebrewDistractorPairs: [["באיזו", "בְּאֵיזוֹ"], ["צורת רבים", "צוּרַת רַבִּים"], ["נכתבה", "נִכְתְּבָה"], ["המילה", "הַמִּלָּה"], ["הזאת", "הַזֹּאת"]], englishDistractors: ["Which", "plural form", "was written", "that", "word in"],
+    notes: "זמן דקדוקי is grammatical tense."
+  }),
+  buildReviewedSentence({
+    id: "everyday_187", emoji: "💬", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "קשה להבין את הניב הזה בלי דוגמה.", hebrewNiqqud: "קָשֶׁה לְהָבִין אֶת הַנִּיב הַזֶּה בְּלִי דֻּגְמָה.", english: "This idiom is hard to understand without an example.",
+    hebrewTokenPairs: [["קשה", "קָשֶׁה"], ["להבין", "לְהָבִין"], ["את הניב", "אֶת הַנִּיב"], ["הזה", "הַזֶּה"], ["בלי", "בְּלִי"], ["דוגמה", "דֻּגְמָה"]], englishTokens: ["This", "idiom", "is hard", "to understand", "without", "an example"],
+    hebrewDistractorPairs: [["קל", "קַל"], ["לתרגם", "לְתַרְגֵּם"], ["את השורש", "אֶת הַשֹּׁרֶשׁ"], ["ההוא", "הַהוּא"], ["עם", "עִם"], ["הסבר", "הֶסְבֵּר"]], englishDistractors: ["That", "root", "is easy", "to translate", "with", "an explanation"],
+    hebrewOrderAlternates: [{ text: "בלי דוגמה קשה להבין את הניב הזה.", textNiqqud: "בְּלִי דֻּגְמָה קָשֶׁה לְהָבִין אֶת הַנִּיב הַזֶּה.", order: [4, 5, 0, 1, 2, 3] }],
+    notes: "ניב is an idiom; the without-phrase may come first or last."
+  }),
+  buildReviewedSentence({
+    id: "everyday_188", emoji: "🗯️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המילה הזאת היא סלנג או עברית תקנית?", hebrewNiqqud: "הַמִּלָּה הַזֹּאת הִיא סְלֶנְג אוֹ עִבְרִית תִּקְנִית?", english: "Is this word slang or standard Hebrew?",
+    hebrewTokenPairs: [["המילה", "הַמִּלָּה"], ["הזאת", "הַזֹּאת"], ["היא", "הִיא"], ["סלנג", "סְלֶנְג"], ["או", "אוֹ"], ["עברית", "עִבְרִית"], ["תקנית", "תִּקְנִית"]], englishTokens: ["Is", "this", "word", "slang", "or", "standard", "Hebrew"],
+    hebrewDistractorPairs: [["המשפט", "הַמִּשְׁפָּט"], ["הזה", "הַזֶּה"], ["נשמע", "נִשְׁמָע"], ["רשמי", "רִשְׁמִי"], ["וגם", "וְגַם"], ["ערבית מדוברת", "עֲרָבִית מְדֻבֶּרֶת"]], englishDistractors: ["Does", "that sentence", "sound", "formal", "and", "spoken Arabic"],
+    notes: "סלנג is slang; עברית תקנית is standard Hebrew."
+  }),
+  buildReviewedSentence({
+    id: "everyday_189", emoji: "🔗", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "איזו מילת יחס באה אחרי הפועל הזה?", hebrewNiqqud: "אֵיזוֹ מִלַּת יַחַס בָּאָה אַחֲרֵי הַפֹּעַל הַזֶּה?", english: "Which preposition comes after this verb?",
+    hebrewTokenPairs: [["איזו", "אֵיזוֹ"], ["מילת יחס", "מִלַּת יַחַס"], ["באה", "בָּאָה"], ["אחרי", "אַחֲרֵי"], ["הפועל", "הַפֹּעַל"], ["הזה", "הַזֶּה"]], englishTokens: ["Which", "preposition", "comes", "after", "this", "verb"],
+    hebrewDistractorPairs: [["איזה", "אֵיזֶה"], ["כינוי שייכות", "כִּנּוּי שַׁיָּכוּת"], ["עומד", "עוֹמֵד"], ["לפני", "לִפְנֵי"], ["השם", "הַשֵּׁם"], ["ההוא", "הַהוּא"]], englishDistractors: ["What kind of", "possessive suffix", "stands", "before", "that", "noun"],
+    notes: "מילת יחס is a preposition; Hebrew verbs often govern a specific one."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -17010,6 +17303,7 @@ SENTENCE_BANK.push(
   ...IVRI_SENTENCES,
   ...IVRI_TECH_SENTENCES,
   ...CAST_VOCAB_SENTENCES,
+  ...NEUTRAL_EVERYDAY_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -17035,6 +17329,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260809a",
+  __build: "20260810b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

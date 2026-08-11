@@ -40,9 +40,29 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
   assert.equal(report.records.length, 2168);
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 600);
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 647);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1568);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1521);
+});
+
+test("the neutral everyday tranche gives all forty selected shared words exact sentence support", () => {
+  const anchors = new Set([
+    "מטרפה", "מרית", "מצקת", "קולפן", "פומפייה",
+    "משחת שיניים", "שמפו", "נייר טואלט", "טישו", "ג'ל לחיטוי ידיים",
+    "ביטוח בריאות", "מרפאה", "תרופה", "מינון", "תסמין",
+    "פעילות גופנית", "אימון", "פיזיותרפיה", "תזונה", "נדודי שינה",
+    "הזדמנות", "דרישה", "חשש", "ציפייה", "סבלנות",
+    "גמישות", "אמינות", "זמינות", "איכות", "כמות",
+    "אכזבה", "תסכול", "חמלה", "אמון", "געגוע",
+    "שורש", "זמן דקדוקי", "ניב", "סלנג", "מילת יחס",
+  ]);
+  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const selected = report.records.filter((record) => anchors.has(record.word.he));
+
+  assert.equal(anchors.size, 40);
+  assert.equal(selected.length, 40);
+  assert.equal(selected.filter((record) => record.status !== "exact").length, 0);
+  assert.ok(selected.every((record) => record.exactSentenceIds.some((id) => /^everyday_1(?:5\d|[6-8]\d)$/.test(id))));
 });
 
 test("every card in the new cast and smartphone tranches has exact sentence support", () => {
