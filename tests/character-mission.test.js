@@ -799,6 +799,34 @@ test("the legal tranche is Inat-owned but drawable for every companion", () => {
   }
 });
 
+test("the finance tranche is Ivri-owned but drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 173; index <= 196; index += 1) {
+    const row = byId.get(`professional_${index}`);
+    assert.ok(row, `missing professional_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        entry.id === "ivri",
+        `${row.id} ownership must belong to Ivri alone`,
+      );
+    });
+  }
+});
+
 test("urban and practical additions preserve shared routing while character backfill stays reserved", () => {
   const { characterData } = loadCharacterModule();
   const bankContext = { console };
