@@ -471,6 +471,13 @@ const URBAN_MOBILITY_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 190, 217),
   ...sentenceIdRange("colloquial", 168, 175),
 ];
+const KITCHEN_ACTION_ENTRY_IDS = sentenceIdRange("everyday", 218, 241);
+const HOME_CARE_ENTRY_IDS = sentenceIdRange("everyday", 242, 265);
+const INAT_FORMAL_ENTRY_IDS = sentenceIdRange("formal", 88, 107);
+const RELATIONSHIP_ENTRY_IDS = sentenceIdRange("colloquial", 176, 195);
+const IVRI_AI_ENTRY_IDS = sentenceIdRange("professional", 153, 172);
+const SHARED_GRAMMAR_ENTRY_IDS = sentenceIdRange("everyday", 266, 279);
+const INAT_LEGAL_ENTRY_IDS = sentenceIdRange("formal", 108, 125);
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -641,6 +648,21 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     cutting board
     emotional regulation
     formal register
+    informal register
+    grammatical gender
+    singular form
+    literal meaning
+    figurative meaning
+    construct state
+    direct object marker
+    definite object
+    linguistic terminology
+    word formation
+    verbal pattern
+    root letter
+    nominal pattern
+    weak root
+    aramaic influence
     interest rate
     language register
     medical referral
@@ -662,6 +684,28 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     tone voice
     training data
     treatment plan
+    neural network
+    neural layer
+    open source
+    open source license
+    autonomous system
+    recursive improvement
+    model collapse
+    model hallucination
+    context window
+    fine tuned
+    fine tuning
+    safety guardrail
+    open weights
+    machine learning
+    supervised learning
+    unsupervised learning
+    prompt engineering
+    vector database
+    cybersecurity breach
+    product roadmap
+    venture capital
+    startups cash runway
     body lotion
     hand sanitizer
     health insurance
@@ -726,6 +770,92 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     vehicle check
     traffic fine
     parking ticket
+    serrated knife
+    paring knife
+    citrus zester
+    wooden spoon
+    hand mixer
+    rolling pin
+    olive oil
+    storage container
+    baking tray
+    storage compartment
+    laundry room
+    utility room
+    spare key
+    door hinge
+    window frame
+    curtain rod
+    light switch
+    electrical outlet
+    extension cord
+    power strip
+    charging cable
+    circuit breaker
+    drill bit
+    wall plug
+    measuring tape
+    instruction manual
+    water damage
+    vacuum cleaner
+    stain remover
+    laundry basket
+    literary criticism
+    moral dilemma
+    cultural reference
+    dramatic irony
+    literary canon
+    cultural memory
+    historical narrative
+    cultural assimilation
+    diaspora identity
+    identity formation
+    identity expression
+    pop culture
+    status symbol
+    social class
+    existential question
+    logical fallacy
+    deductive logic
+    normative claim
+    meaning life
+    mutual respect
+    emotional availability
+    define relationship
+    shared values
+    long distance relationship
+    shared future
+    dating fatigue
+    commitment issue
+    set boundaries
+    get attached
+    leading someone
+    catch feelings
+    lose interest
+    pulling away
+    green flag
+    green flag behavior
+    trust issue
+    red flag behavior
+    co parenting
+    extended family
+    constitutional law
+    legal liability
+    national security
+    civil lawsuit
+    state attorneys office
+    plea bargain
+    burden proof
+    cross examination
+    admissible evidence
+    immigration status
+    property deed
+    corporate bylaw
+    regulatory compliance
+    liability clause
+    direct testimony
+    internal rule
+    technical appendix
   `, "term: recognized multiword vocabulary unit"),
   ...compactUnitMap(`
     calms down
@@ -974,12 +1104,16 @@ const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
   [compactTokenExceptionKey("inbal_104", "distractor", "People sing"), "grammar: impersonal Hebrew verb needs a generic English subject"],
   [compactTokenExceptionKey("idan_125", "target", "asked to see"), "grammar: English control construction mirrors the Hebrew verb pair"],
   [compactTokenExceptionKey("idan_125", "distractor", "refused to accept"), "grammar: English control construction mirrors the Hebrew verb pair"],
+  [compactTokenExceptionKey("everyday_276", "target", "a word’s form"), "grammar: English possessive realizes the Hebrew construct phrase צורת המילה"],
 ]);
 
 // Keep empty unless Hebrew and English genuinely cannot express a natural row
 // with comparable target counts. Future entries require an exact id + reason.
 const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map([
   ["everyday_165", "Hebrew expresses English exercise with the verb-object construction עושה פעילות גופנית"],
+  ["everyday_266", "Hebrew has a standalone definite-object marker את with no English target chip"],
+  ["everyday_276", "Hebrew combines standalone את with a construct phrase realized by one English possessive chip"],
+  ["formal_118", "Hebrew has a standalone definite-object marker את with no English target chip"],
 ]);
 
 function isCompactTokenPolicyEntry(entry) {
@@ -1126,6 +1260,21 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
   inbal_106: ["לפני הטקס בני הזוג חתמו על הכתובה."],
   inbal_107: ["אחרי שיצאנו מהעיר אמרנו תפילת הדרך."],
   idan_121: ["מתרחקים מחלונות בזמן רעידת אדמה."],
+  everyday_249: ["בשידת הלילה נמצא המפתח הרזרבי."],
+  everyday_256: ["בארגז הכלים נמצאים המברג והמפתח השוודי."],
+  everyday_263: ["ליד הדלי עומדים שואב האבק והמגב."],
+  colloquial_179: ["כשיש ערכים משותפים, בלעדיות מתאימה לנו."],
+  colloquial_185: ["בקשר לא מוגדר לא רצינו לפתח רגשות."],
+  colloquial_186: ["אחרי פרידה קשה להיות תקוע על מישהו."],
+  colloquial_188: ["החלטנו להפוך את זה לרשמי אחרי פיוס."],
+  professional_161: ["לפי בנצ'מרק צריך לכוונן מודל."],
+  professional_166: ["בבנצ'מרק כוונון עדין משפר תוצאות."],
+  everyday_268: ["בינוני יכול לתפקד כתואר או כפועל."],
+  everyday_271: ["כינוי שייכות וסמיכות מבטאים בעלות."],
+  everyday_273: ["מונחי בלשנות כוללים פרגמטיקה ותחביר."],
+  everyday_274: ["תצורת מילים יכולה להוסיף סופית או תחילית."],
+  everyday_275: ["כל אות שורש מקבלת תפקיד בתבנית פועל."],
+  everyday_279: ["באוצר המילים ניכרת השפעה ארמית."],
 };
 
 const EXPANSION_GENDER_ALTERNATE_IDS = [
@@ -1171,15 +1320,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 905 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,045 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 905);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 905);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 905);
+  assert.equal(entries.length, 1045);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1045);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1045);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1284,10 +1433,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
-    colloquial: 215,
-    everyday: 399,
-    professional: 168,
-    formal: 123,
+    colloquial: 235,
+    everyday: 461,
+    professional: 188,
+    formal: 161,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1364,6 +1513,167 @@ test("neutral everyday tranche adds forty reviewed rows in the approved difficul
   );
 });
 
+test("kitchen-action tranche adds twenty-four compact handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = KITCHEN_ACTION_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 24);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 24);
+  assert.ok(entries.every((entry) => entry.category === "everyday"));
+  assert.ok(entries.every((entry) => entry.hebrew_order_review === "fixed"));
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 6 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 8, 2: 12, 3: 4 }
+  );
+});
+
+test("home-care tranche adds twenty-four reviewed handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = HOME_CARE_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 24);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 24);
+  assert.ok(entries.every((entry) => entry.category === "everyday"));
+  assert.ok(entries.every((entry) => ["fixed", "alternates"].includes(entry.hebrew_order_review)));
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 6 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 8, 2: 12, 3: 4 }
+  );
+});
+
+test("Inat formal tranche adds twenty non-partisan handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = INAT_FORMAL_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 20);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 20);
+  assert.ok(entries.every((entry) => entry.category === "formal"));
+  assert.ok(entries.every((entry) => entry.hebrew_order_review === "fixed"));
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 6 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 4, 2: 10, 3: 6 }
+  );
+  assert.ok(entries.every((entry) => !/מפלג|בחיר|צבא|משטר|מחאה/.test(entry.hebrew)));
+});
+
+test("relationship tranche adds twenty inclusive handwriting-ready colloquial rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = RELATIONSHIP_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 20);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 20);
+  assert.ok(entries.every((entry) => entry.category === "colloquial"));
+  assert.ok(entries.every((entry) => ["fixed", "alternates"].includes(entry.hebrew_order_review)));
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 6 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 6, 2: 10, 3: 4 }
+  );
+  assert.ok(entries.every((entry) => !/(?:boyfriend|girlfriend|husband|wife)\b|חבר(?:ה)? שלי|בעל|אישה/iu.test(`${entry.english} ${entry.hebrew}`)));
+});
+
+test("Ivri AI tranche adds twenty reviewed professional handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = IVRI_AI_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 20);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 20);
+  assert.ok(entries.every((entry) => entry.category === "professional"));
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "fixed").length, 18);
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "alternates").length, 2);
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 6 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 4, 2: 10, 3: 6 }
+  );
+});
+
+test("shared grammar tranche adds fourteen unowned reviewed handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = SHARED_GRAMMAR_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 14);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 14);
+  assert.ok(entries.every((entry) => entry.category === "everyday"));
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "fixed").length, 8);
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "alternates").length, 6);
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 6 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 4, 2: 7, 3: 3 }
+  );
+  assert.equal(byId.get("everyday_271").hebrew_alternates[0].tokens_niqqud[1], "וּ");
+  assert.equal(byId.get("everyday_273").hebrew_alternates[0].tokens_niqqud[3], "וְ");
+});
+
+test("Inat legal tranche adds eighteen reviewed formal handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = INAT_LEGAL_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 18);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 18);
+  assert.ok(entries.every((entry) => entry.category === "formal"));
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "fixed").length, 16);
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "alternates").length, 2);
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 17 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 4, 2: 9, 3: 5 }
+  );
+});
+
 test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
@@ -1392,6 +1702,13 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...IDO_CAST_VOCAB_ENTRY_IDS,
     ...NEUTRAL_EVERYDAY_ENTRY_IDS,
     ...URBAN_MOBILITY_ENTRY_IDS,
+    ...KITCHEN_ACTION_ENTRY_IDS,
+    ...HOME_CARE_ENTRY_IDS,
+    ...INAT_FORMAL_ENTRY_IDS,
+    ...RELATIONSHIP_ENTRY_IDS,
+    ...IVRI_AI_ENTRY_IDS,
+    ...SHARED_GRAMMAR_ENTRY_IDS,
+    ...INAT_LEGAL_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

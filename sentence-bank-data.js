@@ -59,14 +59,18 @@ function buildReviewedSentence({
   }
 
   const expectedOrder = hebrewTokenPairs.map((_, index) => index).join(",");
-  const reorderedAlternates = hebrewOrderAlternates.map(({ text, textNiqqud, order }) => {
+  const reorderedAlternates = hebrewOrderAlternates.map(({ text, textNiqqud, order, tokensNiqqud }) => {
     if (!Array.isArray(order) || [...order].sort((a, b) => a - b).join(",") !== expectedOrder) {
       throw new Error(`${sentence.id} has an invalid Hebrew token-order permutation`);
     }
+    if (tokensNiqqud !== undefined && (!Array.isArray(tokensNiqqud) || tokensNiqqud.length !== order.length)) {
+      throw new Error(`${sentence.id} has invalid alternate Hebrew token niqqud`);
+    }
+    const orderedPairs = order.map((index) => hebrewTokenPairs[index]);
     return {
       text,
       textNiqqud,
-      tokenPairs: order.map((index) => hebrewTokenPairs[index]),
+      tokenPairs: orderedPairs.map(([plain, marked], index) => [plain, tokensNiqqud?.[index] || marked]),
     };
   });
   const entry = buildExpandedSentence({
@@ -17604,6 +17608,1032 @@ const URBAN_MOBILITY_SENTENCES = [
   }),
 ];
 
+const KITCHEN_ACTION_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_218", emoji: "🌿", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "צריך לקצוץ פטרוזיליה בסכין.", hebrewNiqqud: "צָרִיךְ לְקַצֵּץ פֶּטְרוֹזִילְיָה בְּסַכִּין.", english: "You need to chop parsley with a knife.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לקצוץ", "לְקַצֵּץ"], ["פטרוזיליה", "פֶּטְרוֹזִילְיָה"], ["בסכין", "בְּסַכִּין"]], englishTokens: ["You need", "to chop", "parsley", "with a knife"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לפרוס", "לִפְרוֹס"], ["בצל", "בָּצָל"], ["במספריים", "בְּמִסְפָּרַיִם"]], englishDistractors: ["You can", "to slice", "an onion", "with scissors"],
+    notes: "לקצוץ means to chop into small pieces; פטרוזיליה is parsley."
+  }),
+  buildReviewedSentence({
+    id: "everyday_219", emoji: "🥔", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר לחתוך לקוביות תפוח אדמה בסכין שף.", hebrewNiqqud: "אֶפְשָׁר לַחְתּוֹךְ לְקוּבִיּוֹת תַּפּוּחַ אֲדָמָה בְּסַכִּין שֶׁף.", english: "You can dice a potato with a chef's knife.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לחתוך לקוביות", "לַחְתּוֹךְ לְקוּבִיּוֹת"], ["תפוח אדמה", "תַּפּוּחַ אֲדָמָה"], ["בסכין שף", "בְּסַכִּין שֶׁף"]], englishTokens: ["You can", "dice", "a potato", "with a chef's knife"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לקלף", "לְקַלֵּף"], ["בצל", "בָּצָל"], ["בקולפן", "בְּקוֹלְפָן"]], englishDistractors: ["You should", "peel", "an onion", "with a peeler"],
+    notes: "לחתוך לקוביות is to dice; סכין שף is a chef's knife."
+  }),
+  buildReviewedSentence({
+    id: "everyday_220", emoji: "🍞", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כדאי לפרוס לחם בסכין משוננת.", hebrewNiqqud: "כְּדַאי לִפְרוֹס לֶחֶם בְּסַכִּין מְשֻׁנֶּנֶת.", english: "You should slice bread with a serrated knife.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לפרוס", "לִפְרוֹס"], ["לחם", "לֶחֶם"], ["בסכין משוננת", "בְּסַכִּין מְשֻׁנֶּנֶת"]], englishTokens: ["You should", "slice", "bread", "with a serrated knife"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לקצוץ", "לְקַצֵּץ"], ["גבינה", "גְּבִינָה"], ["במספריים", "בְּמִסְפָּרַיִם"]], englishDistractors: ["You can", "to chop", "cheese", "with scissors"],
+    notes: "לפרוס is to cut into slices; סכין משוננת is a serrated knife."
+  }),
+  buildReviewedSentence({
+    id: "everyday_221", emoji: "🧄", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "צריך לקצוץ דק את השום.", hebrewNiqqud: "צָרִיךְ לְקַצֵּץ דַּק אֶת הַשּׁוּם.", english: "You need to mince the garlic.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לקצוץ דק", "לְקַצֵּץ דַּק"], ["את השום", "אֶת הַשּׁוּם"]], englishTokens: ["You need", "to mince", "the garlic"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לגרד", "לְגָרֵד"], ["את הגזר", "אֶת הַגֶּזֶר"], ["היום", "הַיּוֹם"]], englishDistractors: ["You should", "grate", "the carrot", "today"],
+    notes: "לקצוץ דק means to mince or chop finely; שום is garlic."
+  }),
+  buildReviewedSentence({
+    id: "everyday_222", emoji: "🥕", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר לקלף גזר בסכין לקילוף.", hebrewNiqqud: "אֶפְשָׁר לְקַלֵּף גֶּזֶר בְּסַכִּין לְקִלּוּף.", english: "You can peel a carrot with a paring knife.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לקלף", "לְקַלֵּף"], ["גזר", "גֶּזֶר"], ["בסכין לקילוף", "בְּסַכִּין לְקִלּוּף"]], englishTokens: ["You can", "peel", "a carrot", "with a paring knife"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לפרוס", "לִפְרוֹס"], ["תפוח", "תַּפּוּחַ"], ["בפומפייה", "בְּפוּמְפִּיָּה"]], englishDistractors: ["You need", "to slice", "an apple", "with a grater"],
+    notes: "לקלף is to peel; סכין לקילוף is a small paring knife."
+  }),
+  buildReviewedSentence({
+    id: "everyday_223", emoji: "🍋", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "קל לגרד קליפה של לימון במגרדת הדרים.", hebrewNiqqud: "קַל לְגָרֵד קְלִיפָּה שֶׁל לִימוֹן בְּמְגָרֶדֶת הֲדָרִים.", english: "It's easy to grate the peel of a lemon with a citrus zester.",
+    hebrewTokenPairs: [["קל", "קַל"], ["לגרד", "לְגָרֵד"], ["קליפה", "קְלִיפָּה"], ["של לימון", "שֶׁל לִימוֹן"], ["במגרדת הדרים", "בְּמְגָרֶדֶת הֲדָרִים"]], englishTokens: ["It's easy", "to grate", "the peel", "of a lemon", "with a citrus zester"],
+    hebrewDistractorPairs: [["קשה", "קָשֶׁה"], ["לקלף", "לְקַלֵּף"], ["בצל", "בָּצָל"], ["בלי", "בְּלִי"], ["סכין", "סַכִּין"], ["בקולפן", "בְּקוֹלְפָן"]], englishDistractors: ["It's hard", "to peel", "an onion", "without", "a knife", "with a peeler"],
+    notes: "לגרד can mean to grate; מגרדת הדרים is a tool for removing citrus peel."
+  }),
+  buildReviewedSentence({
+    id: "everyday_224", emoji: "🥚", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר לטרוף ביצה בעזרת מטרפה.", hebrewNiqqud: "אֶפְשָׁר לִטְרוֹף בֵּיצָה בְּעֶזְרַת מַטְרֵפָה.", english: "You can beat an egg with a whisk.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לטרוף", "לִטְרוֹף"], ["ביצה", "בֵּיצָה"], ["בעזרת מטרפה", "בְּעֶזְרַת מַטְרֵפָה"]], englishTokens: ["You can", "beat", "an egg", "with a whisk"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לערבב", "לְעַרְבֵּב"], ["שמנת", "שַׁמֶּנֶת"], ["בכף", "בְּכַף"]], englishDistractors: ["You need", "to stir", "cream", "with a spoon"],
+    notes: "לטרוף is the cooking verb for whisking or beating; מטרפה is a whisk."
+  }),
+  buildReviewedSentence({
+    id: "everyday_225", emoji: "🥄", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "עדיף לערבב רוטב בכף עץ.", hebrewNiqqud: "עָדִיף לְעַרְבֵּב רֹטֶב בְּכַף עֵץ.", english: "It's better to stir sauce with a wooden spoon.",
+    hebrewTokenPairs: [["עדיף", "עָדִיף"], ["לערבב", "לְעַרְבֵּב"], ["רוטב", "רֹטֶב"], ["בכף עץ", "בְּכַף עֵץ"]], englishTokens: ["It's better", "to stir", "sauce", "with a wooden spoon"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לחמם", "לְחַמֵּם"], ["מים", "מַיִם"], ["במיקרוגל", "בְּמִיקְרוֹגַל"]], englishDistractors: ["You can", "to heat", "water", "in a microwave"],
+    notes: "לערבב is to stir or mix; כף עץ is a wooden spoon."
+  }),
+  buildReviewedSentence({
+    id: "everyday_226", emoji: "🥣", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "צריך לקפל שמנת מוקצפת לתוך הבלילה.", hebrewNiqqud: "צָרִיךְ לְקַפֵּל שַׁמֶּנֶת מֻקְצֶפֶת לְתוֹךְ הַבְּלִילָה.", english: "You need to fold whipped cream into the batter.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לקפל", "לְקַפֵּל"], ["שמנת", "שַׁמֶּנֶת"], ["מוקצפת", "מֻקְצֶפֶת"], ["לתוך הבלילה", "לְתוֹךְ הַבְּלִילָה"]], englishTokens: ["You need", "to fold", "whipped", "cream", "into the batter"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לערבב", "לְעַרְבֵּב"], ["קמח", "קֶמַח"], ["עם המים", "עִם הַמַּיִם"]], englishDistractors: ["You should", "mix", "flour", "with the water"],
+    notes: "לקפל is the baking technique of folding one mixture gently into another."
+  }),
+  buildReviewedSentence({
+    id: "everyday_227", emoji: "🧁", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר להקציף שמנת במיקסר ידני.", hebrewNiqqud: "אֶפְשָׁר לְהַקְצִיף שַׁמֶּנֶת בְּמִיקְסֶר יָדָנִי.", english: "You can whip cream with a hand mixer.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להקציף", "לְהַקְצִיף"], ["שמנת", "שַׁמֶּנֶת"], ["במיקסר ידני", "בְּמִיקְסֶר יָדָנִי"]], englishTokens: ["You can", "whip", "cream", "with a hand mixer"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לערבב", "לְעַרְבֵּב"], ["ביצה", "בֵּיצָה"], ["במטרפה", "בְּמַטְרֵפָה"]], englishDistractors: ["You need", "to mix", "an egg", "with a whisk"],
+    notes: "להקציף means to whip or beat until foamy; מיקסר ידני is a hand mixer."
+  }),
+  buildReviewedSentence({
+    id: "everyday_228", emoji: "🍞", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר ללוש בצק במיקסר.", hebrewNiqqud: "אֶפְשָׁר לָלוּשׁ בָּצֵק בְּמִיקְסֶר.", english: "You can knead dough with a mixer.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["ללוש", "לָלוּשׁ"], ["בצק", "בָּצֵק"], ["במיקסר", "בְּמִיקְסֶר"]], englishTokens: ["You can", "knead", "dough", "with a mixer"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לערבב", "לְעַרְבֵּב"], ["רוטב", "רֹטֶב"], ["בכף", "בְּכַף"]], englishDistractors: ["You need", "to stir", "sauce", "with a spoon"],
+    notes: "ללוש is to knead dough; a mixer can perform the same action with a dough hook."
+  }),
+  buildReviewedSentence({
+    id: "everyday_229", emoji: "🥐", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "צריך לרדד בצק במערוך.", hebrewNiqqud: "צָרִיךְ לְרַדֵּד בָּצֵק בְּמַעֲרוֹךְ.", english: "You need to roll out dough with a rolling pin.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לרדד", "לְרַדֵּד"], ["בצק", "בָּצֵק"], ["במערוך", "בְּמַעֲרוֹךְ"]], englishTokens: ["You need", "to roll out", "dough", "with a rolling pin"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לקפל", "לְקַפֵּל"], ["מגבת", "מַגֶּבֶת"], ["בידיים", "בַּיָּדַיִם"]], englishDistractors: ["You can", "to fold", "a towel", "by hand"],
+    notes: "לרדד is to roll dough flat; מערוך is a rolling pin."
+  }),
+  buildReviewedSentence({
+    id: "everyday_230", emoji: "🌾", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כדאי לנפות קמח במסננת.", hebrewNiqqud: "כְּדַאי לְנַפּוֹת קֶמַח בִּמְסַנֶּנֶת.", english: "You should sift flour through a sieve.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לנפות", "לְנַפּוֹת"], ["קמח", "קֶמַח"], ["במסננת", "בִּמְסַנֶּנֶת"]], englishTokens: ["You should", "sift", "flour", "through a sieve"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לערבב", "לְעַרְבֵּב"], ["סוכר", "סֻכָּר"], ["בכף", "בְּכַף"]], englishDistractors: ["You can", "to mix", "sugar", "with a spoon"],
+    notes: "לנפות is to sift; מסננת is a sieve or strainer."
+  }),
+  buildReviewedSentence({
+    id: "everyday_231", emoji: "🥛", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "צריך למדוד מים בכוס מדידה.", hebrewNiqqud: "צָרִיךְ לִמְדוֹד מַיִם בְּכוֹס מְדִידָה.", english: "You need to measure water with a measuring cup.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["למדוד", "לִמְדוֹד"], ["מים", "מַיִם"], ["בכוס מדידה", "בְּכוֹס מְדִידָה"]], englishTokens: ["You need", "to measure", "water", "with a measuring cup"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לשקול", "לִשְׁקֹל"], ["קמח", "קֶמַח"], ["במשקל", "בְּמִשְׁקָל"]], englishDistractors: ["You should", "weigh", "flour", "on a scale"],
+    notes: "למדוד is to measure; כוס מדידה is a measuring cup."
+  }),
+  buildReviewedSentence({
+    id: "everyday_232", emoji: "🫗", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר למזוג שמן דרך משפך.", hebrewNiqqud: "אֶפְשָׁר לִמְזוֹג שֶׁמֶן דֶּרֶךְ מַשְׁפֵּךְ.", english: "You can pour oil through a funnel.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["למזוג", "לִמְזוֹג"], ["שמן", "שֶׁמֶן"], ["דרך משפך", "דֶּרֶךְ מַשְׁפֵּךְ"]], englishTokens: ["You can", "pour", "oil", "through a funnel"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לשפוך", "לִשְׁפֹּךְ"], ["מים", "מַיִם"], ["לכיור", "לַכִּיּוֹר"]], englishDistractors: ["You need", "to dump", "water", "into the sink"],
+    notes: "למזוג is to pour a liquid carefully; משפך is a funnel."
+  }),
+  buildReviewedSentence({
+    id: "everyday_233", emoji: "🥗", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כדאי לזלף שמן זית על הסלט.", hebrewNiqqud: "כְּדַאי לְזַלֵּף שֶׁמֶן זַיִת עַל הַסָּלָט.", english: "You should drizzle olive oil over the salad.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לזלף", "לְזַלֵּף"], ["שמן זית", "שֶׁמֶן זַיִת"], ["על", "עַל"], ["הסלט", "הַסָּלָט"]], englishTokens: ["You should", "drizzle", "olive oil", "over", "the salad"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["למרוח", "לִמְרוֹחַ"], ["חמאה", "חֶמְאָה"], ["על הלחם", "עַל הַלֶּחֶם"]], englishDistractors: ["You can", "to spread", "butter", "on the bread"],
+    notes: "לזלף means to drizzle a liquid in a thin stream; שמן זית is olive oil."
+  }),
+  buildReviewedSentence({
+    id: "everyday_234", emoji: "🍲", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר לתבל מרק בתבלין אחד.", hebrewNiqqud: "אֶפְשָׁר לְתַבֵּל מָרָק בְּתַבְלִין אֶחָד.", english: "You can season soup with one spice.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לתבל", "לְתַבֵּל"], ["מרק", "מָרָק"], ["בתבלין", "בְּתַבְלִין"], ["אחד", "אֶחָד"]], englishTokens: ["You can", "season", "soup", "with one", "spice"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לבשל", "לְבַשֵּׁל"], ["אורז", "אֹרֶז"], ["בסיר", "בְּסִיר"]], englishDistractors: ["You need", "to cook", "rice", "in a pot"],
+    notes: "לתבל is to season food; תבלין is a spice or seasoning."
+  }),
+  buildReviewedSentence({
+    id: "everyday_235", emoji: "🍗", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "כדאי להשרות במרינדה בקופסת אחסון.", hebrewNiqqud: "כְּדַאי לְהַשְׁרוֹת בְּמָרִינָדָה בְּקֻפְסַת אִחְסוּן.", english: "You should marinate in a storage container.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["להשרות במרינדה", "לְהַשְׁרוֹת בְּמָרִינָדָה"], ["בקופסת אחסון", "בְּקֻפְסַת אִחְסוּן"]], englishTokens: ["You should", "marinate", "in a storage container"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לטגן", "לְטַגֵּן"], ["דג", "דָּג"], ["במחבת", "בְּמַחֲבַת"]], englishDistractors: ["You can", "to fry", "fish", "in a pan"],
+    notes: "להשרות במרינדה is to marinate; קופסת אחסון is a storage container."
+  }),
+  buildReviewedSentence({
+    id: "everyday_236", emoji: "🫘", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "צריך להשרות שעועית במים.", hebrewNiqqud: "צָרִיךְ לְהַשְׁרוֹת שְׁעוּעִית בְּמַיִם.", english: "You need to soak beans in water.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["להשרות", "לְהַשְׁרוֹת"], ["שעועית", "שְׁעוּעִית"], ["במים", "בְּמַיִם"]], englishTokens: ["You need", "to soak", "beans", "in water"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לבשל", "לְבַשֵּׁל"], ["עדשים", "עֲדָשִׁים"], ["ברוטב", "בְּרֹטֶב"]], englishDistractors: ["You should", "cook", "lentils", "in sauce"],
+    notes: "להשרות is to soak; dried beans are commonly soaked in water before cooking."
+  }),
+  buildReviewedSentence({
+    id: "everyday_237", emoji: "🫖", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר להרתיח מים בקומקום.", hebrewNiqqud: "אֶפְשָׁר לְהַרְתִּיחַ מַיִם בְּקוּמְקוּם.", english: "You can boil water in a kettle.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להרתיח", "לְהַרְתִּיחַ"], ["מים", "מַיִם"], ["בקומקום", "בְּקוּמְקוּם"]], englishTokens: ["You can", "boil", "water", "in a kettle"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לקרר", "לְקָרֵר"], ["מיץ", "מִיץ"], ["במקרר", "בַּמְּקָרֵר"]], englishDistractors: ["You need", "to chill", "juice", "in the refrigerator"],
+    notes: "להרתיח is to bring a liquid to a boil; קומקום is a kettle."
+  }),
+  buildReviewedSentence({
+    id: "everyday_238", emoji: "🍅", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "אפשר לבשל על אש קטנה בקלחת.", hebrewNiqqud: "אֶפְשָׁר לְבַשֵּׁל עַל אֵשׁ קְטַנָּה בְּקַלַּחַת.", english: "You can cook over a low flame in a saucepan.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לבשל", "לְבַשֵּׁל"], ["על", "עַל"], ["אש", "אֵשׁ"], ["קטנה", "קְטַנָּה"], ["בקלחת", "בְּקַלַּחַת"]], englishTokens: ["You can", "cook", "over", "a low", "flame", "in a saucepan"],
+    hebrewDistractorPairs: [["לפני", "לִפְנֵי"], ["להרתיח", "לְהַרְתִּיחַ"], ["ממלאים", "מְמַלְּאִים"], ["קומקום", "קוּמְקוּם"]], englishDistractors: ["Before", "boiling", "fill", "a kettle"],
+    notes: "לבשל על אש קטנה literally means to cook over a low flame and is the everyday way to say simmer; קלחת is a small saucepan."
+  }),
+  buildReviewedSentence({
+    id: "everyday_239", emoji: "🥦", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר לאדות ירקות בסיר אידוי.", hebrewNiqqud: "אֶפְשָׁר לְאַדּוֹת יְרָקוֹת בְּסִיר אִידּוּי.", english: "You can steam vegetables in a steamer.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לאדות", "לְאַדּוֹת"], ["ירקות", "יְרָקוֹת"], ["בסיר אידוי", "בְּסִיר אִידּוּי"]], englishTokens: ["You can", "steam", "vegetables", "in a steamer"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["להרתיח", "לְהַרְתִּיחַ"], ["מים", "מַיִם"], ["בקומקום", "בְּקוּמְקוּם"]], englishDistractors: ["You need", "to boil", "water", "in a kettle"],
+    notes: "לאדות is to cook with steam; סיר אידוי is a steamer pot."
+  }),
+  buildReviewedSentence({
+    id: "everyday_240", emoji: "🍳", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "עדיף לטגן ביצה במחבת.", hebrewNiqqud: "עָדִיף לְטַגֵּן בֵּיצָה בְּמַחֲבַת.", english: "It's better to fry an egg in a skillet.",
+    hebrewTokenPairs: [["עדיף", "עָדִיף"], ["לטגן", "לְטַגֵּן"], ["ביצה", "בֵּיצָה"], ["במחבת", "בְּמַחֲבַת"]], englishTokens: ["It's better", "to fry", "an egg", "in a skillet"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לאפות", "לֶאֱפוֹת"], ["לחם", "לֶחֶם"], ["בתנור", "בַּתַּנּוּר"]], englishDistractors: ["You can", "to bake", "bread", "in an oven"],
+    notes: "לטגן is to fry; מחבת is a frying pan or skillet."
+  }),
+  buildReviewedSentence({
+    id: "everyday_241", emoji: "🍪", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "צריך לאפות עוגיות בתבנית אפייה.", hebrewNiqqud: "צָרִיךְ לֶאֱפוֹת עוּגִיּוֹת בְּתַבְנִית אֲפִיָּה.", english: "You need to bake cookies on a baking tray.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לאפות", "לֶאֱפוֹת"], ["עוגיות", "עוּגִיּוֹת"], ["בתבנית אפייה", "בְּתַבְנִית אֲפִיָּה"]], englishTokens: ["You need", "to bake", "cookies", "on a baking tray"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לטגן", "לְטַגֵּן"], ["ירקות", "יְרָקוֹת"], ["במחבת", "בְּמַחֲבַת"]], englishDistractors: ["You should", "fry", "vegetables", "in a pan"],
+    notes: "לאפות is to bake; תבנית אפייה is a baking tray."
+  }),
+];
+
+const HOME_CARE_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_242", emoji: "📚", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המדף מתאים לכוננית הספרים.", hebrewNiqqud: "הַמַּדָּף מַתְאִים לְכוֹנָנִית הַסְּפָרִים.", english: "The shelf fits the bookcase.",
+    hebrewTokenPairs: [["המדף", "הַמַּדָּף"], ["מתאים", "מַתְאִים"], ["לכוננית הספרים", "לְכוֹנָנִית הַסְּפָרִים"]], englishTokens: ["The shelf", "fits", "the bookcase"],
+    hebrewDistractorPairs: [["המגירה", "הַמְּגֵרָה"], ["קטנה", "קְטַנָּה"], ["לארון", "לָאָרוֹן"], ["החדש", "הֶחָדָשׁ"]], englishDistractors: ["The drawer", "is small", "the cabinet", "the new one"],
+    notes: "מדף is a shelf; כוננית ספרים is a bookcase."
+  }),
+  buildReviewedSentence({
+    id: "everyday_243", emoji: "🪵", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ארון הבגדים והשידה עשויים מעץ.", hebrewNiqqud: "אֲרוֹן הַבְּגָדִים וְהַשִּׁדָּה עֲשׂוּיִים מֵעֵץ.", english: "The wardrobe and dresser are made of wood.",
+    hebrewTokenPairs: [["ארון הבגדים", "אֲרוֹן הַבְּגָדִים"], ["והשידה", "וְהַשִּׁדָּה"], ["עשויים", "עֲשׂוּיִים"], ["מעץ", "מֵעֵץ"]], englishTokens: ["The wardrobe", "and dresser", "are made", "of wood"],
+    hebrewDistractorPairs: [["הכיסא", "הַכִּסֵּא"], ["והשולחן", "וְהַשֻּׁלְחָן"], ["צבועים", "צְבוּעִים"], ["בלבן", "בְּלָבָן"]], englishDistractors: ["The chair", "and table", "are painted", "white"],
+    notes: "ארון בגדים is a wardrobe; שידה is a dresser."
+  }),
+  buildReviewedSentence({
+    id: "everyday_244", emoji: "🥫", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "תא האחסון במזווה פנוי.", hebrewNiqqud: "תָּא הָאִחְסוּן בַּמַּזְוֶה פָּנוּי.", english: "The storage compartment in the pantry is empty.",
+    hebrewTokenPairs: [["תא האחסון", "תָּא הָאִחְסוּן"], ["במזווה", "בַּמַּזְוֶה"], ["פנוי", "פָּנוּי"]], englishTokens: ["The storage compartment", "in the pantry", "is empty"],
+    hebrewDistractorPairs: [["המדף", "הַמַּדָּף"], ["במטבח", "בַּמִּטְבָּח"], ["מלא", "מָלֵא"], ["היום", "הַיּוֹם"]], englishDistractors: ["The shelf", "in the kitchen", "is full", "today"],
+    notes: "תא אחסון is a storage compartment; מזווה is a pantry."
+  }),
+  buildReviewedSentence({
+    id: "everyday_245", emoji: "🧺", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "חדר הכביסה צמוד לחדר השירות.", hebrewNiqqud: "חֶדֶר הַכְּבִיסָה צָמוּד לְחֶדֶר הַשֵּׁרוּת.", english: "The laundry room adjoins the utility room.",
+    hebrewTokenPairs: [["חדר הכביסה", "חֶדֶר הַכְּבִיסָה"], ["צמוד", "צָמוּד"], ["לחדר השירות", "לְחֶדֶר הַשֵּׁרוּת"]], englishTokens: ["The laundry room", "adjoins", "the utility room"],
+    hebrewDistractorPairs: [["חדר השינה", "חֶדֶר הַשֵּׁנָה"], ["רחוק", "רָחוֹק"], ["מהמטבח", "מֵהַמִּטְבָּח"], ["למעלה", "לְמַעְלָה"]], englishDistractors: ["The bedroom", "is far", "from the kitchen", "upstairs"],
+    notes: "חדר כביסה is a laundry room; חדר שירות is a utility room."
+  }),
+  buildReviewedSentence({
+    id: "everyday_246", emoji: "🚪", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המבואה מובילה למסדרון.", hebrewNiqqud: "הַמָּבוֹאָה מוֹבִילָה לַמִּסְדְּרוֹן.", english: "The entryway leads to the hallway.",
+    hebrewTokenPairs: [["המבואה", "הַמָּבוֹאָה"], ["מובילה", "מוֹבִילָה"], ["למסדרון", "לַמִּסְדְּרוֹן"]], englishTokens: ["The entryway", "leads", "to the hallway"],
+    hebrewDistractorPairs: [["המדרגות", "הַמַּדְרֵגוֹת"], ["יורדות", "יוֹרְדוֹת"], ["למרתף", "לַמַּרְתֵּף"], ["מכאן", "מִכָּאן"]], englishDistractors: ["The stairs", "descend", "to the basement", "from here"],
+    notes: "מבואה is an entryway or foyer; מסדרון is a hallway."
+  }),
+  buildReviewedSentence({
+    id: "everyday_247", emoji: "🌳", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המרפסת משקיפה על החצר האחורית.", hebrewNiqqud: "הַמִּרְפֶּסֶת מַשְׁקִיפָה עַל הֶחָצֵר הָאֲחוֹרִית.", english: "The balcony overlooks the backyard.",
+    hebrewTokenPairs: [["המרפסת", "הַמִּרְפֶּסֶת"], ["משקיפה על", "מַשְׁקִיפָה עַל"], ["החצר האחורית", "הֶחָצֵר הָאֲחוֹרִית"]], englishTokens: ["The balcony", "overlooks", "the backyard"],
+    hebrewDistractorPairs: [["החלון", "הַחַלּוֹן"], ["פונה אל", "פּוֹנֶה אֶל"], ["הרחוב", "הָרְחוֹב"], ["הראשי", "הָרָאשִׁי"], ["מלמטה", "מִלְּמַטָּה"]], englishDistractors: ["The window", "faces", "the main", "street", "from below"],
+    notes: "מרפסת is a balcony; חצר אחורית is a backyard."
+  }),
+  buildReviewedSentence({
+    id: "everyday_248", emoji: "🔒", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המנעול של השער מחובר לגדר.", hebrewNiqqud: "הַמַּנְעוּל שֶׁל הַשַּׁעַר מְחֻבָּר לַגָּדֵר.", english: "The lock on the gate is attached to the fence.",
+    hebrewTokenPairs: [["המנעול", "הַמַּנְעוּל"], ["של השער", "שֶׁל הַשַּׁעַר"], ["מחובר", "מְחֻבָּר"], ["לגדר", "לַגָּדֵר"]], englishTokens: ["The lock", "on the gate", "is attached", "to the fence"],
+    hebrewDistractorPairs: [["הידית", "הַיְּדִית"], ["של הדלת", "שֶׁל הַדֶּלֶת"], ["שבורה", "שְׁבוּרָה"], ["בקיר", "בַּקִּיר"]], englishDistractors: ["The handle", "on the door", "is broken", "in the wall"],
+    notes: "מנעול is a lock, שער is a gate, and גדר is a fence."
+  }),
+  buildReviewedSentence({
+    id: "everyday_249", emoji: "🗝️", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "המפתח הרזרבי נמצא בשידת הלילה.", hebrewNiqqud: "הַמַּפְתֵּחַ הָרֶזֶרְבִּי נִמְצָא בְּשִׁדַּת הַלַּיְלָה.", english: "The spare key is in the nightstand.",
+    hebrewTokenPairs: [["המפתח הרזרבי", "הַמַּפְתֵּחַ הָרֶזֶרְבִּי"], ["נמצא", "נִמְצָא"], ["בשידת הלילה", "בְּשִׁדַּת הַלַּיְלָה"]], englishTokens: ["The spare key", "is", "in the nightstand"],
+    hebrewDistractorPairs: [["המפתח", "הַמַּפְתֵּחַ"], ["הראשי", "הָרָאשִׁי"], ["מונח", "מֻנָּח"], ["במגירה", "בַּמְּגֵרָה"], ["למעלה", "לְמַעְלָה"]], englishDistractors: ["The main", "key", "rests", "in the drawer", "upstairs"],
+    hebrewOrderAlternates: [{ text: "בשידת הלילה נמצא המפתח הרזרבי.", textNiqqud: "בְּשִׁדַּת הַלַּיְלָה נִמְצָא הַמַּפְתֵּחַ הָרֶזֶרְבִּי.", order: [2, 1, 0] }],
+    notes: "מפתח רזרבי is a spare key; שידת לילה is a nightstand."
+  }),
+  buildReviewedSentence({
+    id: "everyday_250", emoji: "🚪", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ציר הדלת חורק ליד המשקוף.", hebrewNiqqud: "צִיר הַדֶּלֶת חוֹרֵק לְיַד הַמַּשְׁקוֹף.", english: "The door hinge squeaks near the doorframe.",
+    hebrewTokenPairs: [["ציר הדלת", "צִיר הַדֶּלֶת"], ["חורק", "חוֹרֵק"], ["ליד", "לְיַד"], ["המשקוף", "הַמַּשְׁקוֹף"]], englishTokens: ["The door hinge", "squeaks", "near", "the doorframe"],
+    hebrewDistractorPairs: [["ידית הדלת", "יְדִית הַדֶּלֶת"], ["רופפת", "רוֹפֶפֶת"], ["מעל", "מֵעַל"], ["החלון", "הַחַלּוֹן"]], englishDistractors: ["The doorknob", "is loose", "above", "the window"],
+    notes: "ציר דלת is a door hinge; משקוף is a doorframe."
+  }),
+  buildReviewedSentence({
+    id: "everyday_251", emoji: "🪟", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מסגרת החלון נסדקה ליד התריס.", hebrewNiqqud: "מִסְגֶּרֶת הַחַלּוֹן נִסְדְּקָה לְיַד הַתְּרִיס.", english: "The window frame cracked near the blind.",
+    hebrewTokenPairs: [["מסגרת החלון", "מִסְגֶּרֶת הַחַלּוֹן"], ["נסדקה", "נִסְדְּקָה"], ["ליד", "לְיַד"], ["התריס", "הַתְּרִיס"]], englishTokens: ["The window frame", "cracked", "near", "the blind"],
+    hebrewDistractorPairs: [["הזכוכית", "הַזְּכוּכִית"], ["נשברה", "נִשְׁבְּרָה"], ["מעל", "מֵעַל"], ["הידית", "הַיְּדִית"]], englishDistractors: ["The glass", "broke", "above", "the handle"],
+    notes: "מסגרת חלון is a window frame; תריס is a window blind or shutter."
+  }),
+  buildReviewedSentence({
+    id: "everyday_252", emoji: "🪟", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מוט הווילון מותקן מעל אדן החלון.", hebrewNiqqud: "מוֹט הַוִּילוֹן מֻתְקָן מֵעַל אֶדֶן הַחַלּוֹן.", english: "The curtain rod is installed above the windowsill.",
+    hebrewTokenPairs: [["מוט הווילון", "מוֹט הַוִּילוֹן"], ["מותקן", "מֻתְקָן"], ["מעל", "מֵעַל"], ["אדן החלון", "אֶדֶן הַחַלּוֹן"]], englishTokens: ["The curtain rod", "is installed", "above", "the windowsill"],
+    hebrewDistractorPairs: [["המדף", "הַמַּדָּף"], ["מונח", "מֻנָּח"], ["מתחת", "מִתַּחַת"], ["לתמונה", "לַתְּמוּנָה"]], englishDistractors: ["The shelf", "rests", "below", "the picture"],
+    notes: "מוט וילון is a curtain rod; אדן חלון is a windowsill."
+  }),
+  buildReviewedSentence({
+    id: "everyday_253", emoji: "⚡", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "צריך לבדוק את מתג התאורה ואת שקע החשמל.", hebrewNiqqud: "צָרִיךְ לִבְדֹּק אֶת מַתֵּג הַתְּאוּרָה וְאֶת שֶׁקַע הַחַשְׁמַל.", english: "You need to check the light switch and the electrical outlet.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לבדוק", "לִבְדֹּק"], ["את מתג התאורה", "אֶת מַתֵּג הַתְּאוּרָה"], ["ואת שקע החשמל", "וְאֶת שֶׁקַע הַחַשְׁמַל"]], englishTokens: ["You need", "to check", "the light switch", "and the electrical outlet"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["להחליף", "לְהַחֲלִיף"], ["את הנורה", "אֶת הַנּוּרָה"], ["ואת הכבל", "וְאֶת הַכֶּבֶל"]], englishDistractors: ["You can", "replace", "the bulb", "and the cable"],
+    notes: "מתג תאורה is a light switch; שקע חשמל is an electrical outlet. Electrical repairs should be left to a qualified technician."
+  }),
+  buildReviewedSentence({
+    id: "everyday_254", emoji: "🔌", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הכבל המאריך מחובר למפצל החשמל.", hebrewNiqqud: "הַכֶּבֶל הַמַּאֲרִיךְ מְחֻבָּר לִמְפַצֵּל הַחַשְׁמַל.", english: "The extension cord is connected to the power strip.",
+    hebrewTokenPairs: [["הכבל המאריך", "הַכֶּבֶל הַמַּאֲרִיךְ"], ["מחובר", "מְחֻבָּר"], ["למפצל החשמל", "לִמְפַצֵּל הַחַשְׁמַל"]], englishTokens: ["The extension cord", "is connected", "to the power strip"],
+    hebrewDistractorPairs: [["כבל הטעינה", "כֶּבֶל הַטְּעִינָה"], ["מנותק", "מְנֻתָּק"], ["מהמחשב", "מֵהַמַּחְשֵׁב"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["The charging cable", "is disconnected", "from the computer", "now"],
+    notes: "כבל מאריך is an extension cord; מפצל חשמל is a power strip."
+  }),
+  buildReviewedSentence({
+    id: "everyday_255", emoji: "🔦", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "צריך פנס כדי לבדוק את מפסק הזרם.", hebrewNiqqud: "צָרִיךְ פַּנָּס כְּדֵי לִבְדֹּק אֶת מַפְסֵק הַזֶּרֶם.", english: "You need a flashlight to check the circuit breaker.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["פנס", "פַּנָּס"], ["כדי לבדוק", "כְּדֵי לִבְדֹּק"], ["את מפסק הזרם", "אֶת מַפְסֵק הַזֶּרֶם"]], englishTokens: ["You need", "a flashlight", "to check", "the circuit breaker"],
+    hebrewDistractorPairs: [["אפשר לקחת", "אֶפְשָׁר לָקַחַת"], ["נר", "נֵר"], ["כדי להאיר", "כְּדֵי לְהָאִיר"], ["את החדר", "אֶת הַחֶדֶר"]], englishDistractors: ["You can take", "a candle", "to light", "the room"],
+    notes: "מפסק זרם is a circuit breaker; פנס is a flashlight. Do not work on a live electrical panel."
+  }),
+  buildReviewedSentence({
+    id: "everyday_256", emoji: "🧰", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "המברג והמפתח השוודי נמצאים בארגז הכלים.", hebrewNiqqud: "הַמַּבְרֵג וְהַמַּפְתֵּחַ הַשְּׁוֶדִּי נִמְצָאִים בְּאַרְגַּז הַכֵּלִים.", english: "The screwdriver and wrench are in the toolbox.",
+    hebrewTokenPairs: [["המברג", "הַמַּבְרֵג"], ["והמפתח השוודי", "וְהַמַּפְתֵּחַ הַשְּׁוֶדִּי"], ["נמצאים", "נִמְצָאִים"], ["בארגז הכלים", "בְּאַרְגַּז הַכֵּלִים"]], englishTokens: ["The screwdriver", "and wrench", "are", "in the toolbox"],
+    hebrewDistractorPairs: [["המסור", "הַמַּסּוֹר"], ["והפטיש", "וְהַפַּטִּישׁ"], ["מונחים", "מֻנָּחִים"], ["על המדף", "עַל הַמַּדָּף"]], englishDistractors: ["The saw", "and hammer", "rest", "on the shelf"],
+    hebrewOrderAlternates: [{ text: "בארגז הכלים נמצאים המברג והמפתח השוודי.", textNiqqud: "בְּאַרְגַּז הַכֵּלִים נִמְצָאִים הַמַּבְרֵג וְהַמַּפְתֵּחַ הַשְּׁוֶדִּי.", order: [3, 2, 0, 1] }],
+    notes: "מברג is a screwdriver, מפתח שוודי is a wrench, and ארגז כלים is a toolbox."
+  }),
+  buildReviewedSentence({
+    id: "everyday_257", emoji: "🔨", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "פטיש מתאים למסמר, לא לבורג.", hebrewNiqqud: "פַּטִּישׁ מַתְאִים לְמַסְמֵר, לֹא לְבוֹרֶג.", english: "A hammer is right for a nail, not for a screw.",
+    hebrewTokenPairs: [["פטיש", "פַּטִּישׁ"], ["מתאים", "מַתְאִים"], ["למסמר", "לְמַסְמֵר"], ["לא לבורג", "לֹא לְבוֹרֶג"]], englishTokens: ["A hammer", "is right", "for a nail", "not for a screw"],
+    hebrewDistractorPairs: [["מברג", "מַבְרֵג"], ["מיועד", "מְיֻעָד"], ["לבורג", "לְבוֹרֶג"], ["לא למסמר", "לֹא לְמַסְמֵר"]], englishDistractors: ["A screwdriver", "is intended", "for a screw", "not for a nail"],
+    notes: "פטיש is a hammer, מסמר is a nail, and בורג is a screw."
+  }),
+  buildReviewedSentence({
+    id: "everyday_258", emoji: "🛠️", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "המקדח במקדחה מתאים לדיבל הזה.", hebrewNiqqud: "הַמַּקְדָּח בַּמַּקְדֵּחָה מַתְאִים לַדִּיבֶּל הַזֶּה.", english: "The drill bit in the drill fits this wall plug.",
+    hebrewTokenPairs: [["המקדח", "הַמַּקְדָּח"], ["במקדחה", "בַּמַּקְדֵּחָה"], ["מתאים", "מַתְאִים"], ["לדיבל הזה", "לַדִּיבֶּל הַזֶּה"]], englishTokens: ["The drill bit", "in the drill", "fits", "this wall plug"],
+    hebrewDistractorPairs: [["הלהב", "הַלַּהַב"], ["במסור", "בַּמַּסּוֹר"], ["גדול מדי", "גָּדוֹל מִדַּי"], ["לבורג הזה", "לַבּוֹרֶג הַזֶּה"]], englishDistractors: ["The blade", "in the saw", "is oversized", "for this screw"],
+    notes: "מקדח is a drill bit, מקדחה is a drill, and דיבל is a wall plug or anchor."
+  }),
+  buildReviewedSentence({
+    id: "everyday_259", emoji: "📏", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "סרט מדידה ופלס עוזרים בהרכבה.", hebrewNiqqud: "סֶרֶט מְדִידָה וּפְלָס עוֹזְרִים בְּהַרְכָּבָה.", english: "A measuring tape and level help with assembly.",
+    hebrewTokenPairs: [["סרט מדידה", "סֶרֶט מְדִידָה"], ["ופלס", "וּפְלָס"], ["עוזרים", "עוֹזְרִים"], ["בהרכבה", "בְּהַרְכָּבָה"]], englishTokens: ["A measuring tape", "and level", "help", "with assembly"],
+    hebrewDistractorPairs: [["סרגל", "סַרְגֵּל"], ["ועיפרון", "וְעִפָּרוֹן"], ["נחוצים", "נְחוּצִים"], ["לציור", "לְצִיּוּר"]], englishDistractors: ["A ruler", "and pencil", "are needed", "for drawing"],
+    notes: "סרט מדידה is a measuring tape, פלס is a level, and הרכבה is assembly."
+  }),
+  buildReviewedSentence({
+    id: "everyday_260", emoji: "📖", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "מדריך השימוש מסביר הרכבה ופירוק.", hebrewNiqqud: "מַדְרִיךְ הַשִּׁמּוּשׁ מַסְבִּיר הַרְכָּבָה וּפֵרוּק.", english: "The instruction manual explains assembly and disassembly.",
+    hebrewTokenPairs: [["מדריך השימוש", "מַדְרִיךְ הַשִּׁמּוּשׁ"], ["מסביר", "מַסְבִּיר"], ["הרכבה", "הַרְכָּבָה"], ["ופירוק", "וּפֵרוּק"]], englishTokens: ["The instruction manual", "explains", "assembly", "and disassembly"],
+    hebrewDistractorPairs: [["דף ההוראות", "דַּף הַהוֹרָאוֹת"], ["מראה", "מַרְאֶה"], ["צביעה", "צְבִיעָה"], ["וניקוי", "וְנִיקּוּי"]], englishDistractors: ["The directions", "show", "painting", "and cleaning"],
+    notes: "מדריך שימוש is an instruction manual; הרכבה and פירוק are assembly and disassembly."
+  }),
+  buildReviewedSentence({
+    id: "everyday_261", emoji: "💧", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "נזקי מים גורמים ללחות ולעובש.", hebrewNiqqud: "נִזְקֵי מַיִם גּוֹרְמִים לְלַחוּת וּלְעוֹבֶשׁ.", english: "Water damage causes dampness and mold.",
+    hebrewTokenPairs: [["נזקי מים", "נִזְקֵי מַיִם"], ["גורמים", "גּוֹרְמִים"], ["ללחות", "לְלַחוּת"], ["ולעובש", "וּלְעוֹבֶשׁ"]], englishTokens: ["Water damage", "causes", "dampness", "and mold"],
+    hebrewDistractorPairs: [["אוויר", "אֲוִיר"], ["יבש", "יָבֵשׁ"], ["מונע", "מוֹנֵעַ"], ["ריח", "רֵיחַ"], ["ואבק", "וְאָבָק"]], englishDistractors: ["Dry", "air", "prevents", "odor", "and dust"],
+    notes: "נזקי מים means water damage; לחות is dampness; עובש is mold."
+  }),
+  buildReviewedSentence({
+    id: "everyday_262", emoji: "🪠", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "פומפה יכולה לפתוח סתימה בצינור ניקוז.", hebrewNiqqud: "פּוֹמְפָּה יְכוֹלָה לִפְתֹּחַ סְתִימָה בְּצִנּוֹר נִיקּוּז.", english: "A plunger can clear a clog in a drainpipe.",
+    hebrewTokenPairs: [["פומפה", "פּוֹמְפָּה"], ["יכולה לפתוח", "יְכוֹלָה לִפְתֹּחַ"], ["סתימה", "סְתִימָה"], ["בצינור ניקוז", "בְּצִנּוֹר נִיקּוּז"]], englishTokens: ["A plunger", "can clear", "a clog", "in a drainpipe"],
+    hebrewDistractorPairs: [["מברשת", "מִבְרֶשֶׁת"], ["יכולה לנקות", "יְכוֹלָה לְנַקּוֹת"], ["כתם", "כֶּתֶם"], ["על הרצפה", "עַל הָרִצְפָּה"]], englishDistractors: ["A brush", "can clean", "a stain", "on the floor"],
+    notes: "פומפה is a plunger; סתימה is a clog; צינור ניקוז is a drainpipe."
+  }),
+  buildReviewedSentence({
+    id: "everyday_263", emoji: "🧹", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "שואב האבק והמגב עומדים ליד הדלי.", hebrewNiqqud: "שׁוֹאֵב הָאָבָק וְהַמַּגֵּב עוֹמְדִים לְיַד הַדְּלִי.", english: "The vacuum cleaner and mop are next to the bucket.",
+    hebrewTokenPairs: [["שואב האבק", "שׁוֹאֵב הָאָבָק"], ["והמגב", "וְהַמַּגֵּב"], ["עומדים", "עוֹמְדִים"], ["ליד", "לְיַד"], ["הדלי", "הַדְּלִי"]], englishTokens: ["The vacuum cleaner", "and mop", "are", "next to", "the bucket"],
+    hebrewDistractorPairs: [["המטאטא", "הַמַּטְאֲטֵא"], ["והיעה", "וְהַיַּעָה"], ["מונחים", "מֻנָּחִים"], ["בארון", "בָּאָרוֹן"]], englishDistractors: ["The broom", "and dustpan", "rest", "in the cabinet"],
+    hebrewOrderAlternates: [{ text: "ליד הדלי עומדים שואב האבק והמגב.", textNiqqud: "לְיַד הַדְּלִי עוֹמְדִים שׁוֹאֵב הָאָבָק וְהַמַּגֵּב.", order: [3, 4, 2, 0, 1] }],
+    notes: "שואב אבק is a vacuum cleaner, מגב is a mop, and דלי is a bucket."
+  }),
+  buildReviewedSentence({
+    id: "everyday_264", emoji: "🧹", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "צריך מטאטא ויעה, לא סמרטוט.", hebrewNiqqud: "צָרִיךְ מַטְאֲטֵא וְיַעָה, לֹא סְמַרְטוּט.", english: "You need a broom and dustpan, not a rag.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["מטאטא", "מַטְאֲטֵא"], ["ויעה", "וְיַעָה"], ["לא סמרטוט", "לֹא סְמַרְטוּט"]], englishTokens: ["You need", "a broom", "and dustpan", "not a rag"],
+    hebrewDistractorPairs: [["אפשר לקחת", "אֶפְשָׁר לָקַחַת"], ["מגב", "מַגֵּב"], ["ודלי", "וּדְלִי"], ["לא מטלית", "לֹא מַטְלִית"]], englishDistractors: ["You can take", "a mop", "and bucket", "not a cloth"],
+    notes: "מטאטא is a broom, יעה is a dustpan, and סמרטוט is a cleaning rag."
+  }),
+  buildReviewedSentence({
+    id: "everyday_265", emoji: "🧺", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "מסיר הכתמים וחומר הניקוי ליד סל הכביסה.", hebrewNiqqud: "מֵסִיר הַכְּתָמִים וְחוֹמֶר הַנִּיקּוּי לְיַד סַל הַכְּבִיסָה.", english: "The stain remover and detergent are beside the laundry basket.",
+    hebrewTokenPairs: [["מסיר הכתמים", "מֵסִיר הַכְּתָמִים"], ["וחומר הניקוי", "וְחוֹמֶר הַנִּיקּוּי"], ["ליד", "לְיַד"], ["סל הכביסה", "סַל הַכְּבִיסָה"]], englishTokens: ["The stain remover", "and detergent", "are beside", "the laundry basket"],
+    hebrewDistractorPairs: [["חומר החיטוי", "חוֹמֶר הַחִטּוּי"], ["והסבון", "וְהַסַּבּוֹן"], ["מתחת לכיור", "מִתַּחַת לַכִּיּוֹר"], ["בארון", "בָּאָרוֹן"]], englishDistractors: ["The disinfectant", "and soap", "are under the sink", "in the cabinet"],
+    notes: "מסיר כתמים is stain remover, חומר ניקוי is detergent, and סל כביסה is a laundry basket."
+  }),
+];
+
+const INAT_FORMAL_SENTENCES = [
+  buildReviewedSentence({
+    id: "formal_88", emoji: "📖", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ביקורת ספרות דורשת פרשנות, לא רק סיכום.", hebrewNiqqud: "בִּקֹּרֶת סִפְרוּת דּוֹרֶשֶׁת פַּרְשָׁנוּת, לֹא רַק סִכּוּם.", english: "Literary criticism requires interpretation, not just summary.",
+    hebrewTokenPairs: [["ביקורת ספרות", "בִּקֹּרֶת סִפְרוּת"], ["דורשת", "דּוֹרֶשֶׁת"], ["פרשנות", "פַּרְשָׁנוּת"], ["לא רק", "לֹא רַק"], ["סיכום", "סִכּוּם"]], englishTokens: ["Literary criticism", "requires", "interpretation", "not just", "summary"],
+    hebrewDistractorPairs: [["מחקר", "מֶחְקָר"], ["היסטורי", "הִיסְטוֹרִי"], ["מציע", "מַצִּיעַ"], ["עובדות", "עֻבְדּוֹת"], ["בלי", "בְּלִי"], ["דעה", "דֵּעָה"]], englishDistractors: ["Historical", "research", "offers", "facts", "without", "opinion"],
+    notes: "ביקורת ספרות is literary criticism; פרשנות is interpretation rather than plot summary."
+  }),
+  buildReviewedSentence({
+    id: "formal_89", emoji: "⚖️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדמות הראשית ניצבת מול דילמה מוסרית.", hebrewNiqqud: "הַדְּמוּת הָרָאשִׁית נִצֶּבֶת מוּל דִּילֶמָה מוּסָרִית.", english: "The protagonist faces a moral dilemma.",
+    hebrewTokenPairs: [["הדמות הראשית", "הַדְּמוּת הָרָאשִׁית"], ["ניצבת מול", "נִצֶּבֶת מוּל"], ["דילמה מוסרית", "דִּילֶמָה מוּסָרִית"]], englishTokens: ["The protagonist", "faces", "a moral dilemma"],
+    hebrewDistractorPairs: [["המספר", "הַמְסַפֵּר"], ["מתאר", "מְתָאֵר"], ["פתרון", "פִּתְרוֹן"], ["פשוט", "פָּשׁוּט"]], englishDistractors: ["The narrator", "describes", "a solution", "simple"],
+    notes: "דמות ראשית is the protagonist; דילמה מוסרית is a moral dilemma."
+  }),
+  buildReviewedSentence({
+    id: "formal_90", emoji: "🌫️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מטפורה יכולה ליצור עמימות מכוונת.", hebrewNiqqud: "מֶטָפוֹרָה יְכוֹלָה לִיצוֹר עֲמִימוּת מְכֻוֶּנֶת.", english: "A metaphor can create deliberate ambiguity.",
+    hebrewTokenPairs: [["מטפורה", "מֶטָפוֹרָה"], ["יכולה", "יְכוֹלָה"], ["ליצור", "לִיצוֹר"], ["עמימות", "עֲמִימוּת"], ["מכוונת", "מְכֻוֶּנֶת"]], englishTokens: ["A metaphor", "can", "create", "deliberate", "ambiguity"],
+    hebrewDistractorPairs: [["עובדה", "עֻבְדָּה"], ["אינה", "אֵינָהּ"], ["מבטלת", "מְבַטֶּלֶת"], ["בהירות", "בְּהִירוּת"], ["מלאה", "מְלֵאָה"]], englishDistractors: ["A fact", "does not", "remove", "complete", "clarity"],
+    notes: "מטפורה is a metaphor; עמימות מכוונת is ambiguity used deliberately by the writer."
+  }),
+  buildReviewedSentence({
+    id: "formal_91", emoji: "🔗", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ההרמז נשען על רפרנס תרבותי מוכר.", hebrewNiqqud: "הַהֶרְמֵז נִשְׁעָן עַל רֶפֶרֶנְס תַּרְבּוּתִי מֻכָּר.", english: "The allusion relies on a familiar cultural reference.",
+    hebrewTokenPairs: [["ההרמז", "הַהֶרְמֵז"], ["נשען על", "נִשְׁעָן עַל"], ["רפרנס תרבותי", "רֶפֶרֶנְס תַּרְבּוּתִי"], ["מוכר", "מֻכָּר"]], englishTokens: ["The allusion", "relies on", "a familiar", "cultural reference"],
+    hebrewDistractorPairs: [["הציטוט", "הַצִּיטּוּט"], ["מתעלם מן", "מִתְעַלֵּם מִן"], ["מקור", "מָקוֹר"], ["חדש", "חָדָשׁ"]], englishDistractors: ["The quotation", "ignores", "a source", "that is new"],
+    notes: "הרמז is a literary allusion; רפרנס תרבותי is the common borrowed term for a cultural reference."
+  }),
+  buildReviewedSentence({
+    id: "formal_92", emoji: "📜", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "כתב היד משלב שירה ופרוזה.", hebrewNiqqud: "כְּתַב הַיָּד מְשַׁלֵּב שִׁירָה וּפְרוֹזָה.", english: "The manuscript combines poetry and prose.",
+    hebrewTokenPairs: [["כתב היד", "כְּתַב הַיָּד"], ["משלב", "מְשַׁלֵּב"], ["שירה", "שִׁירָה"], ["ופרוזה", "וּפְרוֹזָה"]], englishTokens: ["The manuscript", "combines", "poetry", "and prose"],
+    hebrewDistractorPairs: [["העורך", "הָעוֹרֵךְ"], ["מפריד", "מַפְרִיד"], ["מאמרים", "מַאֲמָרִים"], ["וסיפורים", "וְסִפּוּרִים"]], englishDistractors: ["The editor", "separates", "articles", "and stories"],
+    notes: "כתב יד is a manuscript; שירה and פרוזה are poetry and prose."
+  }),
+  buildReviewedSentence({
+    id: "formal_93", emoji: "🎭", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "אירוניה דרמטית חושפת סתירה בעלילה.", hebrewNiqqud: "אִירוֹנְיָה דְּרָמָטִית חוֹשֶׂפֶת סְתִירָה בָּעֲלִילָה.", english: "Dramatic irony reveals a contradiction in the plot.",
+    hebrewTokenPairs: [["אירוניה דרמטית", "אִירוֹנְיָה דְּרָמָטִית"], ["חושפת", "חוֹשֶׂפֶת"], ["סתירה", "סְתִירָה"], ["בעלילה", "בָּעֲלִילָה"]], englishTokens: ["Dramatic irony", "reveals", "a contradiction", "in the plot"],
+    hebrewDistractorPairs: [["הומור", "הוּמוֹר"], ["מסתיר", "מַסְתִּיר"], ["הסכמה", "הַסְכָּמָה"], ["בסיפור", "בַּסִּפּוּר"]], englishDistractors: ["Humor", "hides", "agreement", "in the story"],
+    notes: "אירוניה דרמטית occurs when the audience knows something a character does not; סתירה is a contradiction."
+  }),
+  buildReviewedSentence({
+    id: "formal_94", emoji: "📚", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "קאנון ספרותי מעצב זיכרון תרבותי.", hebrewNiqqud: "קָאנוֹן סִפְרוּתִי מְעַצֵּב זִכָּרוֹן תַּרְבּוּתִי.", english: "A literary canon shapes cultural memory.",
+    hebrewTokenPairs: [["קאנון ספרותי", "קָאנוֹן סִפְרוּתִי"], ["מעצב", "מְעַצֵּב"], ["זיכרון תרבותי", "זִכָּרוֹן תַּרְבּוּתִי"]], englishTokens: ["A literary canon", "shapes", "cultural memory"],
+    hebrewDistractorPairs: [["הרשימה", "הָרְשִׁימָה"], ["מוחקת", "מוֹחֶקֶת"], ["זיכרון", "זִכָּרוֹן"], ["אישי", "אִישִׁי"]], englishDistractors: ["The list", "erases", "personal", "memory"],
+    notes: "קאנון ספרותי is a literary canon; זיכרון תרבותי is memory sustained through cultural works and practices."
+  }),
+  buildReviewedSentence({
+    id: "formal_95", emoji: "🧭", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "נרטיב היסטורי משקף תפיסת עולם.", hebrewNiqqud: "נָרָטִיב הִיסְטוֹרִי מְשַׁקֵּף תְּפִיסַת עוֹלָם.", english: "A historical narrative reflects a worldview.",
+    hebrewTokenPairs: [["נרטיב היסטורי", "נָרָטִיב הִיסְטוֹרִי"], ["משקף", "מְשַׁקֵּף"], ["תפיסת עולם", "תְּפִיסַת עוֹלָם"]], englishTokens: ["A historical narrative", "reflects", "a worldview"],
+    hebrewDistractorPairs: [["שמועה", "שְׁמוּעָה"], ["פרטית", "פְּרָטִית"], ["מסתירה", "מַסְתִּירָה"], ["עובדה", "עֻבְדָּה"]], englishDistractors: ["A private", "rumor", "hides", "a fact"],
+    notes: "נרטיב היסטורי is a historical narrative; תפיסת עולם is a worldview."
+  }),
+  buildReviewedSentence({
+    id: "formal_96", emoji: "🌍", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הטמעה תרבותית משנה זהות תפוצתית.", hebrewNiqqud: "הַטְמָעָה תַּרְבּוּתִית מְשַׁנָּה זֶהוּת תְּפוּצָתִית.", english: "Cultural assimilation reshapes diaspora identity.",
+    hebrewTokenPairs: [["הטמעה תרבותית", "הַטְמָעָה תַּרְבּוּתִית"], ["משנה", "מְשַׁנָּה"], ["זהות תפוצתית", "זֶהוּת תְּפוּצָתִית"]], englishTokens: ["Cultural assimilation", "reshapes", "diaspora identity"],
+    hebrewDistractorPairs: [["הפרדה", "הַפְרָדָה"], ["חברתית", "חֶבְרָתִית"], ["מחזקת", "מְחַזֶּקֶת"], ["מסורת", "מָסֹרֶת"]], englishDistractors: ["Social", "separation", "strengthens", "tradition"],
+    notes: "הטמעה תרבותית is cultural assimilation; זהות תפוצתית is identity formed in a diaspora context."
+  }),
+  buildReviewedSentence({
+    id: "formal_97", emoji: "🪞", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "גיבוש זהות משפיע על ביטוי זהות.", hebrewNiqqud: "גִּבּוּשׁ זֶהוּת מַשְׁפִּיעַ עַל בִּטּוּי זֶהוּת.", english: "Identity formation affects identity expression.",
+    hebrewTokenPairs: [["גיבוש זהות", "גִּבּוּשׁ זֶהוּת"], ["משפיע על", "מַשְׁפִּיעַ עַל"], ["ביטוי זהות", "בִּטּוּי זֶהוּת"]], englishTokens: ["Identity formation", "affects", "identity expression"],
+    hebrewDistractorPairs: [["לחץ", "לַחַץ"], ["חברתי", "חֶבְרָתִי"], ["מחליש", "מַחֲלִישׁ"], ["ביטחון", "בִּטָּחוֹן"]], englishDistractors: ["Social", "pressure", "weakens", "confidence"],
+    notes: "גיבוש זהות is identity formation; ביטוי זהות is the expression of identity."
+  }),
+  buildReviewedSentence({
+    id: "formal_98", emoji: "📺", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "תרבות פופ משפיעה על השפה היומיומית.", hebrewNiqqud: "תַּרְבּוּת פּוֹפּ מַשְׁפִּיעָה עַל הַשָּׂפָה הַיּוֹמְיוֹמִית.", english: "Pop culture influences everyday language.",
+    hebrewTokenPairs: [["תרבות פופ", "תַּרְבּוּת פּוֹפּ"], ["משפיעה על", "מַשְׁפִּיעָה עַל"], ["השפה", "הַשָּׂפָה"], ["היומיומית", "הַיּוֹמְיוֹמִית"]], englishTokens: ["Pop culture", "influences", "everyday", "language"],
+    hebrewDistractorPairs: [["משלב", "מִשְׁלָב"], ["רשמי", "רִשְׁמִי"], ["מגביל", "מַגְבִּיל"], ["ביטוי", "בִּטּוּי"], ["יצירתי", "יְצִירָתִי"]], englishDistractors: ["A formal", "register", "limits", "creative", "expression"],
+    notes: "תרבות פופ is pop culture; השפה היומיומית is everyday language."
+  }),
+  buildReviewedSentence({
+    id: "formal_99", emoji: "⌚", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "סמל סטטוס עשוי לרמוז על מעמד חברתי.", hebrewNiqqud: "סֵמֶל סְטָטוּס עָשׂוּי לִרְמֹז עַל מַעֲמָד חֶבְרָתִי.", english: "A status symbol may hint at social class.",
+    hebrewTokenPairs: [["סמל סטטוס", "סֵמֶל סְטָטוּס"], ["עשוי", "עָשׂוּי"], ["לרמוז על", "לִרְמֹז עַל"], ["מעמד חברתי", "מַעֲמָד חֶבְרָתִי"]], englishTokens: ["A status symbol", "may", "hint at", "social class"],
+    hebrewDistractorPairs: [["חפץ", "חֵפֶץ"], ["פשוט", "פָּשׁוּט"], ["אינו", "אֵינוֹ"], ["מעיד על", "מֵעִיד עַל"], ["עושר", "עֹשֶׁר"]], englishDistractors: ["A simple", "object", "does not", "indicate", "wealth"],
+    notes: "סמל סטטוס is a status symbol; מעמד חברתי is social class."
+  }),
+  buildReviewedSentence({
+    id: "formal_100", emoji: "🧭", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אתיקה בוחנת התנהגות ראויה.", hebrewNiqqud: "אֶתִיקָה בּוֹחֶנֶת הִתְנַהֲגוּת רְאוּיָה.", english: "Ethics examines proper conduct.",
+    hebrewTokenPairs: [["אתיקה", "אֶתִיקָה"], ["בוחנת", "בּוֹחֶנֶת"], ["התנהגות", "הִתְנַהֲגוּת"], ["ראויה", "רְאוּיָה"]], englishTokens: ["Ethics", "examines", "proper", "conduct"],
+    hebrewDistractorPairs: [["חוק", "חוֹק"], ["מגדיר", "מַגְדִּיר"], ["מעשה", "מַעֲשֶׂה"], ["אסור", "אָסוּר"]], englishDistractors: ["Law", "defines", "a forbidden", "action"],
+    notes: "אתיקה is ethics; התנהגות ראויה means proper or appropriate conduct."
+  }),
+  buildReviewedSentence({
+    id: "formal_101", emoji: "🫀", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מוסר ומצפון אינם זהים.", hebrewNiqqud: "מוּסָר וּמַצְפּוּן אֵינָם זֵהִים.", english: "Morality and conscience are not identical.",
+    hebrewTokenPairs: [["מוסר", "מוּסָר"], ["ומצפון", "וּמַצְפּוּן"], ["אינם", "אֵינָם"], ["זהים", "זֵהִים"]], englishTokens: ["Morality", "and conscience", "are not", "identical"],
+    hebrewDistractorPairs: [["רגש", "רֶגֶשׁ"], ["והיגיון", "וְהִגָּיוֹן"], ["יכולים להיות", "יְכוֹלִים לִהְיוֹת"], ["דומים", "דּוֹמִים"]], englishDistractors: ["Emotion", "and logic", "can be", "similar"],
+    notes: "מוסר is morality as a system of values; מצפון is an individual's conscience."
+  }),
+  buildReviewedSentence({
+    id: "formal_102", emoji: "🛤️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "רצון חופשי מעורר שאלה קיומית.", hebrewNiqqud: "רָצוֹן חוֹפְשִׁי מְעוֹרֵר שְׁאֵלָה קִיּוּמִית.", english: "Free will raises an existential question.",
+    hebrewTokenPairs: [["רצון חופשי", "רָצוֹן חוֹפְשִׁי"], ["מעורר", "מְעוֹרֵר"], ["שאלה קיומית", "שְׁאֵלָה קִיּוּמִית"]], englishTokens: ["Free will", "raises", "an existential question"],
+    hebrewDistractorPairs: [["הרגל", "הֶרְגֵּל"], ["קבוע", "קָבוּעַ"], ["מונע", "מוֹנֵעַ"], ["בחירה", "בְּחִירָה"], ["חדשה", "חֲדָשָׁה"]], englishDistractors: ["A fixed", "habit", "prevents", "a new", "choice"],
+    notes: "רצון חופשי is free will; שאלה קיומית is an existential question."
+  }),
+  buildReviewedSentence({
+    id: "formal_103", emoji: "🧠", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "חקר התודעה בוחן תפיסה וחוויה.", hebrewNiqqud: "חֵקֶר הַתּוֹדָעָה בּוֹחֵן תְּפִיסָה וַחֲוָיָה.", english: "The study of consciousness examines perception and experience.",
+    hebrewTokenPairs: [["חקר", "חֵקֶר"], ["התודעה", "הַתּוֹדָעָה"], ["בוחן", "בּוֹחֵן"], ["תפיסה", "תְּפִיסָה"], ["וחוויה", "וַחֲוָיָה"]], englishTokens: ["The study", "of consciousness", "examines", "perception", "and experience"],
+    hebrewDistractorPairs: [["ניסוי", "נִסּוּי"], ["בזיכרון", "בַּזִּכָּרוֹן"], ["מודד", "מוֹדֵד"], ["תגובה", "תְּגוּבָה"], ["גופנית", "גּוּפָנִית"]], englishDistractors: ["An experiment", "on memory", "measures", "a physical", "response"],
+    notes: "חקר התודעה is the study of consciousness; תפיסה is perception and חוויה is experience."
+  }),
+  buildReviewedSentence({
+    id: "formal_104", emoji: "🧩", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "כשל לוגי אינו חלק מלוגיקה דדוקטיבית.", hebrewNiqqud: "כֶּשֶׁל לוֹגִי אֵינוֹ חֵלֶק מִלּוֹגִיקָה דֶּדוּקְטִיבִית.", english: "A logical fallacy is not part of deductive logic.",
+    hebrewTokenPairs: [["כשל לוגי", "כֶּשֶׁל לוֹגִי"], ["אינו", "אֵינוֹ"], ["חלק", "חֵלֶק"], ["מלוגיקה דדוקטיבית", "מִלּוֹגִיקָה דֶּדוּקְטִיבִית"]], englishTokens: ["A logical fallacy", "is not", "part", "of deductive logic"],
+    hebrewDistractorPairs: [["טיעון", "טִיעוּן"], ["תקף", "תָּקֵף"], ["יכול להיות", "יָכוֹל לִהְיוֹת"], ["מרכיב", "מַרְכִּיב"], ["בהוכחה", "בְּהוֹכָחָה"]], englishDistractors: ["A valid", "argument", "can be", "a component", "in a proof"],
+    notes: "כשל לוגי is a logical fallacy; לוגיקה דדוקטיבית is deductive logic."
+  }),
+  buildReviewedSentence({
+    id: "formal_105", emoji: "📐", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "טענה נורמטיבית מביעה עמדה מוסרית.", hebrewNiqqud: "טַעֲנָה נוֹרְמָטִיבִית מַבִּיעָה עֶמְדָּה מוּסָרִית.", english: "A normative claim expresses a moral position.",
+    hebrewTokenPairs: [["טענה נורמטיבית", "טַעֲנָה נוֹרְמָטִיבִית"], ["מביעה", "מַבִּיעָה"], ["עמדה", "עֶמְדָּה"], ["מוסרית", "מוּסָרִית"]], englishTokens: ["A normative claim", "expresses", "a moral", "position"],
+    hebrewDistractorPairs: [["תיאור", "תֵּאוּר"], ["עובדתי", "עוּבְדָּתִי"], ["מציג", "מַצִּיג"], ["אירוע", "אֵרוּעַ"], ["היסטורי", "הִיסְטוֹרִי"]], englishDistractors: ["A factual", "description", "presents", "a historical", "event"],
+    notes: "טענה נורמטיבית says what should be; a descriptive claim says what is."
+  }),
+  buildReviewedSentence({
+    id: "formal_106", emoji: "🌌", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "משמעות החיים היא שאלה קיומית.", hebrewNiqqud: "מַשְׁמָעוּת הַחַיִּים הִיא שְׁאֵלָה קִיּוּמִית.", english: "The meaning of life is an existential question.",
+    hebrewTokenPairs: [["משמעות החיים", "מַשְׁמָעוּת הַחַיִּים"], ["היא", "הִיא"], ["שאלה קיומית", "שְׁאֵלָה קִיּוּמִית"]], englishTokens: ["The meaning of life", "is", "an existential question"],
+    hebrewDistractorPairs: [["שגרה", "שִׁגְרָה"], ["יומית", "יוֹמִית"], ["אינה", "אֵינָהּ"], ["בעיה", "בְּעָיָה"], ["פילוסופית", "פִילוֹסוֹפִית"]], englishDistractors: ["A daily", "routine", "is not", "a philosophical", "problem"],
+    notes: "משמעות החיים is the meaning of life; קיומי means existential."
+  }),
+  buildReviewedSentence({
+    id: "formal_107", emoji: "🔍", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הטיה משפיעה על פרשנות המציאות.", hebrewNiqqud: "הֲטָיָה מַשְׁפִּיעָה עַל פַּרְשָׁנוּת הַמְּצִיאוּת.", english: "Bias influences the interpretation of reality.",
+    hebrewTokenPairs: [["הטיה", "הֲטָיָה"], ["משפיעה על", "מַשְׁפִּיעָה עַל"], ["פרשנות", "פַּרְשָׁנוּת"], ["המציאות", "הַמְּצִיאוּת"]], englishTokens: ["Bias", "influences", "the interpretation", "of reality"],
+    hebrewDistractorPairs: [["ראיה", "רְאָיָה"], ["חדשה", "חֲדָשָׁה"], ["משנה", "מְשַׁנָּה"], ["תיאור", "תֵּאוּר"], ["העבר", "הֶעָבָר"]], englishDistractors: ["New", "evidence", "changes", "the description", "of the past"],
+    notes: "הטיה is bias; פרשנות המציאות is an interpretation of reality."
+  }),
+];
+
+const RELATIONSHIP_SENTENCES = [
+  buildReviewedSentence({
+    id: "colloquial_176", emoji: "✨", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "יש בינינו כימיה וכבוד הדדי.", hebrewNiqqud: "יֵשׁ בֵּינֵינוּ כִּימְיָה וְכָבוֹד הֲדָדִי.", english: "We have chemistry and mutual respect.",
+    hebrewTokenPairs: [["יש בינינו", "יֵשׁ בֵּינֵינוּ"], ["כימיה", "כִּימְיָה"], ["וכבוד הדדי", "וְכָבוֹד הֲדָדִי"]], englishTokens: ["We have", "chemistry", "and mutual respect"],
+    hebrewDistractorPairs: [["אין בינינו", "אֵין בֵּינֵינוּ"], ["מתח", "מֶתַח"], ["אבל", "אֲבָל"], ["אמון", "אֵמוּן"]], englishDistractors: ["We don't have", "tension", "but", "trust"],
+    notes: "כימיה is chemistry between people; כבוד הדדי is mutual respect."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_177", emoji: "🤝", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מחויבות דורשת זמינות רגשית.", hebrewNiqqud: "מְחֻיָּבוּת דּוֹרֶשֶׁת זְמִינוּת רִגְשִׁית.", english: "Commitment requires emotional availability.",
+    hebrewTokenPairs: [["מחויבות", "מְחֻיָּבוּת"], ["דורשת", "דּוֹרֶשֶׁת"], ["זמינות רגשית", "זְמִינוּת רִגְשִׁית"]], englishTokens: ["Commitment", "requires", "emotional availability"],
+    hebrewDistractorPairs: [["ריחוק", "רִיחוּק"], ["מונע", "מוֹנֵעַ"], ["שיחה", "שִׂיחָה"], ["כנה", "כֵּנָה"]], englishDistractors: ["Distance", "prevents", "an honest", "conversation"],
+    notes: "מחויבות is commitment; זמינות רגשית is emotional availability."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_178", emoji: "🔒", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "החלטנו להגדיר את הקשר כבלעדי.", hebrewNiqqud: "הֶחְלַטְנוּ לְהַגְדִּיר אֶת הַקֶּשֶׁר כְּבִלְעָדִי.", english: "We decided to define the relationship as exclusive.",
+    hebrewTokenPairs: [["החלטנו", "הֶחְלַטְנוּ"], ["להגדיר את הקשר", "לְהַגְדִּיר אֶת הַקֶּשֶׁר"], ["כבלעדי", "כְּבִלְעָדִי"]], englishTokens: ["We decided", "to define the relationship", "as exclusive"],
+    hebrewDistractorPairs: [["ניסינו", "נִיסִּינוּ"], ["לדחות", "לִדְחוֹת"], ["את השיחה", "אֶת הַשִּׂיחָה"], ["למחר", "לְמָחָר"]], englishDistractors: ["We tried", "to postpone", "the conversation", "until tomorrow"],
+    notes: "להגדיר את הקשר means to define the relationship; בלעדי describes an exclusive relationship."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_179", emoji: "🧭", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "בלעדיות מתאימה לנו כשיש ערכים משותפים.", hebrewNiqqud: "בִּלְעָדִיּוּת מַתְאִימָה לָנוּ כְּשֶׁיֵּשׁ עֲרָכִים מְשֻׁתָּפִים.", english: "Exclusivity works for us when we have shared values.",
+    hebrewTokenPairs: [["בלעדיות", "בִּלְעָדִיּוּת"], ["מתאימה", "מַתְאִימָה"], ["לנו", "לָנוּ"], ["כשיש", "כְּשֶׁיֵּשׁ"], ["ערכים משותפים", "עֲרָכִים מְשֻׁתָּפִים"]], englishTokens: ["Exclusivity", "works", "for us", "when we have", "shared values"],
+    hebrewDistractorPairs: [["עצמאות", "עַצְמָאוּת"], ["מפריעה", "מַפְרִיעָה"], ["להם", "לָהֶם"], ["כשאין", "כְּשֶׁאֵין"], ["מטרות", "מַטָּרוֹת"], ["ברורות", "בְּרוּרוֹת"]], englishDistractors: ["Independence", "interferes", "for them", "when they lack", "clear", "goals"],
+    hebrewOrderAlternates: [{ text: "כשיש ערכים משותפים, בלעדיות מתאימה לנו.", textNiqqud: "כְּשֶׁיֵּשׁ עֲרָכִים מְשֻׁתָּפִים, בִּלְעָדִיּוּת מַתְאִימָה לָנוּ.", order: [3, 4, 0, 1, 2] }],
+    notes: "בלעדיות is exclusivity; ערכים משותפים are shared values. The condition may neutrally come first or last."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_180", emoji: "🌍", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מערכת יחסים מרחוק יכולה לבנות עתיד משותף.", hebrewNiqqud: "מַעֲרֶכֶת יְחָסִים מֵרָחוֹק יְכוֹלָה לִבְנוֹת עָתִיד מְשֻׁתָּף.", english: "A long-distance relationship can build a shared future.",
+    hebrewTokenPairs: [["מערכת יחסים מרחוק", "מַעֲרֶכֶת יְחָסִים מֵרָחוֹק"], ["יכולה", "יְכוֹלָה"], ["לבנות", "לִבְנוֹת"], ["עתיד משותף", "עָתִיד מְשֻׁתָּף"]], englishTokens: ["A long-distance relationship", "can", "build", "a shared future"],
+    hebrewDistractorPairs: [["קשר", "קֶשֶׁר"], ["זמני", "זְמַנִּי"], ["מונע", "מוֹנֵעַ"], ["תכנון", "תִּכְנוּן"], ["משותף", "מְשֻׁתָּף"]], englishDistractors: ["A temporary", "bond", "prevents", "shared", "planning"],
+    notes: "מערכת יחסים מרחוק is a long-distance relationship; עתיד משותף is a shared future."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_181", emoji: "📱", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "קשר מרחוק גורם לעייפות מדייטים.", hebrewNiqqud: "קֶשֶׁר מֵרָחוֹק גּוֹרֵם לַעֲיֵפוּת מִדֵּיְיטִים.", english: "A long-distance relationship can cause dating fatigue.",
+    hebrewTokenPairs: [["קשר מרחוק", "קֶשֶׁר מֵרָחוֹק"], ["גורם", "גּוֹרֵם"], ["לעייפות מדייטים", "לַעֲיֵפוּת מִדֵּיְיטִים"]], englishTokens: ["A long-distance relationship", "can cause", "dating fatigue"],
+    hebrewDistractorPairs: [["מפגש", "מִפְגָּשׁ"], ["קצר", "קָצָר"], ["מפחית", "מַפְחִית"], ["לחץ", "לַחַץ"], ["חברתי", "חֶבְרָתִי"]], englishDistractors: ["A brief", "meeting", "can reduce", "social", "pressure"],
+    notes: "קשר מרחוק is another common term for a long-distance relationship; עייפות מדייטים is dating fatigue."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_182", emoji: "💬", category: "colloquial", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "קושי במחויבות דורש שיחה כנה.", hebrewNiqqud: "קֹשִׁי בִּמְחֻיָּבוּת דּוֹרֵשׁ שִׂיחָה כֵּנָה.", english: "A commitment issue requires an honest conversation.",
+    hebrewTokenPairs: [["קושי במחויבות", "קֹשִׁי בִּמְחֻיָּבוּת"], ["דורש", "דּוֹרֵשׁ"], ["שיחה", "שִׂיחָה"], ["כנה", "כֵּנָה"]], englishTokens: ["A commitment issue", "requires", "an honest", "conversation"],
+    hebrewDistractorPairs: [["פער", "פַּעַר"], ["בציפיות", "בְּצִיפִיּוֹת"], ["מונע", "מוֹנֵעַ"], ["פתרון", "פִּתְרוֹן"], ["מהיר", "מָהִיר"]], englishDistractors: ["A gap", "in expectations", "prevents", "a quick", "solution"],
+    notes: "קושי במחויבות is a commitment issue; the sentence frames it as something to discuss, not diagnose."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_183", emoji: "🛑", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כדאי להציב גבולות ולא למהר להיקשר.", hebrewNiqqud: "כְּדַאי לְהַצִּיב גְּבוּלוֹת וְלֹא לְמַהֵר לְהִיקָּשֵׁר.", english: "It's wise to set boundaries and not rush to get attached.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["להציב גבולות", "לְהַצִּיב גְּבוּלוֹת"], ["ולא", "וְלֹא"], ["למהר", "לְמַהֵר"], ["להיקשר", "לְהִיקָּשֵׁר"]], englishTokens: ["It's wise", "to set boundaries", "and not", "rush", "to get attached"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לשנות", "לְשַׁנּוֹת"], ["תוכניות", "תָּכְנִיּוֹת"], ["ואז", "וְאָז"], ["לנסות", "לְנַסּוֹת"], ["שוב", "שׁוּב"]], englishDistractors: ["It's possible", "to change", "plans", "and then", "try", "again"],
+    notes: "להציב גבולות means to set boundaries; להיקשר means to become attached."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_184", emoji: "🫶", category: "colloquial", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "אפשר להיפתח רגשית בלי להוליך שולל.", hebrewNiqqud: "אֶפְשָׁר לְהִפָּתֵחַ רִגְשִׁית בְּלִי לְהוֹלִיךְ שׁוֹלָל.", english: "You can open up emotionally without leading someone on.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להיפתח", "לְהִפָּתֵחַ"], ["רגשית", "רִגְשִׁית"], ["בלי", "בְּלִי"], ["להוליך שולל", "לְהוֹלִיךְ שׁוֹלָל"]], englishTokens: ["You can", "open up", "emotionally", "without", "leading someone on"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["להיסגר", "לְהִיסָּגֵר"], ["לגמרי", "לְגַמְרֵי"], ["כדי", "כְּדֵי"], ["להרשים", "לְהַרְשִׁים"]], englishDistractors: ["You must not", "withdraw", "completely", "in order to", "impress"],
+    notes: "להיפתח רגשית means to open up emotionally; להוליך שולל can mean to mislead or lead someone on."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_185", emoji: "🌫️", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "לא רצינו לפתח רגשות בקשר לא מוגדר.", hebrewNiqqud: "לֹא רָצִינוּ לְפַתֵּחַ רְגָשׁוֹת בְּקֶשֶׁר לֹא מֻגְדָּר.", english: "We didn't want to catch feelings in a situationship.",
+    hebrewTokenPairs: [["לא", "לֹא"], ["רצינו", "רָצִינוּ"], ["לפתח רגשות", "לְפַתֵּחַ רְגָשׁוֹת"], ["בקשר לא מוגדר", "בְּקֶשֶׁר לֹא מֻגְדָּר"]], englishTokens: ["We didn't", "want", "to catch feelings", "in a situationship"],
+    hebrewDistractorPairs: [["כן ניסינו", "כֵּן נִיסִּינוּ"], ["לשמור", "לִשְׁמֹר"], ["מרחק", "מֶרְחָק"], ["במערכת יחסים", "בְּמַעֲרֶכֶת יְחָסִים"], ["חדשה", "חֲדָשָׁה"]], englishDistractors: ["We did try", "to keep", "distance", "in a new", "relationship"],
+    hebrewOrderAlternates: [{ text: "בקשר לא מוגדר לא רצינו לפתח רגשות.", textNiqqud: "בְּקֶשֶׁר לֹא מֻגְדָּר לֹא רָצִינוּ לְפַתֵּחַ רְגָשׁוֹת.", order: [3, 0, 1, 2] }],
+    notes: "לפתח רגשות is to catch feelings; קשר לא מוגדר is the common Hebrew description of a situationship."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_186", emoji: "💔", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "קשה להיות תקוע על מישהו אחרי פרידה.", hebrewNiqqud: "קָשֶׁה לִהְיוֹת תָּקוּעַ עַל מִישֶׁהוּ אַחֲרֵי פְּרֵדָה.", english: "It's hard to be hung up on someone after a breakup.",
+    hebrewTokenPairs: [["קשה", "קָשֶׁה"], ["להיות תקוע", "לִהְיוֹת תָּקוּעַ"], ["על מישהו", "עַל מִישֶׁהוּ"], ["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"]], englishTokens: ["It's hard", "to be hung up", "on someone", "after", "a breakup"],
+    hebrewDistractorPairs: [["קל", "קַל"], ["להיות פנוי", "לִהְיוֹת פָּנוּי"], ["להיות תקועה", "לִהְיוֹת תְּקוּעָה"], ["על מישהי", "עַל מִישֶׁהִי"], ["לפני", "לִפְנֵי"], ["פגישה", "פְּגִישָׁה"]], englishDistractors: ["It's easy", "to be available", "for her", "before", "a meeting"],
+    hebrewOrderAlternates: [{ text: "אחרי פרידה קשה להיות תקוע על מישהו.", textNiqqud: "אַחֲרֵי פְּרֵדָה קָשֶׁה לִהְיוֹת תָּקוּעַ עַל מִישֶׁהוּ.", order: [3, 4, 0, 1, 2] }],
+    hebrewAlternates: [
+      { text: "קשה להיות תקועה על מישהו אחרי פרידה.", textNiqqud: "קָשֶׁה לִהְיוֹת תְּקוּעָה עַל מִישֶׁהוּ אַחֲרֵי פְּרֵדָה.", tokenPairs: [["קשה", "קָשֶׁה"], ["להיות תקועה", "לִהְיוֹת תְּקוּעָה"], ["על מישהו", "עַל מִישֶׁהוּ"], ["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"]] },
+      { text: "קשה להיות תקוע על מישהי אחרי פרידה.", textNiqqud: "קָשֶׁה לִהְיוֹת תָּקוּעַ עַל מִישֶׁהִי אַחֲרֵי פְּרֵדָה.", tokenPairs: [["קשה", "קָשֶׁה"], ["להיות תקוע", "לִהְיוֹת תָּקוּעַ"], ["על מישהי", "עַל מִישֶׁהִי"], ["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"]] },
+      { text: "קשה להיות תקועה על מישהי אחרי פרידה.", textNiqqud: "קָשֶׁה לִהְיוֹת תְּקוּעָה עַל מִישֶׁהִי אַחֲרֵי פְּרֵדָה.", tokenPairs: [["קשה", "קָשֶׁה"], ["להיות תקועה", "לִהְיוֹת תְּקוּעָה"], ["על מישהי", "עַל מִישֶׁהִי"], ["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"]] },
+      { text: "אחרי פרידה קשה להיות תקועה על מישהו.", textNiqqud: "אַחֲרֵי פְּרֵדָה קָשֶׁה לִהְיוֹת תְּקוּעָה עַל מִישֶׁהוּ.", tokenPairs: [["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"], ["קשה", "קָשֶׁה"], ["להיות תקועה", "לִהְיוֹת תְּקוּעָה"], ["על מישהו", "עַל מִישֶׁהוּ"]] },
+      { text: "אחרי פרידה קשה להיות תקוע על מישהי.", textNiqqud: "אַחֲרֵי פְּרֵדָה קָשֶׁה לִהְיוֹת תָּקוּעַ עַל מִישֶׁהִי.", tokenPairs: [["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"], ["קשה", "קָשֶׁה"], ["להיות תקוע", "לִהְיוֹת תָּקוּעַ"], ["על מישהי", "עַל מִישֶׁהִי"]] },
+      { text: "אחרי פרידה קשה להיות תקועה על מישהי.", textNiqqud: "אַחֲרֵי פְּרֵדָה קָשֶׁה לִהְיוֹת תְּקוּעָה עַל מִישֶׁהִי.", tokenPairs: [["אחרי", "אַחֲרֵי"], ["פרידה", "פְּרֵדָה"], ["קשה", "קָשֶׁה"], ["להיות תקועה", "לִהְיוֹת תְּקוּעָה"], ["על מישהי", "עַל מִישֶׁהִי"]] },
+    ],
+    notes: "להיות תקוע על מישהו is colloquial Hebrew for being hung up on someone. Masculine and feminine experiencers and partners are accepted in both neutral time-phrase positions."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_187", emoji: "👻", category: "colloquial", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "אפשר לאבד עניין בלי להתרחק או להיעלם.", hebrewNiqqud: "אֶפְשָׁר לְאַבֵּד עִנְיָן בְּלִי לְהִתְרַחֵק אוֹ לְהֵיעָלֵם.", english: "You can lose interest without pulling away or ghosting.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לאבד עניין", "לְאַבֵּד עִנְיָן"], ["בלי", "בְּלִי"], ["להתרחק", "לְהִתְרַחֵק"], ["או להיעלם", "אוֹ לְהֵיעָלֵם"]], englishTokens: ["You can", "lose interest", "without", "pulling away", "or ghosting"],
+    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["לשקול מחדש", "לִשְׁקֹל מֵחָדָשׁ"], ["ואז", "וְאָז"], ["לדבר", "לְדַבֵּר"], ["בכנות", "בְּכֵנוּת"]], englishDistractors: ["You may", "reconsider", "and then", "speak", "honestly"],
+    notes: "לאבד עניין is to lose interest, להתרחק is to pull away, and להיעלם is to ghost in dating context."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_188", emoji: "💍", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אחרי פיוס החלטנו להפוך את זה לרשמי.", hebrewNiqqud: "אַחֲרֵי פִּיּוּס הֶחְלַטְנוּ לַהֲפוֹךְ אֶת זֶה לְרִשְׁמִי.", english: "After reconciling, we decided to make it official.",
+    hebrewTokenPairs: [["אחרי", "אַחֲרֵי"], ["פיוס", "פִּיּוּס"], ["החלטנו", "הֶחְלַטְנוּ"], ["להפוך את זה", "לַהֲפוֹךְ אֶת זֶה"], ["לרשמי", "לְרִשְׁמִי"]], englishTokens: ["After", "reconciling", "we decided", "to make it", "official"],
+    hebrewDistractorPairs: [["לפני", "לִפְנֵי"], ["ויכוח", "וִיכּוּחַ"], ["ניסינו", "נִיסִּינוּ"], ["לשמור", "לִשְׁמֹר"], ["הכול", "הַכֹּל"], ["בסוד", "בְּסוֹד"]], englishDistractors: ["Before", "an argument", "we tried", "to keep", "everything", "secret"],
+    hebrewOrderAlternates: [{ text: "החלטנו להפוך את זה לרשמי אחרי פיוס.", textNiqqud: "הֶחְלַטְנוּ לַהֲפוֹךְ אֶת זֶה לְרִשְׁמִי אַחֲרֵי פִּיּוּס.", order: [2, 3, 4, 0, 1] }],
+    notes: "פיוס is reconciliation; להפוך את זה לרשמי means to make the relationship official. The time phrase is neutral first or last."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_189", emoji: "💚", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "דגל ירוק הוא כנות לגבי גבולות.", hebrewNiqqud: "דֶּגֶל יָרוֹק הוּא כֵּנוּת לְגַבֵּי גְּבוּלוֹת.", english: "A green flag is honesty about boundaries.",
+    hebrewTokenPairs: [["דגל ירוק", "דֶּגֶל יָרוֹק"], ["הוא", "הוּא"], ["כנות", "כֵּנוּת"], ["לגבי", "לְגַבֵּי"], ["גבולות", "גְּבוּלוֹת"]], englishTokens: ["A green flag", "is", "honesty", "about", "boundaries"],
+    hebrewDistractorPairs: [["סימן אזהרה", "סִימַן אַזְהָרָה"], ["יכול להיות", "יָכוֹל לִהְיוֹת"], ["שתיקה", "שְׁתִיקָה"], ["בנוגע", "בְּנוֹגֵעַ"], ["לציפיות", "לְצִיפִיּוֹת"]], englishDistractors: ["A warning", "sign", "can be", "silence", "about expectations"],
+    notes: "דגל ירוק is a green flag; גבולות are personal boundaries."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_190", emoji: "🌱", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "התנהגות דגל ירוק עשויה למנוע בעיית אמון.", hebrewNiqqud: "הִתְנַהֲגוּת דֶּגֶל יָרוֹק עֲשׂוּיָה לִמְנוֹעַ בְּעָיַת אֵמוּן.", english: "Green-flag behavior can prevent a trust issue.",
+    hebrewTokenPairs: [["התנהגות דגל ירוק", "הִתְנַהֲגוּת דֶּגֶל יָרוֹק"], ["עשויה", "עֲשׂוּיָה"], ["למנוע", "לִמְנוֹעַ"], ["בעיית אמון", "בְּעָיַת אֵמוּן"]], englishTokens: ["Green-flag behavior", "can", "prevent", "a trust issue"],
+    hebrewDistractorPairs: [["תקשורת", "תִּקְשֹׁרֶת"], ["לקויה", "לְקוּיָה"], ["יוצרת", "יוֹצֶרֶת"], ["מתח", "מֶתַח"], ["מיותר", "מְיֻתָּר"]], englishDistractors: ["Poor", "communication", "creates", "unnecessary", "tension"],
+    notes: "התנהגות דגל ירוק is green-flag behavior; בעיית אמון is a trust issue."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_191", emoji: "🚩", category: "colloquial", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "התנהגות דגל אדום עלולה להוביל לפרידה.", hebrewNiqqud: "הִתְנַהֲגוּת דֶּגֶל אָדוֹם עֲלוּלָה לְהוֹבִיל לִפְרֵדָה.", english: "Red-flag behavior can lead to a breakup.",
+    hebrewTokenPairs: [["התנהגות דגל אדום", "הִתְנַהֲגוּת דֶּגֶל אָדוֹם"], ["עלולה", "עֲלוּלָה"], ["להוביל", "לְהוֹבִיל"], ["לפרידה", "לִפְרֵדָה"]], englishTokens: ["Red-flag behavior", "can", "lead", "to a breakup"],
+    hebrewDistractorPairs: [["מחווה", "מֶחְוָה"], ["חיובית", "חִיּוּבִית"], ["עשויה", "עֲשׂוּיָה"], ["לחזק", "לְחַזֵּק"], ["את הקשר", "אֶת הַקֶּשֶׁר"]], englishDistractors: ["A positive", "gesture", "may", "strengthen", "the relationship"],
+    notes: "התנהגות דגל אדום is red-flag behavior; פרידה is a breakup. The modal עלולה avoids claiming an automatic outcome."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_192", emoji: "😉", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "פלרטוט לא מחייב בלעדיות.", hebrewNiqqud: "פְלִרְטוּט לֹא מְחַיֵּב בִּלְעָדִיּוּת.", english: "Flirting doesn't require exclusivity.",
+    hebrewTokenPairs: [["פלרטוט", "פְלִרְטוּט"], ["לא", "לֹא"], ["מחייב", "מְחַיֵּב"], ["בלעדיות", "בִּלְעָדִיּוּת"]], englishTokens: ["Flirting", "doesn't", "require", "exclusivity"],
+    hebrewDistractorPairs: [["דייט", "דֵּייט"], ["יכול ליצור", "יָכוֹל לִיצוֹר"], ["ציפייה", "צִיפִיָּה"], ["ברורה", "בְּרוּרָה"]], englishDistractors: ["A date", "can create", "a clear", "expectation"],
+    notes: "פלרטוט is flirtation; בלעדיות is exclusivity."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_193", emoji: "👨‍👩‍👧", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הורות משותפת דורשת כבוד הדדי.", hebrewNiqqud: "הוֹרוּת מְשֻׁתֶּפֶת דּוֹרֶשֶׁת כָּבוֹד הֲדָדִי.", english: "Co-parenting requires mutual respect.",
+    hebrewTokenPairs: [["הורות משותפת", "הוֹרוּת מְשֻׁתֶּפֶת"], ["דורשת", "דּוֹרֶשֶׁת"], ["כבוד הדדי", "כָּבוֹד הֲדָדִי"]], englishTokens: ["Co-parenting", "requires", "mutual respect"],
+    hebrewDistractorPairs: [["פרידה", "פְּרֵדָה"], ["מבטלת", "מְבַטֶּלֶת"], ["אחריות", "אַחֲרָיוּת"], ["משותפת", "מְשֻׁתֶּפֶת"]], englishDistractors: ["A breakup", "cancels", "shared", "responsibility"],
+    notes: "הורות משותפת is co-parenting; כבוד הדדי is mutual respect."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_194", emoji: "👪", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המחותנים פגשו את המשפחה המורחבת.", hebrewNiqqud: "הַמְּחוּתָנִים פָּגְשׁוּ אֶת הַמִּשְׁפָּחָה הַמֻּרְחֶבֶת.", english: "The in-laws met the extended family.",
+    hebrewTokenPairs: [["המחותנים", "הַמְּחוּתָנִים"], ["פגשו", "פָּגְשׁוּ"], ["את המשפחה המורחבת", "אֶת הַמִּשְׁפָּחָה הַמֻּרְחֶבֶת"]], englishTokens: ["The in-laws", "met", "the extended family"],
+    hebrewDistractorPairs: [["החברים", "הַחֲבֵרִים"], ["הזמינו", "הִזְמִינוּ"], ["את הזוג", "אֶת הַזּוּג"], ["הצעיר", "הַצָּעִיר"]], englishDistractors: ["The friends", "invited", "the young", "couple"],
+    notes: "מחותנים are the parents of a married couple in relation to one another; משפחה מורחבת is extended family."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_195", emoji: "🕊️", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "פיוס דורש שיחה על ערכים משותפים.", hebrewNiqqud: "פִּיּוּס דּוֹרֵשׁ שִׂיחָה עַל עֲרָכִים מְשֻׁתָּפִים.", english: "Reconciliation requires a conversation about shared values.",
+    hebrewTokenPairs: [["פיוס", "פִּיּוּס"], ["דורש", "דּוֹרֵשׁ"], ["שיחה", "שִׂיחָה"], ["על", "עַל"], ["ערכים משותפים", "עֲרָכִים מְשֻׁתָּפִים"]], englishTokens: ["Reconciliation", "requires", "a conversation", "about", "shared values"],
+    hebrewDistractorPairs: [["ויכוח", "וִיכּוּחַ"], ["מונע", "מוֹנֵעַ"], ["הסכמה", "הַסְכָּמָה"], ["לגבי", "לְגַבֵּי"], ["תוכניות", "תָּכְנִיּוֹת"], ["עתידיות", "עֲתִידִיּוֹת"]], englishDistractors: ["An argument", "prevents", "agreement", "regarding", "future", "plans"],
+    notes: "פיוס is reconciliation; ערכים משותפים are shared values."
+  }),
+];
+
+const IVRI_AI_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_153", emoji: "🧮", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "האלגוריתם לומד מנתוני אימון.", hebrewNiqqud: "הָאַלְגוֹרִיתְם לוֹמֵד מִנְּתוּנֵי אִמּוּן.", english: "The algorithm learns from training data.",
+    hebrewTokenPairs: [["האלגוריתם", "הָאַלְגוֹרִיתְם"], ["לומד", "לוֹמֵד"], ["מנתוני אימון", "מִנְּתוּנֵי אִמּוּן"]], englishTokens: ["The algorithm", "learns", "from training data"],
+    hebrewDistractorPairs: [["המודל", "הַמּוֹדֶל"], ["נבדק", "נִבְדָּק"], ["על", "עַל"], ["מידע", "מֵידָע"], ["חדש", "חָדָשׁ"]], englishDistractors: ["The model", "is tested", "on", "new", "information"],
+    notes: "אלגוריתם is an algorithm; נתוני אימון are the training data from which a model learns."
+  }),
+  buildReviewedSentence({
+    id: "professional_154", emoji: "🧠", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "רשת עצבית כוללת שכבה עצבית נוספת.", hebrewNiqqud: "רֶשֶׁת עַצַּבִּית כּוֹלֶלֶת שִׁכְבָה עַצַּבִּית נוֹסֶפֶת.", english: "A neural network includes an additional neural layer.",
+    hebrewTokenPairs: [["רשת עצבית", "רֶשֶׁת עַצַּבִּית"], ["כוללת", "כּוֹלֶלֶת"], ["שכבה עצבית", "שִׁכְבָה עַצַּבִּית"], ["נוספת", "נוֹסֶפֶת"]], englishTokens: ["A neural network", "includes", "an additional", "neural layer"],
+    hebrewDistractorPairs: [["מסד נתונים", "מְסַד נְתוּנִים"], ["מכיל", "מֵכִיל"], ["רשומה", "רְשׁוּמָה"], ["ישנה", "יְשָׁנָה"]], englishDistractors: ["A database", "contains", "an old", "record"],
+    notes: "רשת עצבית is a neural network; שכבה עצבית is one neural layer within it."
+  }),
+  buildReviewedSentence({
+    id: "professional_155", emoji: "🔎", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הסקה אינה תמיד הנמקה.", hebrewNiqqud: "הַסָּקָה אֵינָהּ תָּמִיד הַנְמָקָה.", english: "Inference is not always reasoning.",
+    hebrewTokenPairs: [["הסקה", "הַסָּקָה"], ["אינה", "אֵינָהּ"], ["תמיד", "תָּמִיד"], ["הנמקה", "הַנְמָקָה"]], englishTokens: ["Inference", "is not", "always", "reasoning"],
+    hebrewDistractorPairs: [["תחזית", "תַּחֲזִית"], ["יכולה להיות", "יְכוֹלָה לִהְיוֹת"], ["לפעמים", "לִפְעָמִים"], ["מדויקת", "מְדֻיֶּקֶת"]], englishDistractors: ["A forecast", "can be", "sometimes", "accurate"],
+    notes: "הסקה is inference; הנמקה is an explicit chain of reasoning, and the two are not automatically identical."
+  }),
+  buildReviewedSentence({
+    id: "professional_156", emoji: "🚀", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "פריסה מוצלחת תלויה במדרגיות.", hebrewNiqqud: "פְּרִיסָה מֻצְלַחַת תְּלוּיָה בְּמִדְרָגִיּוּת.", english: "Successful deployment depends on scalability.",
+    hebrewTokenPairs: [["פריסה", "פְּרִיסָה"], ["מוצלחת", "מֻצְלַחַת"], ["תלויה", "תְּלוּיָה"], ["במדרגיות", "בְּמִדְרָגִיּוּת"]], englishTokens: ["Successful", "deployment", "depends", "on scalability"],
+    hebrewDistractorPairs: [["גרסה", "גִּרְסָה"], ["חדשה", "חֲדָשָׁה"], ["נכשלת", "נִכְשֶׁלֶת"], ["בעומס", "בְּעוֹמֶס"]], englishDistractors: ["A new", "release", "fails", "under load"],
+    notes: "פריסה is deployment to production; מדרגיות is scalability under growing load."
+  }),
+  buildReviewedSentence({
+    id: "professional_157", emoji: "📜", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "קוד פתוח דורש רישיון קוד פתוח.", hebrewNiqqud: "קוֹד פָּתוּחַ דּוֹרֵשׁ רִישָּׁיוֹן קוֹד פָּתוּחַ.", english: "Open source requires an open-source license.",
+    hebrewTokenPairs: [["קוד פתוח", "קוֹד פָּתוּחַ"], ["דורש", "דּוֹרֵשׁ"], ["רישיון קוד פתוח", "רִישָּׁיוֹן קוֹד פָּתוּחַ"]], englishTokens: ["Open source", "requires", "an open-source license"],
+    hebrewDistractorPairs: [["תוכנה", "תּוֹכְנָה"], ["סגורה", "סְגוּרָה"], ["מגבילה", "מַגְבִּילָה"], ["שימוש", "שִׁמּוּשׁ"]], englishDistractors: ["Closed", "software", "limits", "use"],
+    notes: "קוד פתוח is open source; רישיון קוד פתוח states the terms under which it may be used."
+  }),
+  buildReviewedSentence({
+    id: "professional_158", emoji: "🤖", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מערכת אוטונומית יכולה לכלול סוכן.", hebrewNiqqud: "מַעֲרֶכֶת אוֹטוֹנוֹמִית יְכוֹלָה לִכְלוֹל סוֹכֵן.", english: "An autonomous system can include an agent.",
+    hebrewTokenPairs: [["מערכת אוטונומית", "מַעֲרֶכֶת אוֹטוֹנוֹמִית"], ["יכולה", "יְכוֹלָה"], ["לכלול", "לִכְלוֹל"], ["סוכן", "סוֹכֵן"]], englishTokens: ["An autonomous system", "can", "include", "an agent"],
+    hebrewDistractorPairs: [["יישום", "יִשּׂוּם"], ["פשוט", "פָּשׁוּט"], ["אינו", "אֵינוֹ"], ["מפעיל", "מַפְעִיל"], ["רובוט", "רוֹבּוֹט"]], englishDistractors: ["A simple", "application", "does not", "operate", "a robot"],
+    notes: "מערכת אוטונומית is an autonomous system; סוכן is an agent acting within a system."
+  }),
+  buildReviewedSentence({
+    id: "professional_159", emoji: "🔁", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "שיפור רקורסיבי אינו זהה לקריסת מודל.", hebrewNiqqud: "שִׁפּוּר רֶקוּרְסִיבִי אֵינוֹ זֵהֶה לִקְרִיסַת מוֹדֶל.", english: "Recursive improvement is not the same as model collapse.",
+    hebrewTokenPairs: [["שיפור רקורסיבי", "שִׁפּוּר רֶקוּרְסִיבִי"], ["אינו", "אֵינוֹ"], ["זהה", "זֵהֶה"], ["לקריסת מודל", "לִקְרִיסַת מוֹדֶל"]], englishTokens: ["Recursive improvement", "is not", "the same as", "model collapse"],
+    hebrewDistractorPairs: [["אימון", "אִמּוּן"], ["חוזר", "חוֹזֵר"], ["עשוי להיות", "עָשׂוּי לִהְיוֹת"], ["דומה", "דּוֹמֶה"], ["לכוונון עדין", "לְכִוְונוּן עָדִין"]], englishDistractors: ["Repeated", "training", "may be", "similar to", "fine-tuning"],
+    notes: "שיפור רקורסיבי is recursive improvement; קריסת מודל is model collapse, a different failure mode."
+  }),
+  buildReviewedSentence({
+    id: "professional_160", emoji: "🧱", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כל טוקן בפרומפט תופס מקום בחלון ההקשר.", hebrewNiqqud: "כָּל טוֹקֶן בִּפְרוֹמְפְּט תּוֹפֵס מָקוֹם בְּחַלּוֹן הַהֶקְשֵׁר.", english: "Each token in the prompt takes up space in the context window.",
+    hebrewTokenPairs: [["כל", "כָּל"], ["טוקן", "טוֹקֶן"], ["בפרומפט", "בִּפְרוֹמְפְּט"], ["תופס", "תּוֹפֵס"], ["מקום", "מָקוֹם"], ["בחלון ההקשר", "בְּחַלּוֹן הַהֶקְשֵׁר"]], englishTokens: ["Each", "token", "in the prompt", "takes up", "space", "in the context window"],
+    hebrewDistractorPairs: [["שום", "שׁוּם"], ["תמונה", "תְּמוּנָה"], ["במסמך", "בַּמִּסְמָךְ"], ["לא צורכת", "לֹא צוֹרֶכֶת"], ["זיכרון", "זִכָּרוֹן"], ["בשרת", "בַּשָּׁרֵת"]], englishDistractors: ["No", "image", "in the document", "uses", "memory", "on the server"],
+    notes: "טוקן is a token, פרומפט is a prompt, and חלון ההקשר is the context window that holds tokens."
+  }),
+  buildReviewedSentence({
+    id: "professional_161", emoji: "🎛️", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "צריך לכוונן מודל לפי בנצ'מרק.", hebrewNiqqud: "צָרִיךְ לְכַוְנֵן מוֹדֶל לְפִי בֶּנְצְ'מַרְק.", english: "A model should be fine-tuned against a benchmark.",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לכוונן", "לְכַוְנֵן"], ["מודל", "מוֹדֶל"], ["לפי בנצ'מרק", "לְפִי בֶּנְצְ'מַרְק"]], englishTokens: ["A model", "should be", "fine-tuned", "against a benchmark"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לבדוק", "לִבְדּוֹק"], ["גרסה", "גִּרְסָה"], ["בלי בנצ'מרק", "בְּלִי בֶּנְצְ'מַרְק"]], englishDistractors: ["A version", "can be", "tested", "without a benchmark"],
+    hebrewOrderAlternates: [{ text: "לפי בנצ'מרק צריך לכוונן מודל.", textNiqqud: "לְפִי בֶּנְצְ'מַרְק צָרִיךְ לְכַוְנֵן מוֹדֶל.", order: [3, 0, 1, 2] }],
+    notes: "לכוונן is to fine-tune; בנצ'מרק is a benchmark. The benchmark phrase is neutral first or last."
+  }),
+  buildReviewedSentence({
+    id: "professional_162", emoji: "🛡️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בדקנו מנגנון בטיחות עם משקלים פתוחים.", hebrewNiqqud: "בָּדַקְנוּ מַנְגָּנוֹן בְּטִיחוּת עִם מִשְׁקָלִים פְּתוּחִים.", english: "We tested a safety guardrail with open weights.",
+    hebrewTokenPairs: [["בדקנו", "בָּדַקְנוּ"], ["מנגנון בטיחות", "מַנְגָּנוֹן בְּטִיחוּת"], ["עם", "עִם"], ["משקלים פתוחים", "מִשְׁקָלִים פְּתוּחִים"]], englishTokens: ["We tested", "a safety guardrail", "with", "open weights"],
+    hebrewDistractorPairs: [["הסרנו", "הֵסַרְנוּ"], ["הגבלה", "הַגְבָּלָה"], ["מן", "מִן"], ["המודל", "הַמּוֹדֶל"], ["הסגור", "הַסָּגוּר"]], englishDistractors: ["We removed", "a restriction", "from", "the closed", "model"],
+    notes: "מנגנון בטיחות is a safety guardrail; משקלים פתוחים are open model weights."
+  }),
+  buildReviewedSentence({
+    id: "professional_163", emoji: "📚", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "למידת מכונה נשענת על נתוני אימון.", hebrewNiqqud: "לְמִידַת מְכוֹנָה נִשְׁעֶנֶת עַל נְתוּנֵי אִמּוּן.", english: "Machine learning relies on training data.",
+    hebrewTokenPairs: [["למידת מכונה", "לְמִידַת מְכוֹנָה"], ["נשענת על", "נִשְׁעֶנֶת עַל"], ["נתוני אימון", "נְתוּנֵי אִמּוּן"]], englishTokens: ["Machine learning", "relies on", "training data"],
+    hebrewDistractorPairs: [["רובוטיקה", "רוֹבּוֹטִיקָה"], ["משלבת", "מְשַׁלֶּבֶת"], ["חיישנים", "חַיְשָׁנִים"], ["פיזיים", "פִיזִיִּים"]], englishDistractors: ["Robotics", "combines", "physical", "sensors"],
+    notes: "למידת מכונה is machine learning; נתוני אימון are the examples used during training."
+  }),
+  buildReviewedSentence({
+    id: "professional_164", emoji: "🏷️", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "למידה מונחית דורשת דוגמאות מסומנות.", hebrewNiqqud: "לְמִידָה מוּנְחֵית דּוֹרֶשֶׁת דֻּגְמָאוֹת מְסֻמָּנוֹת.", english: "Supervised learning requires labeled examples.",
+    hebrewTokenPairs: [["למידה מונחית", "לְמִידָה מוּנְחֵית"], ["דורשת", "דּוֹרֶשֶׁת"], ["דוגמאות", "דֻּגְמָאוֹת"], ["מסומנות", "מְסֻמָּנוֹת"]], englishTokens: ["Supervised learning", "requires", "labeled", "examples"],
+    hebrewDistractorPairs: [["למידה", "לְמִידָה"], ["עצמאית", "עַצְמָאִית"], ["משתמשת", "מִשְׁתַּמֶּשֶׁת"], ["בטקסטים", "בְּטֶקְסְטִים"], ["לא מסומנים", "לֹא מְסֻמָּנִים"]], englishDistractors: ["Independent", "learning", "uses", "unlabeled", "texts"],
+    notes: "למידה מונחית is supervised learning; its examples carry labels or marked target values."
+  }),
+  buildReviewedSentence({
+    id: "professional_165", emoji: "🧩", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "למידה לא מונחית מזהה דפוסים.", hebrewNiqqud: "לְמִידָה לֹא מוּנְחֵית מְזַהָה דְּפוּסִים.", english: "Unsupervised learning identifies patterns.",
+    hebrewTokenPairs: [["למידה לא מונחית", "לְמִידָה לֹא מוּנְחֵית"], ["מזהה", "מְזַהָה"], ["דפוסים", "דְּפוּסִים"]], englishTokens: ["Unsupervised learning", "identifies", "patterns"],
+    hebrewDistractorPairs: [["ניתוח", "נִיתּוּחַ"], ["ידני", "יָדָנִי"], ["מחמיץ", "מַחְמִיץ"], ["קשרים", "קְשָׁרִים"]], englishDistractors: ["Manual", "analysis", "misses", "connections"],
+    notes: "למידה לא מונחית is unsupervised learning, which searches for patterns without supplied labels."
+  }),
+  buildReviewedSentence({
+    id: "professional_166", emoji: "📊", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "כוונון עדין משפר תוצאות בבנצ'מרק.", hebrewNiqqud: "כִּוְונוּן עָדִין מְשַׁפֵּר תּוֹצָאוֹת בְּבֶנְצְ'מַרְק.", english: "Fine-tuning improves benchmark results.",
+    hebrewTokenPairs: [["כוונון עדין", "כִּוְונוּן עָדִין"], ["משפר", "מְשַׁפֵּר"], ["תוצאות", "תּוֹצָאוֹת"], ["בבנצ'מרק", "בְּבֶנְצְ'מַרְק"]], englishTokens: ["Fine-tuning", "improves", "benchmark", "results"],
+    hebrewDistractorPairs: [["אימון מחדש", "אִמּוּן מֵחָדָשׁ"], ["מוריד", "מוֹרִיד"], ["דיוק", "דִּיּוּק"], ["בבדיקה", "בַּבְּדִיקָה"]], englishDistractors: ["Retraining", "reduces", "accuracy", "in testing"],
+    hebrewOrderAlternates: [{ text: "בבנצ'מרק כוונון עדין משפר תוצאות.", textNiqqud: "בְּבֶנְצְ'מַרְק כִּוְונוּן עָדִין מְשַׁפֵּר תּוֹצָאוֹת.", order: [3, 0, 1, 2] }],
+    notes: "כוונון עדין is fine-tuning; the benchmark context may neutrally appear first or last."
+  }),
+  buildReviewedSentence({
+    id: "professional_167", emoji: "✍️", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הנדסת פרומפטים מפחיתה הזיה של מודל.", hebrewNiqqud: "הַנְדָּסַת פְּרוֹמְפְּטִים מַפְחִיתָה הֲזָיָה שֶׁל מוֹדֶל.", english: "Prompt engineering reduces model hallucination.",
+    hebrewTokenPairs: [["הנדסת פרומפטים", "הַנְדָּסַת פְּרוֹמְפְּטִים"], ["מפחיתה", "מַפְחִיתָה"], ["הזיה של מודל", "הֲזָיָה שֶׁל מוֹדֶל"]], englishTokens: ["Prompt engineering", "reduces", "model hallucination"],
+    hebrewDistractorPairs: [["כתיבה", "כְּתִיבָה"], ["אקראית", "אַקְרָאִית"], ["מגדילה", "מַגְדִּילָה"], ["שגיאה", "שְׁגִיאָה"], ["בתשובה", "בַּתְּשׁוּבָה"]], englishDistractors: ["Random", "writing", "increases", "an error", "in the answer"],
+    notes: "הנדסת פרומפטים is prompt engineering; הזיה של מודל is a model hallucination rather than a human perception."
+  }),
+  buildReviewedSentence({
+    id: "professional_168", emoji: "🗄️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מסד נתונים וקטורי מאחסן ייצוגים.", hebrewNiqqud: "מְסַד נְתוּנִים וֶקְטוֹרִי מְאַחְסֵן יִצּוּגִים.", english: "A vector database stores representations.",
+    hebrewTokenPairs: [["מסד נתונים וקטורי", "מְסַד נְתוּנִים וֶקְטוֹרִי"], ["מאחסן", "מְאַחְסֵן"], ["ייצוגים", "יִצּוּגִים"]], englishTokens: ["A vector database", "stores", "representations"],
+    hebrewDistractorPairs: [["קובץ", "קוֹבֶץ"], ["רגיל", "רָגִיל"], ["שומר", "שׁוֹמֵר"], ["טבלאות", "טַבְלָאוֹת"]], englishDistractors: ["A regular", "file", "keeps", "tables"],
+    notes: "מסד נתונים וקטורי is a vector database; it stores vector representations for retrieval."
+  }),
+  buildReviewedSentence({
+    id: "professional_169", emoji: "🚨", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "פרצת סייבר חשפה מידע רגיש.", hebrewNiqqud: "פִּרְצַת סַיְיבֶּר חָשְׂפָה מֵידָע רָגִישׁ.", english: "A cybersecurity breach exposed sensitive information.",
+    hebrewTokenPairs: [["פרצת סייבר", "פִּרְצַת סַיְיבֶּר"], ["חשפה", "חָשְׂפָה"], ["מידע", "מֵידָע"], ["רגיש", "רָגִישׁ"]], englishTokens: ["A cybersecurity breach", "exposed", "sensitive", "information"],
+    hebrewDistractorPairs: [["עדכון", "עִדְכּוּן"], ["אבטחה", "אַבְטָחָה"], ["הגן", "הֵגֵן"], ["על השרת", "עַל הַשָּׁרֵת"]], englishDistractors: ["A security", "update", "protected", "the server"],
+    notes: "פרצת סייבר is a cybersecurity breach; מידע רגיש is sensitive information."
+  }),
+  buildReviewedSentence({
+    id: "professional_170", emoji: "🦾", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "רובוטיקה משלבת מערכת אוטונומית.", hebrewNiqqud: "רוֹבּוֹטִיקָה מְשַׁלֶּבֶת מַעֲרֶכֶת אוֹטוֹנוֹמִית.", english: "Robotics integrates an autonomous system.",
+    hebrewTokenPairs: [["רובוטיקה", "רוֹבּוֹטִיקָה"], ["משלבת", "מְשַׁלֶּבֶת"], ["מערכת אוטונומית", "מַעֲרֶכֶת אוֹטוֹנוֹמִית"]], englishTokens: ["Robotics", "integrates", "an autonomous system"],
+    hebrewDistractorPairs: [["תוכנה", "תּוֹכְנָה"], ["ידנית", "יָדָנִית"], ["מפעילה", "מַפְעִילָה"], ["מכונה", "מְכוֹנָה"]], englishDistractors: ["Manual", "software", "operates", "a machine"],
+    notes: "רובוטיקה is robotics; מערכת אוטונומית is an autonomous system that can act without continuous control."
+  }),
+  buildReviewedSentence({
+    id: "professional_171", emoji: "🗺️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מפת דרכים למוצר כוללת גרסת תוכנה חדשה.", hebrewNiqqud: "מַפַּת דְּרָכִים לַמּוּצָר כּוֹלֶלֶת גִּרְסַת תּוֹכְנָה חֲדָשָׁה.", english: "The product roadmap includes a new software release.",
+    hebrewTokenPairs: [["מפת דרכים למוצר", "מַפַּת דְּרָכִים לַמּוּצָר"], ["כוללת", "כּוֹלֶלֶת"], ["גרסת תוכנה", "גִּרְסַת תּוֹכְנָה"], ["חדשה", "חֲדָשָׁה"]], englishTokens: ["The product roadmap", "includes", "a new", "software release"],
+    hebrewDistractorPairs: [["תוכנית", "תּוֹכְנִית"], ["קצרה", "קְצָרָה"], ["משמיטה", "מַשְׁמִיטָה"], ["עדכון", "עִדְכּוּן"], ["ישן", "יָשָׁן"]], englishDistractors: ["A short", "plan", "omits", "an old", "update"],
+    notes: "מפת דרכים למוצר is a product roadmap; גרסת תוכנה is a software release or version."
+  }),
+  buildReviewedSentence({
+    id: "professional_172", emoji: "💰", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הון סיכון מממן מסלול מזומנים לסטארטאפ.", hebrewNiqqud: "הוֹן סִיכּוּן מְמַמֵּן מַסְלוּל מְזוּמָנִים לְסְטַארְטְאַפּ.", english: "Venture capital funds a startup's cash runway.",
+    hebrewTokenPairs: [["הון סיכון", "הוֹן סִיכּוּן"], ["מממן", "מְמַמֵּן"], ["מסלול מזומנים לסטארטאפ", "מַסְלוּל מְזוּמָנִים לְסְטַארְטְאַפּ"]], englishTokens: ["Venture capital", "funds", "a startup's cash runway"],
+    hebrewDistractorPairs: [["הלוואה", "הַלְוָאָה"], ["קטנה", "קְטַנָּה"], ["מכסה", "מְכַסָּה"], ["הוצאה", "הוֹצָאָה"], ["חודשית", "חוֹדְשִׁית"]], englishDistractors: ["A small", "loan", "covers", "a monthly", "expense"],
+    notes: "הון סיכון is venture capital; מסלול מזומנים לסטארטאפ is the startup runway funded by available cash."
+  }),
+];
+
+const SHARED_GRAMMAR_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_266", emoji: "🔎", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ניואנס קטן משנה את המשמעות המילולית.", hebrewNiqqud: "נִיוּאַנְס קָטָן מְשַׁנֶּה אֶת הַמַּשְׁמָעוּת הַמִּילּוּלִית.", english: "A small nuance changes the literal meaning.",
+    hebrewTokenPairs: [["ניואנס", "נִיוּאַנְס"], ["קטן", "קָטָן"], ["משנה", "מְשַׁנֶּה"], ["את", "אֶת"], ["המשמעות המילולית", "הַמַּשְׁמָעוּת הַמִּילּוּלִית"]], englishTokens: ["A small", "nuance", "changes", "the literal meaning"],
+    hebrewDistractorPairs: [["כלל", "כְּלָל"], ["גדול", "גָּדוֹל"], ["תמיד", "תָּמִיד"], ["שומר", "שׁוֹמֵר"], ["על הניסוח", "עַל הַנִּסּוּחַ"]], englishDistractors: ["A major", "rule", "always", "preserves", "the wording"],
+    notes: "ניואנס is a nuance; משמעות מילולית is the direct, literal meaning rather than an implied one."
+  }),
+  buildReviewedSentence({
+    id: "everyday_267", emoji: "💭", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "משמעות מושאלת תלויה בהקשר.", hebrewNiqqud: "מַשְׁמָעוּת מֻשְׁאָלֶת תְּלוּיָה בַּהֶקְשֵׁר.", english: "Figurative meaning depends on context.",
+    hebrewTokenPairs: [["משמעות מושאלת", "מַשְׁמָעוּת מֻשְׁאָלֶת"], ["תלויה", "תְּלוּיָה"], ["בהקשר", "בַּהֶקְשֵׁר"]], englishTokens: ["Figurative meaning", "depends on", "context"],
+    hebrewDistractorPairs: [["משמעות מילולית", "מַשְׁמָעוּת מִילּוּלִית"], ["ברורה", "בְּרוּרָה"], ["ללא", "לְלֹא"], ["דוגמה", "דֻּגְמָה"]], englishDistractors: ["Literal meaning", "is clear", "without", "an example"],
+    notes: "משמעות מושאלת is figurative meaning; the intended reading depends on context."
+  }),
+  buildReviewedSentence({
+    id: "everyday_268", emoji: "🔄", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "בינוני יכול לתפקד כפועל או כתואר.", hebrewNiqqud: "בֵּינוֹנִי יָכוֹל לְתַפְקֵד כְּפוֹעַל אוֹ כְּתוֹאַר.", english: "A participle can function as a verb or an adjective.",
+    hebrewTokenPairs: [["בינוני", "בֵּינוֹנִי"], ["יכול לתפקד", "יָכוֹל לְתַפְקֵד"], ["כפועל", "כְּפוֹעַל"], ["או", "אוֹ"], ["כתואר", "כְּתוֹאַר"]], englishTokens: ["A participle", "can function", "as a verb", "or", "an adjective"],
+    hebrewDistractorPairs: [["שם עצם", "שֵׁם עֶצֶם"], ["עשוי לשמש", "עָשׂוּי לְשַׁמֵּשׁ"], ["כנושא", "כְּנוֹשֵׂא"], ["ולא", "וְלֹא"], ["כמושא", "כְּמוּשָׂא"]], englishDistractors: ["A noun", "may serve", "as a subject", "but not", "an object"],
+    hebrewOrderAlternates: [{ text: "בינוני יכול לתפקד כתואר או כפועל.", textNiqqud: "בֵּינוֹנִי יָכוֹל לְתַפְקֵד כְּתוֹאַר אוֹ כְּפוֹעַל.", order: [0, 1, 4, 3, 2] }],
+    notes: "בינוני is the participle or present-tense form; the two coordinated functions may appear in either order."
+  }),
+  buildReviewedSentence({
+    id: "everyday_269", emoji: "📣", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "שם הפועל שונה מציווי.", hebrewNiqqud: "שֵׁם הַפּוֹעַל שׁוֹנֶה מִצִּוּוּי.", english: "The infinitive differs from the imperative.",
+    hebrewTokenPairs: [["שם הפועל", "שֵׁם הַפּוֹעַל"], ["שונה", "שׁוֹנֶה"], ["מציווי", "מִצִּוּוּי"]], englishTokens: ["The infinitive", "differs", "from the imperative"],
+    hebrewDistractorPairs: [["שם עצם", "שֵׁם עֶצֶם"], ["דומה", "דּוֹמֶה"], ["לרבים", "לָרַבִּים"], ["בכתיבה", "בִּכְתִיבָה"]], englishDistractors: ["The noun", "resembles", "the plural", "in writing"],
+    notes: "שם הפועל is the infinitive; ציווי is the imperative used for direct commands."
+  }),
+  buildReviewedSentence({
+    id: "everyday_270", emoji: "⚖️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מין דקדוקי משפיע על צורת היחיד.", hebrewNiqqud: "מִין דִּקְדּוּקִי מַשְׁפִּיעַ עַל צוּרַת הַיָּחִיד.", english: "Grammatical gender affects the singular form.",
+    hebrewTokenPairs: [["מין דקדוקי", "מִין דִּקְדּוּקִי"], ["משפיע על", "מַשְׁפִּיעַ עַל"], ["צורת היחיד", "צוּרַת הַיָּחִיד"]], englishTokens: ["Grammatical gender", "affects", "the singular form"],
+    hebrewDistractorPairs: [["הקשר", "הֶקְשֵׁר"], ["לא משנה", "לֹא מְשַׁנֶּה"], ["את", "אֶת"], ["ההגייה", "הַהֲגִיָּה"]], englishDistractors: ["Context", "does not change", "the", "pronunciation"],
+    notes: "מין דקדוקי is grammatical gender; צורת היחיד is the singular form of a word."
+  }),
+  buildReviewedSentence({
+    id: "everyday_271", emoji: "🔗", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "סמיכות וכינוי שייכות מבטאים בעלות.", hebrewNiqqud: "סְמִיכוּת וְכִנּוּי שַׁיָּכוּת מְבַטְּאִים בַּעֲלוּת.", english: "Construct state and a possessive suffix express possession.",
+    hebrewTokenPairs: [["סמיכות", "סְמִיכוּת"], ["ו", "וְ"], ["כינוי שייכות", "כִּנּוּי שַׁיָּכוּת"], ["מבטאים", "מְבַטְּאִים"], ["בעלות", "בַּעֲלוּת"]], englishTokens: ["Construct state", "and", "a possessive suffix", "express", "possession"],
+    hebrewDistractorPairs: [["ניקוד", "נִקּוּד"], ["או", "אוֹ"], ["הגייה", "הֲגִיָּה"], ["משנים", "מְשַׁנִּים"], ["צליל", "צְלִיל"]], englishDistractors: ["Vocalization", "or", "pronunciation", "change", "sound"],
+    hebrewOrderAlternates: [{ text: "כינוי שייכות וסמיכות מבטאים בעלות.", textNiqqud: "כִּנּוּי שַׁיָּכוּת וּסְמִיכוּת מְבַטְּאִים בַּעֲלוּת.", order: [2, 1, 0, 3, 4], tokensNiqqud: ["כִּנּוּי שַׁיָּכוּת", "וּ", "סְמִיכוּת", "מְבַטְּאִים", "בַּעֲלוּת"] }],
+    notes: "סמיכות and כינוי שייכות are two ways Hebrew can express possession; either coordinated term may come first."
+  }),
+  buildReviewedSentence({
+    id: "everyday_272", emoji: "🎯", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מילת המושא מופיעה לפני מושא מיודע.", hebrewNiqqud: "מִלַּת הַמּוּשָׂא מוֹפִיעָה לִפְנֵי מוּשָׂא מְיֻדָּע.", english: "The direct object marker appears before a definite object.",
+    hebrewTokenPairs: [["מילת המושא", "מִלַּת הַמּוּשָׂא"], ["מופיעה", "מוֹפִיעָה"], ["לפני", "לִפְנֵי"], ["מושא מיודע", "מוּשָׂא מְיֻדָּע"]], englishTokens: ["The direct object marker", "appears", "before", "a definite object"],
+    hebrewDistractorPairs: [["מילת יחס", "מִלַּת יַחַס"], ["נעלמת", "נֶעֱלֶמֶת"], ["אחרי", "אַחֲרֵי"], ["נושא", "נוֹשֵׂא"], ["כללי", "כְּלָלִי"]], englishDistractors: ["A preposition", "disappears", "after", "a general", "subject"],
+    notes: "מילת המושא refers to את, the marker used before a definite direct object."
+  }),
+  buildReviewedSentence({
+    id: "everyday_273", emoji: "📚", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "מונחי בלשנות כוללים תחביר ופרגמטיקה.", hebrewNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים תַּחְבִּיר וּפְרַגְמָטִיקָה.", english: "Linguistic terminology includes syntax and pragmatics.",
+    hebrewTokenPairs: [["מונחי בלשנות", "מוּנְחֵי בַּלְשָׁנוּת"], ["כוללים", "כּוֹלְלִים"], ["תחביר", "תַּחְבִּיר"], ["ו", "וּ"], ["פרגמטיקה", "פְּרַגְמָטִיקָה"]], englishTokens: ["Linguistic terminology", "includes", "syntax", "and", "pragmatics"],
+    hebrewDistractorPairs: [["ספרי לימוד", "סִפְרֵי לִמּוּד"], ["משמיטים", "מַשְׁמִיטִים"], ["הגייה", "הֲגִיָּה"], ["או", "אוֹ"], ["כתיב", "כְּתִיב"]], englishDistractors: ["Textbooks", "omit", "pronunciation", "or", "spelling"],
+    hebrewOrderAlternates: [{ text: "מונחי בלשנות כוללים פרגמטיקה ותחביר.", textNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים פְּרַגְמָטִיקָה וְתַחְבִּיר.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["מוּנְחֵי בַּלְשָׁנוּת", "כּוֹלְלִים", "פְּרַגְמָטִיקָה", "וְ", "תַחְבִּיר"] }],
+    notes: "מונחי בלשנות is linguistic terminology; תחביר studies sentence structure, while פרגמטיקה studies meaning in use."
+  }),
+  buildReviewedSentence({
+    id: "everyday_274", emoji: "🧩", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "תצורת מילים יכולה להוסיף תחילית או סופית.", hebrewNiqqud: "תְּצוּרַת מִילִּים יְכוֹלָה לְהוֹסִיף תְּחִילִית אוֹ סוֹפִית.", english: "Word formation can add a prefix or a suffix.",
+    hebrewTokenPairs: [["תצורת מילים", "תְּצוּרַת מִילִּים"], ["יכולה להוסיף", "יְכוֹלָה לְהוֹסִיף"], ["תחילית", "תְּחִילִית"], ["או", "אוֹ"], ["סופית", "סוֹפִית"]], englishTokens: ["Word formation", "can add", "a prefix", "or", "a suffix"],
+    hebrewDistractorPairs: [["נטייה", "נְטִיָּה"], ["חייבת להסיר", "חַיֶּבֶת לְהָסִיר"], ["שורש", "שֹׁרֶשׁ"], ["בלי", "בְּלִי"], ["משקל", "מִשְׁקָל"]], englishDistractors: ["Conjugation", "must remove", "a root", "without", "a pattern"],
+    hebrewOrderAlternates: [{ text: "תצורת מילים יכולה להוסיף סופית או תחילית.", textNiqqud: "תְּצוּרַת מִילִּים יְכוֹלָה לְהוֹסִיף סוֹפִית אוֹ תְּחִילִית.", order: [0, 1, 4, 3, 2] }],
+    notes: "תצורת מילים is word formation; תחילית is a prefix and סופית is a suffix."
+  }),
+  buildReviewedSentence({
+    id: "everyday_275", emoji: "🔠", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "בתבנית פועל כל אות שורש מקבלת תפקיד.", hebrewNiqqud: "בְּתַבְנִית פּוֹעַל כָּל אוֹת שׁוֹרֶשׁ מְקַבֶּלֶת תַּפְקִיד.", english: "In a verbal pattern, each root letter has a role.",
+    hebrewTokenPairs: [["בתבנית פועל", "בְּתַבְנִית פּוֹעַל"], ["כל", "כָּל"], ["אות שורש", "אוֹת שׁוֹרֶשׁ"], ["מקבלת", "מְקַבֶּלֶת"], ["תפקיד", "תַּפְקִיד"]], englishTokens: ["In a verbal pattern", "each", "root letter", "has", "a role"],
+    hebrewDistractorPairs: [["בפרוזה", "בִּפְרוֹזָה"], ["שום", "שׁוּם"], ["פסיק", "פְּסִיק"], ["מאבד", "מְאַבֵּד"], ["מקום", "מָקוֹם"]], englishDistractors: ["In prose", "no", "comma", "loses", "a place"],
+    hebrewOrderAlternates: [{ text: "כל אות שורש מקבלת תפקיד בתבנית פועל.", textNiqqud: "כָּל אוֹת שׁוֹרֶשׁ מְקַבֶּלֶת תַּפְקִיד בְּתַבְנִית פּוֹעַל.", order: [1, 2, 3, 4, 0] }],
+    notes: "תבנית פועל is a verbal pattern; אות שורש is one consonant belonging to the root."
+  }),
+  buildReviewedSentence({
+    id: "everyday_276", emoji: "🏷️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תבנית שם קובעת את צורת המילה.", hebrewNiqqud: "תַּבְנִית שֵׁם קוֹבַעַת אֶת צוּרַת הַמִּלָּה.", english: "A nominal pattern determines a word’s form.",
+    hebrewTokenPairs: [["תבנית שם", "תַּבְנִית שֵׁם"], ["קובעת", "קוֹבַעַת"], ["את", "אֶת"], ["צורת המילה", "צוּרַת הַמִּלָּה"]], englishTokens: ["A nominal pattern", "determines", "a word’s form"],
+    hebrewDistractorPairs: [["הקשר", "הֶקְשֵׁר"], ["משנה", "מְשַׁנֶּה"], ["בלי", "בְּלִי"], ["המשמעות", "הַמַּשְׁמָעוּת"]], englishDistractors: ["Context", "changes", "without", "meaning"],
+    notes: "תבנית שם is a nominal pattern; it helps determine the form of a derived noun."
+  }),
+  buildReviewedSentence({
+    id: "everyday_277", emoji: "🌱", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "שורש חלש עשוי לשנות צורה.", hebrewNiqqud: "שׁוֹרֶשׁ חָלָשׁ עָשׂוּי לְשַׁנּוֹת צוּרָה.", english: "A weak root may change form.",
+    hebrewTokenPairs: [["שורש חלש", "שׁוֹרֶשׁ חָלָשׁ"], ["עשוי לשנות", "עָשׂוּי לְשַׁנּוֹת"], ["צורה", "צוּרָה"]], englishTokens: ["A weak root", "may change", "form"],
+    hebrewDistractorPairs: [["משקל", "מִשְׁקָל"], ["קבוע", "קָבוּעַ"], ["חייב להישאר", "חַיָּב לְהִישָּׁאֵר"], ["בלי", "בְּלִי"], ["שינוי", "שִׁנּוּי"]], englishDistractors: ["A pattern", "fixed", "must remain", "without", "change"],
+    notes: "שורש חלש is a weak root whose consonants or vowels may change visibly in inflection."
+  }),
+  buildReviewedSentence({
+    id: "everyday_278", emoji: "🎩", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "משלב רשמי שונה ממשלב לא רשמי.", hebrewNiqqud: "מִשְׁלָב רִשְׁמִי שׁוֹנֶה מִמִּשְׁלָב לֹא רִשְׁמִי.", english: "A formal register differs from an informal register.",
+    hebrewTokenPairs: [["משלב רשמי", "מִשְׁלָב רִשְׁמִי"], ["שונה", "שׁוֹנֶה"], ["ממשלב לא רשמי", "מִמִּשְׁלָב לֹא רִשְׁמִי"]], englishTokens: ["A formal register", "differs", "from an informal register"],
+    hebrewDistractorPairs: [["סלנג", "סְלֶנְג"], ["דומה", "דּוֹמֶה"], ["לעברית", "לְעִבְרִית"], ["תקנית", "תִּקְנִית"]], englishDistractors: ["Slang", "resembles", "standard", "Hebrew"],
+    notes: "משלב רשמי is formal register; משלב לא רשמי is informal register used in less formal settings."
+  }),
+  buildReviewedSentence({
+    id: "everyday_279", emoji: "🏺", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "השפעה ארמית ניכרת באוצר המילים.", hebrewNiqqud: "הַשְׁפָּעָה אֲרָמִית נִכֶּרֶת בְּאוֹצַר הַמִּלִּים.", english: "Aramaic influence is evident in the vocabulary.",
+    hebrewTokenPairs: [["השפעה ארמית", "הַשְׁפָּעָה אֲרָמִית"], ["ניכרת", "נִכֶּרֶת"], ["באוצר המילים", "בְּאוֹצַר הַמִּלִּים"]], englishTokens: ["Aramaic influence", "is evident", "in the vocabulary"],
+    hebrewDistractorPairs: [["השפעה", "הַשְׁפָּעָה"], ["אנגלית", "אַנְגְּלִית"], ["כמעט", "כִּמְעַט"], ["נעלמת", "נֶעֱלֶמֶת"], ["בדיבור", "בַּדִּבּוּר"]], englishDistractors: ["English", "influence", "almost", "disappears", "in speech"],
+    hebrewOrderAlternates: [{ text: "באוצר המילים ניכרת השפעה ארמית.", textNiqqud: "בְּאוֹצַר הַמִּלִּים נִכֶּרֶת הַשְׁפָּעָה אֲרָמִית.", order: [2, 1, 0] }],
+    notes: "השפעה ארמית is Aramaic influence; it is visible in parts of Hebrew vocabulary."
+  }),
+];
+
+const INAT_LEGAL_SENTENCES = [
+  buildReviewedSentence({
+    id: "formal_108", emoji: "📜", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "החוקה היא הבסיס למשפט חוקתי.", hebrewNiqqud: "הַחֻקָּה הִיא הַבָּסִיס לְמִשְׁפָּט חֻקָּתִי.", english: "The constitution is the basis of constitutional law.",
+    hebrewTokenPairs: [["החוקה", "הַחֻקָּה"], ["היא", "הִיא"], ["הבסיס", "הַבָּסִיס"], ["למשפט חוקתי", "לְמִשְׁפָּט חֻקָּתִי"]], englishTokens: ["The constitution", "is", "the basis", "of constitutional law"],
+    hebrewDistractorPairs: [["התקנה", "הַתַּקָּנָה"], ["אינה", "אֵינָהּ"], ["חריג", "חָרִיג"], ["לנוהל", "לַנֹּהַל"]], englishDistractors: ["A regulation", "is not", "an exception", "to procedure"],
+    notes: "חוקה is a constitution; משפט חוקתי is the field of constitutional law."
+  }),
+  buildReviewedSentence({
+    id: "formal_109", emoji: "🏛️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "סמכות שיפוט נבחנת לפני הדיון.", hebrewNiqqud: "סַמְכוּת שִׁפּוּט נִבְחֶנֶת לִפְנֵי הַדִּיּוּן.", english: "Jurisdiction is examined before the hearing.",
+    hebrewTokenPairs: [["סמכות שיפוט", "סַמְכוּת שִׁפּוּט"], ["נבחנת", "נִבְחֶנֶת"], ["לפני", "לִפְנֵי"], ["הדיון", "הַדִּיּוּן"]], englishTokens: ["Jurisdiction", "is examined", "before", "the hearing"],
+    hebrewDistractorPairs: [["העדות", "הָעֵדוּת"], ["נשמעת", "נִשְׁמַעַת"], ["אחרי", "אַחֲרֵי"], ["ההפסקה", "הַהַפְסָקָה"]], englishDistractors: ["Testimony", "is heard", "after", "the recess"],
+    notes: "סמכות שיפוט is a court's jurisdiction or authority to hear a matter."
+  }),
+  buildReviewedSentence({
+    id: "formal_110", emoji: "🛡️", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הליך הוגן מגן על זכויות הצדדים.", hebrewNiqqud: "הֲלִיךְ הוֹגֵן מֵגֵן עַל זְכֻיּוֹת הַצְּדָדִים.", english: "Due process protects the parties' rights.",
+    hebrewTokenPairs: [["הליך הוגן", "הֲלִיךְ הוֹגֵן"], ["מגן", "מֵגֵן"], ["על זכויות", "עַל זְכֻיּוֹת"], ["הצדדים", "הַצְּדָדִים"]], englishTokens: ["Due process", "protects", "the parties'", "rights"],
+    hebrewDistractorPairs: [["עיכוב", "עִכּוּב"], ["פוגע", "פּוֹגֵעַ"], ["באינטרסים", "בָּאִינְטֶרֶסִים"], ["פרטיים", "פְּרָטִיִּים"]], englishDistractors: ["A delay", "harms", "private", "interests"],
+    notes: "הליך הוגן is due process or a fair legal procedure."
+  }),
+  buildReviewedSentence({
+    id: "formal_111", emoji: "⚠️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "רשלנות עלולה ליצור אחריות משפטית.", hebrewNiqqud: "רַשְׁלָנוּת עֲלוּלָה לִיצוֹר אַחֲרָיוּת מִשְׁפָּטִית.", english: "Negligence may create legal liability.",
+    hebrewTokenPairs: [["רשלנות", "רַשְׁלָנוּת"], ["עלולה", "עֲלוּלָה"], ["ליצור", "לִיצוֹר"], ["אחריות משפטית", "אַחֲרָיוּת מִשְׁפָּטִית"]], englishTokens: ["Negligence", "may", "create", "legal liability"],
+    hebrewDistractorPairs: [["זהירות", "זְהִירוּת"], ["עשויה", "עֲשׂוּיָה"], ["למנוע", "לִמְנֹעַ"], ["נזק", "נֶזֶק"]], englishDistractors: ["Care", "can", "prevent", "harm"],
+    notes: "רשלנות is negligence; אחריות משפטית is legal liability."
+  }),
+  buildReviewedSentence({
+    id: "formal_112", emoji: "📚", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "פסק דין עשוי ליצור תקדים.", hebrewNiqqud: "פְּסַק דִּין עָשׂוּי לִיצוֹר תַּקְדִּים.", english: "A ruling may create a precedent.",
+    hebrewTokenPairs: [["פסק דין", "פְּסַק דִּין"], ["עשוי", "עָשׂוּי"], ["ליצור", "לִיצוֹר"], ["תקדים", "תַּקְדִּים"]], englishTokens: ["A ruling", "may", "create", "a precedent"],
+    hebrewDistractorPairs: [["החלטה", "הַחְלָטָה"], ["יכולה", "יְכוֹלָה"], ["לבטל", "לְבַטֵּל"], ["ערעור", "עִרְעוּר"]], englishDistractors: ["A decision", "can", "cancel", "an appeal"],
+    notes: "פסק דין is a ruling or verdict; תקדים is a precedent used in later legal reasoning."
+  }),
+  buildReviewedSentence({
+    id: "formal_113", emoji: "📨", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "צו זימון דורש התייצבות בבית המשפט.", hebrewNiqqud: "צַו זִמּוּן דּוֹרֵשׁ הִתְיַצְּבוּת בְּבֵית הַמִּשְׁפָּט.", english: "A subpoena requires an appearance in court.",
+    hebrewTokenPairs: [["צו זימון", "צַו זִמּוּן"], ["דורש", "דּוֹרֵשׁ"], ["התייצבות", "הִתְיַצְּבוּת"], ["בבית המשפט", "בְּבֵית הַמִּשְׁפָּט"]], englishTokens: ["A subpoena", "requires", "an appearance", "in court"],
+    hebrewDistractorPairs: [["מכתב", "מִכְתָּב"], ["מאפשר", "מְאַפְשֵׁר"], ["תגובה", "תְּגוּבָה"], ["בדואר", "בַּדֹּאַר"]], englishDistractors: ["A letter", "allows", "a response", "by mail"],
+    notes: "צו זימון is a subpoena; התייצבות is appearing as formally required."
+  }),
+  buildReviewedSentence({
+    id: "formal_114", emoji: "⛔", category: "formal", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "בית המשפט הוציא צו מניעה.", hebrewNiqqud: "בֵּית הַמִּשְׁפָּט הוֹצִיא צַו מְנִיעָה.", english: "The court issued an injunction.",
+    hebrewTokenPairs: [["בית המשפט", "בֵּית הַמִּשְׁפָּט"], ["הוציא", "הוֹצִיא"], ["צו מניעה", "צַו מְנִיעָה"]], englishTokens: ["The court", "issued", "an injunction"],
+    hebrewDistractorPairs: [["הוועדה", "הַוַּעֲדָה"], ["דחתה", "דָּחֲתָה"], ["את הבקשה", "אֶת הַבַּקָּשָׁה"], ["החדשה", "הַחֲדָשָׁה"]], englishDistractors: ["The committee", "rejected", "the new", "request"],
+    notes: "צו מניעה is an injunction, a court order preventing an action."
+  }),
+  buildReviewedSentence({
+    id: "formal_115", emoji: "🏛️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "חקיקה חדשה עוסקת בביטחון לאומי.", hebrewNiqqud: "חֲקִיקָה חֲדָשָׁה עוֹסֶקֶת בְּבִטָּחוֹן לְאוּמִּי.", english: "New legislation addresses national security.",
+    hebrewTokenPairs: [["חקיקה", "חֲקִיקָה"], ["חדשה", "חֲדָשָׁה"], ["עוסקת", "עוֹסֶקֶת"], ["בביטחון לאומי", "בְּבִטָּחוֹן לְאוּמִּי"]], englishTokens: ["New", "legislation", "addresses", "national security"],
+    hebrewDistractorPairs: [["מדיניות", "מְדִינִיּוּת"], ["ישנה", "יְשָׁנָה"], ["מתעלמת", "מִתְעַלֶּמֶת"], ["מן הנושא", "מִן הַנּוֹשֵׂא"]], englishDistractors: ["Old", "policy", "ignores", "the issue"],
+    notes: "חקיקה is legislation; ביטחון לאומי is national security."
+  }),
+  buildReviewedSentence({
+    id: "formal_116", emoji: "💼", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תביעה אזרחית עשויה לכלול פיצויים.", hebrewNiqqud: "תְּבִיעָה אֶזְרָחִית עֲשׂוּיָה לִכְלוֹל פִּיצּוּיִים.", english: "A civil lawsuit may include damages.",
+    hebrewTokenPairs: [["תביעה אזרחית", "תְּבִיעָה אֶזְרָחִית"], ["עשויה", "עֲשׂוּיָה"], ["לכלול", "לִכְלוֹל"], ["פיצויים", "פִּיצּוּיִים"]], englishTokens: ["A civil lawsuit", "may", "include", "damages"],
+    hebrewDistractorPairs: [["חקירה", "חֲקִירָה"], ["פלילית", "פְּלִילִית"], ["יכולה להסתיים", "יְכוֹלָה לְהִסְתַּיֵּם"], ["בקנס", "בִּקְנָס"]], englishDistractors: ["A criminal", "investigation", "can end", "with a fine"],
+    notes: "תביעה אזרחית is a civil lawsuit; פיצויים are monetary damages or compensation."
+  }),
+  buildReviewedSentence({
+    id: "formal_117", emoji: "⚖️", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "התוצאה לנאשם הייתה הרשעה ולא זיכוי.", hebrewNiqqud: "הַתּוֹצָאָה לַנֶּאֱשָׁם הָיְתָה הַרְשָׁעָה וְלֹא זִכּוּי.", english: "The outcome for the defendant was a conviction, not an acquittal.",
+    hebrewTokenPairs: [["התוצאה", "הַתּוֹצָאָה"], ["לנאשם", "לַנֶּאֱשָׁם"], ["הייתה", "הָיְתָה"], ["הרשעה", "הַרְשָׁעָה"], ["ולא", "וְלֹא"], ["זיכוי", "זִכּוּי"]], englishTokens: ["The outcome", "for the defendant", "was", "a conviction", "not", "an acquittal"],
+    hebrewDistractorPairs: [["ההחלטה", "הַהַחְלָטָה"], ["לתובע", "לַתּוֹבֵעַ"], ["נותרה", "נוֹתְרָה"], ["ערעור", "עִרְעוּר"], ["וגם", "וְגַם"], ["קנס", "קְנָס"]], englishDistractors: ["The decision", "for the claimant", "remained", "an appeal", "and", "a fine"],
+    notes: "נאשם is a defendant; הרשעה is conviction and זיכוי is acquittal."
+  }),
+  buildReviewedSentence({
+    id: "formal_118", emoji: "🔍", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הפרקליטות בחנה את כתב האישום.", hebrewNiqqud: "הַפְּרַקְלִיטוּת בָּחֲנָה אֶת כְּתַב הָאִשּׁוּם.", english: "The state attorney's office reviewed the indictment.",
+    hebrewTokenPairs: [["הפרקליטות", "הַפְּרַקְלִיטוּת"], ["בחנה", "בָּחֲנָה"], ["את", "אֶת"], ["כתב האישום", "כְּתַב הָאִשּׁוּם"]], englishTokens: ["The state attorney's office", "reviewed", "the indictment"],
+    hebrewDistractorPairs: [["הסנגוריה", "הַסַּנֵגוֹרְיָה"], ["הגישה", "הִגִּישָׁה"], ["ערעור", "עִרְעוּר"], ["חדש", "חָדָשׁ"]], englishDistractors: ["The defense", "filed", "a new", "appeal"],
+    notes: "פרקליטות is the state attorney's or public prosecution office; כתב אישום is an indictment."
+  }),
+  buildReviewedSentence({
+    id: "formal_119", emoji: "🤝", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בית המשפט אישר הסדר טיעון.", hebrewNiqqud: "בֵּית הַמִּשְׁפָּט אִשֵּׁר הֶסְדֵּר טִיעוּן.", english: "The court approved a plea bargain.",
+    hebrewTokenPairs: [["בית המשפט", "בֵּית הַמִּשְׁפָּט"], ["אישר", "אִשֵּׁר"], ["הסדר טיעון", "הֶסְדֵּר טִיעוּן"]], englishTokens: ["The court", "approved", "a plea bargain"],
+    hebrewDistractorPairs: [["השופט", "הַשּׁוֹפֵט"], ["דחה", "דָּחָה"], ["את הערעור", "אֶת הָעִרְעוּר"], ["המאוחר", "הַמְּאֻחָר"]], englishDistractors: ["The judge", "rejected", "the late", "appeal"],
+    notes: "הסדר טיעון is a plea bargain submitted for judicial approval."
+  }),
+  buildReviewedSentence({
+    id: "formal_120", emoji: "⚖️", category: "formal", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "בתיק הזה נטל ההוכחה מוטל על התביעה.", hebrewNiqqud: "בַּתִּיק הַזֶּה נֵטֶל הַהוֹכָחָה מוּטָל עַל הַתְּבִיעָה.", english: "In this case, the burden of proof rests with the prosecution.",
+    hebrewTokenPairs: [["בתיק הזה", "בַּתִּיק הַזֶּה"], ["נטל ההוכחה", "נֵטֶל הַהוֹכָחָה"], ["מוטל", "מוּטָל"], ["על", "עַל"], ["התביעה", "הַתְּבִיעָה"]], englishTokens: ["In this case", "the burden of proof", "rests", "with", "the prosecution"],
+    hebrewDistractorPairs: [["בערעור ההוא", "בָּעִרְעוּר הַהוּא"], ["חובת הגילוי", "חוֹבַת הַגִּלּוּי"], ["עוברת", "עוֹבֶרֶת"], ["אל", "אֶל"], ["הסנגוריה", "הַסַּנֵגוֹרְיָה"]], englishDistractors: ["In that appeal", "the duty", "passes", "to", "the defense"],
+    hebrewOrderAlternates: [{ text: "נטל ההוכחה מוטל על התביעה בתיק הזה.", textNiqqud: "נֵטֶל הַהוֹכָחָה מוּטָל עַל הַתְּבִיעָה בַּתִּיק הַזֶּה.", order: [1, 2, 3, 4, 0] }],
+    notes: "נטל ההוכחה is the burden of proof. The case context is neutral first or last."
+  }),
+  buildReviewedSentence({
+    id: "formal_121", emoji: "🔎", category: "formal", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "בחקירה נגדית נבחנה ראיה קבילה.", hebrewNiqqud: "בַּחֲקִירָה נֶגְדִּית נִבְחֲנָה רְאָיָה קְבִילָה.", english: "Admissible evidence was examined in cross-examination.",
+    hebrewTokenPairs: [["בחקירה נגדית", "בַּחֲקִירָה נֶגְדִּית"], ["נבחנה", "נִבְחֲנָה"], ["ראיה קבילה", "רְאָיָה קְבִילָה"]], englishTokens: ["Admissible evidence", "was examined", "in cross-examination"],
+    hebrewDistractorPairs: [["עדות ראשית", "עֵדוּת רָאשִׁית"], ["הציגה", "הִצִּיגָה"], ["טענה", "טַעֲנָה"], ["חדשה", "חֲדָשָׁה"]], englishDistractors: ["Direct testimony", "presented", "a new", "claim"],
+    hebrewOrderAlternates: [{ text: "ראיה קבילה נבחנה בחקירה נגדית.", textNiqqud: "רְאָיָה קְבִילָה נִבְחֲנָה בַּחֲקִירָה נֶגְדִּית.", order: [2, 1, 0] }],
+    notes: "חקירה נגדית is cross-examination; ראיה קבילה is evidence admissible in the proceeding. The examination context is neutral first or last."
+  }),
+  buildReviewedSentence({
+    id: "formal_122", emoji: "🛂", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "מעמד הגירה נקבע לפי החוק.", hebrewNiqqud: "מַעֲמַד הֲגִירָה נִקְבָּע לְפִי הַחֹק.", english: "Immigration status is determined by law.",
+    hebrewTokenPairs: [["מעמד הגירה", "מַעֲמַד הֲגִירָה"], ["נקבע", "נִקְבָּע"], ["לפי", "לְפִי"], ["החוק", "הַחֹק"]], englishTokens: ["Immigration status", "is determined", "by", "law"],
+    hebrewDistractorPairs: [["מקום מגורים", "מְקוֹם מְגוּרִים"], ["משתנה", "מִשְׁתַּנֶּה"], ["עם", "עִם"], ["העבודה", "הָעֲבוֹדָה"]], englishDistractors: ["Residence", "changes", "with", "employment"],
+    notes: "מעמד הגירה is immigration status; the sentence states a general legal classification, not advice about a specific case."
+  }),
+  buildReviewedSentence({
+    id: "formal_123", emoji: "📄", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "שטר בעלות מתעד את הזכויות בנכס.", hebrewNiqqud: "שְׁטַר בַּעֲלוּת מְתַעֵד אֶת הַזְּכֻיּוֹת בַּנֶּכֶס.", english: "A property deed records the rights in the property.",
+    hebrewTokenPairs: [["שטר בעלות", "שְׁטַר בַּעֲלוּת"], ["מתעד", "מְתַעֵד"], ["את הזכויות", "אֶת הַזְּכֻיּוֹת"], ["בנכס", "בַּנֶּכֶס"]], englishTokens: ["A property deed", "records", "the rights", "in the property"],
+    hebrewDistractorPairs: [["חוזה שכירות", "חוֹזֵה שְׂכִירוּת"], ["מפרט", "מְפָרֵט"], ["את התשלום", "אֶת הַתַּשְׁלוּם"], ["החודשי", "הַחוֹדְשִׁי"]], englishDistractors: ["A lease", "details", "the monthly", "payment"],
+    notes: "שטר בעלות is a property deed documenting rights connected to an asset."
+  }),
+  buildReviewedSentence({
+    id: "formal_124", emoji: "🏢", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תקנון חברה תומך בציות רגולטורי.", hebrewNiqqud: "תַּקָּנוֹן חֶבְרָה תּוֹמֵךְ בְּצִיּוּת רֶגּוּלָטוֹרִי.", english: "A corporate bylaw supports regulatory compliance.",
+    hebrewTokenPairs: [["תקנון חברה", "תַּקָּנוֹן חֶבְרָה"], ["תומך", "תּוֹמֵךְ"], ["בציות רגולטורי", "בְּצִיּוּת רֶגּוּלָטוֹרִי"]], englishTokens: ["A corporate bylaw", "supports", "regulatory compliance"],
+    hebrewDistractorPairs: [["נוהל פנימי", "נֹהַל פְּנִימִי"], ["מקל", "מֵקֵל"], ["על העבודה", "עַל הָעֲבוֹדָה"], ["השוטפת", "הַשּׁוֹטֶפֶת"]], englishDistractors: ["An internal rule", "simplifies", "routine", "work"],
+    notes: "תקנון חברה is a corporate bylaw; ציות רגולטורי is regulatory compliance."
+  }),
+  buildReviewedSentence({
+    id: "formal_125", emoji: "📝", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "סעיף אחריות מגדיר חובות בחוזה.", hebrewNiqqud: "סְעִיף אַחֲרָיוּת מַגְדִּיר חוֹבוֹת בַּחוֹזֶה.", english: "A liability clause defines obligations in the contract.",
+    hebrewTokenPairs: [["סעיף אחריות", "סְעִיף אַחֲרָיוּת"], ["מגדיר", "מַגְדִּיר"], ["חובות", "חוֹבוֹת"], ["בחוזה", "בַּחוֹזֶה"]], englishTokens: ["A liability clause", "defines", "obligations", "in the contract"],
+    hebrewDistractorPairs: [["נספח טכני", "נִסְפָּח טֶכְנִי"], ["מתאר", "מְתָאֵר"], ["שינויים", "שִׁנּוּיִים"], ["במוצר", "בַּמּוּצָר"]], englishDistractors: ["A technical appendix", "describes", "changes", "to the product"],
+    notes: "סעיף אחריות is a liability clause; חובות are the obligations it assigns."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -17613,6 +18643,13 @@ SENTENCE_BANK.push(
   ...CAST_VOCAB_SENTENCES,
   ...NEUTRAL_EVERYDAY_SENTENCES,
   ...URBAN_MOBILITY_SENTENCES,
+  ...KITCHEN_ACTION_SENTENCES,
+  ...HOME_CARE_SENTENCES,
+  ...INAT_FORMAL_SENTENCES,
+  ...RELATIONSHIP_SENTENCES,
+  ...IVRI_AI_SENTENCES,
+  ...SHARED_GRAMMAR_SENTENCES,
+  ...INAT_LEGAL_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -17638,6 +18675,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260811a",
+  __build: "20260811h",
 };
 })(typeof window !== "undefined" ? window : globalThis);

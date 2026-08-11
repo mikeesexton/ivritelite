@@ -7515,3 +7515,240 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - GitHub PR #69 verification — **pass**: ready for review, `MERGEABLE`, clean merge state, no pending checks, and expected head SHA `352d60a65b3362a9cfa2aef4d050a7a41604edb1` before merge; final state **MERGED** at `ebbbba7dad6f643e371dceef18cc486ff2129ef0`.
 
 **Risks / regressions to check:** This follow-up is documentation-only. The remote feature branch remains available unless repository branch-cleanup settings remove it.
+
+### 2026-08-11 12:34 EDT — Plan a shared kitchen-actions sentence tranche
+
+**Requested:** Inspect the game's current content and choose where the next content expansion is most needed, then provide an implementation plan without making the content addition.
+
+**Files changed:**
+- `task-log.md` — recorded the content audit and planning session.
+
+**Behavior changed:** None. The recommended addition was planned but not implemented.
+
+**Tests run:**
+- `npm run report:coverage` — **pass**: 2,192 vocabulary cards; 699 exact-supported, 0 reviewed, 1,493 unsupported. `cooking_verbs` is the lowest-coverage shelf at 3/72 (4.2%); `cooking_utensils` is 12/75 (16.0%).
+- `npm run report:characters` — **pass**: 2,192 vocabulary cards, 905 sentences, 282 abbreviations, and 259 conjugation entries; every character remains above the documented per-mode floors.
+- Repository/data inventory scripts — **pass**: confirmed 905 sentences (399 everyday), 81 idioms, 100 prepositions, 80 Binyan roots / 392 forms, and the current sentence id/test conventions.
+
+**Risks / regressions to check:** The coverage report deliberately recognizes exact/clitic-normalized surface forms, not ordinary inflection, so its 4.2% cooking-verb figure understates some contextual exposure but still identifies a real infinitive-context gap. The proposed tranche should not count ambiguous duplicate headwords such as `לחלוט` as supporting both “poach” and “blanch” without separate, sense-specific contexts. Exact aggregate coverage can gain incidental matches, so implementation should pin selected sentence-to-card anchors rather than relying only on a total.
+
+### 2026-08-11 13:03 EDT — Add a shared kitchen-actions sentence tranche
+
+**Requested:** Implement the planned content expansion at the game's clearest coverage gap: shared, practical kitchen-action sentences anchored to cooking verbs, utensils, and groceries.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `KITCHEN_ACTION_SENTENCES`, 24 append-only reviewed everyday rows (`everyday_218`–`everyday_241`) covering chopping through baking; kept compact bilingual chips, explicit fixed word-order decisions, pointed Hebrew, handwriting-safe lengths, practical tools and ingredients, and an 8/12/4 level 1/2/3 mix. Added the tranche to the production bank and bumped `__build` to `20260811b`.
+- `tests/sentence-bank-data.test.js` — registered the 24-row id range and genuine compact English units, ratcheted the bank/category totals, included the rows in alignment checks, and asserted tranche size, uniqueness, review path, fixed order, handwriting window, and difficulty mix.
+- `tests/content-coverage.test.js` — ratcheted production coverage, pinned each of the 24 intended cooking-verb cards to its authored sentence, and asserted 31 utensil/ingredient context anchors resolve inside the tranche.
+- `tests/character-mission.test.js` — asserted every new row remains unowned and drawable for all five companions.
+- `docs/character-gameplay-strategy.md` — recorded the expansion, its coverage and pool effects, the deliberately deferred ambiguous `לחלוט` senses, and completion of the next content priority.
+- `index.html` — advanced the sentence-bank cache key to `20260811b`.
+- `task-log.md` — recorded the preceding planning session and this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 905 to 929 rows and the everyday category from 399 to 423. Conservative exact vocabulary support rises from 699 to 757 cards; unsupported cards fall from 1,493 to 1,435. Cooking-verb support rises from 3/72 to 28/72, cooking utensils from 12/75 to 29/75, and groceries from 21/79 to 32/79. The new practical rows remain cast-wide: all five companion draw pools gain the same 24 sentences, reaching Ido 691, Inbal 770, Ivri 679, Inat 759, and Idan 746, with ownership and reservation counts unchanged.
+
+**Tests run:**
+- `npm test` — baseline **398 pass, 0 fail**; final **402 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **43 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js tests/character-mission.test.js` — final **114 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — final **1 pass, 0 fail** at the required rendered mobile viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 757, reviewed 0, unsupported 1,435; cooking verbs 28/72, utensils 29/75, and groceries 32/79.
+- `npm run report:characters` — **pass**: pool 2,192 vocabulary / 929 sentences / 282 abbreviations / 259 conjugation entries; 231 unrouted sentences and 266 reserved sentences; all five draw pools remain above their floors.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** The two ambiguous `לחלוט` cards (“poach” and “blanch”) remain deliberately unsupported until separate sense-specific contexts are authored. Aggregate coverage can include incidental clitic-normalized matches, so the explicit verb-to-row assertions are the stable guarantee. The compact-unit registry is exact and staleness-checked, so rewording registered English chips requires updating it. Every new row is marked fixed-order after review; later Hebrew wording changes require a fresh neutral-order review. Reserving or assigning any of these ids later will intentionally break the cast-wide routing assertion.
+
+### 2026-08-11 15:13 EDT — Add a shared home-care sentence tranche
+
+**Requested:** Choose and implement another content addition after the kitchen expansion. The selected gap was `home_everyday_life`, the largest weak practical shelf at 15/106 exact-supported cards.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `HOME_CARE_SENTENCES`, 24 append-only reviewed everyday rows (`everyday_242`–`everyday_265`) spanning furniture and storage, rooms and entry spaces, locks and windows, small-tool recognition, water damage and drains, cleaning, and laundry. Kept compact bilingual chips, fully pointed Hebrew, 6–34-letter Handwriting eligibility, an 8/12/4 level 1/2/3 mix, and three reviewed neutral locative reorderings. Added the tranche to the production bank and bumped `__build` to `20260811c`.
+- `tests/sentence-bank-data.test.js` — registered the new id range and genuine household terms, ratcheted the bank/category totals, included the rows in all alignment checks, pinned their three accepted reorderings, and asserted tranche size, review path, Handwriting window, and difficulty mix.
+- `tests/content-coverage.test.js` — ratcheted aggregate production coverage, pinned one intended home card to each of the 24 rows, and asserted the full 61-card household context cluster resolves inside the tranche.
+- `tests/character-mission.test.js` — asserted all 24 rows remain unowned and drawable for every companion.
+- `docs/character-gameplay-strategy.md` — recorded the home-care expansion, its content and safety boundaries, measured coverage and pool effects, and completion in the content ledger.
+- `index.html` — advanced the sentence-bank cache key to `20260811c`.
+- `task-log.md` — recorded this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 929 to 953 rows and the everyday category from 423 to 447. The new rows give exact context to 61 home cards and produce a net shelf gain of 59: `home_everyday_life` rises from 15/106 (14.2%) to 74/106 (69.8%). App-wide conservative exact support rises from 757 to 819 cards; unsupported cards fall from 1,435 to 1,373. All five companion sentence pools gain the same 24 shared rows, reaching Ido 715, Inbal 794, Ivri 703, Inat 783, and Idan 770, with ownership and reservation counts unchanged.
+
+**Tests run:**
+- `npm test` — baseline **402 pass, 0 fail**; final **406 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **44 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js tests/character-mission.test.js` — final **118 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — final **1 pass, 0 fail** at the required rendered mobile viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 819, reviewed 0, unsupported 1,373; `home_everyday_life` 74/106.
+- `npm run report:characters` — **pass**: pool 2,192 vocabulary / 953 sentences / 282 abbreviations / 259 conjugation entries; 255 unrouted sentences and 266 reserved sentences; all five draw pools remain above their floors.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** Sixty-one home cards resolve in the new range but the net shelf gain is 59 because two short components already had prior support; the app-wide gain is 62 because conservative clitic-normalized matching also finds three incidental cards outside the shelf. The explicit card-to-row assertions, not the aggregate delta, are the stable guarantee. The electrical rows teach recognition and checking language only and must not drift into live-panel repair instructions. The three accepted locative reorderings are audited regressions and should not be removed during rewording. Household glossary entries are exact and staleness-checked, and reserving or assigning any of these ids later will intentionally break the cast-wide routing assertion.
+
+### 2026-08-11 15:21 EDT — Plan a non-partisan Inat formal tranche
+
+**Requested:** Plan another content addition for review before implementation, with the topic and scope left to the assistant.
+
+**Files changed:**
+- `task-log.md` — recorded the content audit and proposed tranche; no game content or tests were changed.
+
+**Behavior changed:** None. The proposal is 20 shared `formal_88`–`formal_107` rows owned by Inat through her formal-register route but left unreserved and drawable by every companion. The planned subjects are literary interpretation, cultural memory and identity, ethics, consciousness, and logic, explicitly excluding partisan politics.
+
+**Tests run:**
+- `npm run report:coverage` — **pass**: 2,192 vocabulary cards; exact 819, reviewed 0, unsupported 1,373. Relevant baselines are `philosophy_intellectual_expanded` 1/14, `culture_identity_expanded` 3/18, `literature_arts_cultural_history` 17/35, and `abstract_philosophy` 4/20.
+- `npm run report:characters` — **pass**: 953 sentences; Inat owns 167 and can draw 783; all character pools remain above their floors.
+- In-memory coverage projection for the 20 provisional Hebrew anchor sentences — **pass**: projected exact support 819 → 859; the four target shelves project to 12/14, 10/18, 28/35, and 13/20 respectively.
+- Character-routing probe for a provisional `formal_88` row — **pass**: Inat is the sole owner, `getItemAudience` returns `null`, and the row remains cast-wide rather than fenced.
+- Sentence/data inventory and Hebrew-length audit — **pass**: `formal_87` is the current endpoint; the proposed 4/10/6 difficulty mix uses 20 provisional sentences of 20–31 Hebrew letters.
+
+**Risks / regressions to check:** The 40-card projection uses provisional wording and can change during niqqud, chip, natural-English, and word-order review; implementation should pin intended card-to-row anchors instead of promising only the aggregate. These rows must use the `formal_` bank, not the `inat_` prefix or reserve list, so their distinctive but non-sensitive content stays cast-wide. Political philosophy, party politics, military service, policing, and protest tactics are out of scope. The provisional full sentences are planning aids, not approved final authoring; implementation still requires the append-only reviewed builder and the complete sentence-bank checklist.
+
+### 2026-08-11 15:42 EDT — Add a non-partisan Inat formal tranche
+
+**Requested:** Proceed with the reviewed plan for another content addition: twenty shared, non-partisan formal-register sentences centered on literature, cultural memory and identity, ethics, consciousness, and logic.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `INAT_FORMAL_SENTENCES`, twenty append-only reviewed rows (`formal_88`–`formal_107`) with compact bilingual chips, pointed Hebrew, explicit fixed-order decisions, 20–31 Hebrew-letter Handwriting eligibility, and a 4/10/6 level 1/2/3 mix. Added the tranche to the production bank and advanced `__build` to `20260811d`.
+- `tests/sentence-bank-data.test.js` — registered the formal id range and genuine compact glossary units, ratcheted bank and category totals, included the rows in alignment checks, and asserted review path, non-partisan scope, fixed order, Handwriting window, and difficulty mix.
+- `tests/content-coverage.test.js` — ratcheted production coverage, pinned one intended vocabulary card to each authored row, and asserted exact counts for the four target shelves.
+- `tests/character-mission.test.js` — asserted all twenty rows are owned by Inat through the formal register but remain unreserved and drawable by every companion.
+- `docs/character-gameplay-strategy.md` — recorded the tranche's themes, authoring decisions, coverage gains, ownership, shared routing, and completed roadmap status.
+- `index.html` — advanced the sentence-bank cache key to `20260811d`.
+- `task-log.md` — recorded this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 953 to 973 rows and the formal category from 123 to 143. Conservative exact vocabulary support rises from 819 to 859 cards and unsupported cards fall from 1,373 to 1,333. Target shelf support becomes `philosophy_intellectual_expanded` 12/14, `culture_identity_expanded` 10/18, `literature_arts_cultural_history` 28/35, and `abstract_philosophy` 13/20. Inat's owned sentence count rises from 167 to 187, while every companion gains all twenty rows in its draw pool: Ido 735, Inbal 814, Ivri 723, Inat 803, and Idan 790. Reserved and unrouted sentence counts remain 266 and 255.
+
+**Tests run:**
+- `npm test` — baseline **406 pass, 0 fail**; final **410 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **45 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js tests/character-mission.test.js` — final **122 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — final **1 pass, 0 fail** at the required rendered mobile viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 859, reviewed 0, unsupported 1,333; target shelves 12/14, 10/18, 28/35, and 13/20.
+- `npm run report:characters` — **pass**: pool 2,192 vocabulary / 973 sentences / 282 abbreviations / 259 conjugation entries; 255 unrouted and 266 reserved sentences; all five draw pools remain above their floors.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** Conservative clitic matching finds incidental support beyond the twenty primary anchors, so the explicit card-to-row map and per-shelf counts are the stable guarantees. These rows intentionally use `formal_` ids and no reserve list; adding an `inat_` prefix or reservation would fence them from the rest of the cast. Every row is fixed-order after a neutral-order audit, so later Hebrew rewording requires another audit. Compact glossary units are exact and staleness-checked. The non-partisan term filter is a regression backstop, not a substitute for conceptual review if the content is revised.
+
+### 2026-08-11 15:47 EDT — Plan a shared dating and relationship tranche
+
+**Requested:** Choose and plan another content addition, but present the details and wait for approval before implementing it.
+
+**Files changed:**
+- `task-log.md` — recorded the content audit and proposed tranche; no game content or tests were changed.
+
+**Behavior changed:** None. The proposal is twenty `colloquial_176`–`colloquial_195` rows covering healthy dating and relationship language: chemistry, commitment, exclusivity, long-distance relationships, boundaries, emotional openness, ambiguous relationships, changing interest, breakups and reconciliation, shared values, co-parenting, and extended family. Colloquial-register routing would make Ido the owner while leaving every row unreserved and drawable by all five companions.
+
+**Tests run:**
+- `npm run report:coverage` — **pass**: 2,192 vocabulary cards; exact 859, reviewed 0, unsupported 1,333. `dating_relationships` is the lowest-covered shelf at 2/24 (8.3%), and `relationships_dating_expanded` is 2/15 (13.3%).
+- `npm run report:characters` — **pass**: 973 sentences; Ido owns 215 and can draw 735; all character pools remain above their documented floors.
+- In-memory coverage projection for twenty provisional Hebrew sentences — **pass**: both relationship shelves reach full exact support, 24/24 and 15/15. App-wide exact support projects from 859 to 897 because the 35 intended new relationship cards also produce three incidental matches.
+- Character-routing probe for a provisional `colloquial_176` row — **pass**: Ido is the sole owner, `getItemAudience` returns `null`, and the row remains cast-wide rather than fenced.
+- Hebrew-length audit of the revised provisional sentences — **pass**: all twenty fit the 6–34-letter Handwriting window; the provisional range is 20–31 Hebrew letters.
+
+**Risks / regressions to check:** The provisional wording is a coverage model, not final authoring; implementation still requires niqqud, compact chips, natural standalone English, distractors, and a complete neutral Hebrew word-order audit. Three incidental matches (`מערכת יחסים`, `להוביל`, and `להפוך`) explain the projected app-wide gain of 38 versus 35 intended relationship cards, so explicit card-to-row anchors should be the stable regression. The tranche should stay inclusive and non-prescriptive, avoid treating emotional difficulty as pathology or a categorical warning sign, and use gender-neutral or parallel forms where English does not specify gender. Using `colloquial_` ids without a reserve entry is essential to keep the content cast-wide.
+
+### 2026-08-11 16:13 EDT — Add a shared dating and relationship tranche
+
+**Requested:** Implement the approved twenty-row healthy dating and relationship expansion after presenting its scope and projected effects for review.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `RELATIONSHIP_SENTENCES`, twenty append-only reviewed colloquial rows (`colloquial_176`–`colloquial_195`) covering chemistry, commitment, exclusivity, long-distance relationships, boundaries, emotional openness, situationships, changing interest, breakups and reconciliation, shared values, co-parenting, and extended family. Added compact bilingual chips, pointed Hebrew, reviewed distractors, a 6/10/4 level 1/2/3 mix, four neutral word-order audits, and full masculine/feminine participant combinations for the gender-ambiguous “hung up on someone” row. Added the tranche to the production bank and advanced `__build` to `20260811e`.
+- `tests/sentence-bank-data.test.js` — registered the 20-row range and genuine relationship glossary units, ratcheted bank and category totals, added the rows to alignment checks, pinned four neutral reorderings, and asserted reviewed authoring, inclusive framing, Handwriting eligibility, and difficulty mix.
+- `tests/content-coverage.test.js` — ratcheted production coverage, pinned all 35 previously unsupported relationship cards to intended rows, and asserted both target shelves reach full exact support.
+- `tests/character-mission.test.js` — asserted all twenty rows are owned by Ido through the colloquial register while remaining unreserved and drawable by every companion.
+- `docs/character-gameplay-strategy.md` — recorded the tranche's content, inclusive authoring boundaries, word-order and gender review, coverage gain, ownership, shared routing, and completed content ledger entry.
+- `index.html` — advanced the sentence-bank cache key to `20260811e`.
+- `task-log.md` — recorded this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 973 to 993 rows and the colloquial category from 215 to 235. Both relationship shelves reach full exact sentence support: `dating_relationships` rises from 2/24 to 24/24 and `relationships_dating_expanded` from 2/15 to 15/15. App-wide conservative exact support rises from 859 to 897 cards and unsupported cards fall from 1,333 to 1,295. Ido's owned sentence count rises from 215 to 235, while every companion gains all twenty rows in its draw pool: Ido 755, Inbal 834, Ivri 743, Inat 823, and Idan 810. Reserved and unrouted sentence counts remain 266 and 255.
+
+**Tests run:**
+- `npm test` — baseline **410 pass, 0 fail**; final **414 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **46 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js tests/character-mission.test.js` — final **126 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — final **1 pass, 0 fail** at the required rendered mobile viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 897, reviewed 0, unsupported 1,295; both relationship shelves at 100% exact support.
+- `npm run report:characters` — **pass**: pool 2,192 vocabulary / 993 sentences / 282 abbreviations / 259 conjugation entries; 255 unrouted and 266 reserved sentences; all five draw pools remain above their floors.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** The stable content guarantee is the explicit 35-card map; three incidental conservative matches (`מערכת יחסים`, `להוביל`, and `להפוך`) account for the difference between 35 intended cards and the app-wide gain of 38. The rows intentionally use `colloquial_` ids without a reserve entry; reserving or renaming them would fence the content from other companions. The relationship glossary is exact and staleness-checked. Later wording changes require renewed chip, neutral-order, and gender-combination review, especially `colloquial_186`, whose eight accepted gender/order combinations depend on alternate tiles remaining available. Red/green-flag language should remain modal and non-diagnostic rather than becoming categorical advice.
+
+### 2026-08-11 16:53 EDT — Add Ivri AI and machine-learning contexts
+
+**Requested:** Implement the approved twenty-row Ivri AI and machine-learning expansion, `professional_153`–`professional_172`, with reviewed sentences, exact vocabulary coverage regressions, Ivri ownership, cast-wide availability, documentation, and full verification.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `IVRI_AI_SENTENCES`, twenty append-only `buildReviewedSentence` rows with complete niqqud, compact bilingual chips, shape-matched distractors, explanatory notes, a 4/10/6 level 1/2/3 mix, and 17–32 Hebrew-letter Handwriting eligibility. Eighteen rows are fixed-order; `professional_161` and `professional_166` include reviewed benchmark-fronting alternates. Added the tranche to the production bank and advanced `__build` to `20260811f`.
+- `tests/sentence-bank-data.test.js` — registered the new range, added genuine AI glossary units, ratcheted the bank and professional-category totals, included all rows in full alignment checks, pinned both reviewed alternates, and asserted category, order decisions, Handwriting window, and difficulty mix.
+- `tests/content-coverage.test.js` — ratcheted production coverage to 934 exact / 1,258 unsupported, pinned all 34 previously unsupported AI cards to intended rows, asserted both technology shelves at 100% exact support, and separately pinned the three projected incidental matches.
+- `tests/character-mission.test.js` — asserted every new row is owned only by Ivri through the professional register while remaining unreserved and drawable by all five companions.
+- `docs/character-gameplay-strategy.md` — recorded content scope, authoring decisions, coverage gains, ownership and routing totals, updated current sentence counts, and marked the expansion complete in the content ledger.
+- `index.html` — advanced the sentence-bank cache key to `20260811f`.
+- `task-log.md` — recorded this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 993 to 1,013 rows and the professional category from 168 to 188. `technology_ai` reaches 21/21 exact support and `technology_ai_expanded` reaches 18/18. App-wide conservative exact support rises from 897 to 934 cards and unsupported cards fall from 1,295 to 1,258. Ivri-owned sentences rise from 168 to 188. All twenty rows remain cast-wide, raising drawable sentence pools to Ido 775, Inbal 854, Ivri 763, Inat 843, and Idan 830; unrouted and reserved sentence counts remain 255 and 266.
+
+**Tests run:**
+- `npm test` — baseline **414 pass, 0 fail**; final **419 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — **47 pass, 0 fail**.
+- `node --test tests/content-coverage.test.js` — **18 pass, 0 fail**.
+- `node --test --test-name-pattern='AI tranche|relationship tranche' tests/character-mission.test.js` — **2 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js` — final focused run **65 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail** in rendered Chrome at the required compact viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 934, reviewed 0, unsupported 1,258; both technology shelves at 100% exact support.
+- `npm run report:characters` — **pass**: 1,013 sentences; Ivri owns 188; 255 unrouted and 266 reserved; drawable sentence pools 775 / 854 / 763 / 843 / 830.
+- `git diff --check` — **pass** before and after this log entry.
+
+**Risks / regressions to check:** The explicit 34-card map and two full-shelf assertions are the stable coverage guarantee; `מפת דרכים`, `הון`, and `מסלול` are the three newly supported incidental cards and are pinned separately. The rows intentionally use `professional_` ids without a reservation, so adding a reserve or changing their register would alter cast-wide routing. AI glossary units are exact and staleness-checked. Later Hebrew rewording requires a fresh neutral-order audit, especially for the two benchmark-placement rows. Technical loanword spelling follows the existing vocabulary deck and should remain aligned with those authoritative card forms.
+
+### 2026-08-11 17:16 EDT — Add shared Hebrew grammar and meta-language contexts
+
+**Requested:** Implement the approved fourteen-row shared grammar and meta-language expansion, `everyday_266`–`everyday_279`, covering every unsupported card in `meta_language` and `advanced_grammar_meta_expanded` while remaining unowned and available to every companion.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `SHARED_GRAMMAR_SENTENCES`, fourteen append-only reviewed rows with complete niqqud, compact bilingual chips, shape-matched distractors, teaching notes, a 4/7/3 level 1/2/3 mix, and 17–34 Hebrew-letter Handwriting eligibility. Eight rows are fixed-order and six carry reviewed coordination or context-placement alternates. Extended the internal reviewed-order builder with alternate-specific pointed tokens so reordered standalone ו־ chips retain correct וְ/וּ pronunciation without changing their plain token permutation. Added the tranche to the production bank and advanced `__build` to `20260811g`.
+- `tests/sentence-bank-data.test.js` — registered the new range and grammar glossary units, documented two unavoidable target-count mismatches involving standalone את, ratcheted bank and everyday-category totals, added all rows to alignment checks, pinned all six alternates and the two conjunction-pointing overrides, and asserted review decisions, Handwriting window, and difficulty mix.
+- `tests/content-coverage.test.js` — ratcheted aggregate production coverage, pinned all 24 previously unsupported grammar cards to intended rows, asserted both target shelves reach 100% exact support, and separately pinned the incidental `השפעה` match.
+- `tests/character-mission.test.js` — asserted all fourteen rows remain unowned, unreserved, and drawable by all five companions.
+- `docs/character-gameplay-strategy.md` — recorded the tranche’s language-learning scope, authoring decisions, coverage gains, shared routing totals, and completed content-ledger entry.
+- `index.html` — advanced the sentence-bank cache key to `20260811g`.
+- `task-log.md` — recorded this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 1,013 to 1,027 rows and the everyday category from 447 to 461. Both grammar shelves reach full exact support: `meta_language` rises from 8/19 to 19/19 and `advanced_grammar_meta_expanded` from 3/16 to 16/16. App-wide conservative exact support rises from 934 to 959 cards and unsupported cards fall from 1,258 to 1,233; `השפעה` is the one incidental match. Character-owned counts and 266 reserved sentences do not change. Unrouted sentences rise from 255 to 269, and every companion gains all fourteen rows in its draw pool: Ido 789, Inbal 868, Ivri 777, Inat 857, and Idan 844.
+
+**Tests run:**
+- `npm test` — baseline **419 pass, 0 fail**; final **424 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **48 pass, 0 fail**.
+- `node --test tests/content-coverage.test.js` — final **21 pass, 0 fail**.
+- `node --test --test-name-pattern='grammar tranche|AI tranche' tests/character-mission.test.js` — **2 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail** in rendered Chrome at the required compact viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 959, reviewed 0, unsupported 1,233; both grammar shelves at 100% exact support.
+- `npm run report:characters` — **pass**: 1,027 sentences; 269 unrouted and 266 reserved; owned counts unchanged; drawable sentence pools 789 / 868 / 777 / 857 / 844.
+- `git diff --check` — **pass** before and after this log entry.
+
+**Risks / regressions to check:** The explicit 24-card map and both full-shelf assertions are the stable coverage guarantee; `השפעה` is pinned separately as the sole incidental gain. These rows intentionally use unreserved `everyday_` ids, so assigning or reserving them later would change their shared routing. Grammar glossary units are exact and staleness-checked. Rewording any of the six flexible rows requires another neutral-order audit. In particular, the coordinated `everyday_271` and `everyday_273` alternates depend on alternate-specific וְ/וּ pointing; the regression assertions prevent a future builder change from silently preserving the letters while restoring the wrong pronunciation.
+
+### 2026-08-11 17:34 EDT — Complete legal coverage and publish the cumulative expansion
+
+**Requested:** Choose and implement one more content expansion, then commit the cumulative sentence-bank work, push it to GitHub, and merge it into `main`.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `INAT_LEGAL_SENTENCES`, eighteen reviewed `formal_108`–`formal_125` rows with complete niqqud, compact bilingual chips, shape-matched distractors, teaching notes, a 4/9/5 level 1/2/3 mix, and 20–29 Hebrew-letter Handwriting eligibility. Sixteen orders are fixed; `formal_120` accepts the reviewed case-context-final alternate and `formal_121` accepts its cross-examination context first or last. Added the tranche to production and advanced `__build` to `20260811h`.
+- `tests/sentence-bank-data.test.js` — registered the legal range, its exact legal glossary units, and the single definite-object-marker count exception; ratcheted bank and formal totals; added the tranche to full alignment checks; and asserted review decisions, difficulty mix, and Handwriting range.
+- `tests/content-coverage.test.js` — ratcheted aggregate exact coverage to 994/1,198, mapped all 29 previously unsupported legal cards to their intended rows, asserted both target shelves reach 100%, and pinned the six incidental matches separately.
+- `tests/character-mission.test.js` — asserted all eighteen formal rows are owned only by Inat while remaining unreserved and drawable by all five companions.
+- `docs/character-gameplay-strategy.md` — recorded the legal tranche, its authoring decisions, full-shelf coverage, routing totals, and completed content-ledger item.
+- `index.html` — advanced the sentence-bank cache key to `20260811h`.
+- `task-log.md` — recorded this implementation, verification, and publication session.
+
+**Behavior changed:** The sentence bank grows from 1,027 to 1,045 rows and the formal category from 143 to 161. `legal_civic` reaches 18/18 exact support and `law_legal_systems_expanded` reaches 16/16. App-wide conservative exact support rises from 959 to 994 cards and unsupported cards fall from 1,233 to 1,198; six gains are incidental. Inat-owned sentences rise from 187 to 205. All eighteen rows remain cast-wide, raising drawable sentence pools to Ido 807, Inbal 886, Ivri 795, Inat 875, and Idan 862; unrouted and reserved sentence counts remain 269 and 266.
+
+**Tests run:**
+- `npm test` — baseline from the immediately preceding expansion **424 pass, 0 fail**; final **429 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js` — **pass**.
+- `node --test --test-name-pattern='legal tranche' tests/character-mission.test.js` — **pass**.
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail** in rendered Chrome at the required compact viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 994, reviewed 0, unsupported 1,198; both legal shelves at 100% exact support.
+- `npm run report:characters` — **pass**: 1,045 sentences; Inat owns 205; 269 unrouted and 266 reserved; drawable sentence pools 807 / 886 / 795 / 875 / 862.
+- `git diff --check` — **pass** before this log entry; rerun after the entry before publication.
+
+**Risks / regressions to check:** The explicit 29-card map and two full-shelf assertions are the stable legal-coverage guarantee; the six incidental matches are pinned separately. The rows teach vocabulary and general relationships, not jurisdiction-specific legal advice. They intentionally use Inat's `formal` register without a reservation, so changing category or audience would alter ownership or cast-wide routing. Legal glossary units are exact and staleness-checked. Rewording `formal_120` or `formal_121` requires another context-placement audit.

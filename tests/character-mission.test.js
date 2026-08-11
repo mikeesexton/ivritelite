@@ -603,6 +603,202 @@ test("the neutral everyday tranche stays unowned and drawable for every companio
   });
 });
 
+test("the kitchen-action tranche stays unowned and drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 218; index <= 241; index += 1) {
+    const row = byId.get(`everyday_${index}`);
+    assert.ok(row, `missing everyday_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        false,
+        `${row.id} must not change ${entry.id}'s owned count`,
+      );
+    });
+  }
+});
+
+test("the home-care tranche stays unowned and drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 242; index <= 265; index += 1) {
+    const row = byId.get(`everyday_${index}`);
+    assert.ok(row, `missing everyday_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        false,
+        `${row.id} must not change ${entry.id}'s owned count`,
+      );
+    });
+  }
+});
+
+test("the non-partisan formal tranche is Inat-owned but drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 88; index <= 107; index += 1) {
+    const row = byId.get(`formal_${index}`);
+    assert.ok(row, `missing formal_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        entry.id === "inat",
+        `${row.id} ownership must belong to Inat alone`,
+      );
+    });
+  }
+});
+
+test("the relationship tranche is Ido-owned but drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 176; index <= 195; index += 1) {
+    const row = byId.get(`colloquial_${index}`);
+    assert.ok(row, `missing colloquial_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        entry.id === "ido",
+        `${row.id} ownership must belong to Ido alone`,
+      );
+    });
+  }
+});
+
+test("the AI tranche is Ivri-owned but drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 153; index <= 172; index += 1) {
+    const row = byId.get(`professional_${index}`);
+    assert.ok(row, `missing professional_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        entry.id === "ivri",
+        `${row.id} ownership must belong to Ivri alone`,
+      );
+    });
+  }
+});
+
+test("the grammar tranche stays unowned and drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 266; index <= 279; index += 1) {
+    const row = byId.get(`everyday_${index}`);
+    assert.ok(row, `missing everyday_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        false,
+        `${row.id} must remain unowned`,
+      );
+    });
+  }
+});
+
+test("the legal tranche is Inat-owned but drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 108; index <= 125; index += 1) {
+    const row = byId.get(`formal_${index}`);
+    assert.ok(row, `missing formal_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        entry.id === "inat",
+        `${row.id} ownership must belong to Inat alone`,
+      );
+    });
+  }
+});
+
 test("urban and practical additions preserve shared routing while character backfill stays reserved", () => {
   const { characterData } = loadCharacterModule();
   const bankContext = { console };

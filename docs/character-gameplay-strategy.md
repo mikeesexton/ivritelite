@@ -261,15 +261,15 @@ draws from, exactly as `npm run report:characters` prints it.
 | pool | floor | Ido | Inbal | Ivri | Inat | Idan |
 |---|---|---|---|---|---|---|
 | vocabulary | **250** | 472 | 335 | 491 | 372 | 259 |
-| sentences | **90** | 202 | 96 | 138 | 162 | 115 |
+| sentences | **90** | 235 | 107 | 188 | 187 | 126 |
 | abbreviations | **30** | 68 | 87 | 113 | 85 | 34 |
 | verbs | **20** | 34 | 26 | 23 | 24 | 30 |
 
 All five characters now clear all four floors.
 
-Read the sentence row against the fence, not only against the floor. Ivri owns 138 and can
-draw 127, because Inat reserves eleven `professional_` rows that are still his by register.
-Idan owns 115 and can draw all of them; 43 of those are also cast-wide, so the other four
+Read the sentence row against the fence, not only against the floor. Ivri owns 188 and can
+draw 177 of those owned rows, because Inat reserves eleven `professional_` rows that are still
+his by register. Idan owns 126 and can draw all of them; 49 of those are also cast-wide, so the other four
 reach them too. The second table in `npm run report:characters` is the authority on what a
 character may actually be served.
 
@@ -338,7 +338,9 @@ voiced without content routing. Revisit only if a non-colloquial idiom tranche i
 The existing colloquial tranche includes the newer LGBTQ+ and camp slang material and its related sentences. Preserve it as the current Ido content baseline.
 
 - Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories, plus the practical-life shelves added later — `home_everyday_life`, `groceries_food`, and `everyday_survival_expanded` — for 402 cards. This document always assigned him practical Tel Aviv life, but the route table did not carry it until then. `cooking_utensils` and `cooking_verbs` stay shared: they are technique rather than street life.
-- Sentences: the `colloquial` category plus the `whatsapp` style. The `everyday` register is deliberately **not** his. Adding its 148 unrouted rows would put him at 56% of the whole sentence bank and blur the colloquial identity that distinguishes him.
+- Sentences: the `colloquial` category plus the `whatsapp` style — 235 owned in total after
+  the shared relationship expansion. The `everyday` register is deliberately **not** his.
+  Adding it would blur the colloquial identity that distinguishes him.
 - Conjugation verbs: 30 route entries. The domestic tranche — `לבשל`, `לנקות`, `להדליק`,
   `לכבות`, `לסדר`, `להתקלח`, `לגור`, `לטייל`, `לשבת`, `לקום` — arrived with the
   practical-life vocabulary: the verbs an apartment runs on. `לישון` was left unowned
@@ -386,7 +388,7 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   `scientific_analytical`, and `science_research_expanded` — 341 cards. Bureaucracy is
   named in his blurb above and was simply never routed; the two science shelves follow
   the abbreviation split, which already gives him the `Ideas, Science & Tech` bucket.
-- Sentences: the `professional` register — 138 rows, of which he can draw 127. `professional_98`–`122`
+- Sentences: the `professional` register — 188 rows, of which he can draw 177. `professional_98`–`122`
   were authored against the clusters his bank had at or near zero, after an audit found 47 of
   his 97 rows were internal meeting-and-email choreography: contracts as objects (5 rows —
   **zero** rows had contained `חוזה`, `הסכם` or `סעיף`), regulation and compliance (4),
@@ -396,6 +398,8 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   had contained `פרוטוקול`). The tranche is deliberately short, 16–25 Hebrew letters against
   a bank median of 34, and deliberately weighted 8/10/7 by difficulty because he had two
   level-1 rows in 97. Handwriting eligibility went 53/97 to 78/122.
+  `professional_123`–`152` later extended his technology register, and
+  `professional_153`–`172` complete the AI and machine-learning shelves described below.
 - The defence rows stay procurement and engineering framing — a technical spec, an approved
   supplier, an export licence, a milestone. They must never reach for the fenced military
   vocabulary: that boundary is the whole point of the Ivri/Inat/Idan split. The compliance
@@ -432,8 +436,8 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   `ספורים` reached individually through `vocabWords` — 302 cards in total. Both of those sit on someone else's shelf
   (`work_business` and the unrouted `core_advanced`) and were deliberately not
   re-shelved.
-- Sentences: 25 entries, `inat_01` through `inat_25`, plus the `formal` register, plus the
-  46-row political tranche named in `route.sentenceReserveIds` — 162 owned in total. That
+- Sentences: 30 entries, `inat_01` through `inat_30`, plus the `formal` register, plus the
+  46-row political tranche named in `route.sentenceReserveIds` — 187 owned in total. That
   tranche (`SENTENCE_EXPANSION_POLITICS` and its neighbours) was authored into the
   `colloquial`, `everyday`, `professional` and `formal` banks before the withholding layer
   existed, which put occupation terminology, settler violence, an assassination row and a
@@ -450,7 +454,9 @@ The existing colloquial tranche includes the newer LGBTQ+ and camp slang materia
   LGBTQ+ community life, cost-of-living gripes, civic literacy, and a municipal housing plan —
   everyday register, and the housing plan is good Ivri bureaucracy material.
 - Her literature, law and philosophy shelves are **not** reserved: they are distinctive
-  rather than sensitive. Only `politics_society_expanded` is.
+  rather than sensitive. Only `politics_society_expanded` is. The same policy keeps the
+  non-partisan `formal_88`–`107` tranche cast-wide even though its formal register makes
+  Inat its owner.
 - Conjugation verbs: 22 route entries. `לפרש` and `למחות`, with stored present, past,
   and future forms, plus `לדון`, `להוכיח`, `להשפיע`, `לשחרר`, `לספר`, `ללמד`, and a
   reading-and-memory tranche — `לכתוב`, `לקרוא`, `לזכור`, `לשכוח`, `להשתתף`, `לשנות`,
@@ -485,6 +491,161 @@ because a vocabulary card can only ever show one form: `תחרותי` (professio
 against `תחרותיות` (formal_78), and `ספורים` (everyday_139) against `ספורות`
 (formal_79).
 
+### Shared kitchen-action expansion
+
+`everyday_218`–`241` address the largest measured context gap rather than adding
+another topic shelf. Before the tranche, `cooking_verbs` had exact sentence support
+for 3 of 72 cards (4.2%) and `cooking_utensils` for 12 of 75 (16.0%). The twenty-four
+rows cover high-utility preparation, mixing, baking, measuring, seasoning, and heat
+methods and pair them with existing tools and ingredients. All are unowned,
+unreserved, and 6–34 Hebrew letters long, so they remain shared across the cast and
+eligible for Handwriting.
+
+Afterward, conservative exact support is 28/72 cooking verbs (38.9%), 29/75 utensils
+(38.7%), and 32/79 groceries (40.5%); the extra verb beyond the twenty-four planned
+anchors is the existing `לגרד קליפה` zest card supported by the grating row. The
+ambiguous `לחלוט` cards for poaching and blanching remain deliberately untouched until
+each sense can receive its own reviewed context. The sentence pool is 929, with 231
+unrouted rows. Drawable sentence pools are Ido 691, Inbal 770, Ivri 679, Inat 759, and
+Idan 746; character-owned and reserved counts do not change.
+
+### Shared home-care expansion
+
+`everyday_242`–`265` follow the same coverage-led policy for the largest remaining
+practical gap. Before the tranche, `home_everyday_life` had exact sentence support
+for 15 of 106 cards (14.2%). The twenty-four rows cover furniture and storage,
+rooms and entry spaces, locks and window hardware, basic tool recognition, water
+damage, drains, cleaning, and laundry. Electrical rows teach recognition and
+checking vocabulary without presenting repair instructions; their notes direct
+live-panel work to a qualified technician.
+
+All rows are unowned and unreserved, use the reviewed append-only builder, and
+stay within the 6–34 Hebrew-letter Handwriting window. Three locative sentences
+include their neutral Hebrew reorderings. The tranche directly contextualizes 61
+home cards and produces a net shelf gain of 59: exact support rises to 74/106
+(69.8%). App-wide conservative exact support rises from 757 to 819 cards, while
+unsupported cards fall from 1,435 to 1,373. The sentence pool is 953, with 255
+unrouted rows. Drawable sentence pools are Ido 715, Inbal 794, Ivri 703, Inat 783,
+and Idan 770; character-owned and reserved counts remain unchanged.
+
+### Non-partisan Inat formal expansion
+
+`formal_88`–`107` add twenty academic-register rows without extending Inat's
+political fence. They cover literary interpretation, metaphor and allusion,
+cultural memory and diaspora identity, ethics and conscience, consciousness,
+deductive logic, normative claims, and existential questions. All use the
+reviewed append-only builder, stay within the 6–34 Hebrew-letter Handwriting
+window, and use a 4/10/6 level 1/2/3 mix. Their neutral Hebrew orders were
+reviewed as fixed; plausible permutations would change focus rather than supply
+equivalent neutral orders.
+
+The tranche raises conservative exact support from 819 to 859 cards and lowers
+unsupported cards from 1,373 to 1,333. The four target shelves move from 1/14 to
+12/14 (`philosophy_intellectual_expanded`), 3/18 to 10/18
+(`culture_identity_expanded`), 17/35 to 28/35
+(`literature_arts_cultural_history`), and 4/20 to 13/20
+(`abstract_philosophy`). The sentence pool is 973, with 255 unrouted and 266
+reserved rows. Inat's owned count rises from 167 to 187, while leaving the rows
+unreserved lifts every drawable pool by twenty: Ido 735, Inbal 814, Ivri 723,
+Inat 803, and Idan 790.
+
+### Shared dating and relationship expansion
+
+`colloquial_176`–`195` address the two weakest remaining vocabulary shelves:
+`dating_relationships` began at 2/24 exact-supported cards (8.3%), and
+`relationships_dating_expanded` at 2/15 (13.3%). The twenty rows cover chemistry,
+commitment and exclusivity, long-distance relationships, boundaries and emotional
+openness, situationships, changing interest, breakups and reconciliation, shared
+values, co-parenting, and extended family. The language stays inclusive and
+non-prescriptive: no partner gender is assumed, emotional difficulty is not treated
+as pathology, and red-flag language is framed as a possibility rather than an
+automatic diagnosis.
+
+All rows use the reviewed append-only builder, fit the 6–34 Hebrew-letter
+Handwriting window, and use a 6/10/4 level 1/2/3 mix. Four rows include neutral
+Hebrew reorderings for fronted conditions, relationship context, post-breakup time,
+and reconciliation time. The post-breakup row also accepts the full masculine/feminine
+experiencer-and-partner combinations in both time positions. Exact support reaches
+24/24 and 15/15 on the two target
+shelves. App-wide support rises from 859 to 897 cards; the 35 intended relationship
+cards also yield three conservative incidental matches. The sentence pool is 993,
+with 255 unrouted and 266 reserved rows. Ido's colloquial-register ownership rises
+from 215 to 235, while leaving the rows unreserved raises every drawable pool by
+twenty: Ido 755, Inbal 834, Ivri 743, Inat 823, and Idan 810.
+
+### Ivri AI and machine-learning expansion
+
+`professional_153`–`172` add twenty professional-register rows for the unsupported
+cards in `technology_ai` and `technology_ai_expanded`. They teach AI terminology through
+compact relationships between concepts: algorithms and training data, neural networks and
+layers, inference and reasoning, deployment and scalability, open-source licensing,
+autonomous systems and agents, model collapse, prompts and context windows, benchmark-based
+fine-tuning, guardrails and open weights, learning paradigms, hallucination, vector storage,
+cybersecurity, robotics, product roadmaps, software releases, venture capital, and runway.
+
+All rows use the reviewed append-only builder, fit the 6–34 Hebrew-letter Handwriting
+window at 17–32 letters, and use a 4/10/6 level 1/2/3 mix. Eighteen orders are fixed;
+`professional_161` and `professional_166` also accept the reviewed benchmark-fronting
+orders. Exact support reaches 21/21 and 18/18 on the two target shelves. App-wide support
+rises from 897 to 934 cards, while unsupported cards fall from 1,295 to 1,258. The 34
+intended AI cards produce three new conservative incidental matches: `מפת דרכים`, `הון`,
+and `מסלול`.
+
+The sentence pool is 1,013, with 255 unrouted and 266 reserved rows. Ivri's
+professional-register ownership rises from 168 to 188. Because the rows remain unreserved,
+every companion can draw them: total drawable pools rise to Ido 775, Inbal 854, Ivri 763,
+Inat 843, and Idan 830.
+
+### Shared Hebrew grammar and meta-language expansion
+
+`everyday_266`–`279` complete the two language-learning shelves without assigning
+them to a character. The fourteen rows cover literal and figurative meaning,
+participles, infinitives and imperatives, grammatical gender and singular forms,
+construct state and possessive suffixes, the direct-object marker, linguistic
+terminology, word formation, verbal and nominal patterns, weak roots, register,
+syntax, pragmatics, and Aramaic influence.
+
+All rows use the reviewed append-only builder, fit the 6–34 Hebrew-letter
+Handwriting window at 17–34 letters, and use a 4/7/3 level 1/2/3 mix. Eight rows
+have fixed order. Six accept reviewed coordination or context-placement variants;
+the coordination variants also preserve the correct וְ/וּ pointing after terms
+are reordered.
+
+Exact support reaches 19/19 for `meta_language` and 16/16 for
+`advanced_grammar_meta_expanded`. App-wide support rises from 934 to 959 cards,
+while unsupported cards fall from 1,258 to 1,233. The 24 intended grammar cards
+also produce one conservative incidental match, `השפעה`, through the Aramaic-
+influence row.
+
+The sentence pool is 1,027, with 269 unrouted and 266 reserved rows. The tranche
+is unowned and unreserved, so character-owned counts do not change and every
+drawable pool rises by fourteen: Ido 789, Inbal 868, Ivri 777, Inat 857, and
+Idan 844.
+
+### Inat legal and civic expansion
+
+`formal_108`–`125` complete the two legal-study shelves through concise examples
+of constitutional law, jurisdiction and due process, liability and negligence,
+precedent, subpoenas and injunctions, legislation, civil claims and damages,
+criminal outcomes, prosecution, plea bargains, evidence, immigration status,
+property deeds, corporate bylaws, compliance, and contract liability. The rows
+teach terminology and relationships rather than case-specific legal advice.
+
+All eighteen rows use the reviewed append-only builder, fit the Handwriting
+window at 20–29 Hebrew letters, and use a 4/9/5 level 1/2/3 mix. Sixteen orders
+are fixed; `formal_120` accepts the case context in final position and
+`formal_121` accepts its cross-examination context first or last. Exact
+support reaches 18/18 for `legal_civic` and 16/16 for
+`law_legal_systems_expanded`. App-wide exact support rises from 959 to 994 cards,
+while unsupported cards fall from 1,233 to 1,198. The 29 intended legal cards
+also produce six conservative incidental matches: evidence, prevention,
+compliance, summons, immigration, and interrogation.
+
+The sentence pool is 1,045, with 269 unrouted and 266 reserved rows. Inat's
+formal-register ownership rises from 187 to 205. The rows remain unreserved and
+drawable by every companion, lifting drawable pools to Ido 807, Inbal 886, Ivri
+795, Inat 875, and Idan 862.
+
 Binyanim, Prepositions, and Conjugation+ stay character-neutral by decision — see the Depth standard section above for the evidence.
 
 ## Visual production
@@ -511,8 +672,8 @@ All five characters are built and integrated, so this section is now a record ra
 ## Next decisions
 
 0. **Authoring priority after the fence.** Withholding shrank the shared tier for everyone, so
-   the content work below was driven by that rather than by the ownership report. Items 1 and 2
-   are **done**; 3 and 4 are open.
+   the content work below was driven by that rather than by the ownership report. Items 1–4
+   are **done**.
    1. ~~A shareable civil-defense tranche for Idan.~~ **Done** — `idan_91`–`115`. Twenty are
       cast-wide, taking the allow-list from 21 to 43 and giving the shelf real sentence support;
       five stay his. His bank went 90 → 115.
@@ -523,10 +684,29 @@ All five characters are built and integrated, so this section is now a record ra
       language-learning contexts. They are unowned and unreserved, taking the unrouted sentence
       tier from 139 to 179 and lifting every drawable pool equally: Ido 631, Inbal 704, Ivri 619,
       Inat 699 and Idan 680. Character-owned counts and the 254 fenced sentences are unchanged.
-   4. **A non-partisan tranche for Inat, ~20 rows.** She reads healthiest on count but is the
-      most fenced on identity — 46 reserved rows. Literature, cultural memory, archives, close
-      reading. Still open.
+   4. ~~**A non-partisan tranche for Inat, ~20 rows.**~~ **Done** — `formal_88`–`107`.
+      The twenty rows cover literature, cultural memory and identity, ethics, consciousness,
+      and logic. Formal-register ownership raises Inat from 167 to 187 owned sentences, while
+      leaving the rows unreserved makes all twenty drawable by every companion.
    5. Inbal needs nothing: 96 rows across two well-covered shelves.
+   6. ~~**Shared kitchen-action context, ~24 rows.**~~ **Done** — `everyday_218`–`241`.
+      The tranche raises cooking-verb support from 4.2% to 38.9% while remaining unowned,
+      unreserved, and available to every companion.
+   7. ~~**Shared home-care context, ~24 rows.**~~ **Done** — `everyday_242`–`265`.
+      The tranche raises `home_everyday_life` support from 15/106 to 74/106 while remaining
+      unowned, unreserved, and available to every companion.
+   8. ~~**Shared dating and relationship context, ~20 rows.**~~ **Done** —
+      `colloquial_176`–`195`. Both relationship shelves reach full exact support. Ido owns
+      the colloquial register, but every row remains unreserved and available to the cast.
+   9. ~~**Ivri AI and machine-learning context, ~20 rows.**~~ **Done** —
+      `professional_153`–`172`. Both technology shelves reach full exact support. Ivri owns
+      the professional register, but every row remains unreserved and available to the cast.
+   10. ~~**Shared Hebrew grammar and meta-language context, ~14 rows.**~~ **Done** —
+      `everyday_266`–`279`. Both language-learning shelves reach full exact support. The
+      rows remain unowned, unreserved, and available to every companion.
+   11. ~~**Inat legal and civic context, ~18 rows.**~~ **Done** — `formal_108`–`125`.
+      Both legal shelves reach full exact support. Inat owns the formal register,
+      but all eighteen rows remain unreserved and available to every companion.
 1. Consider a verb pass. Verbs are the thinnest pool app-wide — 48.2% of the 247-item conjugation
    deck is unrouted and no character exceeds 34. Every character clears the floor of 20, so this
    is not urgent, but it is the largest structural deficit left.
