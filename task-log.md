@@ -7499,3 +7499,19 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - `git diff --check` — **pass** before this log entry.
 
 **Risks / regressions to check:** Several deliberately rare Binyan forms (especially הָאֳכַל, נִכֵּר / נֻכַּר, עוֹרַר, and מֻסַּס) are pedagogically present but excluded from sibling distractor selection; future gloss edits must preserve the duplicate-unpointed-form disambiguation and option-uniqueness tests. Compact-chip glossary/grammar entries are exact and staleness-checked, so sentence rewording must update them. Aggregate coverage includes incidental matches beyond the 48 explicitly anchored cards, while the anchor regression is the stable guarantee. No routing runtime data changed; reserving the urban/practical ids later would intentionally break the shared-routing assertion.
+
+### 2026-08-11 11:08 EDT — Publish and merge the urban mobility expansion
+
+**Requested:** Push the completed Urban Mobility and Coverage Expansion to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded publication of the already-tested vocabulary, sentence-bank, Binyan, localization, cache-key, coverage, and routing changes through PR #69.
+
+**Behavior changed:** None beyond the content expansion recorded in the preceding entry. PR #69 merged feature commit `352d60a` through merge commit `ebbbba7` into `main`.
+
+**Tests run:**
+- `npm test` — **398 pass, 0 fail** immediately before publication, as recorded in the preceding entry.
+- `git diff --cached --check` — **pass** before the implementation commit.
+- GitHub PR #69 verification — **pass**: ready for review, `MERGEABLE`, clean merge state, no pending checks, and expected head SHA `352d60a65b3362a9cfa2aef4d050a7a41604edb1` before merge; final state **MERGED** at `ebbbba7dad6f643e371dceef18cc486ff2129ef0`.
+
+**Risks / regressions to check:** This follow-up is documentation-only. The remote feature branch remains available unless repository branch-cleanup settings remove it.
