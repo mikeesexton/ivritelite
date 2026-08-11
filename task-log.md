@@ -7451,3 +7451,19 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - `git diff --check` — **pass** after the final task-log entry.
 
 **Risks / regressions to check:** The tranche deliberately adds one exact bilingual target-count exception for `everyday_165`, because Hebrew expresses “exercise” with `עושה פעילות גופנית`; it is keyed to that row and guarded against staleness. The vocabulary report gains seven incidental exact matches beyond the forty planned anchors, so future wording changes can alter the aggregate 647 count even when the anchor regression remains green. No route or reserve-list data changed; adding these ids to a future reserve list would violate the cast-wide routing regression.
+
+### 2026-08-10 22:51 EDT — Publish and merge the neutral everyday tranche
+
+**Requested:** Push the approved forty-row neutral `everyday_` sentence-bank tranche to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded the publication and merge of the already-tested sentence-bank, coverage, routing, cache-key, and strategy changes through PR #68.
+
+**Behavior changed:** None beyond the forty-row shared sentence-pool expansion recorded in the preceding entry. The implementation is published through PR #68 and merged into `main`.
+
+**Tests run:**
+- `npm test` — **394 pass, 0 fail** on the staged feature change immediately before publication.
+- `git diff --cached --check` — **pass** before the implementation commit.
+- GitHub PR #68 merge-state and head-SHA verification — **pass** before merge.
+
+**Risks / regressions to check:** This follow-up only records publication. The remote feature branch may remain after merge unless repository branch-cleanup settings remove it.
