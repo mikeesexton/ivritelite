@@ -4,7 +4,7 @@
 // AUTHORED, VERIFIED DATA. The app only shuffles and displays these forms — it
 // must never generate, infer, or conjugate verb forms. Ported verbatim from
 // verbs_seed.json (see verb_game_schema.json for the data contract).
-const VERSION = "1.1";
+const VERSION = "1.2";
 
 const DISTRACTOR_STRATEGY = "Build 3 distractors per question from the OTHER existing binyan forms of the SAME root (related-but-wrong is the most instructive). Only when a root has fewer than 4 existing forms, top up from a cross-root gloss pool. In 'identify the function' mode, distractors are sibling forms of the same root whose function differs from the answer.";
 
@@ -1400,6 +1400,112 @@ const ROOTS = [
       hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִלְחִים", form_plain: "הלחים", translit: "hilchim", gloss: "welded together", function: "causative", voice: "active", valence: "transitive" },
       hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻלְחַם", form_plain: "הולחם", translit: "hulcham", gloss: "was welded together", function: "passive", voice: "passive", valence: "intransitive" },
       hitpael: { exists: false },
+    },
+  },
+  {
+    id: "a-k-l", root: "א־כ־ל", root_letters: ["א", "כ", "ל"], gizra: "pe_guttural", gizra_label: "פ\"א", difficulty: "easy",
+    difficulty_reason: "A familiar meaning exposes the vowel shifts caused by an initial alef in nif'al and the causative branch.",
+    core_meaning: "eating and feeding", emoji: "🍽️",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "אָכַל", form_plain: "אכל", translit: "akhal", gloss: "ate", function: "simple", voice: "active", valence: "transitive", register: "common" },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נֶאֱכַל", form_plain: "נאכל", translit: "ne'ekhal", gloss: "was eaten", function: "passive", voice: "passive", valence: "intransitive", register: "common", teaching_point: "פ\"א root: א cannot take a dagesh, so neighboring prefix vowels shift." },
+      piel: { exists: false }, pual: { exists: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הֶאֱכִיל", form_plain: "האכיל", translit: "he'ekhil", gloss: "fed someone", function: "causative", voice: "active", valence: "transitive", register: "common", teaching_point: "פ\"א root: א cannot take a dagesh, so neighboring prefix vowels shift." },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הָאֳכַל", form_plain: "האכל", translit: "ho'akhal", gloss: "was fed", function: "passive", voice: "passive", valence: "intransitive", register: "rare", distractor_eligible: false, teaching_point: "פ\"א root: א cannot take a dagesh, so neighboring prefix vowels shift." },
+      hitpael: { exists: false },
+    },
+  },
+  {
+    id: "p-n-h", root: "פ־נ־ה", root_letters: ["פ", "נ", "ה"], gizra: "lamed_he", gizra_label: "ל\"ה", difficulty: "medium",
+    difficulty_reason: "All seven branches are useful, while the final he disappears or changes its vowel behavior across the family.",
+    core_meaning: "turning, clearing, and directing", emoji: "↪️",
+    forms: {
+      paal: { exists: true, actual_binyan: "paal", form_vocalized: "פָּנָה", form_plain: "פנה", translit: "pana", gloss: "turned, approached", function: "simple", voice: "active", valence: "intransitive", register: "common", teaching_point: "ל\"ה root: the final ה disappears or becomes a vowel in many inflected forms." },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִפְנָה", form_plain: "נפנה", translit: "nifna", gloss: "became available", function: "middle", voice: "middle", valence: "intransitive", register: "common" },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "פִּנָּה", form_plain: "פינה", translit: "pina", gloss: "cleared, evacuated", function: "causative", voice: "active", valence: "transitive", register: "common" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "פֻּנָּה", form_plain: "פונה", translit: "puna", gloss: "was evacuated", function: "passive", voice: "passive", valence: "intransitive", register: "common" },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִפְנָה", form_plain: "הפנה", translit: "hifna", gloss: "directed, referred", function: "causative", voice: "active", valence: "transitive", register: "common" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻפְנָה", form_plain: "הופנה", translit: "hufna", gloss: "was directed or referred", function: "passive", voice: "passive", valence: "intransitive", register: "formal" },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְפַּנָּה", form_plain: "התפנה", translit: "hitpana", gloss: "made oneself available", function: "reflexive", voice: "reflexive", valence: "intransitive", register: "common" },
+    },
+  },
+  {
+    id: "n-g-sh", root: "נ־ג־שׁ", root_letters: ["נ", "ג", "שׁ"], gizra: "pe_nun", gizra_label: "פ\"נ", difficulty: "medium",
+    difficulty_reason: "The initial nun assimilates in hif'il but remains visible after the hitpa'el prefix.",
+    core_meaning: "approaching, submitting, and colliding", emoji: "📨",
+    forms: {
+      paal: { exists: false },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִגַּשׁ", form_plain: "ניגש", translit: "nigash", gloss: "approached", function: "middle", voice: "middle", valence: "intransitive", register: "common" },
+      piel: { exists: false }, pual: { exists: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִגִּישׁ", form_plain: "הגיש", translit: "higish", gloss: "submitted, served", function: "causative", voice: "active", valence: "transitive", register: "common", teaching_point: "פ\"נ assimilation: the נ disappears into a dagesh (הנפיל → הִפִּיל)." },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻגַּשׁ", form_plain: "הוגש", translit: "hugash", gloss: "was submitted or served", function: "passive", voice: "passive", valence: "intransitive", register: "common" },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְנַגֵּשׁ", form_plain: "התנגש", translit: "hitnagesh", gloss: "collided", function: "reciprocal", voice: "middle", valence: "intransitive", register: "common", teaching_point: "Here the נ stays put — it follows the ת of the hitpa'el, so there is no assimilation." },
+    },
+  },
+  {
+    id: "n-k-r", root: "נ־כ־ר", root_letters: ["נ", "כ", "ר"], gizra: "pe_nun", gizra_label: "פ\"נ", difficulty: "hard",
+    difficulty_reason: "Two pointed forms collapse to the same unpointed spelling, and the branches range from recognition to estrangement.",
+    core_meaning: "recognizing and estranging", emoji: "🪪",
+    forms: {
+      paal: { exists: false },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נִכַּר", form_plain: "ניכר", translit: "nikar", gloss: "was evident", function: "middle", voice: "middle", valence: "intransitive", register: "formal", distractor_eligible: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "נִכֵּר", form_plain: "ניכר", translit: "niker", gloss: "distinguished, made recognizable", function: "intensive", voice: "active", valence: "transitive", register: "rare", distractor_eligible: false },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "נֻכַּר", form_plain: "נוכר", translit: "nukar", gloss: "was made recognizable", function: "passive", voice: "passive", valence: "intransitive", register: "rare", distractor_eligible: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הִכִּיר", form_plain: "הכיר", translit: "hikir", gloss: "recognized, knew", function: "causative", voice: "active", valence: "transitive", register: "common", teaching_point: "פ\"נ assimilation: the נ disappears into a dagesh (הנפיל → הִפִּיל)." },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הֻכַּר", form_plain: "הוכר", translit: "hukar", gloss: "was recognized", function: "passive", voice: "passive", valence: "intransitive", register: "formal" },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְנַכֵּר", form_plain: "התנכר", translit: "hitnaker", gloss: "became estranged", function: "reflexive", voice: "reflexive", valence: "intransitive", register: "formal", teaching_point: "Here the נ stays put — it follows the ת of the hitpa'el, so there is no assimilation." },
+    },
+  },
+  {
+    id: "a-w-r", root: "ע־ו־ר", root_letters: ["ע", "ו", "ר"], gizra: "ayin_vav", gizra_label: "ע\"ו (חלולים)", difficulty: "hard",
+    difficulty_reason: "The hollow middle radical produces polel, polal, and hitpolel forms alongside the causative wake-up pair.",
+    core_meaning: "waking and stirring", emoji: "⏰",
+    forms: {
+      paal: { exists: false },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נֵעוֹר", form_plain: "נעור", translit: "ne'or", gloss: "awoke", function: "middle", voice: "middle", valence: "intransitive", register: "literary", distractor_eligible: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "עוֹרֵר", form_plain: "עורר", translit: "orer", gloss: "aroused, stirred", function: "intensive", voice: "active", valence: "transitive", register: "formal", teaching_point: "Pi'el SLOT realized as polel (CoCeC) because the root is hollow." },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "עוֹרַר", form_plain: "עורר", translit: "orar", gloss: "was aroused or stirred", function: "passive", voice: "passive", valence: "intransitive", register: "rare", distractor_eligible: false, teaching_point: "Pu'al slot realized as polal." },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הֵעִיר", form_plain: "העיר", translit: "he'ir", gloss: "woke someone", function: "causative", voice: "active", valence: "transitive", register: "common" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הוּעַר", form_plain: "הוער", translit: "hu'ar", gloss: "was awakened", function: "passive", voice: "passive", valence: "intransitive", register: "formal", distractor_eligible: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְעוֹרֵר", form_plain: "התעורר", translit: "hit'orer", gloss: "woke up", function: "reflexive", voice: "reflexive", valence: "intransitive", register: "common", teaching_point: "Hitpael slot realized as hitpolel for hollow roots." },
+    },
+  },
+  {
+    id: "m-s-s", root: "מ־ס־ס", root_letters: ["מ", "ס", "ס"], gizra: "ayin_ayin", gizra_label: "ע\"ע", difficulty: "hard",
+    difficulty_reason: "The repeated final radicals merge or double differently across six productive branches.",
+    core_meaning: "melting and dissolving", emoji: "🧊",
+    forms: {
+      paal: { exists: false },
+      nifal: { exists: true, actual_binyan: "nifal", form_vocalized: "נָמַס", form_plain: "נמס", translit: "namas", gloss: "melted", function: "middle", voice: "middle", valence: "intransitive", register: "common", teaching_point: "ע\"ע root: the second and third radicals are identical, so they may merge or surface as a doubled consonant." },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "מִסֵּס", form_plain: "מיסס", translit: "mises", gloss: "dissolved something", function: "intensive", voice: "active", valence: "transitive", register: "formal" },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "מֻסַּס", form_plain: "מוסס", translit: "musas", gloss: "was dissolved", function: "passive", voice: "passive", valence: "intransitive", register: "rare", distractor_eligible: false },
+      hifil: { exists: true, actual_binyan: "hifil", form_vocalized: "הֵמֵס", form_plain: "המס", translit: "hemes", gloss: "melted something", function: "causative", voice: "active", valence: "transitive", register: "common" },
+      hufal: { exists: true, actual_binyan: "hufal", form_vocalized: "הוּמַס", form_plain: "הומס", translit: "humas", gloss: "was melted", function: "passive", voice: "passive", valence: "intransitive", register: "formal", distractor_eligible: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְמוֹסֵס", form_plain: "התמוסס", translit: "hitmoses", gloss: "dissolved away", function: "reflexive", voice: "middle", valence: "intransitive", register: "common" },
+    },
+  },
+  {
+    id: "p-r-s-m", root: "פ־ר־ס־ם", root_letters: ["פ", "ר", "ס", "ם"], gizra: "quadriliteral", gizra_label: "מרובעים", difficulty: "medium",
+    difficulty_reason: "The first four-letter family shows how quadriliteral roots occupy only the pi'el, pu'al, and hitpa'el slots.",
+    core_meaning: "publishing and becoming known", emoji: "📣",
+    forms: {
+      paal: { exists: false }, nifal: { exists: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "פִּרְסֵם", form_plain: "פרסם", translit: "pirsem", gloss: "published, advertised", function: "intensive", voice: "active", valence: "transitive", register: "common", teaching_point: "Four-letter root: the middle two radicals fill the middle position of the Pi'el-family template together." },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "פֻּרְסַם", form_plain: "פורסם", translit: "pursam", gloss: "was published", function: "passive", voice: "passive", valence: "intransitive", register: "common" },
+      hifil: { exists: false }, hufal: { exists: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְפַּרְסֵם", form_plain: "התפרסם", translit: "hitparsem", gloss: "became famous or publicized", function: "reflexive", voice: "middle", valence: "intransitive", register: "common" },
+    },
+  },
+  {
+    id: "a-d-k-n", root: "ע־ד־כ־ן", root_letters: ["ע", "ד", "כ", "ן"], gizra: "quadriliteral", gizra_label: "מרובעים", difficulty: "medium",
+    difficulty_reason: "A transparent modern four-letter family contrasts active updating, passive updating, and self-updating.",
+    core_meaning: "updating", emoji: "🔄",
+    forms: {
+      paal: { exists: false }, nifal: { exists: false },
+      piel: { exists: true, actual_binyan: "piel", form_vocalized: "עִדְכֵּן", form_plain: "עדכן", translit: "idken", gloss: "updated something", function: "intensive", voice: "active", valence: "transitive", register: "common", teaching_point: "Four-letter root: the middle two radicals fill the middle position of the Pi'el-family template together." },
+      pual: { exists: true, actual_binyan: "pual", form_vocalized: "עֻדְכַּן", form_plain: "עודכן", translit: "udkan", gloss: "was updated", function: "passive", voice: "passive", valence: "intransitive", register: "common" },
+      hifil: { exists: false }, hufal: { exists: false },
+      hitpael: { exists: true, actual_binyan: "hitpael", form_vocalized: "הִתְעַדְכֵּן", form_plain: "התעדכן", translit: "hit'adken", gloss: "got updated, caught up", function: "reflexive", voice: "middle", valence: "intransitive", register: "common" },
     },
   },
 ];

@@ -17296,6 +17296,314 @@ const NEUTRAL_EVERYDAY_SENTENCES = [
   }),
 ];
 
+const URBAN_MOBILITY_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_190", emoji: "🌙", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "האם יש תחבורה ציבורית אחרי חצות?", hebrewNiqqud: "הַאִם יֵשׁ תַּחְבּוּרָה צִבּוּרִית אַחֲרֵי חֲצוֹת?", english: "Is there public transportation after midnight?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["יש", "יֵשׁ"], ["תחבורה ציבורית", "תַּחְבּוּרָה צִבּוּרִית"], ["אחרי חצות", "אַחֲרֵי חֲצוֹת"]], englishTokens: ["Is there", "public transportation", "after", "midnight"],
+    hebrewDistractorPairs: [["אולי", "אוּלַי"], ["אין", "אֵין"], ["רכבת קלה", "רַכֶּבֶת קַלָּה"], ["לפני הערב", "לִפְנֵי הָעֶרֶב"]], englishDistractors: ["Was there", "a service taxi", "before", "noon"],
+    hebrewOrderAlternates: [{ text: "האם אחרי חצות יש תחבורה ציבורית?", textNiqqud: "הַאִם אַחֲרֵי חֲצוֹת יֵשׁ תַּחְבּוּרָה צִבּוּרִית?", order: [0, 3, 1, 2] }], notes: "תחבורה ציבורית is public transportation; חצות is midnight."
+  }),
+  buildReviewedSentence({
+    id: "everyday_191", emoji: "🚌", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "איזה קו אוטובוס מגיע לאוניברסיטה?", hebrewNiqqud: "אֵיזֶה קַו אוֹטוֹבּוּס מַגִּיעַ לָאוּנִיבֶרְסִיטָה?", english: "Which bus route goes to the university?",
+    hebrewTokenPairs: [["איזה", "אֵיזֶה"], ["קו אוטובוס", "קַו אוֹטוֹבּוּס"], ["מגיע", "מַגִּיעַ"], ["לאוניברסיטה", "לָאוּנִיבֶרְסִיטָה"]], englishTokens: ["Which", "bus route", "goes", "to the university"],
+    hebrewDistractorPairs: [["איזו", "אֵיזוֹ"], ["תחנת רכבת", "תַּחֲנַת רַכֶּבֶת"], ["יוצאת", "יוֹצֵאת"], ["מהספרייה", "מֵהַסִּפְרִיָּה"]], englishDistractors: ["What", "train station", "leaves", "from the library"], notes: "קו אוטובוס is a numbered or named bus route."
+  }),
+  buildReviewedSentence({
+    id: "everyday_192", emoji: "🚏", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "יש תחנת אוטובוס בסביבה?", hebrewNiqqud: "יֵשׁ תַּחֲנַת אוֹטוֹבּוּס בַּסְּבִיבָה?", english: "Is there a bus stop nearby?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["תחנת אוטובוס", "תַּחֲנַת אוֹטוֹבּוּס"], ["בסביבה", "בַּסְּבִיבָה"]], englishTokens: ["Is there", "a bus stop", "nearby"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["תחנת רכבת", "תַּחֲנַת רַכֶּבֶת"], ["רחוק", "רָחוֹק"], ["מחר", "מָחָר"]], englishDistractors: ["Isn't there", "a train station", "far away", "tomorrow"], notes: "בסביבה means nearby or in the area."
+  }),
+  buildReviewedSentence({
+    id: "everyday_193", emoji: "🚆", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "יש תחנת רכבת במרחק הליכה?", hebrewNiqqud: "יֵשׁ תַּחֲנַת רַכֶּבֶת בְּמֶרְחַק הֲלִיכָה?", english: "Is there a train station within walking distance?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["תחנת רכבת", "תַּחֲנַת רַכֶּבֶת"], ["במרחק הליכה", "בְּמֶרְחַק הֲלִיכָה"]], englishTokens: ["Is there", "a train station", "within walking distance"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["תחנת אוטובוס", "תַּחֲנַת אוֹטוֹבּוּס"], ["מחוץ לעיר", "מִחוּץ לָעִיר"], ["היום", "הַיּוֹם"]], englishDistractors: ["Isn't there", "a bus stop", "outside the city", "today"], notes: "במרחק הליכה means within walking distance."
+  }),
+  buildReviewedSentence({
+    id: "everyday_194", emoji: "🚈", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הרכבת הקלה עוצרת באלנבי?", hebrewNiqqud: "הָרַכֶּבֶת הַקַּלָּה עוֹצֶרֶת בְּאַלֶנְבִּי?", english: "Does the light rail stop at Allenby?",
+    hebrewTokenPairs: [["הרכבת הקלה", "הָרַכֶּבֶת הַקַּלָּה"], ["עוצרת", "עוֹצֶרֶת"], ["באלנבי", "בְּאַלֶנְבִּי"]], englishTokens: ["Does the light rail", "stop", "at Allenby"],
+    hebrewDistractorPairs: [["הרכבת המהירה", "הָרַכֶּבֶת הַמְּהִירָה"], ["עוברת", "עוֹבֶרֶת"], ["בירושלים", "בִּירוּשָׁלַיִם"], ["מחר", "מָחָר"]], englishDistractors: ["Does the express train", "pass", "in Jerusalem", "tomorrow"], notes: "רכבת קלה is light rail; Allenby is a stop on Tel Aviv's Red Line."
+  }),
+  buildReviewedSentence({
+    id: "everyday_195", emoji: "🚐", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "יש מונית שירות לירושלים ביום שישי?", hebrewNiqqud: "יֵשׁ מוֹנִית שֵׁרוּת לִירוּשָׁלַיִם בְּיוֹם שִׁישִּׁי?", english: "Is there a service taxi to Jerusalem on Friday?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["מונית שירות", "מוֹנִית שֵׁרוּת"], ["לירושלים", "לִירוּשָׁלַיִם"], ["ביום שישי", "בְּיוֹם שִׁישִּׁי"]], englishTokens: ["Is there", "a service taxi", "to Jerusalem", "on Friday"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["קו אוטובוס", "קַו אוֹטוֹבּוּס"], ["לתל אביב", "לְתֵל אָבִיב"], ["במוצאי שבת", "בְּמוֹצָאֵי שַׁבָּת"]], englishDistractors: ["Isn't there", "a bus route", "to Tel Aviv", "on Saturday night"],
+    hebrewOrderAlternates: [{ text: "ביום שישי יש מונית שירות לירושלים?", textNiqqud: "בְּיוֹם שִׁישִּׁי יֵשׁ מוֹנִית שֵׁרוּת לִירוּשָׁלַיִם?", order: [3, 0, 1, 2] }], notes: "מונית שירות is a shared service taxi running on a fixed route."
+  }),
+  buildReviewedSentence({
+    id: "everyday_196", emoji: "🚉", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הרציף השתנה ברגע האחרון.", hebrewNiqqud: "הָרָצִיף הִשְׁתַּנָּה בָּרֶגַע הָאַחֲרוֹן.", english: "The platform changed at the last minute.",
+    hebrewTokenPairs: [["הרציף", "הָרָצִיף"], ["השתנה", "הִשְׁתַּנָּה"], ["ברגע האחרון", "בָּרֶגַע הָאַחֲרוֹן"]], englishTokens: ["The platform", "changed", "at the last minute"],
+    hebrewDistractorPairs: [["המסלול", "הַמַּסְלוּל"], ["נסגר", "נִסְגַּר"], ["אתמול בערב", "אֶתְמוֹל בָּעֶרֶב"], ["לגמרי", "לְגַמְרֵי"]], englishDistractors: ["The route", "closed", "yesterday evening", "completely"], notes: "רציף is a train or transit platform."
+  }),
+  buildReviewedSentence({
+    id: "everyday_197", emoji: "💳", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "צריך לתקף שוב אחרי שמחליפים אוטובוס?", hebrewNiqqud: "צָרִיךְ לְתַקֵּף שׁוּב אַחֲרֵי שֶׁמַּחֲלִיפִים אוֹטוֹבּוּס?", english: "Do I need to tap in again after changing buses?",
+    hebrewTokenPairs: [["צריך", "צָרִיךְ"], ["לתקף", "לְתַקֵּף"], ["שוב", "שׁוּב"], ["אחרי שמחליפים", "אַחֲרֵי שֶׁמַּחֲלִיפִים"], ["אוטובוס", "אוֹטוֹבּוּס"]], englishTokens: ["Do I need", "to tap in", "again", "after changing", "buses"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["להטעין", "לְהַטְעִין"], ["כאן", "כָּאן"], ["לפני שיוצאים", "לִפְנֵי שֶׁיּוֹצְאִים"], ["מהתחנה", "מֵהַתַּחֲנָה"]], englishDistractors: ["Can I", "top up", "here", "before getting", "off"],
+    hebrewOrderAlternates: [{ text: "אחרי שמחליפים אוטובוס צריך לתקף שוב?", textNiqqud: "אַחֲרֵי שֶׁמַּחֲלִיפִים אוֹטוֹבּוּס צָרִיךְ לְתַקֵּף שׁוּב?", order: [3, 4, 0, 1, 2] }], notes: "לתקף means to validate a fare; colloquially this is tapping in."
+  }),
+  buildReviewedSentence({
+    id: "everyday_198", emoji: "✈️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "מה תעריף הנסיעה לנמל התעופה בן־גוריון?", hebrewNiqqud: "מַה תַּעֲרִיף הַנְּסִיעָה לִנְמַל הַתְּעוּפָה בֶּן־גּוּרְיוֹן?", english: "What is the fare to Ben Gurion Airport?",
+    hebrewTokenPairs: [["מה", "מַה"], ["תעריף הנסיעה", "תַּעֲרִיף הַנְּסִיעָה"], ["לנמל התעופה בן־גוריון", "לִנְמַל הַתְּעוּפָה בֶּן־גּוּרְיוֹן"]], englishTokens: ["What is", "the fare", "to Ben Gurion Airport"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["זמן ההגעה", "זְמַן הַהַגָּעָה"], ["לתחנה המרכזית", "לַתַּחֲנָה הַמֶּרְכָּזִית"], ["היום", "הַיּוֹם"]], englishDistractors: ["When is", "the arrival", "at the central station", "today"], notes: "תעריף נסיעה is the price charged for a transit trip."
+  }),
+  buildReviewedSentence({
+    id: "everyday_199", emoji: "🔁", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "התעריף הזה כולל מעבר חופשי?", hebrewNiqqud: "הַתַּעֲרִיף הַזֶּה כּוֹלֵל מַעֲבָר חוֹפְשִׁי?", english: "Does this fare include a free transfer?",
+    hebrewTokenPairs: [["התעריף הזה", "הַתַּעֲרִיף הַזֶּה"], ["כולל", "כּוֹלֵל"], ["מעבר חופשי", "מַעֲבָר חוֹפְשִׁי"]], englishTokens: ["Does this fare", "include", "a free transfer"],
+    hebrewDistractorPairs: [["הכרטיס הזה", "הַכַּרְטִיס הַזֶּה"], ["דורש", "דּוֹרֵשׁ"], ["תשלום", "תַּשְׁלוּם"], ["נוסף", "נוֹסָף"]], englishDistractors: ["Does this ticket", "require", "an extra", "payment"], notes: "מעבר חופשי is a transfer included without an additional fare."
+  }),
+  buildReviewedSentence({
+    id: "everyday_200", emoji: "📱", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "זמן ההגעה המשוער משתנה כל הזמן ביישומון.", hebrewNiqqud: "זְמַן הַהַגָּעָה הַמְשֹׁעָר מִשְׁתַּנֶּה כָּל הַזְּמַן בַּיִּשּׂוּמוֹן.", english: "The estimated arrival time keeps changing in the app.",
+    hebrewTokenPairs: [["זמן ההגעה המשוער", "זְמַן הַהַגָּעָה הַמְשֹׁעָר"], ["משתנה", "מִשְׁתַּנֶּה"], ["כל הזמן", "כָּל הַזְּמַן"], ["ביישומון", "בַּיִּשּׂוּמוֹן"]], englishTokens: ["The estimated arrival time", "keeps", "changing", "in the app"],
+    hebrewDistractorPairs: [["מספר הרציף", "מִסְפַּר הָרָצִיף"], ["נשאר", "נִשְׁאַר"], ["קבוע", "קָבוּעַ"], ["בלוח", "בַּלּוּחַ"]], englishDistractors: ["The platform number", "stays", "fixed", "on the board"], notes: "יישומון is the formal Hebrew word for an app."
+  }),
+  buildReviewedSentence({
+    id: "everyday_201", emoji: "🧭", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "כדאי לבדוק את כיוון הנסיעה לפני שעולים.", hebrewNiqqud: "כְּדַאי לִבְדֹּק אֶת כִּוּוּן הַנְּסִיעָה לִפְנֵי שֶׁעוֹלִים.", english: "It’s worth checking the direction of travel before boarding.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לבדוק", "לִבְדֹּק"], ["את כיוון הנסיעה", "אֶת כִּוּוּן הַנְּסִיעָה"], ["לפני שעולים", "לִפְנֵי שֶׁעוֹלִים"]], englishTokens: ["It’s worth", "checking", "the direction of travel", "before boarding"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["לשכוח", "לִשְׁכֹּחַ"], ["את מספר הקו", "אֶת מִסְפַּר הַקַּו"], ["אחרי שיורדים", "אַחֲרֵי שֶׁיּוֹרְדִים"]], englishDistractors: ["It's forbidden", "to forget", "the route number", "after getting off"],
+    hebrewOrderAlternates: [{ text: "לפני שעולים כדאי לבדוק את כיוון הנסיעה.", textNiqqud: "לִפְנֵי שֶׁעוֹלִים כְּדַאי לִבְדֹּק אֶת כִּוּוּן הַנְּסִיעָה.", order: [3, 0, 1, 2] }], notes: "כיוון הנסיעה distinguishes the two directions served by a route."
+  }),
+  buildReviewedSentence({
+    id: "everyday_202", emoji: "🔀", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "איפה עושים את ההחלפה בין הקווים?", hebrewNiqqud: "אֵיפֹה עוֹשִׂים אֶת הַהַחְלָפָה בֵּין הַקַּוִּים?", english: "Where do I transfer between routes?",
+    hebrewTokenPairs: [["איפה", "אֵיפֹה"], ["עושים", "עוֹשִׂים"], ["את ההחלפה", "אֶת הַהַחְלָפָה"], ["בין הקווים", "בֵּין הַקַּוִּים"]], englishTokens: ["Where", "do I transfer", "between", "routes"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["מתקפים", "מְתַקְּפִים"], ["את", "אֶת"], ["כרטיס הנסיעה", "כַּרְטִיס הַנְּסִיעָה"]], englishDistractors: ["When", "do I validate", "the", "travel card"], notes: "החלפה בין קווים is changing from one transit route to another."
+  }),
+  buildReviewedSentence({
+    id: "everyday_203", emoji: "🚗", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "עומס התנועה מחמיר בשעות השיא.", hebrewNiqqud: "עוֹמֶס הַתְּנוּעָה מַחְמִיר בִּשְׁעוֹת הַשִּׂיא.", english: "Traffic congestion gets worse during rush hour.",
+    hebrewTokenPairs: [["עומס התנועה", "עוֹמֶס הַתְּנוּעָה"], ["מחמיר", "מַחְמִיר"], ["בשעות השיא", "בִּשְׁעוֹת הַשִּׂיא"]], englishTokens: ["Traffic congestion", "gets worse", "during rush hour"],
+    hebrewDistractorPairs: [["זרם התנועה", "זֶרֶם הַתְּנוּעָה"], ["משתפר", "מִשְׁתַּפֵּר"], ["באמצע", "בְּאֶמְצַע"], ["הלילה", "הַלַּיְלָה"]], englishDistractors: ["Traffic flow", "improves", "in the middle", "of the night"],
+    hebrewOrderAlternates: [{ text: "בשעות השיא עומס התנועה מחמיר.", textNiqqud: "בִּשְׁעוֹת הַשִּׂיא עוֹמֶס הַתְּנוּעָה מַחְמִיר.", order: [2, 0, 1] }], notes: "שעות השיא are rush hours."
+  }),
+  buildReviewedSentence({
+    id: "everyday_204", emoji: "🚌", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אסור למכוניות לחנות בנתיב תחבורה ציבורית.", hebrewNiqqud: "אָסוּר לִמְכוֹנִיּוֹת לַחֲנוֹת בִּנְתִיב תַּחְבּוּרָה צִבּוּרִית.", english: "Cars may not park in a public-transport lane.",
+    hebrewTokenPairs: [["אסור", "אָסוּר"], ["למכוניות", "לִמְכוֹנִיּוֹת"], ["לחנות", "לַחֲנוֹת"], ["בנתיב תחבורה ציבורית", "בִּנְתִיב תַּחְבּוּרָה צִבּוּרִית"]], englishTokens: ["Cars", "may not", "park", "in a public-transport lane"],
+    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["לאוטובוסים", "לָאוֹטוֹבּוּסִים"], ["לעצור", "לַעֲצֹר"], ["ליד המדרכה", "לְיַד הַמִּדְרָכָה"]], englishDistractors: ["Buses", "may", "stop", "by the sidewalk"], notes: "נתיב תחבורה ציבורית is an officially designated public-transport lane."
+  }),
+  buildReviewedSentence({
+    id: "everyday_205", emoji: "🚶", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מעבר החצייה הקרוב נמצא ליד הרמזור.", hebrewNiqqud: "מַעֲבַר הַחֲצִיָּה הַקָּרוֹב נִמְצָא לְיַד הָרַמְזוֹר.", english: "The nearest crosswalk is by the traffic light.",
+    hebrewTokenPairs: [["מעבר החצייה", "מַעֲבַר הַחֲצִיָּה"], ["הקרוב", "הַקָּרוֹב"], ["נמצא", "נִמְצָא"], ["ליד הרמזור", "לְיַד הָרַמְזוֹר"]], englishTokens: ["The nearest", "crosswalk", "is", "by the traffic light"],
+    hebrewDistractorPairs: [["שביל האופניים", "שְׁבִיל הָאוֹפַנַּיִם"], ["הרחוק", "הָרָחוֹק"], ["ממשיך", "מַמְשִׁיךְ"], ["אחרי הצומת", "אַחֲרֵי הַצּוֹמֶת"]], englishDistractors: ["The farthest", "bike path", "continues", "after the intersection"], notes: "מעבר חצייה is a marked pedestrian crosswalk."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_168", emoji: "💳", category: "colloquial", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אפשר להטעין כאן את הרב־קו?", hebrewNiqqud: "אֶפְשָׁר לְהַטְעִין כָּאן אֶת הָרַב־קַו?", english: "Can I top up my Rav-Kav here?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להטעין", "לְהַטְעִין"], ["כאן", "כָּאן"], ["את הרב־קו", "אֶת הָרַב־קַו"]], englishTokens: ["Can I", "top up", "my Rav-Kav", "here"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לתקף", "לְתַקֵּף"], ["עכשיו", "עַכְשָׁו"], ["את הכרטיס", "אֶת הַכַּרְטִיס"]], englishDistractors: ["Do I need to", "validate", "my ticket", "now"],
+    hebrewOrderAlternates: [{ text: "כאן אפשר להטעין את הרב־קו?", textNiqqud: "כָּאן אֶפְשָׁר לְהַטְעִין אֶת הָרַב־קַו?", order: [2, 0, 1, 3] }], notes: "רב־קו is Israel's reloadable public-transport card; להטעין means to add stored value."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_169", emoji: "⌛", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "סליחה על האיחור, האוטובוס לא הגיע.", hebrewNiqqud: "סְלִיחָה עַל הָאִחוּר, הָאוֹטוֹבּוּס לֹא הִגִּיעַ.", english: "Sorry for the delay; the bus didn’t come.",
+    hebrewTokenPairs: [["סליחה", "סְלִיחָה"], ["על האיחור", "עַל הָאִחוּר"], ["האוטובוס", "הָאוֹטוֹבּוּס"], ["לא", "לֹא"], ["הגיע", "הִגִּיעַ"]], englishTokens: ["Sorry", "for the delay", "the bus", "didn’t", "come"],
+    hebrewDistractorPairs: [["תודה", "תּוֹדָה"], ["על העזרה", "עַל הָעֶזְרָה"], ["הרכבת", "הָרַכֶּבֶת"], ["יצאה", "יָצְאָה"], ["בזמן", "בַּזְּמַן"]], englishDistractors: ["Thanks", "for the help", "the train", "left", "on time"], notes: "איחור can mean lateness or a delay."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_170", emoji: "🚙", category: "colloquial", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "יש פקק תנועה ענק באיילון.", hebrewNiqqud: "יֵשׁ פְּקַק תְּנוּעָה עֲנָק בְּאַיָּלוֹן.", english: "There’s a huge traffic jam on Ayalon.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["פקק תנועה", "פְּקַק תְּנוּעָה"], ["ענק", "עֲנָק"], ["באיילון", "בְּאַיָּלוֹן"]], englishTokens: ["There’s", "a huge", "traffic jam", "on Ayalon"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["עומס תנועה", "עוֹמֶס תְּנוּעָה"], ["קטן", "קָטָן"], ["בכביש החוף", "בִּכְבִישׁ הַחוֹף"]], englishDistractors: ["There isn't", "a small", "traffic slowdown", "on the coastal road"],
+    hebrewOrderAlternates: [{ text: "באיילון יש פקק תנועה ענק.", textNiqqud: "בְּאַיָּלוֹן יֵשׁ פְּקַק תְּנוּעָה עֲנָק.", order: [3, 0, 1, 2] }], notes: "איילון refers to the major freeway through the Tel Aviv area."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_171", emoji: "🚲", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "שביל האופניים ממשיך עד הים.", hebrewNiqqud: "שְׁבִיל הָאוֹפַנַּיִם מַמְשִׁיךְ עַד הַיָּם.", english: "The bike path continues all the way to the beach.",
+    hebrewTokenPairs: [["שביל האופניים", "שְׁבִיל הָאוֹפַנַּיִם"], ["ממשיך", "מַמְשִׁיךְ"], ["עד", "עַד"], ["הים", "הַיָּם"]], englishTokens: ["The bike path", "continues", "all the way", "to the beach"],
+    hebrewDistractorPairs: [["נתיב האוטובוס", "נְתִיב הָאוֹטוֹבּוּס"], ["מסתיים", "מִסְתַּיֵּם"], ["לפני", "לִפְנֵי"], ["הגשר", "הַגֶּשֶׁר"]], englishDistractors: ["The bus lane", "ends", "before", "the bridge"], notes: "שביל אופניים is a designated bike path."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_172", emoji: "🛴", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "לא משאירים קורקינט חשמלי באמצע המדרכה.", hebrewNiqqud: "לֹא מַשְׁאִירִים קוֹרְקִינֵט חַשְׁמַלִּי בְּאֶמְצַע הַמִּדְרָכָה.", english: "Don’t leave an electric scooter in the middle of the sidewalk.",
+    hebrewTokenPairs: [["לא", "לֹא"], ["משאירים", "מַשְׁאִירִים"], ["קורקינט חשמלי", "קוֹרְקִינֵט חַשְׁמַלִּי"], ["באמצע", "בְּאֶמְצַע"], ["המדרכה", "הַמִּדְרָכָה"]], englishTokens: ["Don’t", "leave", "an electric scooter", "in the middle", "of the sidewalk"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["להחנות", "לְהַחֲנוֹת"], ["אופניים שיתופיים", "אוֹפַנַּיִם שִׁתּוּפִיִּים"], ["ליד", "לְיַד"], ["התחנה", "הַתַּחֲנָה"]], englishDistractors: ["You can", "park", "a bike-share bike", "near", "the station"], notes: "קורקינט חשמלי is an electric kick scooter; the sentence states a general public-space rule."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_173", emoji: "🚲", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אפשר לשכור אופניים שיתופיים ליד התחנה?", hebrewNiqqud: "אֶפְשָׁר לִשְׂכֹּר אוֹפַנַּיִם שִׁתּוּפִיִּים לְיַד הַתַּחֲנָה?", english: "Can I rent a bike-share bike near the station?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לשכור", "לִשְׂכֹּר"], ["אופניים שיתופיים", "אוֹפַנַּיִם שִׁתּוּפִיִּים"], ["ליד", "לְיַד"], ["התחנה", "הַתַּחֲנָה"]], englishTokens: ["Can I", "rent", "a bike-share bike", "near", "the station"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["להחזיר", "לְהַחֲזִיר"], ["קורקינט חשמלי", "קוֹרְקִינֵט חַשְׁמַלִּי"], ["במרכז", "בְּמֶרְכַּז"], ["העיר", "הָעִיר"]], englishDistractors: ["Do I need to", "return", "an electric scooter", "downtown", "today"],
+    hebrewOrderAlternates: [{ text: "ליד התחנה אפשר לשכור אופניים שיתופיים?", textNiqqud: "לְיַד הַתַּחֲנָה אֶפְשָׁר לִשְׂכֹּר אוֹפַנַּיִם שִׁתּוּפִיִּים?", order: [3, 4, 0, 1, 2] }], notes: "אופניים שיתופיים are bikes offered through a public bike-share service."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_174", emoji: "↩️", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "בצומת הבא פונים שמאלה.", hebrewNiqqud: "בַּצּוֹמֶת הַבָּא פּוֹנִים שְׂמֹאלָה.", english: "Turn left at the next intersection.",
+    hebrewTokenPairs: [["בצומת", "בַּצּוֹמֶת"], ["הבא", "הַבָּא"], ["פונים", "פּוֹנִים"], ["שמאלה", "שְׂמֹאלָה"]], englishTokens: ["Turn", "left", "at the next", "intersection"],
+    hebrewDistractorPairs: [["ברמזור", "בָּרַמְזוֹר"], ["הקרוב", "הַקָּרוֹב"], ["ממשיכים", "מַמְשִׁיכִים"], ["ישר", "יָשָׁר"]], englishDistractors: ["Continue", "straight", "at the nearest", "light"], notes: "צומת is an intersection; לפנות שמאלה means to turn left."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_175", emoji: "🅿️", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "יש חניון שפתוח כל הלילה?", hebrewNiqqud: "יֵשׁ חֶנְיוֹן שֶׁפָּתוּחַ כָּל הַלַּיְלָה?", english: "Is there a parking garage open all night?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["חניון", "חֶנְיוֹן"], ["שפתוח", "שֶׁפָּתוּחַ"], ["כל הלילה", "כָּל הַלַּיְלָה"]], englishTokens: ["Is there", "a parking garage", "open", "all night"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["מגרש חניה", "מִגְרַשׁ חֲנָיָה"], ["שסגור", "שֶׁסָּגוּר"], ["בשבת", "בְּשַׁבָּת"]], englishDistractors: ["Isn't there", "a parking lot", "closed", "on Saturday"], notes: "חניון usually means a parking facility or garage."
+  }),
+  buildReviewedSentence({
+    id: "everyday_206", emoji: "📝", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "כדאי לקרוא את חוזה השכירות בעיון לפני שחותמים.", hebrewNiqqud: "כְּדַאי לִקְרֹא אֶת חוֹזֵה הַשְּׂכִירוּת בְּעִיּוּן לִפְנֵי שֶׁחוֹתְמִים.", english: "Read the lease carefully before signing.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לקרוא", "לִקְרֹא"], ["את חוזה השכירות", "אֶת חוֹזֵה הַשְּׂכִירוּת"], ["בעיון", "בְּעִיּוּן"], ["לפני שחותמים", "לִפְנֵי שֶׁחוֹתְמִים"]], englishTokens: ["Read", "the lease", "carefully", "before", "signing"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לצלם", "לְצַלֵּם"], ["את חשבון המים", "אֶת חֶשְׁבּוֹן הַמַּיִם"], ["במהירות", "בִּמְהִירוּת"], ["אחרי שעוברים", "אַחֲרֵי שֶׁעוֹבְרִים"]], englishDistractors: ["Photograph", "the water bill", "quickly", "after", "moving"],
+    hebrewOrderAlternates: [{ text: "לפני שחותמים כדאי לקרוא את חוזה השכירות בעיון.", textNiqqud: "לִפְנֵי שֶׁחוֹתְמִים כְּדַאי לִקְרֹא אֶת חוֹזֵה הַשְּׂכִירוּת בְּעִיּוּן.", order: [4, 0, 1, 2, 3] }], notes: "חוזה שכירות is a lease; בעיון means carefully or attentively."
+  }),
+  buildReviewedSentence({
+    id: "everyday_207", emoji: "🔢", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "איפה מד השירות של הדירה הזאת?", hebrewNiqqud: "אֵיפֹה מַד הַשֵּׁירוּת שֶׁל הַדִּירָה הַזֹּאת?", english: "Where is this apartment’s utility meter?",
+    hebrewTokenPairs: [["איפה", "אֵיפֹה"], ["מד השירות", "מַד הַשֵּׁירוּת"], ["של הדירה הזאת", "שֶׁל הַדִּירָה הַזֹּאת"]], englishTokens: ["Where is", "this apartment’s", "utility meter"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["חשבון החשמל", "חֶשְׁבּוֹן הַחַשְׁמַל"], ["מגיע אל", "מַגִּיעַ אֶל"], ["הבית הזה", "הַבַּיִת הַזֶּה"]], englishDistractors: ["When is", "the electricity bill", "sent to", "this house"], notes: "מד שירות is a utility meter for water, gas, or electricity."
+  }),
+  buildReviewedSentence({
+    id: "everyday_208", emoji: "💧", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "חשבון המים גבוה בהרבה מהחודש שעבר.", hebrewNiqqud: "חֶשְׁבּוֹן הַמַּיִם גָּבוֹהַּ בְּהַרְבֵּה מֵהַחֹדֶשׁ שֶׁעָבַר.", english: "The water bill is much higher than last month.",
+    hebrewTokenPairs: [["חשבון המים", "חֶשְׁבּוֹן הַמַּיִם"], ["גבוה", "גָּבוֹהַּ"], ["בהרבה", "בְּהַרְבֵּה"], ["מהחודש שעבר", "מֵהַחֹדֶשׁ שֶׁעָבַר"]], englishTokens: ["The water bill", "is", "much higher", "than last month"],
+    hebrewDistractorPairs: [["חשבון החשמל", "חֶשְׁבּוֹן הַחַשְׁמַל"], ["נמוך", "נָמוּךְ"], ["במעט", "בִּמְעַט"], ["מהשנה שעברה", "מֵהַשָּׁנָה שֶׁעָבְרָה"]], englishDistractors: ["The electricity bill", "was", "slightly lower", "than last year"], notes: "חשבון מים is a water utility bill."
+  }),
+  buildReviewedSentence({
+    id: "everyday_209", emoji: "🔧", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בעל הדירה אישר תיקון חירום לנזילה.", hebrewNiqqud: "בַּעַל הַדִּירָה אִשֵּׁר תִּיקּוּן חֵירוּם לַנְּזִילָה.", english: "The landlord approved an emergency repair for the leak.",
+    hebrewTokenPairs: [["בעל הדירה", "בַּעַל הַדִּירָה"], ["אישר", "אִשֵּׁר"], ["תיקון חירום", "תִּיקּוּן חֵירוּם"], ["לנזילה", "לַנְּזִילָה"]], englishTokens: ["The landlord", "approved", "an emergency repair", "for the leak"],
+    hebrewDistractorPairs: [["ועד הבית", "וַעַד הַבַּיִת"], ["דחה", "דָּחָה"], ["בדיקה רגילה", "בְּדִיקָה רְגִילָה"], ["למעלית", "לַמַּעֲלִית"]], englishDistractors: ["The building committee", "delayed", "a routine inspection", "for the elevator"], notes: "תיקון חירום is an urgent repair; נזילה is a leak."
+  }),
+  buildReviewedSentence({
+    id: "everyday_210", emoji: "📋", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "החברה תיעדה כל תלונת לקוח שקיבלה.", hebrewNiqqud: "הַחֶבְרָה תִּעֲדָה כָּל תְּלוּנַת לָקוֹחַ שֶׁקִּבְּלָה.", english: "The company documented every customer complaint it received.",
+    hebrewTokenPairs: [["החברה", "הַחֶבְרָה"], ["תיעדה", "תִּעֲדָה"], ["כל תלונת לקוח", "כָּל תְּלוּנַת לָקוֹחַ"], ["שקיבלה", "שֶׁקִּבְּלָה"]], englishTokens: ["The company", "documented", "every customer complaint", "it received"],
+    hebrewDistractorPairs: [["העירייה", "הָעִירִיָּה"], ["מחקה", "מָחֲקָה"], ["כל בקשת שירות", "כָּל בַּקָּשַׁת שֵׁירוּת"], ["ששלחה", "שֶׁשָּׁלְחָה"]], englishDistractors: ["The municipality", "deleted", "every service request", "it sent"], notes: "לתעד means to document; תלונת לקוח is a customer complaint."
+  }),
+  buildReviewedSentence({
+    id: "everyday_211", emoji: "🎧", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר לדבר עם נציג שירות?", hebrewNiqqud: "אֶפְשָׁר לְדַבֵּר עִם נְצִיג שֵׁירוּת?", english: "Can I speak to a service representative?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לדבר עם", "לְדַבֵּר עִם"], ["נציג שירות", "נְצִיג שֵׁירוּת"]], englishTokens: ["Can I", "speak to", "a service representative"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["לחכות ל", "לְחַכּוֹת לְ"], ["מנהל הסניף", "מְנַהֵל הַסְּנִיף"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["Do I need to", "wait for", "the branch manager", "now"], notes: "נציג שירות is a customer-service representative."
+  }),
+  buildReviewedSentence({
+    id: "everyday_212", emoji: "🛡️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אילו מסמכים צריך כדי להגיש תביעת ביטוח?", hebrewNiqqud: "אֵילוּ מִסְמָכִים צָרִיךְ כְּדֵי לְהַגִּישׁ תְּבִיעַת בִּיטּוּחַ?", english: "Which documents do I need to file an insurance claim?",
+    hebrewTokenPairs: [["אילו מסמכים", "אֵילוּ מִסְמָכִים"], ["צריך", "צָרִיךְ"], ["כדי להגיש", "כְּדֵי לְהַגִּישׁ"], ["תביעת ביטוח", "תְּבִיעַת בִּיטּוּחַ"]], englishTokens: ["Which documents", "do I need", "to file", "an insurance claim"],
+    hebrewDistractorPairs: [["אילו פרטים", "אֵילוּ פְּרָטִים"], ["אפשר", "אֶפְשָׁר"], ["כדי לבטל", "כְּדֵי לְבַטֵּל"], ["חוזה שכירות", "חוֹזֵה שְׂכִירוּת"]], englishDistractors: ["Which details", "can I use", "to cancel", "a lease"], notes: "להגיש תביעת ביטוח means to file an insurance claim."
+  }),
+  buildReviewedSentence({
+    id: "everyday_213", emoji: "📅", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "יש תור פנוי מחר בבוקר?", hebrewNiqqud: "יֵשׁ תּוֹר פָּנוּי מָחָר בַּבֹּקֶר?", english: "Is there an appointment slot tomorrow morning?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["תור פנוי", "תּוֹר פָּנוּי"], ["מחר בבוקר", "מָחָר בַּבֹּקֶר"]], englishTokens: ["Is there", "an appointment slot", "tomorrow morning"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["מקום", "מָקוֹם"], ["פנוי", "פָּנוּי"], ["הערב", "הָעֶרֶב"]], englishDistractors: ["Isn't there", "an open", "place", "this evening"],
+    hebrewOrderAlternates: [{ text: "מחר בבוקר יש תור פנוי?", textNiqqud: "מָחָר בַּבֹּקֶר יֵשׁ תּוֹר פָּנוּי?", order: [2, 0, 1] }], notes: "תור פנוי is an available appointment slot."
+  }),
+  buildReviewedSentence({
+    id: "everyday_214", emoji: "👁️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "כמה פעמים ביום צריך להשתמש בטיפות העיניים?", hebrewNiqqud: "כַּמָּה פְּעָמִים בַּיּוֹם צָרִיךְ לְהִשְׁתַּמֵּשׁ בְּטִפּוֹת הָעֵינַיִם?", english: "How many times a day should I use the eye drops?",
+    hebrewTokenPairs: [["כמה", "כַּמָּה"], ["פעמים", "פְּעָמִים"], ["ביום", "בַּיּוֹם"], ["צריך", "צָרִיךְ"], ["להשתמש ב", "לְהִשְׁתַּמֵּשׁ בְּ"], ["טיפות העיניים", "טִפּוֹת הָעֵינַיִם"]], englishTokens: ["How many", "times", "a day", "should I", "use", "the eye drops"],
+    hebrewDistractorPairs: [["אילו", "אֵילוּ"], ["ימים", "יָמִים"], ["בשבוע", "בַּשָּׁבוּעַ"], ["אפשר", "אֶפְשָׁר"], ["להפסיק את", "לְהַפְסִיק אֶת"], ["התרופה הזאת", "הַתְּרוּפָה הַזֹּאת"]], englishDistractors: ["Which", "days", "a week", "can I", "stop", "this medicine"], notes: "טיפות עיניים are eye drops; להשתמש ב־ takes the preposition ב־."
+  }),
+  buildReviewedSentence({
+    id: "everyday_215", emoji: "🍬", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "יש לכם סוכרייה לגרון בלי סוכר?", hebrewNiqqud: "יֵשׁ לָכֶם סֻכָּרִיָּה לַגָּרוֹן בְּלִי סֻכָּר?", english: "Do you have a sugar-free throat lozenge?",
+    hebrewTokenPairs: [["יש לכם", "יֵשׁ לָכֶם"], ["סוכרייה לגרון", "סֻכָּרִיָּה לַגָּרוֹן"], ["בלי סוכר", "בְּלִי סֻכָּר"]], englishTokens: ["Do you have", "a sugar-free", "throat lozenge"],
+    hebrewDistractorPairs: [["אין לכם", "אֵין לָכֶם"], ["סירופ לשיעול", "סִירוֹפּ לַשִּׁעוּל"], ["עם דבש", "עִם דְּבַשׁ"], ["במלאי", "בִּמְלַאי"]], englishDistractors: ["Don't you have", "cough syrup", "with honey", "in stock"], notes: "סוכרייה לגרון is a throat lozenge; בלי סוכר means sugar-free."
+  }),
+  buildReviewedSentence({
+    id: "everyday_216", emoji: "🩹", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר פלסטר? הנעל שפשפה לי את העקב.", hebrewNiqqud: "אֶפְשָׁר פְּלַסְטֶר? הַנַּעַל שִׁפְשְׁפָה לִי אֶת הֶעָקֵב.", english: "Could I have a band-aid? My shoe rubbed my heel.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["פלסטר", "פְּלַסְטֶר"], ["הנעל", "הַנַּעַל"], ["שפשפה לי", "שִׁפְשְׁפָה לִי"], ["את העקב", "אֶת הֶעָקֵב"]], englishTokens: ["Could I have", "a band-aid", "My shoe", "rubbed", "my heel"],
+    hebrewDistractorPairs: [["יש", "יֵשׁ"], ["תחבושת", "תַּחְבֹּשֶׁת"], ["הגרב", "הַגֶּרֶב"], ["לחצה לי", "לָחֲצָה לִי"], ["על האצבע", "עַל הָאֶצְבַּע"]], englishDistractors: ["Is there", "a bandage", "My sock", "pressed", "my toe"], notes: "פלסטר is an adhesive bandage; עקב is the heel."
+  }),
+  buildReviewedSentence({
+    id: "everyday_217", emoji: "💧", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "כדאי לשתות מים לפני ההליכה כדי למנוע התייבשות.", hebrewNiqqud: "כְּדַאי לִשְׁתּוֹת מַיִם לִפְנֵי הַהֲלִיכָה כְּדֵי לִמְנֹעַ הִתְיַבְּשׁוּת.", english: "Drink water before the walk to prevent dehydration.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["לשתות", "לִשְׁתּוֹת"], ["מים", "מַיִם"], ["לפני ההליכה", "לִפְנֵי הַהֲלִיכָה"], ["כדי למנוע", "כְּדֵי לִמְנֹעַ"], ["התייבשות", "הִתְיַבְּשׁוּת"]], englishTokens: ["Drink", "water", "before", "the walk", "to prevent", "dehydration"],
+    hebrewDistractorPairs: [["אפשר", "אֶפְשָׁר"], ["לאכול", "לֶאֱכֹל"], ["משהו", "מַשֶּׁהוּ"], ["אחרי הריצה", "אַחֲרֵי הָרִיצָה"], ["כדי לטפל ב", "כְּדֵי לְטַפֵּל בְּ"], ["סחרחורת", "סַחְרְחוֹרֶת"]], englishDistractors: ["Eat", "something", "after", "the run", "to treat", "dizziness"],
+    hebrewOrderAlternates: [{ text: "לפני ההליכה כדאי לשתות מים כדי למנוע התייבשות.", textNiqqud: "לִפְנֵי הַהֲלִיכָה כְּדַאי לִשְׁתּוֹת מַיִם כְּדֵי לִמְנֹעַ הִתְיַבְּשׁוּת.", order: [3, 0, 1, 2, 4, 5] }], notes: "התייבשות is dehydration; כדי למנוע means in order to prevent."
+  }),
+  buildReviewedSentence({
+    id: "inbal_102", emoji: "🕯️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "באיזו שעה כניסת שבת בתל אביב השבוע?", hebrewNiqqud: "בְּאֵיזוֹ שָׁעָה כְּנִיסַת שַׁבָּת בְּתֵל אָבִיב הַשָּׁבוּעַ?", english: "What time does Shabbat begin in Tel Aviv this week?",
+    hebrewTokenPairs: [["באיזו שעה", "בְּאֵיזוֹ שָׁעָה"], ["כניסת שבת", "כְּנִיסַת שַׁבָּת"], ["בתל אביב", "בְּתֵל אָבִיב"], ["השבוע", "הַשָּׁבוּעַ"]], englishTokens: ["What time does", "Shabbat begin", "in Tel Aviv", "this week"],
+    hebrewDistractorPairs: [["באיזה יום", "בְּאֵיזֶה יוֹם"], ["צאת השבת", "צֵאת הַשַּׁבָּת"], ["בירושלים", "בִּירוּשָׁלַיִם"], ["החודש", "הַחֹדֶשׁ"]], englishDistractors: ["What day does", "Shabbat end", "in Jerusalem", "this month"], notes: "כניסת שבת is the local candle-lighting time when Shabbat begins."
+  }),
+  buildReviewedSentence({
+    id: "inbal_103", emoji: "🌅", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "בקיץ בית הכנסת מקיים קבלת שבת בחוץ.", hebrewNiqqud: "בַּקַּיִץ בֵּית הַכְּנֶסֶת מְקַיֵּם קַבָּלַת שַׁבָּת בַּחוּץ.", english: "In summer, the synagogue holds Kabbalat Shabbat outside.",
+    hebrewTokenPairs: [["בקיץ", "בַּקַּיִץ"], ["בית הכנסת", "בֵּית הַכְּנֶסֶת"], ["מקיים", "מְקַיֵּם"], ["קבלת שבת", "קַבָּלַת שַׁבָּת"], ["בחוץ", "בַּחוּץ"]], englishTokens: ["In summer", "the synagogue", "holds", "Kabbalat Shabbat", "outside"],
+    hebrewDistractorPairs: [["בחורף", "בַּחוֹרֶף"], ["בית הספר", "בֵּית הַסֵּפֶר"], ["מבטל", "מְבַטֵּל"], ["תפילת ערבית", "תְּפִלַּת עַרְבִית"], ["בפנים", "בִּפְנִים"]], englishDistractors: ["In winter", "the school", "cancels", "the evening prayer", "inside"],
+    hebrewOrderAlternates: [{ text: "בית הכנסת מקיים בקיץ קבלת שבת בחוץ.", textNiqqud: "בֵּית הַכְּנֶסֶת מְקַיֵּם בַּקַּיִץ קַבָּלַת שַׁבָּת בַּחוּץ.", order: [1, 2, 0, 3, 4] }], notes: "קבלת שבת is the Friday-evening service welcoming Shabbat."
+  }),
+  buildReviewedSentence({
+    id: "inbal_104", emoji: "🍞", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אומרים ברכת המזון אחרי הארוחה.", hebrewNiqqud: "אוֹמְרִים בִּרְכַּת הַמָּזוֹן אַחֲרֵי הָאֲרוּחָה.", english: "People say Grace After Meals after the meal.",
+    hebrewTokenPairs: [["אומרים", "אוֹמְרִים"], ["ברכת המזון", "בִּרְכַּת הַמָּזוֹן"], ["אחרי הארוחה", "אַחֲרֵי הָאֲרוּחָה"]], englishTokens: ["People say", "Grace After Meals", "after the meal"],
+    hebrewDistractorPairs: [["שרים", "שָׁרִים"], ["שיר שבת", "שִׁיר שַׁבָּת"], ["לפני הקידוש", "לִפְנֵי הַקִּדּוּשׁ"], ["ביחד", "בְּיַחַד"]], englishDistractors: ["People sing", "a Shabbat song", "before Kiddush", "together"],
+    hebrewOrderAlternates: [{ text: "אחרי הארוחה אומרים ברכת המזון.", textNiqqud: "אַחֲרֵי הָאֲרוּחָה אוֹמְרִים בִּרְכַּת הַמָּזוֹן.", order: [2, 0, 1] }], notes: "ברכת המזון is Grace After Meals, recited after eating bread."
+  }),
+  buildReviewedSentence({
+    id: "inbal_105", emoji: "✅", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "יש תעודת כשרות בתוקף בכניסה?", hebrewNiqqud: "יֵשׁ תְּעוּדַת כַּשְׁרוּת בְּתֹקֶף בַּכְּנִיסָה?", english: "Is there a current kashrut certificate at the entrance?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["תעודת כשרות", "תְּעוּדַת כַּשְׁרוּת"], ["בתוקף", "בְּתֹקֶף"], ["בכניסה", "בַּכְּנִיסָה"]], englishTokens: ["Is there", "a current", "kashrut certificate", "at the entrance"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["רישיון עסק", "רִשָּׁיוֹן עֵסֶק"], ["שפג", "שֶׁפָּג"], ["במטבח", "בַּמִּטְבָּח"]], englishDistractors: ["Isn't there", "a business license", "that expired", "in the kitchen"],
+    hebrewOrderAlternates: [{ text: "בכניסה יש תעודת כשרות בתוקף?", textNiqqud: "בַּכְּנִיסָה יֵשׁ תְּעוּדַת כַּשְׁרוּת בְּתֹקֶף?", order: [3, 0, 1, 2] }], notes: "תעודת כשרות is a kashrut certificate; בתוקף means currently valid."
+  }),
+  buildReviewedSentence({
+    id: "inbal_106", emoji: "💍", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "בני הזוג חתמו על הכתובה לפני הטקס.", hebrewNiqqud: "בְּנֵי הַזּוּג חָתְמוּ עַל הַכְּתוּבָּה לִפְנֵי הַטֶּקֶס.", english: "The couple signed the ketubah before the ceremony.",
+    hebrewTokenPairs: [["בני הזוג", "בְּנֵי הַזּוּג"], ["חתמו על", "חָתְמוּ עַל"], ["הכתובה", "הַכְּתוּבָּה"], ["לפני הטקס", "לִפְנֵי הַטֶּקֶס"]], englishTokens: ["The couple", "signed", "the ketubah", "before the ceremony"],
+    hebrewDistractorPairs: [["העדים", "הָעֵדִים"], ["קראו את", "קָרְאוּ אֶת"], ["ההזמנה", "הַהַזְמָנָה"], ["אחרי החופה", "אַחֲרֵי הַחֻפָּה"]], englishDistractors: ["The witnesses", "read", "the invitation", "after the chuppah"],
+    hebrewOrderAlternates: [{ text: "לפני הטקס בני הזוג חתמו על הכתובה.", textNiqqud: "לִפְנֵי הַטֶּקֶס בְּנֵי הַזּוּג חָתְמוּ עַל הַכְּתוּבָּה.", order: [3, 0, 1, 2] }], notes: "כתובה is the Jewish marriage contract."
+  }),
+  buildReviewedSentence({
+    id: "inbal_107", emoji: "🛣️", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אמרנו תפילת הדרך אחרי שיצאנו מהעיר.", hebrewNiqqud: "אָמַרְנוּ תְּפִלַּת הַדֶּרֶךְ אַחֲרֵי שֶׁיָּצָאנוּ מֵהָעִיר.", english: "We said the Traveler’s Prayer after leaving the city.",
+    hebrewTokenPairs: [["אמרנו", "אָמַרְנוּ"], ["תפילת הדרך", "תְּפִלַּת הַדֶּרֶךְ"], ["אחרי שיצאנו", "אַחֲרֵי שֶׁיָּצָאנוּ"], ["מהעיר", "מֵהָעִיר"]], englishTokens: ["We said", "the Traveler’s Prayer", "after leaving", "the city"],
+    hebrewDistractorPairs: [["שרנו", "שַׁרְנוּ"], ["שיר לדרך", "שִׁיר לַדֶּרֶךְ"], ["לפני שחזרנו", "לִפְנֵי שֶׁחָזַרְנוּ"], ["הביתה", "הַבַּיְתָה"]], englishDistractors: ["We sang", "a travel song", "before returning", "home"],
+    hebrewOrderAlternates: [{ text: "אחרי שיצאנו מהעיר אמרנו תפילת הדרך.", textNiqqud: "אַחֲרֵי שֶׁיָּצָאנוּ מֵהָעִיר אָמַרְנוּ תְּפִלַּת הַדֶּרֶךְ.", order: [2, 3, 0, 1] }], notes: "תפילת הדרך is the Traveler's Prayer recited after beginning a journey."
+  }),
+  buildReviewedSentence({
+    id: "idan_121", emoji: "🌎", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "בזמן רעידת אדמה מתרחקים מחלונות.", hebrewNiqqud: "בִּזְמַן רְעִידַת אֲדָמָה מִתְרַחֲקִים מֵחַלּוֹנוֹת.", english: "During an earthquake, stay away from windows.",
+    hebrewTokenPairs: [["בזמן רעידת אדמה", "בִּזְמַן רְעִידַת אֲדָמָה"], ["מתרחקים", "מִתְרַחֲקִים"], ["מחלונות", "מֵחַלּוֹנוֹת"]], englishTokens: ["During an earthquake", "stay away", "from windows"],
+    hebrewDistractorPairs: [["בזמן שריפה", "בִּזְמַן שְׂרֵפָה"], ["מתקרבים", "מִתְקָרְבִים"], ["לדלתות", "לִדְלָתוֹת"], ["במהירות", "בִּמְהִירוּת"]], englishDistractors: ["During a fire", "move closer", "to doors", "quickly"],
+    hebrewOrderAlternates: [{ text: "מתרחקים מחלונות בזמן רעידת אדמה.", textNiqqud: "מִתְרַחֲקִים מֵחַלּוֹנוֹת בִּזְמַן רְעִידַת אֲדָמָה.", order: [1, 2, 0] }], notes: "רעידת אדמה is an earthquake; להתרחק מ־ means to stay away from."
+  }),
+  buildReviewedSentence({
+    id: "idan_122", emoji: "📻", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "שידור החירום קטע את התוכנית הרגילה.", hebrewNiqqud: "שִׁדּוּר הַחֵירוּם קָטַע אֶת הַתָּכְנִית הָרְגִילָה.", english: "The emergency broadcast interrupted the regular program.",
+    hebrewTokenPairs: [["שידור החירום", "שִׁדּוּר הַחֵירוּם"], ["קטע את", "קָטַע אֶת"], ["התוכנית הרגילה", "הַתָּכְנִית הָרְגִילָה"]], englishTokens: ["The emergency broadcast", "interrupted", "the regular program"],
+    hebrewDistractorPairs: [["מבזק החדשות", "מִבְזַק הַחֲדָשׁוֹת"], ["המשיך את", "הִמְשִׁיךְ אֶת"], ["השידור החי", "הַשִּׁדּוּר הַחַי"], ["כרגיל", "כָּרָגִיל"]], englishDistractors: ["The news bulletin", "continued", "the live broadcast", "normally"], notes: "שידור חירום is an emergency broadcast; לקטוע means to interrupt."
+  }),
+  buildReviewedSentence({
+    id: "idan_123", emoji: "🚒", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "כוחות כיבוי האש הגיעו בתוך דקות.", hebrewNiqqud: "כּוֹחוֹת כִּבּוּי הָאֵשׁ הִגִּיעוּ בְּתוֹךְ דַּקּוֹת.", english: "Fire crews arrived within minutes.",
+    hebrewTokenPairs: [["כוחות כיבוי האש", "כּוֹחוֹת כִּבּוּי הָאֵשׁ"], ["הגיעו", "הִגִּיעוּ"], ["בתוך דקות", "בְּתוֹךְ דַּקּוֹת"]], englishTokens: ["Fire crews", "arrived", "within minutes"],
+    hebrewDistractorPairs: [["צוותי הרפואה", "צִוְתֵי הָרְפוּאָה"], ["עזבו", "עָזְבוּ"], ["אחרי שעה", "אַחֲרֵי שָׁעָה"], ["למחרת", "לְמָחֳרָת"]], englishDistractors: ["Medical teams", "left", "after an hour", "the next day"], notes: "כוחות כיבוי האש are firefighting crews."
+  }),
+  buildReviewedSentence({
+    id: "idan_124", emoji: "🚧", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "יש מחסום דרכים בהמשך; סעו לפי שלטי המעקף.", hebrewNiqqud: "יֵשׁ מַחְסוֹם דְּרָכִים בַּהֶמְשֵׁךְ; סְעוּ לְפִי שִׁלְטֵי הַמַּעֲקָף.", english: "There’s a roadblock ahead; follow the detour signs.",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["מחסום דרכים", "מַחְסוֹם דְּרָכִים"], ["בהמשך", "בַּהֶמְשֵׁךְ"], ["סעו לפי", "סְעוּ לְפִי"], ["שלטי המעקף", "שִׁלְטֵי הַמַּעֲקָף"]], englishTokens: ["There’s", "a roadblock", "ahead", "follow", "the detour signs"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["עומס תנועה", "עוֹמֶס תְּנוּעָה"], ["מאחור", "מֵאָחוֹר"], ["פנו אחרי", "פְּנוּ אַחֲרֵי"], ["הרמזור", "הָרַמְזוֹר"], ["הבא", "הַבָּא"]], englishDistractors: ["There isn't", "traffic congestion", "behind you", "turn after", "the next", "light"], notes: "מחסום דרכים is a roadblock; מעקף is a detour."
+  }),
+  buildReviewedSentence({
+    id: "idan_125", emoji: "👮", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בבדיקת הרישיון השוטר ביקש לראות את הרישיון שלי.", hebrewNiqqud: "בִּבְדִיקַת הָרִשָּׁיוֹן הַשּׁוֹטֵר בִּקֵּשׁ לִרְאוֹת אֶת הָרִשָּׁיוֹן שֶׁלִּי.", english: "During the license check, the officer asked to see my license.",
+    hebrewTokenPairs: [["בבדיקת הרישיון", "בִּבְדִיקַת הָרִשָּׁיוֹן"], ["השוטר", "הַשּׁוֹטֵר"], ["ביקש לראות", "בִּקֵּשׁ לִרְאוֹת"], ["את הרישיון שלי", "אֶת הָרִשָּׁיוֹן שֶׁלִּי"]], englishTokens: ["During the license check", "the officer", "asked to see", "my license"],
+    hebrewDistractorPairs: [["בבדיקת הרכב", "בִּבְדִיקַת הָרֶכֶב"], ["הפקח", "הַפַּקָּח"], ["סירב לקבל", "סֵרֵב לְקַבֵּל"], ["את התעודה שלו", "אֶת הַתְּעוּדָה שֶׁלּוֹ"]], englishDistractors: ["During the vehicle check", "the inspector", "refused to accept", "his certificate"], notes: "בדיקת רישיון is a license check; the repeated noun is natural in the locked Hebrew."
+  }),
+  buildReviewedSentence({
+    id: "idan_126", emoji: "🚔", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "איפה אפשר לערער על קנס תנועה?", hebrewNiqqud: "אֵיפֹה אֶפְשָׁר לְעַרְעֵר עַל קְנַס תְּנוּעָה?", english: "Where can I appeal a traffic fine?",
+    hebrewTokenPairs: [["איפה", "אֵיפֹה"], ["אפשר", "אֶפְשָׁר"], ["לערער על", "לְעַרְעֵר עַל"], ["קנס תנועה", "קְנַס תְּנוּעָה"]], englishTokens: ["Where", "can I", "appeal", "a traffic fine"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["צריך", "צָרִיךְ"], ["לשלם את", "לְשַׁלֵּם אֶת"], ["דוח החניה", "דּוּחַ הַחֲנָיָה"]], englishDistractors: ["When", "must I", "pay", "the parking ticket"], notes: "לערער על means to appeal; קנס תנועה is a traffic fine."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -17304,6 +17612,7 @@ SENTENCE_BANK.push(
   ...IVRI_TECH_SENTENCES,
   ...CAST_VOCAB_SENTENCES,
   ...NEUTRAL_EVERYDAY_SENTENCES,
+  ...URBAN_MOBILITY_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -17329,6 +17638,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260810b",
+  __build: "20260811a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

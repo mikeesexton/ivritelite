@@ -25,6 +25,10 @@ const TEACHING_POINT_KEYS = {
   "Geminate (ע\"ע) hif'il: the doubled radical collapses, giving הֵסֵב (not הִסְבִּיב).": "binyan.teaching.geminateHifil",
   "Geminate (ע\"ע) hitpa'el plus ס metathesis: הִתְסוֹבֵב → הִסְתּוֹבֵב.": "binyan.teaching.geminateHitpaelSibilant",
   "Geminate (ע\"ע) hitpa'el, no metathesis: מ is not a sibilant, so the order stays (הִתְמוֹדֵד).": "binyan.teaching.geminateHitpael",
+  "פ\"א root: א cannot take a dagesh, so neighboring prefix vowels shift.": "binyan.teaching.peAlef",
+  "ל\"ה root: the final ה disappears or becomes a vowel in many inflected forms.": "binyan.teaching.lamedHe",
+  "Four-letter root: the middle two radicals fill the middle position of the Pi'el-family template together.": "binyan.teaching.quadriliteral",
+  "ע\"ע root: the second and third radicals are identical, so they may merge or surface as a doubled consonant.": "binyan.teaching.geminateGeneric",
 };
 
 function getRuntime() {

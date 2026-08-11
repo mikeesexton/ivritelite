@@ -603,6 +603,46 @@ test("the neutral everyday tranche stays unowned and drawable for every companio
   });
 });
 
+test("urban and practical additions preserve shared routing while character backfill stays reserved", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"), bankContext);
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = characterData.characters;
+
+  for (let index = 190; index <= 217; index += 1) {
+    const row = byId.get(`everyday_${index}`);
+    assert.ok(row);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} stays cast-wide`);
+    Object.values(characters).forEach((entry) => {
+      assert.equal(characterData.ownsItem(entry.route, "sentence", row), false, `${row.id} stays unowned`);
+    });
+  }
+
+  for (let index = 168; index <= 175; index += 1) {
+    const row = byId.get(`colloquial_${index}`);
+    assert.ok(row);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} stays shared`);
+    assert.equal(characterData.ownsItem(characters.ido.route, "sentence", row), true, `${row.id} boosts Ido`);
+  }
+
+  for (let index = 102; index <= 107; index += 1) {
+    const row = byId.get(`inbal_${index}`);
+    assert.deepEqual(Array.from(characterData.getItemAudience("sentence", row)), ["inbal"]);
+  }
+  for (let index = 121; index <= 126; index += 1) {
+    const row = byId.get(`idan_${index}`);
+    assert.deepEqual(Array.from(characterData.getItemAudience("sentence", row)), ["idan"]);
+  }
+
+  const practicalCard = { category: "everyday_survival_expanded", he: "תחבורה ציבורית" };
+  assert.equal(characterData.getItemAudience("vocab", practicalCard), null);
+  assert.equal(characterData.ownsItem(characters.ido.route, "vocab", practicalCard), true);
+});
+
 // A mild row inside a fenced tranche is opted back out by id, because Idan's bank
 // mixes "the shelter is in the yard" with sirens and casualties.
 test("the cast-wide allow-list un-fences the ordinary safety register", () => {

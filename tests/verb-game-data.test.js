@@ -134,7 +134,8 @@ test("binyan root data stays broad enough and fully authored", () => {
 
   // 6 roots per session, so this is the number that decides how long the mode
   // goes before it starts repeating. Raising it is a content decision.
-  assert.equal(verbGameData.ROOTS.length, 72);
+  assert.equal(verbGameData.VERSION, "1.2");
+  assert.equal(verbGameData.ROOTS.length, 80);
 
   for (const root of verbGameData.ROOTS) {
     assert.ok(root.id);
@@ -147,7 +148,7 @@ test("binyan root data stays broad enough and fully authored", () => {
 
     const existingForms = Object.entries(root.forms).filter(([, form]) => form?.exists === true);
     assert.ok(existingForms.length >= 3, `${root.id} needs at least three playable forms`);
-    if (!["ts-l-m", "b-y-n", "k-y-m", "m-d-d", "y-r-d", "sh-t-f", "d-f-s"].includes(root.id)) {
+    if (!["ts-l-m", "b-y-n", "k-y-m", "m-d-d", "y-r-d", "sh-t-f", "d-f-s", "p-r-s-m", "a-d-k-n"].includes(root.id)) {
       assert.ok(existingForms.length >= 4, `${root.id} needs at least four playable forms`);
     }
     playableFormCount += existingForms.length;
@@ -167,8 +168,30 @@ test("binyan root data stays broad enough and fully authored", () => {
     }
   }
 
-  assert.ok(playableFormCount >= 65);
-  assert.ok(playableFormCount <= 400);
+  assert.equal(playableFormCount, 392);
+});
+
+test("urban expansion adds the reviewed weak and quadriliteral root families", () => {
+  const expected = new Map([
+    ["a-k-l", ["pe_guttural", 4]], ["p-n-h", ["lamed_he", 7]],
+    ["n-g-sh", ["pe_nun", 4]], ["n-k-r", ["pe_nun", 6]],
+    ["a-w-r", ["ayin_vav", 6]], ["m-s-s", ["ayin_ayin", 6]],
+    ["p-r-s-m", ["quadriliteral", 3]], ["a-d-k-n", ["quadriliteral", 3]],
+  ]);
+
+  expected.forEach(([gizra, formCount], id) => {
+    const root = verbGameData.ROOTS.find((entry) => entry.id === id);
+    assert.ok(root, `missing root ${id}`);
+    assert.equal(root.gizra, gizra, `${id} gizra`);
+    assert.equal(Object.values(root.forms).filter((form) => form?.exists === true).length, formCount, `${id} form count`);
+    Object.values(root.forms).filter((form) => form?.exists === true).forEach((form) => {
+      assert.match(form.register, /\S/, `${id} form needs register metadata`);
+    });
+  });
+
+  const quadriliterals = verbGameData.ROOTS.filter((root) => root.gizra === "quadriliteral");
+  assert.deepEqual(quadriliterals.map((root) => root.gizra_label), ["מרובעים", "מרובעים"]);
+  assert.deepEqual(quadriliterals.map((root) => root.root_letters.length), [4, 4]);
 });
 
 test("binyan root data keeps duplicate plain forms distinguishable", () => {

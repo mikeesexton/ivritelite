@@ -426,14 +426,14 @@ const POLITICAL_ENTRY_IDS = [
 ];
 
 const REQUESTED_ENTRY_IDS = sentenceIdRange("everyday", 137, 138);
-const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 101).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const INBAL_ENTRY_IDS = sentenceIdRange("inbal", 1, 107).map((id) => id.replace(/_(\d)$/, "_0$1"));
 const INAT_ENTRY_IDS = sentenceIdRange("inat", 1, 30).map((id) => id.replace(/_(\d)$/, "_0$1"));
 // Idan's tranche. Registering it here switches on the seven alignment checks the
 // rows had been escaping — pointed Hebrew, plain/niqqud token parity, the 4-6
 // distractor budget, duplicate distractors, and target reuse.
 // Extended to 120: idan_91-110 carry the cast-wide shelf and are listed in
 // CAST_WIDE_SENTENCE_IDS; idan_111-120 stay his own.
-const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 120).map((id) => id.replace(/_(\d)$/, "_0$1"));
+const IDAN_ENTRY_IDS = sentenceIdRange("idan", 1, 126).map((id) => id.replace(/_(\d)$/, "_0$1"));
 // One-word-focus rows added alongside the תחרותי / ספורים / בלי חרטות cards and
 // the לקלוט, להגיש, להקליט conjugation entries. Registered here so the alignment
 // checks below cover them; the compact-token policy already does, via their
@@ -467,6 +467,10 @@ const IVRI_ENTRY_IDS = sentenceIdRange("professional", 98, 122);
 const IVRI_TECH_ENTRY_IDS = sentenceIdRange("professional", 123, 152);
 const IDO_CAST_VOCAB_ENTRY_IDS = sentenceIdRange("colloquial", 163, 167);
 const NEUTRAL_EVERYDAY_ENTRY_IDS = sentenceIdRange("everyday", 150, 189);
+const URBAN_MOBILITY_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 190, 217),
+  ...sentenceIdRange("colloquial", 168, 175),
+];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -665,6 +669,63 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     possessive suffix
     spoken arabic
     toilet paper
+    service taxi
+    bus route
+    train station
+    bus stop
+    walking distance
+    light rail
+    express train
+    central station
+    free transfer
+    estimated arrival time
+    platform number
+    direction travel
+    route number
+    travel card
+    traffic congestion
+    rush hour
+    traffic flow
+    public transport lane
+    traffic light
+    traffic jam
+    traffic slowdown
+    bike path
+    bus lane
+    electric scooter
+    bike share bike
+    parking garage
+    parking lot
+    water bill
+    utility meter
+    electricity bill
+    emergency repair
+    building committee
+    routine inspection
+    customer complaint
+    service request
+    service representative
+    branch manager
+    insurance claim
+    appointment slot
+    eye drops
+    throat lozenge
+    evening prayer
+    shabbat song
+    kashrut certificate
+    business license
+    travel song
+    emergency broadcast
+    regular program
+    news bulletin
+    live broadcast
+    fire crews
+    medical teams
+    detour signs
+    license check
+    vehicle check
+    traffic fine
+    parking ticket
   `, "term: recognized multiword vocabulary unit"),
   ...compactUnitMap(`
     calms down
@@ -681,6 +742,17 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     seven thirty
     three times
     time day
+    saturday night
+    last minute
+    yesterday evening
+    last month
+    last year
+    tomorrow morning
+    stay away
+    move closer
+    far away
+    sugar free
+    next day
   `, "fixed-expression: lexicalized verb or paired expression"),
   ...compactUnitMap(`
     basic laws
@@ -691,6 +763,9 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     internal police investigations
     supreme court
     tel aviv
+    ben gurion airport
+    coastal road
+    rav kav
   `, "proper-name: geographic, legal, or institutional name"),
   ...compactUnitMap(`
     baal shem tov
@@ -867,6 +942,9 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     sabbath bulletin
     prayer book
     prayer shawl bag
+    kabbalat shabbat
+    grace meals
+    travelers prayer
     hanukkah menorah
     literary essay
     point view
@@ -887,6 +965,15 @@ const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
   [compactTokenExceptionKey("professional_83", "distractor", "makes it harder"), "grammar: natural analytic rendering of one Hebrew verb"],
   [compactTokenExceptionKey("everyday_184", "target", "grew stronger"), "grammar: natural analytic rendering of one Hebrew verb"],
   [compactTokenExceptionKey("everyday_184", "distractor", "grew weaker"), "grammar: natural analytic rendering of one Hebrew verb"],
+  [compactTokenExceptionKey("everyday_203", "target", "gets worse"), "grammar: natural analytic rendering of one Hebrew verb"],
+  [compactTokenExceptionKey("everyday_208", "target", "much higher"), "grammar: natural analytic comparative rendering of Hebrew גבוה בהרבה"],
+  [compactTokenExceptionKey("everyday_208", "distractor", "slightly lower"), "grammar: natural analytic comparative rendering of Hebrew נמוך במעט"],
+  [compactTokenExceptionKey("inbal_102", "target", "Shabbat begin"), "grammar: verbal English rendering of the Hebrew construct noun כניסת שבת"],
+  [compactTokenExceptionKey("inbal_102", "distractor", "Shabbat end"), "grammar: verbal English rendering of the Hebrew construct noun צאת השבת"],
+  [compactTokenExceptionKey("inbal_104", "target", "People say"), "grammar: impersonal Hebrew verb needs a generic English subject"],
+  [compactTokenExceptionKey("inbal_104", "distractor", "People sing"), "grammar: impersonal Hebrew verb needs a generic English subject"],
+  [compactTokenExceptionKey("idan_125", "target", "asked to see"), "grammar: English control construction mirrors the Hebrew verb pair"],
+  [compactTokenExceptionKey("idan_125", "distractor", "refused to accept"), "grammar: English control construction mirrors the Hebrew verb pair"],
 ]);
 
 // Keep empty unless Hebrew and English genuinely cannot express a natural row
@@ -1022,6 +1109,23 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
   everyday_183: ["אחרי שקר קשה לבנות אמון."],
   everyday_184: ["אחרי חודש בחו״ל הגעגוע הביתה התחזק."],
   everyday_187: ["בלי דוגמה קשה להבין את הניב הזה."],
+  everyday_190: ["האם אחרי חצות יש תחבורה ציבורית?"],
+  everyday_195: ["ביום שישי יש מונית שירות לירושלים?"],
+  everyday_197: ["אחרי שמחליפים אוטובוס צריך לתקף שוב?"],
+  everyday_201: ["לפני שעולים כדאי לבדוק את כיוון הנסיעה."],
+  everyday_203: ["בשעות השיא עומס התנועה מחמיר."],
+  colloquial_168: ["כאן אפשר להטעין את הרב־קו?"],
+  colloquial_170: ["באיילון יש פקק תנועה ענק."],
+  colloquial_173: ["ליד התחנה אפשר לשכור אופניים שיתופיים?"],
+  everyday_206: ["לפני שחותמים כדאי לקרוא את חוזה השכירות בעיון."],
+  everyday_213: ["מחר בבוקר יש תור פנוי?"],
+  everyday_217: ["לפני ההליכה כדאי לשתות מים כדי למנוע התייבשות."],
+  inbal_103: ["בית הכנסת מקיים בקיץ קבלת שבת בחוץ."],
+  inbal_104: ["אחרי הארוחה אומרים ברכת המזון."],
+  inbal_105: ["בכניסה יש תעודת כשרות בתוקף?"],
+  inbal_106: ["לפני הטקס בני הזוג חתמו על הכתובה."],
+  inbal_107: ["אחרי שיצאנו מהעיר אמרנו תפילת הדרך."],
+  idan_121: ["מתרחקים מחלונות בזמן רעידת אדמה."],
 };
 
 const EXPANSION_GENDER_ALTERNATE_IDS = [
@@ -1067,15 +1171,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 857 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 905 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 857);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 857);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 857);
+  assert.equal(entries.length, 905);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 905);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 905);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1180,8 +1284,8 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
-    colloquial: 207,
-    everyday: 359,
+    colloquial: 215,
+    everyday: 399,
     professional: 168,
     formal: 123,
   });
@@ -1287,6 +1391,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...IVRI_TECH_ENTRY_IDS,
     ...IDO_CAST_VOCAB_ENTRY_IDS,
     ...NEUTRAL_EVERYDAY_ENTRY_IDS,
+    ...URBAN_MOBILITY_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
@@ -1364,7 +1469,7 @@ test("Inbal and Inat sentence tranches stay aligned and exercise their conjugati
   const inbal = INBAL_ENTRY_IDS.map((id) => byId.get(id));
   const inat = INAT_ENTRY_IDS.map((id) => byId.get(id));
 
-  assert.equal(inbal.length, 101);
+  assert.equal(inbal.length, 107);
   assert.equal(inat.length, 30);
   assert.ok([...inbal, ...inat].every(Boolean));
   [...inbal, ...inat].forEach((entry) => {

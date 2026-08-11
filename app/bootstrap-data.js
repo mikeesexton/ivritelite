@@ -216,6 +216,10 @@ bootstrapData.I18N = bootstrapData.I18N || {
         geminateHifil: "In a geminate (ע\"ע) root the doubled radical collapses, so the hif'il is הֵסֵב — not the expected הִסְבִּיב.",
         geminateHitpaelSibilant: "Geminate (ע\"ע) hitpa'el: the base הִתְסוֹבֵב also swaps ת and ס (sibilant metathesis), giving הִסְתּוֹבֵב.",
         geminateHitpael: "Geminate (ע\"ע) hitpa'el: the doubled radical gives the CoCeC shape הִתְמוֹדֵד; מ is not a sibilant, so there is no metathesis.",
+        peAlef: "Because this root starts with א (פ\"א), the alef cannot take a dagesh, so the neighboring prefix vowels shift.",
+        lamedHe: "In a ל\"ה root, the final ה disappears or becomes a vowel in many inflected forms.",
+        quadriliteral: "In a four-letter root (מרובעים), the middle two radicals fill the middle of the Pi'el-family template together.",
+        geminateGeneric: "In a geminate root (ע\"ע), the second and third radicals are identical, so they may merge or appear as a doubled consonant.",
       },
     },
     prompt: {
@@ -664,6 +668,10 @@ bootstrapData.I18N = bootstrapData.I18N || {
         geminateHifil: "בשורש כפול (ע\"ע) האות הכפולה נבלעת, ולכן ההפעיל הוא הֵסֵב — ולא הִסְבִּיב הצפוי.",
         geminateHitpaelSibilant: "התפעל של שורש כפול (ע\"ע): הבסיס הִתְסוֹבֵב גם מחליף ת ו־ס (מטאתזיס של אות שורקת), ויוצא הִסְתּוֹבֵב.",
         geminateHitpael: "התפעל של שורש כפול (ע\"ע): האות הכפולה נותנת את התבנית הִתְמוֹדֵד; מ אינה אות שורקת, ולכן אין מטאתזיס.",
+        peAlef: "בשורש פ\"א האות א אינה יכולה לקבל דגש, ולכן תנועות התחילית הסמוכות משתנות.",
+        lamedHe: "בשורש ל\"ה האות ה הסופית נעלמת או הופכת לתנועה בצורות נטייה רבות.",
+        quadriliteral: "בשורש מרובע שתי אותיות השורש האמצעיות ממלאות יחד את אמצע תבנית משפחת פיעל.",
+        geminateGeneric: "בשורש כפול (ע\"ע) האות השנייה והשלישית זהות, ולכן הן עשויות להיבלע או להופיע כעיצור מוכפל.",
       },
     },
     prompt: {

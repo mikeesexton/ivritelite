@@ -154,8 +154,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2168);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2103);
+  assert.equal(vocabulary.length, 2192);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2127);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -171,6 +171,25 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
   assert.equal(entriesByHebrew.get("עדיין")?.id, "conversation_glue-025-still-yet");
   assert.equal(entriesByHebrew.get("דיוק")?.id, "scientific_analytical-017-accuracy");
   assert.equal(entriesByHebrew.get("ישיבה")?.id, "scientific_analytical-018-work-meeting");
+});
+
+test("urban mobility tranche appends 24 pointed survival cards in locked order", () => {
+  const rows = loadVocabulary().filter((word) => word.category === "everyday_survival_expanded").slice(15);
+  assert.deepEqual(Array.from(rows, (word) => [word.he, word.en]), [
+    ["תחבורה ציבורית", "public transportation"], ["קו אוטובוס", "bus route"],
+    ["תחנת אוטובוס", "bus stop"], ["תחנת רכבת", "train station"], ["רכבת קלה", "light rail"],
+    ["מונית שירות", "service taxi"], ["רציף", "platform (transit)"], ["רב־קו", "Rav-Kav transit card"],
+    ["לתקף", "to validate a fare"], ["תעריף נסיעה", "transit fare"], ["מעבר חופשי", "free transfer"],
+    ["זמן הגעה משוער", "estimated arrival time"], ["כיוון הנסיעה", "direction of travel"],
+    ["החלפה בין קווים", "transfer between routes"], ["איחור", "lateness"], ["פקק תנועה", "traffic jam"],
+    ["עומס תנועה", "traffic congestion"], ["נתיב תחבורה ציבורית", "public transport lane"],
+    ["שביל אופניים", "bike path"], ["קורקינט חשמלי", "electric scooter"],
+    ["אופניים שיתופיים", "bike share"], ["צומת", "intersection"], ["מעבר חצייה", "crosswalk"],
+    ["חניון", "parking garage"],
+  ]);
+  assert.equal(rows.length, 24);
+  assert.ok(rows.every((word) => word.availability?.translationQuiz));
+  assert.ok(rows.every((word) => /[\u05B0-\u05BC\u05C1\u05C2\u05C7]/u.test(word.heNiqqud)));
 });
 
 test("planned Translation Match cards have niqqud and no gloss collisions", () => {
