@@ -39,10 +39,34 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
-  assert.equal(report.records.length, 2168);
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 647);
+  assert.equal(report.records.length, 2192);
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 699);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1521);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1493);
+});
+
+test("urban mobility cards and practical backfill anchors have exact sentence support", () => {
+  const urban = new Set([
+    "תחבורה ציבורית", "קו אוטובוס", "תחנת אוטובוס", "תחנת רכבת", "רכבת קלה", "מונית שירות",
+    "רציף", "רב־קו", "לתקף", "תעריף נסיעה", "מעבר חופשי", "זמן הגעה משוער", "כיוון הנסיעה",
+    "החלפה בין קווים", "איחור", "פקק תנועה", "עומס תנועה", "נתיב תחבורה ציבורית", "שביל אופניים",
+    "קורקינט חשמלי", "אופניים שיתופיים", "צומת", "מעבר חצייה", "חניון",
+  ]);
+  const backfill = new Set([
+    "חוזה שכירות", "מד שירות", "חשבון מים", "תיקון חירום", "תלונת לקוח", "נציג שירות",
+    "תביעת ביטוח", "תור פנוי", "טיפות עיניים", "סוכרייה לגרון", "פלסטר", "התייבשות",
+    "כניסת שבת", "קבלת שבת", "ברכת המזון", "תעודת כשרות", "כתובה", "תפילת הדרך",
+    "רעידת אדמה", "שידור חירום", "כיבוי אש", "מחסום דרכים", "בדיקת רישיון", "קנס תנועה",
+  ]);
+  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const assertSupported = (anchors, label) => {
+    const selected = report.records.filter((record) => anchors.has(record.word.he));
+    assert.ok(selected.length >= anchors.size, `${label} anchors must all resolve to cards`);
+    assert.equal(selected.filter((record) => record.status !== "exact").length, 0, `${label} anchors need exact/clitic-normalized support`);
+  };
+
+  assertSupported(urban, "urban");
+  assertSupported(backfill, "backfill");
 });
 
 test("the neutral everyday tranche gives all forty selected shared words exact sentence support", () => {

@@ -7467,3 +7467,35 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - GitHub PR #68 merge-state and head-SHA verification — **pass** before merge.
 
 **Risks / regressions to check:** This follow-up only records publication. The remote feature branch may remain after merge unless repository branch-cleanup settings remove it.
+
+### 2026-08-11 11:06 EDT — Add urban mobility, practical backfill, and weak-root Binyan content
+
+**Requested:** Implement the approved Urban Mobility and Coverage Expansion: 24 pointed vocabulary cards, 48 reviewed sentence-bank rows, eight weak/quadriliteral Binyan roots, localized teaching points, append-only/count/routing/coverage regressions, the `20260811a` cache key, and no new preposition, abbreviation, idiom, or conjugation content.
+
+**Files changed:**
+- `vocab-data.js` — appended the 24 locked urban-mobility cards to `everyday_survival_expanded` without changing earlier ids; advanced `__build` to `20260811a`.
+- `sentence-bank-data.js` — added 48 fully pointed `buildReviewedSentence` rows (`everyday_190`–`217`, `colloquial_168`–`175`, `inbal_102`–`107`, and `idan_121`–`126`) with compact bilingual chips, 4–6 shape-matched distractors, notes, explicit word-order decisions, and all 17 required neutral reorderings; advanced `__build` to `20260811a`.
+- `verb-game-data.js` — advanced the data version to `1.2` and added the eight locked roots with exactly 39 playable forms, the new `quadriliteral` / `מרובעים` classification, four-letter root arrays, distinct metadata, and rare/colliding forms excluded from distractor use where appropriate.
+- `app/binyan-board.js` and `app/bootstrap-data.js` — localized teaching points for פ״א, ל״ה, quadriliteral, and generic ע״ע behavior while reusing the existing פ״נ and hollow-root explanations.
+- `index.html` — advanced cache keys for the changed vocabulary, sentence, Binyan data, localization, and Binyan-board scripts to `20260811a`.
+- `tests/vocab-data.test.js` and `tests/fixtures/vocab-id-baseline.json` — ratcheted totals, locked the new card order/content/pointing, and extended the append-only id baseline.
+- `tests/sentence-bank-data.test.js` — ratcheted the 905-row totals/category histogram, registered all new rows for alignment/distractor/parity review, recorded only genuine glossary units or exact grammar exceptions, and pinned every approved reordered answer.
+- `tests/verb-game-data.test.js` — ratcheted 80 roots and 392 forms, added the two quadriliteral three-form exceptions, and asserted the eight roots' class, form count, four-letter shape, and register metadata.
+- `tests/content-coverage.test.js` — ratcheted the recomputed production totals and asserted exact/clitic-normalized support for all 24 mobility cards and all 24 practical/character backfill anchors.
+- `tests/character-mission.test.js` — asserted shared/unowned everyday rows, shared Ido-boosted colloquial rows, Inbal/Idan prefix reservation, and the unfenced Ido vocabulary shelf.
+- `task-log.md` — recorded this implementation and verification.
+
+**Behavior changed:** Vocabulary grows from 2,168 to 2,192 cards (2,127 Translation Match playable), the sentence bank from 857 to 905 rows, and the Binyan Board from 72 roots / 353 forms to 80 roots / 392 forms. Conservative exact sentence support rises from 647 to 699 cards; unsupported cards fall from 1,521 to 1,493. Ido now owns 501 vocabulary cards and 215 sentences, Inbal 107 sentences, and Idan 126 sentences. Urban/practical everyday content remains cast-wide, while the prefixed character rows retain their automatic withholding behavior.
+
+**Tests run:**
+- `npm test` — baseline **394 pass, 0 fail**; final **398 pass, 0 fail**.
+- `node --test tests/vocab-data.test.js tests/content-coverage.test.js` — final **31 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **42 pass, 0 fail**.
+- `node --test tests/verb-game-data.test.js` — final **15 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` — final **61 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — final isolated rerun **1 pass, 0 fail** at the required rendered mobile viewport; one preceding combined verification run timed out/flaked before this clean rerun.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 699, reviewed 0, unsupported 1,493; every new mobility and backfill anchor has exact support.
+- `npm run report:characters` — **pass**: pool 2,192 vocabulary / 905 sentences; Ido 501/215, Inbal 340/107, Ivri 531/168, Inat 377/167, Idan 264/126.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** Several deliberately rare Binyan forms (especially הָאֳכַל, נִכֵּר / נֻכַּר, עוֹרַר, and מֻסַּס) are pedagogically present but excluded from sibling distractor selection; future gloss edits must preserve the duplicate-unpointed-form disambiguation and option-uniqueness tests. Compact-chip glossary/grammar entries are exact and staleness-checked, so sentence rewording must update them. Aggregate coverage includes incidental matches beyond the 48 explicitly anchored cards, while the anchor regression is the stable guarantee. No routing runtime data changed; reserving the urban/practical ids later would intentionally break the shared-routing assertion.
