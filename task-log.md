@@ -7779,3 +7779,18 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - `git diff --check` — **pass** before this log entry; rerun after the entry.
 
 **Risks / regressions to check:** The explicit 30-card map and two full-shelf assertions are the stable finance-coverage guarantee; the seven incidental matches are pinned separately. These rows teach terminology and general relationships, not investment, tax, credit, pension, or insurance advice. They intentionally use Ivri's `professional` register without a reservation, so changing category or audience would alter ownership or cast-wide routing. Finance glossary units are exact and staleness-checked. Rewording `professional_176`, `professional_178`, or `professional_183` requires another neutral-order audit, including the alternate-specific וְ/וּ pointing in the two coordinated rows.
+
+### 2026-08-11 17:55 EDT — Publish and merge the finance expansion
+
+**Requested:** Push the completed finance/business expansion to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded the publication and merge session. The content, tests, documentation, and cache-key changes remain in the preceding finance-expansion commit.
+
+**Behavior changed:** None beyond the already-verified finance expansion; this session publishes that implementation to the default branch.
+
+**Tests run:**
+- No additional application suite was needed after the clean local commit; the immediately preceding implementation run completed `npm test` with **434 pass, 0 fail** and the rendered gameplay-layout test with **1 pass, 0 fail**.
+- `git diff --check` — rerun before publication.
+
+**Risks / regressions to check:** GitHub reports no required checks for this repository, so merge safety depends on the recorded local suite. Confirm the PR remains based on `main`, contains only the finance expansion plus this publication log, and is mergeable before merging.
