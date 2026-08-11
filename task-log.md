@@ -7752,3 +7752,30 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - `git diff --check` — **pass** before this log entry; rerun after the entry before publication.
 
 **Risks / regressions to check:** The explicit 29-card map and two full-shelf assertions are the stable legal-coverage guarantee; the six incidental matches are pinned separately. The rows teach vocabulary and general relationships, not jurisdiction-specific legal advice. They intentionally use Inat's `formal` register without a reservation, so changing category or audience would alter ownership or cast-wide routing. Legal glossary units are exact and staleness-checked. Rewording `formal_120` or `formal_121` requires another context-placement audit.
+
+### 2026-08-11 17:52 EDT — Add a larger Ivri finance and business expansion
+
+**Requested:** Make another larger content addition without spending time on a GitHub merge.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `IVRI_FINANCE_SENTENCES`, twenty-four reviewed `professional_173`–`professional_196` rows with complete niqqud, compact bilingual chips, shape-matched distractors, teaching notes, a 6/12/6 level 1/2/3 mix, and 17–34 Hebrew-letter Handwriting eligibility. Twenty-one orders are fixed; three include reviewed market-context or coordination alternates. Added the tranche to production and advanced `__build` to `20260811i`.
+- `tests/sentence-bank-data.test.js` — registered the finance range and exact finance glossary units, ratcheted bank and professional totals, added the tranche to full alignment checks, pinned all three alternates, and asserted review decisions, difficulty mix, and Handwriting range.
+- `tests/content-coverage.test.js` — ratcheted aggregate production coverage, mapped all 30 previously unsupported finance cards to intended rows, asserted both finance shelves reach 100% exact support, and pinned seven incidental matches separately.
+- `tests/character-mission.test.js` — asserted all twenty-four rows are owned only by Ivri while remaining unreserved and drawable by all five companions.
+- `docs/character-gameplay-strategy.md` — recorded the finance tranche, its non-advisory scope, authoring decisions, full-shelf coverage, routing totals, and completed content-ledger item.
+- `index.html` — advanced the sentence-bank cache key to `20260811i`.
+- `task-log.md` — recorded this implementation and verification session.
+
+**Behavior changed:** The sentence bank grows from 1,045 to 1,069 rows and the professional category from 188 to 212. `finance_investing` reaches 17/17 exact support and `business_finance_expanded` reaches 20/20. App-wide conservative exact support rises from 994 to 1,031 cards and unsupported cards fall from 1,198 to 1,161; seven gains are incidental. Ivri-owned sentences rise from 188 to 212. All twenty-four rows remain cast-wide, raising drawable sentence pools to Ido 831, Inbal 910, Ivri 819, Inat 899, and Idan 886; unrouted and reserved sentence counts remain 269 and 266.
+
+**Tests run:**
+- `npm test` — baseline **429 pass, 0 fail**; final **434 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **50 pass, 0 fail**.
+- `node --test --test-name-pattern='Ivri finance|production coverage' tests/content-coverage.test.js` — **4 pass, 0 fail**.
+- `node --test --test-name-pattern='finance tranche' tests/character-mission.test.js` — **1 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail** in rendered Chrome at the required compact viewport.
+- `npm run report:coverage` — **pass**: 2,192 cards; exact 1,031, reviewed 0, unsupported 1,161; both finance shelves at 100% exact support.
+- `npm run report:characters` — **pass**: 1,069 sentences; Ivri owns 212; 269 unrouted and 266 reserved; drawable sentence pools 831 / 910 / 819 / 899 / 886.
+- `git diff --check` — **pass** before this log entry; rerun after the entry.
+
+**Risks / regressions to check:** The explicit 30-card map and two full-shelf assertions are the stable finance-coverage guarantee; the seven incidental matches are pinned separately. These rows teach terminology and general relationships, not investment, tax, credit, pension, or insurance advice. They intentionally use Ivri's `professional` register without a reservation, so changing category or audience would alter ownership or cast-wide routing. Finance glossary units are exact and staleness-checked. Rewording `professional_176`, `professional_178`, or `professional_183` requires another neutral-order audit, including the alternate-specific וְ/וּ pointing in the two coordinated rows.

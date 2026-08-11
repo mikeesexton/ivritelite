@@ -646,6 +646,36 @@ formal-register ownership rises from 187 to 205. The rows remain unreserved and
 drawable by every companion, lifting drawable pools to Ido 807, Inbal 886, Ivri
 795, Inat 875, and Idan 862.
 
+### Ivri finance and business expansion
+
+`professional_173`–`196` add twenty-four finance and business rows covering
+portfolios and asset allocation, volatility and liquidity, bonds and yields,
+inflation and exchange rates, hedging and diversification, capital gains and
+tax deductions, stocks and dividends, pensions and insurance, loans and credit,
+balance sheets and margins, valuation, mergers and acquisitions, boards and
+shareholders, macro- and microeconomics, and financial leverage. Eight rows
+also deepen already-supported concepts such as cash flow, due diligence,
+mortgages, savings, and revenue forecasts.
+
+All rows use the reviewed append-only builder, fit the Handwriting window at
+17–34 Hebrew letters, and use a 6/12/6 level 1/2/3 mix. Twenty-one orders are
+fixed. Three accept reviewed neutral alternatives: bond-market context first or
+last, and either ordering of the hedging/diversification and pension/insurance
+coordinations. The rows are vocabulary contexts, not investment, tax, credit,
+or insurance advice.
+
+Exact support reaches 17/17 for `finance_investing` and 20/20 for
+`business_finance_expanded`. App-wide exact support rises from 994 to 1,031
+cards, while unsupported cards fall from 1,198 to 1,161. The 30 intended cards
+produce seven conservative incidental matches in `work_business` and
+`bureaucracy`: profit, merger, acquisition, valuation, board of directors,
+shareholder, and tax.
+
+The sentence pool is 1,069, with 269 unrouted and 266 reserved rows. Ivri's
+professional-register ownership rises from 188 to 212. Because the rows remain
+unreserved, every companion can draw them: Ido 831, Inbal 910, Ivri 819, Inat
+899, and Idan 886.
+
 Binyanim, Prepositions, and Conjugation+ stay character-neutral by decision — see the Depth standard section above for the evidence.
 
 ## Visual production
@@ -707,6 +737,10 @@ All five characters are built and integrated, so this section is now a record ra
    11. ~~**Inat legal and civic context, ~18 rows.**~~ **Done** — `formal_108`–`125`.
       Both legal shelves reach full exact support. Inat owns the formal register,
       but all eighteen rows remain unreserved and available to every companion.
+   12. ~~**Ivri finance and business context, ~24 rows.**~~ **Done** —
+      `professional_173`–`196`. Both finance shelves reach full exact support.
+      Ivri owns the professional register, but all twenty-four rows remain
+      unreserved and available to every companion.
 1. Consider a verb pass. Verbs are the thinnest pool app-wide — 48.2% of the 247-item conjugation
    deck is unrouted and no character exceeds 34. Every character clears the floor of 20, so this
    is not urgent, but it is the largest structural deficit left.

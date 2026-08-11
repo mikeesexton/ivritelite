@@ -40,9 +40,9 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
   assert.equal(report.records.length, 2192);
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 994);
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1031);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1198);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1161);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {
@@ -426,6 +426,76 @@ test("Inat legal sentences preserve the six incidental exact matches", () => {
     ["bureaucracy-056-summons", "formal_113"],
     ["bureaucracy-078-immigration", "formal_122"],
     ["emergency_response-006-police-interrogation", "formal_121"],
+  ]);
+  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const byId = new Map(report.records.map((record) => [record.word.id, record]));
+
+  expectedSentenceByCard.forEach((sentenceId, cardId) => {
+    const record = byId.get(cardId);
+    assert.ok(record, `missing incidental card ${cardId}`);
+    assert.ok(record.exactSentenceIds.includes(sentenceId), `${cardId} needs incidental exact support from ${sentenceId}`);
+  });
+});
+
+test("Ivri finance sentences give every previously unsupported finance card its intended exact context", () => {
+  const expectedSentenceByCard = new Map([
+    ["finance_investing-001-portfolio", "professional_173"],
+    ["finance_investing-002-asset-allocation", "professional_173"],
+    ["finance_investing-003-volatility", "professional_174"],
+    ["finance_investing-004-bond", "professional_175"],
+    ["finance_investing-005-liquidity", "professional_174"],
+    ["finance_investing-006-inflation", "professional_177"],
+    ["finance_investing-008-hedge", "professional_178"],
+    ["finance_investing-009-capital-gains", "professional_179"],
+    ["finance_investing-010-stock-exchange", "professional_181"],
+    ["finance_investing-011-share-stock", "professional_181"],
+    ["finance_investing-012-dividend", "professional_182"],
+    ["finance_investing-013-yield-return", "professional_175"],
+    ["finance_investing-015-pension", "professional_183"],
+    ["finance_investing-016-loan", "professional_184"],
+    ["finance_investing-017-exchange-rate", "professional_177"],
+    ["business_finance_expanded-002-balance-sheet", "professional_185"],
+    ["business_finance_expanded-003-profit-margin", "professional_186"],
+    ["business_finance_expanded-005-valuation", "professional_186"],
+    ["business_finance_expanded-006-merger", "professional_187"],
+    ["business_finance_expanded-007-acquisition", "professional_187"],
+    ["business_finance_expanded-009-shareholder", "professional_182"],
+    ["business_finance_expanded-010-board-of-directors", "professional_187"],
+    ["business_finance_expanded-011-macroeconomic-trend", "professional_188"],
+    ["business_finance_expanded-012-microeconomic-incentive", "professional_188"],
+    ["business_finance_expanded-014-insurance-premium", "professional_183"],
+    ["business_finance_expanded-015-tax-deduction", "professional_180"],
+    ["business_finance_expanded-016-credit-score", "professional_184"],
+    ["business_finance_expanded-017-bond-yield", "professional_176"],
+    ["business_finance_expanded-018-risk-diversification", "professional_178"],
+    ["business_finance_expanded-019-financial-leverage", "professional_185"],
+  ]);
+  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const byId = new Map(report.records.map((record) => [record.word.id, record]));
+
+  assert.equal(expectedSentenceByCard.size, 30);
+  expectedSentenceByCard.forEach((sentenceId, cardId) => {
+    const record = byId.get(cardId);
+    assert.ok(record, `missing finance card ${cardId}`);
+    assert.ok(record.exactSentenceIds.includes(sentenceId), `${cardId} needs exact support from ${sentenceId}`);
+  });
+});
+
+test("Ivri finance sentences bring both finance shelves to full exact support", () => {
+  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  assert.deepEqual({ ...report.categories.get("finance_investing") }, { total: 17, exact: 17, reviewed: 0, unsupported: 0 });
+  assert.deepEqual({ ...report.categories.get("business_finance_expanded") }, { total: 20, exact: 20, reviewed: 0, unsupported: 0 });
+});
+
+test("Ivri finance sentences preserve the seven incidental exact matches", () => {
+  const expectedSentenceByCard = new Map([
+    ["work_business-012-profit", "professional_186"],
+    ["work_business-055-merger", "professional_187"],
+    ["work_business-056-acquisition", "professional_187"],
+    ["work_business-071-valuation", "professional_186"],
+    ["work_business-072-board-of-directors", "professional_187"],
+    ["work_business-073-shareholder", "professional_182"],
+    ["bureaucracy-014-tax", "professional_180"],
   ]);
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
   const byId = new Map(report.records.map((record) => [record.word.id, record]));

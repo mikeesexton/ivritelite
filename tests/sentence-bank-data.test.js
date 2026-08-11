@@ -478,6 +478,7 @@ const RELATIONSHIP_ENTRY_IDS = sentenceIdRange("colloquial", 176, 195);
 const IVRI_AI_ENTRY_IDS = sentenceIdRange("professional", 153, 172);
 const SHARED_GRAMMAR_ENTRY_IDS = sentenceIdRange("everyday", 266, 279);
 const INAT_LEGAL_ENTRY_IDS = sentenceIdRange("formal", 108, 125);
+const IVRI_FINANCE_ENTRY_IDS = sentenceIdRange("professional", 173, 196);
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -856,6 +857,38 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     direct testimony
     internal rule
     technical appendix
+    asset allocation
+    investment portfolio
+    bond yield
+    exchange rate
+    risk diversification
+    asset concentration
+    capital gains
+    tax deduction
+    taxable income
+    tax payment
+    stock selection
+    insurance premium
+    loan repayment
+    credit score
+    loan terms
+    credit report
+    financial leverage
+    operational risk
+    profit margins
+    company valuation
+    production costs
+    macroeconomic trend
+    microeconomic incentive
+    cyclical change
+    market signal
+    stock price
+    sales forecast
+    expense forecast
+    sales targets
+    technical review
+    competitive advantage
+    business value
   `, "term: recognized multiword vocabulary unit"),
   ...compactUnitMap(`
     calms down
@@ -1275,6 +1308,9 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
   everyday_274: ["תצורת מילים יכולה להוסיף סופית או תחילית."],
   everyday_275: ["כל אות שורש מקבלת תפקיד בתבנית פועל."],
   everyday_279: ["באוצר המילים ניכרת השפעה ארמית."],
+  professional_176: ["לפי השוק משתנה תשואת אג״ח."],
+  professional_178: ["פיזור סיכונים וגידור מפחיתים חשיפה."],
+  professional_183: ["התקציב כולל פרמיית ביטוח ופנסיה."],
 };
 
 const EXPANSION_GENDER_ALTERNATE_IDS = [
@@ -1320,15 +1356,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,045 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,069 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1045);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1045);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1045);
+  assert.equal(entries.length, 1069);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1069);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1069);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1435,7 +1471,7 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   assert.deepEqual(categoryCounts, {
     colloquial: 235,
     everyday: 461,
-    professional: 188,
+    professional: 212,
     formal: 161,
   });
 
@@ -1674,6 +1710,29 @@ test("Inat legal tranche adds eighteen reviewed formal handwriting-ready rows", 
   );
 });
 
+test("Ivri finance tranche adds twenty-four reviewed professional handwriting-ready rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = IVRI_FINANCE_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 24);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 24);
+  assert.ok(entries.every((entry) => entry.category === "professional"));
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "fixed").length, 21);
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "alternates").length, 3);
+  assert.ok(entries.every((entry) => {
+    const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+    return letters.length >= 17 && letters.length <= 34;
+  }));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 6, 2: 12, 3: 6 }
+  );
+});
+
 test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
@@ -1709,6 +1768,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...IVRI_AI_ENTRY_IDS,
     ...SHARED_GRAMMAR_ENTRY_IDS,
     ...INAT_LEGAL_ENTRY_IDS,
+    ...IVRI_FINANCE_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

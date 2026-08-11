@@ -18634,6 +18634,180 @@ const INAT_LEGAL_SENTENCES = [
   }),
 ];
 
+const IVRI_FINANCE_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_173", emoji: "🧺", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הקצאת נכסים מאזנת תיק השקעות.", hebrewNiqqud: "הַקְצָאַת נְכָסִים מְאַזֶּנֶת תִּיק הַשְׁקָעוֹת.", english: "Asset allocation balances an investment portfolio.",
+    hebrewTokenPairs: [["הקצאת נכסים", "הַקְצָאַת נְכָסִים"], ["מאזנת", "מְאַזֶּנֶת"], ["תיק השקעות", "תִּיק הַשְׁקָעוֹת"]], englishTokens: ["Asset allocation", "balances", "an investment portfolio"],
+    hebrewDistractorPairs: [["בחירת מניות", "בְּחִירַת מְנָיוֹת"], ["מגדילה", "מַגְדִּילָה"], ["סיכון", "סִכּוּן"], ["מיותר", "מְיֻתָּר"]], englishDistractors: ["Stock selection", "increases", "unnecessary", "risk"],
+    notes: "הקצאת נכסים is asset allocation; תיק השקעות is an investment portfolio."
+  }),
+  buildReviewedSentence({
+    id: "professional_174", emoji: "📉", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תנודתיות גבוהה עלולה לפגוע בנזילות.", hebrewNiqqud: "תְּנוּדָתִיּוּת גְּבוֹהָה עֲלוּלָה לִפְגֹּעַ בִּנְזִילוּת.", english: "High volatility may hurt liquidity.",
+    hebrewTokenPairs: [["תנודתיות", "תְּנוּדָתִיּוּת"], ["גבוהה", "גְּבוֹהָה"], ["עלולה", "עֲלוּלָה"], ["לפגוע", "לִפְגֹּעַ"], ["בנזילות", "בִּנְזִילוּת"]], englishTokens: ["High", "volatility", "may", "hurt", "liquidity"],
+    hebrewDistractorPairs: [["יציבות", "יַצִּיבוּת"], ["נמוכה", "נְמוּכָה"], ["יכולה", "יְכוֹלָה"], ["לשפר", "לְשַׁפֵּר"], ["ביצועים", "בִּיצוּעִים"]], englishDistractors: ["Low", "stability", "can", "improve", "performance"],
+    notes: "תנודתיות is volatility; נזילות is the ease of converting an asset to cash."
+  }),
+  buildReviewedSentence({
+    id: "professional_175", emoji: "📜", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אג״ח יכולה להציע תשואה קבועה.", hebrewNiqqud: "אג״ח יְכוֹלָה לְהַצִּיעַ תְּשׂוּאָה קְבוּעָה.", english: "A bond can offer a fixed yield.",
+    hebrewTokenPairs: [["אג״ח", "אג״ח"], ["יכולה", "יְכוֹלָה"], ["להציע", "לְהַצִּיעַ"], ["תשואה", "תְּשׂוּאָה"], ["קבועה", "קְבוּעָה"]], englishTokens: ["A bond", "can", "offer", "a fixed", "yield"],
+    hebrewDistractorPairs: [["מניה", "מְנָיָה"], ["מבטיחה", "מַבְטִיחָה"], ["מחיר", "מְחִיר"], ["עולה", "עוֹלֶה"]], englishDistractors: ["A stock", "promises", "a rising", "price"],
+    notes: "אג״ח is a bond; תשואה is yield or return. The modal יכולה avoids implying that every bond has a fixed yield."
+  }),
+  buildReviewedSentence({
+    id: "professional_176", emoji: "📊", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "תשואת אג״ח משתנה לפי השוק.", hebrewNiqqud: "תְּשׂוּאַת אג״ח מִשְׁתַּנָּה לְפִי הַשּׁוּק.", english: "Bond yield changes with the market.",
+    hebrewTokenPairs: [["תשואת אג״ח", "תְּשׂוּאַת אג״ח"], ["משתנה", "מִשְׁתַּנָּה"], ["לפי", "לְפִי"], ["השוק", "הַשּׁוּק"]], englishTokens: ["Bond yield", "changes", "with", "the market"],
+    hebrewDistractorPairs: [["מחיר מניה", "מְחִיר מְנָיָה"], ["נשאר", "נִשְׁאָר"], ["מעל", "מֵעַל"], ["היעד", "הַיַּעַד"]], englishDistractors: ["A stock price", "stays", "above", "the target"],
+    hebrewOrderAlternates: [{ text: "לפי השוק משתנה תשואת אג״ח.", textNiqqud: "לְפִי הַשּׁוּק מִשְׁתַּנָּה תְּשׂוּאַת אג״ח.", order: [2, 3, 1, 0] }],
+    notes: "תשואת אג״ח is bond yield. The market context is neutral first or last."
+  }),
+  buildReviewedSentence({
+    id: "professional_177", emoji: "💱", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אינפלציה עשויה לשנות שער חליפין.", hebrewNiqqud: "אִינְפְלַצְיָה עֲשׂוּיָה לְשַׁנּוֹת שַׁעַר חֲלִיפִין.", english: "Inflation may change an exchange rate.",
+    hebrewTokenPairs: [["אינפלציה", "אִינְפְלַצְיָה"], ["עשויה", "עֲשׂוּיָה"], ["לשנות", "לְשַׁנּוֹת"], ["שער חליפין", "שַׁעַר חֲלִיפִין"]], englishTokens: ["Inflation", "may", "change", "an exchange rate"],
+    hebrewDistractorPairs: [["אבטלה", "אַבְטָלָה"], ["יכולה", "יְכוֹלָה"], ["להפחית", "לְהַפְחִית"], ["את", "אֶת"], ["הביקוש", "הַבִּקּוּשׁ"]], englishDistractors: ["Unemployment", "can", "reduce", "market", "demand"],
+    notes: "אינפלציה is inflation; שער חליפין is an exchange rate. The relationship is possible, not guaranteed."
+  }),
+  buildReviewedSentence({
+    id: "professional_178", emoji: "🛡️", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "גידור ופיזור סיכונים מפחיתים חשיפה.", hebrewNiqqud: "גִּדּוּר וּפִזּוּר סִכּוּנִים מַפְחִיתִים חֲשִׂיפָה.", english: "Hedging and risk diversification reduce exposure.",
+    hebrewTokenPairs: [["גידור", "גִּדּוּר"], ["ו", "וּ"], ["פיזור סיכונים", "פִזּוּר סִכּוּנִים"], ["מפחיתים", "מַפְחִיתִים"], ["חשיפה", "חֲשִׂיפָה"]], englishTokens: ["Hedging", "and", "risk diversification", "reduce", "exposure"],
+    hebrewDistractorPairs: [["מינוף", "מִינוּף"], ["או", "אוֹ"], ["ריכוז נכסים", "רִכּוּז נְכָסִים"], ["מגדילים", "מַגְדִּילִים"], ["תנודתיות", "תְּנוּדָתִיּוּת"]], englishDistractors: ["Leverage", "or", "asset concentration", "increase", "volatility"],
+    hebrewOrderAlternates: [{ text: "פיזור סיכונים וגידור מפחיתים חשיפה.", textNiqqud: "פִזּוּר סִכּוּנִים וְגִדּוּר מַפְחִיתִים חֲשִׂיפָה.", order: [2, 1, 0, 3, 4], tokensNiqqud: ["פִזּוּר סִכּוּנִים", "וְ", "גִּדּוּר", "מַפְחִיתִים", "חֲשִׂיפָה"] }],
+    notes: "גידור is hedging; פיזור סיכונים is risk diversification. The coordinated strategies may appear in either order."
+  }),
+  buildReviewedSentence({
+    id: "professional_179", emoji: "💰", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "המשקיע רשם רווחי הון.", hebrewNiqqud: "הַמַּשְׁקִיעַ רָשַׁם רִוְחֵי הוֹן.", english: "The investor recorded capital gains.",
+    hebrewTokenPairs: [["המשקיע", "הַמַּשְׁקִיעַ"], ["רשם", "רָשַׁם"], ["רווחי הון", "רִוְחֵי הוֹן"]], englishTokens: ["The investor", "recorded", "capital gains"],
+    hebrewDistractorPairs: [["החוסך", "הַחוֹסֵךְ"], ["ספג", "סָפַג"], ["הפסד", "הֶפְסֵד"], ["זמני", "זְמַנִּי"]], englishDistractors: ["The saver", "absorbed", "a temporary", "loss"],
+    notes: "רווחי הון are capital gains from an increase in an asset's value."
+  }),
+  buildReviewedSentence({
+    id: "professional_180", emoji: "🧾", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ניכוי מס הפחית הכנסה חייבת.", hebrewNiqqud: "נִכּוּי מַס הִפְחִית הַכְנָסָה חַיֶּבֶת.", english: "A tax deduction reduced taxable income.",
+    hebrewTokenPairs: [["ניכוי מס", "נִכּוּי מַס"], ["הפחית", "הִפְחִית"], ["הכנסה חייבת", "הַכְנָסָה חַיֶּבֶת"]], englishTokens: ["A tax deduction", "reduced", "taxable income"],
+    hebrewDistractorPairs: [["תשלום מס", "תַּשְׁלוּם מַס"], ["הגדיל", "הִגְדִּיל"], ["הוצאה מוכרת", "הוֹצָאָה מֻכֶּרֶת"], ["שנתית", "שְׁנָתִית"]], englishDistractors: ["A tax payment", "increased", "an annual", "expense"],
+    notes: "ניכוי מס is a tax deduction; הכנסה חייבת is taxable income. Rules vary by jurisdiction."
+  }),
+  buildReviewedSentence({
+    id: "professional_181", emoji: "🏦", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "מניה חדשה נסחרת בבורסה.", hebrewNiqqud: "מְנָיָה חֲדָשָׁה נִסְחֶרֶת בַּבּוּרְסָה.", english: "A new stock trades on the exchange.",
+    hebrewTokenPairs: [["מניה", "מְנָיָה"], ["חדשה", "חֲדָשָׁה"], ["נסחרת", "נִסְחֶרֶת"], ["בבורסה", "בַּבּוּרְסָה"]], englishTokens: ["A new", "stock", "trades", "on the exchange"],
+    hebrewDistractorPairs: [["אג״ח", "אג״ח"], ["נפדית", "נִפְדֵּית"], ["בבנק", "בַּבַּנְק"], ["מרכזי", "מֶרְכָּזִי"]], englishDistractors: ["A bond", "is redeemed", "at a central", "bank"],
+    notes: "מניה is a share or stock; בורסה is a stock exchange."
+  }),
+  buildReviewedSentence({
+    id: "professional_182", emoji: "👤", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "בעל מניות קיבל דיבידנד.", hebrewNiqqud: "בַּעַל מְנָיוֹת קִבֵּל דִּיבִידֶנְד.", english: "A shareholder received a dividend.",
+    hebrewTokenPairs: [["בעל מניות", "בַּעַל מְנָיוֹת"], ["קיבל", "קִבֵּל"], ["דיבידנד", "דִּיבִידֶנְד"]], englishTokens: ["A shareholder", "received", "a dividend"],
+    hebrewDistractorPairs: [["בעל חוב", "בַּעַל חוֹב"], ["שילם", "שִׁלֵּם"], ["עמלה", "עַמְלָה"], ["נוספת", "נוֹסֶפֶת"]], englishDistractors: ["A debtor", "paid", "an additional", "fee"],
+    notes: "בעל מניות is a shareholder; דיבידנד is a dividend distributed to shareholders."
+  }),
+  buildReviewedSentence({
+    id: "professional_183", emoji: "🧮", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "התקציב כולל פנסיה ופרמיית ביטוח.", hebrewNiqqud: "הַתַּקְצִיב כּוֹלֵל פֶּנְסְיָה וּפְרֶמְיַת בִּיטּוּחַ.", english: "The budget includes pension and an insurance premium.",
+    hebrewTokenPairs: [["התקציב", "הַתַּקְצִיב"], ["כולל", "כּוֹלֵל"], ["פנסיה", "פֶּנְסְיָה"], ["ו", "וּ"], ["פרמיית ביטוח", "פְרֶמְיַת בִּיטּוּחַ"]], englishTokens: ["The budget", "includes", "pension", "and", "an insurance premium"],
+    hebrewDistractorPairs: [["הדוח", "הַדּוּחַ"], ["משמיט", "מַשְׁמִיט"], ["משכנתה", "מַשְׁכַּנְתָּה"], ["או", "אוֹ"], ["החזר הלוואה", "הֶחְזֵר הַלְוָאָה"]], englishDistractors: ["The report", "omits", "a mortgage", "or", "a loan repayment"],
+    hebrewOrderAlternates: [{ text: "התקציב כולל פרמיית ביטוח ופנסיה.", textNiqqud: "הַתַּקְצִיב כּוֹלֵל פְרֶמְיַת בִּיטּוּחַ וּפֶנְסְיָה.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["הַתַּקְצִיב", "כּוֹלֵל", "פְרֶמְיַת בִּיטּוּחַ", "וּ", "פֶּנְסְיָה"] }],
+    notes: "פנסיה is pension; פרמיית ביטוח is an insurance premium. The coordinated costs may appear in either order."
+  }),
+  buildReviewedSentence({
+    id: "professional_184", emoji: "💳", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "דירוג אשראי משפיע על תנאי הלוואה.", hebrewNiqqud: "דֵּירוּג אַשְׁרַאי מַשְׁפִּיעַ עַל תְּנָאֵי הַלְוָאָה.", english: "A credit score affects loan terms.",
+    hebrewTokenPairs: [["דירוג אשראי", "דֵּירוּג אַשְׁרַאי"], ["משפיע על", "מַשְׁפִּיעַ עַל"], ["תנאי הלוואה", "תְּנָאֵי הַלְוָאָה"]], englishTokens: ["A credit score", "affects", "loan terms"],
+    hebrewDistractorPairs: [["דוח אשראי", "דּוּחַ אַשְׁרַאי"], ["מתעד", "מְתַעֵד"], ["תשלום", "תַּשְׁלוּם"], ["באיחור", "בְּאִחוּר"]], englishDistractors: ["A credit report", "records", "a late", "payment"],
+    notes: "דירוג אשראי is a credit score; תנאי הלוואה are loan terms."
+  }),
+  buildReviewedSentence({
+    id: "professional_185", emoji: "📋", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "מאזן מציג מינוף פיננסי.", hebrewNiqqud: "מַאֲזָן מַצִּיג מִינוּף פִינַנְסִי.", english: "A balance sheet shows financial leverage.",
+    hebrewTokenPairs: [["מאזן", "מַאֲזָן"], ["מציג", "מַצִּיג"], ["מינוף פיננסי", "מִינוּף פִינַנְסִי"]], englishTokens: ["A balance sheet", "shows", "financial leverage"],
+    hebrewDistractorPairs: [["תקציב", "תַּקְצִיב"], ["מסתיר", "מַסְתִּיר"], ["סיכון תפעולי", "סִכּוּן תִּפְעוּלִי"], ["גבוה", "גָּבוֹהַּ"]], englishDistractors: ["A budget", "hides", "high", "operational risk"],
+    notes: "מאזן is a balance sheet; מינוף פיננסי is financial leverage using borrowed capital."
+  }),
+  buildReviewedSentence({
+    id: "professional_186", emoji: "📈", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "שולי רווח משפיעים על שווי החברה.", hebrewNiqqud: "שׁוּלֵי רֶוַח מַשְׁפִּיעִים עַל שְׁוִי הַחֶבְרָה.", english: "Profit margins influence company valuation.",
+    hebrewTokenPairs: [["שולי רווח", "שׁוּלֵי רֶוַח"], ["משפיעים על", "מַשְׁפִּיעִים עַל"], ["שווי החברה", "שְׁוִי הַחֶבְרָה"]], englishTokens: ["Profit margins", "influence", "company valuation"],
+    hebrewDistractorPairs: [["עלויות ייצור", "עֲלֻיּוֹת יִצּוּר"], ["מגבילות", "מַגְבִּילוֹת"], ["צמיחה", "צְמִיחָה"], ["עתידית", "עֲתִידִית"]], englishDistractors: ["Production costs", "limit", "future", "growth"],
+    notes: "שולי רווח are profit margins; שווי החברה is the company's valuation."
+  }),
+  buildReviewedSentence({
+    id: "professional_187", emoji: "🤝", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הדירקטוריון השווה מיזוג לרכישה.", hebrewNiqqud: "הַדִּירֶקְטוֹרְיוֹן הִשְׁוָה מִיזּוּג לִרְכִישָׁה.", english: "The board compared a merger with an acquisition.",
+    hebrewTokenPairs: [["הדירקטוריון", "הַדִּירֶקְטוֹרְיוֹן"], ["השווה", "הִשְׁוָה"], ["מיזוג", "מִיזּוּג"], ["לרכישה", "לִרְכִישָׁה"]], englishTokens: ["The board", "compared", "a merger", "with an acquisition"],
+    hebrewDistractorPairs: [["ההנהלה", "הַהַנְהָלָה"], ["העדיפה", "הֶעֱדִיפָה"], ["הנפקה", "הַנְפָּקָה"], ["על מכירה", "עַל מְכִירָה"]], englishDistractors: ["Management", "preferred", "an offering", "over a sale"],
+    notes: "דירקטוריון is a board of directors; מיזוג is a merger and רכישה is an acquisition."
+  }),
+  buildReviewedSentence({
+    id: "professional_188", emoji: "🔬", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "מגמה מאקרו-כלכלית אינה תמריץ מיקרו-כלכלי.", hebrewNiqqud: "מְגַמָּה מַאקְרוֹ-כַּלְכָּלִית אֵינָהּ תַּמְרִיץ מִיקְרוֹ-כַּלְכָּלִי.", english: "A macroeconomic trend is not a microeconomic incentive.",
+    hebrewTokenPairs: [["מגמה מאקרו-כלכלית", "מְגַמָּה מַאקְרוֹ-כַּלְכָּלִית"], ["אינה", "אֵינָהּ"], ["תמריץ מיקרו-כלכלי", "תַּמְרִיץ מִיקְרוֹ-כַּלְכָּלִי"]], englishTokens: ["A macroeconomic trend", "is not", "a microeconomic incentive"],
+    hebrewDistractorPairs: [["שינוי מחזורי", "שִׁנּוּי מַחְזוֹרִי"], ["עשוי להיות", "עָשׂוּי לִהְיוֹת"], ["אות שוק", "אוֹת שׁוּק"], ["זמני", "זְמַנִּי"]], englishDistractors: ["A cyclical change", "may be", "a temporary", "market signal"],
+    notes: "מגמה מאקרו-כלכלית is a macroeconomic trend; תמריץ מיקרו-כלכלי is an incentive acting at the individual or firm level."
+  }),
+  buildReviewedSentence({
+    id: "professional_189", emoji: "🏠", category: "professional", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "ריבית גבוהה מעלה עלויות משכנתה.", hebrewNiqqud: "רִבִּית גְּבוֹהָה מַעֲלָה עֲלֻיּוֹת מַשְׁכַּנְתָּה.", english: "High interest raises mortgage costs.",
+    hebrewTokenPairs: [["ריבית", "רִבִּית"], ["גבוהה", "גְּבוֹהָה"], ["מעלה", "מַעֲלָה"], ["עלויות", "עֲלֻיּוֹת"], ["משכנתה", "מַשְׁכַּנְתָּה"]], englishTokens: ["High", "interest", "raises", "mortgage", "costs"],
+    hebrewDistractorPairs: [["עמלה", "עַמְלָה"], ["נמוכה", "נְמוּכָה"], ["מפחיתה", "מַפְחִיתָה"], ["תשלומי", "תַּשְׁלוּמֵי"], ["שכירות", "שְׂכִירוּת"]], englishDistractors: ["A low", "fee", "reduces", "rental", "payments"],
+    notes: "ריבית is interest; משכנתה is a mortgage. The sentence describes a general cost relationship."
+  }),
+  buildReviewedSentence({
+    id: "professional_190", emoji: "🐷", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "חיסכון קבוע מחזק תיק השקעות.", hebrewNiqqud: "חִסָּכוֹן קָבוּעַ מְחַזֵּק תִּיק הַשְׁקָעוֹת.", english: "Regular saving strengthens an investment portfolio.",
+    hebrewTokenPairs: [["חיסכון", "חִסָּכוֹן"], ["קבוע", "קָבוּעַ"], ["מחזק", "מְחַזֵּק"], ["תיק השקעות", "תִּיק הַשְׁקָעוֹת"]], englishTokens: ["Regular", "saving", "strengthens", "an investment portfolio"],
+    hebrewDistractorPairs: [["הוצאה", "הוֹצָאָה"], ["חריגה", "חֲרִיגָה"], ["מחלישה", "מַחֲלִישָׁה"], ["תוכנית", "תּוֹכְנִית"], ["שנתית", "שְׁנָתִית"]], englishDistractors: ["An unusual", "expense", "weakens", "an annual", "plan"],
+    notes: "חיסכון is saving; the row reuses תיק השקעות in a recurring-contribution context."
+  }),
+  buildReviewedSentence({
+    id: "professional_191", emoji: "📑", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תזרים מזומנים נבדק מול מאזן.", hebrewNiqqud: "תַּזְרִים מְזוּמָנִים נִבְדָּק מוּל מַאֲזָן.", english: "Cash flow is checked against a balance sheet.",
+    hebrewTokenPairs: [["תזרים מזומנים", "תַּזְרִים מְזוּמָנִים"], ["נבדק", "נִבְדָּק"], ["מול", "מוּל"], ["מאזן", "מַאֲזָן"]], englishTokens: ["Cash flow", "is checked", "against", "a balance sheet"],
+    hebrewDistractorPairs: [["תחזית מכירות", "תַּחֲזִית מְכִירוֹת"], ["מושווית", "מֻשְׁוֵית"], ["עם", "עִם"], ["תקציב", "תַּקְצִיב"]], englishDistractors: ["A sales forecast", "is compared", "with", "a budget"],
+    notes: "תזרים מזומנים is cash flow; מאזן is the balance sheet used for a different financial snapshot."
+  }),
+  buildReviewedSentence({
+    id: "professional_192", emoji: "📈", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "תחזית הכנסות משפיעה על שולי רווח.", hebrewNiqqud: "תַּחֲזִית הַכְנָסוֹת מַשְׁפִּיעָה עַל שׁוּלֵי רֶוַח.", english: "A revenue forecast affects profit margins.",
+    hebrewTokenPairs: [["תחזית הכנסות", "תַּחֲזִית הַכְנָסוֹת"], ["משפיעה על", "מַשְׁפִּיעָה עַל"], ["שולי רווח", "שׁוּלֵי רֶוַח"]], englishTokens: ["A revenue forecast", "affects", "profit margins"],
+    hebrewDistractorPairs: [["תחזית הוצאות", "תַּחֲזִית הוֹצָאוֹת"], ["מתעלמת מן", "מִתְעַלֶּמֶת מִן"], ["יעדי מכירה", "יַעֲדֵי מְכִירָה"], ["חדשים", "חֲדָשִׁים"]], englishDistractors: ["An expense forecast", "ignores", "new", "sales targets"],
+    notes: "תחזית הכנסות is a revenue forecast; שולי רווח are profit margins."
+  }),
+  buildReviewedSentence({
+    id: "professional_193", emoji: "🔎", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בדיקת נאותות קודמת לרכישה.", hebrewNiqqud: "בְּדִיקַת נְאוֹתוּת קוֹדֶמֶת לִרְכִישָׁה.", english: "Due diligence precedes an acquisition.",
+    hebrewTokenPairs: [["בדיקת נאותות", "בְּדִיקַת נְאוֹתוּת"], ["קודמת", "קוֹדֶמֶת"], ["לרכישה", "לִרְכִישָׁה"]], englishTokens: ["Due diligence", "precedes", "an acquisition"],
+    hebrewDistractorPairs: [["בדיקה טכנית", "בְּדִיקָה טֶכְנִית"], ["באה", "בָּאָה"], ["אחרי", "אַחֲרֵי"], ["מיזוג", "מִיזּוּג"], ["מלא", "מָלֵא"]], englishDistractors: ["A technical review", "comes", "after", "a full", "merger"],
+    notes: "בדיקת נאותות is due diligence performed before an acquisition."
+  }),
+  buildReviewedSentence({
+    id: "professional_194", emoji: "⚖️", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "מנוף כלכלי אינו מינוף פיננסי.", hebrewNiqqud: "מָנוֹף כַּלְכָּלִי אֵינוֹ מִינוּף פִינַנְסִי.", english: "Economic leverage is not financial leverage.",
+    hebrewTokenPairs: [["מנוף כלכלי", "מָנוֹף כַּלְכָּלִי"], ["אינו", "אֵינוֹ"], ["מינוף פיננסי", "מִינוּף פִינַנְסִי"]], englishTokens: ["Economic leverage", "is not", "financial leverage"],
+    hebrewDistractorPairs: [["יתרון תחרותי", "יִתְרוֹן תַּחֲרוּתִי"], ["עשוי ליצור", "עָשׂוּי לִיצוֹר"], ["ערך עסקי", "עֵרֶךְ עִסְקִי"], ["חדש", "חָדָשׁ"]], englishDistractors: ["A competitive advantage", "may create", "new", "business value"],
+    notes: "מנוף כלכלי is economic leverage in a broad policy or strategic sense; מינוף פיננסי specifically uses debt or borrowed capital."
+  }),
+  buildReviewedSentence({
+    id: "professional_195", emoji: "🧩", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "נזילות נמוכה מגבילה פיזור סיכונים.", hebrewNiqqud: "נְזִילוּת נְמוּכָה מַגְבִּילָה פִזּוּר סִכּוּנִים.", english: "Low liquidity limits risk diversification.",
+    hebrewTokenPairs: [["נזילות", "נְזִילוּת"], ["נמוכה", "נְמוּכָה"], ["מגבילה", "מַגְבִּילָה"], ["פיזור סיכונים", "פִזּוּר סִכּוּנִים"]], englishTokens: ["Low", "liquidity", "limits", "risk diversification"],
+    hebrewDistractorPairs: [["תשואה", "תְּשׂוּאָה"], ["גבוהה", "גְּבוֹהָה"], ["מאפשרת", "מְאַפְשֶׁרֶת"], ["ריכוז נכסים", "רִכּוּז נְכָסִים"]], englishDistractors: ["High", "yield", "allows", "asset concentration"],
+    notes: "The row connects low liquidity with constraints on פיזור סיכונים, risk diversification."
+  }),
+  buildReviewedSentence({
+    id: "professional_196", emoji: "💱", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "שער חליפין משנה שווי של השקעה.", hebrewNiqqud: "שַׁעַר חֲלִיפִין מְשַׁנֶּה שְׁוִי שֶׁל הַשְׁקָעָה.", english: "An exchange rate changes the value of an investment.",
+    hebrewTokenPairs: [["שער חליפין", "שַׁעַר חֲלִיפִין"], ["משנה", "מְשַׁנֶּה"], ["שווי", "שְׁוִי"], ["של", "שֶׁל"], ["השקעה", "הַשְׁקָעָה"]], englishTokens: ["An exchange rate", "changes", "the value", "of", "an investment"],
+    hebrewDistractorPairs: [["שער ריבית", "שַׁעַר רִבִּית"], ["שומר על", "שׁוֹמֵר עַל"], ["מחיר", "מְחִיר"], ["בלי", "בְּלִי"], ["עמלה", "עַמְלָה"]], englishDistractors: ["An interest rate", "preserves", "the price", "without", "a fee"],
+    notes: "שער חליפין is an exchange rate; שווי is value or valuation."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -18650,6 +18824,7 @@ SENTENCE_BANK.push(
   ...IVRI_AI_SENTENCES,
   ...SHARED_GRAMMAR_SENTENCES,
   ...INAT_LEGAL_SENTENCES,
+  ...IVRI_FINANCE_SENTENCES,
   ...LEXICAL_FOCUS_SENTENCES,
   ...RUMOR_SENTENCES,
   ...CONTEXT_BRIDGE_SENTENCES,
@@ -18675,6 +18850,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260811h",
+  __build: "20260811i",
 };
 })(typeof window !== "undefined" ? window : globalThis);
