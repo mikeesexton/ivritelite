@@ -575,6 +575,34 @@ test("register, style and ordinary topic shelves are never withheld", () => {
   });
 });
 
+test("the neutral everyday tranche stays unowned and drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const rows = bankContext.IvriQuestSentenceBank.getSentenceBank()
+    .filter((row) => /^everyday_1(?:5\d|[6-8]\d)$/.test(row.id));
+  const characters = Object.values(characterData.characters);
+
+  assert.equal(rows.length, 40);
+  rows.forEach((row) => {
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        false,
+        `${row.id} must not change ${entry.id}'s owned count`,
+      );
+    });
+  });
+});
+
 // A mild row inside a fenced tranche is opted back out by id, because Idan's bank
 // mixes "the shelter is in the yard" with sirens and casualties.
 test("the cast-wide allow-list un-fences the ordinary safety register", () => {

@@ -7426,3 +7426,44 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 - GitHub reported PR #66 **cleanly mergeable** with no pending checks; post-merge verification reported state **MERGED**.
 
 **Risks / regressions to check:** This follow-up is documentation-only. The remote feature branch remains available after merge unless repository branch-cleanup settings remove it.
+
+### 2026-08-10 22:47 EDT — Add forty neutral everyday sentence-bank rows
+
+**Requested:** Add the approved `everyday_150`–`everyday_189` sentence-bank tranche to deepen the shared pool for every companion, following the compact-chip and append-only word-order-review policies, preserving character balance, adding coverage, running the full suite, and recording the work.
+
+**Files changed:**
+- `sentence-bank-data.js` — added forty fully pointed `buildReviewedSentence` rows with compact bilingual chips, shape-matched distractors, notes, explicit fixed/alternates decisions, and the ten approved reordered Hebrew answers; added the tranche to the final bank assembly and advanced the data build id.
+- `tests/sentence-bank-data.test.js` — registered the contiguous tranche in the alignment checks, ratcheted all approved reordered texts, added the one irreducible target-count exception and reviewed glossary/grammar units, updated bank/category totals, and asserted the 16/20/4 difficulty distribution.
+- `tests/content-coverage.test.js` — updated production coverage totals and asserted exact sentence support for all forty selected shared vocabulary anchors.
+- `tests/character-mission.test.js` — added a regression proving every new row is unowned and has a cast-wide audience.
+- `docs/character-gameplay-strategy.md` — marked the neutral everyday priority complete and recorded the new unrouted and per-companion drawable sentence counts.
+- `index.html` — advanced the sentence-bank cache key to `20260810b`.
+- `task-log.md` — recorded the implementation and verification.
+
+**Behavior changed:** The sentence bank grows from 817 to 857 rows and the everyday category from 319 to 359. The forty approved rows are available as new material to every companion without changing any character-owned or reserved count. Unrouted sentences rise from 139 to 179; drawable sentence pools rise to Ido 631, Inbal 704, Ivri 619, Inat 699, and Idan 680. Conservative vocabulary coverage improves from 600 to 647 exact cards because the forty planned anchors plus seven incidental words now have direct sentence support.
+
+**Tests run:**
+- `npm test` — baseline **391 pass, 0 fail**; final **394 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — final **41 pass, 0 fail** after fixing expected totals, pointed distractor alignment, compact chips, target reuse, and gender-decoy issues exposed during authoring.
+- `node --test tests/sentence-bank-data.test.js tests/content-coverage.test.js tests/character-mission.test.js` — final **108 pass, 0 fail**.
+- `npm run report:coverage` — **pass**: 2168 cards; exact 647, reviewed 0, unsupported 1521; every selected anchor has exact support.
+- `npm run report:characters` — **pass**: sentence pool 857, unrouted 179, reserved 254; owned counts unchanged and every drawable sentence pool increased by 40.
+- `git diff --check` — **pass** after the final task-log entry.
+
+**Risks / regressions to check:** The tranche deliberately adds one exact bilingual target-count exception for `everyday_165`, because Hebrew expresses “exercise” with `עושה פעילות גופנית`; it is keyed to that row and guarded against staleness. The vocabulary report gains seven incidental exact matches beyond the forty planned anchors, so future wording changes can alter the aggregate 647 count even when the anchor regression remains green. No route or reserve-list data changed; adding these ids to a future reserve list would violate the cast-wide routing regression.
+
+### 2026-08-10 22:51 EDT — Publish and merge the neutral everyday tranche
+
+**Requested:** Push the approved forty-row neutral `everyday_` sentence-bank tranche to GitHub and merge it into `main`.
+
+**Files changed:**
+- `task-log.md` — recorded the publication and merge of the already-tested sentence-bank, coverage, routing, cache-key, and strategy changes through PR #68.
+
+**Behavior changed:** None beyond the forty-row shared sentence-pool expansion recorded in the preceding entry. The implementation is published through PR #68 and merged into `main`.
+
+**Tests run:**
+- `npm test` — **394 pass, 0 fail** on the staged feature change immediately before publication.
+- `git diff --cached --check` — **pass** before the implementation commit.
+- GitHub PR #68 merge-state and head-SHA verification — **pass** before merge.
+
+**Risks / regressions to check:** This follow-up only records publication. The remote feature branch may remain after merge unless repository branch-cleanup settings remove it.

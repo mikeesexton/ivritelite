@@ -518,9 +518,11 @@ All five characters are built and integrated, so this section is now a record ra
       five stay his. His bank went 90 → 115.
    2. ~~A `professional` tranche for Ivri.~~ **Done** — `professional_98`–`122`. His bank went
       113 → 138 owned, 127 drawable.
-   3. **Neutral `everyday_` rows, ~40.** The 139 unrouted rows are the connective tissue all
-      five draw the shared tier from, and that tier is what the fence shrinks. The cheapest
-      way to lift every character at once. Still open.
+   3. ~~**Neutral `everyday_` rows, ~40.**~~ **Done** — `everyday_150`–`189`. The forty
+      coverage-led rows use ordinary cooking, personal-care, health, planning, emotional and
+      language-learning contexts. They are unowned and unreserved, taking the unrouted sentence
+      tier from 139 to 179 and lifting every drawable pool equally: Ido 631, Inbal 704, Ivri 619,
+      Inat 699 and Idan 680. Character-owned counts and the 254 fenced sentences are unchanged.
    4. **A non-partisan tranche for Inat, ~20 rows.** She reads healthiest on count but is the
       most fenced on identity — 46 reserved rows. Literature, cultural memory, archives, close
       reading. Still open.

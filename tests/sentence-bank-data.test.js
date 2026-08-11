@@ -466,6 +466,7 @@ const LEHAKIR_ENTRY_IDS = ["professional_97", "everyday_146", "inbal_96"];
 const IVRI_ENTRY_IDS = sentenceIdRange("professional", 98, 122);
 const IVRI_TECH_ENTRY_IDS = sentenceIdRange("professional", 123, 152);
 const IDO_CAST_VOCAB_ENTRY_IDS = sentenceIdRange("colloquial", 163, 167);
+const NEUTRAL_EVERYDAY_ENTRY_IDS = sentenceIdRange("everyday", 150, 189);
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -657,6 +658,13 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     tone voice
     training data
     treatment plan
+    body lotion
+    hand sanitizer
+    health insurance
+    plural form
+    possessive suffix
+    spoken arabic
+    toilet paper
   `, "term: recognized multiword vocabulary unit"),
   ...compactUnitMap(`
     calms down
@@ -670,6 +678,9 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     present day
     upside down
     went down
+    seven thirty
+    three times
+    time day
   `, "fixed-expression: lexicalized verb or paired expression"),
   ...compactUnitMap(`
     basic laws
@@ -874,11 +885,15 @@ const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
   [compactTokenExceptionKey("colloquial_151", "target", "When people say"), "grammar: impersonal Hebrew verb needs a generic English subject"],
   [compactTokenExceptionKey("colloquial_151", "distractor", "When people write"), "grammar: impersonal Hebrew verb needs a generic English subject"],
   [compactTokenExceptionKey("professional_83", "distractor", "makes it harder"), "grammar: natural analytic rendering of one Hebrew verb"],
+  [compactTokenExceptionKey("everyday_184", "target", "grew stronger"), "grammar: natural analytic rendering of one Hebrew verb"],
+  [compactTokenExceptionKey("everyday_184", "distractor", "grew weaker"), "grammar: natural analytic rendering of one Hebrew verb"],
 ]);
 
 // Keep empty unless Hebrew and English genuinely cannot express a natural row
 // with comparable target counts. Future entries require an exact id + reason.
-const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map();
+const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map([
+  ["everyday_165", "Hebrew expresses English exercise with the verb-object construction עושה פעילות גופנית"],
+]);
 
 function isCompactTokenPolicyEntry(entry) {
   if (/^(?:inbal|inat|idan)_\d+$/.test(String(entry?.id || ""))) return true;
@@ -997,6 +1012,16 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
     "מחינו אתמול בכיכר, ומחר שוב נמחה.",
     "מחינו בכיכר אתמול, ומחר שוב נמחה.",
   ],
+  everyday_151: ["אפשר בבקשה להעביר לי את המרית?"],
+  everyday_157: ["בארון נשאר נייר טואלט?"],
+  everyday_159: ["ליד הקופה יש ג׳ל לחיטוי ידיים."],
+  everyday_165: ["שלוש פעמים בשבוע אני עושה פעילות גופנית."],
+  everyday_166: ["היום האימון היה קצר אבל קשה."],
+  everyday_177: ["לפני שקובעים תור, צריך לבדוק זמינות."],
+  everyday_181: ["בכל פעם שהאתר נתקע, התסכול שלי גדל."],
+  everyday_183: ["אחרי שקר קשה לבנות אמון."],
+  everyday_184: ["אחרי חודש בחו״ל הגעגוע הביתה התחזק."],
+  everyday_187: ["בלי דוגמה קשה להבין את הניב הזה."],
 };
 
 const EXPANSION_GENDER_ALTERNATE_IDS = [
@@ -1042,15 +1067,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 817 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 857 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 817);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 817);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 817);
+  assert.equal(entries.length, 857);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 857);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 857);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1156,7 +1181,7 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   assert.deepEqual(categoryCounts, {
     colloquial: 207,
-    everyday: 319,
+    everyday: 359,
     professional: 168,
     formal: 123,
   });
@@ -1217,6 +1242,24 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   );
 });
 
+test("neutral everyday tranche adds forty reviewed rows in the approved difficulty mix", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = NEUTRAL_EVERYDAY_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 40);
+  assert.ok(entries.every(Boolean));
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 40);
+  assert.ok(entries.every((entry) => entry.category === "everyday"));
+  assert.ok(entries.every((entry) => ["fixed", "alternates"].includes(entry.hebrew_order_review)));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 1: 16, 2: 20, 3: 4 }
+  );
+});
+
 test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
@@ -1243,6 +1286,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...IVRI_ENTRY_IDS,
     ...IVRI_TECH_ENTRY_IDS,
     ...IDO_CAST_VOCAB_ENTRY_IDS,
+    ...NEUTRAL_EVERYDAY_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
