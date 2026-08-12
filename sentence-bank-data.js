@@ -4476,6 +4476,17 @@ const SENTENCE_BANK = [
       "in a small room",
       "before noon"
     ],
+    "english_alternates": [
+      {
+        "text": "The ceremony was held after sunset in the main hall.",
+        "tokens": [
+          "The ceremony",
+          "was held",
+          "after sunset",
+          "in the main hall"
+        ]
+      }
+    ],
     "notes": "התקיים means 'took place' or 'was held' for events; here the ceremony was held in a specific place."
   },
   {
@@ -5380,6 +5391,20 @@ const SENTENCE_BANK = [
       "for a minute",
       "I left",
       "at the desk"
+    ],
+    "english_alternates": [
+      {
+        "text": "I took a number and I've already been waiting in line an hour.",
+        "tokens": [
+          "I took",
+          "a number",
+          "and I've",
+          "already",
+          "been waiting",
+          "in line",
+          "an hour"
+        ]
+      }
     ],
     "hebrew_alternates": [
       {
@@ -8773,6 +8798,12 @@ const SENTENCE_EXPANSION = [
     englishTokens: ["How about", "coffee", "tomorrow", "after work"],
     hebrewDistractorPairs: [["מי", "מִי"], ["רוצה", "רוֹצֶה"], ["תה", "תֵּה"], ["היום", "הַיּוֹם"], ["לפני", "לִפְנֵי"], ["הלימודים", "הַלִּמּוּדִים"]],
     englishDistractors: ["Who wants", "tea", "today", "before class", "instead"],
+    englishAlternates: [
+      {
+        text: "How about coffee after work tomorrow?",
+        tokens: ["How about", "coffee", "after work", "tomorrow"],
+      },
+    ],
     notes: "מה דעתך על...? is a natural, low-pressure way to suggest a plan or ask someone's opinion."
   }),
   buildExpandedSentence({
@@ -9385,6 +9416,12 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["I stood", "in line", "at the post office", "for", "almost", "a whole hour"],
     hebrewDistractorPairs: [["ישבתי", "יָשַׁבְתִּי"], ["בבנק", "בַּבַּנְק"], ["רק", "רַק"], ["דקה", "דַּקָּה"], ["אחת", "אַחַת"]],
     englishDistractors: ["I sat", "at the bank", "only", "one minute", "waiting"],
+    englishAlternates: [
+      {
+        text: "I stood in line for almost a whole hour at the post office.",
+        tokens: ["I stood", "in line", "for", "almost", "a whole hour", "at the post office"],
+      },
+    ],
     notes: "Past-tense narrative. עמדתי בתור = I stood in line — here at the post office for שעה שלמה, a whole hour. ישבתי (I sat) is the verb trap."
   }),
   buildExpandedSentence({
@@ -9473,6 +9510,12 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["We'll meet", "in", "a quarter of an hour", "by", "the entrance"],
     hebrewDistractorPairs: [["נדבר", "נְדַבֵּר"], ["חצי שעה", "חֲצִי שָׁעָה"], ["מול", "מוּל"], ["היציאה", "הַיְּצִיאָה"], ["מחר", "מָחָר"]],
     englishDistractors: ["We'll talk", "half an hour", "across from", "the exit", "tomorrow"],
+    englishAlternates: [
+      {
+        text: "We'll meet by the entrance in a quarter of an hour.",
+        tokens: ["We'll meet", "by", "the entrance", "in", "a quarter of an hour"],
+      },
+    ],
     notes: "True future ניפגש (we'll meet). רבע שעה (a quarter hour) is one compound chip vs חצי שעה (half an hour). ליד (by) vs מול (across from)."
   }),
   buildExpandedSentence({
@@ -9877,6 +9920,12 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["The study", "was conducted", "over", "five", "years", "at three", "different", "institutions"],
     hebrewDistractorPairs: [["הניסוי", "הַנִּסּוּי"], ["נכתב", "נִכְתַּב"], ["חודשים", "חֳדָשִׁים"], ["זהים", "זֵהִים"], ["בשני", "בִּשְׁנֵי"]],
     englishDistractors: ["The experiment", "was written", "months", "identical", "at two"],
+    englishAlternates: [
+      {
+        text: "The study was conducted at three different institutions over five years.",
+        tokens: ["The study", "was conducted", "at three", "different", "institutions", "over", "five", "years"],
+      },
+    ],
     notes: "נערך is the formal passive 'was conducted'. שונים (different) vs זהים (identical) is the contrast; note the counted phrases חמש שנים and שלושה מוסדות."
   }),
   buildExpandedSentence({
@@ -10582,6 +10631,12 @@ const SENTENCE_EXPANSION_ROUND3 = [
     englishTokens: ["The interview", "was broadcast", "live", "last night"],
     hebrewDistractorPairs: [["הנאום", "הַנְּאוּם"], ["הוקלט", "הֻקְלַט"], ["הבוקר", "הַבֹּקֶר"], ["בערוץ אחר", "בְּעָרוּץ אַחֵר"]],
     englishDistractors: ["The speech", "was recorded", "this morning", "on another channel"],
+    englishAlternates: [
+      {
+        text: "The interview was broadcast last night live.",
+        tokens: ["The interview", "was broadcast", "last night", "live"],
+      },
+    ],
     notes: "שודר — pu'al passive, 'was broadcast'. אמש = last night (formal; colloquial אתמול בלילה). בשידור חי = live, lit. 'in live broadcast'."
   }),
   buildExpandedSentence({
@@ -11465,6 +11520,12 @@ const SENTENCE_EXPANSION_ROUND4 = [
     englishTokens: ["We stood", "forty", "minutes", "in line", "for the new bakery", "in Florentin"],
     hebrewDistractorPairs: [["ישבנו", "יָשַׁבְנוּ"], ["עשרים", "עֶשְׂרִים"], ["בכניסה", "בַּכְּנִיסָה"], ["לבית הקפה", "לְבֵית הַקָּפֶה"], ["בנווה צדק", "בִּנְוֵה צֶדֶק"]],
     englishDistractors: ["We sat", "twenty", "hours", "at the entrance", "for the old café", "in Neve Tzedek"],
+    englishAlternates: [
+      {
+        text: "We stood in line forty minutes for the new bakery in Florentin.",
+        tokens: ["We stood", "in line", "forty", "minutes", "for the new bakery", "in Florentin"],
+      },
+    ],
     notes: "The pastry-hype cycle — a bakery opens, Instagram erupts, the line wraps the block — is a Florentin specialty. עמדנו בתור = we stood in line."
   }),
   buildExpandedSentence({
@@ -12283,6 +12344,12 @@ const SENTENCE_EXPANSION_REQUESTED = [
       text: "בכל יום היא מדברת שתי שפות בעבודה.", textNiqqud: "בְּכָל יוֹם הִיא מְדַבֶּרֶת שְׁתֵּי שָׂפוֹת בָּעֲבוֹדָה.",
       tokenPairs: [["בכל יום", "בְּכָל יוֹם"], ["היא", "הִיא"], ["מדברת", "מְדַבֶּרֶת"], ["שתי", "שְׁתֵּי"], ["שפות", "שָׂפוֹת"], ["בעבודה", "בָּעֲבוֹדָה"]]
     }],
+    englishAlternates: [
+      {
+        text: "She speaks two languages every day at work.",
+        tokens: ["She", "speaks", "two", "languages", "every day", "at work"],
+      },
+    ],
     notes: "שתי is the feminine construct form of 'two,' used before the feminine plural noun שפות: שתי שפות, 'two languages.'"
   }),
   // APPEND_ONLY_REVIEWED_SENTENCES_START
@@ -13504,6 +13571,12 @@ const INBAL_SENTENCES = [
       textNiqqud: "אֶתְמוֹל הִדְלַקְנוּ נֵר נְשָׁמָה לְזֵכֶר סַבָּא שֶׁלִּי.",
       order: [4, 0, 1, 2, 3],
     }],
+    englishAlternates: [
+      {
+        text: "We lit a memorial candle yesterday in memory of my grandfather.",
+        tokens: ["We lit", "a memorial candle", "yesterday", "in memory of", "my grandfather"],
+      },
+    ],
     notes: "A נר נשמה burns for twenty-four hours on a yahrzeit and on memorial days. לזכר, in memory of, is the fixed phrase that goes with it."
   }),
   buildReviewedSentence({
@@ -17754,6 +17827,12 @@ const KITCHEN_ACTION_SENTENCES = [
     hebrew: "אפשר לבשל על אש קטנה בקלחת.", hebrewNiqqud: "אֶפְשָׁר לְבַשֵּׁל עַל אֵשׁ קְטַנָּה בְּקַלַּחַת.", english: "You can cook over a low flame in a saucepan.",
     hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לבשל", "לְבַשֵּׁל"], ["על", "עַל"], ["אש", "אֵשׁ"], ["קטנה", "קְטַנָּה"], ["בקלחת", "בְּקַלַּחַת"]], englishTokens: ["You can", "cook", "over", "a low", "flame", "in a saucepan"],
     hebrewDistractorPairs: [["לפני", "לִפְנֵי"], ["להרתיח", "לְהַרְתִּיחַ"], ["ממלאים", "מְמַלְּאִים"], ["קומקום", "קוּמְקוּם"]], englishDistractors: ["Before", "boiling", "fill", "a kettle"],
+    englishAlternates: [
+      {
+        text: "You can cook in a saucepan over a low flame.",
+        tokens: ["You can", "cook", "in a saucepan", "over", "a low", "flame"],
+      },
+    ],
     notes: "לבשל על אש קטנה literally means to cook over a low flame and is the everyday way to say simmer; קלחת is a small saucepan."
   }),
   buildReviewedSentence({
@@ -18850,6 +18929,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260811j",
+  __build: "20260811k",
 };
 })(typeof window !== "undefined" ? window : globalThis);
