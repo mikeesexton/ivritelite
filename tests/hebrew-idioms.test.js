@@ -86,7 +86,7 @@ function consonantalSkeleton(text) {
 test("every idiom carries the fields advConj needs to build an item", () => {
   const idioms = loadIdioms();
 
-  assert.equal(idioms.length, 81);
+  assert.equal(idioms.length, 105);
   assert.equal(new Set(idioms.map((entry) => entry.id)).size, idioms.length);
 
   idioms.forEach((idiom) => {
@@ -137,7 +137,7 @@ test("the idiom pool stays deep enough that a ten-round session does not exhaust
   // relaxed to 75 when 23 literal verbs were migrated out and restored once the
   // pool was rebalanced — migrating a plain verb out is progress, but it should
   // be paid for with a real idiom, not with a lower bar.
-  assert.ok(idioms.length >= 80, `only ${idioms.length} idioms`);
+  assert.ok(idioms.length >= 105, `only ${idioms.length} idioms`);
 
   const byType = idioms.reduce((acc, idiom) => {
     acc[idiom.object_type] = (acc[idiom.object_type] || 0) + 1;
@@ -229,7 +229,7 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
     }
   });
 
-  assert.deepEqual(statusCounts, { reviewed: 81 });
+  assert.deepEqual(statusCounts, { reviewed: 105 });
   assert.deepEqual(
     Array.from(idioms)
       .filter((idiom) => idiom.niqqud_sources.some((source) => /^https:\/\//.test(String(source))))
@@ -289,7 +289,7 @@ test("every internally-sourced idiom matches the approved paradigm it cites", ()
     });
   });
 
-  assert.equal(checked, 76, `expected 76 internally-sourced idioms, checked ${checked}`);
+  assert.equal(checked, 100, `expected 100 internally-sourced idioms, checked ${checked}`);
 });
 
 test("the reviewed idiom pilot exactly matches approved internal verb paradigms", () => {
@@ -462,7 +462,7 @@ test("the idiom-to-paradigm join keeps its person coverage in past and future", 
 
   const linked = idioms.filter((idiom) => lemmas.has(idiom.verb));
   assert.ok(
-    linked.length >= 81,
+    linked.length >= 105,
     `only ${linked.length} of ${idioms.length} idioms reach first and second person in past/future`,
   );
 

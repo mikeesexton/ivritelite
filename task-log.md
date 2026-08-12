@@ -5,6 +5,30 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-12 EDT — Conjugation+ idiom tranche, 81 → 105, and the frame ceiling it ran into
+
+**Requested:** Plan and execute another content addition, with a survey of where there was room to expand. The survey picked Conjugation+ as the target: the last ten tranches (2026-08-10/11) all landed in the sentence bank, already the deepest pool at 1,069 rows (~107 sessions before repeat), while Conjugation+ sat at 81 idioms. `pickAdvConjQuestions` (`app/adv-conj.js:397`) weights per `idiomId`, so despite `buildAdvConjDeck` returning thousands of rows the real variety unit was 81, and `ADV_CONJ_ROUNDS = 10` cycled the whole teaching set in about eight sessions. Approved scope was ~44 new idioms to 125; delivered 24 to 105, for the reason recorded below.
+
+**Files changed:**
+- `hebrew-idioms.js` — 24 entries appended to `raw`: 14 `l_dative`, 7 `direct`, 3 `possessive_suffix`. Every entry cites `internal:hebrew-verbs#<seedId>` and none cites a URL, so the five-id `EXTERNAL_SOURCE_IDS` list is untouched. Conjugation tables were **generated, not authored** — a scratch build script copied `present.msg/fsg/mpl/fpl` and the third-person `past`/`future` cells straight out of the cited approved paradigm, on exactly the slots `tests/hebrew-idioms.test.js:244` resolves, so the copy cannot drift from the source it claims. The only hand-pointed material is 14 `fixed_object_niqqud` phrases and 30 `suffix_forms_niqqud` cells. New verbs reached: לקלקל, למכור, לספר, לצאת, לעלות, לפתוח, לשים, לשבת, לרדת, לדפוק, לשחק, לקלוט, למחוק, להרוס, לכבות, לקנות, לאכול, להפיל, להציל, להעמיד — 20 of the 22 cited seeds had backed no idiom before.
+- `tests/hebrew-idioms.test.js` — five hard-coded literals ratcheted, no assertion loosened: entry count 81 → 105 (line 89), pool floor 80 → 105 (line 140), `statusCounts` `{reviewed: 81}` → `{reviewed: 105}` (line 232), internal-citation count 76 → 100 and its message (line 292), paradigm-join floor 81 → 105 (line 465).
+- `index.html` — `hebrew-idioms.js?v=20260811l` → `?v=20260812a`. Only cache key affected; this file carries no `__build` stamp.
+
+**Behavior changed:** Conjugation+ pool 81 → 105 idioms, a 30% deeper teaching set; repeat horizon ~8 → ~10.5 sessions. Live deck 10,509 → 16,844 rows, of which 3,834 come from the new entries. Frame mix `l_dative` 48 → 62, `direct` 17 → 24, `possessive_suffix` 16 → 19. Binyan mix pa'al 43 → 58, hif'il 26 → 31, pi'el 11 → 15; nif'al stays 1 and hitpa'el stays 0. No other mode is touched.
+
+**Tests run:**
+- `npm test` — **438 pass, 0 fail**, both before (baseline) and after. No new test cases; existing ones were widened.
+- `node --test tests/hebrew-idioms.test.js` — 11 pass, run in isolation after the ratchet.
+- Deck-reachability check (an idiom missing `literal_sg`, or a `possessive_suffix` gap, is dropped by `buildAdvConjDeck` **silently**): `distinct idioms reaching the deck 105 of 105`, `missing: []`.
+- Browser walkthrough on `ulpango-dev` with inline Nikud on: page loads 105 idioms under the new cache key, zero console errors, Conjugation+ played through multiple rounds in both `en2he` and `he2en`. Programmatic sweep of all 3,834 new-idiom deck rows in the live page: 0 missing `correctAnswerNiqqud`, 0 missing `promptNiqqud`, 0 missing option `textNiqqud`.
+
+**Risks / regressions to check:**
+
+- **The pool is now at the frame ceiling; the next tranche is blocked.** `l_dative` is 62 of 105 = 59.0% against the 60% cap at `tests/hebrew-idioms.test.js:154` — 63.0 — so there is **one entry** of headroom. Adding any further `l_dative` requires adding ~1.5 non-dative entries alongside it.
+- **Why 24 and not the approved 44.** The plan assumed 185 verbs backing no idiom meant 185 opportunities. That was wrong: the binding constraint is idiomatic *expressions*, not verbs (multiple idioms per verb is already normal — `להוציא` backs 10). The idiom-bearing verbs were largely already mined (לדפוק, לשרוף, להעיף, לחסל, לגמור, להרוג, לסחוב, לזרוק, לתפוס, לפוצץ, לדחוף); what remained unused was ordinary vocabulary and causative psych verbs (לעצבן, להרשים, לשכנע) which are *compositional* and belong in the ordinary conjugation drill, not here. Sourcing at a strict certainty bar yielded ~7 `direct`, ~9 `possessive_suffix`, ~18 `l_dative`; the 60% cap then forced the dative count down to 14, giving 24. This is the same wall the 2026-08-11 22:45 entry hit from the frame side, and that entry's diagnosis was the correct one.
+- **The real unblock is a fourth `object_type`.** The experiencer-dative — נמאס לי, בא לי, נשבר לי, יצא לי — is the largest untapped seam in spoken Hebrew and the natural home for nif'al and hitpa'el, which this pool has 1 and 0 of. It needs `app/adv-conj.js` work, not just data: the subject inverts, which the four-slot msg/fsg/mpl/fpl frame cannot express. Recorded as deferred at 2026-08-11 22:45 and still deferred.
+- **Hebrew review wanted on the entries themselves.** Pointing of the 14 fixed objects and 30 suffix forms is hand-authored and unverified beyond the skeleton-parity test, which strips א/ה/ו/י and so cannot catch a wrong vowel. Worth a native read on the pointing and on the idiomaticity of the weaker picks — `achilat_mishehu` (לאכול מישהו, natural with an abstract subject, odd with a person) and `haamadat_al_raglav` (suffix on a dual noun) are the two most worth a second opinion.
+- Three `direct` entries lean colloquial (`mechikat_mishehu`, `kibui_mishehu`, `harisat_mishehu`); if the register is wrong for the app they are self-contained deletions, each requiring the five test literals to be walked back by one.
 ### 2026-08-07 17:55 EDT — Sentence tranches for Idan and Ivri, and a correction to the fence
 
 **Requested:** Write and then execute a plan for the new Idan and Ivri sentences — the two holes the withholding layer opened earlier the same day.
