@@ -138,6 +138,28 @@ Do not add new rows above the marker. The builder rejects a missing or
 contradictory decision, validates every permutation, and derives the alternate
 plain/pointed token arrays from the primary tokens so they cannot drift.
 
+## English word-order alternates
+
+The Hebrew→English direction has the same problem in reverse: a learner who
+builds a different but equally correct English order is marked wrong. Author
+these under `englishAlternates`, which takes a flat `tokens` array rather than
+the `tokenPairs` Hebrew uses.
+
+The neutrality bar is the Hebrew one: the reordering must be idiomatic English
+that means exactly what the Hebrew means. Reject an order that shifts focus,
+changes what an adjunct attaches to, or reads as marked. The productive cases
+are adjuncts — a trailing manner, duration, place, or time phrase that English
+lets sit in more than one slot (`live last night` / `last night live`).
+
+Two mechanical rules constrain what is even expressible:
+
+- the alternate must use exactly the primary tokens, so its token count matches
+  and pure reorderings need no new distractor; and
+- the alternate `text` must contain each of its tokens verbatim and in order,
+  because the renderer locates chips with a case-sensitive search. A lowercase
+  chip therefore cannot be moved to the front of the sentence — only an
+  already-capitalised chip can open an alternate.
+
 ## Authoring and review checklist
 
 For every changed row:

@@ -538,6 +538,7 @@ handwriting.checkHandwritingAttempt = handwriting.checkHandwritingAttempt || fun
       sentence: translate("handwriting.feedbackPass", { score: result.score }),
       detail: "",
     });
+    runtime.state.sessionStreak += 1;
     h.playAnswerFeedbackSound?.(true);
     repaintStage();
     updateToolbarState();
@@ -555,6 +556,7 @@ handwriting.checkHandwritingAttempt = handwriting.checkHandwritingAttempt || fun
     sentence: translate("handwriting.feedbackRetry", { score: result.score }),
     detail: letterform.tipEn && runtime.state.language !== "he" ? letterform.tipEn : (letterform.tipHe || letterform.tipEn || ""),
   });
+  runtime.state.sessionStreak = 0;
   h.playAnswerFeedbackSound?.(false);
   repaintStage();
   updateToolbarState();

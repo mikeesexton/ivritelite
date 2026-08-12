@@ -2559,6 +2559,42 @@ test("colloquial_72 accepts the English duration after the topic", () => {
   assert.equal(alternate.tokens.length, entry.english_tokens.length);
 });
 
+test("the adjunct-order sweep keeps its accepted English reorderings", () => {
+  const api = loadSentenceBankApi();
+  const bank = api.getSentenceBank();
+  const expected = [
+    ["formal_50", "The interview was broadcast last night live."],
+    ["formal_11", "The ceremony was held after sunset in the main hall."],
+    ["formal_39", "The study was conducted at three different institutions over five years."],
+    ["everyday_79", "I stood in line for almost a whole hour at the post office."],
+    ["everyday_86", "We'll meet by the entrance in a quarter of an hour."],
+    ["everyday_114", "We stood in line forty minutes for the new bakery in Florentin."],
+    ["everyday_138", "She speaks two languages every day at work."],
+    ["everyday_238", "You can cook in a saucepan over a low flame."],
+    ["colloquial_26", "I took a number and I've already been waiting in line an hour."],
+    ["colloquial_45", "How about coffee after work tomorrow?"],
+    ["inbal_75", "We lit a memorial candle yesterday in memory of my grandfather."],
+  ];
+
+  expected.forEach(([id, text]) => {
+    const entry = bank.find((sentence) => sentence.id === id);
+    assert.ok(entry, `${id} exists`);
+    const alternate = (entry.english_alternates || []).find((variant) => variant.text === text);
+    assert.ok(alternate, `${id} accepts "${text}"`);
+    assert.equal(alternate.tokens.length, entry.english_tokens.length);
+    assert.notDeepEqual(
+      Array.from(alternate.tokens),
+      Array.from(entry.english_tokens),
+      `${id} alternate reorders the primary tokens`
+    );
+    assert.deepEqual(
+      Array.from(alternate.tokens).slice().sort(),
+      Array.from(entry.english_tokens).slice().sort(),
+      `${id} alternate reuses exactly the primary chips`
+    );
+  });
+});
+
 test("colloquial_105 accepts the reordered Hebrew word order with pre-verbal רק", () => {
   const api = loadSentenceBankApi();
   const entry = api.getSentenceBank().find((sentence) => sentence.id === "colloquial_105");
