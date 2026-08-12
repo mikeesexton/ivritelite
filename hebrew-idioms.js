@@ -23,17 +23,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will light {o} up",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מדליק", "fsg": "מדליקה", "mpl": "מדליקים", "fpl": "מדליקות" },
-      "past":    { "msg": "הדליק", "fsg": "הדליקה", "mpl": "הדליקו", "fpl": "הדליקו" },
-      "future":  { "msg": "ידליק", "fsg": "תדליק", "mpl": "ידליקו", "fpl": "ידליקו" }
+      "present": {
+        "msg": "מדליק",
+        "fsg": "מדליקה",
+        "mpl": "מדליקים",
+        "fpl": "מדליקות"
+      },
+      "past": {
+        "msg": "הדליק",
+        "fsg": "הדליקה",
+        "mpl": "הדליקו",
+        "fpl": "הדליקו"
+      },
+      "future": {
+        "msg": "ידליק",
+        "fsg": "תדליק",
+        "mpl": "ידליקו",
+        "fpl": "ידליקו"
+      }
     },
     "conjugations_niqqud": {
-      "present": { "msg": "מַדְלִיק", "fsg": "מַדְלִיקָה", "mpl": "מַדְלִיקִים", "fpl": "מַדְלִיקוֹת" },
-      "past":    { "msg": "הִדְלִיק", "fsg": "הִדְלִיקָה", "mpl": "הִדְלִיקוּ", "fpl": "הִדְלִיקוּ" },
-      "future":  { "msg": "יַדְלִיק", "fsg": "תַּדְלִיק", "mpl": "יַדְלִיקוּ", "fpl": "יַדְלִיקוּ" }
+      "present": {
+        "msg": "מַדְלִיק",
+        "fsg": "מַדְלִיקָה",
+        "mpl": "מַדְלִיקִים",
+        "fpl": "מַדְלִיקוֹת"
+      },
+      "past": {
+        "msg": "הִדְלִיק",
+        "fsg": "הִדְלִיקָה",
+        "mpl": "הִדְלִיקוּ",
+        "fpl": "הִדְלִיקוּ"
+      },
+      "future": {
+        "msg": "יַדְלִיק",
+        "fsg": "תַּדְלִיק",
+        "mpl": "יַדְלִיקוּ",
+        "fpl": "יַדְלִיקוּ"
+      }
     },
     "niqqud_status": "reviewed",
-    "niqqud_sources": ["https://www.pealim.com/dict/423-lehadlik/"]
+    "niqqud_sources": [
+      "https://www.pealim.com/dict/423-lehadlik/"
+    ]
   },
   {
     "id": "kara",
@@ -52,10 +84,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will tear {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "קורע", "fsg": "קורעת", "mpl": "קורעים", "fpl": "קורעות" },
-      "past":    { "msg": "קרע", "fsg": "קרעה", "mpl": "קרעו", "fpl": "קרעו" },
-      "future":  { "msg": "יקרע", "fsg": "תקרע", "mpl": "יקרעו", "fpl": "יקרעו" }
-    }
+      "present": {
+        "msg": "קורע",
+        "fsg": "קורעת",
+        "mpl": "קורעים",
+        "fpl": "קורעות"
+      },
+      "past": {
+        "msg": "קרע",
+        "fsg": "קרעה",
+        "mpl": "קרעו",
+        "fpl": "קרעו"
+      },
+      "future": {
+        "msg": "יקרע",
+        "fsg": "תקרע",
+        "mpl": "יקרעו",
+        "fpl": "יקרעו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "קוֹרֵעַ",
+        "fsg": "קוֹרַעַת",
+        "mpl": "קוֹרְעִים",
+        "fpl": "קוֹרְעוֹת"
+      },
+      "past": {
+        "msg": "קָרַע",
+        "fsg": "קָרְעָה",
+        "mpl": "קָרְעוּ",
+        "fpl": "קָרְעוּ"
+      },
+      "future": {
+        "msg": "יִקְרַע",
+        "fsg": "תִּקְרַע",
+        "mpl": "יִקְרְעוּ",
+        "fpl": "יִקְרְעוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-likroa"
+    ]
   },
   {
     "id": "haalat_sif",
@@ -75,10 +146,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will raise {p} paragraph",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מעלה", "fsg": "מעלה", "mpl": "מעלים", "fpl": "מעלות" },
-      "past":    { "msg": "העלה", "fsg": "העלתה", "mpl": "העלו", "fpl": "העלו" },
-      "future":  { "msg": "יעלה", "fsg": "תעלה", "mpl": "יעלו", "fpl": "יעלו" }
-    }
+      "present": {
+        "msg": "מעלה",
+        "fsg": "מעלה",
+        "mpl": "מעלים",
+        "fpl": "מעלות"
+      },
+      "past": {
+        "msg": "העלה",
+        "fsg": "העלתה",
+        "mpl": "העלו",
+        "fpl": "העלו"
+      },
+      "future": {
+        "msg": "יעלה",
+        "fsg": "תעלה",
+        "mpl": "יעלו",
+        "fpl": "יעלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲלֶה",
+        "fsg": "מַעֲלָה",
+        "mpl": "מַעֲלִים",
+        "fpl": "מַעֲלוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱלָה",
+        "fsg": "הֶעֶלְתָה",
+        "mpl": "הֶעֱלוּ",
+        "fpl": "הֶעֱלוּ"
+      },
+      "future": {
+        "msg": "יַעֲלֶה",
+        "fsg": "תַּעֲלֶה",
+        "mpl": "יַעֲלוּ",
+        "fpl": "יַעֲלוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַסָּעִיף",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaalot"
+    ]
   },
   {
     "id": "horadat_hesheq",
@@ -98,10 +209,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will bring down {p} desire",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מוריד", "fsg": "מורידה", "mpl": "מורידים", "fpl": "מורידות" },
-      "past":    { "msg": "הוריד", "fsg": "הורידה", "mpl": "הורידו", "fpl": "הורידו" },
-      "future":  { "msg": "יוריד", "fsg": "תוריד", "mpl": "יורידו", "fpl": "יורידו" }
-    }
+      "present": {
+        "msg": "מוריד",
+        "fsg": "מורידה",
+        "mpl": "מורידים",
+        "fpl": "מורידות"
+      },
+      "past": {
+        "msg": "הוריד",
+        "fsg": "הורידה",
+        "mpl": "הורידו",
+        "fpl": "הורידו"
+      },
+      "future": {
+        "msg": "יוריד",
+        "fsg": "תוריד",
+        "mpl": "יורידו",
+        "fpl": "יורידו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹרִיד",
+        "fsg": "מוֹרִידָה",
+        "mpl": "מוֹרִידִים",
+        "fpl": "מוֹרִידוֹת"
+      },
+      "past": {
+        "msg": "הוֹרִיד",
+        "fsg": "הוֹרִידָה",
+        "mpl": "הוֹרִידוּ",
+        "fpl": "הוֹרִידוּ"
+      },
+      "future": {
+        "msg": "יוֹרִיד",
+        "fsg": "תּוֹרִיד",
+        "mpl": "יוֹרִידוּ",
+        "fpl": "יוֹרִידוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַחֵשֶׁק",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehorid"
+    ]
   },
   {
     "id": "hotzaat_mitz",
@@ -121,10 +272,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will take out {p} juice",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַמִּיץ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "shvira_lev",
@@ -144,10 +335,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will break {p} heart",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "שובר", "fsg": "שוברת", "mpl": "שוברים", "fpl": "שוברות" },
-      "past":    { "msg": "שבר", "fsg": "שברה", "mpl": "שברו", "fpl": "שברו" },
-      "future":  { "msg": "ישבור", "fsg": "תשבור", "mpl": "ישברו", "fpl": "ישברו" }
-    }
+      "present": {
+        "msg": "שובר",
+        "fsg": "שוברת",
+        "mpl": "שוברים",
+        "fpl": "שוברות"
+      },
+      "past": {
+        "msg": "שבר",
+        "fsg": "שברה",
+        "mpl": "שברו",
+        "fpl": "שברו"
+      },
+      "future": {
+        "msg": "ישבור",
+        "fsg": "תשבור",
+        "mpl": "ישברו",
+        "fpl": "ישברו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "שׁוֹבֵר",
+        "fsg": "שׁוֹבֶרֶת",
+        "mpl": "שׁוֹבְרִים",
+        "fpl": "שׁוֹבְרוֹת"
+      },
+      "past": {
+        "msg": "שָׁבַר",
+        "fsg": "שָׁבְרָה",
+        "mpl": "שָׁבְרוּ",
+        "fpl": "שָׁבְרוּ"
+      },
+      "future": {
+        "msg": "יִשְׁבֹּר",
+        "fsg": "תִּשְׁבֹּר",
+        "mpl": "יִשְׁבְּרוּ",
+        "fpl": "יִשְׁבְּרוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַלֵּב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lishbor"
+    ]
   },
   {
     "id": "asiya_hayim",
@@ -167,10 +398,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will make {p} life difficult",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "עושה", "fsg": "עושה", "mpl": "עושים", "fpl": "עושות" },
-      "past":    { "msg": "עשה", "fsg": "עשתה", "mpl": "עשו", "fpl": "עשו" },
-      "future":  { "msg": "יעשה", "fsg": "תעשה", "mpl": "יעשו", "fpl": "יעשו" }
-    }
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַחַיִּים קָשִׁים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laasot"
+    ]
   },
   {
     "id": "hfalat_asiman",
@@ -190,10 +461,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will drop {p} token",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מפיל", "fsg": "מפילה", "mpl": "מפילים", "fpl": "מפילות" },
-      "past":    { "msg": "הפיל", "fsg": "הפילה", "mpl": "הפילו", "fpl": "הפילו" },
-      "future":  { "msg": "יפיל", "fsg": "תפיל", "mpl": "יפילו", "fpl": "יפילו" }
-    }
+      "present": {
+        "msg": "מפיל",
+        "fsg": "מפילה",
+        "mpl": "מפילים",
+        "fpl": "מפילות"
+      },
+      "past": {
+        "msg": "הפיל",
+        "fsg": "הפילה",
+        "mpl": "הפילו",
+        "fpl": "הפילו"
+      },
+      "future": {
+        "msg": "יפיל",
+        "fsg": "תפיל",
+        "mpl": "יפילו",
+        "fpl": "יפילו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַפִּיל",
+        "fsg": "מַפִּילָה",
+        "mpl": "מַפִּילִים",
+        "fpl": "מַפִּילוֹת"
+      },
+      "past": {
+        "msg": "הִפִּיל",
+        "fsg": "הִפִּילָה",
+        "mpl": "הִפִּילוּ",
+        "fpl": "הִפִּילוּ"
+      },
+      "future": {
+        "msg": "יַפִּיל",
+        "fsg": "תַּפִּיל",
+        "mpl": "יַפִּילוּ",
+        "fpl": "יַפִּילוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָאֲסִימוֹן",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehapil"
+    ]
   },
   {
     "id": "ptihat_einayim",
@@ -213,14 +524,44 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will open {p} eyes",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "פותח", "fsg": "פותחת", "mpl": "פותחים", "fpl": "פותחות" },
-      "past":    { "msg": "פתח", "fsg": "פתחה", "mpl": "פתחו", "fpl": "פתחו" },
-      "future":  { "msg": "יפתח", "fsg": "תפתח", "mpl": "יפתחו", "fpl": "יפתחו" }
+      "present": {
+        "msg": "פותח",
+        "fsg": "פותחת",
+        "mpl": "פותחים",
+        "fpl": "פותחות"
+      },
+      "past": {
+        "msg": "פתח",
+        "fsg": "פתחה",
+        "mpl": "פתחו",
+        "fpl": "פתחו"
+      },
+      "future": {
+        "msg": "יפתח",
+        "fsg": "תפתח",
+        "mpl": "יפתחו",
+        "fpl": "יפתחו"
+      }
     },
     "conjugations_niqqud": {
-      "present": { "msg": "פּוֹתֵחַ", "fsg": "פּוֹתַחַת", "mpl": "פּוֹתְחִים", "fpl": "פּוֹתְחוֹת" },
-      "past":    { "msg": "פָּתַח", "fsg": "פָּתְחָה", "mpl": "פָּתְחוּ", "fpl": "פָּתְחוּ" },
-      "future":  { "msg": "יִפְתַּח", "fsg": "תִּפְתַּח", "mpl": "יִפְתְּחוּ", "fpl": "יִפְתְּחוּ" }
+      "present": {
+        "msg": "פּוֹתֵחַ",
+        "fsg": "פּוֹתַחַת",
+        "mpl": "פּוֹתְחִים",
+        "fpl": "פּוֹתְחוֹת"
+      },
+      "past": {
+        "msg": "פָּתַח",
+        "fsg": "פָּתְחָה",
+        "mpl": "פָּתְחוּ",
+        "fpl": "פָּתְחוּ"
+      },
+      "future": {
+        "msg": "יִפְתַּח",
+        "fsg": "תִּפְתַּח",
+        "mpl": "יִפְתְּחוּ",
+        "fpl": "יִפְתְּחוּ"
+      }
     },
     "fixed_object_niqqud": "אֶת הָעֵינַיִם",
     "niqqud_status": "reviewed",
@@ -247,10 +588,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will sit on {p} soul",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "יושב", "fsg": "יושבת", "mpl": "יושבים", "fpl": "יושבות" },
-      "past":    { "msg": "ישב", "fsg": "ישבה", "mpl": "ישבו", "fpl": "ישבו" },
-      "future":  { "msg": "יישב", "fsg": "תישב", "mpl": "יישבו", "fpl": "יישבו" }
-    }
+      "present": {
+        "msg": "יושב",
+        "fsg": "יושבת",
+        "mpl": "יושבים",
+        "fpl": "יושבות"
+      },
+      "past": {
+        "msg": "ישב",
+        "fsg": "ישבה",
+        "mpl": "ישבו",
+        "fpl": "ישבו"
+      },
+      "future": {
+        "msg": "יישב",
+        "fsg": "תישב",
+        "mpl": "יישבו",
+        "fpl": "יישבו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "יוֹשֵׁב",
+        "fsg": "יוֹשֶׁבֶת",
+        "mpl": "יוֹשְׁבִים",
+        "fpl": "יוֹשְׁבוֹת"
+      },
+      "past": {
+        "msg": "יָשַׁב",
+        "fsg": "יָשְׁבָה",
+        "mpl": "יָשְׁבוּ",
+        "fpl": "יָשְׁבוּ"
+      },
+      "future": {
+        "msg": "יֵשֵׁב",
+        "fsg": "תֵּשֵׁב",
+        "mpl": "יֵשְׁבוּ",
+        "fpl": "יֵשְׁבוּ"
+      }
+    },
+    "fixed_object_niqqud": "עַל הַנְּשָׁמָה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lashevet"
+    ]
   },
   {
     "id": "yerida_gav",
@@ -270,10 +651,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will get off {p} back",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "יורד", "fsg": "יורדת", "mpl": "יורדים", "fpl": "יורדות" },
-      "past":    { "msg": "ירד", "fsg": "ירדה", "mpl": "ירדו", "fpl": "ירדו" },
-      "future":  { "msg": "יירד", "fsg": "תירד", "mpl": "יירדו", "fpl": "יירדו" }
-    }
+      "present": {
+        "msg": "יורד",
+        "fsg": "יורדת",
+        "mpl": "יורדים",
+        "fpl": "יורדות"
+      },
+      "past": {
+        "msg": "ירד",
+        "fsg": "ירדה",
+        "mpl": "ירדו",
+        "fpl": "ירדו"
+      },
+      "future": {
+        "msg": "יירד",
+        "fsg": "תירד",
+        "mpl": "יירדו",
+        "fpl": "יירדו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "יוֹרֵד",
+        "fsg": "יוֹרֶדֶת",
+        "mpl": "יוֹרְדִים",
+        "fpl": "יוֹרְדוֹת"
+      },
+      "past": {
+        "msg": "יָרַד",
+        "fsg": "יָרְדָה",
+        "mpl": "יָרְדוּ",
+        "fpl": "יָרְדוּ"
+      },
+      "future": {
+        "msg": "יֵרֵד",
+        "fsg": "תֵּרֵד",
+        "mpl": "יֵרְדוּ",
+        "fpl": "יֵרְדוּ"
+      }
+    },
+    "fixed_object_niqqud": "מֵהַגַּב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laredet"
+    ]
   },
   {
     "id": "amida_derekh",
@@ -293,10 +714,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will stand in {p} way",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "עומד", "fsg": "עומדת", "mpl": "עומדים", "fpl": "עומדות" },
-      "past":    { "msg": "עמד", "fsg": "עמדה", "mpl": "עמדו", "fpl": "עמדו" },
-      "future":  { "msg": "יעמוד", "fsg": "תעמוד", "mpl": "יעמדו", "fpl": "יעמדו" }
-    }
+      "present": {
+        "msg": "עומד",
+        "fsg": "עומדת",
+        "mpl": "עומדים",
+        "fpl": "עומדות"
+      },
+      "past": {
+        "msg": "עמד",
+        "fsg": "עמדה",
+        "mpl": "עמדו",
+        "fpl": "עמדו"
+      },
+      "future": {
+        "msg": "יעמוד",
+        "fsg": "תעמוד",
+        "mpl": "יעמדו",
+        "fpl": "יעמדו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹמֵד",
+        "fsg": "עוֹמֶדֶת",
+        "mpl": "עוֹמְדִים",
+        "fpl": "עוֹמְדוֹת"
+      },
+      "past": {
+        "msg": "עָמַד",
+        "fsg": "עָמְדָה",
+        "mpl": "עָמְדוּ",
+        "fpl": "עָמְדוּ"
+      },
+      "future": {
+        "msg": "יַעֲמֹד",
+        "fsg": "תַּעֲמֹד",
+        "mpl": "יַעַמְדוּ",
+        "fpl": "יַעַמְדוּ"
+      }
+    },
+    "fixed_object_niqqud": "בַּדֶּרֶךְ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-laamod"
+    ]
   },
   {
     "id": "khnisa_rosh",
@@ -316,10 +777,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will enter {p} head",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "נכנס", "fsg": "נכנסת", "mpl": "נכנסים", "fpl": "נכנסות" },
-      "past":    { "msg": "נכנס", "fsg": "נכנסה", "mpl": "נכנסו", "fpl": "נכנסו" },
-      "future":  { "msg": "ייכנס", "fsg": "תיכנס", "mpl": "ייכנסו", "fpl": "ייכנסו" }
-    }
+      "present": {
+        "msg": "נכנס",
+        "fsg": "נכנסת",
+        "mpl": "נכנסים",
+        "fpl": "נכנסות"
+      },
+      "past": {
+        "msg": "נכנס",
+        "fsg": "נכנסה",
+        "mpl": "נכנסו",
+        "fpl": "נכנסו"
+      },
+      "future": {
+        "msg": "ייכנס",
+        "fsg": "תיכנס",
+        "mpl": "ייכנסו",
+        "fpl": "ייכנסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "נִכְנָס",
+        "fsg": "נִכְנֶסֶת",
+        "mpl": "נִכְנָסִים",
+        "fpl": "נִכְנָסוֹת"
+      },
+      "past": {
+        "msg": "נִכְנַס",
+        "fsg": "נִכְנְסָה",
+        "mpl": "נִכְנְסוּ",
+        "fpl": "נִכְנְסוּ"
+      },
+      "future": {
+        "msg": "יִכָּנֵס",
+        "fsg": "תִּכָּנֵס",
+        "mpl": "יִכָּנְסוּ",
+        "fpl": "יִכָּנְסוּ"
+      }
+    },
+    "fixed_object_niqqud": "לָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-lehikanes"
+    ]
   },
   {
     "id": "lo_yatza_rosh",
@@ -339,10 +840,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} won't leave {p} head",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "יוצא", "fsg": "יוצאת", "mpl": "יוצאים", "fpl": "יוצאות" },
-      "past":    { "msg": "יצא", "fsg": "יצאה", "mpl": "יצאו", "fpl": "יצאו" },
-      "future":  { "msg": "ייצא", "fsg": "תצא", "mpl": "ייצאו", "fpl": "ייצאו" }
-    }
+      "present": {
+        "msg": "יוצא",
+        "fsg": "יוצאת",
+        "mpl": "יוצאים",
+        "fpl": "יוצאות"
+      },
+      "past": {
+        "msg": "יצא",
+        "fsg": "יצאה",
+        "mpl": "יצאו",
+        "fpl": "יצאו"
+      },
+      "future": {
+        "msg": "ייצא",
+        "fsg": "תצא",
+        "mpl": "ייצאו",
+        "fpl": "ייצאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "יוֹצֵא",
+        "fsg": "יוֹצֵאת",
+        "mpl": "יוֹצְאִים",
+        "fpl": "יוֹצְאוֹת"
+      },
+      "past": {
+        "msg": "יָצָא",
+        "fsg": "יָצְאָה",
+        "mpl": "יָצְאוּ",
+        "fpl": "יָצְאוּ"
+      },
+      "future": {
+        "msg": "יֵצֵא",
+        "fsg": "תֵּצֵא",
+        "mpl": "יֵצְאוּ",
+        "fpl": "יֵצְאוּ"
+      }
+    },
+    "fixed_object_niqqud": "מֵהָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-latzet"
+    ]
   },
   {
     "id": "ntina_barosh",
@@ -362,10 +903,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will give {o} in the head",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "נותן", "fsg": "נותנת", "mpl": "נותנים", "fpl": "נותנות" },
-      "past":    { "msg": "נתן", "fsg": "נתנה", "mpl": "נתנו", "fpl": "נתנו" },
-      "future":  { "msg": "ייתן", "fsg": "תיתן", "mpl": "ייתנו", "fpl": "ייתנו" }
-    }
+      "present": {
+        "msg": "נותן",
+        "fsg": "נותנת",
+        "mpl": "נותנים",
+        "fpl": "נותנות"
+      },
+      "past": {
+        "msg": "נתן",
+        "fsg": "נתנה",
+        "mpl": "נתנו",
+        "fpl": "נתנו"
+      },
+      "future": {
+        "msg": "ייתן",
+        "fsg": "תיתן",
+        "mpl": "ייתנו",
+        "fpl": "ייתנו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "נוֹתֵן",
+        "fsg": "נוֹתֶנֶת",
+        "mpl": "נוֹתְנִים",
+        "fpl": "נוֹתְנוֹת"
+      },
+      "past": {
+        "msg": "נָתַן",
+        "fsg": "נָתְנָה",
+        "mpl": "נָתְנוּ",
+        "fpl": "נָתְנוּ"
+      },
+      "future": {
+        "msg": "יִתֵּן",
+        "fsg": "תִּתֵּן",
+        "mpl": "יִתְּנוּ",
+        "fpl": "יִתְּנוּ"
+      }
+    },
+    "fixed_object_niqqud": "בָּרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-latet"
+    ]
   },
   {
     "id": "akhila_rosh",
@@ -385,10 +966,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will eat {p} head",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "אוכל", "fsg": "אוכלת", "mpl": "אוכלים", "fpl": "אוכלות" },
-      "past":    { "msg": "אכל", "fsg": "אכלה", "mpl": "אכלו", "fpl": "אכלו" },
-      "future":  { "msg": "יאכל", "fsg": "תאכל", "mpl": "יאכלו", "fpl": "יאכלו" }
-    }
+      "present": {
+        "msg": "אוכל",
+        "fsg": "אוכלת",
+        "mpl": "אוכלים",
+        "fpl": "אוכלות"
+      },
+      "past": {
+        "msg": "אכל",
+        "fsg": "אכלה",
+        "mpl": "אכלו",
+        "fpl": "אכלו"
+      },
+      "future": {
+        "msg": "יאכל",
+        "fsg": "תאכל",
+        "mpl": "יאכלו",
+        "fpl": "יאכלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "אוֹכֵל",
+        "fsg": "אוֹכֶלֶת",
+        "mpl": "אוֹכְלִים",
+        "fpl": "אוֹכְלוֹת"
+      },
+      "past": {
+        "msg": "אָכַל",
+        "fsg": "אָכְלָה",
+        "mpl": "אָכְלוּ",
+        "fpl": "אָכְלוּ"
+      },
+      "future": {
+        "msg": "יֹאכַל",
+        "fsg": "תֹּאכַל",
+        "mpl": "יֹאכְלוּ",
+        "fpl": "יֹאכְלוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-leechol"
+    ]
   },
   {
     "id": "gnivat_lev",
@@ -408,10 +1029,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will steal {p} heart",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "גונב", "fsg": "גונבת", "mpl": "גונבים", "fpl": "גונבות" },
-      "past":    { "msg": "גנב", "fsg": "גנבה", "mpl": "גנבו", "fpl": "גנבו" },
-      "future":  { "msg": "יגנוב", "fsg": "תגנוב", "mpl": "יגנבו", "fpl": "יגנבו" }
-    }
+      "present": {
+        "msg": "גונב",
+        "fsg": "גונבת",
+        "mpl": "גונבים",
+        "fpl": "גונבות"
+      },
+      "past": {
+        "msg": "גנב",
+        "fsg": "גנבה",
+        "mpl": "גנבו",
+        "fpl": "גנבו"
+      },
+      "future": {
+        "msg": "יגנוב",
+        "fsg": "תגנוב",
+        "mpl": "יגנבו",
+        "fpl": "יגנבו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "גּוֹנֵב",
+        "fsg": "גּוֹנֶבֶת",
+        "mpl": "גּוֹנְבִים",
+        "fpl": "גּוֹנְבוֹת"
+      },
+      "past": {
+        "msg": "גָּנַב",
+        "fsg": "גָּנְבָה",
+        "mpl": "גָּנְבוּ",
+        "fpl": "גָּנְבוּ"
+      },
+      "future": {
+        "msg": "יִגְנֹב",
+        "fsg": "תִּגְנֹב",
+        "mpl": "יִגְנְבוּ",
+        "fpl": "יִגְנְבוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַלֵּב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lignov"
+    ]
   },
   {
     "id": "hotzaat_midato",
@@ -432,15 +1093,73 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will take {o} out of {p} mind",
     "showMeaning": false,
     "suffix_forms": {
-      "1sg": "מדעתי", "2msg": "מדעתך", "2fsg": "מדעתך",
-      "3msg": "מדעתו", "3fsg": "מדעתה", "1pl": "מדעתנו",
-      "2mpl": "מדעתכם", "2fpl": "מדעתכן", "3mpl": "מדעתם", "3fpl": "מדעתן"
+      "1sg": "מדעתי",
+      "2msg": "מדעתך",
+      "2fsg": "מדעתך",
+      "3msg": "מדעתו",
+      "3fsg": "מדעתה",
+      "1pl": "מדעתנו",
+      "2mpl": "מדעתכם",
+      "2fpl": "מדעתכן",
+      "3mpl": "מדעתם",
+      "3fpl": "מדעתן"
     },
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מִדַּעְתִּי",
+      "2msg": "מִדַּעְתְּךָ",
+      "2fsg": "מִדַּעְתֵּךְ",
+      "3msg": "מִדַּעְתּוֹ",
+      "3fsg": "מִדַּעְתָּהּ",
+      "1pl": "מִדַּעְתֵּנוּ",
+      "2mpl": "מִדַּעְתְּכֶם",
+      "2fpl": "מִדַּעְתְּכֶן",
+      "3mpl": "מִדַּעְתָּם",
+      "3fpl": "מִדַּעְתָּן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "hotzaat_miklav",
@@ -461,15 +1180,73 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will take {o} out of {p} vessels",
     "showMeaning": true,
     "suffix_forms": {
-      "1sg": "מכליי", "2msg": "מכליך", "2fsg": "מכליך",
-      "3msg": "מכליו", "3fsg": "מכליה", "1pl": "מכלינו",
-      "2mpl": "מכליכם", "2fpl": "מכליכן", "3mpl": "מכליהם", "3fpl": "מכליהן"
+      "1sg": "מכליי",
+      "2msg": "מכליך",
+      "2fsg": "מכליך",
+      "3msg": "מכליו",
+      "3fsg": "מכליה",
+      "1pl": "מכלינו",
+      "2mpl": "מכליכם",
+      "2fpl": "מכליכן",
+      "3mpl": "מכליהם",
+      "3fpl": "מכליהן"
     },
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מִכֵּלַי",
+      "2msg": "מִכֵּלֶיךָ",
+      "2fsg": "מִכֵּלַיִךְ",
+      "3msg": "מִכֵּלָיו",
+      "3fsg": "מִכֵּלֶיהָ",
+      "1pl": "מִכֵּלֵינוּ",
+      "2mpl": "מִכְּלֵיכֶם",
+      "2fpl": "מִכְּלֵיכֶן",
+      "3mpl": "מִכְּלֵיהֶם",
+      "3fpl": "מִכְּלֵיהֶן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "bilbul_moach",
@@ -489,10 +1266,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will confuse {p} brain",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מבלבל", "fsg": "מבלבלת", "mpl": "מבלבלים", "fpl": "מבלבלות" },
-      "past":    { "msg": "בלבל", "fsg": "בלבלה", "mpl": "בלבלו", "fpl": "בלבלו" },
-      "future":  { "msg": "יבלבל", "fsg": "תבלבל", "mpl": "יבלבלו", "fpl": "יבלבלו" }
-    }
+      "present": {
+        "msg": "מבלבל",
+        "fsg": "מבלבלת",
+        "mpl": "מבלבלים",
+        "fpl": "מבלבלות"
+      },
+      "past": {
+        "msg": "בלבל",
+        "fsg": "בלבלה",
+        "mpl": "בלבלו",
+        "fpl": "בלבלו"
+      },
+      "future": {
+        "msg": "יבלבל",
+        "fsg": "תבלבל",
+        "mpl": "יבלבלו",
+        "fpl": "יבלבלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְבַלְבֵּל",
+        "fsg": "מְבַלְבֶּלֶת",
+        "mpl": "מְבַלְבְּלִים",
+        "fpl": "מְבַלְבְּלוֹת"
+      },
+      "past": {
+        "msg": "בִּלְבֵּל",
+        "fsg": "בִּלְבְּלָה",
+        "mpl": "בִּלְבְּלוּ",
+        "fpl": "בִּלְבְּלוּ"
+      },
+      "future": {
+        "msg": "יְבַלְבֵּל",
+        "fsg": "תְּבַלְבֵּל",
+        "mpl": "יְבַלְבְּלוּ",
+        "fpl": "יְבַלְבְּלוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַמֹּחַ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-levalbel"
+    ]
   },
   {
     "id": "shtifat_moach",
@@ -512,10 +1329,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will wash {p} brain",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "שוטף", "fsg": "שוטפת", "mpl": "שוטפים", "fpl": "שוטפות" },
-      "past":    { "msg": "שטף", "fsg": "שטפה", "mpl": "שטפו", "fpl": "שטפו" },
-      "future":  { "msg": "ישטוף", "fsg": "תשטוף", "mpl": "ישטפו", "fpl": "ישטפו" }
-    }
+      "present": {
+        "msg": "שוטף",
+        "fsg": "שוטפת",
+        "mpl": "שוטפים",
+        "fpl": "שוטפות"
+      },
+      "past": {
+        "msg": "שטף",
+        "fsg": "שטפה",
+        "mpl": "שטפו",
+        "fpl": "שטפו"
+      },
+      "future": {
+        "msg": "ישטוף",
+        "fsg": "תשטוף",
+        "mpl": "ישטפו",
+        "fpl": "ישטפו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "שׁוֹטֵף",
+        "fsg": "שׁוֹטֶפֶת",
+        "mpl": "שׁוֹטְפִים",
+        "fpl": "שׁוֹטְפוֹת"
+      },
+      "past": {
+        "msg": "שָׁטַף",
+        "fsg": "שָׁטְפָה",
+        "mpl": "שָׁטְפוּ",
+        "fpl": "שָׁטְפוּ"
+      },
+      "future": {
+        "msg": "יִשְׁטֹף",
+        "fsg": "תִּשְׁטֹף",
+        "mpl": "יִשְׁטְפוּ",
+        "fpl": "יִשְׁטְפוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַמֹּחַ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lishtof"
+    ]
   },
   {
     "id": "hotzaat_neshama",
@@ -535,10 +1392,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will take out {p} soul",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַנְּשָׁמָה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "aliyat_atzabim",
@@ -558,10 +1455,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will climb on {p} nerves",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "עולה", "fsg": "עולה", "mpl": "עולים", "fpl": "עולות" },
-      "past":    { "msg": "עלה", "fsg": "עלתה", "mpl": "עלו", "fpl": "עלו" },
-      "future":  { "msg": "יעלה", "fsg": "תעלה", "mpl": "יעלו", "fpl": "יעלו" }
-    }
+      "present": {
+        "msg": "עולה",
+        "fsg": "עולה",
+        "mpl": "עולים",
+        "fpl": "עולות"
+      },
+      "past": {
+        "msg": "עלה",
+        "fsg": "עלתה",
+        "mpl": "עלו",
+        "fpl": "עלו"
+      },
+      "future": {
+        "msg": "יעלה",
+        "fsg": "תעלה",
+        "mpl": "יעלו",
+        "fpl": "יעלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹלֶה",
+        "fsg": "עוֹלָה",
+        "mpl": "עוֹלִים",
+        "fpl": "עוֹלוֹת"
+      },
+      "past": {
+        "msg": "עָלָה",
+        "fsg": "עָלְתָה",
+        "mpl": "עָלוּ",
+        "fpl": "עָלוּ"
+      },
+      "future": {
+        "msg": "יַעֲלֶה",
+        "fsg": "תַּעֲלֶה",
+        "mpl": "יַעֲלוּ",
+        "fpl": "יַעֲלוּ"
+      }
+    },
+    "fixed_object_niqqud": "עַל הָעֲצַבִּים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laalot"
+    ]
   },
   {
     "id": "sivuv_rosh",
@@ -581,10 +1518,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will spin {p} head",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מסובב", "fsg": "מסובבת", "mpl": "מסובבים", "fpl": "מסובבות" },
-      "past":    { "msg": "סובב", "fsg": "סובבה", "mpl": "סובבו", "fpl": "סובבו" },
-      "future":  { "msg": "יסובב", "fsg": "תסובב", "mpl": "יסובבו", "fpl": "יסובבו" }
-    }
+      "present": {
+        "msg": "מסובב",
+        "fsg": "מסובבת",
+        "mpl": "מסובבים",
+        "fpl": "מסובבות"
+      },
+      "past": {
+        "msg": "סובב",
+        "fsg": "סובבה",
+        "mpl": "סובבו",
+        "fpl": "סובבו"
+      },
+      "future": {
+        "msg": "יסובב",
+        "fsg": "תסובב",
+        "mpl": "יסובבו",
+        "fpl": "יסובבו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְסוֹבֵב",
+        "fsg": "מְסוֹבֶבֶת",
+        "mpl": "מְסוֹבְבִים",
+        "fpl": "מְסוֹבְבוֹת"
+      },
+      "past": {
+        "msg": "סוֹבֵב",
+        "fsg": "סוֹבְבָה",
+        "mpl": "סוֹבְבוּ",
+        "fpl": "סוֹבְבוּ"
+      },
+      "future": {
+        "msg": "יְסוֹבֵב",
+        "fsg": "תְּסוֹבֵב",
+        "mpl": "יְסוֹבְבוּ",
+        "fpl": "יְסוֹבְבוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lesovev"
+    ]
   },
   {
     "id": "simat_regel",
@@ -604,10 +1581,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will put a leg out for {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "שם", "fsg": "שמה", "mpl": "שמים", "fpl": "שמות" },
-      "past":    { "msg": "שם", "fsg": "שמה", "mpl": "שמו", "fpl": "שמו" },
-      "future":  { "msg": "ישים", "fsg": "תשים", "mpl": "ישימו", "fpl": "ישימו" }
-    }
+      "present": {
+        "msg": "שם",
+        "fsg": "שמה",
+        "mpl": "שמים",
+        "fpl": "שמות"
+      },
+      "past": {
+        "msg": "שם",
+        "fsg": "שמה",
+        "mpl": "שמו",
+        "fpl": "שמו"
+      },
+      "future": {
+        "msg": "ישים",
+        "fsg": "תשים",
+        "mpl": "ישימו",
+        "fpl": "ישימו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "שָׂם",
+        "fsg": "שָׂמָה",
+        "mpl": "שָׂמִים",
+        "fpl": "שָׂמוֹת"
+      },
+      "past": {
+        "msg": "שָׂם",
+        "fsg": "שָׂמָה",
+        "mpl": "שָׂמוּ",
+        "fpl": "שָׂמוּ"
+      },
+      "future": {
+        "msg": "יָשִׂים",
+        "fsg": "תָּשִׂים",
+        "mpl": "יָשִׂימוּ",
+        "fpl": "יָשִׂימוּ"
+      }
+    },
+    "fixed_object_niqqud": "רֶגֶל",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lasim"
+    ]
   },
   {
     "id": "chimum_lev",
@@ -627,10 +1644,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will warm {p} heart",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "מחמם", "fsg": "מחממת", "mpl": "מחממים", "fpl": "מחממות" },
-      "past":    { "msg": "חימם", "fsg": "חיממה", "mpl": "חיממו", "fpl": "חיממו" },
-      "future":  { "msg": "יחמם", "fsg": "תחמם", "mpl": "יחממו", "fpl": "יחממו" }
-    }
+      "present": {
+        "msg": "מחמם",
+        "fsg": "מחממת",
+        "mpl": "מחממים",
+        "fpl": "מחממות"
+      },
+      "past": {
+        "msg": "חימם",
+        "fsg": "חיממה",
+        "mpl": "חיממו",
+        "fpl": "חיממו"
+      },
+      "future": {
+        "msg": "יחמם",
+        "fsg": "תחמם",
+        "mpl": "יחממו",
+        "fpl": "יחממו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְחַמֵּם",
+        "fsg": "מְחַמֶּמֶת",
+        "mpl": "מְחַמְּמִים",
+        "fpl": "מְחַמְּמוֹת"
+      },
+      "past": {
+        "msg": "חִמֵּם",
+        "fsg": "חִמְּמָה",
+        "mpl": "חִמְּמוּ",
+        "fpl": "חִמְּמוּ"
+      },
+      "future": {
+        "msg": "יְחַמֵּם",
+        "fsg": "תְּחַמֵּם",
+        "mpl": "יְחַמְּמוּ",
+        "fpl": "יְחַמְּמוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַלֵּב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lechamem"
+    ]
   },
   {
     "id": "merihat_atzabim",
@@ -650,10 +1707,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will pluck {p} nerves",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מורט", "fsg": "מורטת", "mpl": "מורטים", "fpl": "מורטות" },
-      "past":    { "msg": "מרט", "fsg": "מרטה", "mpl": "מרטו", "fpl": "מרטו" },
-      "future":  { "msg": "ימרוט", "fsg": "תמרוט", "mpl": "ימרטו", "fpl": "ימרטו" }
-    }
+      "present": {
+        "msg": "מורט",
+        "fsg": "מורטת",
+        "mpl": "מורטים",
+        "fpl": "מורטות"
+      },
+      "past": {
+        "msg": "מרט",
+        "fsg": "מרטה",
+        "mpl": "מרטו",
+        "fpl": "מרטו"
+      },
+      "future": {
+        "msg": "ימרוט",
+        "fsg": "תמרוט",
+        "mpl": "ימרטו",
+        "fpl": "ימרטו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹרֵט",
+        "fsg": "מוֹרֶטֶת",
+        "mpl": "מוֹרְטִים",
+        "fpl": "מוֹרְטוֹת"
+      },
+      "past": {
+        "msg": "מָרַט",
+        "fsg": "מָרְטָה",
+        "mpl": "מָרְטוּ",
+        "fpl": "מָרְטוּ"
+      },
+      "future": {
+        "msg": "יִמְרֹט",
+        "fsg": "תִּמְרֹט",
+        "mpl": "יִמְרְטוּ",
+        "fpl": "יִמְרְטוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָעֲצַבִּים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-limrot"
+    ]
   },
   {
     "id": "ruach_mifrasim",
@@ -673,10 +1770,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will take the wind out of {p} sails",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָרוּחַ מֵהַמִּפְרָשִׂים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "sider",
@@ -695,17 +1832,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will arrange {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מסדר", "fsg": "מסדרת", "mpl": "מסדרים", "fpl": "מסדרות" },
-      "past":    { "msg": "סידר", "fsg": "סידרה", "mpl": "סידרו", "fpl": "סידרו" },
-      "future":  { "msg": "יסדר", "fsg": "תסדר", "mpl": "יסדרו", "fpl": "יסדרו" }
+      "present": {
+        "msg": "מסדר",
+        "fsg": "מסדרת",
+        "mpl": "מסדרים",
+        "fpl": "מסדרות"
+      },
+      "past": {
+        "msg": "סידר",
+        "fsg": "סידרה",
+        "mpl": "סידרו",
+        "fpl": "סידרו"
+      },
+      "future": {
+        "msg": "יסדר",
+        "fsg": "תסדר",
+        "mpl": "יסדרו",
+        "fpl": "יסדרו"
+      }
     },
     "conjugations_niqqud": {
-      "present": { "msg": "מְסַדֵּר", "fsg": "מְסַדֶּרֶת", "mpl": "מְסַדְּרִים", "fpl": "מְסַדְּרוֹת" },
-      "past":    { "msg": "סִדֵּר", "fsg": "סִדְּרָה", "mpl": "סִדְּרוּ", "fpl": "סִדְּרוּ" },
-      "future":  { "msg": "יְסַדֵּר", "fsg": "תְּסַדֵּר", "mpl": "יְסַדְּרוּ", "fpl": "יְסַדְּרוּ" }
+      "present": {
+        "msg": "מְסַדֵּר",
+        "fsg": "מְסַדֶּרֶת",
+        "mpl": "מְסַדְּרִים",
+        "fpl": "מְסַדְּרוֹת"
+      },
+      "past": {
+        "msg": "סִדֵּר",
+        "fsg": "סִדְּרָה",
+        "mpl": "סִדְּרוּ",
+        "fpl": "סִדְּרוּ"
+      },
+      "future": {
+        "msg": "יְסַדֵּר",
+        "fsg": "תְּסַדֵּר",
+        "mpl": "יְסַדְּרוּ",
+        "fpl": "יְסַדְּרוּ"
+      }
     },
     "niqqud_status": "reviewed",
-    "niqqud_sources": ["https://www.pealim.com/dict/1320-lesader/"]
+    "niqqud_sources": [
+      "https://www.pealim.com/dict/1320-lesader/"
+    ]
   },
   {
     "id": "marach",
@@ -724,10 +1893,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will smear {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מורח", "fsg": "מורחת", "mpl": "מורחים", "fpl": "מורחות" },
-      "past":    { "msg": "מרח", "fsg": "מרחה", "mpl": "מרחו", "fpl": "מרחו" },
-      "future":  { "msg": "ימרח", "fsg": "תמרח", "mpl": "ימרחו", "fpl": "ימרחו" }
-    }
+      "present": {
+        "msg": "מורח",
+        "fsg": "מורחת",
+        "mpl": "מורחים",
+        "fpl": "מורחות"
+      },
+      "past": {
+        "msg": "מרח",
+        "fsg": "מרחה",
+        "mpl": "מרחו",
+        "fpl": "מרחו"
+      },
+      "future": {
+        "msg": "ימרח",
+        "fsg": "תמרח",
+        "mpl": "ימרחו",
+        "fpl": "ימרחו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹרֵחַ",
+        "fsg": "מוֹרַחַת",
+        "mpl": "מוֹרְחִים",
+        "fpl": "מוֹרְחוֹת"
+      },
+      "past": {
+        "msg": "מָרַח",
+        "fsg": "מָרְחָה",
+        "mpl": "מָרְחוּ",
+        "fpl": "מָרְחוּ"
+      },
+      "future": {
+        "msg": "יִמְרַח",
+        "fsg": "תִּמְרַח",
+        "mpl": "יִמְרְחוּ",
+        "fpl": "יִמְרְחוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-limroach"
+    ]
   },
   {
     "id": "asiyat_yom",
@@ -747,14 +1955,44 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will make {p} day",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "עושה", "fsg": "עושה", "mpl": "עושים", "fpl": "עושות" },
-      "past":    { "msg": "עשה", "fsg": "עשתה", "mpl": "עשו", "fpl": "עשו" },
-      "future":  { "msg": "יעשה", "fsg": "תעשה", "mpl": "יעשו", "fpl": "יעשו" }
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
     },
     "conjugations_niqqud": {
-      "present": { "msg": "עוֹשֶׂה", "fsg": "עוֹשָׂה", "mpl": "עוֹשִׂים", "fpl": "עוֹשׂוֹת" },
-      "past":    { "msg": "עָשָׂה", "fsg": "עָשְׂתָה", "mpl": "עָשׂוּ", "fpl": "עָשׂוּ" },
-      "future":  { "msg": "יַעֲשֶׂה", "fsg": "תַּעֲשֶׂה", "mpl": "יַעֲשׂוּ", "fpl": "יַעֲשׂוּ" }
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
     },
     "fixed_object_niqqud": "אֶת הַיּוֹם",
     "niqqud_status": "reviewed",
@@ -781,10 +2019,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will lift {p} morale",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מרים", "fsg": "מרימה", "mpl": "מרימים", "fpl": "מרימות" },
-      "past":    { "msg": "הרים", "fsg": "הרימה", "mpl": "הרימו", "fpl": "הרימו" },
-      "future":  { "msg": "ירים", "fsg": "תרים", "mpl": "ירימו", "fpl": "ירימו" }
-    }
+      "present": {
+        "msg": "מרים",
+        "fsg": "מרימה",
+        "mpl": "מרימים",
+        "fpl": "מרימות"
+      },
+      "past": {
+        "msg": "הרים",
+        "fsg": "הרימה",
+        "mpl": "הרימו",
+        "fpl": "הרימו"
+      },
+      "future": {
+        "msg": "ירים",
+        "fsg": "תרים",
+        "mpl": "ירימו",
+        "fpl": "ירימו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מֵרִים",
+        "fsg": "מְרִימָה",
+        "mpl": "מְרִימִים",
+        "fpl": "מְרִימוֹת"
+      },
+      "past": {
+        "msg": "הֵרִים",
+        "fsg": "הֵרִימָה",
+        "mpl": "הֵרִימוּ",
+        "fpl": "הֵרִימוּ"
+      },
+      "future": {
+        "msg": "יָרִים",
+        "fsg": "תָּרִים",
+        "mpl": "יָרִימוּ",
+        "fpl": "יָרִימוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַמּוֹרָל",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-leharim"
+    ]
   },
   {
     "id": "harisat_matzav_ruach",
@@ -804,10 +2082,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will ruin {p} mood",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "הורס", "fsg": "הורסת", "mpl": "הורסים", "fpl": "הורסות" },
-      "past":    { "msg": "הרס", "fsg": "הרסה", "mpl": "הרסו", "fpl": "הרסו" },
-      "future":  { "msg": "יהרוס", "fsg": "תהרוס", "mpl": "יהרסו", "fpl": "יהרסו" }
-    }
+      "present": {
+        "msg": "הורס",
+        "fsg": "הורסת",
+        "mpl": "הורסים",
+        "fpl": "הורסות"
+      },
+      "past": {
+        "msg": "הרס",
+        "fsg": "הרסה",
+        "mpl": "הרסו",
+        "fpl": "הרסו"
+      },
+      "future": {
+        "msg": "יהרוס",
+        "fsg": "תהרוס",
+        "mpl": "יהרסו",
+        "fpl": "יהרסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "הוֹרֵס",
+        "fsg": "הוֹרֶסֶת",
+        "mpl": "הוֹרְסִים",
+        "fpl": "הוֹרְסוֹת"
+      },
+      "past": {
+        "msg": "הָרַס",
+        "fsg": "הָרְסָה",
+        "mpl": "הָרְסוּ",
+        "fpl": "הָרְסוּ"
+      },
+      "future": {
+        "msg": "יַהֲרוֹס",
+        "fsg": "תַּהֲרוֹס",
+        "mpl": "יַהַרְסוּ",
+        "fpl": "יַהַרְסוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת מַצַּב הָרוּחַ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-laharos"
+    ]
   },
   {
     "id": "gnivat_hatzaga",
@@ -827,10 +2145,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will steal {p} show",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "גונב", "fsg": "גונבת", "mpl": "גונבים", "fpl": "גונבות" },
-      "past":    { "msg": "גנב", "fsg": "גנבה", "mpl": "גנבו", "fpl": "גנבו" },
-      "future":  { "msg": "יגנוב", "fsg": "תגנוב", "mpl": "יגנבו", "fpl": "יגנבו" }
-    }
+      "present": {
+        "msg": "גונב",
+        "fsg": "גונבת",
+        "mpl": "גונבים",
+        "fpl": "גונבות"
+      },
+      "past": {
+        "msg": "גנב",
+        "fsg": "גנבה",
+        "mpl": "גנבו",
+        "fpl": "גנבו"
+      },
+      "future": {
+        "msg": "יגנוב",
+        "fsg": "תגנוב",
+        "mpl": "יגנבו",
+        "fpl": "יגנבו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "גּוֹנֵב",
+        "fsg": "גּוֹנֶבֶת",
+        "mpl": "גּוֹנְבִים",
+        "fpl": "גּוֹנְבוֹת"
+      },
+      "past": {
+        "msg": "גָּנַב",
+        "fsg": "גָּנְבָה",
+        "mpl": "גָּנְבוּ",
+        "fpl": "גָּנְבוּ"
+      },
+      "future": {
+        "msg": "יִגְנֹב",
+        "fsg": "תִּגְנֹב",
+        "mpl": "יִגְנְבוּ",
+        "fpl": "יִגְנְבוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַהַצָּגָה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lignov"
+    ]
   },
   {
     "id": "drichat_yabalot",
@@ -850,10 +2208,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will step on {p} blisters",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "דורך", "fsg": "דורכת", "mpl": "דורכים", "fpl": "דורכות" },
-      "past":    { "msg": "דרך", "fsg": "דרכה", "mpl": "דרכו", "fpl": "דרכו" },
-      "future":  { "msg": "ידרוך", "fsg": "תדרוך", "mpl": "ידרכו", "fpl": "ידרכו" }
-    }
+      "present": {
+        "msg": "דורך",
+        "fsg": "דורכת",
+        "mpl": "דורכים",
+        "fpl": "דורכות"
+      },
+      "past": {
+        "msg": "דרך",
+        "fsg": "דרכה",
+        "mpl": "דרכו",
+        "fpl": "דרכו"
+      },
+      "future": {
+        "msg": "ידרוך",
+        "fsg": "תדרוך",
+        "mpl": "ידרכו",
+        "fpl": "ידרכו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "דּוֹרֵךְ",
+        "fsg": "דּוֹרֶכֶת",
+        "mpl": "דּוֹרְכִים",
+        "fpl": "דּוֹרְכוֹת"
+      },
+      "past": {
+        "msg": "דָּרַךְ",
+        "fsg": "דָּרְכָה",
+        "mpl": "דָּרְכוּ",
+        "fpl": "דָּרְכוּ"
+      },
+      "future": {
+        "msg": "יִדְרֹךְ",
+        "fsg": "תִּדְרֹךְ",
+        "mpl": "יִדְרְכוּ",
+        "fpl": "יִדְרְכוּ"
+      }
+    },
+    "fixed_object_niqqud": "עַל הַיַּבָּלוֹת",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lidroch"
+    ]
   },
   {
     "id": "tsvitat_lev",
@@ -873,10 +2271,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will pinch {p} heart",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "צובט", "fsg": "צובטת", "mpl": "צובטים", "fpl": "צובטות" },
-      "past":    { "msg": "צבט", "fsg": "צבטה", "mpl": "צבטו", "fpl": "צבטו" },
-      "future":  { "msg": "יצבוט", "fsg": "תצבוט", "mpl": "יצבטו", "fpl": "יצבטו" }
-    }
+      "present": {
+        "msg": "צובט",
+        "fsg": "צובטת",
+        "mpl": "צובטים",
+        "fpl": "צובטות"
+      },
+      "past": {
+        "msg": "צבט",
+        "fsg": "צבטה",
+        "mpl": "צבטו",
+        "fpl": "צבטו"
+      },
+      "future": {
+        "msg": "יצבוט",
+        "fsg": "תצבוט",
+        "mpl": "יצבטו",
+        "fpl": "יצבטו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "צוֹבֵט",
+        "fsg": "צוֹבֶטֶת",
+        "mpl": "צוֹבְטִים",
+        "fpl": "צוֹבְטוֹת"
+      },
+      "past": {
+        "msg": "צָבַט",
+        "fsg": "צָבְטָה",
+        "mpl": "צָבְטוּ",
+        "fpl": "צָבְטוּ"
+      },
+      "future": {
+        "msg": "יִצְבֹּט",
+        "fsg": "תִּצְבֹּט",
+        "mpl": "יִצְבְּטוּ",
+        "fpl": "יִצְבְּטוּ"
+      }
+    },
+    "fixed_object_niqqud": "בַּלֵּב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-litzbot"
+    ]
   },
   {
     "id": "zarak",
@@ -895,10 +2333,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will throw {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "זורק", "fsg": "זורקת", "mpl": "זורקים", "fpl": "זורקות" },
-      "past":    { "msg": "זרק", "fsg": "זרקה", "mpl": "זרקו", "fpl": "זרקו" },
-      "future":  { "msg": "יזרוק", "fsg": "תזרוק", "mpl": "יזרקו", "fpl": "יזרקו" }
-    }
+      "present": {
+        "msg": "זורק",
+        "fsg": "זורקת",
+        "mpl": "זורקים",
+        "fpl": "זורקות"
+      },
+      "past": {
+        "msg": "זרק",
+        "fsg": "זרקה",
+        "mpl": "זרקו",
+        "fpl": "זרקו"
+      },
+      "future": {
+        "msg": "יזרוק",
+        "fsg": "תזרוק",
+        "mpl": "יזרקו",
+        "fpl": "יזרקו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "זוֹרֵק",
+        "fsg": "זוֹרֶקֶת",
+        "mpl": "זוֹרְקִים",
+        "fpl": "זוֹרְקוֹת"
+      },
+      "past": {
+        "msg": "זָרַק",
+        "fsg": "זָרְקָה",
+        "mpl": "זָרְקוּ",
+        "fpl": "זָרְקוּ"
+      },
+      "future": {
+        "msg": "יִזְרֹק",
+        "fsg": "תִּזְרֹק",
+        "mpl": "יִזְרְקוּ",
+        "fpl": "יִזְרְקוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lizrok"
+    ]
   },
   {
     "id": "tafas_oti",
@@ -917,10 +2394,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will catch {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "תופס", "fsg": "תופסת", "mpl": "תופסים", "fpl": "תופסות" },
-      "past":    { "msg": "תפס", "fsg": "תפסה", "mpl": "תפסו", "fpl": "תפסו" },
-      "future":  { "msg": "יתפוס", "fsg": "תתפוס", "mpl": "יתפסו", "fpl": "יתפסו" }
-    }
+      "present": {
+        "msg": "תופס",
+        "fsg": "תופסת",
+        "mpl": "תופסים",
+        "fpl": "תופסות"
+      },
+      "past": {
+        "msg": "תפס",
+        "fsg": "תפסה",
+        "mpl": "תפסו",
+        "fpl": "תפסו"
+      },
+      "future": {
+        "msg": "יתפוס",
+        "fsg": "תתפוס",
+        "mpl": "יתפסו",
+        "fpl": "יתפסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "תּוֹפֵס",
+        "fsg": "תּוֹפֶסֶת",
+        "mpl": "תּוֹפְסִים",
+        "fpl": "תּוֹפְסוֹת"
+      },
+      "past": {
+        "msg": "תָּפַס",
+        "fsg": "תָּפְסָה",
+        "mpl": "תָּפְסוּ",
+        "fpl": "תָּפְסוּ"
+      },
+      "future": {
+        "msg": "יִתְפֹּס",
+        "fsg": "תִּתְפֹּס",
+        "mpl": "יִתְפְּסוּ",
+        "fpl": "יִתְפְּסוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-litfos"
+    ]
   },
   {
     "id": "dafak",
@@ -939,10 +2455,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will knock {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "דופק", "fsg": "דופקת", "mpl": "דופקים", "fpl": "דופקות" },
-      "past":    { "msg": "דפק", "fsg": "דפקה", "mpl": "דפקו", "fpl": "דפקו" },
-      "future":  { "msg": "ידפוק", "fsg": "תדפוק", "mpl": "ידפקו", "fpl": "ידפקו" }
-    }
+      "present": {
+        "msg": "דופק",
+        "fsg": "דופקת",
+        "mpl": "דופקים",
+        "fpl": "דופקות"
+      },
+      "past": {
+        "msg": "דפק",
+        "fsg": "דפקה",
+        "mpl": "דפקו",
+        "fpl": "דפקו"
+      },
+      "future": {
+        "msg": "ידפוק",
+        "fsg": "תדפוק",
+        "mpl": "ידפקו",
+        "fpl": "ידפקו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "דּוֹפֵק",
+        "fsg": "דּוֹפֶקֶת",
+        "mpl": "דּוֹפְקִים",
+        "fpl": "דּוֹפְקוֹת"
+      },
+      "past": {
+        "msg": "דָּפַק",
+        "fsg": "דָּפְקָה",
+        "mpl": "דָּפְקוּ",
+        "fpl": "דָּפְקוּ"
+      },
+      "future": {
+        "msg": "יִדְפֹּק",
+        "fsg": "תִּדְפֹּק",
+        "mpl": "יִדְפְּקוּ",
+        "fpl": "יִדְפְּקוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lidfok"
+    ]
   },
   {
     "id": "heif",
@@ -961,10 +2516,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will fly {o} out",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מעיף", "fsg": "מעיפה", "mpl": "מעיפים", "fpl": "מעיפות" },
-      "past":    { "msg": "העיף", "fsg": "העיפה", "mpl": "העיפו", "fpl": "העיפו" },
-      "future":  { "msg": "יעיף", "fsg": "תעיף", "mpl": "יעיפו", "fpl": "יעיפו" }
-    }
+      "present": {
+        "msg": "מעיף",
+        "fsg": "מעיפה",
+        "mpl": "מעיפים",
+        "fpl": "מעיפות"
+      },
+      "past": {
+        "msg": "העיף",
+        "fsg": "העיפה",
+        "mpl": "העיפו",
+        "fpl": "העיפו"
+      },
+      "future": {
+        "msg": "יעיף",
+        "fsg": "תעיף",
+        "mpl": "יעיפו",
+        "fpl": "יעיפו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מֵעִיף",
+        "fsg": "מְעִיפָה",
+        "mpl": "מְעִיפִים",
+        "fpl": "מְעִיפוֹת"
+      },
+      "past": {
+        "msg": "הֵעִיף",
+        "fsg": "הֵעִיפָה",
+        "mpl": "הֵעִיפוּ",
+        "fpl": "הֵעִיפוּ"
+      },
+      "future": {
+        "msg": "יָעִיף",
+        "fsg": "תָּעִיף",
+        "mpl": "יָעִיפוּ",
+        "fpl": "יָעִיפוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaif"
+    ]
   },
   {
     "id": "chisel",
@@ -983,10 +2577,49 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will eliminate {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מחסל", "fsg": "מחסלת", "mpl": "מחסלים", "fpl": "מחסלות" },
-      "past":    { "msg": "חיסל", "fsg": "חיסלה", "mpl": "חיסלו", "fpl": "חיסלו" },
-      "future":  { "msg": "יחסל", "fsg": "תחסל", "mpl": "יחסלו", "fpl": "יחסלו" }
-    }
+      "present": {
+        "msg": "מחסל",
+        "fsg": "מחסלת",
+        "mpl": "מחסלים",
+        "fpl": "מחסלות"
+      },
+      "past": {
+        "msg": "חיסל",
+        "fsg": "חיסלה",
+        "mpl": "חיסלו",
+        "fpl": "חיסלו"
+      },
+      "future": {
+        "msg": "יחסל",
+        "fsg": "תחסל",
+        "mpl": "יחסלו",
+        "fpl": "יחסלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְחַסֵּל",
+        "fsg": "מְחַסֶּלֶת",
+        "mpl": "מְחַסְּלִים",
+        "fpl": "מְחַסְּלוֹת"
+      },
+      "past": {
+        "msg": "חִסֵּל",
+        "fsg": "חִסְּלָה",
+        "mpl": "חִסְּלוּ",
+        "fpl": "חִסְּלוּ"
+      },
+      "future": {
+        "msg": "יְחַסֵּל",
+        "fsg": "תְּחַסֵּל",
+        "mpl": "יְחַסְּלוּ",
+        "fpl": "יְחַסְּלוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lechasel"
+    ]
   },
   {
     "id": "asiyat_tova",
@@ -1006,10 +2639,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will do {o} a favor",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "עושה", "fsg": "עושה", "mpl": "עושים", "fpl": "עושות" },
-      "past":    { "msg": "עשה", "fsg": "עשתה", "mpl": "עשו", "fpl": "עשו" },
-      "future":  { "msg": "יעשה", "fsg": "תעשה", "mpl": "יעשו", "fpl": "יעשו" }
-    }
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
+    },
+    "fixed_object_niqqud": "טוֹבָה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laasot"
+    ]
   },
   {
     "id": "dibur_al_halev",
@@ -1029,10 +2702,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will talk on {p} heart",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מדבר", "fsg": "מדברת", "mpl": "מדברים", "fpl": "מדברות" },
-      "past":    { "msg": "דיבר", "fsg": "דיברה", "mpl": "דיברו", "fpl": "דיברו" },
-      "future":  { "msg": "ידבר", "fsg": "תדבר", "mpl": "ידברו", "fpl": "ידברו" }
-    }
+      "present": {
+        "msg": "מדבר",
+        "fsg": "מדברת",
+        "mpl": "מדברים",
+        "fpl": "מדברות"
+      },
+      "past": {
+        "msg": "דיבר",
+        "fsg": "דיברה",
+        "mpl": "דיברו",
+        "fpl": "דיברו"
+      },
+      "future": {
+        "msg": "ידבר",
+        "fsg": "תדבר",
+        "mpl": "ידברו",
+        "fpl": "ידברו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְדַבֵּר",
+        "fsg": "מְדַבֶּרֶת",
+        "mpl": "מְדַבְּרִים",
+        "fpl": "מְדַבְּרוֹת"
+      },
+      "past": {
+        "msg": "דִּבֵּר",
+        "fsg": "דִּבְּרָה",
+        "mpl": "דִּבְּרוּ",
+        "fpl": "דִּבְּרוּ"
+      },
+      "future": {
+        "msg": "יְדַבֵּר",
+        "fsg": "תְּדַבֵּר",
+        "mpl": "יְדַבְּרוּ",
+        "fpl": "יְדַבְּרוּ"
+      }
+    },
+    "fixed_object_niqqud": "עַל הַלֵּב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-ledaber"
+    ]
   },
   {
     "id": "asiyat_seder_barosh",
@@ -1052,10 +2765,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will make order in {p} head",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "עושה", "fsg": "עושה", "mpl": "עושים", "fpl": "עושות" },
-      "past":    { "msg": "עשה", "fsg": "עשתה", "mpl": "עשו", "fpl": "עשו" },
-      "future":  { "msg": "יעשה", "fsg": "תעשה", "mpl": "יעשו", "fpl": "יעשו" }
-    }
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
+    },
+    "fixed_object_niqqud": "סֵדֶר בָּרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laasot"
+    ]
   },
   {
     "id": "hachzarat_chiyuch",
@@ -1075,10 +2828,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will return {p} smile",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מחזיר", "fsg": "מחזירה", "mpl": "מחזירים", "fpl": "מחזירות" },
-      "past":    { "msg": "החזיר", "fsg": "החזירה", "mpl": "החזירו", "fpl": "החזירו" },
-      "future":  { "msg": "יחזיר", "fsg": "תחזיר", "mpl": "יחזירו", "fpl": "יחזירו" }
-    }
+      "present": {
+        "msg": "מחזיר",
+        "fsg": "מחזירה",
+        "mpl": "מחזירים",
+        "fpl": "מחזירות"
+      },
+      "past": {
+        "msg": "החזיר",
+        "fsg": "החזירה",
+        "mpl": "החזירו",
+        "fpl": "החזירו"
+      },
+      "future": {
+        "msg": "יחזיר",
+        "fsg": "תחזיר",
+        "mpl": "יחזירו",
+        "fpl": "יחזירו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַחְזִיר",
+        "fsg": "מַחְזִירָה",
+        "mpl": "מַחְזִירִים",
+        "fpl": "מַחְזִירוֹת"
+      },
+      "past": {
+        "msg": "הֶחְזִיר",
+        "fsg": "הֶחְזִירָה",
+        "mpl": "הֶחְזִירוּ",
+        "fpl": "הֶחְזִירוּ"
+      },
+      "future": {
+        "msg": "יַחְזִיר",
+        "fsg": "תַּחְזִיר",
+        "mpl": "יַחְזִירוּ",
+        "fpl": "יַחְזִירוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַחִיּוּךְ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehachzir"
+    ]
   },
   {
     "id": "tfisat_ayin",
@@ -1098,10 +2891,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will catch {p} eye",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "תופס", "fsg": "תופסת", "mpl": "תופסים", "fpl": "תופסות" },
-      "past":    { "msg": "תפס", "fsg": "תפסה", "mpl": "תפסו", "fpl": "תפסו" },
-      "future":  { "msg": "יתפוס", "fsg": "תתפוס", "mpl": "יתפסו", "fpl": "יתפסו" }
-    }
+      "present": {
+        "msg": "תופס",
+        "fsg": "תופסת",
+        "mpl": "תופסים",
+        "fpl": "תופסות"
+      },
+      "past": {
+        "msg": "תפס",
+        "fsg": "תפסה",
+        "mpl": "תפסו",
+        "fpl": "תפסו"
+      },
+      "future": {
+        "msg": "יתפוס",
+        "fsg": "תתפוס",
+        "mpl": "יתפסו",
+        "fpl": "יתפסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "תּוֹפֵס",
+        "fsg": "תּוֹפֶסֶת",
+        "mpl": "תּוֹפְסִים",
+        "fpl": "תּוֹפְסוֹת"
+      },
+      "past": {
+        "msg": "תָּפַס",
+        "fsg": "תָּפְסָה",
+        "mpl": "תָּפְסוּ",
+        "fpl": "תָּפְסוּ"
+      },
+      "future": {
+        "msg": "יִתְפֹּס",
+        "fsg": "תִּתְפֹּס",
+        "mpl": "יִתְפְּסוּ",
+        "fpl": "יִתְפְּסוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָעַיִן",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-litfos"
+    ]
   },
   {
     "id": "chisachon_keev",
@@ -1121,10 +2954,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will save {o} the pain",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "חוסך", "fsg": "חוסכת", "mpl": "חוסכים", "fpl": "חוסכות" },
-      "past":    { "msg": "חסך", "fsg": "חסכה", "mpl": "חסכו", "fpl": "חסכו" },
-      "future":  { "msg": "יחסוך", "fsg": "תחסוך", "mpl": "יחסכו", "fpl": "יחסכו" }
-    }
+      "present": {
+        "msg": "חוסך",
+        "fsg": "חוסכת",
+        "mpl": "חוסכים",
+        "fpl": "חוסכות"
+      },
+      "past": {
+        "msg": "חסך",
+        "fsg": "חסכה",
+        "mpl": "חסכו",
+        "fpl": "חסכו"
+      },
+      "future": {
+        "msg": "יחסוך",
+        "fsg": "תחסוך",
+        "mpl": "יחסכו",
+        "fpl": "יחסכו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "חוֹסֵךְ",
+        "fsg": "חוֹסֶכֶת",
+        "mpl": "חוֹסְכִים",
+        "fpl": "חוֹסְכוֹת"
+      },
+      "past": {
+        "msg": "חָסַךְ",
+        "fsg": "חָסְכָה",
+        "mpl": "חָסְכוּ",
+        "fpl": "חָסְכוּ"
+      },
+      "future": {
+        "msg": "יַחְסֹךְ",
+        "fsg": "תַּחְסֹךְ",
+        "mpl": "יַחְסְכוּ",
+        "fpl": "יַחְסְכוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַכְּאֵב",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lachsoch"
+    ]
   },
   {
     "id": "haarat_yom",
@@ -1144,10 +3017,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will light up {p} day",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מאיר", "fsg": "מאירה", "mpl": "מאירים", "fpl": "מאירות" },
-      "past":    { "msg": "האיר", "fsg": "האירה", "mpl": "האירו", "fpl": "האירו" },
-      "future":  { "msg": "יאיר", "fsg": "תאיר", "mpl": "יאירו", "fpl": "יאירו" }
-    }
+      "present": {
+        "msg": "מאיר",
+        "fsg": "מאירה",
+        "mpl": "מאירים",
+        "fpl": "מאירות"
+      },
+      "past": {
+        "msg": "האיר",
+        "fsg": "האירה",
+        "mpl": "האירו",
+        "fpl": "האירו"
+      },
+      "future": {
+        "msg": "יאיר",
+        "fsg": "תאיר",
+        "mpl": "יאירו",
+        "fpl": "יאירו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מֵאִיר",
+        "fsg": "מְאִירָה",
+        "mpl": "מְאִירִים",
+        "fpl": "מְאִירוֹת"
+      },
+      "past": {
+        "msg": "הֵאִיר",
+        "fsg": "הֵאִירָה",
+        "mpl": "הֵאִירוּ",
+        "fpl": "הֵאִירוּ"
+      },
+      "future": {
+        "msg": "יָאִיר",
+        "fsg": "תָּאִיר",
+        "mpl": "יָאִירוּ",
+        "fpl": "יָאִירוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַיּוֹם",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehair"
+    ]
   },
   {
     "id": "mirur_chayim",
@@ -1167,10 +3080,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will embitter {p} life",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "ממרר", "fsg": "ממררת", "mpl": "ממררים", "fpl": "ממררות" },
-      "past":    { "msg": "מירר", "fsg": "מיררה", "mpl": "מיררו", "fpl": "מיררו" },
-      "future":  { "msg": "ימרר", "fsg": "תמרר", "mpl": "ימררו", "fpl": "ימררו" }
-    }
+      "present": {
+        "msg": "ממרר",
+        "fsg": "ממררת",
+        "mpl": "ממררים",
+        "fpl": "ממררות"
+      },
+      "past": {
+        "msg": "מירר",
+        "fsg": "מיררה",
+        "mpl": "מיררו",
+        "fpl": "מיררו"
+      },
+      "future": {
+        "msg": "ימרר",
+        "fsg": "תמרר",
+        "mpl": "ימררו",
+        "fpl": "ימררו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְמָרֵר",
+        "fsg": "מְמָרֶרֶת",
+        "mpl": "מְמָרְרִים",
+        "fpl": "מְמָרְרוֹת"
+      },
+      "past": {
+        "msg": "מֵרֵר",
+        "fsg": "מֵרְרָה",
+        "mpl": "מֵרְרוּ",
+        "fpl": "מֵרְרוּ"
+      },
+      "future": {
+        "msg": "יְמָרֵר",
+        "fsg": "תְּמָרֵר",
+        "mpl": "יְמָרְרוּ",
+        "fpl": "יְמָרְרוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַחַיִּים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lemarer"
+    ]
   },
   {
     "id": "asiyat_mavet",
@@ -1190,10 +3143,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will make {p} death",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "עושה", "fsg": "עושה", "mpl": "עושים", "fpl": "עושות" },
-      "past":    { "msg": "עשה", "fsg": "עשתה", "mpl": "עשו", "fpl": "עשו" },
-      "future":  { "msg": "יעשה", "fsg": "תעשה", "mpl": "יעשו", "fpl": "יעשו" }
-    }
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַמָּוֶת",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laasot"
+    ]
   },
   {
     "id": "haramat_telefon",
@@ -1213,10 +3206,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will lift a phone for {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מרים", "fsg": "מרימה", "mpl": "מרימים", "fpl": "מרימות" },
-      "past":    { "msg": "הרים", "fsg": "הרימה", "mpl": "הרימו", "fpl": "הרימו" },
-      "future":  { "msg": "ירים", "fsg": "תרים", "mpl": "ירימו", "fpl": "ירימו" }
-    }
+      "present": {
+        "msg": "מרים",
+        "fsg": "מרימה",
+        "mpl": "מרימים",
+        "fpl": "מרימות"
+      },
+      "past": {
+        "msg": "הרים",
+        "fsg": "הרימה",
+        "mpl": "הרימו",
+        "fpl": "הרימו"
+      },
+      "future": {
+        "msg": "ירים",
+        "fsg": "תרים",
+        "mpl": "ירימו",
+        "fpl": "ירימו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מֵרִים",
+        "fsg": "מְרִימָה",
+        "mpl": "מְרִימִים",
+        "fpl": "מְרִימוֹת"
+      },
+      "past": {
+        "msg": "הֵרִים",
+        "fsg": "הֵרִימָה",
+        "mpl": "הֵרִימוּ",
+        "fpl": "הֵרִימוּ"
+      },
+      "future": {
+        "msg": "יָרִים",
+        "fsg": "תָּרִים",
+        "mpl": "יָרִימוּ",
+        "fpl": "יָרִימוּ"
+      }
+    },
+    "fixed_object_niqqud": "טֶלֶפוֹן",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-leharim"
+    ]
   },
   {
     "id": "ntinat_kavod",
@@ -1236,10 +3269,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will give {o} respect",
     "showMeaning": false,
     "conjugations": {
-      "present": { "msg": "נותן", "fsg": "נותנת", "mpl": "נותנים", "fpl": "נותנות" },
-      "past":    { "msg": "נתן", "fsg": "נתנה", "mpl": "נתנו", "fpl": "נתנו" },
-      "future":  { "msg": "ייתן", "fsg": "תיתן", "mpl": "ייתנו", "fpl": "ייתנו" }
-    }
+      "present": {
+        "msg": "נותן",
+        "fsg": "נותנת",
+        "mpl": "נותנים",
+        "fpl": "נותנות"
+      },
+      "past": {
+        "msg": "נתן",
+        "fsg": "נתנה",
+        "mpl": "נתנו",
+        "fpl": "נתנו"
+      },
+      "future": {
+        "msg": "ייתן",
+        "fsg": "תיתן",
+        "mpl": "ייתנו",
+        "fpl": "ייתנו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "נוֹתֵן",
+        "fsg": "נוֹתֶנֶת",
+        "mpl": "נוֹתְנִים",
+        "fpl": "נוֹתְנוֹת"
+      },
+      "past": {
+        "msg": "נָתַן",
+        "fsg": "נָתְנָה",
+        "mpl": "נָתְנוּ",
+        "fpl": "נָתְנוּ"
+      },
+      "future": {
+        "msg": "יִתֵּן",
+        "fsg": "תִּתֵּן",
+        "mpl": "יִתְּנוּ",
+        "fpl": "יִתְּנוּ"
+      }
+    },
+    "fixed_object_niqqud": "כָּבוֹד",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-latet"
+    ]
   },
   {
     "id": "shibush_tochniyot",
@@ -1259,10 +3332,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will disrupt {p} plans",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "משבש", "fsg": "משבשת", "mpl": "משבשים", "fpl": "משבשות" },
-      "past":    { "msg": "שיבש", "fsg": "שיבשה", "mpl": "שיבשו", "fpl": "שיבשו" },
-      "future":  { "msg": "ישבש", "fsg": "תשבש", "mpl": "ישבשו", "fpl": "ישבשו" }
-    }
+      "present": {
+        "msg": "משבש",
+        "fsg": "משבשת",
+        "mpl": "משבשים",
+        "fpl": "משבשות"
+      },
+      "past": {
+        "msg": "שיבש",
+        "fsg": "שיבשה",
+        "mpl": "שיבשו",
+        "fpl": "שיבשו"
+      },
+      "future": {
+        "msg": "ישבש",
+        "fsg": "תשבש",
+        "mpl": "ישבשו",
+        "fpl": "ישבשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְשַׁבֵּשׁ",
+        "fsg": "מְשַׁבֶּשֶׁת",
+        "mpl": "מְשַׁבְּשִׁים",
+        "fpl": "מְשַׁבְּשׁוֹת"
+      },
+      "past": {
+        "msg": "שִׁבֵּשׁ",
+        "fsg": "שִׁבְּשָׁה",
+        "mpl": "שִׁבְּשׁוּ",
+        "fpl": "שִׁבְּשׁוּ"
+      },
+      "future": {
+        "msg": "יְשַׁבֵּשׁ",
+        "fsg": "תְּשַׁבֵּשׁ",
+        "mpl": "יְשַׁבְּשׁוּ",
+        "fpl": "יְשַׁבְּשׁוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַתָּכְנִיּוֹת",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-leshabesh"
+    ]
   },
   {
     "id": "zriyat_melach",
@@ -1282,10 +3395,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will scatter salt on {p} wounds",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "זורה", "fsg": "זורה", "mpl": "זורים", "fpl": "זורות" },
-      "past":    { "msg": "זרה", "fsg": "זרתה", "mpl": "זרו", "fpl": "זרו" },
-      "future":  { "msg": "יזרה", "fsg": "תזרה", "mpl": "יזרו", "fpl": "יזרו" }
-    }
+      "present": {
+        "msg": "זורה",
+        "fsg": "זורה",
+        "mpl": "זורים",
+        "fpl": "זורות"
+      },
+      "past": {
+        "msg": "זרה",
+        "fsg": "זרתה",
+        "mpl": "זרו",
+        "fpl": "זרו"
+      },
+      "future": {
+        "msg": "יזרה",
+        "fsg": "תזרה",
+        "mpl": "יזרו",
+        "fpl": "יזרו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "זוֹרֶה",
+        "fsg": "זוֹרָה",
+        "mpl": "זוֹרִים",
+        "fpl": "זוֹרוֹת"
+      },
+      "past": {
+        "msg": "זָרָה",
+        "fsg": "זָרְתָה",
+        "mpl": "זָרוּ",
+        "fpl": "זָרוּ"
+      },
+      "future": {
+        "msg": "יִזְרֶה",
+        "fsg": "תִּזְרֶה",
+        "mpl": "יִזְרוּ",
+        "fpl": "יִזְרוּ"
+      }
+    },
+    "fixed_object_niqqud": "מֶלַח עַל הַפְּצָעִים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lizrot"
+    ]
   },
   {
     "id": "hotzaat_milim",
@@ -1305,10 +3458,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will take the words out of {p} mouth",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַמִּלִּים מֵהַפֶּה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "sgirat_pina",
@@ -1328,10 +3521,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will close {o} a corner",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "סוגר", "fsg": "סוגרת", "mpl": "סוגרים", "fpl": "סוגרות" },
-      "past":    { "msg": "סגר", "fsg": "סגרה", "mpl": "סגרו", "fpl": "סגרו" },
-      "future":  { "msg": "יסגור", "fsg": "תסגור", "mpl": "יסגרו", "fpl": "יסגרו" }
-    }
+      "present": {
+        "msg": "סוגר",
+        "fsg": "סוגרת",
+        "mpl": "סוגרים",
+        "fpl": "סוגרות"
+      },
+      "past": {
+        "msg": "סגר",
+        "fsg": "סגרה",
+        "mpl": "סגרו",
+        "fpl": "סגרו"
+      },
+      "future": {
+        "msg": "יסגור",
+        "fsg": "תסגור",
+        "mpl": "יסגרו",
+        "fpl": "יסגרו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "סוֹגֵר",
+        "fsg": "סוֹגֶרֶת",
+        "mpl": "סוֹגְרִים",
+        "fpl": "סוֹגְרוֹת"
+      },
+      "past": {
+        "msg": "סָגַר",
+        "fsg": "סָגְרָה",
+        "mpl": "סָגְרוּ",
+        "fpl": "סָגְרוּ"
+      },
+      "future": {
+        "msg": "יִסְגּוֹר",
+        "fsg": "תִּסְגּוֹר",
+        "mpl": "יִסְגְּרוּ",
+        "fpl": "יִסְגְּרוּ"
+      }
+    },
+    "fixed_object_niqqud": "פִּנָּה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lisgor"
+    ]
   },
   {
     "id": "ptichat_delet",
@@ -1351,10 +3584,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will open {o} a door",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "פותח", "fsg": "פותחת", "mpl": "פותחים", "fpl": "פותחות" },
-      "past":    { "msg": "פתח", "fsg": "פתחה", "mpl": "פתחו", "fpl": "פתחו" },
-      "future":  { "msg": "יפתח", "fsg": "תפתח", "mpl": "יפתחו", "fpl": "יפתחו" }
-    }
+      "present": {
+        "msg": "פותח",
+        "fsg": "פותחת",
+        "mpl": "פותחים",
+        "fpl": "פותחות"
+      },
+      "past": {
+        "msg": "פתח",
+        "fsg": "פתחה",
+        "mpl": "פתחו",
+        "fpl": "פתחו"
+      },
+      "future": {
+        "msg": "יפתח",
+        "fsg": "תפתח",
+        "mpl": "יפתחו",
+        "fpl": "יפתחו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "פּוֹתֵחַ",
+        "fsg": "פּוֹתַחַת",
+        "mpl": "פּוֹתְחִים",
+        "fpl": "פּוֹתְחוֹת"
+      },
+      "past": {
+        "msg": "פָּתַח",
+        "fsg": "פָּתְחָה",
+        "mpl": "פָּתְחוּ",
+        "fpl": "פָּתְחוּ"
+      },
+      "future": {
+        "msg": "יִפְתַּח",
+        "fsg": "תִּפְתַּח",
+        "mpl": "יִפְתְּחוּ",
+        "fpl": "יִפְתְּחוּ"
+      }
+    },
+    "fixed_object_niqqud": "דֶּלֶת",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-liftoach"
+    ]
   },
   {
     "id": "hatayat_ozen",
@@ -1374,10 +3647,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will incline an ear to {o}",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "מטה", "fsg": "מטה", "mpl": "מטים", "fpl": "מטות" },
-      "past":    { "msg": "הטה", "fsg": "הטתה", "mpl": "הטו", "fpl": "הטו" },
-      "future":  { "msg": "יטה", "fsg": "תטה", "mpl": "יטו", "fpl": "יטו" }
-    }
+      "present": {
+        "msg": "מטה",
+        "fsg": "מטה",
+        "mpl": "מטים",
+        "fpl": "מטות"
+      },
+      "past": {
+        "msg": "הטה",
+        "fsg": "הטתה",
+        "mpl": "הטו",
+        "fpl": "הטו"
+      },
+      "future": {
+        "msg": "יטה",
+        "fsg": "תטה",
+        "mpl": "יטו",
+        "fpl": "יטו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַטֶּה",
+        "fsg": "מַטָּה",
+        "mpl": "מַטִּים",
+        "fpl": "מַטּוֹת"
+      },
+      "past": {
+        "msg": "הִטָּה",
+        "fsg": "הִטְּתָה",
+        "mpl": "הִטּוּ",
+        "fpl": "הִטּוּ"
+      },
+      "future": {
+        "msg": "יַטֶּה",
+        "fsg": "תַּטֶּה",
+        "mpl": "יַטּוּ",
+        "fpl": "יַטּוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֹזֶן",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehatot"
+    ]
   },
   {
     "id": "hafichat_chayim",
@@ -1397,10 +3710,50 @@ const HEBREW_IDIOMS = (function () {
     "literal_future": "{s} will turn {p} life over",
     "showMeaning": true,
     "conjugations": {
-      "present": { "msg": "הופך", "fsg": "הופכת", "mpl": "הופכים", "fpl": "הופכות" },
-      "past":    { "msg": "הפך", "fsg": "הפכה", "mpl": "הפכו", "fpl": "הפכו" },
-      "future":  { "msg": "יהפוך", "fsg": "תהפוך", "mpl": "יהפכו", "fpl": "יהפכו" }
-    }
+      "present": {
+        "msg": "הופך",
+        "fsg": "הופכת",
+        "mpl": "הופכים",
+        "fpl": "הופכות"
+      },
+      "past": {
+        "msg": "הפך",
+        "fsg": "הפכה",
+        "mpl": "הפכו",
+        "fpl": "הפכו"
+      },
+      "future": {
+        "msg": "יהפוך",
+        "fsg": "תהפוך",
+        "mpl": "יהפכו",
+        "fpl": "יהפכו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "הוֹפֵךְ",
+        "fsg": "הוֹפֶכֶת",
+        "mpl": "הוֹפְכִים",
+        "fpl": "הוֹפְכוֹת"
+      },
+      "past": {
+        "msg": "הָפַךְ",
+        "fsg": "הָפְכָה",
+        "mpl": "הָפְכוּ",
+        "fpl": "הָפְכוּ"
+      },
+      "future": {
+        "msg": "יַהֲפֹךְ",
+        "fsg": "תַּהֲפֹךְ",
+        "mpl": "יַהַפְכוּ",
+        "fpl": "יַהַפְכוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַחַיִּים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lahafoch"
+    ]
   },
   {
     "id": "hotzaa_mishalva",
@@ -1433,10 +3786,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "משלוותן"
     },
     "conjugations": {
-      "present": { "msg": "מוציא", "fsg": "מוציאה", "mpl": "מוציאים", "fpl": "מוציאות" },
-      "past":    { "msg": "הוציא", "fsg": "הוציאה", "mpl": "הוציאו", "fpl": "הוציאו" },
-      "future":  { "msg": "יוציא", "fsg": "תוציא", "mpl": "יוציאו", "fpl": "יוציאו" }
-    }
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מִשַּׁלְוָתִי",
+      "2msg": "מִשַּׁלְוָתְךָ",
+      "2fsg": "מִשַּׁלְוָתֵךְ",
+      "3msg": "מִשַּׁלְוָתוֹ",
+      "3fsg": "מִשַּׁלְוָתָהּ",
+      "1pl": "מִשַּׁלְוָתֵנוּ",
+      "2mpl": "מִשַּׁלְוַתְכֶם",
+      "2fpl": "מִשַּׁלְוַתְכֶן",
+      "3mpl": "מִשַּׁלְוָתָם",
+      "3fpl": "מִשַּׁלְוָתָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "haamada_bimkomo",
@@ -1469,10 +3873,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "במקומן"
     },
     "conjugations": {
-      "present": { "msg": "מעמיד", "fsg": "מעמידה", "mpl": "מעמידים", "fpl": "מעמידות" },
-      "past":    { "msg": "העמיד", "fsg": "העמידה", "mpl": "העמידו", "fpl": "העמידו" },
-      "future":  { "msg": "יעמיד", "fsg": "תעמיד", "mpl": "יעמידו", "fpl": "יעמידו" }
-    }
+      "present": {
+        "msg": "מעמיד",
+        "fsg": "מעמידה",
+        "mpl": "מעמידים",
+        "fpl": "מעמידות"
+      },
+      "past": {
+        "msg": "העמיד",
+        "fsg": "העמידה",
+        "mpl": "העמידו",
+        "fpl": "העמידו"
+      },
+      "future": {
+        "msg": "יעמיד",
+        "fsg": "תעמיד",
+        "mpl": "יעמידו",
+        "fpl": "יעמידו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲמִיד",
+        "fsg": "מַעֲמִידָה",
+        "mpl": "מַעֲמִידִים",
+        "fpl": "מַעֲמִידוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱמִיד",
+        "fsg": "הֶעֱמִידָה",
+        "mpl": "הֶעֱמִידוּ",
+        "fpl": "הֶעֱמִידוּ"
+      },
+      "future": {
+        "msg": "יַעֲמִיד",
+        "fsg": "תַּעֲמִיד",
+        "mpl": "יַעֲמִידוּ",
+        "fpl": "יַעֲמִידוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "בִּמְקוֹמִי",
+      "2msg": "בִּמְקוֹמְךָ",
+      "2fsg": "בִּמְקוֹמֵךְ",
+      "3msg": "בִּמְקוֹמוֹ",
+      "3fsg": "בִּמְקוֹמָהּ",
+      "1pl": "בִּמְקוֹמֵנוּ",
+      "2mpl": "בִּמְקוֹמְכֶם",
+      "2fpl": "בִּמְקוֹמְכֶן",
+      "3mpl": "בִּמְקוֹמָם",
+      "3fpl": "בִּמְקוֹמָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaamid"
+    ]
   },
   {
     "id": "tfisa_bimilato",
@@ -1505,10 +3960,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "במילתן"
     },
     "conjugations": {
-      "present": { "msg": "תופס", "fsg": "תופסת", "mpl": "תופסים", "fpl": "תופסות" },
-      "past":    { "msg": "תפס", "fsg": "תפסה", "mpl": "תפסו", "fpl": "תפסו" },
-      "future":  { "msg": "יתפוס", "fsg": "תתפוס", "mpl": "יתפסו", "fpl": "יתפסו" }
-    }
+      "present": {
+        "msg": "תופס",
+        "fsg": "תופסת",
+        "mpl": "תופסים",
+        "fpl": "תופסות"
+      },
+      "past": {
+        "msg": "תפס",
+        "fsg": "תפסה",
+        "mpl": "תפסו",
+        "fpl": "תפסו"
+      },
+      "future": {
+        "msg": "יתפוס",
+        "fsg": "תתפוס",
+        "mpl": "יתפסו",
+        "fpl": "יתפסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "תּוֹפֵס",
+        "fsg": "תּוֹפֶסֶת",
+        "mpl": "תּוֹפְסִים",
+        "fpl": "תּוֹפְסוֹת"
+      },
+      "past": {
+        "msg": "תָּפַס",
+        "fsg": "תָּפְסָה",
+        "mpl": "תָּפְסוּ",
+        "fpl": "תָּפְסוּ"
+      },
+      "future": {
+        "msg": "יִתְפֹּס",
+        "fsg": "תִּתְפֹּס",
+        "mpl": "יִתְפְּסוּ",
+        "fpl": "יִתְפְּסוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "בְּמִלָּתִי",
+      "2msg": "בְּמִלָּתְךָ",
+      "2fsg": "בְּמִלָּתֵךְ",
+      "3msg": "בְּמִלָּתוֹ",
+      "3fsg": "בְּמִלָּתָהּ",
+      "1pl": "בְּמִלָּתֵנוּ",
+      "2mpl": "בְּמִלַּתְכֶם",
+      "2fpl": "בְּמִלַּתְכֶן",
+      "3mpl": "בְּמִלָּתָם",
+      "3fpl": "בְּמִלָּתָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-litfos"
+    ]
   },
   {
     "id": "hachzara_leatzmo",
@@ -1541,14 +4047,44 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "לעצמן"
     },
     "conjugations": {
-      "present": { "msg": "מחזיר", "fsg": "מחזירה", "mpl": "מחזירים", "fpl": "מחזירות" },
-      "past":    { "msg": "החזיר", "fsg": "החזירה", "mpl": "החזירו", "fpl": "החזירו" },
-      "future":  { "msg": "יחזיר", "fsg": "תחזיר", "mpl": "יחזירו", "fpl": "יחזירו" }
+      "present": {
+        "msg": "מחזיר",
+        "fsg": "מחזירה",
+        "mpl": "מחזירים",
+        "fpl": "מחזירות"
+      },
+      "past": {
+        "msg": "החזיר",
+        "fsg": "החזירה",
+        "mpl": "החזירו",
+        "fpl": "החזירו"
+      },
+      "future": {
+        "msg": "יחזיר",
+        "fsg": "תחזיר",
+        "mpl": "יחזירו",
+        "fpl": "יחזירו"
+      }
     },
     "conjugations_niqqud": {
-      "present": { "msg": "מַחְזִיר", "fsg": "מַחְזִירָה", "mpl": "מַחְזִירִים", "fpl": "מַחְזִירוֹת" },
-      "past":    { "msg": "הֶחְזִיר", "fsg": "הֶחְזִירָה", "mpl": "הֶחְזִירוּ", "fpl": "הֶחְזִירוּ" },
-      "future":  { "msg": "יַחְזִיר", "fsg": "תַּחְזִיר", "mpl": "יַחְזִירוּ", "fpl": "יַחְזִירוּ" }
+      "present": {
+        "msg": "מַחְזִיר",
+        "fsg": "מַחְזִירָה",
+        "mpl": "מַחְזִירִים",
+        "fpl": "מַחְזִירוֹת"
+      },
+      "past": {
+        "msg": "הֶחְזִיר",
+        "fsg": "הֶחְזִירָה",
+        "mpl": "הֶחְזִירוּ",
+        "fpl": "הֶחְזִירוּ"
+      },
+      "future": {
+        "msg": "יַחְזִיר",
+        "fsg": "תַּחְזִיר",
+        "mpl": "יַחְזִירוּ",
+        "fpl": "יַחְזִירוּ"
+      }
     },
     "suffix_forms_niqqud": {
       "1sg": "לְעַצְמִי",
@@ -1599,10 +4135,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "על דעתן"
     },
     "conjugations": {
-      "present": { "msg": "מעביר", "fsg": "מעבירה", "mpl": "מעבירים", "fpl": "מעבירות" },
-      "past":    { "msg": "העביר", "fsg": "העבירה", "mpl": "העבירו", "fpl": "העבירו" },
-      "future":  { "msg": "יעביר", "fsg": "תעביר", "mpl": "יעבירו", "fpl": "יעבירו" }
-    }
+      "present": {
+        "msg": "מעביר",
+        "fsg": "מעבירה",
+        "mpl": "מעבירים",
+        "fpl": "מעבירות"
+      },
+      "past": {
+        "msg": "העביר",
+        "fsg": "העבירה",
+        "mpl": "העבירו",
+        "fpl": "העבירו"
+      },
+      "future": {
+        "msg": "יעביר",
+        "fsg": "תעביר",
+        "mpl": "יעבירו",
+        "fpl": "יעבירו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲבִיר",
+        "fsg": "מַעֲבִירָה",
+        "mpl": "מַעֲבִירִים",
+        "fpl": "מַעֲבִירוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱבִיר",
+        "fsg": "הֶעֱבִירָה",
+        "mpl": "הֶעֱבִירוּ",
+        "fpl": "הֶעֱבִירוּ"
+      },
+      "future": {
+        "msg": "יַעֲבִיר",
+        "fsg": "תַּעֲבִיר",
+        "mpl": "יַעֲבִירוּ",
+        "fpl": "יַעֲבִירוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "עַל דַּעְתִּי",
+      "2msg": "עַל דַּעְתְּךָ",
+      "2fsg": "עַל דַּעְתֵּךְ",
+      "3msg": "עַל דַּעְתּוֹ",
+      "3fsg": "עַל דַּעְתָּהּ",
+      "1pl": "עַל דַּעְתֵּנוּ",
+      "2mpl": "עַל דַּעְתְּכֶם",
+      "2fpl": "עַל דַּעְתְּכֶן",
+      "3mpl": "עַל דַּעְתָּם",
+      "3fpl": "עַל דַּעְתָּן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaavir"
+    ]
   },
   {
     "id": "hashara_betzarato",
@@ -1635,10 +4222,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "בצרתן"
     },
     "conjugations": {
-      "present": { "msg": "משאיר", "fsg": "משאירה", "mpl": "משאירים", "fpl": "משאירות" },
-      "past":    { "msg": "השאיר", "fsg": "השאירה", "mpl": "השאירו", "fpl": "השאירו" },
-      "future":  { "msg": "ישאיר", "fsg": "תשאיר", "mpl": "ישאירו", "fpl": "ישאירו" }
-    }
+      "present": {
+        "msg": "משאיר",
+        "fsg": "משאירה",
+        "mpl": "משאירים",
+        "fpl": "משאירות"
+      },
+      "past": {
+        "msg": "השאיר",
+        "fsg": "השאירה",
+        "mpl": "השאירו",
+        "fpl": "השאירו"
+      },
+      "future": {
+        "msg": "ישאיר",
+        "fsg": "תשאיר",
+        "mpl": "ישאירו",
+        "fpl": "ישאירו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַשְׁאִיר",
+        "fsg": "מַשְׁאִירָה",
+        "mpl": "מַשְׁאִירִים",
+        "fpl": "מַשְׁאִירוֹת"
+      },
+      "past": {
+        "msg": "הִשְׁאִיר",
+        "fsg": "הִשְׁאִירָה",
+        "mpl": "הִשְׁאִירוּ",
+        "fpl": "הִשְׁאִירוּ"
+      },
+      "future": {
+        "msg": "יַשְׁאִיר",
+        "fsg": "תַּשְׁאִיר",
+        "mpl": "יַשְׁאִירוּ",
+        "fpl": "יַשְׁאִירוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "בְּצָרָתִי",
+      "2msg": "בְּצָרָתְךָ",
+      "2fsg": "בְּצָרָתֵךְ",
+      "3msg": "בְּצָרָתוֹ",
+      "3fsg": "בְּצָרָתָהּ",
+      "1pl": "בְּצָרָתֵנוּ",
+      "2mpl": "בְּצָרַתְכֶם",
+      "2fpl": "בְּצָרַתְכֶן",
+      "3mpl": "בְּצָרָתָם",
+      "3fpl": "בְּצָרָתָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehashir"
+    ]
   },
   {
     "id": "haamada_al_tauto",
@@ -1671,10 +4309,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "על טעותן"
     },
     "conjugations": {
-      "present": { "msg": "מעמיד", "fsg": "מעמידה", "mpl": "מעמידים", "fpl": "מעמידות" },
-      "past":    { "msg": "העמיד", "fsg": "העמידה", "mpl": "העמידו", "fpl": "העמידו" },
-      "future":  { "msg": "יעמיד", "fsg": "תעמיד", "mpl": "יעמידו", "fpl": "יעמידו" }
-    }
+      "present": {
+        "msg": "מעמיד",
+        "fsg": "מעמידה",
+        "mpl": "מעמידים",
+        "fpl": "מעמידות"
+      },
+      "past": {
+        "msg": "העמיד",
+        "fsg": "העמידה",
+        "mpl": "העמידו",
+        "fpl": "העמידו"
+      },
+      "future": {
+        "msg": "יעמיד",
+        "fsg": "תעמיד",
+        "mpl": "יעמידו",
+        "fpl": "יעמידו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲמִיד",
+        "fsg": "מַעֲמִידָה",
+        "mpl": "מַעֲמִידִים",
+        "fpl": "מַעֲמִידוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱמִיד",
+        "fsg": "הֶעֱמִידָה",
+        "mpl": "הֶעֱמִידוּ",
+        "fpl": "הֶעֱמִידוּ"
+      },
+      "future": {
+        "msg": "יַעֲמִיד",
+        "fsg": "תַּעֲמִיד",
+        "mpl": "יַעֲמִידוּ",
+        "fpl": "יַעֲמִידוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "עַל טָעוּתִי",
+      "2msg": "עַל טָעוּתְךָ",
+      "2fsg": "עַל טָעוּתֵךְ",
+      "3msg": "עַל טָעוּתוֹ",
+      "3fsg": "עַל טָעוּתָהּ",
+      "1pl": "עַל טָעוּתֵנוּ",
+      "2mpl": "עַל טָעוּתְכֶם",
+      "2fpl": "עַל טָעוּתְכֶן",
+      "3mpl": "עַל טָעוּתָם",
+      "3fpl": "עַל טָעוּתָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaamid"
+    ]
   },
   {
     "id": "tfisa_bekilkelato",
@@ -1707,10 +4396,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "בקלקלתן"
     },
     "conjugations": {
-      "present": { "msg": "תופס", "fsg": "תופסת", "mpl": "תופסים", "fpl": "תופסות" },
-      "past":    { "msg": "תפס", "fsg": "תפסה", "mpl": "תפסו", "fpl": "תפסו" },
-      "future":  { "msg": "יתפוס", "fsg": "תתפוס", "mpl": "יתפסו", "fpl": "יתפסו" }
-    }
+      "present": {
+        "msg": "תופס",
+        "fsg": "תופסת",
+        "mpl": "תופסים",
+        "fpl": "תופסות"
+      },
+      "past": {
+        "msg": "תפס",
+        "fsg": "תפסה",
+        "mpl": "תפסו",
+        "fpl": "תפסו"
+      },
+      "future": {
+        "msg": "יתפוס",
+        "fsg": "תתפוס",
+        "mpl": "יתפסו",
+        "fpl": "יתפסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "תּוֹפֵס",
+        "fsg": "תּוֹפֶסֶת",
+        "mpl": "תּוֹפְסִים",
+        "fpl": "תּוֹפְסוֹת"
+      },
+      "past": {
+        "msg": "תָּפַס",
+        "fsg": "תָּפְסָה",
+        "mpl": "תָּפְסוּ",
+        "fpl": "תָּפְסוּ"
+      },
+      "future": {
+        "msg": "יִתְפֹּס",
+        "fsg": "תִּתְפֹּס",
+        "mpl": "יִתְפְּסוּ",
+        "fpl": "יִתְפְּסוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "בְּקַלְקָלָתִי",
+      "2msg": "בְּקַלְקָלָתְךָ",
+      "2fsg": "בְּקַלְקָלָתֵךְ",
+      "3msg": "בְּקַלְקָלָתוֹ",
+      "3fsg": "בְּקַלְקָלָתָהּ",
+      "1pl": "בְּקַלְקָלָתֵנוּ",
+      "2mpl": "בְּקַלְקָלַתְכֶם",
+      "2fpl": "בְּקַלְקָלַתְכֶן",
+      "3mpl": "בְּקַלְקָלָתָם",
+      "3fpl": "בְּקַלְקָלָתָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-litfos"
+    ]
   },
   {
     "id": "ktia_bidvarav",
@@ -1743,10 +4483,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "בדבריהן"
     },
     "conjugations": {
-      "present": { "msg": "קוטע", "fsg": "קוטעת", "mpl": "קוטעים", "fpl": "קוטעות" },
-      "past":    { "msg": "קטע", "fsg": "קטעה", "mpl": "קטעו", "fpl": "קטעו" },
-      "future":  { "msg": "יקטע", "fsg": "תקטע", "mpl": "יקטעו", "fpl": "יקטעו" }
-    }
+      "present": {
+        "msg": "קוטע",
+        "fsg": "קוטעת",
+        "mpl": "קוטעים",
+        "fpl": "קוטעות"
+      },
+      "past": {
+        "msg": "קטע",
+        "fsg": "קטעה",
+        "mpl": "קטעו",
+        "fpl": "קטעו"
+      },
+      "future": {
+        "msg": "יקטע",
+        "fsg": "תקטע",
+        "mpl": "יקטעו",
+        "fpl": "יקטעו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "קוֹטֵעַ",
+        "fsg": "קוֹטַעַת",
+        "mpl": "קוֹטְעִים",
+        "fpl": "קוֹטְעוֹת"
+      },
+      "past": {
+        "msg": "קָטַע",
+        "fsg": "קָטְעָה",
+        "mpl": "קָטְעוּ",
+        "fpl": "קָטְעוּ"
+      },
+      "future": {
+        "msg": "יִקְטַע",
+        "fsg": "תִּקְטַע",
+        "mpl": "יִקְטְעוּ",
+        "fpl": "יִקְטְעוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "בִּדְבָרַי",
+      "2msg": "בִּדְבָרֶיךָ",
+      "2fsg": "בִּדְבָרַיִךְ",
+      "3msg": "בִּדְבָרָיו",
+      "3fsg": "בִּדְבָרֶיהָ",
+      "1pl": "בִּדְבָרֵינוּ",
+      "2mpl": "בְּדִבְרֵיכֶם",
+      "2fpl": "בְּדִבְרֵיכֶן",
+      "3mpl": "בְּדִבְרֵיהֶם",
+      "3fpl": "בְּדִבְרֵיהֶן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-liktoa"
+    ]
   },
   {
     "id": "chizuk_bedaato",
@@ -1779,10 +4570,61 @@ const HEBREW_IDIOMS = (function () {
       "3fpl": "בדעתן"
     },
     "conjugations": {
-      "present": { "msg": "מחזק", "fsg": "מחזקת", "mpl": "מחזקים", "fpl": "מחזקות" },
-      "past":    { "msg": "חיזק", "fsg": "חיזקה", "mpl": "חיזקו", "fpl": "חיזקו" },
-      "future":  { "msg": "יחזק", "fsg": "תחזק", "mpl": "יחזקו", "fpl": "יחזקו" }
-    }
+      "present": {
+        "msg": "מחזק",
+        "fsg": "מחזקת",
+        "mpl": "מחזקים",
+        "fpl": "מחזקות"
+      },
+      "past": {
+        "msg": "חיזק",
+        "fsg": "חיזקה",
+        "mpl": "חיזקו",
+        "fpl": "חיזקו"
+      },
+      "future": {
+        "msg": "יחזק",
+        "fsg": "תחזק",
+        "mpl": "יחזקו",
+        "fpl": "יחזקו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְחַזֵּק",
+        "fsg": "מְחַזֶּקֶת",
+        "mpl": "מְחַזְּקִים",
+        "fpl": "מְחַזְּקוֹת"
+      },
+      "past": {
+        "msg": "חִזֵּק",
+        "fsg": "חִזְּקָה",
+        "mpl": "חִזְּקוּ",
+        "fpl": "חִזְּקוּ"
+      },
+      "future": {
+        "msg": "יְחַזֵּק",
+        "fsg": "תְּחַזֵּק",
+        "mpl": "יְחַזְּקוּ",
+        "fpl": "יְחַזְּקוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "בְּדַעְתִּי",
+      "2msg": "בְּדַעְתְּךָ",
+      "2fsg": "בְּדַעְתֵּךְ",
+      "3msg": "בְּדַעְתּוֹ",
+      "3fsg": "בְּדַעְתָּהּ",
+      "1pl": "בְּדַעְתֵּנוּ",
+      "2mpl": "בְּדַעְתְּכֶם",
+      "2fpl": "בְּדַעְתְּכֶן",
+      "3mpl": "בְּדַעְתָּם",
+      "3fpl": "בְּדַעְתָּן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lechazek"
+    ]
   },
   {
     "id": "srifat_oto",
@@ -1819,7 +4661,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "ישרפו",
         "fpl": "ישרפו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "שׂוֹרֵף",
+        "fsg": "שׂוֹרֶפֶת",
+        "mpl": "שׂוֹרְפִים",
+        "fpl": "שׂוֹרְפוֹת"
+      },
+      "past": {
+        "msg": "שָׂרַף",
+        "fsg": "שָׂרְפָה",
+        "mpl": "שָׂרְפוּ",
+        "fpl": "שָׂרְפוּ"
+      },
+      "future": {
+        "msg": "יִשְׂרֹף",
+        "fsg": "תִּשְׂרֹף",
+        "mpl": "יִשְׂרְפוּ",
+        "fpl": "יִשְׂרְפוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lisrof"
+    ]
   },
   {
     "id": "pitzutz_oto",
@@ -1856,7 +4722,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יפוצצו",
         "fpl": "יפוצצו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְפוֹצֵץ",
+        "fsg": "מְפוֹצֶצֶת",
+        "mpl": "מְפוֹצְצִים",
+        "fpl": "מְפוֹצְצוֹת"
+      },
+      "past": {
+        "msg": "פּוֹצֵץ",
+        "fsg": "פּוֹצְצָה",
+        "mpl": "פּוֹצְצוּ",
+        "fpl": "פּוֹצְצוּ"
+      },
+      "future": {
+        "msg": "יְפוֹצֵץ",
+        "fsg": "תְּפוֹצֵץ",
+        "mpl": "יְפוֹצְצוּ",
+        "fpl": "יְפוֹצְצוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lefotzetz"
+    ]
   },
   {
     "id": "gmirat_oto",
@@ -1893,7 +4783,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יגמרו",
         "fpl": "יגמרו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "גּוֹמֵר",
+        "fsg": "גּוֹמֶרֶת",
+        "mpl": "גּוֹמְרִים",
+        "fpl": "גּוֹמְרוֹת"
+      },
+      "past": {
+        "msg": "גָּמַר",
+        "fsg": "גָּמְרָה",
+        "mpl": "גָּמְרוּ",
+        "fpl": "גָּמְרוּ"
+      },
+      "future": {
+        "msg": "יִגְמוֹר",
+        "fsg": "תִּגְמוֹר",
+        "mpl": "יִגְמְרוּ",
+        "fpl": "יִגְמְרוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-ligmor"
+    ]
   },
   {
     "id": "shvirat_oto",
@@ -1930,7 +4844,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "ישברו",
         "fpl": "ישברו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "שׁוֹבֵר",
+        "fsg": "שׁוֹבֶרֶת",
+        "mpl": "שׁוֹבְרִים",
+        "fpl": "שׁוֹבְרוֹת"
+      },
+      "past": {
+        "msg": "שָׁבַר",
+        "fsg": "שָׁבְרָה",
+        "mpl": "שָׁבְרוּ",
+        "fpl": "שָׁבְרוּ"
+      },
+      "future": {
+        "msg": "יִשְׁבֹּר",
+        "fsg": "תִּשְׁבֹּר",
+        "mpl": "יִשְׁבְּרוּ",
+        "fpl": "יִשְׁבְּרוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lishbor"
+    ]
   },
   {
     "id": "harigat_oto",
@@ -1967,7 +4905,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יהרגו",
         "fpl": "יהרגו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "הוֹרֵג",
+        "fsg": "הוֹרֶגֶת",
+        "mpl": "הוֹרְגִים",
+        "fpl": "הוֹרְגוֹת"
+      },
+      "past": {
+        "msg": "הָרַג",
+        "fsg": "הָרְגָה",
+        "mpl": "הָרְגוּ",
+        "fpl": "הָרְגוּ"
+      },
+      "future": {
+        "msg": "יַהֲרֹג",
+        "fsg": "תַּהֲרֹג",
+        "mpl": "יַהַרְגוּ",
+        "fpl": "יַהַרְגוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-laharog"
+    ]
   },
   {
     "id": "schivat_oto",
@@ -2004,7 +4966,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יסחבו",
         "fpl": "יסחבו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "סוֹחֵב",
+        "fsg": "סוֹחֶבֶת",
+        "mpl": "סוֹחֲבִים",
+        "fpl": "סוֹחֲבוֹת"
+      },
+      "past": {
+        "msg": "סָחַב",
+        "fsg": "סָחֲבָה",
+        "mpl": "סָחֲבוּ",
+        "fpl": "סָחֲבוּ"
+      },
+      "future": {
+        "msg": "יִסְחַב",
+        "fsg": "תִּסְחַב",
+        "mpl": "יִסְחֲבוּ",
+        "fpl": "יִסְחֲבוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lischov"
+    ]
   },
   {
     "id": "prikat_oto",
@@ -2041,7 +5027,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יפרקו",
         "fpl": "יפרקו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְפָרֵק",
+        "fsg": "מְפָרֶקֶת",
+        "mpl": "מְפָרְקִים",
+        "fpl": "מְפָרְקוֹת"
+      },
+      "past": {
+        "msg": "פֵּרֵק",
+        "fsg": "פֵּרְקָה",
+        "mpl": "פֵּרְקוּ",
+        "fpl": "פֵּרְקוּ"
+      },
+      "future": {
+        "msg": "יְפָרֵק",
+        "fsg": "תְּפָרֵק",
+        "mpl": "יְפָרְקוּ",
+        "fpl": "יְפָרְקוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lefarek"
+    ]
   },
   {
     "id": "dchifat_oto",
@@ -2078,7 +5088,31 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "ידחפו",
         "fpl": "ידחפו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "דּוֹחֵף",
+        "fsg": "דּוֹחֶפֶת",
+        "mpl": "דּוֹחֲפִים",
+        "fpl": "דּוֹחֲפוֹת"
+      },
+      "past": {
+        "msg": "דָּחַף",
+        "fsg": "דָּחֲפָה",
+        "mpl": "דָּחֲפוּ",
+        "fpl": "דָּחֲפוּ"
+      },
+      "future": {
+        "msg": "יִדְחַף",
+        "fsg": "תִּדְחַף",
+        "mpl": "יִדְחֲפוּ",
+        "fpl": "יִדְחֲפוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lidchof"
+    ]
   },
   {
     "id": "haavara_al_midotav",
@@ -2129,7 +5163,43 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יעבירו",
         "fpl": "יעבירו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲבִיר",
+        "fsg": "מַעֲבִירָה",
+        "mpl": "מַעֲבִירִים",
+        "fpl": "מַעֲבִירוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱבִיר",
+        "fsg": "הֶעֱבִירָה",
+        "mpl": "הֶעֱבִירוּ",
+        "fpl": "הֶעֱבִירוּ"
+      },
+      "future": {
+        "msg": "יַעֲבִיר",
+        "fsg": "תַּעֲבִיר",
+        "mpl": "יַעֲבִירוּ",
+        "fpl": "יַעֲבִירוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "עַל מִדּוֹתַי",
+      "2msg": "עַל מִדּוֹתֶיךָ",
+      "2fsg": "עַל מִדּוֹתַיִךְ",
+      "3msg": "עַל מִדּוֹתָיו",
+      "3fsg": "עַל מִדּוֹתֶיהָ",
+      "1pl": "עַל מִדּוֹתֵינוּ",
+      "2mpl": "עַל מִדּוֹתֵיכֶם",
+      "2fpl": "עַל מִדּוֹתֵיכֶן",
+      "3mpl": "עַל מִדּוֹתֵיהֶם",
+      "3fpl": "עַל מִדּוֹתֵיהֶן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaavir"
+    ]
   },
   {
     "id": "hotzaa_migidro",
@@ -2180,7 +5250,43 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יוציאו",
         "fpl": "יוציאו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מִגִּדְרִי",
+      "2msg": "מִגִּדְרְךָ",
+      "2fsg": "מִגִּדְרֵךְ",
+      "3msg": "מִגִּדְרוֹ",
+      "3fsg": "מִגִּדְרָהּ",
+      "1pl": "מִגִּדְרֵנוּ",
+      "2mpl": "מִגִּדְרְכֶם",
+      "2fpl": "מִגִּדְרְכֶן",
+      "3mpl": "מִגִּדְרָם",
+      "3fpl": "מִגִּדְרָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "hotzaa_meashtonotav",
@@ -2231,7 +5337,43 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יוציאו",
         "fpl": "יוציאו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מֵעֶשְׁתּוֹנוֹתַי",
+      "2msg": "מֵעֶשְׁתּוֹנוֹתֶיךָ",
+      "2fsg": "מֵעֶשְׁתּוֹנוֹתַיִךְ",
+      "3msg": "מֵעֶשְׁתּוֹנוֹתָיו",
+      "3fsg": "מֵעֶשְׁתּוֹנוֹתֶיהָ",
+      "1pl": "מֵעֶשְׁתּוֹנוֹתֵינוּ",
+      "2mpl": "מֵעֶשְׁתּוֹנוֹתֵיכֶם",
+      "2fpl": "מֵעֶשְׁתּוֹנוֹתֵיכֶן",
+      "3mpl": "מֵעֶשְׁתּוֹנוֹתֵיהֶם",
+      "3fpl": "מֵעֶשְׁתּוֹנוֹתֵיהֶן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
   },
   {
     "id": "haamada_al_tivo",
@@ -2282,7 +5424,43 @@ const HEBREW_IDIOMS = (function () {
         "mpl": "יעמידו",
         "fpl": "יעמידו"
       }
-    }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲמִיד",
+        "fsg": "מַעֲמִידָה",
+        "mpl": "מַעֲמִידִים",
+        "fpl": "מַעֲמִידוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱמִיד",
+        "fsg": "הֶעֱמִידָה",
+        "mpl": "הֶעֱמִידוּ",
+        "fpl": "הֶעֱמִידוּ"
+      },
+      "future": {
+        "msg": "יַעֲמִיד",
+        "fsg": "תַּעֲמִיד",
+        "mpl": "יַעֲמִידוּ",
+        "fpl": "יַעֲמִידוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "עַל טִיבִי",
+      "2msg": "עַל טִיבְךָ",
+      "2fsg": "עַל טִיבֵךְ",
+      "3msg": "עַל טִיבוֹ",
+      "3fsg": "עַל טִיבָהּ",
+      "1pl": "עַל טִיבֵנוּ",
+      "2mpl": "עַל טִיבְכֶם",
+      "2fpl": "עַל טִיבְכֶן",
+      "3mpl": "עַל טִיבָם",
+      "3fpl": "עַל טִיבָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaamid"
+    ]
   }
 ];
 

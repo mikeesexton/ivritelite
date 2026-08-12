@@ -2787,11 +2787,16 @@ function slug(input) {
 function getBaseVocabulary() {
   const words = [];
 
-  Object.entries(RAW).forEach(([category, rows], categoryIndex) => {
+  Object.entries(RAW).forEach(([category, rows]) => {
     const max = rows.length;
 
     rows.forEach(([en, he, heNiqqud = "", meta = null], idx) => {
-      const utility = Math.max(1, 100 - Math.floor((idx / max) * 45) - categoryIndex * 2);
+      // Position within the category only. This used to subtract
+      // `categoryIndex * 2`, which penalised a category purely for sitting
+      // late in RAW: the last shelf started at 18 and floored 349 cards at 1,
+      // so the newest tranches were drawn ~1.6x less often than the oldest
+      // ones. Dividing by `max` already normalises across category sizes.
+      const utility = Math.max(1, 100 - Math.floor((idx / max) * 45));
       const stableIdEnglish = typeof meta?.idEnglish === "string" && meta.idEnglish ? meta.idEnglish : en;
       const id = `${category}-${String(idx + 1).padStart(3, "0")}-${slug(stableIdEnglish)}`;
 

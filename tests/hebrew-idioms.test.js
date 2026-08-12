@@ -62,13 +62,18 @@ const OBJECT_TYPES = new Set(["direct", "l_dative", "possessive_suffix"]);
 // used to mix in `qal`, which would split any grouping by binyan.
 const BINYANIM = new Set(["paal", "piel", "hifil", "nifal", "hitpael", "pual", "hufal"]);
 const NIQQUD_PATTERN = /[\u0591-\u05C7]/;
-const REVIEWED_NIQQUD_IDS = [
+// The original pilot, pointed against external dictionary entries. Every other
+// idiom derives its pointing from an approved hebrew-verbs paradigm instead and
+// cites it as `internal:hebrew-verbs#<seedId>` \u2014 provenance a test can actually
+// resolve, which a URL never was.
+const EXTERNAL_SOURCE_IDS = [
   "asiyat_yom",
   "hachzara_leatzmo",
   "hidlik",
   "ptihat_einayim",
   "sider",
 ];
+const INTERNAL_SOURCE_PATTERN = /^internal:hebrew-verbs#(.+)$/;
 
 function stripNiqqud(text) {
   return String(text || "").normalize("NFC").replace(/[\u0591-\u05C7]/g, "");
@@ -178,7 +183,10 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
 
     assert.ok(idiom.niqqud_sources.length > 0, `${idiom.id} reviewed pointing needs provenance`);
     idiom.niqqud_sources.forEach((source) => {
-      assert.match(String(source), /^https:\/\//, `${idiom.id} has invalid pointing source ${source}`);
+      assert.ok(
+        /^https:\/\//.test(String(source)) || INTERNAL_SOURCE_PATTERN.test(String(source)),
+        `${idiom.id} has invalid pointing source ${source}`,
+      );
     });
     ["present", "past", "future"].forEach((tense) => {
       const forms = idiom.conjugations_niqqud?.[tense];
@@ -221,14 +229,67 @@ test("advanced conjugation pointing is explicit, complete, and sourced before ru
     }
   });
 
-  assert.deepEqual(statusCounts, { reviewed: 5, unreviewed: 76 });
+  assert.deepEqual(statusCounts, { reviewed: 81 });
   assert.deepEqual(
     Array.from(idioms)
-      .filter((idiom) => idiom.niqqud_status === "reviewed")
+      .filter((idiom) => idiom.niqqud_sources.some((source) => /^https:\/\//.test(String(source))))
       .map((idiom) => idiom.id)
       .sort(),
-    REVIEWED_NIQQUD_IDS,
+    EXTERNAL_SOURCE_IDS,
   );
+});
+
+// A URL in a data file is a claim no test can check. A seed reference is one it
+// can: resolve it and compare every pointed form against the approved paradigm.
+test("every internally-sourced idiom matches the approved paradigm it cites", () => {
+  const verbApi = require(path.join(__dirname, "..", "hebrew-verbs.js"));
+  const seeds = new Map(verbApi.getSeedVerbEntries().map((entry) => [entry.id, entry]));
+  const formSlots = {
+    present: {
+      msg: "masculine_singular",
+      fsg: "feminine_singular",
+      mpl: "masculine_plural",
+      fpl: "feminine_plural",
+    },
+    past: {
+      msg: "third_person_masculine_singular",
+      fsg: "third_person_feminine_singular",
+      mpl: "third_person_plural",
+      fpl: "third_person_plural",
+    },
+    future: {
+      msg: "third_person_masculine_singular",
+      fsg: "third_person_feminine_singular",
+      mpl: "third_person_plural",
+      fpl: "third_person_plural",
+    },
+  };
+
+  let checked = 0;
+  loadIdioms().forEach((idiom) => {
+    idiom.niqqud_sources.forEach((source) => {
+      const match = INTERNAL_SOURCE_PATTERN.exec(String(source));
+      if (!match) return;
+
+      const seed = seeds.get(match[1]);
+      assert.ok(seed, `${idiom.id} cites missing seed ${match[1]}`);
+      assert.equal(seed.review_status, "approved", `${idiom.id} cites unapproved seed ${seed.id}`);
+      assert.equal(seed.lemma, idiom.verb, `${idiom.id} cites seed for ${seed.lemma}, not ${idiom.verb}`);
+
+      Object.entries(formSlots).forEach(([tense, slots]) => {
+        Object.entries(slots).forEach(([idiomForm, seedForm]) => {
+          assert.equal(
+            idiom.conjugations_niqqud[tense][idiomForm],
+            seed.forms[tense][seedForm].niqqud,
+            `${idiom.id} ${tense}.${idiomForm} pointing drifted from ${seed.id}`,
+          );
+        });
+      });
+      checked += 1;
+    });
+  });
+
+  assert.equal(checked, 76, `expected 76 internally-sourced idioms, checked ${checked}`);
 });
 
 test("the reviewed idiom pilot exactly matches approved internal verb paradigms", () => {
