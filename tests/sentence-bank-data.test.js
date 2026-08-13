@@ -479,6 +479,27 @@ const IVRI_AI_ENTRY_IDS = sentenceIdRange("professional", 153, 172);
 const SHARED_GRAMMAR_ENTRY_IDS = sentenceIdRange("everyday", 266, 279);
 const INAT_LEGAL_ENTRY_IDS = sentenceIdRange("formal", 108, 125);
 const IVRI_FINANCE_ENTRY_IDS = sentenceIdRange("professional", 173, 196);
+// Four coverage tranches, each aimed at a hole a sweep of the bank turned up
+// rather than at a new topic: future tense and third person, high-frequency
+// connectives, numbers and clock times, and health.
+const FUTURE_PERSON_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 280, 296),
+  ...sentenceIdRange("colloquial", 196, 203),
+  ...sentenceIdRange("professional", 197, 201),
+];
+const CONNECTIVE_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 297, 311),
+  ...sentenceIdRange("colloquial", 204, 218),
+];
+const NUMBER_TIME_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 312, 331),
+  ...sentenceIdRange("professional", 202, 206),
+];
+const HEALTH_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 332, 346),
+  ...sentenceIdRange("professional", 207, 211),
+  ...sentenceIdRange("formal", 126, 130),
+];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -1356,15 +1377,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,069 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,179 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1069);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1069);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1069);
+  assert.equal(entries.length, 1179);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1179);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1179);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1468,11 +1489,13 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
+  // The four coverage tranches add 110: 67 everyday, 23 colloquial, 15
+  // professional, 5 formal.
   assert.deepEqual(categoryCounts, {
-    colloquial: 235,
-    everyday: 461,
-    professional: 212,
-    formal: 161,
+    colloquial: 258,
+    everyday: 528,
+    professional: 227,
+    formal: 166,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1733,6 +1756,115 @@ test("Ivri finance tranche adds twenty-four reviewed professional handwriting-re
   );
 });
 
+// The four coverage tranches below were authored against gaps measured across
+// the whole bank, so each one asserts the gap it was meant to close rather than
+// just its own size: future/third-person slots that were empty, connectives
+// that appeared once or twice in 1,069 rows, numerals and clock times at two to
+// four percent, and health at 24 rows.
+const COVERAGE_TRANCHES = [
+  {
+    label: "future and third person",
+    ids: FUTURE_PERSON_ENTRY_IDS,
+    size: 30,
+    difficulty: { 1: 10, 2: 19, 3: 1 },
+    category: { everyday: 17, colloquial: 8, professional: 5 },
+  },
+  {
+    label: "high-frequency connectives",
+    ids: CONNECTIVE_ENTRY_IDS,
+    size: 30,
+    difficulty: { 1: 12, 2: 18 },
+    category: { everyday: 15, colloquial: 15 },
+  },
+  {
+    label: "numbers, prices and times",
+    ids: NUMBER_TIME_ENTRY_IDS,
+    size: 25,
+    difficulty: { 1: 11, 2: 14 },
+    category: { everyday: 20, professional: 5 },
+  },
+  {
+    label: "health",
+    ids: HEALTH_ENTRY_IDS,
+    size: 25,
+    difficulty: { 1: 4, 2: 14, 3: 7 },
+    category: { everyday: 15, professional: 5, formal: 5 },
+  },
+];
+
+test("the coverage tranches add reviewed handwriting-ready rows in the authored mix", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+
+  COVERAGE_TRANCHES.forEach(({ label, ids, size, difficulty, category }) => {
+    const entries = ids.map((id) => byId.get(id));
+    assert.ok(entries.every(Boolean), `${label} tranche has a missing id`);
+    assert.equal(entries.length, size, `${label} tranche size`);
+    assert.equal(new Set(entries.map((entry) => entry.id)).size, size, `${label} duplicate id`);
+    assert.ok(
+      entries.every((entry) => ["fixed", "alternates"].includes(entry.hebrew_order_review)),
+      `${label} tranche needs an explicit word-order decision on every row`
+    );
+    assert.ok(
+      entries.every((entry) => {
+        const letters = String(entry.hebrew).match(/[א-ת]/g) || [];
+        return letters.length >= 14 && letters.length <= 34;
+      }),
+      `${label} tranche has a row outside the handwriting length envelope`
+    );
+    assert.ok(
+      entries.every((entry) => entry.hebrew_tokens.length >= 4 && entry.hebrew_tokens.length <= 6),
+      `${label} tranche has a row outside the authored four-to-six chip range`
+    );
+    assert.deepEqual(
+      entries.reduce((counts, entry) => {
+        counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+        return counts;
+      }, {}),
+      difficulty,
+      `${label} difficulty mix`
+    );
+    assert.deepEqual(
+      entries.reduce((counts, entry) => {
+        counts[entry.category] = (counts[entry.category] || 0) + 1;
+        return counts;
+      }, {}),
+      category,
+      `${label} category mix`
+    );
+  });
+});
+
+test("the future tranche fills the conjugation slots the bank had left empty", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const has = (id, token) => byId.get(id).hebrew_tokens.includes(token);
+
+  // Third-person feminine and plural future: the bank had none of either.
+  assert.ok(has("everyday_280", "תגיע"), "everyday_280 carries a third-person feminine future");
+  assert.ok(has("professional_198", "תפרסם"), "professional_198 carries a third-person feminine future");
+  assert.ok(has("everyday_282", "יחזרו"), "everyday_282 carries a third-person plural future");
+  assert.ok(has("professional_197", "יבחנו"), "professional_197 carries a third-person plural future");
+
+  // Second-person feminine past, singular and plural: also both at zero.
+  assert.ok(has("colloquial_196", "היית"), "colloquial_196 carries a feminine singular past");
+  assert.ok(has("colloquial_200", "ראית"), "colloquial_200 carries a feminine singular past");
+  assert.ok(has("colloquial_197", "עשיתן"), "colloquial_197 carries a feminine plural past");
+  assert.ok(has("colloquial_201", "הגעתן"), "colloquial_201 carries a feminine plural past");
+});
+
+test("the connective tranche puts the high-frequency function words on their own chips", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const connectiveRows = CONNECTIVE_ENTRY_IDS.map((id) => byId.get(id));
+
+  // Each of these appeared in fewer than 25 of the 1,069 rows the tranche was
+  // measured against, and אולי in exactly one.
+  ["אולי", "בגלל", "כי", "גם", "אף פעם", "תמיד", "הכי", "יותר", "פחות", "אבל", "למרות", "אפילו"].forEach((word) => {
+    assert.ok(
+      connectiveRows.some((entry) => entry.hebrew_tokens.includes(word)),
+      `the connective tranche should drill ${word} as its own selectable chip`
+    );
+  });
+});
+
 test("sentence bank expansion keeps text, niqqud, chips, distractors, and alternates aligned", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const niqqudPattern = /[\u0591-\u05c7]/;
@@ -1769,6 +1901,10 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...SHARED_GRAMMAR_ENTRY_IDS,
     ...INAT_LEGAL_ENTRY_IDS,
     ...IVRI_FINANCE_ENTRY_IDS,
+    ...FUTURE_PERSON_ENTRY_IDS,
+    ...CONNECTIVE_ENTRY_IDS,
+    ...NUMBER_TIME_ENTRY_IDS,
+    ...HEALTH_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
