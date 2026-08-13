@@ -5461,6 +5461,1576 @@ const HEBREW_IDIOMS = (function () {
     "niqqud_sources": [
       "internal:hebrew-verbs#advanced-verb-lehaamid"
     ]
+  },
+  {
+    "id": "kilkul_teavon",
+    "infinitive": "לקלקל למישהו את התיאבון",
+    "english": "to ruin someone's appetite",
+    "verb": "לקלקל",
+    "root": "ק.ל.ק.ל",
+    "binyan": "piel",
+    "object_type": "l_dative",
+    "fixed_object": "את התיאבון",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ את התיאבון",
+    "example": "אתה מקלקל לי את התיאבון",
+    "negated": false,
+    "literal_sg": "{s} ruins {p} appetite",
+    "literal_pl": "{s} ruin {p} appetite",
+    "literal_past": "{s} ruined {p} appetite",
+    "literal_future": "{s} will ruin {p} appetite",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מקלקל",
+        "fsg": "מקלקלת",
+        "mpl": "מקלקלים",
+        "fpl": "מקלקלות"
+      },
+      "past": {
+        "msg": "קילקל",
+        "fsg": "קילקלה",
+        "mpl": "קילקלו",
+        "fpl": "קילקלו"
+      },
+      "future": {
+        "msg": "יקלקל",
+        "fsg": "תקלקל",
+        "mpl": "יקלקלו",
+        "fpl": "יקלקלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְקַלְקֵל",
+        "fsg": "מְקַלְקֶלֶת",
+        "mpl": "מְקַלְקְלִים",
+        "fpl": "מְקַלְקְלוֹת"
+      },
+      "past": {
+        "msg": "קִלְקֵל",
+        "fsg": "קִלְקְלָה",
+        "mpl": "קִלְקְלוּ",
+        "fpl": "קִלְקְלוּ"
+      },
+      "future": {
+        "msg": "יְקַלְקֵל",
+        "fsg": "תְּקַלְקֵל",
+        "mpl": "יְקַלְקְלוּ",
+        "fpl": "יְקַלְקְלוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַתֵּאָבוֹן",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lekalkel"
+    ]
+  },
+  {
+    "id": "hotzaat_einayim",
+    "infinitive": "להוציא למישהו את העיניים",
+    "english": "to make someone envious / rub it in",
+    "verb": "להוציא",
+    "root": "י.צ.א",
+    "binyan": "hifil",
+    "object_type": "l_dative",
+    "fixed_object": "את העיניים",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ את העיניים",
+    "example": "הם מוציאים לי את העיניים",
+    "negated": false,
+    "literal_sg": "{s} takes out {p} eyes",
+    "literal_pl": "{s} take out {p} eyes",
+    "literal_past": "{s} took out {p} eyes",
+    "literal_future": "{s} will take out {p} eyes",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָעֵינַיִם",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
+  },
+  {
+    "id": "mechirat_lokshim",
+    "infinitive": "למכור למישהו לוקשים",
+    "english": "to feed someone a line / spin someone lies",
+    "verb": "למכור",
+    "root": "מ.כ.ר",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "לוקשים",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ לוקשים",
+    "example": "אל תמכור לי לוקשים",
+    "negated": false,
+    "literal_sg": "{s} sells {o} noodles",
+    "literal_pl": "{s} sell {o} noodles",
+    "literal_past": "{s} sold {o} noodles",
+    "literal_future": "{s} will sell {o} noodles",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מוכר",
+        "fsg": "מוכרת",
+        "mpl": "מוכרים",
+        "fpl": "מוכרות"
+      },
+      "past": {
+        "msg": "מכר",
+        "fsg": "מכרה",
+        "mpl": "מכרו",
+        "fpl": "מכרו"
+      },
+      "future": {
+        "msg": "ימכור",
+        "fsg": "תמכור",
+        "mpl": "ימכרו",
+        "fpl": "ימכרו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹכֵר",
+        "fsg": "מוֹכֶרֶת",
+        "mpl": "מוֹכְרִים",
+        "fpl": "מוֹכְרוֹת"
+      },
+      "past": {
+        "msg": "מָכַר",
+        "fsg": "מָכְרָה",
+        "mpl": "מָכְרוּ",
+        "fpl": "מָכְרוּ"
+      },
+      "future": {
+        "msg": "יִמְכּוֹר",
+        "fsg": "תִּמְכּוֹר",
+        "mpl": "יִמְכְּרוּ",
+        "fpl": "יִמְכְּרוּ"
+      }
+    },
+    "fixed_object_niqqud": "לוֹקְשִׁים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-limkor"
+    ]
+  },
+  {
+    "id": "sipur_sipurim",
+    "infinitive": "לספר למישהו סיפורים",
+    "english": "to feed someone nonsense",
+    "verb": "לספר",
+    "root": "ס.פ.ר",
+    "binyan": "piel",
+    "object_type": "l_dative",
+    "fixed_object": "סיפורים",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ סיפורים",
+    "example": "אל תספר לי סיפורים",
+    "negated": false,
+    "literal_sg": "{s} tells {o} stories",
+    "literal_pl": "{s} tell {o} stories",
+    "literal_past": "{s} told {o} stories",
+    "literal_future": "{s} will tell {o} stories",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מספר",
+        "fsg": "מספרת",
+        "mpl": "מספרים",
+        "fpl": "מספרות"
+      },
+      "past": {
+        "msg": "סיפר",
+        "fsg": "סיפרה",
+        "mpl": "סיפרו",
+        "fpl": "סיפרו"
+      },
+      "future": {
+        "msg": "יספר",
+        "fsg": "תספר",
+        "mpl": "יספרו",
+        "fpl": "יספרו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְסַפֵּר",
+        "fsg": "מְסַפֶּרֶת",
+        "mpl": "מְסַפְּרִים",
+        "fpl": "מְסַפְּרוֹת"
+      },
+      "past": {
+        "msg": "סִפֵּר",
+        "fsg": "סִפְּרָה",
+        "mpl": "סִפְּרוּ",
+        "fpl": "סִפְּרוּ"
+      },
+      "future": {
+        "msg": "יְסַפֵּר",
+        "fsg": "תְּסַפֵּר",
+        "mpl": "יְסַפְּרוּ",
+        "fpl": "יְסַפְּרוּ"
+      }
+    },
+    "fixed_object_niqqud": "סִפּוּרִים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-lesaper"
+    ]
+  },
+  {
+    "id": "yetziat_meaf",
+    "infinitive": "לצאת למישהו מהאף",
+    "english": "to be sick and tired of something",
+    "verb": "לצאת",
+    "root": "י.צ.א",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "מהאף",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ מהאף",
+    "example": "הפרויקט הזה יוצא לי מהאף",
+    "negated": false,
+    "literal_sg": "{s} comes out of {p} nose",
+    "literal_pl": "{s} come out of {p} nose",
+    "literal_past": "{s} came out of {p} nose",
+    "literal_future": "{s} will come out of {p} nose",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "יוצא",
+        "fsg": "יוצאת",
+        "mpl": "יוצאים",
+        "fpl": "יוצאות"
+      },
+      "past": {
+        "msg": "יצא",
+        "fsg": "יצאה",
+        "mpl": "יצאו",
+        "fpl": "יצאו"
+      },
+      "future": {
+        "msg": "יצא",
+        "fsg": "תצא",
+        "mpl": "יצאו",
+        "fpl": "יצאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "יוֹצֵא",
+        "fsg": "יוֹצֵאת",
+        "mpl": "יוֹצְאִים",
+        "fpl": "יוֹצְאוֹת"
+      },
+      "past": {
+        "msg": "יָצָא",
+        "fsg": "יָצְאָה",
+        "mpl": "יָצְאוּ",
+        "fpl": "יָצְאוּ"
+      },
+      "future": {
+        "msg": "יֵצֵא",
+        "fsg": "תֵּצֵא",
+        "mpl": "יֵצְאוּ",
+        "fpl": "יֵצְאוּ"
+      }
+    },
+    "fixed_object_niqqud": "מֵהָאַף",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-latzet"
+    ]
+  },
+  {
+    "id": "aliyat_larosh",
+    "infinitive": "לעלות למישהו לראש",
+    "english": "to go to someone's head",
+    "verb": "לעלות",
+    "root": "ע.ל.ה",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "לראש",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ לראש",
+    "example": "ההצלחה עלתה לו לראש",
+    "negated": false,
+    "literal_sg": "{s} goes up to {p} head",
+    "literal_pl": "{s} go up to {p} head",
+    "literal_past": "{s} went up to {p} head",
+    "literal_future": "{s} will go up to {p} head",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "עולה",
+        "fsg": "עולה",
+        "mpl": "עולים",
+        "fpl": "עולות"
+      },
+      "past": {
+        "msg": "עלה",
+        "fsg": "עלתה",
+        "mpl": "עלו",
+        "fpl": "עלו"
+      },
+      "future": {
+        "msg": "יעלה",
+        "fsg": "תעלה",
+        "mpl": "יעלו",
+        "fpl": "יעלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹלֶה",
+        "fsg": "עוֹלָה",
+        "mpl": "עוֹלִים",
+        "fpl": "עוֹלוֹת"
+      },
+      "past": {
+        "msg": "עָלָה",
+        "fsg": "עָלְתָה",
+        "mpl": "עָלוּ",
+        "fpl": "עָלוּ"
+      },
+      "future": {
+        "msg": "יַעֲלֶה",
+        "fsg": "תַּעֲלֶה",
+        "mpl": "יַעֲלוּ",
+        "fpl": "יַעֲלוּ"
+      }
+    },
+    "fixed_object_niqqud": "לָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laalot"
+    ]
+  },
+  {
+    "id": "ptihat_harosh",
+    "infinitive": "לפתוח למישהו את הראש",
+    "english": "to broaden someone's mind",
+    "verb": "לפתוח",
+    "root": "פ.ת.ח",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "את הראש",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ את הראש",
+    "example": "הטיול פתח לי את הראש",
+    "negated": false,
+    "literal_sg": "{s} opens {p} head",
+    "literal_pl": "{s} open {p} head",
+    "literal_past": "{s} opened {p} head",
+    "literal_future": "{s} will open {p} head",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "פותח",
+        "fsg": "פותחת",
+        "mpl": "פותחים",
+        "fpl": "פותחות"
+      },
+      "past": {
+        "msg": "פתח",
+        "fsg": "פתחה",
+        "mpl": "פתחו",
+        "fpl": "פתחו"
+      },
+      "future": {
+        "msg": "יפתח",
+        "fsg": "תפתח",
+        "mpl": "יפתחו",
+        "fpl": "יפתחו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "פּוֹתֵחַ",
+        "fsg": "פּוֹתַחַת",
+        "mpl": "פּוֹתְחִים",
+        "fpl": "פּוֹתְחוֹת"
+      },
+      "past": {
+        "msg": "פָּתַח",
+        "fsg": "פָּתְחָה",
+        "mpl": "פָּתְחוּ",
+        "fpl": "פָּתְחוּ"
+      },
+      "future": {
+        "msg": "יִפְתַּח",
+        "fsg": "תִּפְתַּח",
+        "mpl": "יִפְתְּחוּ",
+        "fpl": "יִפְתְּחוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-liftoach"
+    ]
+  },
+  {
+    "id": "simat_maklot",
+    "infinitive": "לשים למישהו מקלות בגלגלים",
+    "english": "to throw a wrench in someone's works",
+    "verb": "לשים",
+    "root": "ש.י.ם",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "מקלות בגלגלים",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ מקלות בגלגלים",
+    "example": "הוא שם לי מקלות בגלגלים",
+    "negated": false,
+    "literal_sg": "{s} puts sticks in {p} wheels",
+    "literal_pl": "{s} put sticks in {p} wheels",
+    "literal_past": "{s} put sticks in {p} wheels",
+    "literal_future": "{s} will put sticks in {p} wheels",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "שם",
+        "fsg": "שמה",
+        "mpl": "שמים",
+        "fpl": "שמות"
+      },
+      "past": {
+        "msg": "שם",
+        "fsg": "שמה",
+        "mpl": "שמו",
+        "fpl": "שמו"
+      },
+      "future": {
+        "msg": "ישים",
+        "fsg": "תשים",
+        "mpl": "ישימו",
+        "fpl": "ישימו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "שָׂם",
+        "fsg": "שָׂמָה",
+        "mpl": "שָׂמִים",
+        "fpl": "שָׂמוֹת"
+      },
+      "past": {
+        "msg": "שָׂם",
+        "fsg": "שָׂמָה",
+        "mpl": "שָׂמוּ",
+        "fpl": "שָׂמוּ"
+      },
+      "future": {
+        "msg": "יָשִׂים",
+        "fsg": "תָּשִׂים",
+        "mpl": "יָשִׂימוּ",
+        "fpl": "יָשִׂימוּ"
+      }
+    },
+    "fixed_object_niqqud": "מַקְלוֹת בַּגַּלְגַּלִּים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lasim"
+    ]
+  },
+  {
+    "id": "yeshivat_al_harosh",
+    "infinitive": "לשבת למישהו על הראש",
+    "english": "to hound someone / breathe down someone's neck",
+    "verb": "לשבת",
+    "root": "י.ש.ב",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "על הראש",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ על הראש",
+    "example": "המנהל יושב לי על הראש",
+    "negated": false,
+    "literal_sg": "{s} sits on {p} head",
+    "literal_pl": "{s} sit on {p} head",
+    "literal_past": "{s} sat on {p} head",
+    "literal_future": "{s} will sit on {p} head",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "יושב",
+        "fsg": "יושבת",
+        "mpl": "יושבים",
+        "fpl": "יושבות"
+      },
+      "past": {
+        "msg": "ישב",
+        "fsg": "ישבה",
+        "mpl": "ישבו",
+        "fpl": "ישבו"
+      },
+      "future": {
+        "msg": "ישב",
+        "fsg": "תשב",
+        "mpl": "ישבו",
+        "fpl": "ישבו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "יוֹשֵׁב",
+        "fsg": "יוֹשֶׁבֶת",
+        "mpl": "יוֹשְׁבִים",
+        "fpl": "יוֹשְׁבוֹת"
+      },
+      "past": {
+        "msg": "יָשַׁב",
+        "fsg": "יָשְׁבָה",
+        "mpl": "יָשְׁבוּ",
+        "fpl": "יָשְׁבוּ"
+      },
+      "future": {
+        "msg": "יֵשֵׁב",
+        "fsg": "תֵּשֵׁב",
+        "mpl": "יֵשְׁבוּ",
+        "fpl": "יֵשְׁבוּ"
+      }
+    },
+    "fixed_object_niqqud": "עַל הָרֹאשׁ",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lashevet"
+    ]
+  },
+  {
+    "id": "yeridat_lachaim",
+    "infinitive": "לרדת למישהו לחיים",
+    "english": "to make someone's life miserable",
+    "verb": "לרדת",
+    "root": "י.ר.ד",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "לחיים",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ לחיים",
+    "example": "הם יורדים לו לחיים",
+    "negated": false,
+    "literal_sg": "{s} comes down on {p} life",
+    "literal_pl": "{s} come down on {p} life",
+    "literal_past": "{s} came down on {p} life",
+    "literal_future": "{s} will come down on {p} life",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "יורד",
+        "fsg": "יורדת",
+        "mpl": "יורדים",
+        "fpl": "יורדות"
+      },
+      "past": {
+        "msg": "ירד",
+        "fsg": "ירדה",
+        "mpl": "ירדו",
+        "fpl": "ירדו"
+      },
+      "future": {
+        "msg": "ירד",
+        "fsg": "תרד",
+        "mpl": "ירדו",
+        "fpl": "ירדו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "יוֹרֵד",
+        "fsg": "יוֹרֶדֶת",
+        "mpl": "יוֹרְדִים",
+        "fpl": "יוֹרְדוֹת"
+      },
+      "past": {
+        "msg": "יָרַד",
+        "fsg": "יָרְדָה",
+        "mpl": "יָרְדוּ",
+        "fpl": "יָרְדוּ"
+      },
+      "future": {
+        "msg": "יֵרֵד",
+        "fsg": "תֵּרֵד",
+        "mpl": "יֵרְדוּ",
+        "fpl": "יֵרְדוּ"
+      }
+    },
+    "fixed_object_niqqud": "לַחַיִּים",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laredet"
+    ]
+  },
+  {
+    "id": "defikat_hayom",
+    "infinitive": "לדפוק למישהו את היום",
+    "english": "to ruin someone's day",
+    "verb": "לדפוק",
+    "root": "ד.פ.ק",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "את היום",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ את היום",
+    "example": "החדשות דפקו לי את היום",
+    "negated": false,
+    "literal_sg": "{s} bangs up {p} day",
+    "literal_pl": "{s} bang up {p} day",
+    "literal_past": "{s} banged up {p} day",
+    "literal_future": "{s} will bang up {p} day",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "דופק",
+        "fsg": "דופקת",
+        "mpl": "דופקים",
+        "fpl": "דופקות"
+      },
+      "past": {
+        "msg": "דפק",
+        "fsg": "דפקה",
+        "mpl": "דפקו",
+        "fpl": "דפקו"
+      },
+      "future": {
+        "msg": "ידפוק",
+        "fsg": "תדפוק",
+        "mpl": "ידפקו",
+        "fpl": "ידפקו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "דּוֹפֵק",
+        "fsg": "דּוֹפֶקֶת",
+        "mpl": "דּוֹפְקִים",
+        "fpl": "דּוֹפְקוֹת"
+      },
+      "past": {
+        "msg": "דָּפַק",
+        "fsg": "דָּפְקָה",
+        "mpl": "דָּפְקוּ",
+        "fpl": "דָּפְקוּ"
+      },
+      "future": {
+        "msg": "יִדְפֹּק",
+        "fsg": "תִּדְפֹּק",
+        "mpl": "יִדְפְּקוּ",
+        "fpl": "יִדְפְּקוּ"
+      }
+    },
+    "fixed_object_niqqud": "אֶת הַיּוֹם",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lidfok"
+    ]
+  },
+  {
+    "id": "sechok_layadayim",
+    "infinitive": "לשחק למישהו לידיים",
+    "english": "to play into someone's hands",
+    "verb": "לשחק",
+    "root": "ש.ח.ק",
+    "binyan": "piel",
+    "object_type": "l_dative",
+    "fixed_object": "לידיים",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ לידיים",
+    "example": "העיכוב משחק לו לידיים",
+    "negated": false,
+    "literal_sg": "{s} plays into {p} hands",
+    "literal_pl": "{s} play into {p} hands",
+    "literal_past": "{s} played into {p} hands",
+    "literal_future": "{s} will play into {p} hands",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "משחק",
+        "fsg": "משחקת",
+        "mpl": "משחקים",
+        "fpl": "משחקות"
+      },
+      "past": {
+        "msg": "שיחק",
+        "fsg": "שיחקה",
+        "mpl": "שיחקו",
+        "fpl": "שיחקו"
+      },
+      "future": {
+        "msg": "ישחק",
+        "fsg": "תשחק",
+        "mpl": "ישחקו",
+        "fpl": "ישחקו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְשַׂחֵק",
+        "fsg": "מְשַׂחֶקֶת",
+        "mpl": "מְשַׂחֲקִים",
+        "fpl": "מְשַׂחֲקוֹת"
+      },
+      "past": {
+        "msg": "שִׂיחֵק",
+        "fsg": "שִׂיחֲקָה",
+        "mpl": "שִׂיחֲקוּ",
+        "fpl": "שִׂיחֲקוּ"
+      },
+      "future": {
+        "msg": "יְשַׂחֵק",
+        "fsg": "תְּשַׂחֵק",
+        "mpl": "יְשַׂחֲקוּ",
+        "fpl": "יְשַׂחֲקוּ"
+      }
+    },
+    "fixed_object_niqqud": "לַיָּדַיִם",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lesachek"
+    ]
+  },
+  {
+    "id": "asiyat_hanacha",
+    "infinitive": "לעשות למישהו הנחה",
+    "english": "to cut someone some slack",
+    "verb": "לעשות",
+    "root": "ע.שׂ.ה",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "הנחה",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ הנחה",
+    "example": "תעשה לי הנחה, זה היום הראשון שלי",
+    "negated": false,
+    "literal_sg": "{s} gives {o} a discount",
+    "literal_pl": "{s} give {o} a discount",
+    "literal_past": "{s} gave {o} a discount",
+    "literal_future": "{s} will give {o} a discount",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
+    },
+    "fixed_object_niqqud": "הֲנָחָה",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laasot"
+    ]
+  },
+  {
+    "id": "asiyat_bushot",
+    "infinitive": "לעשות למישהו בושות",
+    "english": "to embarrass someone in public",
+    "verb": "לעשות",
+    "root": "ע.שׂ.ה",
+    "binyan": "paal",
+    "object_type": "l_dative",
+    "fixed_object": "בושות",
+    "template": "⟨VERB⟩ ⟨L_OBJ⟩ בושות",
+    "example": "עשית לי בושות מול כולם",
+    "negated": false,
+    "literal_sg": "{s} makes embarrassments for {o}",
+    "literal_pl": "{s} make embarrassments for {o}",
+    "literal_past": "{s} made embarrassments for {o}",
+    "literal_future": "{s} will make embarrassments for {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "עושה",
+        "fsg": "עושה",
+        "mpl": "עושים",
+        "fpl": "עושות"
+      },
+      "past": {
+        "msg": "עשה",
+        "fsg": "עשתה",
+        "mpl": "עשו",
+        "fpl": "עשו"
+      },
+      "future": {
+        "msg": "יעשה",
+        "fsg": "תעשה",
+        "mpl": "יעשו",
+        "fpl": "יעשו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "עוֹשֶׂה",
+        "fsg": "עוֹשָׂה",
+        "mpl": "עוֹשִׂים",
+        "fpl": "עוֹשׂוֹת"
+      },
+      "past": {
+        "msg": "עָשָׂה",
+        "fsg": "עָשְׂתָה",
+        "mpl": "עָשׂוּ",
+        "fpl": "עָשׂוּ"
+      },
+      "future": {
+        "msg": "יַעֲשֶׂה",
+        "fsg": "תַּעֲשֶׂה",
+        "mpl": "יַעֲשׂוּ",
+        "fpl": "יַעֲשׂוּ"
+      }
+    },
+    "fixed_object_niqqud": "בּוּשׁוֹת",
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-laasot"
+    ]
+  },
+  {
+    "id": "klitat_mishehu",
+    "infinitive": "לקלוט מישהו",
+    "english": "to read / get someone",
+    "verb": "לקלוט",
+    "root": "ק.ל.ט",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "אני קולט אותך",
+    "negated": false,
+    "literal_sg": "{s} picks {o} up",
+    "literal_pl": "{s} pick {o} up",
+    "literal_past": "{s} picked {o} up",
+    "literal_future": "{s} will pick {o} up",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "קולט",
+        "fsg": "קולטת",
+        "mpl": "קולטים",
+        "fpl": "קולטות"
+      },
+      "past": {
+        "msg": "קלט",
+        "fsg": "קלטה",
+        "mpl": "קלטו",
+        "fpl": "קלטו"
+      },
+      "future": {
+        "msg": "יקלוט",
+        "fsg": "תקלוט",
+        "mpl": "יקלטו",
+        "fpl": "יקלטו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "קוֹלֵט",
+        "fsg": "קוֹלֶטֶת",
+        "mpl": "קוֹלְטִים",
+        "fpl": "קוֹלְטוֹת"
+      },
+      "past": {
+        "msg": "קָלַט",
+        "fsg": "קָלְטָה",
+        "mpl": "קָלְטוּ",
+        "fpl": "קָלְטוּ"
+      },
+      "future": {
+        "msg": "יִקְלוֹט",
+        "fsg": "תִּקְלוֹט",
+        "mpl": "יִקְלְטוּ",
+        "fpl": "יִקְלְטוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#character-verb-liklot"
+    ]
+  },
+  {
+    "id": "mechikat_mishehu",
+    "infinitive": "למחוק מישהו",
+    "english": "to wipe the floor with someone",
+    "verb": "למחוק",
+    "root": "מ.ח.ק",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הם מחקו אותנו במשחק",
+    "negated": false,
+    "literal_sg": "{s} erases {o}",
+    "literal_pl": "{s} erase {o}",
+    "literal_past": "{s} erased {o}",
+    "literal_future": "{s} will erase {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מוחק",
+        "fsg": "מוחקת",
+        "mpl": "מוחקים",
+        "fpl": "מוחקות"
+      },
+      "past": {
+        "msg": "מחק",
+        "fsg": "מחקה",
+        "mpl": "מחקו",
+        "fpl": "מחקו"
+      },
+      "future": {
+        "msg": "ימחק",
+        "fsg": "תמחק",
+        "mpl": "ימחקו",
+        "fpl": "ימחקו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹחֵק",
+        "fsg": "מוֹחֶקֶת",
+        "mpl": "מוֹחֲקִים",
+        "fpl": "מוֹחֲקוֹת"
+      },
+      "past": {
+        "msg": "מָחַק",
+        "fsg": "מָחֲקָה",
+        "mpl": "מָחֲקוּ",
+        "fpl": "מָחֲקוּ"
+      },
+      "future": {
+        "msg": "יִמְחַק",
+        "fsg": "תִּמְחַק",
+        "mpl": "יִמְחֲקוּ",
+        "fpl": "יִמְחֲקוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#technology-verb-limchok"
+    ]
+  },
+  {
+    "id": "harisat_mishehu",
+    "infinitive": "להרוס מישהו",
+    "english": "to devastate someone",
+    "verb": "להרוס",
+    "root": "ה.ר.ס",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הסרט הזה הרס אותי",
+    "negated": false,
+    "literal_sg": "{s} destroys {o}",
+    "literal_pl": "{s} destroy {o}",
+    "literal_past": "{s} destroyed {o}",
+    "literal_future": "{s} will destroy {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "הורס",
+        "fsg": "הורסת",
+        "mpl": "הורסים",
+        "fpl": "הורסות"
+      },
+      "past": {
+        "msg": "הרס",
+        "fsg": "הרסה",
+        "mpl": "הרסו",
+        "fpl": "הרסו"
+      },
+      "future": {
+        "msg": "יהרוס",
+        "fsg": "תהרוס",
+        "mpl": "יהרסו",
+        "fpl": "יהרסו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "הוֹרֵס",
+        "fsg": "הוֹרֶסֶת",
+        "mpl": "הוֹרְסִים",
+        "fpl": "הוֹרְסוֹת"
+      },
+      "past": {
+        "msg": "הָרַס",
+        "fsg": "הָרְסָה",
+        "mpl": "הָרְסוּ",
+        "fpl": "הָרְסוּ"
+      },
+      "future": {
+        "msg": "יַהֲרוֹס",
+        "fsg": "תַּהֲרוֹס",
+        "mpl": "יַהַרְסוּ",
+        "fpl": "יַהַרְסוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-laharos"
+    ]
+  },
+  {
+    "id": "kibui_mishehu",
+    "infinitive": "לכבות מישהו",
+    "english": "to turn someone off",
+    "verb": "לכבות",
+    "root": "כ.ב.ה",
+    "binyan": "piel",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הסגנון שלו מכבה אותי",
+    "negated": false,
+    "literal_sg": "{s} switches {o} off",
+    "literal_pl": "{s} switch {o} off",
+    "literal_past": "{s} switched {o} off",
+    "literal_future": "{s} will switch {o} off",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מכבה",
+        "fsg": "מכבה",
+        "mpl": "מכבים",
+        "fpl": "מכבות"
+      },
+      "past": {
+        "msg": "כיבה",
+        "fsg": "כיבתה",
+        "mpl": "כיבו",
+        "fpl": "כיבו"
+      },
+      "future": {
+        "msg": "יכבה",
+        "fsg": "תכבה",
+        "mpl": "יכבו",
+        "fpl": "יכבו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מְכַבֶּה",
+        "fsg": "מְכַבָּה",
+        "mpl": "מְכַבִּים",
+        "fpl": "מְכַבּוֹת"
+      },
+      "past": {
+        "msg": "כִּבָּה",
+        "fsg": "כִּבְּתָה",
+        "mpl": "כִּבּוּ",
+        "fpl": "כִּבּוּ"
+      },
+      "future": {
+        "msg": "יְכַבֶּה",
+        "fsg": "תְּכַבֶּה",
+        "mpl": "יְכַבּוּ",
+        "fpl": "יְכַבּוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-lekhabot"
+    ]
+  },
+  {
+    "id": "kniyat_mishehu",
+    "infinitive": "לקנות מישהו",
+    "english": "to win someone over",
+    "verb": "לקנות",
+    "root": "ק.נ.ה",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הוא קנה אותי במשפט הראשון",
+    "negated": false,
+    "literal_sg": "{s} buys {o}",
+    "literal_pl": "{s} buy {o}",
+    "literal_past": "{s} bought {o}",
+    "literal_future": "{s} will buy {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "קונה",
+        "fsg": "קונה",
+        "mpl": "קונים",
+        "fpl": "קונות"
+      },
+      "past": {
+        "msg": "קנה",
+        "fsg": "קנתה",
+        "mpl": "קנו",
+        "fpl": "קנו"
+      },
+      "future": {
+        "msg": "יקנה",
+        "fsg": "תקנה",
+        "mpl": "יקנו",
+        "fpl": "יקנו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "קוֹנֶה",
+        "fsg": "קוֹנָה",
+        "mpl": "קוֹנִים",
+        "fpl": "קוֹנוֹת"
+      },
+      "past": {
+        "msg": "קָנָה",
+        "fsg": "קָנְתָה",
+        "mpl": "קָנוּ",
+        "fpl": "קָנוּ"
+      },
+      "future": {
+        "msg": "יִקְנֶה",
+        "fsg": "תִּקְנֶה",
+        "mpl": "יִקְנוּ",
+        "fpl": "יִקְנוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#common-verb-liknot"
+    ]
+  },
+  {
+    "id": "achilat_mishehu",
+    "infinitive": "לאכול מישהו",
+    "english": "to eat away at someone",
+    "verb": "לאכול",
+    "root": "א.כ.ל",
+    "binyan": "paal",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "מה אוכל אותך?",
+    "negated": false,
+    "literal_sg": "{s} eats {o}",
+    "literal_pl": "{s} eat {o}",
+    "literal_past": "{s} ate {o}",
+    "literal_future": "{s} will eat {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "אוכל",
+        "fsg": "אוכלת",
+        "mpl": "אוכלים",
+        "fpl": "אוכלות"
+      },
+      "past": {
+        "msg": "אכל",
+        "fsg": "אכלה",
+        "mpl": "אכלו",
+        "fpl": "אכלו"
+      },
+      "future": {
+        "msg": "יאכל",
+        "fsg": "תאכל",
+        "mpl": "יאכלו",
+        "fpl": "יאכלו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "אוֹכֵל",
+        "fsg": "אוֹכֶלֶת",
+        "mpl": "אוֹכְלִים",
+        "fpl": "אוֹכְלוֹת"
+      },
+      "past": {
+        "msg": "אָכַל",
+        "fsg": "אָכְלָה",
+        "mpl": "אָכְלוּ",
+        "fpl": "אָכְלוּ"
+      },
+      "future": {
+        "msg": "יֹאכַל",
+        "fsg": "תֹּאכַל",
+        "mpl": "יֹאכְלוּ",
+        "fpl": "יֹאכְלוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#starter-verb-leechol"
+    ]
+  },
+  {
+    "id": "hapalat_mishehu",
+    "infinitive": "להפיל מישהו",
+    "english": "to bring someone down / set someone up",
+    "verb": "להפיל",
+    "root": "נ.פ.ל",
+    "binyan": "hifil",
+    "object_type": "direct",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩",
+    "example": "הם הפילו אותו בוועדה",
+    "negated": false,
+    "literal_sg": "{s} drops {o}",
+    "literal_pl": "{s} drop {o}",
+    "literal_past": "{s} dropped {o}",
+    "literal_future": "{s} will drop {o}",
+    "showMeaning": true,
+    "conjugations": {
+      "present": {
+        "msg": "מפיל",
+        "fsg": "מפילה",
+        "mpl": "מפילים",
+        "fpl": "מפילות"
+      },
+      "past": {
+        "msg": "הפיל",
+        "fsg": "הפילה",
+        "mpl": "הפילו",
+        "fpl": "הפילו"
+      },
+      "future": {
+        "msg": "יפיל",
+        "fsg": "תפיל",
+        "mpl": "יפילו",
+        "fpl": "יפילו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַפִּיל",
+        "fsg": "מַפִּילָה",
+        "mpl": "מַפִּילִים",
+        "fpl": "מַפִּילוֹת"
+      },
+      "past": {
+        "msg": "הִפִּיל",
+        "fsg": "הִפִּילָה",
+        "mpl": "הִפִּילוּ",
+        "fpl": "הִפִּילוּ"
+      },
+      "future": {
+        "msg": "יַפִּיל",
+        "fsg": "תַּפִּיל",
+        "mpl": "יַפִּילוּ",
+        "fpl": "יַפִּילוּ"
+      }
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehapil"
+    ]
+  },
+  {
+    "id": "hatzalat_meatzmo",
+    "infinitive": "להציל מישהו מעצמו",
+    "english": "to save someone from themselves",
+    "verb": "להציל",
+    "root": "נ.צ.ל",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "עצם",
+    "suffix_preposition": "מ",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "מישהו צריך להציל אותו מעצמו",
+    "negated": false,
+    "literal_sg": "{s} saves {o} from {p} own self",
+    "literal_pl": "{s} save {o} from {p} own self",
+    "literal_past": "{s} saved {o} from {p} own self",
+    "literal_future": "{s} will save {o} from {p} own self",
+    "showMeaning": false,
+    "suffix_forms": {
+      "1sg": "מעצמי",
+      "2msg": "מעצמך",
+      "2fsg": "מעצמך",
+      "3msg": "מעצמו",
+      "3fsg": "מעצמה",
+      "1pl": "מעצמנו",
+      "2mpl": "מעצמכם",
+      "2fpl": "מעצמכן",
+      "3mpl": "מעצמם",
+      "3fpl": "מעצמן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מציל",
+        "fsg": "מצילה",
+        "mpl": "מצילים",
+        "fpl": "מצילות"
+      },
+      "past": {
+        "msg": "הציל",
+        "fsg": "הצילה",
+        "mpl": "הצילו",
+        "fpl": "הצילו"
+      },
+      "future": {
+        "msg": "יציל",
+        "fsg": "תציל",
+        "mpl": "יצילו",
+        "fpl": "יצילו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַצִּיל",
+        "fsg": "מַצִּילָה",
+        "mpl": "מַצִּילִים",
+        "fpl": "מַצִּילוֹת"
+      },
+      "past": {
+        "msg": "הִצִּיל",
+        "fsg": "הִצִּילָה",
+        "mpl": "הִצִּילוּ",
+        "fpl": "הִצִּילוּ"
+      },
+      "future": {
+        "msg": "יַצִּיל",
+        "fsg": "תַּצִּיל",
+        "mpl": "יַצִּילוּ",
+        "fpl": "יַצִּילוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מֵעַצְמִי",
+      "2msg": "מֵעַצְמְךָ",
+      "2fsg": "מֵעַצְמֵךְ",
+      "3msg": "מֵעַצְמוֹ",
+      "3fsg": "מֵעַצְמָהּ",
+      "1pl": "מֵעַצְמֵנוּ",
+      "2mpl": "מֵעַצְמְכֶם",
+      "2fpl": "מֵעַצְמְכֶן",
+      "3mpl": "מֵעַצְמָם",
+      "3fpl": "מֵעַצְמָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehatsil"
+    ]
+  },
+  {
+    "id": "hotzaat_meizuno",
+    "infinitive": "להוציא מישהו מאיזונו",
+    "english": "to throw someone off balance",
+    "verb": "להוציא",
+    "root": "י.צ.א",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "איזון",
+    "suffix_preposition": "מ",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "השאלה הזאת הוציאה אותו מאיזונו",
+    "negated": false,
+    "literal_sg": "{s} takes {o} out of {p} balance",
+    "literal_pl": "{s} take {o} out of {p} balance",
+    "literal_past": "{s} took {o} out of {p} balance",
+    "literal_future": "{s} will take {o} out of {p} balance",
+    "showMeaning": false,
+    "suffix_forms": {
+      "1sg": "מאיזוני",
+      "2msg": "מאיזונך",
+      "2fsg": "מאיזונך",
+      "3msg": "מאיזונו",
+      "3fsg": "מאיזונה",
+      "1pl": "מאיזוננו",
+      "2mpl": "מאיזונכם",
+      "2fpl": "מאיזונכן",
+      "3mpl": "מאיזונם",
+      "3fpl": "מאיזונן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מוציא",
+        "fsg": "מוציאה",
+        "mpl": "מוציאים",
+        "fpl": "מוציאות"
+      },
+      "past": {
+        "msg": "הוציא",
+        "fsg": "הוציאה",
+        "mpl": "הוציאו",
+        "fpl": "הוציאו"
+      },
+      "future": {
+        "msg": "יוציא",
+        "fsg": "תוציא",
+        "mpl": "יוציאו",
+        "fpl": "יוציאו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מוֹצִיא",
+        "fsg": "מוֹצִיאָה",
+        "mpl": "מוֹצִיאִים",
+        "fpl": "מוֹצִיאוֹת"
+      },
+      "past": {
+        "msg": "הוֹצִיא",
+        "fsg": "הוֹצִיאָה",
+        "mpl": "הוֹצִיאוּ",
+        "fpl": "הוֹצִיאוּ"
+      },
+      "future": {
+        "msg": "יוֹצִיא",
+        "fsg": "תּוֹצִיא",
+        "mpl": "יוֹצִיאוּ",
+        "fpl": "יוֹצִיאוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "מֵאִזּוּנִי",
+      "2msg": "מֵאִזּוּנְךָ",
+      "2fsg": "מֵאִזּוּנֵךְ",
+      "3msg": "מֵאִזּוּנוֹ",
+      "3fsg": "מֵאִזּוּנָהּ",
+      "1pl": "מֵאִזּוּנֵנוּ",
+      "2mpl": "מֵאִזּוּנְכֶם",
+      "2fpl": "מֵאִזּוּנְכֶן",
+      "3mpl": "מֵאִזּוּנָם",
+      "3fpl": "מֵאִזּוּנָן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehotzi"
+    ]
+  },
+  {
+    "id": "haamadat_al_raglav",
+    "infinitive": "להעמיד מישהו על רגליו",
+    "english": "to get someone back on their feet",
+    "verb": "להעמיד",
+    "root": "ע.מ.ד",
+    "binyan": "hifil",
+    "object_type": "possessive_suffix",
+    "suffix_noun": "רגליים",
+    "suffix_preposition": "על",
+    "template": "⟨VERB⟩ ⟨DIR_OBJ⟩ ⟨SUFFIX_FORM⟩",
+    "example": "המשפחה העמידה אותו על רגליו",
+    "negated": false,
+    "literal_sg": "{s} stands {o} on {p} feet",
+    "literal_pl": "{s} stand {o} on {p} feet",
+    "literal_past": "{s} stood {o} on {p} feet",
+    "literal_future": "{s} will stand {o} on {p} feet",
+    "showMeaning": false,
+    "suffix_forms": {
+      "1sg": "על רגליי",
+      "2msg": "על רגליך",
+      "2fsg": "על רגלייך",
+      "3msg": "על רגליו",
+      "3fsg": "על רגליה",
+      "1pl": "על רגלינו",
+      "2mpl": "על רגליכם",
+      "2fpl": "על רגליכן",
+      "3mpl": "על רגליהם",
+      "3fpl": "על רגליהן"
+    },
+    "conjugations": {
+      "present": {
+        "msg": "מעמיד",
+        "fsg": "מעמידה",
+        "mpl": "מעמידים",
+        "fpl": "מעמידות"
+      },
+      "past": {
+        "msg": "העמיד",
+        "fsg": "העמידה",
+        "mpl": "העמידו",
+        "fpl": "העמידו"
+      },
+      "future": {
+        "msg": "יעמיד",
+        "fsg": "תעמיד",
+        "mpl": "יעמידו",
+        "fpl": "יעמידו"
+      }
+    },
+    "conjugations_niqqud": {
+      "present": {
+        "msg": "מַעֲמִיד",
+        "fsg": "מַעֲמִידָה",
+        "mpl": "מַעֲמִידִים",
+        "fpl": "מַעֲמִידוֹת"
+      },
+      "past": {
+        "msg": "הֶעֱמִיד",
+        "fsg": "הֶעֱמִידָה",
+        "mpl": "הֶעֱמִידוּ",
+        "fpl": "הֶעֱמִידוּ"
+      },
+      "future": {
+        "msg": "יַעֲמִיד",
+        "fsg": "תַּעֲמִיד",
+        "mpl": "יַעֲמִידוּ",
+        "fpl": "יַעֲמִידוּ"
+      }
+    },
+    "suffix_forms_niqqud": {
+      "1sg": "עַל רַגְלַי",
+      "2msg": "עַל רַגְלֶיךָ",
+      "2fsg": "עַל רַגְלַיִךְ",
+      "3msg": "עַל רַגְלָיו",
+      "3fsg": "עַל רַגְלֶיהָ",
+      "1pl": "עַל רַגְלֵינוּ",
+      "2mpl": "עַל רַגְלֵיכֶם",
+      "2fpl": "עַל רַגְלֵיכֶן",
+      "3mpl": "עַל רַגְלֵיהֶם",
+      "3fpl": "עַל רַגְלֵיהֶן"
+    },
+    "niqqud_status": "reviewed",
+    "niqqud_sources": [
+      "internal:hebrew-verbs#advanced-verb-lehaamid"
+    ]
   }
 ];
 
