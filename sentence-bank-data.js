@@ -9386,7 +9386,11 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["Did you lock", "the door", "I don't", "remember"],
     hebrewDistractorPairs: [["פתחת", "פָּתַחְתָּ"], ["החלון", "הַחַלּוֹן"], ["זוכר", "זוֹכֵר"], ["סגרנו", "סָגַרְנוּ"], ["המפתח", "הַמַּפְתֵּחַ"]],
     englishDistractors: ["Did you open", "the window", "he doesn't", "forget", "the key"],
-    notes: "זוכרת marks the speaker as feminine — the masculine זוכר is the gender swap — while נעלת addresses a masculine 'you'. פתחת (opened) is the opposite."
+    hebrewAlternates: [
+      { text: "נעלת את הדלת? אני לא זוכר.", textNiqqud: "נָעַלְתָּ אֶת הַדֶּלֶת? אֲנִי לֹא זוֹכֵר.",
+        tokenPairs: [["נעלת", "נָעַלְתָּ"], ["את", "אֶת"], ["הדלת", "הַדֶּלֶת"], ["אני", "אֲנִי"], ["לא", "לֹא"], ["זוכר", "זוֹכֵר"]] },
+    ],
+    notes: "The English marks no speaker gender, so both זוכרת and זוכר are accepted. נעלת addresses a masculine 'you'. פתחת (opened) is the opposite."
   }),
   buildExpandedSentence({
     id: "everyday_77", emoji: "🛋️", category: "everyday", difficulty: 2,
@@ -9641,9 +9645,17 @@ const SENTENCE_EXPANSION_ROUND2 = [
     english: "I'm on my way to you, need anything from the supermarket?",
     hebrewTokenPairs: [["אני", "אֲנִי"], ["בדרך", "בַּדֶּרֶךְ"], ["אלייך", "אֵלַיִךְ"], ["צריכה", "צְרִיכָה"], ["משהו", "מַשֶּׁהוּ"], ["מהסופר", "מֵהַסּוּפֶּר"]],
     englishTokens: ["I'm", "on my way", "to you", "need", "anything", "from the supermarket"],
-    hebrewDistractorPairs: [["אליך", "אֵלֶיךָ"], ["צריך", "צָרִיךְ"], ["הכול", "הַכֹּל"], ["מהשוק", "מֵהַשּׁוּק"], ["חוזרת", "חוֹזֶרֶת"]],
+    hebrewDistractorPairs: [["אליך", "אֵלֶיךָ"], ["צריך", "צָרִיךְ"], ["רוצה", "רוֹצֶה"], ["הכול", "הַכֹּל"], ["מהשוק", "מֵהַשּׁוּק"], ["חוזרת", "חוֹזֶרֶת"]],
     englishDistractors: ["everything", "from the market", "coming back", "to him", "want"],
-    notes: "Feminine speaker asking a feminine friend: אלייך and צריכה both mark gender — אליך and צריך are the masculine swaps. בדרך = on my way."
+    hebrewAlternates: [
+      { text: "אני בדרך אלייך, צריך משהו מהסופר?", textNiqqud: "אֲנִי בַּדֶּרֶךְ אֵלַיִךְ, צָרִיךְ מַשֶּׁהוּ מֵהַסּוּפֶּר?",
+        tokenPairs: [["אני", "אֲנִי"], ["בדרך", "בַּדֶּרֶךְ"], ["אלייך", "אֵלַיִךְ"], ["צריך", "צָרִיךְ"], ["משהו", "מַשֶּׁהוּ"], ["מהסופר", "מֵהַסּוּפֶּר"]] },
+      { text: "אני בדרך אליך, צריכה משהו מהסופר?", textNiqqud: "אֲנִי בַּדֶּרֶךְ אֵלֶיךָ, צְרִיכָה מַשֶּׁהוּ מֵהַסּוּפֶּר?",
+        tokenPairs: [["אני", "אֲנִי"], ["בדרך", "בַּדֶּרֶךְ"], ["אליך", "אֵלֶיךָ"], ["צריכה", "צְרִיכָה"], ["משהו", "מַשֶּׁהוּ"], ["מהסופר", "מֵהַסּוּפֶּר"]] },
+      { text: "אני בדרך אליך, צריך משהו מהסופר?", textNiqqud: "אֲנִי בַּדֶּרֶךְ אֵלֶיךָ, צָרִיךְ מַשֶּׁהוּ מֵהַסּוּפֶּר?",
+        tokenPairs: [["אני", "אֲנִי"], ["בדרך", "בַּדֶּרֶךְ"], ["אליך", "אֵלֶיךָ"], ["צריך", "צָרִיךְ"], ["משהו", "מַשֶּׁהוּ"], ["מהסופר", "מֵהַסּוּפֶּר"]] },
+    ],
+    notes: "Two independent gender axes, neither cued by the English: צריכה/צריך marks the speaker, אלייך/אליך the addressee. All four combinations are accepted. בדרך = on my way."
   }),
   buildExpandedSentence({
     id: "colloquial_66", emoji: "🍻", category: "colloquial", difficulty: 1,
@@ -9683,7 +9695,11 @@ const SENTENCE_EXPANSION_ROUND2 = [
     englishTokens: ["Running", "ten", "minutes", "late", "order me", "a coffee"],
     hebrewDistractorPairs: [["מאחר", "מְאַחֵר"], ["בחמש", "בְּחָמֵשׁ"], ["שעות", "שָׁעוֹת"], ["תשמרו", "תִּשְׁמְרוּ"], ["תה", "תֵּה"]],
     englishDistractors: ["five", "hours", "save me", "a tea", "He's running"],
-    notes: "WhatsApp-style clipped message. מאחרת marks the sender as feminine (מאחר is the masculine swap); תזמינו is a plural command to the group."
+    hebrewAlternates: [
+      { text: "מאחר בעשר דקות, תזמינו לי קפה.", textNiqqud: "מְאַחֵר בְּעֶשֶׂר דַּקּוֹת, תַּזְמִינוּ לִי קָפֶה.",
+        tokenPairs: [["מאחר", "מְאַחֵר"], ["בעשר", "בְּעֶשֶׂר"], ["דקות", "דַּקּוֹת"], ["תזמינו", "תַּזְמִינוּ"], ["לי", "לִי"], ["קפה", "קָפֶה"]] },
+    ],
+    notes: "WhatsApp-style clipped message. The English marks no sender gender, so both מאחרת and מאחר are accepted; תזמינו is a plural command to the group."
   }),
   buildExpandedSentence({
     id: "colloquial_70", emoji: "📍", category: "colloquial", difficulty: 1, style: "whatsapp",
@@ -9754,9 +9770,13 @@ const SENTENCE_EXPANSION_ROUND2 = [
     english: "The new manager wants to schedule an introductory call with the whole team.",
     hebrewTokenPairs: [["המנהלת", "הַמְּנַהֶלֶת"], ["החדשה", "הַחֲדָשָׁה"], ["רוצה", "רוֹצָה"], ["לקבוע", "לִקְבֹּעַ"], ["שיחת היכרות", "שִׂיחַת הֶכֵּרוּת"], ["עם", "עִם"], ["כל", "כָּל"], ["הצוות", "הַצֶּוֶת"]],
     englishTokens: ["The new", "manager", "wants", "to schedule", "an introductory call", "with", "the whole", "team"],
-    hebrewDistractorPairs: [["המנהל", "הַמְּנַהֵל"], ["לבטל", "לְבַטֵּל"], ["שיחת ועידה", "שִׂיחַת וְעִידָה"], ["חצי", "חֲצִי"], ["הלקוחות", "הַלָּקוֹחוֹת"]],
+    hebrewDistractorPairs: [["המנהל", "הַמְּנַהֵל"], ["החדש", "הֶחָדָשׁ"], ["לבטל", "לְבַטֵּל"], ["שיחת ועידה", "שִׂיחַת וְעִידָה"], ["חצי", "חֲצִי"], ["הלקוחות", "הַלָּקוֹחוֹת"]],
     englishDistractors: ["The old", "director", "to cancel", "a conference call", "half the", "clients"],
-    notes: "המנהלת is a female manager — המנהל is the gender swap. שיחת היכרות (intro call) stays one compound chip; שיחת ועידה (conference call) matches its shape."
+    hebrewAlternates: [
+      { text: "המנהל החדש רוצה לקבוע שיחת היכרות עם כל הצוות.", textNiqqud: "הַמְּנַהֵל הֶחָדָשׁ רוֹצֶה לִקְבֹּעַ שִׂיחַת הֶכֵּרוּת עִם כָּל הַצֶּוֶת.",
+        tokenPairs: [["המנהל", "הַמְּנַהֵל"], ["החדש", "הֶחָדָשׁ"], ["רוצה", "רוֹצֶה"], ["לקבוע", "לִקְבֹּעַ"], ["שיחת היכרות", "שִׂיחַת הֶכֵּרוּת"], ["עם", "עִם"], ["כל", "כָּל"], ["הצוות", "הַצֶּוֶת"]] },
+    ],
+    notes: "English 'the new manager' names no gender, so the whole feminine chain המנהלת/החדשה and its masculine counterpart המנהל/החדש are both accepted. שיחת היכרות (intro call) stays one compound chip; שיחת ועידה (conference call) matches its shape."
   }),
   buildExpandedSentence({
     id: "professional_40", emoji: "🤝", category: "professional", difficulty: 3,
@@ -9848,9 +9868,17 @@ const SENTENCE_EXPANSION_ROUND2 = [
     english: "Sorry for the delay, I'll get back to you with an answer by tomorrow.",
     hebrewTokenPairs: [["מצטערת", "מִצְטַעֶרֶת"], ["על", "עַל"], ["העיכוב", "הָעִכּוּב"], ["אחזור", "אֶחֱזֹר"], ["אלייך", "אֵלַיִךְ"], ["עם", "עִם"], ["תשובה", "תְּשׁוּבָה"], ["עד", "עַד"], ["מחר", "מָחָר"]],
     englishTokens: ["Sorry", "for", "the delay", "I'll get back", "to you", "with", "an answer", "by tomorrow"],
-    hebrewDistractorPairs: [["מצטער", "מִצְטַעֵר"], ["אליך", "אֵלֶיךָ"], ["הביטול", "הַבִּטּוּל"], ["שאלה", "שְׁאֵלָה"], ["אשלח", "אֶשְׁלַח"]],
+    hebrewDistractorPairs: [["מצטער", "מִצְטַעֵר"], ["אליך", "אֵלֶיךָ"], ["הביטול", "הַבִּטּוּל"], ["שאלה", "שְׁאֵלָה"], ["אשלח", "אֶשְׁלַח"], ["תודה", "תּוֹדָה"]],
     englishDistractors: ["the cancellation", "a question", "I'll send", "to him", "Thanks"],
-    notes: "Both speaker and addressee are feminine: מצטערת and אלייך — the masculine forms מצטער/אליך are the gender swap traps. עיכוב = delay."
+    hebrewAlternates: [
+      { text: "מצטער על העיכוב, אחזור אלייך עם תשובה עד מחר.", textNiqqud: "מִצְטַעֵר עַל הָעִכּוּב, אֶחֱזֹר אֵלַיִךְ עִם תְּשׁוּבָה עַד מָחָר.",
+        tokenPairs: [["מצטער", "מִצְטַעֵר"], ["על", "עַל"], ["העיכוב", "הָעִכּוּב"], ["אחזור", "אֶחֱזֹר"], ["אלייך", "אֵלַיִךְ"], ["עם", "עִם"], ["תשובה", "תְּשׁוּבָה"], ["עד", "עַד"], ["מחר", "מָחָר"]] },
+      { text: "מצטערת על העיכוב, אחזור אליך עם תשובה עד מחר.", textNiqqud: "מִצְטַעֶרֶת עַל הָעִכּוּב, אֶחֱזֹר אֵלֶיךָ עִם תְּשׁוּבָה עַד מָחָר.",
+        tokenPairs: [["מצטערת", "מִצְטַעֶרֶת"], ["על", "עַל"], ["העיכוב", "הָעִכּוּב"], ["אחזור", "אֶחֱזֹר"], ["אליך", "אֵלֶיךָ"], ["עם", "עִם"], ["תשובה", "תְּשׁוּבָה"], ["עד", "עַד"], ["מחר", "מָחָר"]] },
+      { text: "מצטער על העיכוב, אחזור אליך עם תשובה עד מחר.", textNiqqud: "מִצְטַעֵר עַל הָעִכּוּב, אֶחֱזֹר אֵלֶיךָ עִם תְּשׁוּבָה עַד מָחָר.",
+        tokenPairs: [["מצטער", "מִצְטַעֵר"], ["על", "עַל"], ["העיכוב", "הָעִכּוּב"], ["אחזור", "אֶחֱזֹר"], ["אליך", "אֵלֶיךָ"], ["עם", "עִם"], ["תשובה", "תְּשׁוּבָה"], ["עד", "עַד"], ["מחר", "מָחָר"]] },
+    ],
+    notes: "Two independent gender axes, neither cued by the English: מצטערת/מצטער marks the sender, אלייך/אליך the recipient. All four combinations are accepted. עיכוב = delay."
   }),
   buildExpandedSentence({
     id: "professional_49", emoji: "🖥️", category: "professional", difficulty: 2,
@@ -10569,9 +10597,13 @@ const SENTENCE_EXPANSION_ROUND3 = [
     english: "The journalist asked whether the minister intends to resign.",
     hebrewTokenPairs: [["העיתונאית", "הָעִתּוֹנָאִית"], ["שאלה", "שָׁאֲלָה"], ["אם", "אִם"], ["השר", "הַשַּׂר"], ["מתכוון", "מִתְכַּוֵּן"], ["להתפטר", "לְהִתְפַּטֵּר"]],
     englishTokens: ["The journalist", "asked", "whether", "the minister", "intends", "to resign"],
-    hebrewDistractorPairs: [["העיתונאי", "הָעִתּוֹנַאי"], ["ענתה", "עָנְתָה"], ["למה", "לָמָּה"], ["ראש העיר", "רֹאשׁ הָעִיר"], ["מסרב", "מְסָרֵב"]],
+    hebrewDistractorPairs: [["העיתונאי", "הָעִתּוֹנַאי"], ["שאל", "שָׁאַל"], ["ענתה", "עָנְתָה"], ["למה", "לָמָּה"], ["ראש העיר", "רֹאשׁ הָעִיר"], ["מסרב", "מְסָרֵב"]],
     englishDistractors: ["answered", "why", "the mayor", "refuses", "The editor"],
-    notes: "שאלה אם — 'asked whether'; indirect yes/no questions use אם. מתכוון ל = intends to. להתפטר = to resign (hitpa'el)."
+    hebrewAlternates: [
+      { text: "העיתונאי שאל אם השר מתכוון להתפטר.", textNiqqud: "הָעִתּוֹנַאי שָׁאַל אִם הַשַּׂר מִתְכַּוֵּן לְהִתְפַּטֵּר.",
+        tokenPairs: [["העיתונאי", "הָעִתּוֹנַאי"], ["שאל", "שָׁאַל"], ["אם", "אִם"], ["השר", "הַשַּׂר"], ["מתכוון", "מִתְכַּוֵּן"], ["להתפטר", "לְהִתְפַּטֵּר"]] },
+    ],
+    notes: "שאלה אם — 'asked whether'; indirect yes/no questions use אם. English 'the journalist' names no gender, so העיתונאית שאלה and העיתונאי שאל are both accepted. מתכוון ל = intends to. להתפטר = to resign (hitpa'el)."
   }),
   buildExpandedSentence({
     id: "professional_62", emoji: "🧮", category: "professional", difficulty: 3,
@@ -18515,9 +18547,9 @@ const SHARED_GRAMMAR_SENTENCES = [
   buildReviewedSentence({
     id: "everyday_271", emoji: "🔗", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
     hebrew: "סמיכות וכינוי שייכות מבטאים בעלות.", hebrewNiqqud: "סְמִיכוּת וְכִנּוּי שַׁיָּכוּת מְבַטְּאִים בַּעֲלוּת.", english: "Construct state and a possessive suffix express possession.",
-    hebrewTokenPairs: [["סמיכות", "סְמִיכוּת"], ["ו", "וְ"], ["כינוי שייכות", "כִּנּוּי שַׁיָּכוּת"], ["מבטאים", "מְבַטְּאִים"], ["בעלות", "בַּעֲלוּת"]], englishTokens: ["Construct state", "and", "a possessive suffix", "express", "possession"],
-    hebrewDistractorPairs: [["ניקוד", "נִקּוּד"], ["או", "אוֹ"], ["הגייה", "הֲגִיָּה"], ["משנים", "מְשַׁנִּים"], ["צליל", "צְלִיל"]], englishDistractors: ["Vocalization", "or", "pronunciation", "change", "sound"],
-    hebrewOrderAlternates: [{ text: "כינוי שייכות וסמיכות מבטאים בעלות.", textNiqqud: "כִּנּוּי שַׁיָּכוּת וּסְמִיכוּת מְבַטְּאִים בַּעֲלוּת.", order: [2, 1, 0, 3, 4], tokensNiqqud: ["כִּנּוּי שַׁיָּכוּת", "וּ", "סְמִיכוּת", "מְבַטְּאִים", "בַּעֲלוּת"] }],
+    hebrewTokenPairs: [["סמיכות", "סְמִיכוּת"], ["וכינוי שייכות", "וְכִנּוּי שַׁיָּכוּת"], ["מבטאים", "מְבַטְּאִים"], ["בעלות", "בַּעֲלוּת"]], englishTokens: ["Construct state", "and", "a possessive suffix", "express", "possession"],
+    hebrewDistractorPairs: [["כינוי שייכות", "כִּנּוּי שַׁיָּכוּת"], ["וסמיכות", "וּסְמִיכוּת"], ["ניקוד", "נִקּוּד"], ["הגייה", "הֲגִיָּה"], ["משנים", "מְשַׁנִּים"], ["צליל", "צְלִיל"]], englishDistractors: ["Vocalization", "or", "pronunciation", "change", "sound"],
+    hebrewAlternates: [{ text: "כינוי שייכות וסמיכות מבטאים בעלות.", textNiqqud: "כִּנּוּי שַׁיָּכוּת וּסְמִיכוּת מְבַטְּאִים בַּעֲלוּת.", tokenPairs: [["כינוי שייכות", "כִּנּוּי שַׁיָּכוּת"], ["וסמיכות", "וּסְמִיכוּת"], ["מבטאים", "מְבַטְּאִים"], ["בעלות", "בַּעֲלוּת"]] }],
     notes: "סמיכות and כינוי שייכות are two ways Hebrew can express possession; either coordinated term may come first."
   }),
   buildReviewedSentence({
@@ -18530,9 +18562,9 @@ const SHARED_GRAMMAR_SENTENCES = [
   buildReviewedSentence({
     id: "everyday_273", emoji: "📚", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
     hebrew: "מונחי בלשנות כוללים תחביר ופרגמטיקה.", hebrewNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים תַּחְבִּיר וּפְרַגְמָטִיקָה.", english: "Linguistic terminology includes syntax and pragmatics.",
-    hebrewTokenPairs: [["מונחי בלשנות", "מוּנְחֵי בַּלְשָׁנוּת"], ["כוללים", "כּוֹלְלִים"], ["תחביר", "תַּחְבִּיר"], ["ו", "וּ"], ["פרגמטיקה", "פְּרַגְמָטִיקָה"]], englishTokens: ["Linguistic terminology", "includes", "syntax", "and", "pragmatics"],
-    hebrewDistractorPairs: [["ספרי לימוד", "סִפְרֵי לִמּוּד"], ["משמיטים", "מַשְׁמִיטִים"], ["הגייה", "הֲגִיָּה"], ["או", "אוֹ"], ["כתיב", "כְּתִיב"]], englishDistractors: ["Textbooks", "omit", "pronunciation", "or", "spelling"],
-    hebrewOrderAlternates: [{ text: "מונחי בלשנות כוללים פרגמטיקה ותחביר.", textNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים פְּרַגְמָטִיקָה וְתַּחְבִּיר.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["מוּנְחֵי בַּלְשָׁנוּת", "כּוֹלְלִים", "פְּרַגְמָטִיקָה", "וְ", "תַּחְבִּיר"] }],
+    hebrewTokenPairs: [["מונחי בלשנות", "מוּנְחֵי בַּלְשָׁנוּת"], ["כוללים", "כּוֹלְלִים"], ["תחביר", "תַּחְבִּיר"], ["ופרגמטיקה", "וּפְרַגְמָטִיקָה"]], englishTokens: ["Linguistic terminology", "includes", "syntax", "and", "pragmatics"],
+    hebrewDistractorPairs: [["פרגמטיקה", "פְּרַגְמָטִיקָה"], ["ותחביר", "וְתַחְבִּיר"], ["ספרי לימוד", "סִפְרֵי לִמּוּד"], ["משמיטים", "מַשְׁמִיטִים"], ["הגייה", "הֲגִיָּה"], ["כתיב", "כְּתִיב"]], englishDistractors: ["Textbooks", "omit", "pronunciation", "or", "spelling"],
+    hebrewAlternates: [{ text: "מונחי בלשנות כוללים פרגמטיקה ותחביר.", textNiqqud: "מוּנְחֵי בַּלְשָׁנוּת כּוֹלְלִים פְּרַגְמָטִיקָה וְתַחְבִּיר.", tokenPairs: [["מונחי בלשנות", "מוּנְחֵי בַּלְשָׁנוּת"], ["כוללים", "כּוֹלְלִים"], ["פרגמטיקה", "פְּרַגְמָטִיקָה"], ["ותחביר", "וְתַחְבִּיר"]] }],
     notes: "מונחי בלשנות is linguistic terminology; תחביר studies sentence structure, while פרגמטיקה studies meaning in use."
   }),
   buildReviewedSentence({
@@ -18753,9 +18785,9 @@ const IVRI_FINANCE_SENTENCES = [
   buildReviewedSentence({
     id: "professional_178", emoji: "🛡️", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
     hebrew: "גידור ופיזור סיכונים מפחיתים חשיפה.", hebrewNiqqud: "גִּדּוּר וּפִזּוּר סִכּוּנִים מַפְחִיתִים חֲשִׂיפָה.", english: "Hedging and risk diversification reduce exposure.",
-    hebrewTokenPairs: [["גידור", "גִּדּוּר"], ["ו", "וּ"], ["פיזור סיכונים", "פִּזּוּר סִכּוּנִים"], ["מפחיתים", "מַפְחִיתִים"], ["חשיפה", "חֲשִׂיפָה"]], englishTokens: ["Hedging", "and", "risk diversification", "reduce", "exposure"],
-    hebrewDistractorPairs: [["מינוף", "מִינוּף"], ["או", "אוֹ"], ["ריכוז נכסים", "רִכּוּז נְכָסִים"], ["מגדילים", "מַגְדִּילִים"], ["תנודתיות", "תְּנוּדָתִיּוּת"]], englishDistractors: ["Leverage", "or", "asset concentration", "increase", "volatility"],
-    hebrewOrderAlternates: [{ text: "פיזור סיכונים וגידור מפחיתים חשיפה.", textNiqqud: "פִּזּוּר סִכּוּנִים וְגִדּוּר מַפְחִיתִים חֲשִׂיפָה.", order: [2, 1, 0, 3, 4], tokensNiqqud: ["פִּזּוּר סִכּוּנִים", "וְ", "גִּדּוּר", "מַפְחִיתִים", "חֲשִׂיפָה"] }],
+    hebrewTokenPairs: [["גידור", "גִּדּוּר"], ["ופיזור סיכונים", "וּפִזּוּר סִכּוּנִים"], ["מפחיתים", "מַפְחִיתִים"], ["חשיפה", "חֲשִׂיפָה"]], englishTokens: ["Hedging", "and", "risk diversification", "reduce", "exposure"],
+    hebrewDistractorPairs: [["פיזור סיכונים", "פִּזּוּר סִכּוּנִים"], ["וגידור", "וְגִדּוּר"], ["מינוף", "מִינוּף"], ["ריכוז נכסים", "רִכּוּז נְכָסִים"], ["מגדילים", "מַגְדִּילִים"], ["תנודתיות", "תְּנוּדָתִיּוּת"]], englishDistractors: ["Leverage", "or", "asset concentration", "increase", "volatility"],
+    hebrewAlternates: [{ text: "פיזור סיכונים וגידור מפחיתים חשיפה.", textNiqqud: "פִּזּוּר סִכּוּנִים וְגִדּוּר מַפְחִיתִים חֲשִׂיפָה.", tokenPairs: [["פיזור סיכונים", "פִּזּוּר סִכּוּנִים"], ["וגידור", "וְגִדּוּר"], ["מפחיתים", "מַפְחִיתִים"], ["חשיפה", "חֲשִׂיפָה"]] }],
     notes: "גידור is hedging; פיזור סיכונים is risk diversification. The coordinated strategies may appear in either order."
   }),
   buildReviewedSentence({
@@ -18789,9 +18821,9 @@ const IVRI_FINANCE_SENTENCES = [
   buildReviewedSentence({
     id: "professional_183", emoji: "🧮", category: "professional", difficulty: 1, wordOrderDecision: "alternates",
     hebrew: "התקציב כולל פנסיה ופרמיית ביטוח.", hebrewNiqqud: "הַתַּקְצִיב כּוֹלֵל פֶּנְסְיָה וּפְרֶמְיַת בִּיטּוּחַ.", english: "The budget includes pension and an insurance premium.",
-    hebrewTokenPairs: [["התקציב", "הַתַּקְצִיב"], ["כולל", "כּוֹלֵל"], ["פנסיה", "פֶּנְסְיָה"], ["ו", "וּ"], ["פרמיית ביטוח", "פְּרֶמְיַת בִּיטּוּחַ"]], englishTokens: ["The budget", "includes", "pension", "and", "an insurance premium"],
-    hebrewDistractorPairs: [["הדוח", "הַדּוּחַ"], ["משמיט", "מַשְׁמִיט"], ["משכנתה", "מַשְׁכַּנְתָּה"], ["או", "אוֹ"], ["החזר הלוואה", "הֶחְזֵר הַלְוָאָה"]], englishDistractors: ["The report", "omits", "a mortgage", "or", "a loan repayment"],
-    hebrewOrderAlternates: [{ text: "התקציב כולל פרמיית ביטוח ופנסיה.", textNiqqud: "הַתַּקְצִיב כּוֹלֵל פְּרֶמְיַת בִּיטּוּחַ וּפֶנְסְיָה.", order: [0, 1, 4, 3, 2], tokensNiqqud: ["הַתַּקְצִיב", "כּוֹלֵל", "פְּרֶמְיַת בִּיטּוּחַ", "וּ", "פֶּנְסְיָה"] }],
+    hebrewTokenPairs: [["התקציב", "הַתַּקְצִיב"], ["כולל", "כּוֹלֵל"], ["פנסיה", "פֶּנְסְיָה"], ["ופרמיית ביטוח", "וּפְרֶמְיַת בִּיטּוּחַ"]], englishTokens: ["The budget", "includes", "pension", "and", "an insurance premium"],
+    hebrewDistractorPairs: [["פרמיית ביטוח", "פְּרֶמְיַת בִּיטּוּחַ"], ["ופנסיה", "וּפֶנְסְיָה"], ["הדוח", "הַדּוּחַ"], ["משמיט", "מַשְׁמִיט"], ["משכנתה", "מַשְׁכַּנְתָּה"], ["החזר הלוואה", "הֶחְזֵר הַלְוָאָה"]], englishDistractors: ["The report", "omits", "a mortgage", "or", "a loan repayment"],
+    hebrewAlternates: [{ text: "התקציב כולל פרמיית ביטוח ופנסיה.", textNiqqud: "הַתַּקְצִיב כּוֹלֵל פְּרֶמְיַת בִּיטּוּחַ וּפֶנְסְיָה.", tokenPairs: [["התקציב", "הַתַּקְצִיב"], ["כולל", "כּוֹלֵל"], ["פרמיית ביטוח", "פְּרֶמְיַת בִּיטּוּחַ"], ["ופנסיה", "וּפֶנְסְיָה"]] }],
     notes: "פנסיה is pension; פרמיית ביטוח is an insurance premium. The coordinated costs may appear in either order."
   }),
   buildReviewedSentence({

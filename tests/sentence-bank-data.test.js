@@ -1168,6 +1168,12 @@ const COMPACT_TARGET_COUNT_EXCEPTIONS = new Map([
   ["everyday_266", "Hebrew has a standalone definite-object marker את with no English target chip"],
   ["everyday_276", "Hebrew combines standalone את with a construct phrase realized by one English possessive chip"],
   ["formal_118", "Hebrew has a standalone definite-object marker את with no English target chip"],
+  // Hebrew fuses the coordinating vav onto the following noun, so its two-noun
+  // coordination is one chip shorter than the English "X and Y".
+  ["everyday_271", "Hebrew fuses the coordinating vav onto the following noun"],
+  ["everyday_273", "Hebrew fuses the coordinating vav onto the following noun"],
+  ["professional_178", "Hebrew fuses the coordinating vav onto the following noun"],
+  ["professional_183", "Hebrew fuses the coordinating vav onto the following noun"],
 ]);
 
 function isCompactTokenPolicyEntry(entry) {
@@ -1706,8 +1712,10 @@ test("shared grammar tranche adds fourteen unowned reviewed handwriting-ready ro
     }, {}),
     { 1: 4, 2: 7, 3: 3 }
   );
-  assert.equal(byId.get("everyday_271").hebrew_alternates[0].tokens_niqqud[1], "וּ");
-  assert.equal(byId.get("everyday_273").hebrew_alternates[0].tokens_niqqud[3], "וְ");
+  // The coordinating vav is a clitic, so it rides on the noun it joins rather than
+  // sitting on a chip of its own, and it repoints when the two nouns swap places.
+  assert.equal(byId.get("everyday_271").hebrew_alternates[0].tokens_niqqud[1], "וּסְמִיכוּת");
+  assert.equal(byId.get("everyday_273").hebrew_alternates[0].tokens_niqqud[3], "וְתַחְבִּיר");
 });
 
 test("Inat legal tranche adds eighteen reviewed formal handwriting-ready rows", () => {
@@ -2279,9 +2287,14 @@ test("approved word-order audit rows keep every reviewed Hebrew order buildable"
       const alternate = entry.hebrew_alternates.find((variant) => variant.text === expectedText);
       assert.ok(alternate, `${id} needs reviewed order: ${expectedText}`);
       assert.equal(alternate.tokens.length, entry.hebrew_tokens.length, `${id} alternate target length`);
+      // A reordering may not introduce new lexical content, but the coordinating
+      // vav is a clitic: when two coordinated nouns swap, it detaches from one and
+      // attaches to the other. Compare without it so that movement is allowed while
+      // any genuinely new word still fails.
+      const withoutLeadingVav = (tokens) => [...tokens].map((token) => token.replace(/^ו/, "")).sort();
       assert.deepEqual(
-        [...alternate.tokens].sort(),
-        [...entry.hebrew_tokens].sort(),
+        withoutLeadingVav(alternate.tokens),
+        withoutLeadingVav(entry.hebrew_tokens),
         `${id} reviewed order must reuse the primary tiles`
       );
       assert.equal(alternate.tokens_niqqud.length, alternate.tokens.length, `${id} alternate niqqud alignment`);
@@ -2780,18 +2793,46 @@ test("gender-variant distractors are either accepted as alternates or removed", 
     "colloquial_01",   // שמעתי (I heard) vs שמעת (you heard) — person, not gender
     "colloquial_92", "colloquial_98", "colloquial_109", "colloquial_126",
     "colloquial_127", "professional_47",              // English names he or she
+    "colloquial_05", "colloquial_105", "everyday_74", "everyday_101",
     "everyday_11", "everyday_84", "professional_38",  // referent is in the Hebrew
     "everyday_92",   // the target את is the object marker, not the pronoun
     "colloquial_89", // "it came out" takes masculine \u05d9\u05e6\u05d0 by convention here
+    // A Hebrew noun inside the sentence fixes the agreement, so the swapped form is
+    // simply wrong rather than an unmarked alternative: the laundry, the variation,
+    // the solution, the cake, the couch, the entrance, and the system each govern
+    // their participle.
+    "everyday_15", "formal_05", "formal_13", "everyday_70",
+    "everyday_77", "everyday_82", "professional_53",
+    "everyday_121",    // the feminine roommate cannot pair with masculine "third"
+    "inat_10",         // the adjective agrees with the masculine noun for "pain"
+    "professional_72", // \u05db\u05da / \u05db\u05db\u05d4 are register variants, not a gender pair
   ]);
 
-  function genderPairKind(a, b) {
-    if (a === b) return "";
+  // Suffixing a feminine ending re-opens a final letter: tsarikh + he is spelled
+  // with a medial kaf, not a final one, so comparing the raw strings missed every
+  // pair whose stem ends in one of the five final forms. That is how colloquial_65
+  // kept an unaccepted masculine counterpart for years.
+  const FINAL_LETTERS = new Map([
+    ["\u05da", "\u05db"], ["\u05dd", "\u05de"], ["\u05df", "\u05e0"],
+    ["\u05e3", "\u05e4"], ["\u05e5", "\u05e6"],
+  ]);
+  const openFinals = (word) => word.replace(/[\u05da\u05dd\u05df\u05e3\u05e5]/g, (letter) => FINAL_LETTERS.get(letter));
+
+  function genderPairKind(rawA, rawB) {
+    if (rawA === rawB) return "";
     for (const [m, f] of SECOND_PERSON_PRONOUNS) {
-      if ((a === m && b === f) || (a === f && b === m)) return "2nd-person pronoun";
+      if ((rawA === m && rawB === f) || (rawA === f && rawB === m)) return "2nd-person pronoun";
     }
+    // The 2fs and 2ms object suffixes ("to you") differ only by a doubled *medial*
+    // yod, so no suffix-comparison rule can see them.
+    const collapseYod = (word) => word.replace(/\u05d9\u05d9/g, "\u05d9");
+    if (collapseYod(rawA) === collapseYod(rawB)) return "2nd-person object suffix m/f";
+    const a = openFinals(rawA);
+    const b = openFinals(rawB);
+    if (a === b) return "";
     if (a === `${b}\u05d9` || b === `${a}\u05d9`) return "2nd-person m/f";
     if (a === `${b}\u05d4` || b === `${a}\u05d4`) return "singular participle m/f";
+    if (a === `${b}\u05ea` || b === `${a}\u05ea`) return "singular participle m/f";
     const plural = (x, y) => x.endsWith("\u05d9\u05dd") && y.endsWith("\u05d5\u05ea")
       && x.slice(0, -2) === y.slice(0, -2);
     if (plural(a, b) || plural(b, a)) return "plural participle m/f";
