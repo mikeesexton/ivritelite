@@ -5,6 +5,48 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-15 EDT — Gender-ambiguous prompts now accept every valid answer; the standalone ו chip is gone
+
+**Requested:** Three reports from play. (1) A hunch that some sentences need alternate word orders accepted. (2) A check on whether אליך vs אלייך is a mistake. (3) That a bare ו appearing as its own Hebrew chip does not match our usage.
+
+**What each turned out to be.**
+
+- **אליך/אלייך is not a mistake.** They are different words — `אליך` = `אֵלֶיךָ` (masculine addressee), `אלייך` = `אֵלַיִךְ` (feminine). The doubled yod is standard *ktiv male* for the consonantal yod. An audit of all six data files found zero mismatched pairings; `preposition-data.js:26-27` has the paradigm right. **No spelling was changed.**
+- **The real bug behind that report** is `colloquial_65`: authored as a feminine speaker addressing a feminine friend (`צריכה` + `אלייך`) with the masculine swaps sitting in the distractor pool as traps, while the English — "I'm on my way to you, need anything from the supermarket?" — marks neither gender. Four answers are valid; one was accepted.
+- **A guard test for exactly this already existed and was blind.** "gender-variant distractors are either accepted as alternates or removed" compared `"צריך" + "ה"` against `"צריכה"` as raw strings. `צריך` ends in **final** kaf (`ך`), `צריכה` has medial kaf (`כ`), so the strings never matched. Every gender pair whose stem ends in `ך ם ן ף ץ` slipped through, plus all `-ת` feminines and the medial-yod `אליך`/`אלייך` pair.
+- **The bare ו** violated `docs/sentence-bank-authoring.md:17`. Its cause was mechanical: `buildReviewedSentence` only accepts a word-order alternate as an index permutation of the *same* tiles, so to let two coordinated nouns swap, the author peeled the vav onto its own tile.
+- **Word order (1) could not be reproduced.** Both supermarket screenshots were the gender bug and the גידור sentence was answered correctly. Mike's call: park it and screenshot the next rejection. Noted for the future: שמע mode disables alternates deliberately (`app/sentence-bank.js:1052`) because it is dictation, not translation.
+
+**Files changed:**
+
+- `tests/sentence-bank-data.test.js` — `genderPairKind` now re-opens final letters before comparing suffixes, and gained a `-ת` rule and a doubled-medial-yod rule. Repairing it surfaced 22 offending distractor/target pairs across 20 rows; each was then triaged (below). Also: the two assertions pinning the standalone `ו` chip's niqqud now assert the merged forms; the four vav rows were added to `COMPACT_TARGET_COUNT_EXCEPTIONS`; and the word-order audit's "must reuse the primary tiles" check now compares clitic-normalized tokens so a vav may move between nouns while any genuinely new word still fails.
+- `sentence-bank-data.js` — six rows gained `hebrewAlternates` for gender; four rows had the vav merged. `__build` unchanged in name but the file is bumped in `index.html`.
+- `index.html` — `sentence-bank-data.js?v=20260812b` → `?v=20260815a`. It is the only shipped `.js`/`.css` file in the diff.
+
+**Triage of the 20 surfaced rows.** Six were genuinely ambiguous and now accept both genders: `colloquial_65` and `professional_48` (two independent axes each — speaker and addressee — so all four combinations), `colloquial_69` (`מאחרת`/`מאחר`), `everyday_76` (`זוכרת`/`זוכר`), `professional_39` ("the new manager", whole chain `המנהלת החדשה`/`המנהל החדש`), `professional_61` ("the journalist", `העיתונאית שאלה`/`העיתונאי שאל`). Fourteen were false alarms added to `ENGLISH_DISAMBIGUATES` with reasons: eleven where a Hebrew noun fixes the agreement (`הכביסה מוכנה`, `העוגה צריכה`, `המערכת עובדת`, …) or the English names a gender; `everyday_121` where `שותפה` cannot pair with masculine `שלישי`; `inat_10` where the adjective agrees with masculine `כאב`; and `professional_72`, where `כך`/`ככה` are register variants and not a gender pair at all — a false positive of the `-ה` rule.
+
+Two rows needed a new distractor so the masculine alternate is buildable (`החדש` in `professional_39`, `שאל` in `professional_61`), and two needed one extra genuine distractor to stay inside the 4–6 authored-distractor budget once the gender swaps stopped counting as decoys (`רוצה` in `colloquial_65`, `תודה` in `professional_48`).
+
+**Behavior changed:**
+
+- `colloquial_65`, `professional_48`: all four speaker × addressee gender combinations accepted. `colloquial_69`, `everyday_76`, `professional_39`, `professional_61`: both genders accepted. Mixed-agreement answers (`המנהל החדשה`, `העיתונאי שאלה`) are still rejected.
+- `everyday_271`, `everyday_273`, `professional_178`, `professional_183`: the coordinating vav now rides on its noun. Chip counts drop 5 → 4. The tile pool shows both forms of each coordinated noun — for `professional_178`: `גִּדּוּר`, `וְגִדּוּר`, `פִּזּוּר סִכּוּנִים`, `וּפִזּוּר סִכּוּנִים` — which turns the row into a discrimination drill on where the vav attaches. Both orders still accepted; the displayed sentence text is unchanged.
+
+**Tests run:**
+
+- `npm test` — **441 pass, 0 fail** at baseline; **441 pass, 0 fail** after (no tests added or removed).
+- `node --test tests/sentence-bank-data.test.js` in isolation — 54 pass.
+- Browser verification on `ulpango-dev`, driving the live page through the app's own `selectBankToken` / `placeTokenInNextEmptySlot` / `applySentenceBankAnswer`: all four `colloquial_65` combinations correct **including `אני בדרך אליך, צריך משהו מהסופר?`, the exact answer that was rejected**; two controls (`רוצה` for `צריך`, `מהשוק` for `מהסופר`) still incorrect. All four `professional_48` combinations, both `everyday_76`, both `colloquial_69`, both `professional_39`, both `professional_61` correct, with the two mixed-agreement controls incorrect. Both orders of all four vav rows correct, and `ופיזור סיכונים` + `וגידור` together (vav on both nouns) correctly rejected. Board rendered for `professional_178`: no bare `ו` tile, `Words: 0/4`, zero console errors.
+
+**Risks / regressions to check:**
+
+- **`everyday_273`'s alternate pointing was changed and is a judgment call.** It read `וְתַּחְבִּיר` with a dagesh while its three sibling rows soften after the vav (`וְכִנּוּי`, `וְגִדּוּר`, `וּסְמִיכוּת`). Classical grammar keeps the dagesh after a shva vav, so the tranche genuinely disagreed with itself. It is now `וְתַחְבִּיר` for internal consistency. **Reverse this if the classical form is preferred** — it is one string in `sentence-bank-data.js` and one assertion in the test file.
+- **`professional_39`'s masculine alternate displays the feminine pointing on one chip.** `רוצה` is spelled identically for both genders, and `addNiqqudPair` (`app/sentence-bank.js:1207-1214`) keeps only the first pointed form per plain token, so the chip always shows `רוֹצָה` even when the learner is building `המנהל החדש רוצה`. The alternate's own `text_niqqud` in the feedback line is correct. Cosmetic and pre-existing, but this is the first row where it is reachable.
+- **`professional_48` is at the tile ceiling.** Nine targets plus a distractor cap of three, of which two are reserved for the alternate's required chips — so exactly one ordinary decoy survives the shuffle. Adding a target chip to that row would squeeze the required tiles out and make a gender alternate unbuildable.
+- **The relaxed word-order check trades a little strictness for the clitic.** `WORD_ORDER_AUDIT_ALTERNATE_TEXTS` rows now compare tokens with a leading `ו` stripped, so an alternate could swap `ובלי` for `בלי` without failing. That is the movement being permitted; any other new word still fails.
+- **The repaired `genderPairKind` will now fire on new content.** That is the point, but expect newly authored rows with a masculine/feminine decoy to fail the test until they are either given an alternate or listed in `ENGLISH_DISAMBIGUATES` with a reason.
+- **`ENGLISH_DISAMBIGUATES` has no stale-entry check**, unlike the compact-token registries. An id left in it after a row is rewritten will silently keep that row unguarded.
+
 ### 2026-08-12 EDT — Sentence-bank coverage tranches: 1,069 → 1,179 across four measured gaps
 
 **Requested:** Asked where the sentence bank was missing coverage, then to write sentences for four gaps the survey turned up. Chosen: future tense and third person, high-frequency connectives, numbers/prices/times, and medical. Length was to match the existing bank (5–7 tokens) rather than open the empty 11–14 token tier.
