@@ -5,6 +5,132 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-17 EDT — The four merged-pool verb clashes resolved; no Hebrew surface now carries two different glosses
+
+**Requested:** Work out how to address the four Hebrew-only clashes pinned earlier today, then fix all four. Mike's call on the one genuine content question: keep the slang card.
+
+**What the investigation found.** Three of the four were not content decisions at all.
+
+- **`להוריד` was a data slip.** Sixteen verbs in `hebrew-verbs.js` expand to more than one sense card. A card's Hebrew is `lemma` unless the sense carries a `usage_pattern` (`buildStudyWord`), so a multi-sense verb without one collides with *itself* — two cards, same Hebrew, different glosses. Fifteen of the sixteen were already in `TRANSLATION_HIDDEN_STARTER_VERB_IDS`, **including `advanced-verb-lehaalot`, which is the same word pair in the other direction** ("to raise" / "to upload"). `advanced-verb-lehorid` ("to take down" / "to download") was the only one left playable.
+- **`להספיק` and `לברר` were rephrasings, not senses.** "to have time (to)" vs "to manage in time"; "to check into" vs "to find out". Either side could hold the slot.
+- **`להיעלם` was the only real question.** `dating_relationships-007-to-ghost` against `advanced-verb-lehealem` "to disappear". Not synonyms — "to ghost" is the only card teaching that slang.
+
+**The fact that decided it.** Hiding a Translation Match card does not remove a verb from the Conjugation drill: `buildVerbConjugationDeck` gates on `CONJUGATION_HIDDEN_VERB_IDS` and form count, never on `availability`. Verified across the whole set — all **126** verb surfaces currently hidden from Translation Match are still in the conjugation deck. So for every one of these four, the verb keeps being taught whichever card is hidden, and the question is only which English gloss keeps a vocabulary slot.
+
+**A wrong turn worth recording.** The first attempt followed the existing `CONJUGATION_FIRST_TRANSLATION_HEBREW` precedent for `להספיק` and `לברר`, hiding the *vocabulary* card. `tests/vocab-data.test.js` rejected it: both cards are `core_advanced-131` and `-137`, inside the pinned 144-card append-only expansion that the suite requires to stay fully playable (`assert.ok(expansion.every(word => word.availability?.translationQuiz))`). The precedent and that guarantee are in direct conflict for these two rows. The guarantee wins, so both were flipped to hide the conjugation card instead — which also makes all four consistent. `CONJUGATION_FIRST_TRANSLATION_HEBREW` is unchanged at `לסנן`, `לקרר`.
+
+**Files changed:**
+
+- `hebrew-verbs.js` — four ids added to `TRANSLATION_HIDDEN_STARTER_VERB_IDS` in two commented groups, kept separate from the existing entries because the existing group's stated reason (idiom conjugation support) does not apply: `advanced-verb-lehorid`, `advanced-verb-lehealem`, `advanced-verb-lehaspik`, `advanced-verb-levarer`.
+- `tests/vocab-data.test.js` — `KNOWN_MERGED_HEBREW_ONLY_CLASHES` emptied and the test renamed to `no Hebrew surface in the merged pool carries two different glosses`. Its comment now records that the invariant is about the rendered surface, not sense counts: the 14 verbs carrying a per-sense `usage_pattern` can serve several senses safely, which is why a blanket "multi-sense verbs cannot be playable" rule would be wrong.
+- `index.html` — `hebrew-verbs.js?v=20260808b` → `?v=20260817a`. `vocab-data.js` already moved to `?v=20260817a` earlier today and its content is unchanged since.
+
+**Behavior changed:**
+
+- Merged playable pool 2,222 → 2,217. Vocabulary-side playable is unchanged at 2,105.
+- `להוריד` now has no Translation Match card and 2 conjugation cards at 24 forms. `להיעלם` keeps only "to ghost" and 24 conjugation forms. `להספיק` keeps only "to have time (to)" and 21 forms. `לברר` keeps only "to check into" and 21 forms.
+- Boards containing two identical Hebrew tiles: **0.31% → 0.09% → 0.075%** across the day's two fixes, measured over 20,000 simulated 20-card boards each time.
+
+**Tests run:**
+
+- `npm test` — **448 pass, 0 fail** before and after. No test count change; one test was repurposed rather than added.
+- `node --test tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 66 pass.
+- Live on `ulpango-dev`: zero Hebrew-only clashes in the merged runtime pool, and the four verbs confirmed still present in `runtime.verbFormDeck` with their form counts.
+
+**Risks / regressions to check:**
+
+- **The remaining 0.075% is not noise, and it is the same bug.** Ten exact `he`+`en` twins survive in `KNOWN_MERGED_DUPLICATES` — `לעדכן`, `להסכים`, `לוותר`, `לאשר`, `לבטל`, `לצרף`, `להזכיר`, `להמליץ`, `להשפיע`, `להבהיר`. Each is a `core_advanced` vocabulary card duplicated by a verb-seed card with an identical gloss. The allow-list treats them as benign, but they are not: grading is by `pairId` (`app/match-engine.js:221`), so two identical Hebrew tiles against two identical English tiles is still a 50/50 pick that penalises both ids on a miss. They are now the *only* remaining source of duplicate-Hebrew boards. Not fixed here because the scope agreed was the four Hebrew-only clashes; worth its own pass, and the fix is likely the same one-line-per-verb move now that the pattern is established.
+- The four hidden verbs stay in Conjugation, Conjugation+ and sentence hints; only Translation Match lost the cards. Confirmed live rather than reasoned.
+
+### 2026-08-17 EDT — Translation Match no longer deals two indistinguishable cards; 22 duplicate twins suppressed
+
+**Requested:** "Do the next fix" — the duplicate-card defect surfaced in the review earlier the same day.
+
+**The bug.** Translation Match grades a selection by `pairId` (`app/match-engine.js:221`) and the board does not de-duplicate on surface form. Two playable cards sharing a Hebrew string therefore render two identical tiles against two different English glosses. The learner has no way to tell which tile belongs to which gloss, so it is a coin flip, and a wrong pick calls `onMismatch(leftPairId, rightPairId)` and pushes **both** ids down the Leitner ladder. Two cards sharing an English gloss fail the same way from the other side.
+
+**What was already there.** A partial fix had been ported into `main` at some point: `getBaseVocabulary` consults a per-row `meta.availability` before the Hebrew-keyed `LEXICON_AVAILABILITY_OVERRIDES`, with the comment *"the headword map … is keyed by Hebrew alone and so cannot separate two cards that share a spelling"* (`vocab-data.js:2810`). Twelve rows already used it — the clear-cut "same Hebrew and same English" group. The harder judgment-call half was never finished, and 65 commits of new content added fresh clashes. An unmerged worktree (`.claude/worktrees/practical-robinson-31ae13`) held the original attempt as a separate id-keyed Map; that approach was **not** used, because per-row `availability` already exists for exactly this and adding a second overrides map would have made a fourth link in the availability chain.
+
+**Files changed:**
+
+- `vocab-data.js` — 22 rows gained `{ availability: { translationQuiz: false } }`; the two rows that already carried `idEnglish` had it merged rather than replaced. `__build` `20260811a` → `20260817a`. No row was reordered or re-shelved, so the append-only id contract holds.
+- `tests/vocab-data.test.js` — the pinned playable count 2127 → 2105. Added `SUPPRESSED_DUPLICATE_IDS` plus two tests: no two playable cards share a Hebrew surface or an English gloss, and every suppressed id still resolves and keeps `sentenceHints`. Added a third test pinning the four unresolved merged clashes (below).
+- `index.html` — `vocab-data.js?v=20260811l` → `?v=20260817a`. The only shipped `.js`/`.css` in the diff.
+
+**How the 22 were chosen.** The worktree's 3-week-old list was not reused; the duplicate set was recomputed against current `main` and resolved iteratively, since hiding one twin can resolve a second clash (hiding `conversation_glue-014-actually` for the `בעצם` clash also settled the `actually` English clash, so only one card was lost instead of two). Converged in 3 rounds. Tiebreaker was `utility`, matching the original author's documented rule, with sentence-bank support consulted for the two exact ties — it separated `whatever` (`לא משנה` 6 hits vs `שיהיה` 2) and agreed with the utility ordering.
+
+**Caveat on that tiebreaker, recorded deliberately.** `utility` is synthetic — `vocab-data.js:2799` computes it from authoring position within a category, not importance. It is a weak signal for deciding which sense a learner should keep drilling, and for Hebrew-only clashes both twins share a surface so no frequency signal can separate them. Six calls are worth a second look when the frequency import lands: **`הנחה`** keeps "assumption" and hides "discount", though discount is far more common in daily Hebrew; **`מבצע`** keeps "military operation" over the general "operation"; **`תור`** keeps "appointment" over "queue"; **`גיוס`** keeps "conscription" over "recruitment"; **`ארנונה`** keeps "municipal tax" over "property tax" (the unmerged worktree made the opposite call); and **`campaign`** was an exact 75/75 utility tie broken alphabetically, hiding the everyday loanword `קמפיין` in favour of `מערכה` — arguably backwards, and probably better solved by disambiguating the two glosses than by hiding either. Every hidden card keeps `sentenceHints: true`, so nothing left the lexicon; only the Translation Match drill changed.
+
+**Behavior changed:**
+
+- Playable Translation Match cards 2,127 → 2,105 from `vocab-data.js`; hidden cards 65 → 87, all retaining sentence hints.
+- Measured in the running app over 20,000 simulated 20-card boards: boards containing an indistinguishable pair fell from **0.31% to 0.09%** (62 → 18 per 20,000). Roughly one board in 320 was affected before, one in 1,100 now.
+- Spot-checked live: `אחריות` now deals only "responsibility", `הנחה` only "assumption", `רשות` only "authority", `מבצע` only "military operation", `פתאום` only "all of a sudden", `תור` only "appointment".
+
+**Found and pinned, not fixed — four clashes survive the vocab/verb-seed merge.** The runtime pool is 2,451 cards: 2,192 from `vocab-data.js` plus 259 injected by `hebrew-verbs.getSeedVocabularyEntries()`. Fourteen Hebrew clashes exist across that merge. Ten are exact `he`+`en` twins already allow-listed by the existing `KNOWN_MERGED_DUPLICATES` test. The other four carry *different* English and are the genuinely indistinguishable case — and the existing test cannot see them, because it keys on `` `${he} ${en}` `` and so only ever detects exact twins. They are the entire residual 0.09%:
+
+- `להוריד` — `advanced-verb-lehorid` sense-1 "to take down" vs sense-2 "to download". Both are verb-seed entries from the *same* verb, so this one cannot be fixed from `vocab-data.js` at all.
+- `להיעלם` — `dating_relationships-007-to-ghost` vs `advanced-verb-lehealem` "to disappear". The slang sense is the more distinctive teaching item, so the obvious mechanical fix is probably the wrong content call.
+- `להספיק` — `core_advanced-131` "to have time (to)" vs `advanced-verb-lehaspik` "to manage in time".
+- `לברר` — `core_advanced-137` "to check into" vs `advanced-verb-levarer` "to find out".
+
+These were left for a content decision rather than resolved unilaterally: three would be one line each in `CONJUGATION_FIRST_TRANSLATION_HEBREW` (currently just `לסנן`, `לקרר`), which hides the vocab card in favour of the conjugation deck, and the fourth needs a change in `hebrew-verbs.js`. New test `Hebrew-only clashes in the merged pool stay pinned and cannot grow` asserts the set is exactly these four, so a new one fails the build and resolving one forces the list to shrink.
+
+**Tests run:**
+
+- `npm test` before — 445 pass, 0 fail. After — **448 pass, 0 fail**, ~110s. Three tests added.
+- `node --test tests/vocab-data.test.js` — 27 pass (was 24).
+- Live verification on `ulpango-dev` against the running app: `__build` and the script tag both read `20260817a`; zero duplicate Hebrew and zero duplicate English among the 2,105 playable vocab cards; the before/after board simulation above.
+
+**Risks / regressions to check:**
+
+- **One unrelated flake surfaced.** `tests/gameplay-layout.test.js` failed once with *"Binyanim board scrolls (499px > 488px)"*, then passed 8 consecutive runs. Not caused by this change — the Binyanim board draws its glosses from `verb-game-data.js` via `app/binyan-board.js` and never reads vocab. It matters now because `npm test` gates PRs and the Pages deploy as of today, so it will produce random red builds. The failing capture shows `footer.height: 0` and `footerPosition: "static"`, which points at measuring before layout settles. Filed as a separate task.
+- Character routing is unaffected: routes match on Hebrew, and for Hebrew clashes the surviving twin keeps the surface playable. The three suppressions that remove a Hebrew surface outright (`שיהיה`, `קמפיין`, `מובהקות`) were checked against `app/character-data.js` and appear in no route.
+- `tests/content-coverage.test.js` counts all 2,192 records regardless of availability, so its pinned 1043/1149 figures are untouched — confirmed by the green suite.
+
+### 2026-08-17 EDT — Codebase review before the story push; CI test gate, two stale cache keys, and the agent-doc split repaired
+
+**Requested:** A high-level read of the codebase before committing to a push on per-mission storylines, artwork and narration. Mike's framing: content is large but the dictionary may not be saturated, he is ambitious about coverage breadth, he wants a rule for when coverage expansion stops paying, and he suspects Sentences and Shema are slogs next to the matching games. Then: implement the safety-net tranche only. Scenes are explicitly parked — he wants a night to think and wants scene content written before any implementation.
+
+**What the review found.** Written up in full at `~/.claude/plans/can-you-look-over-shimmering-minsky.md`. The load-bearing findings:
+
+- **Diminishing returns already arrived and are measurable in this log.** Reconstructing `npm run report:coverage` tranche by tranche: kitchen actions 2.42 newly-supported cards per sentence, home care 2.58, Inat formal 2.00, dating 1.90, Ivri AI/ML 1.85, Inat legal 1.94, Ivri finance 1.54 — then the 2026-08-12 four-gap tranche, the largest at 110 sentences, returned **0.11**. A twentieth of the earlier rate. Handwriting is 100% saturated (27/27 letterforms), Binyan Board is structurally saturated (80 roots × 7, every cell authored), and idioms are hard-blocked at 105 by the 60% `l_dative` cap with one entry of headroom.
+- **`docs/product-roadmap.md` said this on 2026-07-29 and was not acted on.** Nothing from it shipped — typing mode absent (`grep -c '<input' index.html` → 0), no dialogue scenes, no mode registry, no `corpusHits`, no `prefers-reduced-motion`; only A3 `data-character` landed. Meanwhile sentences went 608 → 1,179 (+94%) in 19 days.
+- **`utility` is synthetic.** `vocab-data.js:2799` computes it as `100 - (idx / max) * 45` — authoring position within a category, not importance — and it drives `utilityBoost` in `app/data.js:257`, i.e. what the learner sees next in every mode. No frequency list, corpus or CEFR mapping exists in the repo. Open Hebrew lemma-frequency data does exist (FDOSH from OPUS OpenSubtitles, `wordfreq`), which would make the roadmap's "unfalsifiable without a corpus" non-goal falsifiable and give a real stopping rule.
+- **The pacing complaint is a real bug, not a preference.** `buildItinerary` (`app/character.js:1506`) takes the first N of the frozen `ACTIVITY_ORDER` (`:7`), so **Short is always Vocabulary → Sentences → Shema** — the two heaviest modes at positions 2 and 3 in every tier, with the quick matching games only from Medium up and always after. Compounding it, `app/constants.js` gives nearly every mode a flat `10` rounds although a round is a tap in one mode and a 12-tile build in another, and the second-chance queue (`app/sentence-bank.js:2024`, replayed at `:1460`) is **uncapped**, so the two hardest modes are the only ones that can run past their stated length.
+- **The narrative engine is ~80% built** — `renderScene` (`app/character.js:664`), `isBlocking()` (`:320`), the `dialogue(text, glosses)` tap-to-reveal gloss engine (`app/character-data.js:7` + `app/character.js:414`), ~660 lines of gendered dialogue, and `captureActivitySummary` (`:1664`) already suppressing the results screen. Missing is only branching.
+
+**Files changed:**
+
+- `.github/workflows/test.yml` — **new.** Runs `npm test` on every pull request. Includes a guard that fails if fewer than 400 tests are discovered, so a Node upgrade or moved directory cannot make the suite pass vacuously.
+- `.github/workflows/deploy-pages.yml` — added a `test` job and made `deploy` depend on it (`needs: test`). Previously the only workflow triggered on push to `main` and deployed with no verification at all; 64 of the last 100 commits are merges, so every one of them reached production unchecked.
+- `index.html` — two genuinely stale cache keys bumped: `app/content-sources.js` `?v=20260324a` → `?v=20260817a` (file last modified 2026-03-29) and `app/lesson.js` `?v=20260315o` → `?v=20260817a` (file gutted from ~639 lines to 42 in `8d2ac4d` on 2026-06-20 and never bumped). All 37 tags were audited; the other nine date mismatches are all +1 day and benign — `index.html` was bumped in the same commit in every case, verified by diff.
+- `docs/project-rules.md` — **new.** The canonical rule set, merged verbatim from the union of `CLAUDE.md` and `AGENTS.md`: task log, editing approach, cache-busting, Hebrew pointing, sentence-bank authoring, viewport floor, sprite review, artwork approval, project structure, plus a new CI section. The project-structure section was corrected while merging — it omitted `prepositions.js`, `handwriting.js`/`handwriting-core.js`, `character.js`/`character-data.js`, `preposition-data.js` and `handwriting-data.js`.
+- `CLAUDE.md`, `AGENTS.md` — both reduced to a pointer at `docs/project-rules.md` plus a five-item non-negotiables list, and made byte-identical below their title line.
+- `tests/agent-docs-parity.test.js` — **new**, 4 tests. Asserts the two agent files are identical below line 1, that each keeps its own title, that both reference the canonical doc, and that the canonical doc still carries all nine rule sections.
+
+**Why the agent-doc change matters.** The two files had ~40 byte-identical lines and then diverged on everything load-bearing. Cache-busting and the Hebrew pointing convention lived **only** in `CLAUDE.md`; sentence-bank authoring, the 360×640 viewport floor, sprite review and artwork approval lived **only** in `AGENTS.md`. Codex authors sentence-bank content and was never told the pointing rule — which is a direct explanation for `328fa98` "fix: correct 14 niqqud errors in the recent content tranches" — and was never told about cache-busting, which is a plausible explanation for the `app/lesson.js` key above. Nothing contradicted; the failure mode was silent omission, so nothing ever failed loudly. The parity test was verified to actually fail by appending a line to `AGENTS.md` alone (1 fail / 3 pass), then restored.
+
+**Behavior changed:**
+
+- No runtime behavior change in the app itself, with one exception: returning users with a warm cache will now receive the current `app/lesson.js` and `app/content-sources.js` instead of the March-keyed copies. Because every module export uses the `x = x || function` idempotency guard, a stale cached module silently **wins** over a later one, so this was failing invisibly rather than erroring.
+- Process change: pull requests now run the suite, and a red suite blocks the Pages deploy.
+
+**Tests run:**
+
+- `npm test` before — **441 pass, 0 fail**, 111s.
+- `npm test` after — **445 pass, 0 fail**, 109s. The four added tests are the parity file.
+- `node --test tests/agent-docs-parity.test.js` in isolation — 4 pass; deliberately drifted, 1 fail / 3 pass; restored, 4 pass.
+- Note for future sessions: `tests/content-coverage.test.js` is ~99% of the suite's wall clock. Everything else combined runs in under 6 seconds. Moving it behind `npm run test:slow` would make the inner loop usable.
+
+**Risks / regressions to check:**
+
+- **CI Node version is pinned to 24; local is 25.6.1.** `node --test` file discovery has changed across majors. The ≥400-test guard will catch a collapse loudly, but the first PR should be checked to confirm CI reports 445 and not some smaller number.
+- `tests/gameplay-layout.test.js` self-skips when Chrome is absent (`t.skip`). Ubuntu runners ship Chrome at `/usr/bin/google-chrome`, which `findChrome()` already probes, so it should run in CI — worth confirming on the first PR that it is not silently skipping.
+- The Pages deploy now has a prerequisite job, so deploys take roughly two minutes longer.
+- `docs/project-rules.md` is now the only copy of several rules. Anything that read `CLAUDE.md` or `AGENTS.md` expecting the full text will need to follow the pointer.
+
+**Found but deliberately not touched — unmerged bug fix in a stale worktree.** `.claude/worktrees/practical-robinson-31ae13` holds ~199 uncommitted lines from 2026-07-27 that never landed: a `LEXICON_ID_AVAILABILITY_OVERRIDES` map in `vocab-data.js` keyed by id rather than Hebrew, plus 61 lines of `tests/vocab-data.test.js`. **The bug it fixes is live in `main` today.** Translation Match grades by `pairId` (`app/match-engine.js:221`) and the board does not de-duplicate on surface form, so two cards sharing a Hebrew string can appear on one board with different English glosses — the learner cannot tell them apart, it is a coin flip, and a wrong flip penalizes both ids in the Leitner ladder. Measured against current `main`: **19 Hebrew surfaces still have more than one playable card**, including `אחריות` (responsibility / warranty), `הנחה` (assumption / discount), `רשות` (permission / authority), `מבצע` (operation / military operation) and `פתאום` (suddenly / all of a sudden). The second worktree, `.claude/worktrees/youthful-bhaskara-e8a772`, holds only 18 uncommitted lines, mostly `task-log.md`. Both worktrees' committed history is already in `main`. **Neither worktree was removed** — the plan had called for deleting both as stale scratch, and that was wrong. Recovering the duplicate-card fix should be its own task.
+
 ### 2026-08-15 EDT — Gender-ambiguous prompts now accept every valid answer; the standalone ו chip is gone
 
 **Requested:** Three reports from play. (1) A hunch that some sentences need alternate word orders accepted. (2) A check on whether אליך vs אלייך is a mistake. (3) That a bare ו appearing as its own Hebrew chip does not match our usage.

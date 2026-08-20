@@ -289,6 +289,31 @@ const TRANSLATION_HIDDEN_STARTER_VERB_IDS = new Set([
   "technology-verb-lehitchaber",
   "technology-verb-lehitnatek",
   "technology-verb-leafes",
+
+  // Hidden for a different reason than the group above: these two collided on
+  // the Translation Match board rather than duplicating an existing meaning.
+  // A card's Hebrew is the lemma unless the sense carries a usage_pattern, so
+  // lehorid's two senses ("to take down" / "to download") rendered two
+  // identical tiles against different glosses — the learner cannot tell them
+  // apart and a wrong pick penalises both ids. Every other multi-sense verb was
+  // already hidden, lehaalot ("to raise" / "to upload") included; lehorid was
+  // the one that slipped. lehealem collided with the vocabulary card for the
+  // slang sense "to ghost", which is kept because nothing else teaches it.
+  // Both verbs stay in the conjugation deck, so neither meaning is lost.
+  "advanced-verb-lehorid",
+  "advanced-verb-lehealem",
+
+  // Same collision, opposite direction from what the conjugation-first list
+  // would do. Their vocabulary twins are rephrasings rather than separate
+  // senses — "to have time (to)" against "to manage in time", and "to check
+  // into" against "to find out" — so either card could have kept the slot, but
+  // both twins sit inside the pinned 144-card append-only expansion that
+  // tests/vocab-data.test.js requires to stay playable. Hiding the conjugation
+  // card is therefore the only option that does not break that guarantee, and
+  // costs nothing: both verbs remain in the conjugation deck.
+  "advanced-verb-lehaspik",
+  "advanced-verb-levarer",
+
 ]);
 
 const CONJUGATION_HIDDEN_VERB_IDS = new Set([

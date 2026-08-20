@@ -124,6 +124,62 @@ test("Translation Match uses one primary English gloss per playable card", () =>
   assert.equal(entriesByHebrew.get("חשבון")?.id, "groceries_food-070-bill-check");
 });
 
+// Translation Match grades a selection by pairId (app/match-engine.js:221) and the
+// board does not de-duplicate on surface form. Two playable cards sharing a Hebrew
+// string therefore put two indistinguishable tiles on one board with different
+// English glosses: the learner cannot tell which is which, it is a coin flip, and
+// a wrong flip pushes BOTH ids down the Leitner ladder. The same holds for two
+// cards sharing an English gloss. Suppression is per-row `availability` on the
+// losing twin, which keeps it in the lexicon for sentence hints.
+const SUPPRESSED_DUPLICATE_IDS = [
+  "bureaucracy-016-property-tax",
+  "bureaucracy-019-queue",
+  "bureaucracy-042-record",
+  "communication_mastery_expanded-017-critique",
+  "conversation_glue-014-actually",
+  "conversation_glue-022-whatever",
+  "cooking_verbs-033-to-blanch-parboil-also-same-word-as-poach",
+  "cooking_verbs-068-to-toss-pan-toss",
+  "core_advanced-067-permission",
+  "core_advanced-082-operation",
+  "core_advanced-085-suddenly",
+  "groceries_food-066-discount",
+  "home_everyday_life-009-closet",
+  "home_everyday_life-054-warranty",
+  "home_everyday_life-086-disinfectant",
+  "home_everyday_life-091-hamper",
+  "home_everyday_life-098-tenancy-agreement",
+  "law_legal_systems_expanded-012-injunction-order",
+  "scientific_analytical-015-statistical-significance",
+  "work_business-036-recruitment",
+  "work_business-050-campaign",
+  "work_business-082-bandwidth",
+];
+
+test("no two playable Translation Match cards share a Hebrew surface or an English gloss", () => {
+  const playable = loadVocabulary().filter((word) => word.availability?.translationQuiz);
+
+  const duplicates = (key) => {
+    const counts = new Map();
+    playable.forEach((word) => counts.set(word[key], (counts.get(word[key]) || 0) + 1));
+    return [...counts.entries()].filter(([, count]) => count > 1).map(([value]) => value).sort();
+  };
+
+  assert.deepEqual(duplicates("he"), [], "two playable cards share a Hebrew surface");
+  assert.deepEqual(duplicates("en"), [], "two playable cards share an English gloss");
+});
+
+test("every suppressed duplicate still resolves and keeps its sentence hints", () => {
+  const wordsById = new Map(loadVocabulary().map((word) => [word.id, word]));
+
+  SUPPRESSED_DUPLICATE_IDS.forEach((id) => {
+    const word = wordsById.get(id);
+    assert.ok(word, `suppression targets a missing id: ${id}`);
+    assert.equal(word.availability.translationQuiz, false, `expected ${id} to be hidden`);
+    assert.equal(word.availability.sentenceHints, true, `expected ${id} to keep sentence hints`);
+  });
+});
+
 function getPlannedExpansion(vocabulary) {
   const originalCategorySizes = new Map([
     ["core_advanced", 124],
@@ -155,7 +211,7 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
   }, {});
 
   assert.equal(vocabulary.length, 2192);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2127);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2105);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -600,5 +656,42 @@ test("the merged Translation Match pool has no new duplicate cards", () => {
   assert.deepEqual(
     collisions.map((item) => item.he).sort(),
     [...KNOWN_MERGED_DUPLICATES].sort(),
+  );
+});
+
+// The test above keys on `he + en`, so it only ever sees exact twins. The worse
+// case is two playable cards sharing a Hebrew surface but carrying DIFFERENT
+// English: the board renders two identical Hebrew tiles against two different
+// glosses, the learner cannot tell them apart, and a wrong pick penalises both
+// ids. There are none left, in vocab-data.js or across the vocab/verb-seed
+// merge, and this asserts it stays that way.
+//
+// Note the invariant is about the rendered Hebrew surface, not about sense
+// counts: a card's `he` is the lemma plus its sense's `usage_pattern`, so the
+// 14 verbs that carry one (לדון ב־, להגיע ל־) can serve several senses safely.
+// A verb whose senses have no usage_pattern cannot, which is why every
+// multi-sense verb without one sits in TRANSLATION_HIDDEN_STARTER_VERB_IDS.
+const KNOWN_MERGED_HEBREW_ONLY_CLASHES = [];
+
+test("no Hebrew surface in the merged pool carries two different glosses", () => {
+  const verbApi = require("../hebrew-verbs.js");
+  const merged = [...loadVocabulary(), ...verbApi.getSeedVocabularyEntries()]
+    .filter((word) => word.availability?.translationQuiz);
+
+  const byHebrew = new Map();
+  merged.forEach((word) => {
+    if (!byHebrew.has(word.he)) byHebrew.set(word.he, []);
+    byHebrew.get(word.he).push(word);
+  });
+
+  const heOnly = [...byHebrew.entries()]
+    .filter(([, words]) => words.length > 1 && new Set(words.map((word) => word.en)).size > 1)
+    .map(([he]) => he)
+    .sort();
+
+  assert.deepEqual(
+    heOnly,
+    [...KNOWN_MERGED_HEBREW_ONLY_CLASHES].sort(),
+    "a new indistinguishable-tile clash appeared, or a pinned one was resolved"
   );
 });

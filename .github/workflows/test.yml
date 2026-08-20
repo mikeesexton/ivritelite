@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Run tests
+        shell: bash
+        run: |
+          set -o pipefail
+          npm test 2>&1 | tee test-output.txt
+
+      # `node --test` discovers files by pattern. If a Node upgrade or a moved
+      # directory ever breaks discovery, the suite would pass vacuously. Fail
+      # loudly instead.
+      - name: Fail if test discovery collapsed
+        shell: bash
+        run: |
+          total=$(sed -n 's/^.*[[:space:]]tests[[:space:]]\([0-9]\{1,\}\)$/\1/p' test-output.txt | tail -1)
+          echo "Discovered tests: ${total:-0}"
+          if [ "${total:-0}" -lt 400 ]; then
+            echo "::error::Expected at least 400 tests, found ${total:-0}. Test discovery may have silently broken."
+            exit 1
+          fi
