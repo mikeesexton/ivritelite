@@ -5,6 +5,64 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-19 EDT — Content routing written down as a rule, and ratcheted
+
+**Requested:** While reviewing the ten-word expansion, Mike asked whether the way he phrases
+routing requests ("put it in Ivri's vocab", "code these sentences to different characters")
+maps onto the code's taxonomy. It does, but the answer existed only in that conversation and
+in a plan file outside the repo. He asked for it written into the rules.
+
+**Why this belongs in `docs/project-rules.md` rather than the strategy doc.**
+`docs/character-gameplay-strategy.md` already documents the withholding layer in depth, but it
+documents it as *design rationale* — why the fence exists, what it measured, which characters
+own what. What was missing was the operational translation: given an instruction in a human's
+words, which field do you edit? That is a rule, not a rationale, and rules live in the
+canonical file where both agents are pointed at them.
+
+**Files changed:**
+
+- `docs/project-rules.md` — new `## Content routing (required)` section, placed after
+  Sentence-bank authoring and before the viewport floor. It carries: the prohibition on a
+  `character` field in any content file (with the mechanical reason — `prepareSentenceBankDeck`
+  whitelists the fields it copies, so an added field is dropped silently rather than loudly);
+  a four-row table translating "give this to X" into a shelf, a register bank, or a `verbIds`
+  entry, and naming Conjugation+/Prepositions/Binyanim as deliberately unroutable; the fact
+  that sentence banks are registers rather than people, with the worked example that "three
+  sentences coded to different characters" is one `formal_`, one `professional_`, one
+  `everyday_`; the grant-versus-fence distinction and the five `*Reserve*` field names; and
+  two traps — never re-shelve a vocabulary card or change its `en`, and an unrouted shelf
+  belongs to nobody so everybody draws it.
+- `tests/agent-docs-parity.test.js` — `"## Content routing (required)"` added to
+  `requiredSections`. This is the point of that ratchet: the section cannot now be dropped
+  without the suite failing, which is exactly the failure mode the parity test was written for
+  after cache-busting and the pointing convention went missing for one agent at a time.
+- `CLAUDE.md` and `AGENTS.md` — one row added to the "Before specific kinds of work" table:
+  routing content to a character → the new section. Both edited identically; verified
+  byte-identical below the title line before committing.
+
+**Two numbers verified rather than carried over from conversation.** The section states that
+ten of the 42 vocabulary categories are unrouted, and that `TARGET_OWNED_SHARE` is 0.65. Both
+were checked against the live data and `app/character.js:329` rather than quoted from the
+earlier discussion, because a rules doc that drifts from the code is worse than no rules doc.
+
+**Behavior changed:** None. Documentation and one test assertion.
+
+**Cache-busting:** Not applicable and deliberately skipped — the only changed files are three
+`.md` files and a test. Nothing `index.html` loads was touched, so there is no `?v=` to bump.
+Recorded here so the omission reads as a decision rather than an oversight.
+
+**Tests run:** `node --test tests/agent-docs-parity.test.js` — 4 pass. `npm test` — **449 pass,
+0 fail**.
+
+**Risks / regressions to check:**
+
+- The new section duplicates facts that also live in `docs/character-gameplay-strategy.md`
+  (the reserve field names, the register-to-character mapping). If the routing model changes,
+  both files need editing. The parity test guards the section's *existence*, not its accuracy.
+- The unrouted-category count (10 of 42) and `TARGET_OWNED_SHARE` (0.65) are stated as
+  literals. Adding a new vocabulary category, or routing one of the ten, makes the first stale.
+  Nothing enforces either number.
+
 ### 2026-08-19 EDT — Tranche 3 of 3: הלוך ושוב with its two legs, and Inbal's השגחה
 
 **Requested:** The last two of the ten words Mike met in play — item 9 (הלוך ושוב, plus בהלוך

@@ -102,6 +102,56 @@ Some older sentence tests preserve historical phrase-chip choices. Those are
 legacy snapshots, not authoring precedent; the linked guide is authoritative for
 new or revised rows.
 
+## Content routing (required)
+
+No content file may carry a `character` field. `prepareSentenceBankDeck` whitelists
+the fields it copies, so a new field on a row is silently dropped before the picker
+ever sees it, and `docs/character-gameplay-strategy.md` forbids it outright. Ownership
+is declared in the route table in `app/character-data.js`, one indirection away from
+the content.
+
+"Give this to Ivri" therefore means three different edits depending on the content type:
+
+| Content | Signal | What "give this to X" means |
+|---|---|---|
+| **Vocabulary** | `route.vocabCategories` (a whole topic shelf) or `route.vocabWords` (exact plain-Hebrew string) | put the card on a shelf X owns, **or** name the word in X's `vocabWords`, which reaches a card without re-shelving it |
+| **Sentences** | `sentenceCategories`, `sentenceStyles`, `sentenceIdPrefixes`, `sentenceReserveIds` | author the row into the right **register bank** — see below |
+| **Verbs** (Conjugation) | `route.verbIds`, an explicit id list | add the verb id to X's `verbIds`. The only direct per-character mapping. |
+| **Conjugation+, Prepositions, Binyanim** | none — deliberately character-neutral | not routable; do not try |
+
+**Sentence banks are registers, not people.** `colloquial` → Ido, `professional` → Ivri,
+`formal` → Inat, and `everyday` is deliberately unowned so the whole cast draws it. Inbal,
+Inat and Idan additionally own private id-prefixed banks (`inbal_`, `inat_`, `idan_`); Ido
+and Ivri have none, so a row is "Ido's" only by being `colloquial` or `whatsapp` style. A
+request for "three sentences coded to different characters" is satisfied by one `formal_`,
+one `professional_` and one `everyday_` row — the same thing, expressed as register.
+
+**Ownership grants weight; only the `*Reserve*` fields fence.** Ownership boosts an item so
+that roughly `TARGET_OWNED_SHARE` (0.65) of a draw lands in the active character's pool. A
+strongly coded row authored into a shared register bank still reaches the entire cast unless
+it is named in `sentenceReserveIds`, `vocabReserveCategories`, `vocabReserveWords`,
+`abbrReserveIds` or `verbReserveIds`. A row carrying an `inbal_`/`inat_`/`idan_` prefix is
+fenced automatically.
+
+Two traps, both of which have already cost real bugs:
+
+- **Never move a vocabulary card between categories, and never change a card's `en`.**
+  Vocabulary ids embed a positional index (`social_cultural-0NN-secular`), so inserting or
+  re-shelving a row renumbers every card below it and orphans learner progress. `ownsItem`
+  matches vocabulary on `he` rather than `id` for exactly this reason, and
+  `tests/vocab-data.test.js` diffs every id against `tests/fixtures/vocab-id-baseline.json`.
+  Append at a category **tail**, and reach an off-shelf word through `route.vocabWords`.
+  Retiring a card means `availability: { translationQuiz: false }`, never deletion.
+- **An unrouted shelf belongs to nobody, which means everybody draws it.** Ten of the 42
+  vocabulary categories have no owner, `core_advanced` among them. That is how `חוסל` — a
+  finite passive form sitting on `core_advanced` — reached an Ido mission on 2026-08-19:
+  nothing said it should not. Before adding a card, check whether its shelf actually has the
+  owner you intend.
+
+`npm run report:characters` prints owned counts plus a second "draw pool after withholding"
+table. Run it after any routing change: it is the only way to see that ownership landed where
+you meant and that no character was starved.
+
 ## Gameplay viewport floor (required)
 
 - Gameplay UI changes must keep all active, answer, and feedback states usable without vertical scrolling or footer overlap at 360×640 CSS pixels.

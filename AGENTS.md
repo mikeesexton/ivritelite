@@ -38,4 +38,5 @@ in [`docs/project-rules.md`](docs/project-rules.md).
 | any gameplay surface | `docs/project-rules.md` → Gameplay viewport floor (360×640, no vertical scroll) |
 | character art or sprites | `docs/project-rules.md` → Character sprite visual review, and artwork approval |
 | any data file | `docs/project-rules.md` → Hebrew pointing convention |
+| routing content to a character | `docs/project-rules.md` → Content routing (a shelf, a register bank, or `verbIds` — never a `character` field) |
 | product direction | `docs/product-roadmap.md`, `docs/character-gameplay-strategy.md` |

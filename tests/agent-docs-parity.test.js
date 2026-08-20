@@ -54,6 +54,7 @@ test("the canonical rules doc still carries every load-bearing rule", () => {
     "## Cache-busting (required before push — do not skip)",
     "## Hebrew pointing convention (data files)",
     "## Sentence-bank authoring (required)",
+    "## Content routing (required)",
     "## Gameplay viewport floor (required)",
     "## Character sprite visual review (required)",
     "## Character artwork approval and cost control (required)",
