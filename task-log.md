@@ -5,6 +5,679 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-20 EDT — Test להרוג as an infinitive with Idan; retire the הורג tile
+
+**Requested:** Two finite verb forms sit as vocabulary headwords on the unrouted
+`core_advanced` shelf — `הורג` (present participle) and `התקיים` (past 3ms) — the same defect
+class fixed for `חוסל` in a82154d. Act on `הורג`, which is hard-security register belonging to
+Idan; consider leaving `התקיים`, which is a register mismatch rather than a routing leak.
+Follow a82154d's pattern exactly and re-derive every count rather than trusting the brief.
+
+**Base corrected twice, before any edit and again at the end.** The worktree was cut from
+`main` (d7fe07b), but the task described the primary checkout, which was four commits ahead on
+`agent/safety-net-ci-cachebust-agent-docs`. On the stale base `military_operational` ended at
+index 092, so appending would have produced `military_operational-093-to-kill` colliding
+head-on with `-093-to-eliminate`: both suites green in isolation, broken on merge. The branch
+had no local commits and d7fe07b was an ancestor, so it was fast-forwarded to 0d9aefb. A
+parallel session flagged the same staleness independently. That session then landed b70a3b0
+and 295340a while this work was in progress, so the finished change was fast-forwarded again
+onto 295340a and every count re-derived on the merged tree rather than carried over.
+
+**Two of the brief's anchors were wrong and were corrected from the source.** `הורג` is
+`core_advanced-088-killing-participle`, not `-092-`; and the new card lands at index **094**,
+not 093, because `לחסל` already holds 093. Both of us had been reading a positional index off
+a file that had since shifted, which is the trap `docs/project-rules.md` now records: never
+trust an index quoted in a prompt.
+
+**Checked against the new "Content routing" section** added in b70a3b0, which landed
+mid-session. The change satisfies it as written: no `character` field; the card reaches Idan
+through `vocabReserveCategories` on a shelf he owns; appended at a category tail with no
+re-shelving and no `en` change; retirement by `availability: { translationQuiz: false }` rather
+than deletion; sentences authored into the `idan_` prefixed bank, which fences automatically;
+`hebrew-verbs.js` untouched, since Conjugation+ is listed as deliberately unroutable.
+`npm run report:characters` run afterwards, as that section requires.
+
+**`התקיים` was left alone,** as the brief allowed. It is genuinely milder: no character owns
+its register, so it leaks nothing, and retiring it would cost a playable card for no
+gameplay defect.
+
+**Files changed:**
+
+- `vocab-data.js` — `core_advanced-088-killing-participle` gains
+  `availability: { translationQuiz: false }`. The row and its id survive, as the append-only
+  baseline requires, and it still feeds sentence hints. New
+  `military_operational-094-to-kill` (`להרוג` / `לַהֲרֹג`) at that shelf's tail; the shelf is
+  in Idan's `vocabReserveCategories`, so the card is weighted and fenced to him with no route
+  edit. `__build` to `20260820a`.
+- `sentence-bank-data.js` — new `KILL_VERB_SENTENCES` tranche, two rows. `__build` to
+  `20260820a`.
+- `tests/vocab-data.test.js` — total 2204 to 2205. Playable is unchanged at 2116: retiring one
+  tile and adding one cancel out, so despite the brief there was no second number to move.
+- `tests/fixtures/vocab-id-baseline.json` — one id inserted in place after
+  `military_operational-093-to-eliminate`. Not regenerated: the file is stored in a different
+  order than `getBaseVocabulary()` returns, so regenerating churns ~110 lines.
+- `tests/content-coverage.test.js` — 2205 records, exact 1061 to 1063, unsupported 1143 to
+  1142, all three taken from `npm run report:coverage` on the merged tree. The corrected
+  morphology-trap comment from 295340a is preserved and extended rather than overwritten.
+- `tests/sentence-bank-data.test.js` — `KILL_VERB_ENTRY_IDS`; count 1206 to 1208 in three
+  assertions and the test title; `everyday` 540 to 542; a `COVERAGE_TRANCHES` entry; and the
+  ids added to the niqqud/chip sweep. Counts re-derived from a fresh load of the bank, not by
+  adding two to the previous figure.
+- `index.html` — `vocab-data.js` and `sentence-bank-data.js` to `?v=20260820a`.
+
+**On the cache key.** This work first used `20260819d`; 295340a independently used
+`20260819e` for `sentence-bank-data.js`. The merged file contains both tranches, so it is
+neither of those two contents, and reusing either key would put two different files behind one
+URL — exactly the failure the rule exists to prevent. Both files this change touches therefore
+move to `20260820a`, today's date, which was unused.
+
+**The two sentences.** ה-ר-ג had no verbal sentence support of any kind: the only `הרג` in the
+bank is the noun inside a metalinguistic row contrasting רצח / הרג / השמדה, and `הרגולציה` is
+an unrelated surface. Both rows stay reporting register rather than tactics, matching a82154d,
+and the `idan_` prefix fences them.
+
+- `idan_129` — "הדובר אמר שאסור להרוג את החשוד." Teaches the infinitive; `fixed`.
+- `idan_130` — "לפי ההודעה העשן הורג אנשים רבים." Teaches the participle, so the retired tile
+  keeps a context; `alternates`, with the לפי-adverbial also authored in final position.
+
+Each row carries the headword form itself, which is the point 295340a makes about `לחסל` and
+`הסמכה`: the coverage matcher tolerates clitics but does not stem morphology, so a card whose
+natural use is inflected needs a row containing the headword, not a relative of it. Every
+pointed form in both rows was taken from an existing vetted form in the bank or in
+`vocab-data.js` rather than authored fresh.
+
+**On `לַהֲרֹג` versus `hebrew-verbs.js`.** `advanced-verb-laharog` carries `lemma_niqqud`
+`לַהֲרוֹג`, keeping the helper vav; the new vocabulary card drops it, per the ktiv-chaser rule,
+and `לעצור` → `לַעֲצֹר` already sets that precedent for this exact shape (paal infinitive,
+guttural second radical). The parallel session then measured the whole deck: **70 infinitives
+keep the holam vav in `lemma_niqqud` and 16 drop it.** Both spellings are correct Hebrew, so
+this is a 70-row convention decision for Mike rather than a defect, and the suite structurally
+cannot catch it — the plain-versus-pointed check strips ו and י so ktiv male ↔ ktiv chaser
+stays legal. Nothing cross-checks the two files and `advanced-verb-laharog` is hidden from
+Translation Match, so no learner sees both forms at once. `hebrew-verbs.js` left untouched.
+
+**Behavior changed:** `הורג` can no longer be served as a Translation Match card to any
+character — this is the Ido-mission leak, closed. `להרוג` is now drawable in Translation
+Match by Idan alone (`getItemAudience` returns `["idan"]`, matching `לחסל`). Idan gains two
+sentences. Conjugation+ is untouched.
+
+**Tests run:**
+
+- `npm test` before, on the corrected base: 449 pass, 0 fail.
+- `npm test` after, on 0d9aefb: 449 pass, 0 fail.
+- `npm test` after the second fast-forward onto 295340a and conflict resolution: see below.
+- `node --test tests/vocab-data.test.js`: 27 pass — including the merged-pool duplicate check,
+  confirming no clash with the hidden `advanced-verb-laharog` seed card.
+- `npm run report:coverage`: Total 2205; exact 1063; unsupported 1142.
+- `npm run report:characters`: Idan 266 vocabulary / 131 sentences; all five characters keep
+  their draw pools.
+
+**Risks / regressions to check:**
+
+- `הורג` is the fourth tile retired this way. If a future audit wants the count of unplayable
+  rows, note that these register retirements are deliberately *not* in
+  `SUPPRESSED_DUPLICATE_IDS`, which is only the 22 duplicate twins — `חוסל` is not in it either.
+- The `הֶ` article in `הֶעָשָׁן` follows `הֶחָתוּל` / `הֶחָדָשׁ` / `הֶחָלָל` in the bank. No test
+  covers article vocalisation before a guttural, so it rests on that precedent.
+- `idan_` ids are now contiguous through 131 across two sessions. Nothing asserts prefix
+  contiguity, but two sessions appending to the same prefix is how a duplicate id would arise;
+  re-derive the next free number from a fresh load rather than from a task-log entry.
+- This branch is now six commits ahead of `main`. Anything else cut from `main` and appending
+  to `military_operational` will collide at index 094.
+
+**Unrelated pre-existing failure fixed to get CI green.** PR #78 was the first time the
+`test.yml` gate added in 4418adb had ever run, and it failed on
+`tests/prepositions-data.test.js:316` — a file this change does not touch.
+`assert.deepEqual(incoherent.map(...), [])` compared a VM-realm array against a host-realm
+`[]`; `deepStrictEqual` checks prototype identity across realms, so it failed under CI's Node
+24 while passing under local Node 25. Fixed with `Array.from`, which resolves from the host
+realm and is the idiom line 200 of the same file already uses. No cache-bust: a test file is
+not loaded by `index.html`. The same trap is documented in `tests/vocab-data.test.js`, which
+spreads before comparing — worth knowing that local Node and CI Node differ here.
+
+### 2026-08-19 EDT — Correction: the לחסל card was never covered; idan_131 added
+
+**Requested:** A parallel session working the `הורג` follow-up reported that
+`military_operational-093-to-eliminate` still reads `unsupported` in the coverage report,
+and that the tranche-1 commit message and test comment read as though the card had arrived
+covered. It was right.
+
+**What went wrong, and it is a reasoning error worth naming.** When tranche 1 landed I
+observed records 2192 → 2193, exact 1043 → 1045, unsupported 1149 → 1148 and *inferred* that
+the new `לחסל` card must be exact and `חוסל` must have moved across with it. That arithmetic
+is equally consistent with the new card being unsupported and **two** other cards moving into
+exact — which is what actually happened. I wrote the inference into a test comment and a
+commit message as though it were a check. The available direct check, `exactSentenceIds` on
+each coverage record, was one line away and I did not run it.
+
+The underlying content gap is real: `idan_127` teaches the past `חיסל` and `idan_128` the
+passive `חוסל`, but `sentenceTestsHeadword` tolerates clitics and does not stem morphology,
+so the infinitive headword `לחסל` matched nothing. This is the same trap that caught `הסמכה`
+one tranche later, where the only row used the plural. **A card whose natural use is
+inflected needs a row carrying the headword form itself.**
+
+**Files changed:**
+
+- `sentence-bank-data.js` — `idan_131` appended to `COMPARE_FOCUS_SENTENCES`:
+  "אסור לחסל מטרה בלי אישור" / "It is forbidden to eliminate a target without approval",
+  with a `בלי אישור` initial-position alternate. It uses the infinitive, so the card now has
+  an exact context, and it completes the original request for sentences in *different forms*
+  of the verb — infinitive, past, passive. Numbered **131**, not 129: the parallel branch has
+  taken `idan_129` and `idan_130` for its `להרוג` tranche. Nothing asserts prefix contiguity,
+  so a gap is cheaper than renumbering across two branches.
+- `tests/content-coverage.test.js` — exact 1060 → 1061, unsupported 1144 → 1143, and the
+  misleading comment replaced with what actually happened, including the morphology trap so
+  the next author meets it as a rule rather than as a surprise.
+- `tests/sentence-bank-data.test.js` — 1205 → 1206, `everyday` 539 → 540, the compare/focus
+  tranche row 9 → 10 rows with its difficulty and category mix updated, and `idan_131` added
+  to `COMPARE_FOCUS_ENTRY_IDS` with a comment explaining the numbering gap.
+- `index.html` / `sentence-bank-data.js` — `?v=20260819e` and the matching `__build`.
+  **Skipped `d` deliberately:** the parallel branch has already used `20260819d` for this
+  file, and two different file contents sharing one cache key is the exact failure the
+  cache-busting rule exists to prevent.
+
+**Behavior changed:** `military_operational-093-to-eliminate` moves from `unsupported` to
+`exact`. Sentences 1205 → 1206. Vocabulary unchanged.
+
+**Tests run:** `npm test` — **449 pass, 0 fail**. `military_operational-093-to-eliminate`
+confirmed `exact via idan_131` by direct query on `exactSentenceIds` this time, not inferred.
+
+**Risks / regressions to check:**
+
+- `idan_129` and `idan_130` do not exist on this branch. If the `להרוג` branch is abandoned
+  the gap stays; harmless, but do not "fix" it by renumbering `idan_131`.
+- Both branches now edit the same count assertions in `tests/content-coverage.test.js` and
+  `tests/sentence-bank-data.test.js`. A merge conflict there is expected and the resolution is
+  to re-derive from `npm run report:coverage`, never to pick one side.
+
+**Flagged, not fixed — a convention question only Mike can settle.** The parallel session also
+noticed that `advanced-verb-laharog` carries `lemma_niqqud: "לַהֲרוֹג"`, keeping the helper vav,
+while a ktiv-chaser reading gives `לַהֲרֹג`. Measured across `hebrew-verbs.js`: **70 infinitives
+keep the holam vav in the pointed form and 16 drop it** — `לִסְגּוֹר`, `לִכְתֹּב`, `לִשְׁמֹר`
+against `לִלְמֹד`, `לַעֲבֹד`, `לַחֲזֹר`. Both spellings are correct Hebrew; the file is simply
+inconsistent, and the majority form is the one the project's own stated rule would drop. The
+suite cannot catch it because the plain-versus-pointed check is deliberately vav-tolerant so
+that ktiv male ↔ ktiv chaser is legal. This is a 70-row convention decision, not a bug, so
+nothing was changed.
+
+### 2026-08-19 EDT — Content routing written down as a rule, and ratcheted
+
+**Requested:** While reviewing the ten-word expansion, Mike asked whether the way he phrases
+routing requests ("put it in Ivri's vocab", "code these sentences to different characters")
+maps onto the code's taxonomy. It does, but the answer existed only in that conversation and
+in a plan file outside the repo. He asked for it written into the rules.
+
+**Why this belongs in `docs/project-rules.md` rather than the strategy doc.**
+`docs/character-gameplay-strategy.md` already documents the withholding layer in depth, but it
+documents it as *design rationale* — why the fence exists, what it measured, which characters
+own what. What was missing was the operational translation: given an instruction in a human's
+words, which field do you edit? That is a rule, not a rationale, and rules live in the
+canonical file where both agents are pointed at them.
+
+**Files changed:**
+
+- `docs/project-rules.md` — new `## Content routing (required)` section, placed after
+  Sentence-bank authoring and before the viewport floor. It carries: the prohibition on a
+  `character` field in any content file (with the mechanical reason — `prepareSentenceBankDeck`
+  whitelists the fields it copies, so an added field is dropped silently rather than loudly);
+  a four-row table translating "give this to X" into a shelf, a register bank, or a `verbIds`
+  entry, and naming Conjugation+/Prepositions/Binyanim as deliberately unroutable; the fact
+  that sentence banks are registers rather than people, with the worked example that "three
+  sentences coded to different characters" is one `formal_`, one `professional_`, one
+  `everyday_`; the grant-versus-fence distinction and the five `*Reserve*` field names; and
+  two traps — never re-shelve a vocabulary card or change its `en`, and an unrouted shelf
+  belongs to nobody so everybody draws it.
+- `tests/agent-docs-parity.test.js` — `"## Content routing (required)"` added to
+  `requiredSections`. This is the point of that ratchet: the section cannot now be dropped
+  without the suite failing, which is exactly the failure mode the parity test was written for
+  after cache-busting and the pointing convention went missing for one agent at a time.
+- `CLAUDE.md` and `AGENTS.md` — one row added to the "Before specific kinds of work" table:
+  routing content to a character → the new section. Both edited identically; verified
+  byte-identical below the title line before committing.
+
+**Two numbers verified rather than carried over from conversation.** The section states that
+ten of the 42 vocabulary categories are unrouted, and that `TARGET_OWNED_SHARE` is 0.65. Both
+were checked against the live data and `app/character.js:329` rather than quoted from the
+earlier discussion, because a rules doc that drifts from the code is worse than no rules doc.
+
+**Behavior changed:** None. Documentation and one test assertion.
+
+**Cache-busting:** Not applicable and deliberately skipped — the only changed files are three
+`.md` files and a test. Nothing `index.html` loads was touched, so there is no `?v=` to bump.
+Recorded here so the omission reads as a decision rather than an oversight.
+
+**Tests run:** `node --test tests/agent-docs-parity.test.js` — 4 pass. `npm test` — **449 pass,
+0 fail**.
+
+**Risks / regressions to check:**
+
+- The new section duplicates facts that also live in `docs/character-gameplay-strategy.md`
+  (the reserve field names, the register-to-character mapping). If the routing model changes,
+  both files need editing. The parity test guards the section's *existence*, not its accuracy.
+- The unrouted-category count (10 of 42) and `TARGET_OWNED_SHARE` (0.65) are stated as
+  literals. Adding a new vocabulary category, or routing one of the ten, makes the first stale.
+  Nothing enforces either number.
+
+### 2026-08-19 EDT — Tranche 3 of 3: הלוך ושוב with its two legs, and Inbal's השגחה
+
+**Requested:** The last two of the ten words Mike met in play — item 9 (הלוך ושוב, plus בהלוך
+and בחזור) and item 10 (השגחה פרטית, and השגחה as a common word in its own right).
+
+**One refinement to his reading, recorded in `notes` rather than left implicit.** Mike asked
+whether `הלוך` means "outbound". Close, but it is not a free word: it is the infinitive
+absolute of `ללכת` and functions only inside the fixed pairings — `הלוך ושוב`, `בהלוך`,
+`בחזור`, `כרטיס הלוך ושוב`. So the card is the whole expression, and `colloquial_220` is
+where the two legs get taught as a contrast rather than as separate vocabulary.
+
+**Why השגחה is on the unrouted shelf.** It carries three live senses: kashrut certification
+on a restaurant sign, a lifeguard's or parent's watch, and, in `השגחה פרטית`, divine
+providence. Mike asked for it as a common word *and* for Inbal, which the routing model does
+in one move: the plain noun goes on `core_advanced`, which no character owns, so everyone
+reaches it, and `"השגחה"` is named in Inbal's `vocabWords` so it weighs for her. Only
+`השגחה פרטית` is on her own shelf, and only the theological sentence is fenced to her.
+
+**Files changed:**
+
+- `vocab-data.js` — three cards at category tails: `core_advanced-171-supervision` (השגחה),
+  `everyday_survival_expanded-040-round-trip` (הלוך ושוב, on Ido's practical-travel shelf),
+  `religion_magic_spirituality-139-divine-providence` (השגחה פרטית).
+- `app/character-data.js` — Inbal's `vocabWords` += `השגחה`.
+- `sentence-bank-data.js` — new `PROVIDENCE_TRAVEL_SENTENCES` array, 5 rows: `everyday_352`
+  (כרטיס הלוך ושוב), `colloquial_220` (בהלוך against בחזור), `inbal_108` (השגחה פרטית),
+  `everyday_353` (kashrut supervision), `everyday_354` (no lifeguard after five).
+- `tests/sentence-bank-data.test.js` — counts 1200 → 1205, category mix, new
+  `PROVIDENCE_TRAVEL_ENTRY_IDS`, a seventh `COVERAGE_TRANCHES` row, ids added to the aggregate
+  check, and two `COMPACT_ENGLISH_MULTIWORD_UNITS` entries: `divine providence`, `round trip`.
+- `tests/vocab-data.test.js` — total 2201 → 2204, playable 2113 → 2116,
+  `religion_magic_spirituality` 138 → 139. The `urban mobility tranche` test was
+  **upper-bounded** with `.slice(15, 39)` instead of `.slice(15)`, the same treatment the
+  smartphone tranche got in tranche 2: that test pins an authored tranche in locked order, and
+  הלוך ושוב at index 040 is a later append, not a 25th mobility card.
+- `tests/content-coverage.test.js` — 2204 records, exact 1056 → 1060, unsupported 1145 → 1144.
+- `tests/fixtures/vocab-id-baseline.json` — three lines inserted in place.
+- `index.html` — `?v=20260819c` for `vocab-data.js`, `sentence-bank-data.js`,
+  `app/character-data.js`; matching `__build` stamps bumped.
+
+**A pattern worth naming for whoever appends next.** Three separate tests broke on this
+work — `urban mobility`, `Ivri smartphone-interface`, and the `expectedCounts` table — all for
+the same reason: a test that pins an authored tranche by "everything at or after index N"
+silently absorbs any later append to that shelf. Where the test is about a *tranche*, the fix
+is an upper bound; where it is about a *shelf*, the fix is bumping the count. Both were used
+here, deliberately and separately. Expect the same on the next append to a shelf that has a
+named tranche test.
+
+**Behavior changed:**
+
+- Vocabulary 2204, sentences 1205. All three new cards playable exactly once and covered by a
+  sentence on arrival — verified live in the browser.
+- `הלוך ושוב` reaches Ido; `השגחה` and `השגחה פרטית` reach Inbal; `השגחה` is also reachable by
+  everyone, which is what Mike asked for. `inbal_108` is fenced to Inbal automatically by its
+  id prefix — confirmed live through `getItemAudience`, not assumed.
+- ח-ס-ל, להשוות, להתמקד, ביקורות מוצרים, ירידה, השכלה, סמכות, הסמכה, מחדל, הלוך ושוב and
+  השגחה — all ten of Mike's words now have a card, a sentence, or a conjugation paradigm, and
+  in most cases all three.
+
+**Pointing decisions** (verified against existing rows, not assumed): `בבריכה` →
+`בַּבְּרֵכָה` and `צירוף מקרים` → `צֵרוּף מִקְרִים` both drop the mater the plain spelling
+carries, while `ריק` → `רֵיק` keeps it. `ובחזור` → `וּבַחֲזוֹר` takes the soft ב after the
+`וּ` prefix, per the documented exception. `בהלוך` → `בַּהֲלוֹךְ`.
+
+**Tests run:**
+
+- `npm test` — **449 pass, 0 fail**.
+- `npm run report:characters` — all five characters clear every depth floor: Ido 502/260/68/34,
+  Inbal 342/108/87/26, Ivri 537/234/113/37, Inat 382/216/85/25, Idan 265/128/34/30.
+- `npm run report:coverage` for the real numbers.
+- Live at `localhost:3000`: no console errors, `__build` stamps read `20260819c`.
+
+**Risks / regressions to check:**
+
+- `בהלוך` and `בחזור` appear only inside `colloquial_220`; neither has a card, deliberately,
+  since neither stands alone as vocabulary. If they are ever wanted as cards they should be
+  authored as the pair, not separately.
+- `השגחה` on the unrouted shelf means Idan and Ivri can draw it. That is intended — it is an
+  ordinary word — but if the religious reading dominates in play, name it in Inbal's
+  `vocabReserveWords` rather than re-shelving it.
+- Six glossary entries were added across tranches 2 and 3. Both registries are staleness-checked,
+  so rewording any of those rows means removing the entry too.
+
+### 2026-08-19 EDT — Tranche 2 of 3: eight noun cards and twelve sentences, with three meaning corrections
+
+**Requested:** Tranche 2 of the ten words Mike hit in play — items 3 (ביקורות מוצרים),
+4 (ירידה), 5 (השכלה), 6 (הסמכות), 8 (מחדל). Three of his readings needed correcting first,
+and he chose the fuller option in each case.
+
+**The three corrections, confirmed with Mike before implementation.**
+
+- **`מחדל` does not mean "default."** Standalone it is a *systemic failure* or dereliction —
+  the word Israeli public debate uses for an institutional failure. The "default" sense exists
+  only inside the construct `ברירת מחדל`, literally a choice of last resort, and the plural
+  `ברירות מחדל` "default settings" was already on the deck at `devices_os_apps-093`. Both
+  cards added: the singular `ברירת מחדל` he was reaching for, and `מחדל` in its real sense.
+- **`הסמכות` is the plural of a different word.** `סמכות` (authority, the power to decide) and
+  `הסמכה` (accreditation, plural `הסמכות`) share the root ס-מ-כ but are separate words, so
+  `הסמכות אקדמיות` really is "academic credentials." Both cards added, split Inat / Ivri.
+- **`מוצר` was absent from the entire deck** — only the compound `מפת דרכים למוצר` existed.
+  Added alongside `ביקורות מוצרים` so the compound no longer rests on an untaught word.
+
+**A gloss collision worth recording.** `סמכות` could not be glossed "authority": that gloss
+belongs to `רשות` at `bureaucracy-027`, and "jurisdiction" belongs to `סמכות שיפוט` on the
+same shelf as the new card. It is glossed **"legal authority"**. `professional_216` then
+teaches the distinction directly — לרשות אין סמכות, "the authority has no power" — which is the
+pair a learner actually confuses. `מחדל` likewise could not be "failure" (that is `כישלון`),
+so it is **"systemic failure"**, which is also the more accurate gloss.
+
+**Files changed:**
+
+- `vocab-data.js` — eight cards, all at category tails: `core_advanced-169-education` (השכלה)
+  and `-170-systemic-failure` (מחדל); `business_finance_expanded-021-product`,
+  `-022-product-reviews`, `-023-decline`; `legal_civic-019-legal-authority`;
+  `bureaucracy-090-accreditation`; `devices_os_apps-116-default-setting`.
+- `app/character-data.js` — Inat's `vocabWords` += `ירידה`, `הסמכה`, `השכלה`. The first two sit
+  on Ivri's shelves and are genuinely both readings: he reads ירידה as a quarter's revenue and
+  הסמכה as a regulator's licence, she reads them as falling turnout and academic credentials.
+  `השכלה` is on the unrouted `core_advanced` shelf, so naming it here is what gives it an owner
+  at all while keeping it reachable by everyone.
+- `sentence-bank-data.js` — new `DECLINE_AUTHORITY_SENTENCES` array, 12 rows:
+  `professional_214`–`218`, `formal_133`–`136`, `everyday_349`–`351`. Five carry
+  `hebrewOrderAlternates`. `everyday_351` is a question, which the bank is still short of.
+- `tests/sentence-bank-data.test.js` — counts 1188 → 1200, category mix, new
+  `DECLINE_AUTHORITY_ENTRY_IDS`, a sixth `COVERAGE_TRANCHES` row, ids added to the aggregate
+  check, and four `COMPACT_ENGLISH_MULTIWORD_UNITS` entries: `product reviews`,
+  `higher education`, `academic credentials`, `default setting`. Each is an established term
+  independently worth learning, which is the documented bar for a glossary add.
+- `tests/vocab-data.test.js` — total 2193 → 2201, playable 2105 → 2113, `devices_os_apps`
+  category count 115 → 116. The `Ivri smartphone-interface tranche` test was **upper-bounded**
+  at index 115 rather than having its 40 bumped to 41: that test is about an authored tranche,
+  not about the shelf, and later appends are already covered by the category count and the
+  global niqqud and uniqueness checks.
+- `tests/content-coverage.test.js` — 2201 records, exact 1045 → 1056, unsupported 1148 → 1145;
+  `legal_civic` 18 → 19 and `business_finance_expanded` 20 → 23, both still fully exact; the
+  cast/smartphone exact-support count 60 → 61.
+- `tests/fixtures/vocab-id-baseline.json` — eight lines inserted in place.
+- `index.html` — `?v=20260819b` for `vocab-data.js`, `sentence-bank-data.js`,
+  `app/character-data.js`; matching `__build` stamps bumped.
+
+**A real gap the coverage report caught.** With eleven sentences authored, `הסמכה` still read
+`unsupported`: the only row using it, `formal_135`, uses the **plural** `הסמכות`, and
+`sentenceTestsHeadword` matches headwords with clitic tolerance, not morphological stemming.
+A twelfth row, `professional_218` ("המעבדה קיבלה הסמכה מהמשרד"), was added to give the singular
+its own context. Worth remembering when authoring for a card whose natural use is plural.
+
+**Behavior changed:**
+
+- Vocabulary 2193 → 2201, all eight new cards playable exactly once — verified live in the
+  browser, not only in tests. Sentences 1188 → 1200.
+- Every one of the eight new cards has **exact** sentence support on arrival, and three
+  pre-existing cards were pulled from unsupported into exact along with them.
+- `ירידה` reaches Ivri and Inat, `הסמכה` reaches both, `השכלה` and `מחדל` reach everyone,
+  and the rest are Ivri's. Nothing is fenced — none of these words is sensitive.
+
+**Tests run:**
+
+- `npm test` — **449 pass, 0 fail** (~105s). Same count as tranche 1: the new content is
+  covered by existing parameterised tests plus the new tranche row.
+- Per-file during authoring: `tests/vocab-data.test.js`, `tests/sentence-bank-data.test.js`,
+  `tests/content-coverage.test.js`, `tests/character-mission.test.js` — all pass. Every
+  pointing and compact-chip check passed first time; only counts and the הסמכה coverage gap
+  needed work.
+- `npm run report:coverage` for the real numbers; `npm run report:characters` for the floors.
+- Live at `localhost:3000`: no console errors, `__build` stamps read `20260819b`, all eight
+  cards present once each, all twelve sentences loaded.
+
+**Pointing decisions worth knowing** (house style, verified against existing rows rather than
+assumed): `עדיין` → `עֲדַיִן`, `שיפור` → `שִׁפּוּר`, `הסיסמה` → `הַסִּסְמָה`, `אישור` → `אִשּׁוּר`,
+`קיבלה` → `קִבְּלָה`, `החג` → `הֶחָג` — all drop the mater the plain spelling carries. `ביקורות`
+→ `בִּקּוֹרוֹת` follows the `ביקורת` → `בִּקּוֹרֶת` vocabulary card rather than the
+`בִּקֹּרֶת` used in the sentence bank; the two conventions coexist in the repo already.
+
+**Risks / regressions to check:**
+
+- `מחדל` is on the unrouted `core_advanced` shelf, so every character can draw it. If the
+  institutional-failure register feels wrong in Ido's or Inbal's mission, the fix is to name it
+  in Inat's `vocabWords` — not to re-shelve it, which would renumber ids.
+- Four glossary entries were added to `COMPACT_ENGLISH_MULTIWORD_UNITS`. Both registries are
+  checked for staleness, so if any of these four rows is ever reworded the entry must go too.
+- `everyday_349` teaches ירידה as a physical descent and `professional_215` notes the
+  ירידה מהארץ sense in passing. Neither has a card of its own; if the emigration sense is ever
+  wanted as vocabulary it belongs on one of Inat's shelves, not on the finance shelf.
+- Tranche 3 (הלוך ושוב with בהלוך/בחזור, and Inbal's השגחה / השגחה פרטית) is not started.
+
+### 2026-08-19 EDT — Tranche 1 of 3: the חוסל misfire fixed, plus להשוות and להתמקד added to Conjugation
+
+**Requested:** Mike hit ten lexical gaps in play and asked for them in vocabulary, Conjugation
+and sentences, explicitly inviting the work to be split. He chose three tranches by content
+type. This is tranche 1 — the verbs: items 1 (חוסל), 2 (להשוות) and 7 (להתמקד). He also asked
+whether his way of phrasing routing requests fits the code's taxonomy; that answer is now
+written into the plan file rather than re-derived.
+
+**Root cause of the bug he reported.** `חוסל` ("was eliminated") surfaced as a *vocabulary*
+card during an **Ido** mission. Two separate faults, and the cause is traceable in the source:
+
+- `advanced-verb-lechasel` was added to `hebrew-verbs.js` only to give Conjugation+ person-marked
+  forms for the idiom `לחסל מישהו`, and was placed in `TRANSLATION_HIDDEN_STARTER_VERB_IDS` under
+  the comment *"Translation Match already has cards for these meanings."* The card it was
+  deferring to is `core_advanced-093-was-eliminated`.
+- `core_advanced` is one of ten **unrouted** categories — owned by no character — so every
+  character draws from it. Nothing said Ido shouldn't get it.
+
+It was also the wrong surface: the deck's convention is the ל-infinitive (all 175 `"to …"` cards
+follow it; only three non-infinitive verb forms exist in 2,193 rows).
+
+**Three corrections Mike confirmed before implementation** (they change tranches 2 and 3, recorded
+here so the reasoning is not lost): `מחדל` alone is a *systemic failure*, not "default" — that
+sense lives only in `ברירת מחדל`; `הסמכות` is the plural of `הסמכה` (accreditation), a different
+word from `סמכות` (authority); and `מוצר` is absent from the whole deck.
+
+**Files changed:**
+
+- `vocab-data.js` — `core_advanced-093-was-eliminated` given `{ availability: { translationQuiz: false } }`,
+  retiring the tile while keeping the id (the append-only baseline forbids deletion) and its
+  sentence hints. New card `military_operational-093-to-eliminate` `["to eliminate", "לחסל", "לְחַסֵּל"]`
+  at that category's tail; the shelf is in Idan's `vocabReserveCategories`, so the card is both
+  weighted and fenced to him with no route edit. No merged-pool clash, because the
+  `advanced-verb-lechasel` seed card stays hidden and is filtered out before the collision check.
+- `hebrew-verbs.js` — two entries appended to `buildRequestedVerbEntries()`:
+  `advanced-verb-lehashvot` (להשוות, hif'il, ש-ו-ה, irregular) and `advanced-verb-lehitmaked`
+  (להתמקד, hitpa'el, מ-ק-ד, regular), each with authoritative present/past/future/imperative,
+  24 learner-facing forms. `advanced-verb-lehashvot` added to `TRANSLATION_HIDDEN_STARTER_VERB_IDS`:
+  `להשוות` is already playable at `core_advanced-140-to-compare`, and an unhidden twin would make
+  the merged-pool collision list disagree with `KNOWN_MERGED_DUPLICATES`, which may only shrink.
+  `advanced-verb-lehitmaked` is deliberately **not** hidden — nothing else in the repo teaches it.
+- `app/character-data.js` — Ivri's `verbIds` += both new ids; Inat's += `advanced-verb-lehashvot`
+  (multi-owner, the `character-verb-lehagish` precedent: he compares vendors, she compares texts).
+  Ivri's `vocabWords` += `להתמקד`, `להשוות` and Inat's += `להשוות`, because the compact verb builder
+  files new entries under `core_advanced`, which no character owns — a verb routed by id still needs
+  its Translation Match card named to reach anyone.
+- `sentence-bank-data.js` — new `COMPARE_FOCUS_SENTENCES` array (9 rows) below
+  `APPEND_ONLY_REVIEWED_SENTENCES_START`, spread into `SENTENCE_BANK.push`. `idan_127`/`idan_128`
+  (active חיסל and passive חוסל, reporting register, fenced by prefix), `professional_212`/`formal_131`/`everyday_347`
+  (להשוות present, past, future-as-instruction), `professional_213`/`formal_132`/`everyday_348`/`colloquial_219`
+  (להתמקד present, past, impersonal infinitive, colloquial). Four carry `hebrewOrderAlternates`.
+- `tests/hebrew-verbs.test.js` — counts 241 → 243 and deck 259 → 261; new test
+  `the compare and focus verbs conjugate with authoritative pointed forms` pinning binyan, mode,
+  availability, 24 forms and one form per tense for each new verb.
+- `tests/sentence-bank-data.test.js` — counts 1179 → 1188 (and the test title), category mix
+  updated, new `COMPARE_FOCUS_ENTRY_IDS` constant, a fifth `COVERAGE_TRANCHES` row
+  (`compare and focus`, size 9), and the ids added to the aggregate niqqud/distractor check.
+- `tests/vocab-data.test.js` — total 2192 → 2193. Playable stays 2105: one card added, one retired.
+- `tests/content-coverage.test.js` — 2192 → 2193 records, exact 1043 → 1045, unsupported 1149 → 1148.
+  Numbers taken from `npm run report:coverage`, not guessed.
+- `tests/fixtures/vocab-id-baseline.json` — one line inserted. Note the committed fixture is stored
+  in a different order than `getBaseVocabulary()` returns, so regenerating it churns ~110 lines for
+  no benefit; the test is a set-membership check, so a minimal insertion is correct.
+- `index.html` — `?v=` bumped to `20260819a` for `vocab-data.js`, `sentence-bank-data.js`,
+  `hebrew-verbs.js`, `app/character-data.js`. Matching `__build` stamps bumped in the three data files.
+
+**Behavior changed:**
+
+- `חוסל` is gone from the Translation Match pool entirely — verified live in the browser:
+  `getVocabularyForMode("translationQuiz", {includeMastered:true})` no longer contains it. The
+  reported misfire cannot recur for any character.
+- `לחסל` is now the tested surface for ח-ס-ל, playable, owned by Idan and **fenced** to him.
+- ח-ס-ל had **zero** sentence coverage of any kind before this; it now has two rows.
+- להשוות had six sentence rows but not one present-tense form; להתמקד had a single inflected chip
+  and no paradigm. Both now conjugate (24 forms each) and have three or four sentence rows.
+- `להשוות` appears exactly once in the merged playable pool — verified live, no duplicate tile.
+- Pools: vocabulary 2192 → 2193, sentences 1179 → 1188, conjugation deck 259 → 261. All five
+  characters still clear every depth-standard floor (`npm run report:characters`): Ivri's verbs
+  35 → 37, Inat's 24 → 25.
+
+**Tests run:**
+
+- `npm test` before the change — **448 pass, 0 fail**.
+- `npm test` after — **449 pass, 0 fail** (duration ~114s).
+- Per-file during authoring: `node --test tests/hebrew-verbs.test.js`, `tests/vocab-data.test.js`,
+  `tests/sentence-bank-data.test.js`, `tests/character-mission.test.js`, `tests/content-coverage.test.js`
+  — all pass. Notably every pointing, compact-chip and word-order check passed on the first run for
+  all nine sentences and both verb paradigms; only the hard-coded counts needed bumping.
+- `npm run report:characters` and `npm run report:coverage` — both clean, floors intact.
+- Live in the browser at `localhost:3000`: no console errors, all three `__build` stamps read
+  `20260819a` (so the cache-bust is doing its job), a Vocabulary round played as Ivri, and the
+  four words' routing and pool membership confirmed by direct query.
+
+**Risks / regressions to check:**
+
+- `להשוות` is now hidden from Translation Match on the verb side. If the `core_advanced-140-to-compare`
+  vocabulary card is ever retired, the word loses its Translation Match surface entirely — un-hide
+  `advanced-verb-lehashvot` in the same commit if that happens.
+- `military_operational` had **zero** verbs before `לחסל`. It is the first infinitive on a shelf that
+  is otherwise nouns; if that reads oddly in play, the alternative is to un-hide
+  `advanced-verb-lechasel` and name `לחסל` in Idan's `vocabWords` instead.
+- Same defect class, deliberately left alone: `vocab-data.js` also carries
+  `["killing (participle)", "הורג", "הוֹרֵג"]` and `["took place", "התקיים", "הִתְקַיֵּם"]` as finite
+  forms on the unrouted `core_advanced` shelf. `הורג` is the one worth revisiting.
+- `advanced-verb-lehitmaked` uses root `מ-ק-ד`. It is denominative from `מוקד`; if a future
+  binyan-board tranche wants the root it should agree with this choice.
+- Tranches 2 (five nouns, ~10 sentences) and 3 (expressions plus Inbal's `השגחה`, ~5 sentences)
+  are not started. Both will move the same hard-coded counts again.
+
+### 2026-08-17 EDT — The four merged-pool verb clashes resolved; no Hebrew surface now carries two different glosses
+
+**Requested:** Work out how to address the four Hebrew-only clashes pinned earlier today, then fix all four. Mike's call on the one genuine content question: keep the slang card.
+
+**What the investigation found.** Three of the four were not content decisions at all.
+
+- **`להוריד` was a data slip.** Sixteen verbs in `hebrew-verbs.js` expand to more than one sense card. A card's Hebrew is `lemma` unless the sense carries a `usage_pattern` (`buildStudyWord`), so a multi-sense verb without one collides with *itself* — two cards, same Hebrew, different glosses. Fifteen of the sixteen were already in `TRANSLATION_HIDDEN_STARTER_VERB_IDS`, **including `advanced-verb-lehaalot`, which is the same word pair in the other direction** ("to raise" / "to upload"). `advanced-verb-lehorid` ("to take down" / "to download") was the only one left playable.
+- **`להספיק` and `לברר` were rephrasings, not senses.** "to have time (to)" vs "to manage in time"; "to check into" vs "to find out". Either side could hold the slot.
+- **`להיעלם` was the only real question.** `dating_relationships-007-to-ghost` against `advanced-verb-lehealem` "to disappear". Not synonyms — "to ghost" is the only card teaching that slang.
+
+**The fact that decided it.** Hiding a Translation Match card does not remove a verb from the Conjugation drill: `buildVerbConjugationDeck` gates on `CONJUGATION_HIDDEN_VERB_IDS` and form count, never on `availability`. Verified across the whole set — all **126** verb surfaces currently hidden from Translation Match are still in the conjugation deck. So for every one of these four, the verb keeps being taught whichever card is hidden, and the question is only which English gloss keeps a vocabulary slot.
+
+**A wrong turn worth recording.** The first attempt followed the existing `CONJUGATION_FIRST_TRANSLATION_HEBREW` precedent for `להספיק` and `לברר`, hiding the *vocabulary* card. `tests/vocab-data.test.js` rejected it: both cards are `core_advanced-131` and `-137`, inside the pinned 144-card append-only expansion that the suite requires to stay fully playable (`assert.ok(expansion.every(word => word.availability?.translationQuiz))`). The precedent and that guarantee are in direct conflict for these two rows. The guarantee wins, so both were flipped to hide the conjugation card instead — which also makes all four consistent. `CONJUGATION_FIRST_TRANSLATION_HEBREW` is unchanged at `לסנן`, `לקרר`.
+
+**Files changed:**
+
+- `hebrew-verbs.js` — four ids added to `TRANSLATION_HIDDEN_STARTER_VERB_IDS` in two commented groups, kept separate from the existing entries because the existing group's stated reason (idiom conjugation support) does not apply: `advanced-verb-lehorid`, `advanced-verb-lehealem`, `advanced-verb-lehaspik`, `advanced-verb-levarer`.
+- `tests/vocab-data.test.js` — `KNOWN_MERGED_HEBREW_ONLY_CLASHES` emptied and the test renamed to `no Hebrew surface in the merged pool carries two different glosses`. Its comment now records that the invariant is about the rendered surface, not sense counts: the 14 verbs carrying a per-sense `usage_pattern` can serve several senses safely, which is why a blanket "multi-sense verbs cannot be playable" rule would be wrong.
+- `index.html` — `hebrew-verbs.js?v=20260808b` → `?v=20260817a`. `vocab-data.js` already moved to `?v=20260817a` earlier today and its content is unchanged since.
+
+**Behavior changed:**
+
+- Merged playable pool 2,222 → 2,217. Vocabulary-side playable is unchanged at 2,105.
+- `להוריד` now has no Translation Match card and 2 conjugation cards at 24 forms. `להיעלם` keeps only "to ghost" and 24 conjugation forms. `להספיק` keeps only "to have time (to)" and 21 forms. `לברר` keeps only "to check into" and 21 forms.
+- Boards containing two identical Hebrew tiles: **0.31% → 0.09% → 0.075%** across the day's two fixes, measured over 20,000 simulated 20-card boards each time.
+
+**Tests run:**
+
+- `npm test` — **448 pass, 0 fail** before and after. No test count change; one test was repurposed rather than added.
+- `node --test tests/vocab-data.test.js tests/hebrew-verbs.test.js` — 66 pass.
+- Live on `ulpango-dev`: zero Hebrew-only clashes in the merged runtime pool, and the four verbs confirmed still present in `runtime.verbFormDeck` with their form counts.
+
+**Risks / regressions to check:**
+
+- **The remaining 0.075% is not noise, and it is the same bug.** Ten exact `he`+`en` twins survive in `KNOWN_MERGED_DUPLICATES` — `לעדכן`, `להסכים`, `לוותר`, `לאשר`, `לבטל`, `לצרף`, `להזכיר`, `להמליץ`, `להשפיע`, `להבהיר`. Each is a `core_advanced` vocabulary card duplicated by a verb-seed card with an identical gloss. The allow-list treats them as benign, but they are not: grading is by `pairId` (`app/match-engine.js:221`), so two identical Hebrew tiles against two identical English tiles is still a 50/50 pick that penalises both ids on a miss. They are now the *only* remaining source of duplicate-Hebrew boards. Not fixed here because the scope agreed was the four Hebrew-only clashes; worth its own pass, and the fix is likely the same one-line-per-verb move now that the pattern is established.
+- The four hidden verbs stay in Conjugation, Conjugation+ and sentence hints; only Translation Match lost the cards. Confirmed live rather than reasoned.
+
+### 2026-08-17 EDT — Translation Match no longer deals two indistinguishable cards; 22 duplicate twins suppressed
+
+**Requested:** "Do the next fix" — the duplicate-card defect surfaced in the review earlier the same day.
+
+**The bug.** Translation Match grades a selection by `pairId` (`app/match-engine.js:221`) and the board does not de-duplicate on surface form. Two playable cards sharing a Hebrew string therefore render two identical tiles against two different English glosses. The learner has no way to tell which tile belongs to which gloss, so it is a coin flip, and a wrong pick calls `onMismatch(leftPairId, rightPairId)` and pushes **both** ids down the Leitner ladder. Two cards sharing an English gloss fail the same way from the other side.
+
+**What was already there.** A partial fix had been ported into `main` at some point: `getBaseVocabulary` consults a per-row `meta.availability` before the Hebrew-keyed `LEXICON_AVAILABILITY_OVERRIDES`, with the comment *"the headword map … is keyed by Hebrew alone and so cannot separate two cards that share a spelling"* (`vocab-data.js:2810`). Twelve rows already used it — the clear-cut "same Hebrew and same English" group. The harder judgment-call half was never finished, and 65 commits of new content added fresh clashes. An unmerged worktree (`.claude/worktrees/practical-robinson-31ae13`) held the original attempt as a separate id-keyed Map; that approach was **not** used, because per-row `availability` already exists for exactly this and adding a second overrides map would have made a fourth link in the availability chain.
+
+**Files changed:**
+
+- `vocab-data.js` — 22 rows gained `{ availability: { translationQuiz: false } }`; the two rows that already carried `idEnglish` had it merged rather than replaced. `__build` `20260811a` → `20260817a`. No row was reordered or re-shelved, so the append-only id contract holds.
+- `tests/vocab-data.test.js` — the pinned playable count 2127 → 2105. Added `SUPPRESSED_DUPLICATE_IDS` plus two tests: no two playable cards share a Hebrew surface or an English gloss, and every suppressed id still resolves and keeps `sentenceHints`. Added a third test pinning the four unresolved merged clashes (below).
+- `index.html` — `vocab-data.js?v=20260811l` → `?v=20260817a`. The only shipped `.js`/`.css` in the diff.
+
+**How the 22 were chosen.** The worktree's 3-week-old list was not reused; the duplicate set was recomputed against current `main` and resolved iteratively, since hiding one twin can resolve a second clash (hiding `conversation_glue-014-actually` for the `בעצם` clash also settled the `actually` English clash, so only one card was lost instead of two). Converged in 3 rounds. Tiebreaker was `utility`, matching the original author's documented rule, with sentence-bank support consulted for the two exact ties — it separated `whatever` (`לא משנה` 6 hits vs `שיהיה` 2) and agreed with the utility ordering.
+
+**Caveat on that tiebreaker, recorded deliberately.** `utility` is synthetic — `vocab-data.js:2799` computes it from authoring position within a category, not importance. It is a weak signal for deciding which sense a learner should keep drilling, and for Hebrew-only clashes both twins share a surface so no frequency signal can separate them. Six calls are worth a second look when the frequency import lands: **`הנחה`** keeps "assumption" and hides "discount", though discount is far more common in daily Hebrew; **`מבצע`** keeps "military operation" over the general "operation"; **`תור`** keeps "appointment" over "queue"; **`גיוס`** keeps "conscription" over "recruitment"; **`ארנונה`** keeps "municipal tax" over "property tax" (the unmerged worktree made the opposite call); and **`campaign`** was an exact 75/75 utility tie broken alphabetically, hiding the everyday loanword `קמפיין` in favour of `מערכה` — arguably backwards, and probably better solved by disambiguating the two glosses than by hiding either. Every hidden card keeps `sentenceHints: true`, so nothing left the lexicon; only the Translation Match drill changed.
+
+**Behavior changed:**
+
+- Playable Translation Match cards 2,127 → 2,105 from `vocab-data.js`; hidden cards 65 → 87, all retaining sentence hints.
+- Measured in the running app over 20,000 simulated 20-card boards: boards containing an indistinguishable pair fell from **0.31% to 0.09%** (62 → 18 per 20,000). Roughly one board in 320 was affected before, one in 1,100 now.
+- Spot-checked live: `אחריות` now deals only "responsibility", `הנחה` only "assumption", `רשות` only "authority", `מבצע` only "military operation", `פתאום` only "all of a sudden", `תור` only "appointment".
+
+**Found and pinned, not fixed — four clashes survive the vocab/verb-seed merge.** The runtime pool is 2,451 cards: 2,192 from `vocab-data.js` plus 259 injected by `hebrew-verbs.getSeedVocabularyEntries()`. Fourteen Hebrew clashes exist across that merge. Ten are exact `he`+`en` twins already allow-listed by the existing `KNOWN_MERGED_DUPLICATES` test. The other four carry *different* English and are the genuinely indistinguishable case — and the existing test cannot see them, because it keys on `` `${he} ${en}` `` and so only ever detects exact twins. They are the entire residual 0.09%:
+
+- `להוריד` — `advanced-verb-lehorid` sense-1 "to take down" vs sense-2 "to download". Both are verb-seed entries from the *same* verb, so this one cannot be fixed from `vocab-data.js` at all.
+- `להיעלם` — `dating_relationships-007-to-ghost` vs `advanced-verb-lehealem` "to disappear". The slang sense is the more distinctive teaching item, so the obvious mechanical fix is probably the wrong content call.
+- `להספיק` — `core_advanced-131` "to have time (to)" vs `advanced-verb-lehaspik` "to manage in time".
+- `לברר` — `core_advanced-137` "to check into" vs `advanced-verb-levarer` "to find out".
+
+These were left for a content decision rather than resolved unilaterally: three would be one line each in `CONJUGATION_FIRST_TRANSLATION_HEBREW` (currently just `לסנן`, `לקרר`), which hides the vocab card in favour of the conjugation deck, and the fourth needs a change in `hebrew-verbs.js`. New test `Hebrew-only clashes in the merged pool stay pinned and cannot grow` asserts the set is exactly these four, so a new one fails the build and resolving one forces the list to shrink.
+
+**Tests run:**
+
+- `npm test` before — 445 pass, 0 fail. After — **448 pass, 0 fail**, ~110s. Three tests added.
+- `node --test tests/vocab-data.test.js` — 27 pass (was 24).
+- Live verification on `ulpango-dev` against the running app: `__build` and the script tag both read `20260817a`; zero duplicate Hebrew and zero duplicate English among the 2,105 playable vocab cards; the before/after board simulation above.
+
+**Risks / regressions to check:**
+
+- **One unrelated flake surfaced.** `tests/gameplay-layout.test.js` failed once with *"Binyanim board scrolls (499px > 488px)"*, then passed 8 consecutive runs. Not caused by this change — the Binyanim board draws its glosses from `verb-game-data.js` via `app/binyan-board.js` and never reads vocab. It matters now because `npm test` gates PRs and the Pages deploy as of today, so it will produce random red builds. The failing capture shows `footer.height: 0` and `footerPosition: "static"`, which points at measuring before layout settles. Filed as a separate task.
+- Character routing is unaffected: routes match on Hebrew, and for Hebrew clashes the surviving twin keeps the surface playable. The three suppressions that remove a Hebrew surface outright (`שיהיה`, `קמפיין`, `מובהקות`) were checked against `app/character-data.js` and appear in no route.
+- `tests/content-coverage.test.js` counts all 2,192 records regardless of availability, so its pinned 1043/1149 figures are untouched — confirmed by the green suite.
+
+### 2026-08-17 EDT — Codebase review before the story push; CI test gate, two stale cache keys, and the agent-doc split repaired
+
+**Requested:** A high-level read of the codebase before committing to a push on per-mission storylines, artwork and narration. Mike's framing: content is large but the dictionary may not be saturated, he is ambitious about coverage breadth, he wants a rule for when coverage expansion stops paying, and he suspects Sentences and Shema are slogs next to the matching games. Then: implement the safety-net tranche only. Scenes are explicitly parked — he wants a night to think and wants scene content written before any implementation.
+
+**What the review found.** Written up in full at `~/.claude/plans/can-you-look-over-shimmering-minsky.md`. The load-bearing findings:
+
+- **Diminishing returns already arrived and are measurable in this log.** Reconstructing `npm run report:coverage` tranche by tranche: kitchen actions 2.42 newly-supported cards per sentence, home care 2.58, Inat formal 2.00, dating 1.90, Ivri AI/ML 1.85, Inat legal 1.94, Ivri finance 1.54 — then the 2026-08-12 four-gap tranche, the largest at 110 sentences, returned **0.11**. A twentieth of the earlier rate. Handwriting is 100% saturated (27/27 letterforms), Binyan Board is structurally saturated (80 roots × 7, every cell authored), and idioms are hard-blocked at 105 by the 60% `l_dative` cap with one entry of headroom.
+- **`docs/product-roadmap.md` said this on 2026-07-29 and was not acted on.** Nothing from it shipped — typing mode absent (`grep -c '<input' index.html` → 0), no dialogue scenes, no mode registry, no `corpusHits`, no `prefers-reduced-motion`; only A3 `data-character` landed. Meanwhile sentences went 608 → 1,179 (+94%) in 19 days.
+- **`utility` is synthetic.** `vocab-data.js:2799` computes it as `100 - (idx / max) * 45` — authoring position within a category, not importance — and it drives `utilityBoost` in `app/data.js:257`, i.e. what the learner sees next in every mode. No frequency list, corpus or CEFR mapping exists in the repo. Open Hebrew lemma-frequency data does exist (FDOSH from OPUS OpenSubtitles, `wordfreq`), which would make the roadmap's "unfalsifiable without a corpus" non-goal falsifiable and give a real stopping rule.
+- **The pacing complaint is a real bug, not a preference.** `buildItinerary` (`app/character.js:1506`) takes the first N of the frozen `ACTIVITY_ORDER` (`:7`), so **Short is always Vocabulary → Sentences → Shema** — the two heaviest modes at positions 2 and 3 in every tier, with the quick matching games only from Medium up and always after. Compounding it, `app/constants.js` gives nearly every mode a flat `10` rounds although a round is a tap in one mode and a 12-tile build in another, and the second-chance queue (`app/sentence-bank.js:2024`, replayed at `:1460`) is **uncapped**, so the two hardest modes are the only ones that can run past their stated length.
+- **The narrative engine is ~80% built** — `renderScene` (`app/character.js:664`), `isBlocking()` (`:320`), the `dialogue(text, glosses)` tap-to-reveal gloss engine (`app/character-data.js:7` + `app/character.js:414`), ~660 lines of gendered dialogue, and `captureActivitySummary` (`:1664`) already suppressing the results screen. Missing is only branching.
+
+**Files changed:**
+
+- `.github/workflows/test.yml` — **new.** Runs `npm test` on every pull request. Includes a guard that fails if fewer than 400 tests are discovered, so a Node upgrade or moved directory cannot make the suite pass vacuously.
+- `.github/workflows/deploy-pages.yml` — added a `test` job and made `deploy` depend on it (`needs: test`). Previously the only workflow triggered on push to `main` and deployed with no verification at all; 64 of the last 100 commits are merges, so every one of them reached production unchecked.
+- `index.html` — two genuinely stale cache keys bumped: `app/content-sources.js` `?v=20260324a` → `?v=20260817a` (file last modified 2026-03-29) and `app/lesson.js` `?v=20260315o` → `?v=20260817a` (file gutted from ~639 lines to 42 in `8d2ac4d` on 2026-06-20 and never bumped). All 37 tags were audited; the other nine date mismatches are all +1 day and benign — `index.html` was bumped in the same commit in every case, verified by diff.
+- `docs/project-rules.md` — **new.** The canonical rule set, merged verbatim from the union of `CLAUDE.md` and `AGENTS.md`: task log, editing approach, cache-busting, Hebrew pointing, sentence-bank authoring, viewport floor, sprite review, artwork approval, project structure, plus a new CI section. The project-structure section was corrected while merging — it omitted `prepositions.js`, `handwriting.js`/`handwriting-core.js`, `character.js`/`character-data.js`, `preposition-data.js` and `handwriting-data.js`.
+- `CLAUDE.md`, `AGENTS.md` — both reduced to a pointer at `docs/project-rules.md` plus a five-item non-negotiables list, and made byte-identical below their title line.
+- `tests/agent-docs-parity.test.js` — **new**, 4 tests. Asserts the two agent files are identical below line 1, that each keeps its own title, that both reference the canonical doc, and that the canonical doc still carries all nine rule sections.
+
+**Why the agent-doc change matters.** The two files had ~40 byte-identical lines and then diverged on everything load-bearing. Cache-busting and the Hebrew pointing convention lived **only** in `CLAUDE.md`; sentence-bank authoring, the 360×640 viewport floor, sprite review and artwork approval lived **only** in `AGENTS.md`. Codex authors sentence-bank content and was never told the pointing rule — which is a direct explanation for `328fa98` "fix: correct 14 niqqud errors in the recent content tranches" — and was never told about cache-busting, which is a plausible explanation for the `app/lesson.js` key above. Nothing contradicted; the failure mode was silent omission, so nothing ever failed loudly. The parity test was verified to actually fail by appending a line to `AGENTS.md` alone (1 fail / 3 pass), then restored.
+
+**Behavior changed:**
+
+- No runtime behavior change in the app itself, with one exception: returning users with a warm cache will now receive the current `app/lesson.js` and `app/content-sources.js` instead of the March-keyed copies. Because every module export uses the `x = x || function` idempotency guard, a stale cached module silently **wins** over a later one, so this was failing invisibly rather than erroring.
+- Process change: pull requests now run the suite, and a red suite blocks the Pages deploy.
+
+**Tests run:**
+
+- `npm test` before — **441 pass, 0 fail**, 111s.
+- `npm test` after — **445 pass, 0 fail**, 109s. The four added tests are the parity file.
+- `node --test tests/agent-docs-parity.test.js` in isolation — 4 pass; deliberately drifted, 1 fail / 3 pass; restored, 4 pass.
+- Note for future sessions: `tests/content-coverage.test.js` is ~99% of the suite's wall clock. Everything else combined runs in under 6 seconds. Moving it behind `npm run test:slow` would make the inner loop usable.
+
+**Risks / regressions to check:**
+
+- **CI Node version is pinned to 24; local is 25.6.1.** `node --test` file discovery has changed across majors. The ≥400-test guard will catch a collapse loudly, but the first PR should be checked to confirm CI reports 445 and not some smaller number.
+- `tests/gameplay-layout.test.js` self-skips when Chrome is absent (`t.skip`). Ubuntu runners ship Chrome at `/usr/bin/google-chrome`, which `findChrome()` already probes, so it should run in CI — worth confirming on the first PR that it is not silently skipping.
+- The Pages deploy now has a prerequisite job, so deploys take roughly two minutes longer.
+- `docs/project-rules.md` is now the only copy of several rules. Anything that read `CLAUDE.md` or `AGENTS.md` expecting the full text will need to follow the pointer.
+
+**Found but deliberately not touched — unmerged bug fix in a stale worktree.** `.claude/worktrees/practical-robinson-31ae13` holds ~199 uncommitted lines from 2026-07-27 that never landed: a `LEXICON_ID_AVAILABILITY_OVERRIDES` map in `vocab-data.js` keyed by id rather than Hebrew, plus 61 lines of `tests/vocab-data.test.js`. **The bug it fixes is live in `main` today.** Translation Match grades by `pairId` (`app/match-engine.js:221`) and the board does not de-duplicate on surface form, so two cards sharing a Hebrew string can appear on one board with different English glosses — the learner cannot tell them apart, it is a coin flip, and a wrong flip penalizes both ids in the Leitner ladder. Measured against current `main`: **19 Hebrew surfaces still have more than one playable card**, including `אחריות` (responsibility / warranty), `הנחה` (assumption / discount), `רשות` (permission / authority), `מבצע` (operation / military operation) and `פתאום` (suddenly / all of a sudden). The second worktree, `.claude/worktrees/youthful-bhaskara-e8a772`, holds only 18 uncommitted lines, mostly `task-log.md`. Both worktrees' committed history is already in `main`. **Neither worktree was removed** — the plan had called for deleting both as stale scratch, and that was wrong. Recovering the duplicate-card fix should be its own task.
+
 ### 2026-08-15 EDT — Gender-ambiguous prompts now accept every valid answer; the standalone ו chip is gone
 
 **Requested:** Three reports from play. (1) A hunch that some sentences need alternate word orders accepted. (2) A check on whether אליך vs אלייך is a mistake. (3) That a bare ו appearing as its own Hebrew chip does not match our usage.

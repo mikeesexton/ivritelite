@@ -313,7 +313,7 @@ test("no conjugated item pairs a subject with an object it would have to corefer
     || /^she\b.*\bher\b(?! place)/.test(question.englishHint)
     || /^they\b.*\bthem\b/.test(question.englishHint)
   ));
-  assert.deepEqual(incoherent.map((question) => question.englishHint), []);
+  assert.deepEqual(Array.from(incoherent, (question) => question.englishHint), []);
 });
 
 test("conjugated frames carry Hebrew and English that agree on subject and tense", () => {

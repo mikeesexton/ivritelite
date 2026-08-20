@@ -19537,6 +19537,334 @@ const NUMBER_TIME_SENTENCES = [
   }),
 ];
 
+// Coverage tranche: lexical, three verbs a learner met in play. ח-ס-ל had zero
+// sentence support of any kind, and the vocabulary card for it was the finite
+// passive חוסל rather than the infinitive; להשוות had six rows but not one
+// present-tense form; להתמקד had a single inflected chip and no paradigm behind
+// it. The two idan_ rows stay reporting register rather than tactics, and the
+// prefix fences them, so nothing here reaches the rest of the cast.
+const COMPARE_FOCUS_SENTENCES = [
+  buildReviewedSentence({
+    id: "idan_127", emoji: "🎯", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדובר אמר שהצבא חיסל את המטרה.", hebrewNiqqud: "הַדּוֹבֵר אָמַר שֶׁהַצָּבָא חִסֵּל אֶת הַמַּטָּרָה.", english: "The spokesperson said that the army eliminated the target.",
+    hebrewTokenPairs: [["הדובר", "הַדּוֹבֵר"], ["אמר", "אָמַר"], ["שהצבא", "שֶׁהַצָּבָא"], ["חיסל", "חִסֵּל"], ["את המטרה", "אֶת הַמַּטָּרָה"]], englishTokens: ["The spokesperson", "said", "that the army", "eliminated", "the target"],
+    hebrewDistractorPairs: [["הקצין", "הַקָּצִין"], ["כתב", "כָּתַב"], ["שהצי", "שֶׁהַצִּי"], ["תפס", "תָּפַס"], ["את המחסן", "אֶת הַמַּחְסָן"]], englishDistractors: ["The officer", "wrote", "that the navy", "caught", "the warehouse"],
+    notes: "חיסל is the third-person past of לחסל; the helper yod of the plain spelling drops under pointing."
+  }),
+  buildReviewedSentence({
+    id: "idan_128", emoji: "📣", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "לפי ההודעה המפקד חוסל.", hebrewNiqqud: "לְפִי הַהוֹדָעָה הַמְּפַקֵּד חֻסַּל.", english: "According to the announcement the commander was eliminated.",
+    hebrewTokenPairs: [["לפי", "לְפִי"], ["ההודעה", "הַהוֹדָעָה"], ["המפקד", "הַמְּפַקֵּד"], ["חוסל", "חֻסַּל"]], englishTokens: ["According to", "the announcement", "the commander", "was eliminated"],
+    hebrewDistractorPairs: [["לדברי", "לְדִבְרֵי"], ["הקצין", "הַקָּצִין"], ["נפצע", "נִפְצַע"], ["בבוקר", "בַּבֹּקֶר"]], englishDistractors: ["In the words of", "the officer", "was wounded", "in the morning"],
+    hebrewOrderAlternates: [
+      {
+        text: "המפקד חוסל לפי ההודעה.",
+        textNiqqud: "הַמְּפַקֵּד חֻסַּל לְפִי הַהוֹדָעָה.",
+        order: [2, 3, 0, 1],
+      },
+    ],
+    notes: "חוסל is the pu'al passive of לחסל, the form a news report uses."
+  }),
+  buildReviewedSentence({
+    id: "idan_131", emoji: "🛑", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אסור לחסל מטרה בלי אישור.", hebrewNiqqud: "אָסוּר לְחַסֵּל מַטָּרָה בְּלִי אִשּׁוּר.", english: "It is forbidden to eliminate a target without approval.",
+    hebrewTokenPairs: [["אסור", "אָסוּר"], ["לחסל", "לְחַסֵּל"], ["מטרה", "מַטָּרָה"], ["בלי אישור", "בְּלִי אִשּׁוּר"]], englishTokens: ["It is forbidden", "to eliminate", "a target", "without approval"],
+    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["לעצור", "לַעֲצֹר"], ["רכב", "רֶכֶב"], ["בלי סיבה", "בְּלִי סִיבָּה"]], englishDistractors: ["It is permitted", "to stop", "a vehicle", "without a reason"],
+    hebrewOrderAlternates: [
+      {
+        text: "בלי אישור אסור לחסל מטרה.",
+        textNiqqud: "בְּלִי אִשּׁוּר אָסוּר לְחַסֵּל מַטָּרָה.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "The infinitive is לחסל; the third-person past is חיסל and the passive is חוסל. Numbered 131 because idan_129 and idan_130 are taken by the להרוג tranche on a parallel branch."
+  }),
+  buildReviewedSentence({
+    id: "professional_212", emoji: "📊", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אני משווה את שתי ההצעות.", hebrewNiqqud: "אֲנִי מַשְׁוֶה אֶת שְׁתֵּי הַהַצָּעוֹת.", english: "I am comparing the two offers.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["משווה", "מַשְׁוֶה"], ["את שתי", "אֶת שְׁתֵּי"], ["ההצעות", "הַהַצָּעוֹת"]], englishTokens: ["I", "am comparing", "the two", "offers"],
+    hebrewDistractorPairs: [["בודק", "בּוֹדֵק"], ["מאשר", "מְאַשֵּׁר"], ["את שלוש", "אֶת שָׁלוֹשׁ"], ["החוזים", "הַחוֹזִים"]], englishDistractors: ["am checking", "am approving", "the three", "contracts"],
+    notes: "משווה is the hif'il present of להשוות; what is compared takes את or בין."
+  }),
+  buildReviewedSentence({
+    id: "formal_131", emoji: "📚", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המחקר השווה בין שתי התקופות.", hebrewNiqqud: "הַמֶּחְקָר הִשְׁוָה בֵּין שְׁתֵּי הַתְּקוּפוֹת.", english: "The study compared the two periods.",
+    hebrewTokenPairs: [["המחקר", "הַמֶּחְקָר"], ["השווה", "הִשְׁוָה"], ["בין שתי", "בֵּין שְׁתֵּי"], ["התקופות", "הַתְּקוּפוֹת"]], englishTokens: ["The study", "compared", "the two", "periods"],
+    hebrewDistractorPairs: [["הספר", "הַסֵּפֶר"], ["תיאר", "תֵּאֵר"], ["בין שלוש", "בֵּין שָׁלוֹשׁ"], ["המדינות", "הַמְּדִינוֹת"]], englishDistractors: ["The book", "described", "the three", "countries"],
+    notes: "השווה is the third-person past of להשוות; the doubled vav of the plain spelling collapses to one under pointing."
+  }),
+  buildReviewedSentence({
+    id: "everyday_347", emoji: "🏷️", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "תשווה מחירים לפני שאתה קונה.", hebrewNiqqud: "תַּשְׁוֶה מְחִירִים לִפְנֵי שֶׁאַתָּה קוֹנֶה.", english: "Compare prices before you buy.",
+    hebrewTokenPairs: [["תשווה", "תַּשְׁוֶה"], ["מחירים", "מְחִירִים"], ["לפני", "לִפְנֵי"], ["שאתה קונה", "שֶׁאַתָּה קוֹנֶה"]], englishTokens: ["Compare", "prices", "before", "you buy"],
+    hebrewDistractorPairs: [["תבדוק", "תִּבְדֹּק"], ["תנאים", "תְּנָאִים"], ["אחרי", "אַחֲרֵי"], ["שאתה מזמין", "שֶׁאַתָּה מַזְמִין"]], englishDistractors: ["Check", "terms", "after", "you order"],
+    hebrewOrderAlternates: [
+      {
+        text: "לפני שאתה קונה תשווה מחירים.",
+        textNiqqud: "לִפְנֵי שֶׁאַתָּה קוֹנֶה תַּשְׁוֶה מְחִירִים.",
+        order: [2, 3, 0, 1],
+      },
+    ],
+    notes: "The masculine future תשווה doubles as a friendly instruction to a man."
+  }),
+  buildReviewedSentence({
+    id: "professional_213", emoji: "🧭", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "בפגישה הזאת אנחנו מתמקדים בתקציב.", hebrewNiqqud: "בַּפְּגִישָׁה הַזֹּאת אֲנַחְנוּ מִתְמַקְּדִים בַּתַּקְצִיב.", english: "In this meeting we are focusing on the budget.",
+    hebrewTokenPairs: [["בפגישה הזאת", "בַּפְּגִישָׁה הַזֹּאת"], ["אנחנו", "אֲנַחְנוּ"], ["מתמקדים", "מִתְמַקְּדִים"], ["בתקציב", "בַּתַּקְצִיב"]], englishTokens: ["In this meeting", "we", "are focusing", "on the budget"],
+    hebrewDistractorPairs: [["בשיחה הזאת", "בַּשִּׂיחָה הַזֹּאת"], ["הם", "הֵם"], ["מדברים", "מְדַבְּרִים"], ["במחירים", "בַּמְּחִירִים"]], englishDistractors: ["In this call", "they", "are talking", "on the prices"],
+    hebrewOrderAlternates: [
+      {
+        text: "אנחנו מתמקדים בתקציב בפגישה הזאת.",
+        textNiqqud: "אֲנַחְנוּ מִתְמַקְּדִים בַּתַּקְצִיב בַּפְּגִישָׁה הַזֹּאת.",
+        order: [1, 2, 3, 0],
+      },
+    ],
+    notes: "להתמקד takes ב for whatever the focus is on."
+  }),
+  buildReviewedSentence({
+    id: "formal_132", emoji: "📝", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המאמר התמקד בביקורת המחקר.", hebrewNiqqud: "הַמַּאֲמָר הִתְמַקֵּד בְּבִקֹּרֶת הַמֶּחְקָר.", english: "The article focused on the critique of the study.",
+    hebrewTokenPairs: [["המאמר", "הַמַּאֲמָר"], ["התמקד", "הִתְמַקֵּד"], ["בביקורת", "בְּבִקֹּרֶת"], ["המחקר", "הַמֶּחְקָר"]], englishTokens: ["The article", "focused", "on the critique", "of the study"],
+    hebrewDistractorPairs: [["הספר", "הַסֵּפֶר"], ["עסק", "עָסַק"], ["בשאלת", "בִּשְׁאֵלַת"], ["התקופה", "הַתְּקוּפָה"]], englishDistractors: ["The book", "dealt", "with the question", "of the period"],
+    notes: "ביקורת here is scholarly critique rather than an audit; התמקד is the third-person past."
+  }),
+  buildReviewedSentence({
+    id: "everyday_348", emoji: "✨", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "כדאי להתמקד במה שחשוב עכשיו.", hebrewNiqqud: "כְּדַאי לְהִתְמַקֵּד בְּמָה שֶׁחָשׁוּב עַכְשָׁו.", english: "It is worth focusing on what is important now.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["להתמקד", "לְהִתְמַקֵּד"], ["במה שחשוב", "בְּמָה שֶׁחָשׁוּב"], ["עכשיו", "עַכְשָׁו"]], englishTokens: ["It is worth", "focusing", "on what is important", "now"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["לשכוח", "לִשְׁכֹּחַ"], ["את מה שקרה", "אֶת מָה שֶׁקָּרָה"], ["אחר כך", "אַחַר כָּךְ"]], englishDistractors: ["It is forbidden", "forgetting", "what happened", "later"],
+    hebrewOrderAlternates: [
+      {
+        text: "עכשיו כדאי להתמקד במה שחשוב.",
+        textNiqqud: "עַכְשָׁו כְּדַאי לְהִתְמַקֵּד בְּמָה שֶׁחָשׁוּב.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "כדאי is impersonal — 'it is worth' — and takes an infinitive."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_219", emoji: "🔇", category: "colloquial", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אין מצב להתמקד כשיש רעש בבית.", hebrewNiqqud: "אֵין מַצָּב לְהִתְמַקֵּד כְּשֶׁיֵּשׁ רַעַשׁ בַּבַּיִת.", english: "There is no way to focus when there is noise at home.",
+    hebrewTokenPairs: [["אין מצב", "אֵין מַצָּב"], ["להתמקד", "לְהִתְמַקֵּד"], ["כשיש רעש", "כְּשֶׁיֵּשׁ רַעַשׁ"], ["בבית", "בַּבַּיִת"]], englishTokens: ["There is no way", "to focus", "when there is noise", "at home"],
+    hebrewDistractorPairs: [["נוח", "נוֹחַ"], ["לישון", "לִישֹׁן"], ["כשאין אור", "כְּשֶׁאֵין אוֹר"], ["בחוץ", "בַּחוּץ"]], englishDistractors: ["It is comfortable", "to sleep", "when there is no light", "outside"],
+    hebrewOrderAlternates: [
+      {
+        text: "כשיש רעש בבית אין מצב להתמקד.",
+        textNiqqud: "כְּשֶׁיֵּשׁ רַעַשׁ בַּבַּיִת אֵין מַצָּב לְהִתְמַקֵּד.",
+        order: [2, 3, 0, 1],
+      },
+    ],
+    notes: "אין מצב is the colloquial 'no way'; here it means focusing is impossible."
+  }),
+];
+
+// Coverage tranche: five nouns a learner met in play, none of which existed as a
+// card. Three carry a correction worth stating in notes rather than leaving to
+// be inferred: ירידה is a decline *and* a descent (and, as ירידה מהארץ,
+// emigration); הסמכה and סמכות are different words from one root; and מחדל on
+// its own is a systemic failure — the "default" sense exists only inside
+// ברירת מחדל.
+const DECLINE_AUTHORITY_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_214", emoji: "🛒", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אנחנו קוראים ביקורות מוצרים לפני רכישה.", hebrewNiqqud: "אֲנַחְנוּ קוֹרְאִים בִּקּוֹרוֹת מוּצָרִים לִפְנֵי רְכִישָׁה.", english: "We read product reviews before a purchase.",
+    hebrewTokenPairs: [["אנחנו", "אֲנַחְנוּ"], ["קוראים", "קוֹרְאִים"], ["ביקורות מוצרים", "בִּקּוֹרוֹת מוּצָרִים"], ["לפני", "לִפְנֵי"], ["רכישה", "רְכִישָׁה"]], englishTokens: ["We", "read", "product reviews", "before", "a purchase"],
+    hebrewDistractorPairs: [["הם", "הֵם"], ["כותבים", "כּוֹתְבִים"], ["תנאים", "תְּנָאִים"], ["אחרי", "אַחֲרֵי"], ["ההזמנה", "הַהַזְמָנָה"]], englishDistractors: ["They", "write", "terms", "after", "the order"],
+    hebrewOrderAlternates: [
+      {
+        text: "לפני רכישה אנחנו קוראים ביקורות מוצרים.",
+        textNiqqud: "לִפְנֵי רְכִישָׁה אֲנַחְנוּ קוֹרְאִים בִּקּוֹרוֹת מוּצָרִים.",
+        order: [3, 4, 0, 1, 2],
+      },
+    ],
+    notes: "ביקורות מוצרים is the standard term for product reviews; ביקורת on its own is criticism or an audit."
+  }),
+  buildReviewedSentence({
+    id: "professional_215", emoji: "📉", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "הנתונים מראים ירידה בהכנסות ברבעון.", hebrewNiqqud: "הַנְּתוּנִים מַרְאִים יְרִידָה בְּהַכְנָסוֹת בָּרִבְעוֹן.", english: "The data show a decline in revenue in the quarter.",
+    hebrewTokenPairs: [["הנתונים", "הַנְּתוּנִים"], ["מראים", "מַרְאִים"], ["ירידה", "יְרִידָה"], ["בהכנסות", "בְּהַכְנָסוֹת"], ["ברבעון", "בָּרִבְעוֹן"]], englishTokens: ["The data", "show", "a decline", "in revenue", "in the quarter"],
+    hebrewDistractorPairs: [["המסמכים", "הַמִּסְמָכִים"], ["מסבירים", "מַסְבִּירִים"], ["צמיחה", "צְמִיחָה"], ["בהוצאות", "בַּהוֹצָאוֹת"], ["בשנה", "בַּשָּׁנָה"]], englishDistractors: ["The documents", "explain", "growth", "in the expenses", "in the year"],
+    hebrewOrderAlternates: [
+      {
+        text: "ברבעון הנתונים מראים ירידה בהכנסות.",
+        textNiqqud: "בָּרִבְעוֹן הַנְּתוּנִים מַרְאִים יְרִידָה בְּהַכְנָסוֹת.",
+        order: [4, 0, 1, 2, 3],
+      },
+    ],
+    notes: "ירידה is a decline; the same noun is also a descent, and ירידה מהארץ means emigrating from Israel."
+  }),
+  buildReviewedSentence({
+    id: "formal_133", emoji: "🗳️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המחקר בדק את הירידה בהשתתפות.", hebrewNiqqud: "הַמֶּחְקָר בָּדַק אֶת הַיְרִידָה בְּהִשְׁתַּתְּפוּת.", english: "The study examined the decline in participation.",
+    hebrewTokenPairs: [["המחקר", "הַמֶּחְקָר"], ["בדק", "בָּדַק"], ["את הירידה", "אֶת הַיְרִידָה"], ["בהשתתפות", "בְּהִשְׁתַּתְּפוּת"]], englishTokens: ["The study", "examined", "the decline", "in participation"],
+    hebrewDistractorPairs: [["הספר", "הַסֵּפֶר"], ["תיאר", "תֵּאֵר"], ["את הצמיחה", "אֶת הַצְּמִיחָה"], ["בתמיכה", "בַּתְּמִיכָה"]], englishDistractors: ["The book", "described", "the growth", "in the support"],
+    notes: "ירידה בהשתתפות is the standard phrase for falling turnout."
+  }),
+  buildReviewedSentence({
+    id: "everyday_349", emoji: "🏖️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הירידה לחוף לוקחת עשר דקות.", hebrewNiqqud: "הַיְרִידָה לַחוֹף לוֹקַחַת עֶשֶׂר דַּקּוֹת.", english: "The descent to the beach takes ten minutes.",
+    hebrewTokenPairs: [["הירידה", "הַיְרִידָה"], ["לחוף", "לַחוֹף"], ["לוקחת", "לוֹקַחַת"], ["עשר", "עֶשֶׂר"], ["דקות", "דַּקּוֹת"]], englishTokens: ["The descent", "to the beach", "takes", "ten", "minutes"],
+    hebrewDistractorPairs: [["הדרך", "הַדֶּרֶךְ"], ["לשוק", "לַשּׁוּק"], ["נמשכת", "נִמְשֶׁכֶת"], ["חמש", "חָמֵשׁ"], ["שעות", "שָׁעוֹת"]], englishDistractors: ["The way", "to the market", "lasts", "five", "hours"],
+    notes: "The same noun that means a decline is also a physical descent."
+  }),
+  buildReviewedSentence({
+    id: "formal_134", emoji: "🎓", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "השכלה גבוהה כבר לא מבטיחה עבודה.", hebrewNiqqud: "הַשְׂכָּלָה גְּבוֹהָה כְּבָר לֹא מַבְטִיחָה עֲבוֹדָה.", english: "Higher education no longer guarantees a job.",
+    hebrewTokenPairs: [["השכלה גבוהה", "הַשְׂכָּלָה גְּבוֹהָה"], ["כבר לא", "כְּבָר לֹא"], ["מבטיחה", "מַבְטִיחָה"], ["עבודה", "עֲבוֹדָה"]], englishTokens: ["Higher education", "no longer", "guarantees", "a job"],
+    hebrewDistractorPairs: [["תעודה", "תְּעוּדָה"], ["עדיין", "עֲדַיִן"], ["מספקת", "מְסַפֶּקֶת"], ["משרה", "מִשְׂרָה"]], englishDistractors: ["A certificate", "still", "provides", "a position"],
+    notes: "השכלה is education as an attainment; השכלה גבוהה is higher education."
+  }),
+  buildReviewedSentence({
+    id: "everyday_350", emoji: "🚪", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "השכלה פותחת דלתות בעבודה.", hebrewNiqqud: "הַשְׂכָּלָה פּוֹתַחַת דְּלָתוֹת בָּעֲבוֹדָה.", english: "Education opens doors at work.",
+    hebrewTokenPairs: [["השכלה", "הַשְׂכָּלָה"], ["פותחת", "פּוֹתַחַת"], ["דלתות", "דְּלָתוֹת"], ["בעבודה", "בָּעֲבוֹדָה"]], englishTokens: ["Education", "opens", "doors", "at work"],
+    hebrewDistractorPairs: [["מקצוע", "מִקְצוֹעַ"], ["סוגרת", "סוֹגֶרֶת"], ["שערים", "שְׁעָרִים"], ["בבית", "בַּבַּיִת"]], englishDistractors: ["A profession", "closes", "gates", "at home"],
+    hebrewOrderAlternates: [
+      {
+        text: "בעבודה השכלה פותחת דלתות.",
+        textNiqqud: "בָּעֲבוֹדָה הַשְׂכָּלָה פּוֹתַחַת דְּלָתוֹת.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "השכלה is formal education as an attainment, distinct from חינוך, which is upbringing and schooling."
+  }),
+  buildReviewedSentence({
+    id: "formal_135", emoji: "📜", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הסמכות אקדמיות אינן מבטיחות דיוק.", hebrewNiqqud: "הַסְמָכוֹת אֲקָדֵמִיּוֹת אֵינָן מַבְטִיחוֹת דִּיּוּק.", english: "Academic credentials do not guarantee accuracy.",
+    hebrewTokenPairs: [["הסמכות אקדמיות", "הַסְמָכוֹת אֲקָדֵמִיּוֹת"], ["אינן", "אֵינָן"], ["מבטיחות", "מַבְטִיחוֹת"], ["דיוק", "דִּיּוּק"]], englishTokens: ["Academic credentials", "do not", "guarantee", "accuracy"],
+    hebrewDistractorPairs: [["תארים", "תְּאָרִים"], ["אינם", "אֵינָם"], ["דורשות", "דּוֹרְשׁוֹת"], ["מקוריות", "מְקוֹרִיּוּת"]], englishDistractors: ["Degrees", "are not", "require", "originality"],
+    notes: "הסמכות is the plural of הסמכה, an accreditation; אינן is the formal feminine-plural negation."
+  }),
+  buildReviewedSentence({
+    id: "professional_218", emoji: "🔬", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המעבדה קיבלה הסמכה מהמשרד.", hebrewNiqqud: "הַמַּעֲבָדָה קִבְּלָה הַסְמָכָה מֵהַמִּשְׂרָד.", english: "The laboratory received an accreditation from the ministry.",
+    hebrewTokenPairs: [["המעבדה", "הַמַּעֲבָדָה"], ["קיבלה", "קִבְּלָה"], ["הסמכה", "הַסְמָכָה"], ["מהמשרד", "מֵהַמִּשְׂרָד"]], englishTokens: ["The laboratory", "received", "an accreditation", "from the ministry"],
+    hebrewDistractorPairs: [["החברה", "הַחֶבְרָה"], ["ביקשה", "בִּקְּשָׁה"], ["אישור", "אִשּׁוּר"], ["מהוועדה", "מֵהַוַּעֲדָה"]], englishDistractors: ["The company", "requested", "an approval", "from the committee"],
+    notes: "הסמכה is an accreditation or certification; its plural הסמכות is what credentials are called."
+  }),
+  buildReviewedSentence({
+    id: "professional_216", emoji: "🏛️", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "לרשות אין סמכות לבטל את המכרז.", hebrewNiqqud: "לָרָשׁוּת אֵין סַמְכוּת לְבַטֵּל אֶת הַמִּכְרָז.", english: "The authority has no power to cancel the tender.",
+    hebrewTokenPairs: [["לרשות", "לָרָשׁוּת"], ["אין", "אֵין"], ["סמכות", "סַמְכוּת"], ["לבטל", "לְבַטֵּל"], ["את המכרז", "אֶת הַמִּכְרָז"]], englishTokens: ["The authority", "has no", "power", "to cancel", "the tender"],
+    hebrewDistractorPairs: [["לוועדה", "לַוַּעֲדָה"], ["יש", "יֵשׁ"], ["חובה", "חוֹבָה"], ["לאשר", "לְאַשֵּׁר"], ["את החוזה", "אֶת הַחוֹזֶה"]], englishDistractors: ["The committee", "has", "a duty", "to approve", "the contract"],
+    hebrewOrderAlternates: [
+      {
+        text: "אין לרשות סמכות לבטל את המכרז.",
+        textNiqqud: "אֵין לָרָשׁוּת סַמְכוּת לְבַטֵּל אֶת הַמִּכְרָז.",
+        order: [1, 0, 2, 3, 4],
+      },
+    ],
+    notes: "סמכות is the power to act; רשות is the body that holds it."
+  }),
+  buildReviewedSentence({
+    id: "everyday_351", emoji: "❓", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "למי יש סמכות להחליט על זה?", hebrewNiqqud: "לְמִי יֵשׁ סַמְכוּת לְהַחְלִיט עַל זֶה?", english: "Who has the authority to decide about this?",
+    hebrewTokenPairs: [["למי", "לְמִי"], ["יש", "יֵשׁ"], ["סמכות", "סַמְכוּת"], ["להחליט", "לְהַחְלִיט"], ["על זה", "עַל זֶה"]], englishTokens: ["Who", "has", "the authority", "to decide", "about this"],
+    hebrewDistractorPairs: [["לך", "לְךָ"], ["אין", "אֵין"], ["רשות", "רְשׁוּת"], ["לשאול", "לִשְׁאֹל"], ["על כך", "עַל כָּךְ"]], englishDistractors: ["you", "do not have", "permission", "to ask", "about that"],
+    notes: "סמכות is the power to decide; רשות is permission, and also the body that grants it."
+  }),
+  buildReviewedSentence({
+    id: "professional_217", emoji: "⚙️", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אפשר לשנות את ברירת המחדל בכל רגע.", hebrewNiqqud: "אֶפְשָׁר לְשַׁנּוֹת אֶת בְּרֵרַת הַמֶּחְדָּל בְּכָל רֶגַע.", english: "You can change the default setting at any time.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לשנות", "לְשַׁנּוֹת"], ["את ברירת המחדל", "אֶת בְּרֵרַת הַמֶּחְדָּל"], ["בכל רגע", "בְּכָל רֶגַע"]], englishTokens: ["You can", "change", "the default setting", "at any time"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["למחוק", "לִמְחֹק"], ["את הסיסמה", "אֶת הַסִּסְמָה"], ["אחרי העדכון", "אַחֲרֵי הָעִדְכּוּן"]], englishDistractors: ["It is forbidden", "to delete", "the password", "after the update"],
+    hebrewOrderAlternates: [
+      {
+        text: "בכל רגע אפשר לשנות את ברירת המחדל.",
+        textNiqqud: "בְּכָל רֶגַע אֶפְשָׁר לְשַׁנּוֹת אֶת בְּרֵרַת הַמֶּחְדָּל.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "ברירת מחדל is literally a choice of last resort and is the standard term for a default setting."
+  }),
+  buildReviewedSentence({
+    id: "formal_136", emoji: "🚨", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הוועדה קבעה שהיה מחדל בפיקוח.", hebrewNiqqud: "הַוַּעֲדָה קָבְעָה שֶׁהָיָה מֶחְדָּל בַּפִּקּוּח.", english: "The committee determined that there was a failure in the oversight.",
+    hebrewTokenPairs: [["הוועדה", "הַוַּעֲדָה"], ["קבעה", "קָבְעָה"], ["שהיה", "שֶׁהָיָה"], ["מחדל", "מֶחְדָּל"], ["בפיקוח", "בַּפִּקּוּח"]], englishTokens: ["The committee", "determined", "that there was", "a failure", "in the oversight"],
+    hebrewDistractorPairs: [["הרשות", "הָרָשׁוּת"], ["הודיעה", "הוֹדִיעָה"], ["שיהיה", "שֶׁיִּהְיֶה"], ["שיפור", "שִׁפּוּר"], ["בתקציב", "בַּתַּקְצִיב"]], englishDistractors: ["The authority", "announced", "that there will be", "an improvement", "in the budget"],
+    notes: "מחדל is a systemic failure or dereliction, the word public debate uses for an institutional failure. On its own it never means 'default' — that sense exists only inside ברירת מחדל."
+  }),
+];
+
+// Coverage tranche: two fixed expressions. הלוך ושוב and its legs בהלוך / בחזור
+// had no card and no sentence in the bank; הלוך is not a free word, it is the
+// infinitive absolute of ללכת and works only in these pairings, which is what
+// the notes say. השגחה carries three live senses — kashrut certification, a
+// lifeguard's watch, and divine providence — so the plain noun sits on the
+// unrouted shelf and only השגחה פרטית is Inbal's alone.
+const PROVIDENCE_TRAVEL_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_352", emoji: "🎫", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "קניתי כרטיס הלוך ושוב לחיפה.", hebrewNiqqud: "קָנִיתִי כַּרְטִיס הָלוֹךְ וָשׁוֹב לְחֵיפָה.", english: "I bought a round trip ticket to Haifa.",
+    hebrewTokenPairs: [["קניתי", "קָנִיתִי"], ["כרטיס", "כַּרְטִיס"], ["הלוך ושוב", "הָלוֹךְ וָשׁוֹב"], ["לחיפה", "לְחֵיפָה"]], englishTokens: ["I bought", "a round trip", "ticket", "to Haifa"],
+    hebrewDistractorPairs: [["הזמנתי", "הִזְמַנְתִּי"], ["מקום", "מָקוֹם"], ["ברכבת", "בָּרַכֶּבֶת"], ["לירושלים", "לִירוּשָׁלַיִם"]], englishDistractors: ["I ordered", "a seat", "on the train", "to Jerusalem"],
+    notes: "הלוך ושוב is a round trip. הלוך is the infinitive absolute of ללכת and works only in these fixed pairings."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_220", emoji: "🚌", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בהלוך היה ריק ובחזור לא היה מקום.", hebrewNiqqud: "בַּהֲלוֹךְ הָיָה רֵיק וּבַחֲזוֹר לֹא הָיָה מָקוֹם.", english: "On the way there it was empty and on the return there was no room.",
+    hebrewTokenPairs: [["בהלוך", "בַּהֲלוֹךְ"], ["היה ריק", "הָיָה רֵיק"], ["ובחזור", "וּבַחֲזוֹר"], ["לא היה מקום", "לֹא הָיָה מָקוֹם"]], englishTokens: ["On the way there", "it was empty", "and on the return", "there was no room"],
+    hebrewDistractorPairs: [["בבוקר", "בַּבֹּקֶר"], ["היה נעים", "הָיָה נָעִים"], ["ובערב", "וּבָעֶרֶב"], ["היה חם", "הָיָה חַם"]], englishDistractors: ["In the morning", "it was pleasant", "and in the evening", "it was hot"],
+    notes: "בהלוך and בחזור are the outbound and return legs of a journey; together, הלוך ושוב is a round trip."
+  }),
+  buildReviewedSentence({
+    id: "inbal_108", emoji: "✨", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "היא מאמינה שהכול השגחה פרטית.", hebrewNiqqud: "הִיא מַאֲמִינָה שֶׁהַכֹּל הַשְׁגָּחָה פְּרָטִית.", english: "She believes that everything is divine providence.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["מאמינה", "מַאֲמִינָה"], ["שהכול", "שֶׁהַכֹּל"], ["השגחה פרטית", "הַשְׁגָּחָה פְּרָטִית"]], englishTokens: ["She", "believes", "that everything", "is divine providence"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["חושב", "חוֹשֵׁב"], ["שזה", "שֶׁזֶּה"], ["צירוף מקרים", "צֵרוּף מִקְרִים"]], englishDistractors: ["He", "thinks", "that it", "is a coincidence"],
+    notes: "השגחה פרטית is divine providence, literally 'particular supervision' — the idea that providence attends each individual rather than only the world in general."
+  }),
+  buildReviewedSentence({
+    id: "everyday_353", emoji: "🧀", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המסעדה הזאת בהשגחה של הרבנות.", hebrewNiqqud: "הַמִּסְעָדָה הַזֹּאת בְּהַשְׁגָּחָה שֶׁל הָרַבָּנוּת.", english: "This restaurant is under supervision of the rabbinate.",
+    hebrewTokenPairs: [["המסעדה הזאת", "הַמִּסְעָדָה הַזֹּאת"], ["בהשגחה", "בְּהַשְׁגָּחָה"], ["של", "שֶׁל"], ["הרבנות", "הָרַבָּנוּת"]], englishTokens: ["This restaurant", "is under supervision", "of", "the rabbinate"],
+    hebrewDistractorPairs: [["החנות הזאת", "הַחֲנוּת הַזֹּאת"], ["בפיקוח", "בְּפִקּוּח"], ["מטעם", "מִטַּעַם"], ["המשרד", "הַמִּשְׂרָד"]], englishDistractors: ["This shop", "is under inspection", "on behalf of", "the ministry"],
+    notes: "השגחה is supervision; on a restaurant sign it means kashrut certification."
+  }),
+  buildReviewedSentence({
+    id: "everyday_354", emoji: "🏊", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אין השגחה בבריכה אחרי חמש.", hebrewNiqqud: "אֵין הַשְׁגָּחָה בַּבְּרֵכָה אַחֲרֵי חָמֵשׁ.", english: "There is no supervision at the pool after five.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["השגחה", "הַשְׁגָּחָה"], ["בבריכה", "בַּבְּרֵכָה"], ["אחרי חמש", "אַחֲרֵי חָמֵשׁ"]], englishTokens: ["There is no", "supervision", "at the pool", "after five"],
+    hebrewDistractorPairs: [["יש", "יֵשׁ"], ["מציל", "מַצִּיל"], ["בחוף", "בַּחוֹף"], ["עד שבע", "עַד שֶׁבַע"]], englishDistractors: ["There is", "a lifeguard", "at the beach", "until seven"],
+    hebrewOrderAlternates: [
+      {
+        text: "אחרי חמש אין השגחה בבריכה.",
+        textNiqqud: "אַחֲרֵי חָמֵשׁ אֵין הַשְׁגָּחָה בַּבְּרֵכָה.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "השגחה also covers a lifeguard's watch or an adult keeping an eye on children."
+  }),
+];
+
+// Coverage tranche: ה-ר-ג. The root had no verbal sentence support of any kind.
+// The only הרג in the bank is the noun, inside a metalinguistic row contrasting
+// רצח / הרג / השמדה, and הרגולציה is an unrelated surface. Both rows stay
+// reporting register rather than tactics, and the idan_ prefix fences them.
+const KILL_VERB_SENTENCES = [
+  buildReviewedSentence({
+    id: "idan_129", emoji: "🚫", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדובר אמר שאסור להרוג את החשוד.", hebrewNiqqud: "הַדּוֹבֵר אָמַר שֶׁאָסוּר לַהֲרֹג אֶת הַחָשׁוּד.", english: "The spokesperson said that it is forbidden to kill the suspect.",
+    hebrewTokenPairs: [["הדובר", "הַדּוֹבֵר"], ["אמר", "אָמַר"], ["שאסור", "שֶׁאָסוּר"], ["להרוג", "לַהֲרֹג"], ["את החשוד", "אֶת הַחָשׁוּד"]], englishTokens: ["The spokesperson", "said", "that it is forbidden", "to kill", "the suspect"],
+    hebrewDistractorPairs: [["הקצין", "הַקָּצִין"], ["כתב", "כָּתַב"], ["שמותר", "שֶׁמֻּתָּר"], ["לעצור", "לַעֲצֹר"], ["את הצוות", "אֶת הַצֶּוֶת"]], englishDistractors: ["The officer", "wrote", "that it is permitted", "to arrest", "the team"],
+    notes: "להרוג is the paal infinitive of ה-ר-ג; the helper vav of the plain spelling drops under pointing, exactly as in לעצור / לַעֲצֹר."
+  }),
+  buildReviewedSentence({
+    id: "idan_130", emoji: "💨", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "לפי ההודעה העשן הורג אנשים רבים.", hebrewNiqqud: "לְפִי הַהוֹדָעָה הֶעָשָׁן הוֹרֵג אֲנָשִׁים רַבִּים.", english: "According to the announcement the smoke kills many people.",
+    hebrewTokenPairs: [["לפי", "לְפִי"], ["ההודעה", "הַהוֹדָעָה"], ["העשן", "הֶעָשָׁן"], ["הורג", "הוֹרֵג"], ["אנשים", "אֲנָשִׁים"], ["רבים", "רַבִּים"]], englishTokens: ["According to", "the announcement", "the smoke", "kills", "many", "people"],
+    hebrewDistractorPairs: [["לדברי", "לְדִבְרֵי"], ["הדיווח", "הַדִּיווּחַ"], ["המפקד", "הַמְּפַקֵּד"], ["מזיק", "מַזִּיק"], ["ילדים", "יְלָדִים"], ["בבוקר", "בַּבֹּקֶר"]], englishDistractors: ["In the words of", "the report", "the commander", "harms", "children", "in the morning"],
+    hebrewOrderAlternates: [
+      {
+        text: "העשן הורג אנשים רבים לפי ההודעה.",
+        textNiqqud: "הֶעָשָׁן הוֹרֵג אֲנָשִׁים רַבִּים לְפִי הַהוֹדָעָה.",
+        order: [2, 3, 4, 5, 0, 1],
+      },
+    ],
+    notes: "הורג is the paal present participle of להרוג; before a guttural carrying qamats the definite article is הֶ, as in הֶעָשָׁן."
+  }),
+];
+
 // Coverage tranche: medical and health. At 24 rows this was the thinnest
 // real-life domain in the bank, well behind bureaucracy at 133 and tech at 112,
 // with almost nothing on appointments, referrals, pharmacies or describing a
@@ -19746,7 +20074,11 @@ SENTENCE_BANK.push(
   ...FUTURE_PERSON_SENTENCES,
   ...CONNECTIVE_SENTENCES,
   ...NUMBER_TIME_SENTENCES,
-  ...HEALTH_SENTENCES
+  ...HEALTH_SENTENCES,
+  ...COMPARE_FOCUS_SENTENCES,
+  ...DECLINE_AUTHORITY_SENTENCES,
+  ...PROVIDENCE_TRAVEL_SENTENCES,
+  ...KILL_VERB_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -19765,6 +20097,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260812b",
+  __build: "20260820a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -495,6 +495,38 @@ const NUMBER_TIME_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 312, 331),
   ...sentenceIdRange("professional", 202, 206),
 ];
+// Lexical tranche, not a domain gap: three verbs a learner met in play. ח-ס-ל
+// had no sentence support at all, להשוות had six rows but no present-tense form,
+// and להתמקד had one inflected chip and no paradigm behind it.
+const COMPARE_FOCUS_ENTRY_IDS = [
+  ...sentenceIdRange("idan", 127, 128),
+  // 131, not 129: idan_129 and idan_130 belong to the להרוג tranche authored on a
+  // parallel branch. A gap in the prefix numbering is harmless — nothing asserts
+  // contiguity — and it is cheaper than renumbering across two branches.
+  ...sentenceIdRange("idan", 131, 131),
+  ...sentenceIdRange("professional", 212, 213),
+  ...sentenceIdRange("formal", 131, 132),
+  ...sentenceIdRange("everyday", 347, 348),
+  ...sentenceIdRange("colloquial", 219, 219),
+];
+// Lexical tranche: five nouns a learner met in play, none of which had a card.
+const DECLINE_AUTHORITY_ENTRY_IDS = [
+  ...sentenceIdRange("professional", 214, 218),
+  ...sentenceIdRange("formal", 133, 136),
+  ...sentenceIdRange("everyday", 349, 351),
+];
+// Lexical tranche: two fixed expressions, הלוך ושוב with its בהלוך / בחזור legs,
+// and השגחה across its kashrut, lifeguard, and theological senses.
+const PROVIDENCE_TRAVEL_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 352, 354),
+  ...sentenceIdRange("colloquial", 220, 220),
+  ...sentenceIdRange("inbal", 108, 108),
+];
+// Lexical tranche: ה-ר-ג, which had no verbal sentence support at all. Both rows
+// are idan_, so the prefix fences them to Idan.
+const KILL_VERB_ENTRY_IDS = [
+  ...sentenceIdRange("idan", 129, 130),
+];
 const HEALTH_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 332, 346),
   ...sentenceIdRange("professional", 207, 211),
@@ -1141,6 +1173,14 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     evacuation route
     medical evacuation
   `, "term: recognized multiword vocabulary unit"),
+  ...compactUnitMap(`
+    product reviews
+    higher education
+    academic credentials
+    default setting
+    divine providence
+    round trip
+  `, "term: recognized multiword vocabulary unit"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -1383,15 +1423,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,179 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,208 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1179);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1179);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1179);
+  assert.equal(entries.length, 1208);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1208);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1208);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1496,12 +1536,16 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   // The four coverage tranches add 110: 67 everyday, 23 colloquial, 15
-  // professional, 5 formal.
+  // professional, 5 formal. The compare/focus tranche adds 10: 5 everyday (three of
+  // them idan_), 2 professional, 2 formal, 1 colloquial. The decline/authority
+  // tranche adds 12: 5 professional, 4 formal, 3 everyday. The
+  // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
+  // The kill-verb tranche adds 2, both everyday and both idan_.
   assert.deepEqual(categoryCounts, {
-    colloquial: 258,
-    everyday: 528,
-    professional: 227,
-    formal: 166,
+    colloquial: 260,
+    everyday: 542,
+    professional: 234,
+    formal: 172,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1798,6 +1842,34 @@ const COVERAGE_TRANCHES = [
     difficulty: { 1: 4, 2: 14, 3: 7 },
     category: { everyday: 15, professional: 5, formal: 5 },
   },
+  {
+    label: "compare and focus",
+    ids: COMPARE_FOCUS_ENTRY_IDS,
+    size: 10,
+    difficulty: { 1: 1, 2: 9 },
+    category: { everyday: 5, professional: 2, formal: 2, colloquial: 1 },
+  },
+  {
+    label: "providence and travel",
+    ids: PROVIDENCE_TRAVEL_ENTRY_IDS,
+    size: 5,
+    difficulty: { 1: 1, 2: 4 },
+    category: { everyday: 4, colloquial: 1 },
+  },
+  {
+    label: "decline and authority",
+    ids: DECLINE_AUTHORITY_ENTRY_IDS,
+    size: 12,
+    difficulty: { 1: 3, 2: 6, 3: 3 },
+    category: { professional: 5, formal: 4, everyday: 3 },
+  },
+  {
+    label: "kill verb",
+    ids: KILL_VERB_ENTRY_IDS,
+    size: 2,
+    difficulty: { 2: 2 },
+    category: { everyday: 2 },
+  },
 ];
 
 test("the coverage tranches add reviewed handwriting-ready rows in the authored mix", () => {
@@ -1913,6 +1985,10 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...CONNECTIVE_ENTRY_IDS,
     ...NUMBER_TIME_ENTRY_IDS,
     ...HEALTH_ENTRY_IDS,
+    ...COMPARE_FOCUS_ENTRY_IDS,
+    ...DECLINE_AUTHORITY_ENTRY_IDS,
+    ...PROVIDENCE_TRAVEL_ENTRY_IDS,
+    ...KILL_VERB_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

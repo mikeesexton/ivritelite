@@ -124,6 +124,62 @@ test("Translation Match uses one primary English gloss per playable card", () =>
   assert.equal(entriesByHebrew.get("חשבון")?.id, "groceries_food-070-bill-check");
 });
 
+// Translation Match grades a selection by pairId (app/match-engine.js:221) and the
+// board does not de-duplicate on surface form. Two playable cards sharing a Hebrew
+// string therefore put two indistinguishable tiles on one board with different
+// English glosses: the learner cannot tell which is which, it is a coin flip, and
+// a wrong flip pushes BOTH ids down the Leitner ladder. The same holds for two
+// cards sharing an English gloss. Suppression is per-row `availability` on the
+// losing twin, which keeps it in the lexicon for sentence hints.
+const SUPPRESSED_DUPLICATE_IDS = [
+  "bureaucracy-016-property-tax",
+  "bureaucracy-019-queue",
+  "bureaucracy-042-record",
+  "communication_mastery_expanded-017-critique",
+  "conversation_glue-014-actually",
+  "conversation_glue-022-whatever",
+  "cooking_verbs-033-to-blanch-parboil-also-same-word-as-poach",
+  "cooking_verbs-068-to-toss-pan-toss",
+  "core_advanced-067-permission",
+  "core_advanced-082-operation",
+  "core_advanced-085-suddenly",
+  "groceries_food-066-discount",
+  "home_everyday_life-009-closet",
+  "home_everyday_life-054-warranty",
+  "home_everyday_life-086-disinfectant",
+  "home_everyday_life-091-hamper",
+  "home_everyday_life-098-tenancy-agreement",
+  "law_legal_systems_expanded-012-injunction-order",
+  "scientific_analytical-015-statistical-significance",
+  "work_business-036-recruitment",
+  "work_business-050-campaign",
+  "work_business-082-bandwidth",
+];
+
+test("no two playable Translation Match cards share a Hebrew surface or an English gloss", () => {
+  const playable = loadVocabulary().filter((word) => word.availability?.translationQuiz);
+
+  const duplicates = (key) => {
+    const counts = new Map();
+    playable.forEach((word) => counts.set(word[key], (counts.get(word[key]) || 0) + 1));
+    return [...counts.entries()].filter(([, count]) => count > 1).map(([value]) => value).sort();
+  };
+
+  assert.deepEqual(duplicates("he"), [], "two playable cards share a Hebrew surface");
+  assert.deepEqual(duplicates("en"), [], "two playable cards share an English gloss");
+});
+
+test("every suppressed duplicate still resolves and keeps its sentence hints", () => {
+  const wordsById = new Map(loadVocabulary().map((word) => [word.id, word]));
+
+  SUPPRESSED_DUPLICATE_IDS.forEach((id) => {
+    const word = wordsById.get(id);
+    assert.ok(word, `suppression targets a missing id: ${id}`);
+    assert.equal(word.availability.translationQuiz, false, `expected ${id} to be hidden`);
+    assert.equal(word.availability.sentenceHints, true, `expected ${id} to keep sentence hints`);
+  });
+});
+
 function getPlannedExpansion(vocabulary) {
   const originalCategorySizes = new Map([
     ["core_advanced", 124],
@@ -154,8 +210,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2192);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2127);
+  assert.equal(vocabulary.length, 2205);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2116);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -174,7 +230,11 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
 });
 
 test("urban mobility tranche appends 24 pointed survival cards in locked order", () => {
-  const rows = loadVocabulary().filter((word) => word.category === "everyday_survival_expanded").slice(15);
+  // slice(15, 39) rather than slice(15): this pins the authored urban-mobility
+  // tranche in order, not the whole shelf, so a later append — הלוך ושוב at 040
+  // — does not read as a 25th mobility card. Appends stay covered by the global
+  // niqqud, playability and uniqueness checks.
+  const rows = loadVocabulary().filter((word) => word.category === "everyday_survival_expanded").slice(15, 39);
   assert.deepEqual(Array.from(rows, (word) => [word.he, word.en]), [
     ["תחבורה ציבורית", "public transportation"], ["קו אוטובוס", "bus route"],
     ["תחנת אוטובוס", "bus stop"], ["תחנת רכבת", "train station"], ["רכבת קלה", "light rail"],
@@ -332,10 +392,13 @@ test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", ()
     ["emergency_response", ["שוטר", "מעצר", "חקירה", "זירת פשע", "החייאה", "כבאי", "מוקדן"]],
   ]);
   const expectedCounts = new Map([
-    ["religion_magic_spirituality", 138],
+    // 138 authored plus השגחה פרטית, the theological term Inbal owns.
+    ["religion_magic_spirituality", 139],
     ["literature_arts_cultural_history", 35],
     ["religious_life_practice", 116],
-    ["devices_os_apps", 115],
+    // 115 authored plus ברירת מחדל, the singular of the ברירות מחדל card
+    // already on this shelf.
+    ["devices_os_apps", 116],
     ["emergency_response", 72],
   ]);
 
@@ -416,9 +479,14 @@ test("the rumor card is playable, pointed, and unique", () => {
 
 test("Ivri smartphone-interface tranche adds 40 pointed append-only cards", () => {
   const vocabulary = loadVocabulary();
-  const additions = vocabulary.filter((word) => (
-    word.category === "devices_os_apps" && Number(word.id.split("-")[1]) >= 76
-  ));
+  // Upper-bounded on purpose: this test is about the authored smartphone
+  // tranche, not about the shelf. Later appends — ברירת מחדל at 116 — are
+  // covered by the category count above and by the global niqqud and
+  // uniqueness checks.
+  const additions = vocabulary.filter((word) => {
+    const index = Number(word.id.split("-")[1]);
+    return word.category === "devices_os_apps" && index >= 76 && index <= 115;
+  });
   assert.equal(additions.length, 40);
   assert.ok(additions.every((word) => word.availability.translationQuiz));
   assert.ok(additions.every((word) => /[\u0591-\u05c7]/.test(word.heNiqqud)));
@@ -600,5 +668,42 @@ test("the merged Translation Match pool has no new duplicate cards", () => {
   assert.deepEqual(
     collisions.map((item) => item.he).sort(),
     [...KNOWN_MERGED_DUPLICATES].sort(),
+  );
+});
+
+// The test above keys on `he + en`, so it only ever sees exact twins. The worse
+// case is two playable cards sharing a Hebrew surface but carrying DIFFERENT
+// English: the board renders two identical Hebrew tiles against two different
+// glosses, the learner cannot tell them apart, and a wrong pick penalises both
+// ids. There are none left, in vocab-data.js or across the vocab/verb-seed
+// merge, and this asserts it stays that way.
+//
+// Note the invariant is about the rendered Hebrew surface, not about sense
+// counts: a card's `he` is the lemma plus its sense's `usage_pattern`, so the
+// 14 verbs that carry one (לדון ב־, להגיע ל־) can serve several senses safely.
+// A verb whose senses have no usage_pattern cannot, which is why every
+// multi-sense verb without one sits in TRANSLATION_HIDDEN_STARTER_VERB_IDS.
+const KNOWN_MERGED_HEBREW_ONLY_CLASHES = [];
+
+test("no Hebrew surface in the merged pool carries two different glosses", () => {
+  const verbApi = require("../hebrew-verbs.js");
+  const merged = [...loadVocabulary(), ...verbApi.getSeedVocabularyEntries()]
+    .filter((word) => word.availability?.translationQuiz);
+
+  const byHebrew = new Map();
+  merged.forEach((word) => {
+    if (!byHebrew.has(word.he)) byHebrew.set(word.he, []);
+    byHebrew.get(word.he).push(word);
+  });
+
+  const heOnly = [...byHebrew.entries()]
+    .filter(([, words]) => words.length > 1 && new Set(words.map((word) => word.en)).size > 1)
+    .map(([he]) => he)
+    .sort();
+
+  assert.deepEqual(
+    heOnly,
+    [...KNOWN_MERGED_HEBREW_ONLY_CLASHES].sort(),
+    "a new indistinguishable-tile clash appeared, or a pinned one was resolved"
   );
 });

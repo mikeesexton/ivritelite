@@ -552,7 +552,7 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
     "להסכים", "להספיק", "להזכיר", "להמליץ", "להשפיע", "להבהיר",
   ];
 
-  assert.equal(entries.length, 241);
+  assert.equal(entries.length, 243);
   requestedLemmas.forEach((lemma) => {
     const seed = entries.find((entry) => entry.lemma === lemma);
     const item = deck.find((entry) => entry.word.he === lemma);
@@ -571,11 +571,41 @@ test("practical verb expansion adds 12 fully pointed conjugation entries", () =>
   assert.equal(giveUp.forms.find((form) => form.id === "past_first_person_singular")?.englishText, "I gave up");
 });
 
+test("the compare and focus verbs conjugate with authoritative pointed forms", () => {
+  const entries = verbApi.getSeedVerbEntries();
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+
+  const expected = new Map([
+    ["advanced-verb-lehashvot", { lemma: "להשוות", binyan: "hifil", present: "משווה", past: "השוויתי", future: "אשווה", translationQuiz: false }],
+    ["advanced-verb-lehitmaked", { lemma: "להתמקד", binyan: "hitpael", present: "מתמקד", past: "התמקדתי", future: "אתמקד", translationQuiz: true }],
+  ]);
+
+  expected.forEach((want, id) => {
+    const seed = entries.find((entry) => entry.id === id);
+    assert.ok(seed, `missing seed entry for ${id}`);
+    assert.equal(seed.lemma, want.lemma);
+    assert.equal(seed.binyan, want.binyan);
+    assert.equal(seed.conjugation_mode, "curated");
+    assert.equal(seed.review_status, "approved");
+    assert.equal(seed.availability.translationQuiz, want.translationQuiz);
+    assert.equal(seed.availability.sentenceHints, true);
+
+    const item = deck.find((entry) => entry.word.id.startsWith(id));
+    assert.ok(item, `missing conjugation item for ${id}`);
+    assert.equal(item.formSource, "authoritative");
+    assert.equal(item.forms.length, 24);
+    assert.ok(item.forms.every((form) => /[\u0591-\u05c7]/.test(form.valueNiqqud)), `${id} form without niqqud`);
+    assert.equal(item.forms.find((form) => form.id === "present_masculine_singular")?.valuePlain, want.present);
+    assert.equal(item.forms.find((form) => form.id === "past_first_person_singular")?.valuePlain, want.past);
+    assert.equal(item.forms.find((form) => form.id === "future_first_person_singular")?.valuePlain, want.future);
+  });
+});
+
 test("technology verbs add two reviewed senses and ten authoritative paradigms", () => {
   const entries = verbApi.getSeedVerbEntries();
   const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
-  assert.equal(entries.length, 241);
-  assert.equal(deck.length, 259);
+  assert.equal(entries.length, 243);
+  assert.equal(deck.length, 261);
 
   const expected = new Map([
     ["technology-verb-lehatkin", ["להתקין", "התקנתי", "אתקין"]],
