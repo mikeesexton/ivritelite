@@ -495,6 +495,16 @@ const NUMBER_TIME_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 312, 331),
   ...sentenceIdRange("professional", 202, 206),
 ];
+// Lexical tranche, not a domain gap: three verbs a learner met in play. ח-ס-ל
+// had no sentence support at all, להשוות had six rows but no present-tense form,
+// and להתמקד had one inflected chip and no paradigm behind it.
+const COMPARE_FOCUS_ENTRY_IDS = [
+  ...sentenceIdRange("idan", 127, 128),
+  ...sentenceIdRange("professional", 212, 213),
+  ...sentenceIdRange("formal", 131, 132),
+  ...sentenceIdRange("everyday", 347, 348),
+  ...sentenceIdRange("colloquial", 219, 219),
+];
 const HEALTH_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 332, 346),
   ...sentenceIdRange("professional", 207, 211),
@@ -1383,15 +1393,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,179 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,188 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1179);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1179);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1179);
+  assert.equal(entries.length, 1188);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1188);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1188);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1496,12 +1506,13 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   // The four coverage tranches add 110: 67 everyday, 23 colloquial, 15
-  // professional, 5 formal.
+  // professional, 5 formal. The compare/focus tranche adds 9: 4 everyday (two of
+  // them idan_), 2 professional, 2 formal, 1 colloquial.
   assert.deepEqual(categoryCounts, {
-    colloquial: 258,
-    everyday: 528,
-    professional: 227,
-    formal: 166,
+    colloquial: 259,
+    everyday: 532,
+    professional: 229,
+    formal: 168,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1798,6 +1809,13 @@ const COVERAGE_TRANCHES = [
     difficulty: { 1: 4, 2: 14, 3: 7 },
     category: { everyday: 15, professional: 5, formal: 5 },
   },
+  {
+    label: "compare and focus",
+    ids: COMPARE_FOCUS_ENTRY_IDS,
+    size: 9,
+    difficulty: { 1: 1, 2: 8 },
+    category: { everyday: 4, professional: 2, formal: 2, colloquial: 1 },
+  },
 ];
 
 test("the coverage tranches add reviewed handwriting-ready rows in the authored mix", () => {
@@ -1913,6 +1931,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...CONNECTIVE_ENTRY_IDS,
     ...NUMBER_TIME_ENTRY_IDS,
     ...HEALTH_ENTRY_IDS,
+    ...COMPARE_FOCUS_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

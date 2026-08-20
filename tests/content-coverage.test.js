@@ -39,12 +39,14 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
-  assert.equal(report.records.length, 2192);
+  assert.equal(report.records.length, 2193);
   // The four coverage tranches pulled twelve more vocabulary cards from
-  // unsupported into exact by giving them a sentence context.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1043);
+  // unsupported into exact by giving them a sentence context. The compare/focus
+  // tranche adds the לחסל card already covered and pulls חוסל across too, so
+  // exact rises by two while unsupported falls by one.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1045);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1149);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1148);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {

@@ -865,6 +865,11 @@ characterData.characters = characterData.characters || Object.freeze({
         "באג",
         "סוללה",
         "אחסון",
+        // The conjugation deck files new verbs under core_advanced, which no
+        // character owns, so a verb routed by id still needs its Translation
+        // Match card named here.
+        "להתמקד",
+        "להשוות",
       ]),
       sentenceCategories: Object.freeze(["professional"]),
       abbrBuckets: Object.freeze(["Civics, Law & Work", "Ideas, Science & Tech"]),
@@ -912,6 +917,11 @@ characterData.characters = characterData.characters || Object.freeze({
         "technology-verb-lehitchaber",
         "technology-verb-lehitnatek",
         "technology-verb-leafes",
+        // The process verbs above, continued: narrowing scope and weighing two
+        // options are what a brief and a spec run on. להשוות is shared with
+        // Inat, who compares texts and precedents rather than vendors.
+        "advanced-verb-lehitmaked",
+        "advanced-verb-lehashvot",
       ]),
     }),
   }),
@@ -948,6 +958,8 @@ characterData.characters = characterData.characters || Object.freeze({
       vocabWords: Object.freeze([
         "תחרותי",
         "ספורים",
+        // Shared with Ivri, matching the verb route above.
+        "להשוות",
       ]),
       // The academic/analytical register is hers; Ivri keeps `professional`.
       sentenceCategories: Object.freeze(["formal"]),
@@ -1009,6 +1021,9 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-laanot",
         "advanced-verb-lehasbir",
         "common-verb-lehavin",
+        // Shared with Ivri, the same way lehagish and lehaklit are: he compares
+        // vendors and quarters, she compares texts, precedents, and readings.
+        "advanced-verb-lehashvot",
       ]),
     }),
   }),

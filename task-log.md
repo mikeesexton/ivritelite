@@ -5,6 +5,115 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-19 EDT — Tranche 1 of 3: the חוסל misfire fixed, plus להשוות and להתמקד added to Conjugation
+
+**Requested:** Mike hit ten lexical gaps in play and asked for them in vocabulary, Conjugation
+and sentences, explicitly inviting the work to be split. He chose three tranches by content
+type. This is tranche 1 — the verbs: items 1 (חוסל), 2 (להשוות) and 7 (להתמקד). He also asked
+whether his way of phrasing routing requests fits the code's taxonomy; that answer is now
+written into the plan file rather than re-derived.
+
+**Root cause of the bug he reported.** `חוסל` ("was eliminated") surfaced as a *vocabulary*
+card during an **Ido** mission. Two separate faults, and the cause is traceable in the source:
+
+- `advanced-verb-lechasel` was added to `hebrew-verbs.js` only to give Conjugation+ person-marked
+  forms for the idiom `לחסל מישהו`, and was placed in `TRANSLATION_HIDDEN_STARTER_VERB_IDS` under
+  the comment *"Translation Match already has cards for these meanings."* The card it was
+  deferring to is `core_advanced-093-was-eliminated`.
+- `core_advanced` is one of ten **unrouted** categories — owned by no character — so every
+  character draws from it. Nothing said Ido shouldn't get it.
+
+It was also the wrong surface: the deck's convention is the ל-infinitive (all 175 `"to …"` cards
+follow it; only three non-infinitive verb forms exist in 2,193 rows).
+
+**Three corrections Mike confirmed before implementation** (they change tranches 2 and 3, recorded
+here so the reasoning is not lost): `מחדל` alone is a *systemic failure*, not "default" — that
+sense lives only in `ברירת מחדל`; `הסמכות` is the plural of `הסמכה` (accreditation), a different
+word from `סמכות` (authority); and `מוצר` is absent from the whole deck.
+
+**Files changed:**
+
+- `vocab-data.js` — `core_advanced-093-was-eliminated` given `{ availability: { translationQuiz: false } }`,
+  retiring the tile while keeping the id (the append-only baseline forbids deletion) and its
+  sentence hints. New card `military_operational-093-to-eliminate` `["to eliminate", "לחסל", "לְחַסֵּל"]`
+  at that category's tail; the shelf is in Idan's `vocabReserveCategories`, so the card is both
+  weighted and fenced to him with no route edit. No merged-pool clash, because the
+  `advanced-verb-lechasel` seed card stays hidden and is filtered out before the collision check.
+- `hebrew-verbs.js` — two entries appended to `buildRequestedVerbEntries()`:
+  `advanced-verb-lehashvot` (להשוות, hif'il, ש-ו-ה, irregular) and `advanced-verb-lehitmaked`
+  (להתמקד, hitpa'el, מ-ק-ד, regular), each with authoritative present/past/future/imperative,
+  24 learner-facing forms. `advanced-verb-lehashvot` added to `TRANSLATION_HIDDEN_STARTER_VERB_IDS`:
+  `להשוות` is already playable at `core_advanced-140-to-compare`, and an unhidden twin would make
+  the merged-pool collision list disagree with `KNOWN_MERGED_DUPLICATES`, which may only shrink.
+  `advanced-verb-lehitmaked` is deliberately **not** hidden — nothing else in the repo teaches it.
+- `app/character-data.js` — Ivri's `verbIds` += both new ids; Inat's += `advanced-verb-lehashvot`
+  (multi-owner, the `character-verb-lehagish` precedent: he compares vendors, she compares texts).
+  Ivri's `vocabWords` += `להתמקד`, `להשוות` and Inat's += `להשוות`, because the compact verb builder
+  files new entries under `core_advanced`, which no character owns — a verb routed by id still needs
+  its Translation Match card named to reach anyone.
+- `sentence-bank-data.js` — new `COMPARE_FOCUS_SENTENCES` array (9 rows) below
+  `APPEND_ONLY_REVIEWED_SENTENCES_START`, spread into `SENTENCE_BANK.push`. `idan_127`/`idan_128`
+  (active חיסל and passive חוסל, reporting register, fenced by prefix), `professional_212`/`formal_131`/`everyday_347`
+  (להשוות present, past, future-as-instruction), `professional_213`/`formal_132`/`everyday_348`/`colloquial_219`
+  (להתמקד present, past, impersonal infinitive, colloquial). Four carry `hebrewOrderAlternates`.
+- `tests/hebrew-verbs.test.js` — counts 241 → 243 and deck 259 → 261; new test
+  `the compare and focus verbs conjugate with authoritative pointed forms` pinning binyan, mode,
+  availability, 24 forms and one form per tense for each new verb.
+- `tests/sentence-bank-data.test.js` — counts 1179 → 1188 (and the test title), category mix
+  updated, new `COMPARE_FOCUS_ENTRY_IDS` constant, a fifth `COVERAGE_TRANCHES` row
+  (`compare and focus`, size 9), and the ids added to the aggregate niqqud/distractor check.
+- `tests/vocab-data.test.js` — total 2192 → 2193. Playable stays 2105: one card added, one retired.
+- `tests/content-coverage.test.js` — 2192 → 2193 records, exact 1043 → 1045, unsupported 1149 → 1148.
+  Numbers taken from `npm run report:coverage`, not guessed.
+- `tests/fixtures/vocab-id-baseline.json` — one line inserted. Note the committed fixture is stored
+  in a different order than `getBaseVocabulary()` returns, so regenerating it churns ~110 lines for
+  no benefit; the test is a set-membership check, so a minimal insertion is correct.
+- `index.html` — `?v=` bumped to `20260819a` for `vocab-data.js`, `sentence-bank-data.js`,
+  `hebrew-verbs.js`, `app/character-data.js`. Matching `__build` stamps bumped in the three data files.
+
+**Behavior changed:**
+
+- `חוסל` is gone from the Translation Match pool entirely — verified live in the browser:
+  `getVocabularyForMode("translationQuiz", {includeMastered:true})` no longer contains it. The
+  reported misfire cannot recur for any character.
+- `לחסל` is now the tested surface for ח-ס-ל, playable, owned by Idan and **fenced** to him.
+- ח-ס-ל had **zero** sentence coverage of any kind before this; it now has two rows.
+- להשוות had six sentence rows but not one present-tense form; להתמקד had a single inflected chip
+  and no paradigm. Both now conjugate (24 forms each) and have three or four sentence rows.
+- `להשוות` appears exactly once in the merged playable pool — verified live, no duplicate tile.
+- Pools: vocabulary 2192 → 2193, sentences 1179 → 1188, conjugation deck 259 → 261. All five
+  characters still clear every depth-standard floor (`npm run report:characters`): Ivri's verbs
+  35 → 37, Inat's 24 → 25.
+
+**Tests run:**
+
+- `npm test` before the change — **448 pass, 0 fail**.
+- `npm test` after — **449 pass, 0 fail** (duration ~114s).
+- Per-file during authoring: `node --test tests/hebrew-verbs.test.js`, `tests/vocab-data.test.js`,
+  `tests/sentence-bank-data.test.js`, `tests/character-mission.test.js`, `tests/content-coverage.test.js`
+  — all pass. Notably every pointing, compact-chip and word-order check passed on the first run for
+  all nine sentences and both verb paradigms; only the hard-coded counts needed bumping.
+- `npm run report:characters` and `npm run report:coverage` — both clean, floors intact.
+- Live in the browser at `localhost:3000`: no console errors, all three `__build` stamps read
+  `20260819a` (so the cache-bust is doing its job), a Vocabulary round played as Ivri, and the
+  four words' routing and pool membership confirmed by direct query.
+
+**Risks / regressions to check:**
+
+- `להשוות` is now hidden from Translation Match on the verb side. If the `core_advanced-140-to-compare`
+  vocabulary card is ever retired, the word loses its Translation Match surface entirely — un-hide
+  `advanced-verb-lehashvot` in the same commit if that happens.
+- `military_operational` had **zero** verbs before `לחסל`. It is the first infinitive on a shelf that
+  is otherwise nouns; if that reads oddly in play, the alternative is to un-hide
+  `advanced-verb-lechasel` and name `לחסל` in Idan's `vocabWords` instead.
+- Same defect class, deliberately left alone: `vocab-data.js` also carries
+  `["killing (participle)", "הורג", "הוֹרֵג"]` and `["took place", "התקיים", "הִתְקַיֵּם"]` as finite
+  forms on the unrouted `core_advanced` shelf. `הורג` is the one worth revisiting.
+- `advanced-verb-lehitmaked` uses root `מ-ק-ד`. It is denominative from `מוקד`; if a future
+  binyan-board tranche wants the root it should agree with this choice.
+- Tranches 2 (five nouns, ~10 sentences) and 3 (expressions plus Inbal's `השגחה`, ~5 sentences)
+  are not started. Both will move the same hard-coded counts again.
+
 ### 2026-08-17 EDT — The four merged-pool verb clashes resolved; no Hebrew surface now carries two different glosses
 
 **Requested:** Work out how to address the four Hebrew-only clashes pinned earlier today, then fix all four. Mike's call on the one genuine content question: keep the slang card.

@@ -314,6 +314,11 @@ const TRANSLATION_HIDDEN_STARTER_VERB_IDS = new Set([
   "advanced-verb-lehaspik",
   "advanced-verb-levarer",
 
+  // Added for Conjugation only. "to compare" is already a playable vocabulary
+  // card (core_advanced-140-to-compare), and an unhidden twin would make the
+  // merged-pool collision list disagree with KNOWN_MERGED_DUPLICATES, which
+  // tests/vocab-data.test.js requires to only ever shrink.
+  "advanced-verb-lehashvot",
 ]);
 
 const CONJUGATION_HIDDEN_VERB_IDS = new Set([
@@ -7919,6 +7924,20 @@ function buildRequestedVerbEntries() {
       future: [["אשאיר", "אַשְׁאִיר"], ["תשאיר", "תַּשְׁאִיר"], ["תשאירי", "תַּשְׁאִירִי"], ["ישאיר", "יַשְׁאִיר"], ["תשאיר", "תַּשְׁאִיר"], ["נשאיר", "נַשְׁאִיר"], ["תשאירו", "תַּשְׁאִירוּ"], ["ישאירו", "יַשְׁאִירוּ"]],
       imperative: [["השאר", "הַשְׁאֵר"], ["השאירי", "הַשְׁאִירִי"], ["השאירו", "הַשְׁאִירוּ"]],
     },
+    {
+      id: "advanced-verb-lehashvot", lemma: "להשוות", lemma_niqqud: "לְהַשְׁווֹת", root: ["ש", "ו", "ה"], binyan: "hifil", regularity: "irregular", gloss: "to compare", difficulty_level: 3,
+      present: [["משווה", "מַשְׁוֶה"], ["משווה", "מַשְׁוָה"], ["משווים", "מַשְׁוִים"], ["משוות", "מַשְׁווֹת"]],
+      past: [["השוויתי", "הִשְׁוֵיתִי"], ["השווית", "הִשְׁוֵיתָ"], ["השווית", "הִשְׁוֵית"], ["השווה", "הִשְׁוָה"], ["השוותה", "הִשְׁוְתָה"], ["השווינו", "הִשְׁוֵינוּ"], ["השוויתם", "הִשְׁוֵיתֶם"], ["השוויתן", "הִשְׁוֵיתֶן"], ["השוו", "הִשְׁווּ"]],
+      future: [["אשווה", "אַשְׁוֶה"], ["תשווה", "תַּשְׁוֶה"], ["תשווי", "תַּשְׁוִי"], ["ישווה", "יַשְׁוֶה"], ["תשווה", "תַּשְׁוֶה"], ["נשווה", "נַשְׁוֶה"], ["תשוו", "תַּשְׁווּ"], ["ישוו", "יַשְׁווּ"]],
+      imperative: [["השווה", "הַשְׁוֵה"], ["השווי", "הַשְׁוִי"], ["השוו", "הַשְׁווּ"]],
+    },
+    {
+      id: "advanced-verb-lehitmaked", lemma: "להתמקד", lemma_niqqud: "לְהִתְמַקֵּד", root: ["מ", "ק", "ד"], binyan: "hitpael", regularity: "regular", gloss: "to focus", difficulty_level: 3,
+      present: [["מתמקד", "מִתְמַקֵּד"], ["מתמקדת", "מִתְמַקֶּדֶת"], ["מתמקדים", "מִתְמַקְּדִים"], ["מתמקדות", "מִתְמַקְּדוֹת"]],
+      past: [["התמקדתי", "הִתְמַקַּדְתִּי"], ["התמקדת", "הִתְמַקַּדְתָּ"], ["התמקדת", "הִתְמַקַּדְתְּ"], ["התמקד", "הִתְמַקֵּד"], ["התמקדה", "הִתְמַקְּדָה"], ["התמקדנו", "הִתְמַקַּדְנוּ"], ["התמקדתם", "הִתְמַקַּדְתֶּם"], ["התמקדתן", "הִתְמַקַּדְתֶּן"], ["התמקדו", "הִתְמַקְּדוּ"]],
+      future: [["אתמקד", "אֶתְמַקֵּד"], ["תתמקד", "תִּתְמַקֵּד"], ["תתמקדי", "תִּתְמַקְּדִי"], ["יתמקד", "יִתְמַקֵּד"], ["תתמקד", "תִּתְמַקֵּד"], ["נתמקד", "נִתְמַקֵּד"], ["תתמקדו", "תִּתְמַקְּדוּ"], ["יתמקדו", "יִתְמַקְּדוּ"]],
+      imperative: [["התמקד", "הִתְמַקֵּד"], ["התמקדי", "הִתְמַקְּדִי"], ["התמקדו", "הִתְמַקְּדוּ"]],
+    },
   ];
 
   return batch.map(({ present, past, future, gloss, glosses, ...config }) => createVerbEntry({
@@ -8874,6 +8893,6 @@ return {
   buildGeneratedForms,
   resolveLearnerFacingForms,
   normalizeAndValidateFormSet,
-  __build: "20260808b",
+  __build: "20260819a",
 };
 });

@@ -496,7 +496,7 @@ const RAW = {
     ["barrier", "חסם", "חֶסֶם"],
     ["front", "חזית", "חֲזִית"],
     ["roar", "שאגה", "שְׁאָגָה"],
-    ["was eliminated", "חוסל", "חֻסַּל"],
+    ["was eliminated", "חוסל", "חֻסַּל", { availability: { translationQuiz: false } }],
     ["council", "מועצה", "מוֹעָצָה"],
     ["infiltration", "חדירה", "חֲדִירָה"],
     ["hostile", "עוין", "עוֹיֵן"],
@@ -2388,6 +2388,7 @@ const RAW = {
     ["sleeping bag", "שק שינה", "שַׂק שֵׁינָה"],
     ["personal kit", "ציוד אישי", "צִיּוּד אִישִׁי"],
     ["field rations", "מנת קרב", "מְנַת קְרָב"],
+    ["to eliminate", "לחסל", "לְחַסֵּל"],
   ],
   emergency_response: [
   // Police procedure — the terms a member of the public meets or reads.
@@ -2824,6 +2825,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260817a",
+  __build: "20260819a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

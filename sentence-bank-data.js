@@ -19537,6 +19537,113 @@ const NUMBER_TIME_SENTENCES = [
   }),
 ];
 
+// Coverage tranche: lexical, three verbs a learner met in play. ח-ס-ל had zero
+// sentence support of any kind, and the vocabulary card for it was the finite
+// passive חוסל rather than the infinitive; להשוות had six rows but not one
+// present-tense form; להתמקד had a single inflected chip and no paradigm behind
+// it. The two idan_ rows stay reporting register rather than tactics, and the
+// prefix fences them, so nothing here reaches the rest of the cast.
+const COMPARE_FOCUS_SENTENCES = [
+  buildReviewedSentence({
+    id: "idan_127", emoji: "🎯", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדובר אמר שהצבא חיסל את המטרה.", hebrewNiqqud: "הַדּוֹבֵר אָמַר שֶׁהַצָּבָא חִסֵּל אֶת הַמַּטָּרָה.", english: "The spokesperson said that the army eliminated the target.",
+    hebrewTokenPairs: [["הדובר", "הַדּוֹבֵר"], ["אמר", "אָמַר"], ["שהצבא", "שֶׁהַצָּבָא"], ["חיסל", "חִסֵּל"], ["את המטרה", "אֶת הַמַּטָּרָה"]], englishTokens: ["The spokesperson", "said", "that the army", "eliminated", "the target"],
+    hebrewDistractorPairs: [["הקצין", "הַקָּצִין"], ["כתב", "כָּתַב"], ["שהצי", "שֶׁהַצִּי"], ["תפס", "תָּפַס"], ["את המחסן", "אֶת הַמַּחְסָן"]], englishDistractors: ["The officer", "wrote", "that the navy", "caught", "the warehouse"],
+    notes: "חיסל is the third-person past of לחסל; the helper yod of the plain spelling drops under pointing."
+  }),
+  buildReviewedSentence({
+    id: "idan_128", emoji: "📣", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "לפי ההודעה המפקד חוסל.", hebrewNiqqud: "לְפִי הַהוֹדָעָה הַמְּפַקֵּד חֻסַּל.", english: "According to the announcement the commander was eliminated.",
+    hebrewTokenPairs: [["לפי", "לְפִי"], ["ההודעה", "הַהוֹדָעָה"], ["המפקד", "הַמְּפַקֵּד"], ["חוסל", "חֻסַּל"]], englishTokens: ["According to", "the announcement", "the commander", "was eliminated"],
+    hebrewDistractorPairs: [["לדברי", "לְדִבְרֵי"], ["הקצין", "הַקָּצִין"], ["נפצע", "נִפְצַע"], ["בבוקר", "בַּבֹּקֶר"]], englishDistractors: ["In the words of", "the officer", "was wounded", "in the morning"],
+    hebrewOrderAlternates: [
+      {
+        text: "המפקד חוסל לפי ההודעה.",
+        textNiqqud: "הַמְּפַקֵּד חֻסַּל לְפִי הַהוֹדָעָה.",
+        order: [2, 3, 0, 1],
+      },
+    ],
+    notes: "חוסל is the pu'al passive of לחסל, the form a news report uses."
+  }),
+  buildReviewedSentence({
+    id: "professional_212", emoji: "📊", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אני משווה את שתי ההצעות.", hebrewNiqqud: "אֲנִי מַשְׁוֶה אֶת שְׁתֵּי הַהַצָּעוֹת.", english: "I am comparing the two offers.",
+    hebrewTokenPairs: [["אני", "אֲנִי"], ["משווה", "מַשְׁוֶה"], ["את שתי", "אֶת שְׁתֵּי"], ["ההצעות", "הַהַצָּעוֹת"]], englishTokens: ["I", "am comparing", "the two", "offers"],
+    hebrewDistractorPairs: [["בודק", "בּוֹדֵק"], ["מאשר", "מְאַשֵּׁר"], ["את שלוש", "אֶת שָׁלוֹשׁ"], ["החוזים", "הַחוֹזִים"]], englishDistractors: ["am checking", "am approving", "the three", "contracts"],
+    notes: "משווה is the hif'il present of להשוות; what is compared takes את or בין."
+  }),
+  buildReviewedSentence({
+    id: "formal_131", emoji: "📚", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המחקר השווה בין שתי התקופות.", hebrewNiqqud: "הַמֶּחְקָר הִשְׁוָה בֵּין שְׁתֵּי הַתְּקוּפוֹת.", english: "The study compared the two periods.",
+    hebrewTokenPairs: [["המחקר", "הַמֶּחְקָר"], ["השווה", "הִשְׁוָה"], ["בין שתי", "בֵּין שְׁתֵּי"], ["התקופות", "הַתְּקוּפוֹת"]], englishTokens: ["The study", "compared", "the two", "periods"],
+    hebrewDistractorPairs: [["הספר", "הַסֵּפֶר"], ["תיאר", "תֵּאֵר"], ["בין שלוש", "בֵּין שָׁלוֹשׁ"], ["המדינות", "הַמְּדִינוֹת"]], englishDistractors: ["The book", "described", "the three", "countries"],
+    notes: "השווה is the third-person past of להשוות; the doubled vav of the plain spelling collapses to one under pointing."
+  }),
+  buildReviewedSentence({
+    id: "everyday_347", emoji: "🏷️", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "תשווה מחירים לפני שאתה קונה.", hebrewNiqqud: "תַּשְׁוֶה מְחִירִים לִפְנֵי שֶׁאַתָּה קוֹנֶה.", english: "Compare prices before you buy.",
+    hebrewTokenPairs: [["תשווה", "תַּשְׁוֶה"], ["מחירים", "מְחִירִים"], ["לפני", "לִפְנֵי"], ["שאתה קונה", "שֶׁאַתָּה קוֹנֶה"]], englishTokens: ["Compare", "prices", "before", "you buy"],
+    hebrewDistractorPairs: [["תבדוק", "תִּבְדֹּק"], ["תנאים", "תְּנָאִים"], ["אחרי", "אַחֲרֵי"], ["שאתה מזמין", "שֶׁאַתָּה מַזְמִין"]], englishDistractors: ["Check", "terms", "after", "you order"],
+    hebrewOrderAlternates: [
+      {
+        text: "לפני שאתה קונה תשווה מחירים.",
+        textNiqqud: "לִפְנֵי שֶׁאַתָּה קוֹנֶה תַּשְׁוֶה מְחִירִים.",
+        order: [2, 3, 0, 1],
+      },
+    ],
+    notes: "The masculine future תשווה doubles as a friendly instruction to a man."
+  }),
+  buildReviewedSentence({
+    id: "professional_213", emoji: "🧭", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "בפגישה הזאת אנחנו מתמקדים בתקציב.", hebrewNiqqud: "בַּפְּגִישָׁה הַזֹּאת אֲנַחְנוּ מִתְמַקְּדִים בַּתַּקְצִיב.", english: "In this meeting we are focusing on the budget.",
+    hebrewTokenPairs: [["בפגישה הזאת", "בַּפְּגִישָׁה הַזֹּאת"], ["אנחנו", "אֲנַחְנוּ"], ["מתמקדים", "מִתְמַקְּדִים"], ["בתקציב", "בַּתַּקְצִיב"]], englishTokens: ["In this meeting", "we", "are focusing", "on the budget"],
+    hebrewDistractorPairs: [["בשיחה הזאת", "בַּשִּׂיחָה הַזֹּאת"], ["הם", "הֵם"], ["מדברים", "מְדַבְּרִים"], ["במחירים", "בַּמְּחִירִים"]], englishDistractors: ["In this call", "they", "are talking", "on the prices"],
+    hebrewOrderAlternates: [
+      {
+        text: "אנחנו מתמקדים בתקציב בפגישה הזאת.",
+        textNiqqud: "אֲנַחְנוּ מִתְמַקְּדִים בַּתַּקְצִיב בַּפְּגִישָׁה הַזֹּאת.",
+        order: [1, 2, 3, 0],
+      },
+    ],
+    notes: "להתמקד takes ב for whatever the focus is on."
+  }),
+  buildReviewedSentence({
+    id: "formal_132", emoji: "📝", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המאמר התמקד בביקורת המחקר.", hebrewNiqqud: "הַמַּאֲמָר הִתְמַקֵּד בְּבִקֹּרֶת הַמֶּחְקָר.", english: "The article focused on the critique of the study.",
+    hebrewTokenPairs: [["המאמר", "הַמַּאֲמָר"], ["התמקד", "הִתְמַקֵּד"], ["בביקורת", "בְּבִקֹּרֶת"], ["המחקר", "הַמֶּחְקָר"]], englishTokens: ["The article", "focused", "on the critique", "of the study"],
+    hebrewDistractorPairs: [["הספר", "הַסֵּפֶר"], ["עסק", "עָסַק"], ["בשאלת", "בִּשְׁאֵלַת"], ["התקופה", "הַתְּקוּפָה"]], englishDistractors: ["The book", "dealt", "with the question", "of the period"],
+    notes: "ביקורת here is scholarly critique rather than an audit; התמקד is the third-person past."
+  }),
+  buildReviewedSentence({
+    id: "everyday_348", emoji: "✨", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "כדאי להתמקד במה שחשוב עכשיו.", hebrewNiqqud: "כְּדַאי לְהִתְמַקֵּד בְּמָה שֶׁחָשׁוּב עַכְשָׁו.", english: "It is worth focusing on what is important now.",
+    hebrewTokenPairs: [["כדאי", "כְּדַאי"], ["להתמקד", "לְהִתְמַקֵּד"], ["במה שחשוב", "בְּמָה שֶׁחָשׁוּב"], ["עכשיו", "עַכְשָׁו"]], englishTokens: ["It is worth", "focusing", "on what is important", "now"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["לשכוח", "לִשְׁכֹּחַ"], ["את מה שקרה", "אֶת מָה שֶׁקָּרָה"], ["אחר כך", "אַחַר כָּךְ"]], englishDistractors: ["It is forbidden", "forgetting", "what happened", "later"],
+    hebrewOrderAlternates: [
+      {
+        text: "עכשיו כדאי להתמקד במה שחשוב.",
+        textNiqqud: "עַכְשָׁו כְּדַאי לְהִתְמַקֵּד בְּמָה שֶׁחָשׁוּב.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "כדאי is impersonal — 'it is worth' — and takes an infinitive."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_219", emoji: "🔇", category: "colloquial", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אין מצב להתמקד כשיש רעש בבית.", hebrewNiqqud: "אֵין מַצָּב לְהִתְמַקֵּד כְּשֶׁיֵּשׁ רַעַשׁ בַּבַּיִת.", english: "There is no way to focus when there is noise at home.",
+    hebrewTokenPairs: [["אין מצב", "אֵין מַצָּב"], ["להתמקד", "לְהִתְמַקֵּד"], ["כשיש רעש", "כְּשֶׁיֵּשׁ רַעַשׁ"], ["בבית", "בַּבַּיִת"]], englishTokens: ["There is no way", "to focus", "when there is noise", "at home"],
+    hebrewDistractorPairs: [["נוח", "נוֹחַ"], ["לישון", "לִישֹׁן"], ["כשאין אור", "כְּשֶׁאֵין אוֹר"], ["בחוץ", "בַּחוּץ"]], englishDistractors: ["It is comfortable", "to sleep", "when there is no light", "outside"],
+    hebrewOrderAlternates: [
+      {
+        text: "כשיש רעש בבית אין מצב להתמקד.",
+        textNiqqud: "כְּשֶׁיֵּשׁ רַעַשׁ בַּבַּיִת אֵין מַצָּב לְהִתְמַקֵּד.",
+        order: [2, 3, 0, 1],
+      },
+    ],
+    notes: "אין מצב is the colloquial 'no way'; here it means focusing is impossible."
+  }),
+];
+
 // Coverage tranche: medical and health. At 24 rows this was the thinnest
 // real-life domain in the bank, well behind bureaucracy at 133 and tech at 112,
 // with almost nothing on appointments, referrals, pharmacies or describing a
@@ -19746,7 +19853,8 @@ SENTENCE_BANK.push(
   ...FUTURE_PERSON_SENTENCES,
   ...CONNECTIVE_SENTENCES,
   ...NUMBER_TIME_SENTENCES,
-  ...HEALTH_SENTENCES
+  ...HEALTH_SENTENCES,
+  ...COMPARE_FOCUS_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -19765,6 +19873,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260812b",
+  __build: "20260819a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
