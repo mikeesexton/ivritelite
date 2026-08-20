@@ -19566,6 +19566,20 @@ const COMPARE_FOCUS_SENTENCES = [
     notes: "חוסל is the pu'al passive of לחסל, the form a news report uses."
   }),
   buildReviewedSentence({
+    id: "idan_131", emoji: "🛑", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אסור לחסל מטרה בלי אישור.", hebrewNiqqud: "אָסוּר לְחַסֵּל מַטָּרָה בְּלִי אִשּׁוּר.", english: "It is forbidden to eliminate a target without approval.",
+    hebrewTokenPairs: [["אסור", "אָסוּר"], ["לחסל", "לְחַסֵּל"], ["מטרה", "מַטָּרָה"], ["בלי אישור", "בְּלִי אִשּׁוּר"]], englishTokens: ["It is forbidden", "to eliminate", "a target", "without approval"],
+    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["לעצור", "לַעֲצֹר"], ["רכב", "רֶכֶב"], ["בלי סיבה", "בְּלִי סִיבָּה"]], englishDistractors: ["It is permitted", "to stop", "a vehicle", "without a reason"],
+    hebrewOrderAlternates: [
+      {
+        text: "בלי אישור אסור לחסל מטרה.",
+        textNiqqud: "בְּלִי אִשּׁוּר אָסוּר לְחַסֵּל מַטָּרָה.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "The infinitive is לחסל; the third-person past is חיסל and the passive is חוסל. Numbered 131 because idan_129 and idan_130 are taken by the להרוג tranche on a parallel branch."
+  }),
+  buildReviewedSentence({
     id: "professional_212", emoji: "📊", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
     hebrew: "אני משווה את שתי ההצעות.", hebrewNiqqud: "אֲנִי מַשְׁוֶה אֶת שְׁתֵּי הַהַצָּעוֹת.", english: "I am comparing the two offers.",
     hebrewTokenPairs: [["אני", "אֲנִי"], ["משווה", "מַשְׁוֶה"], ["את שתי", "אֶת שְׁתֵּי"], ["ההצעות", "הַהַצָּעוֹת"]], englishTokens: ["I", "am comparing", "the two", "offers"],
@@ -20054,6 +20068,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260819c",
+  __build: "20260819e",
 };
 })(typeof window !== "undefined" ? window : globalThis);

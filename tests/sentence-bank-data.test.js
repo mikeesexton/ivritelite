@@ -500,6 +500,10 @@ const NUMBER_TIME_ENTRY_IDS = [
 // and להתמקד had one inflected chip and no paradigm behind it.
 const COMPARE_FOCUS_ENTRY_IDS = [
   ...sentenceIdRange("idan", 127, 128),
+  // 131, not 129: idan_129 and idan_130 belong to the להרוג tranche authored on a
+  // parallel branch. A gap in the prefix numbering is harmless — nothing asserts
+  // contiguity — and it is cheaper than renumbering across two branches.
+  ...sentenceIdRange("idan", 131, 131),
   ...sentenceIdRange("professional", 212, 213),
   ...sentenceIdRange("formal", 131, 132),
   ...sentenceIdRange("everyday", 347, 348),
@@ -1414,15 +1418,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,205 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,206 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1205);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1205);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1205);
+  assert.equal(entries.length, 1206);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1206);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1206);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1527,13 +1531,13 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday carries the prefix-owned character tranches as well as the
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   // The four coverage tranches add 110: 67 everyday, 23 colloquial, 15
-  // professional, 5 formal. The compare/focus tranche adds 9: 4 everyday (two of
+  // professional, 5 formal. The compare/focus tranche adds 10: 5 everyday (three of
   // them idan_), 2 professional, 2 formal, 1 colloquial. The decline/authority
   // tranche adds 12: 5 professional, 4 formal, 3 everyday. The
   // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
   assert.deepEqual(categoryCounts, {
     colloquial: 260,
-    everyday: 539,
+    everyday: 540,
     professional: 234,
     formal: 172,
   });
@@ -1835,9 +1839,9 @@ const COVERAGE_TRANCHES = [
   {
     label: "compare and focus",
     ids: COMPARE_FOCUS_ENTRY_IDS,
-    size: 9,
-    difficulty: { 1: 1, 2: 8 },
-    category: { everyday: 4, professional: 2, formal: 2, colloquial: 1 },
+    size: 10,
+    difficulty: { 1: 1, 2: 9 },
+    category: { everyday: 5, professional: 2, formal: 2, colloquial: 1 },
   },
   {
     label: "providence and travel",

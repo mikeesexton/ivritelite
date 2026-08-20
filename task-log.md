@@ -5,6 +5,71 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-19 EDT — Correction: the לחסל card was never covered; idan_131 added
+
+**Requested:** A parallel session working the `הורג` follow-up reported that
+`military_operational-093-to-eliminate` still reads `unsupported` in the coverage report,
+and that the tranche-1 commit message and test comment read as though the card had arrived
+covered. It was right.
+
+**What went wrong, and it is a reasoning error worth naming.** When tranche 1 landed I
+observed records 2192 → 2193, exact 1043 → 1045, unsupported 1149 → 1148 and *inferred* that
+the new `לחסל` card must be exact and `חוסל` must have moved across with it. That arithmetic
+is equally consistent with the new card being unsupported and **two** other cards moving into
+exact — which is what actually happened. I wrote the inference into a test comment and a
+commit message as though it were a check. The available direct check, `exactSentenceIds` on
+each coverage record, was one line away and I did not run it.
+
+The underlying content gap is real: `idan_127` teaches the past `חיסל` and `idan_128` the
+passive `חוסל`, but `sentenceTestsHeadword` tolerates clitics and does not stem morphology,
+so the infinitive headword `לחסל` matched nothing. This is the same trap that caught `הסמכה`
+one tranche later, where the only row used the plural. **A card whose natural use is
+inflected needs a row carrying the headword form itself.**
+
+**Files changed:**
+
+- `sentence-bank-data.js` — `idan_131` appended to `COMPARE_FOCUS_SENTENCES`:
+  "אסור לחסל מטרה בלי אישור" / "It is forbidden to eliminate a target without approval",
+  with a `בלי אישור` initial-position alternate. It uses the infinitive, so the card now has
+  an exact context, and it completes the original request for sentences in *different forms*
+  of the verb — infinitive, past, passive. Numbered **131**, not 129: the parallel branch has
+  taken `idan_129` and `idan_130` for its `להרוג` tranche. Nothing asserts prefix contiguity,
+  so a gap is cheaper than renumbering across two branches.
+- `tests/content-coverage.test.js` — exact 1060 → 1061, unsupported 1144 → 1143, and the
+  misleading comment replaced with what actually happened, including the morphology trap so
+  the next author meets it as a rule rather than as a surprise.
+- `tests/sentence-bank-data.test.js` — 1205 → 1206, `everyday` 539 → 540, the compare/focus
+  tranche row 9 → 10 rows with its difficulty and category mix updated, and `idan_131` added
+  to `COMPARE_FOCUS_ENTRY_IDS` with a comment explaining the numbering gap.
+- `index.html` / `sentence-bank-data.js` — `?v=20260819e` and the matching `__build`.
+  **Skipped `d` deliberately:** the parallel branch has already used `20260819d` for this
+  file, and two different file contents sharing one cache key is the exact failure the
+  cache-busting rule exists to prevent.
+
+**Behavior changed:** `military_operational-093-to-eliminate` moves from `unsupported` to
+`exact`. Sentences 1205 → 1206. Vocabulary unchanged.
+
+**Tests run:** `npm test` — **449 pass, 0 fail**. `military_operational-093-to-eliminate`
+confirmed `exact via idan_131` by direct query on `exactSentenceIds` this time, not inferred.
+
+**Risks / regressions to check:**
+
+- `idan_129` and `idan_130` do not exist on this branch. If the `להרוג` branch is abandoned
+  the gap stays; harmless, but do not "fix" it by renumbering `idan_131`.
+- Both branches now edit the same count assertions in `tests/content-coverage.test.js` and
+  `tests/sentence-bank-data.test.js`. A merge conflict there is expected and the resolution is
+  to re-derive from `npm run report:coverage`, never to pick one side.
+
+**Flagged, not fixed — a convention question only Mike can settle.** The parallel session also
+noticed that `advanced-verb-laharog` carries `lemma_niqqud: "לַהֲרוֹג"`, keeping the helper vav,
+while a ktiv-chaser reading gives `לַהֲרֹג`. Measured across `hebrew-verbs.js`: **70 infinitives
+keep the holam vav in the pointed form and 16 drop it** — `לִסְגּוֹר`, `לִכְתֹּב`, `לִשְׁמֹר`
+against `לִלְמֹד`, `לַעֲבֹד`, `לַחֲזֹר`. Both spellings are correct Hebrew; the file is simply
+inconsistent, and the majority form is the one the project's own stated rule would drop. The
+suite cannot catch it because the plain-versus-pointed check is deliberately vav-tolerant so
+that ktiv male ↔ ktiv chaser is legal. This is a 70-row convention decision, not a bug, so
+nothing was changed.
+
 ### 2026-08-19 EDT — Content routing written down as a rule, and ratcheted
 
 **Requested:** While reviewing the ten-word expansion, Mike asked whether the way he phrases

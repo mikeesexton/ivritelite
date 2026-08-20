@@ -41,15 +41,22 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
   assert.equal(report.records.length, 2204);
   // The four coverage tranches pulled twelve more vocabulary cards from
-  // unsupported into exact by giving them a sentence context. The compare/focus
-  // tranche adds the לחסל card already covered and pulls חוסל across too, so
-  // exact rises by two while unsupported falls by one. The decline/authority
-  // tranche adds eight cards, all eight covered on arrival, and pulls three more
-  // across with them. The providence/travel tranche adds three cards, all three
-  // covered on arrival, and pulls one more across.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1060);
+  // unsupported into exact by giving them a sentence context.
+  //
+  // The compare/focus tranche's לחסל card did NOT arrive covered, contrary to what
+  // this comment claimed when the tranche landed: idan_127 and idan_128 teach the
+  // past חיסל and the passive חוסל, and the coverage matcher tolerates clitics but
+  // does not stem morphology, so the infinitive headword matched nothing. idan_131
+  // was authored afterwards to give it a context. The same trap caught הסמכה in the
+  // next tranche — a card whose natural use is inflected needs a row carrying the
+  // headword form itself.
+  //
+  // The decline/authority tranche adds eight cards, all eight covered on arrival,
+  // and pulls three more across with them. The providence/travel tranche adds three
+  // cards, all three covered, and pulls one more across.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1061);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1144);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1143);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {
