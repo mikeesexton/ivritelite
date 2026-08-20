@@ -491,7 +491,7 @@ const RAW = {
     ["suddenly", "פתאום", "פִּתְאוֹם", { availability: { translationQuiz: false } }],
     ["burning", "בוער", "בּוֹעֵר"],
     ["crushing", "כותש", "כּוֹתֵשׁ"],
-    ["killing (participle)", "הורג", "הוֹרֵג"],
+    ["killing (participle)", "הורג", "הוֹרֵג", { availability: { translationQuiz: false } }],
     ["obstacle", "מכשול", "מִכְשׁוֹל"],
     ["barrier", "חסם", "חֶסֶם"],
     ["front", "חזית", "חֲזִית"],
@@ -2399,6 +2399,7 @@ const RAW = {
     ["personal kit", "ציוד אישי", "צִיּוּד אִישִׁי"],
     ["field rations", "מנת קרב", "מְנַת קְרָב"],
     ["to eliminate", "לחסל", "לְחַסֵּל"],
+    ["to kill", "להרוג", "לַהֲרֹג"],
   ],
   emergency_response: [
   // Police procedure — the terms a member of the public meets or reads.
@@ -2836,6 +2837,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260819c",
+  __build: "20260820a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

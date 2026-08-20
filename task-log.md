@@ -5,6 +5,126 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-20 EDT — Test להרוג as an infinitive with Idan; retire the הורג tile
+
+**Requested:** Two finite verb forms sit as vocabulary headwords on the unrouted
+`core_advanced` shelf — `הורג` (present participle) and `התקיים` (past 3ms) — the same defect
+class fixed for `חוסל` in a82154d. Act on `הורג`, which is hard-security register belonging to
+Idan; consider leaving `התקיים`, which is a register mismatch rather than a routing leak.
+Follow a82154d's pattern exactly and re-derive every count rather than trusting the brief.
+
+**Base corrected twice, before any edit and again at the end.** The worktree was cut from
+`main` (d7fe07b), but the task described the primary checkout, which was four commits ahead on
+`agent/safety-net-ci-cachebust-agent-docs`. On the stale base `military_operational` ended at
+index 092, so appending would have produced `military_operational-093-to-kill` colliding
+head-on with `-093-to-eliminate`: both suites green in isolation, broken on merge. The branch
+had no local commits and d7fe07b was an ancestor, so it was fast-forwarded to 0d9aefb. A
+parallel session flagged the same staleness independently. That session then landed b70a3b0
+and 295340a while this work was in progress, so the finished change was fast-forwarded again
+onto 295340a and every count re-derived on the merged tree rather than carried over.
+
+**Two of the brief's anchors were wrong and were corrected from the source.** `הורג` is
+`core_advanced-088-killing-participle`, not `-092-`; and the new card lands at index **094**,
+not 093, because `לחסל` already holds 093. Both of us had been reading a positional index off
+a file that had since shifted, which is the trap `docs/project-rules.md` now records: never
+trust an index quoted in a prompt.
+
+**Checked against the new "Content routing" section** added in b70a3b0, which landed
+mid-session. The change satisfies it as written: no `character` field; the card reaches Idan
+through `vocabReserveCategories` on a shelf he owns; appended at a category tail with no
+re-shelving and no `en` change; retirement by `availability: { translationQuiz: false }` rather
+than deletion; sentences authored into the `idan_` prefixed bank, which fences automatically;
+`hebrew-verbs.js` untouched, since Conjugation+ is listed as deliberately unroutable.
+`npm run report:characters` run afterwards, as that section requires.
+
+**`התקיים` was left alone,** as the brief allowed. It is genuinely milder: no character owns
+its register, so it leaks nothing, and retiring it would cost a playable card for no
+gameplay defect.
+
+**Files changed:**
+
+- `vocab-data.js` — `core_advanced-088-killing-participle` gains
+  `availability: { translationQuiz: false }`. The row and its id survive, as the append-only
+  baseline requires, and it still feeds sentence hints. New
+  `military_operational-094-to-kill` (`להרוג` / `לַהֲרֹג`) at that shelf's tail; the shelf is
+  in Idan's `vocabReserveCategories`, so the card is weighted and fenced to him with no route
+  edit. `__build` to `20260820a`.
+- `sentence-bank-data.js` — new `KILL_VERB_SENTENCES` tranche, two rows. `__build` to
+  `20260820a`.
+- `tests/vocab-data.test.js` — total 2204 to 2205. Playable is unchanged at 2116: retiring one
+  tile and adding one cancel out, so despite the brief there was no second number to move.
+- `tests/fixtures/vocab-id-baseline.json` — one id inserted in place after
+  `military_operational-093-to-eliminate`. Not regenerated: the file is stored in a different
+  order than `getBaseVocabulary()` returns, so regenerating churns ~110 lines.
+- `tests/content-coverage.test.js` — 2205 records, exact 1061 to 1063, unsupported 1143 to
+  1142, all three taken from `npm run report:coverage` on the merged tree. The corrected
+  morphology-trap comment from 295340a is preserved and extended rather than overwritten.
+- `tests/sentence-bank-data.test.js` — `KILL_VERB_ENTRY_IDS`; count 1206 to 1208 in three
+  assertions and the test title; `everyday` 540 to 542; a `COVERAGE_TRANCHES` entry; and the
+  ids added to the niqqud/chip sweep. Counts re-derived from a fresh load of the bank, not by
+  adding two to the previous figure.
+- `index.html` — `vocab-data.js` and `sentence-bank-data.js` to `?v=20260820a`.
+
+**On the cache key.** This work first used `20260819d`; 295340a independently used
+`20260819e` for `sentence-bank-data.js`. The merged file contains both tranches, so it is
+neither of those two contents, and reusing either key would put two different files behind one
+URL — exactly the failure the rule exists to prevent. Both files this change touches therefore
+move to `20260820a`, today's date, which was unused.
+
+**The two sentences.** ה-ר-ג had no verbal sentence support of any kind: the only `הרג` in the
+bank is the noun inside a metalinguistic row contrasting רצח / הרג / השמדה, and `הרגולציה` is
+an unrelated surface. Both rows stay reporting register rather than tactics, matching a82154d,
+and the `idan_` prefix fences them.
+
+- `idan_129` — "הדובר אמר שאסור להרוג את החשוד." Teaches the infinitive; `fixed`.
+- `idan_130` — "לפי ההודעה העשן הורג אנשים רבים." Teaches the participle, so the retired tile
+  keeps a context; `alternates`, with the לפי-adverbial also authored in final position.
+
+Each row carries the headword form itself, which is the point 295340a makes about `לחסל` and
+`הסמכה`: the coverage matcher tolerates clitics but does not stem morphology, so a card whose
+natural use is inflected needs a row containing the headword, not a relative of it. Every
+pointed form in both rows was taken from an existing vetted form in the bank or in
+`vocab-data.js` rather than authored fresh.
+
+**On `לַהֲרֹג` versus `hebrew-verbs.js`.** `advanced-verb-laharog` carries `lemma_niqqud`
+`לַהֲרוֹג`, keeping the helper vav; the new vocabulary card drops it, per the ktiv-chaser rule,
+and `לעצור` → `לַעֲצֹר` already sets that precedent for this exact shape (paal infinitive,
+guttural second radical). The parallel session then measured the whole deck: **70 infinitives
+keep the holam vav in `lemma_niqqud` and 16 drop it.** Both spellings are correct Hebrew, so
+this is a 70-row convention decision for Mike rather than a defect, and the suite structurally
+cannot catch it — the plain-versus-pointed check strips ו and י so ktiv male ↔ ktiv chaser
+stays legal. Nothing cross-checks the two files and `advanced-verb-laharog` is hidden from
+Translation Match, so no learner sees both forms at once. `hebrew-verbs.js` left untouched.
+
+**Behavior changed:** `הורג` can no longer be served as a Translation Match card to any
+character — this is the Ido-mission leak, closed. `להרוג` is now drawable in Translation
+Match by Idan alone (`getItemAudience` returns `["idan"]`, matching `לחסל`). Idan gains two
+sentences. Conjugation+ is untouched.
+
+**Tests run:**
+
+- `npm test` before, on the corrected base: 449 pass, 0 fail.
+- `npm test` after, on 0d9aefb: 449 pass, 0 fail.
+- `npm test` after the second fast-forward onto 295340a and conflict resolution: see below.
+- `node --test tests/vocab-data.test.js`: 27 pass — including the merged-pool duplicate check,
+  confirming no clash with the hidden `advanced-verb-laharog` seed card.
+- `npm run report:coverage`: Total 2205; exact 1063; unsupported 1142.
+- `npm run report:characters`: Idan 266 vocabulary / 131 sentences; all five characters keep
+  their draw pools.
+
+**Risks / regressions to check:**
+
+- `הורג` is the fourth tile retired this way. If a future audit wants the count of unplayable
+  rows, note that these register retirements are deliberately *not* in
+  `SUPPRESSED_DUPLICATE_IDS`, which is only the 22 duplicate twins — `חוסל` is not in it either.
+- The `הֶ` article in `הֶעָשָׁן` follows `הֶחָתוּל` / `הֶחָדָשׁ` / `הֶחָלָל` in the bank. No test
+  covers article vocalisation before a guttural, so it rests on that precedent.
+- `idan_` ids are now contiguous through 131 across two sessions. Nothing asserts prefix
+  contiguity, but two sessions appending to the same prefix is how a duplicate id would arise;
+  re-derive the next free number from a fresh load rather than from a task-log entry.
+- This branch is now six commits ahead of `main`. Anything else cut from `main` and appending
+  to `military_operational` will collide at index 094.
+
 ### 2026-08-19 EDT — Correction: the לחסל card was never covered; idan_131 added
 
 **Requested:** A parallel session working the `הורג` follow-up reported that

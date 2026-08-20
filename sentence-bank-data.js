@@ -19837,6 +19837,34 @@ const PROVIDENCE_TRAVEL_SENTENCES = [
   }),
 ];
 
+// Coverage tranche: ה-ר-ג. The root had no verbal sentence support of any kind.
+// The only הרג in the bank is the noun, inside a metalinguistic row contrasting
+// רצח / הרג / השמדה, and הרגולציה is an unrelated surface. Both rows stay
+// reporting register rather than tactics, and the idan_ prefix fences them.
+const KILL_VERB_SENTENCES = [
+  buildReviewedSentence({
+    id: "idan_129", emoji: "🚫", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדובר אמר שאסור להרוג את החשוד.", hebrewNiqqud: "הַדּוֹבֵר אָמַר שֶׁאָסוּר לַהֲרֹג אֶת הַחָשׁוּד.", english: "The spokesperson said that it is forbidden to kill the suspect.",
+    hebrewTokenPairs: [["הדובר", "הַדּוֹבֵר"], ["אמר", "אָמַר"], ["שאסור", "שֶׁאָסוּר"], ["להרוג", "לַהֲרֹג"], ["את החשוד", "אֶת הַחָשׁוּד"]], englishTokens: ["The spokesperson", "said", "that it is forbidden", "to kill", "the suspect"],
+    hebrewDistractorPairs: [["הקצין", "הַקָּצִין"], ["כתב", "כָּתַב"], ["שמותר", "שֶׁמֻּתָּר"], ["לעצור", "לַעֲצֹר"], ["את הצוות", "אֶת הַצֶּוֶת"]], englishDistractors: ["The officer", "wrote", "that it is permitted", "to arrest", "the team"],
+    notes: "להרוג is the paal infinitive of ה-ר-ג; the helper vav of the plain spelling drops under pointing, exactly as in לעצור / לַעֲצֹר."
+  }),
+  buildReviewedSentence({
+    id: "idan_130", emoji: "💨", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "לפי ההודעה העשן הורג אנשים רבים.", hebrewNiqqud: "לְפִי הַהוֹדָעָה הֶעָשָׁן הוֹרֵג אֲנָשִׁים רַבִּים.", english: "According to the announcement the smoke kills many people.",
+    hebrewTokenPairs: [["לפי", "לְפִי"], ["ההודעה", "הַהוֹדָעָה"], ["העשן", "הֶעָשָׁן"], ["הורג", "הוֹרֵג"], ["אנשים", "אֲנָשִׁים"], ["רבים", "רַבִּים"]], englishTokens: ["According to", "the announcement", "the smoke", "kills", "many", "people"],
+    hebrewDistractorPairs: [["לדברי", "לְדִבְרֵי"], ["הדיווח", "הַדִּיווּחַ"], ["המפקד", "הַמְּפַקֵּד"], ["מזיק", "מַזִּיק"], ["ילדים", "יְלָדִים"], ["בבוקר", "בַּבֹּקֶר"]], englishDistractors: ["In the words of", "the report", "the commander", "harms", "children", "in the morning"],
+    hebrewOrderAlternates: [
+      {
+        text: "העשן הורג אנשים רבים לפי ההודעה.",
+        textNiqqud: "הֶעָשָׁן הוֹרֵג אֲנָשִׁים רַבִּים לְפִי הַהוֹדָעָה.",
+        order: [2, 3, 4, 5, 0, 1],
+      },
+    ],
+    notes: "הורג is the paal present participle of להרוג; before a guttural carrying qamats the definite article is הֶ, as in הֶעָשָׁן."
+  }),
+];
+
 // Coverage tranche: medical and health. At 24 rows this was the thinnest
 // real-life domain in the bank, well behind bureaucracy at 133 and tech at 112,
 // with almost nothing on appointments, referrals, pharmacies or describing a
@@ -20049,7 +20077,8 @@ SENTENCE_BANK.push(
   ...HEALTH_SENTENCES,
   ...COMPARE_FOCUS_SENTENCES,
   ...DECLINE_AUTHORITY_SENTENCES,
-  ...PROVIDENCE_TRAVEL_SENTENCES
+  ...PROVIDENCE_TRAVEL_SENTENCES,
+  ...KILL_VERB_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -20068,6 +20097,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260819e",
+  __build: "20260820a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

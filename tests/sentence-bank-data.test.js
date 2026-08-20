@@ -522,6 +522,11 @@ const PROVIDENCE_TRAVEL_ENTRY_IDS = [
   ...sentenceIdRange("colloquial", 220, 220),
   ...sentenceIdRange("inbal", 108, 108),
 ];
+// Lexical tranche: ה-ר-ג, which had no verbal sentence support at all. Both rows
+// are idan_, so the prefix fences them to Idan.
+const KILL_VERB_ENTRY_IDS = [
+  ...sentenceIdRange("idan", 129, 130),
+];
 const HEALTH_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 332, 346),
   ...sentenceIdRange("professional", 207, 211),
@@ -1418,15 +1423,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,206 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,208 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1206);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1206);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1206);
+  assert.equal(entries.length, 1208);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1208);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1208);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1535,9 +1540,10 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // them idan_), 2 professional, 2 formal, 1 colloquial. The decline/authority
   // tranche adds 12: 5 professional, 4 formal, 3 everyday. The
   // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
+  // The kill-verb tranche adds 2, both everyday and both idan_.
   assert.deepEqual(categoryCounts, {
     colloquial: 260,
-    everyday: 540,
+    everyday: 542,
     professional: 234,
     formal: 172,
   });
@@ -1857,6 +1863,13 @@ const COVERAGE_TRANCHES = [
     difficulty: { 1: 3, 2: 6, 3: 3 },
     category: { professional: 5, formal: 4, everyday: 3 },
   },
+  {
+    label: "kill verb",
+    ids: KILL_VERB_ENTRY_IDS,
+    size: 2,
+    difficulty: { 2: 2 },
+    category: { everyday: 2 },
+  },
 ];
 
 test("the coverage tranches add reviewed handwriting-ready rows in the authored mix", () => {
@@ -1975,6 +1988,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...COMPARE_FOCUS_ENTRY_IDS,
     ...DECLINE_AUTHORITY_ENTRY_IDS,
     ...PROVIDENCE_TRAVEL_ENTRY_IDS,
+    ...KILL_VERB_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

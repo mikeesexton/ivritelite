@@ -39,7 +39,7 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
-  assert.equal(report.records.length, 2204);
+  assert.equal(report.records.length, 2205);
   // The four coverage tranches pulled twelve more vocabulary cards from
   // unsupported into exact by giving them a sentence context.
   //
@@ -53,10 +53,13 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   //
   // The decline/authority tranche adds eight cards, all eight covered on arrival,
   // and pulls three more across with them. The providence/travel tranche adds three
-  // cards, all three covered, and pulls one more across.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1061);
+  // cards, all three covered, and pulls one more across. The kill-verb tranche adds
+  // one card, להרוג, covered on arrival by idan_129, and pulls the retired הורג tile
+  // across with idan_130, so exact rises by two while unsupported falls by one.
+  // Both rows carry the headword form itself, per the trap above.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1063);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1143);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1142);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {
