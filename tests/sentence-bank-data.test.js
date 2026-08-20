@@ -511,6 +511,13 @@ const DECLINE_AUTHORITY_ENTRY_IDS = [
   ...sentenceIdRange("formal", 133, 136),
   ...sentenceIdRange("everyday", 349, 351),
 ];
+// Lexical tranche: two fixed expressions, הלוך ושוב with its בהלוך / בחזור legs,
+// and השגחה across its kashrut, lifeguard, and theological senses.
+const PROVIDENCE_TRAVEL_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 352, 354),
+  ...sentenceIdRange("colloquial", 220, 220),
+  ...sentenceIdRange("inbal", 108, 108),
+];
 const HEALTH_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 332, 346),
   ...sentenceIdRange("professional", 207, 211),
@@ -1162,6 +1169,8 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     higher education
     academic credentials
     default setting
+    divine providence
+    round trip
   `, "term: recognized multiword vocabulary unit"),
 ]);
 
@@ -1405,15 +1414,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,200 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,205 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1200);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1200);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1200);
+  assert.equal(entries.length, 1205);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1205);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1205);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1520,10 +1529,11 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // The four coverage tranches add 110: 67 everyday, 23 colloquial, 15
   // professional, 5 formal. The compare/focus tranche adds 9: 4 everyday (two of
   // them idan_), 2 professional, 2 formal, 1 colloquial. The decline/authority
-  // tranche adds 12: 5 professional, 4 formal, 3 everyday.
+  // tranche adds 12: 5 professional, 4 formal, 3 everyday. The
+  // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
   assert.deepEqual(categoryCounts, {
-    colloquial: 259,
-    everyday: 535,
+    colloquial: 260,
+    everyday: 539,
     professional: 234,
     formal: 172,
   });
@@ -1830,6 +1840,13 @@ const COVERAGE_TRANCHES = [
     category: { everyday: 4, professional: 2, formal: 2, colloquial: 1 },
   },
   {
+    label: "providence and travel",
+    ids: PROVIDENCE_TRAVEL_ENTRY_IDS,
+    size: 5,
+    difficulty: { 1: 1, 2: 4 },
+    category: { everyday: 4, colloquial: 1 },
+  },
+  {
     label: "decline and authority",
     ids: DECLINE_AUTHORITY_ENTRY_IDS,
     size: 12,
@@ -1953,6 +1970,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...HEALTH_ENTRY_IDS,
     ...COMPARE_FOCUS_ENTRY_IDS,
     ...DECLINE_AUTHORITY_ENTRY_IDS,
+    ...PROVIDENCE_TRAVEL_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

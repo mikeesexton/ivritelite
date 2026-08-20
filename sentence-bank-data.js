@@ -19772,6 +19772,57 @@ const DECLINE_AUTHORITY_SENTENCES = [
   }),
 ];
 
+// Coverage tranche: two fixed expressions. הלוך ושוב and its legs בהלוך / בחזור
+// had no card and no sentence in the bank; הלוך is not a free word, it is the
+// infinitive absolute of ללכת and works only in these pairings, which is what
+// the notes say. השגחה carries three live senses — kashrut certification, a
+// lifeguard's watch, and divine providence — so the plain noun sits on the
+// unrouted shelf and only השגחה פרטית is Inbal's alone.
+const PROVIDENCE_TRAVEL_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_352", emoji: "🎫", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "קניתי כרטיס הלוך ושוב לחיפה.", hebrewNiqqud: "קָנִיתִי כַּרְטִיס הָלוֹךְ וָשׁוֹב לְחֵיפָה.", english: "I bought a round trip ticket to Haifa.",
+    hebrewTokenPairs: [["קניתי", "קָנִיתִי"], ["כרטיס", "כַּרְטִיס"], ["הלוך ושוב", "הָלוֹךְ וָשׁוֹב"], ["לחיפה", "לְחֵיפָה"]], englishTokens: ["I bought", "a round trip", "ticket", "to Haifa"],
+    hebrewDistractorPairs: [["הזמנתי", "הִזְמַנְתִּי"], ["מקום", "מָקוֹם"], ["ברכבת", "בָּרַכֶּבֶת"], ["לירושלים", "לִירוּשָׁלַיִם"]], englishDistractors: ["I ordered", "a seat", "on the train", "to Jerusalem"],
+    notes: "הלוך ושוב is a round trip. הלוך is the infinitive absolute of ללכת and works only in these fixed pairings."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_220", emoji: "🚌", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "בהלוך היה ריק ובחזור לא היה מקום.", hebrewNiqqud: "בַּהֲלוֹךְ הָיָה רֵיק וּבַחֲזוֹר לֹא הָיָה מָקוֹם.", english: "On the way there it was empty and on the return there was no room.",
+    hebrewTokenPairs: [["בהלוך", "בַּהֲלוֹךְ"], ["היה ריק", "הָיָה רֵיק"], ["ובחזור", "וּבַחֲזוֹר"], ["לא היה מקום", "לֹא הָיָה מָקוֹם"]], englishTokens: ["On the way there", "it was empty", "and on the return", "there was no room"],
+    hebrewDistractorPairs: [["בבוקר", "בַּבֹּקֶר"], ["היה נעים", "הָיָה נָעִים"], ["ובערב", "וּבָעֶרֶב"], ["היה חם", "הָיָה חַם"]], englishDistractors: ["In the morning", "it was pleasant", "and in the evening", "it was hot"],
+    notes: "בהלוך and בחזור are the outbound and return legs of a journey; together, הלוך ושוב is a round trip."
+  }),
+  buildReviewedSentence({
+    id: "inbal_108", emoji: "✨", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "היא מאמינה שהכול השגחה פרטית.", hebrewNiqqud: "הִיא מַאֲמִינָה שֶׁהַכֹּל הַשְׁגָּחָה פְּרָטִית.", english: "She believes that everything is divine providence.",
+    hebrewTokenPairs: [["היא", "הִיא"], ["מאמינה", "מַאֲמִינָה"], ["שהכול", "שֶׁהַכֹּל"], ["השגחה פרטית", "הַשְׁגָּחָה פְּרָטִית"]], englishTokens: ["She", "believes", "that everything", "is divine providence"],
+    hebrewDistractorPairs: [["הוא", "הוּא"], ["חושב", "חוֹשֵׁב"], ["שזה", "שֶׁזֶּה"], ["צירוף מקרים", "צֵרוּף מִקְרִים"]], englishDistractors: ["He", "thinks", "that it", "is a coincidence"],
+    notes: "השגחה פרטית is divine providence, literally 'particular supervision' — the idea that providence attends each individual rather than only the world in general."
+  }),
+  buildReviewedSentence({
+    id: "everyday_353", emoji: "🧀", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המסעדה הזאת בהשגחה של הרבנות.", hebrewNiqqud: "הַמִּסְעָדָה הַזֹּאת בְּהַשְׁגָּחָה שֶׁל הָרַבָּנוּת.", english: "This restaurant is under supervision of the rabbinate.",
+    hebrewTokenPairs: [["המסעדה הזאת", "הַמִּסְעָדָה הַזֹּאת"], ["בהשגחה", "בְּהַשְׁגָּחָה"], ["של", "שֶׁל"], ["הרבנות", "הָרַבָּנוּת"]], englishTokens: ["This restaurant", "is under supervision", "of", "the rabbinate"],
+    hebrewDistractorPairs: [["החנות הזאת", "הַחֲנוּת הַזֹּאת"], ["בפיקוח", "בְּפִקּוּח"], ["מטעם", "מִטַּעַם"], ["המשרד", "הַמִּשְׂרָד"]], englishDistractors: ["This shop", "is under inspection", "on behalf of", "the ministry"],
+    notes: "השגחה is supervision; on a restaurant sign it means kashrut certification."
+  }),
+  buildReviewedSentence({
+    id: "everyday_354", emoji: "🏊", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "אין השגחה בבריכה אחרי חמש.", hebrewNiqqud: "אֵין הַשְׁגָּחָה בַּבְּרֵכָה אַחֲרֵי חָמֵשׁ.", english: "There is no supervision at the pool after five.",
+    hebrewTokenPairs: [["אין", "אֵין"], ["השגחה", "הַשְׁגָּחָה"], ["בבריכה", "בַּבְּרֵכָה"], ["אחרי חמש", "אַחֲרֵי חָמֵשׁ"]], englishTokens: ["There is no", "supervision", "at the pool", "after five"],
+    hebrewDistractorPairs: [["יש", "יֵשׁ"], ["מציל", "מַצִּיל"], ["בחוף", "בַּחוֹף"], ["עד שבע", "עַד שֶׁבַע"]], englishDistractors: ["There is", "a lifeguard", "at the beach", "until seven"],
+    hebrewOrderAlternates: [
+      {
+        text: "אחרי חמש אין השגחה בבריכה.",
+        textNiqqud: "אַחֲרֵי חָמֵשׁ אֵין הַשְׁגָּחָה בַּבְּרֵכָה.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "השגחה also covers a lifeguard's watch or an adult keeping an eye on children."
+  }),
+];
+
 // Coverage tranche: medical and health. At 24 rows this was the thinnest
 // real-life domain in the bank, well behind bureaucracy at 133 and tech at 112,
 // with almost nothing on appointments, referrals, pharmacies or describing a
@@ -19983,7 +20034,8 @@ SENTENCE_BANK.push(
   ...NUMBER_TIME_SENTENCES,
   ...HEALTH_SENTENCES,
   ...COMPARE_FOCUS_SENTENCES,
-  ...DECLINE_AUTHORITY_SENTENCES
+  ...DECLINE_AUTHORITY_SENTENCES,
+  ...PROVIDENCE_TRAVEL_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -20002,6 +20054,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260819b",
+  __build: "20260819c",
 };
 })(typeof window !== "undefined" ? window : globalThis);

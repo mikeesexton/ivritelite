@@ -210,8 +210,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2201);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2113);
+  assert.equal(vocabulary.length, 2204);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2116);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -230,7 +230,11 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
 });
 
 test("urban mobility tranche appends 24 pointed survival cards in locked order", () => {
-  const rows = loadVocabulary().filter((word) => word.category === "everyday_survival_expanded").slice(15);
+  // slice(15, 39) rather than slice(15): this pins the authored urban-mobility
+  // tranche in order, not the whole shelf, so a later append — הלוך ושוב at 040
+  // — does not read as a 25th mobility card. Appends stay covered by the global
+  // niqqud, playability and uniqueness checks.
+  const rows = loadVocabulary().filter((word) => word.category === "everyday_survival_expanded").slice(15, 39);
   assert.deepEqual(Array.from(rows, (word) => [word.he, word.en]), [
     ["תחבורה ציבורית", "public transportation"], ["קו אוטובוס", "bus route"],
     ["תחנת אוטובוס", "bus stop"], ["תחנת רכבת", "train station"], ["רכבת קלה", "light rail"],
@@ -388,7 +392,8 @@ test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", ()
     ["emergency_response", ["שוטר", "מעצר", "חקירה", "זירת פשע", "החייאה", "כבאי", "מוקדן"]],
   ]);
   const expectedCounts = new Map([
-    ["religion_magic_spirituality", 138],
+    // 138 authored plus השגחה פרטית, the theological term Inbal owns.
+    ["religion_magic_spirituality", 139],
     ["literature_arts_cultural_history", 35],
     ["religious_life_practice", 116],
     // 115 authored plus ברירת מחדל, the singular of the ברירות מחדל card

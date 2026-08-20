@@ -787,6 +787,10 @@ characterData.characters = characterData.characters || Object.freeze({
         "לחש",
         "אמונה",
         "תעלומה",
+        // Kashrut certification and a lifeguard's watch are the same word, so the
+        // card sits on the unrouted core_advanced shelf and stays everyone's;
+        // naming it here is what makes it weigh for her.
+        "השגחה",
       ]),
       sentenceIdPrefixes: Object.freeze(["inbal_"]),
       abbrBuckets: Object.freeze(["People, Health & Culture"]),

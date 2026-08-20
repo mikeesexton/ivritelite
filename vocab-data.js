@@ -574,6 +574,7 @@ const RAW = {
     ["just a handful", "ספורים", "סְפוּרִים"],
     ["education", "השכלה", "הַשְׂכָּלָה"],
     ["systemic failure", "מחדל", "מֶחְדָּל"],
+    ["supervision", "השגחה", "הַשְׁגָּחָה"],
   ],
   cooking_utensils: [
     ["knife", "סכין", "סַכִּין"],
@@ -1844,6 +1845,7 @@ const RAW = {
     ["intersection", "צומת", "צוֹמֶת"],
     ["crosswalk", "מעבר חצייה", "מַעֲבַר חֲצִיָּה"],
     ["parking garage", "חניון", "חֶנְיוֹן"],
+    ["round trip", "הלוך ושוב", "הָלוֹךְ וָשׁוֹב"],
   ],
   media_digital_life_expanded: [
     ["social media post", "פוסט ברשתות חברתיות", "פּוֹסְט בָּרְשָׁתוֹת חֶבְרָתִיּוֹת"],
@@ -2071,6 +2073,7 @@ const RAW = {
     ["prophet", "נביא", "נָבִיא"],
     ["miracle", "נס", "נֵס"],
     ["holy tongue", "לשון הקודש", "לְשׁוֹן הַקּוֹדֶשׁ"],
+    ["divine providence", "השגחה פרטית", "הַשְׁגָּחָה פְּרָטִית"],
   ],
   literature_arts_cultural_history: [
     ["literary criticism", "ביקורת ספרות", "בִּקֹּרֶת סִפְרוּת"],
@@ -2833,6 +2836,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260819b",
+  __build: "20260819c",
 };
 })(typeof window !== "undefined" ? window : globalThis);

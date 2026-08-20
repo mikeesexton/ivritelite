@@ -5,6 +5,89 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-19 EDT — Tranche 3 of 3: הלוך ושוב with its two legs, and Inbal's השגחה
+
+**Requested:** The last two of the ten words Mike met in play — item 9 (הלוך ושוב, plus בהלוך
+and בחזור) and item 10 (השגחה פרטית, and השגחה as a common word in its own right).
+
+**One refinement to his reading, recorded in `notes` rather than left implicit.** Mike asked
+whether `הלוך` means "outbound". Close, but it is not a free word: it is the infinitive
+absolute of `ללכת` and functions only inside the fixed pairings — `הלוך ושוב`, `בהלוך`,
+`בחזור`, `כרטיס הלוך ושוב`. So the card is the whole expression, and `colloquial_220` is
+where the two legs get taught as a contrast rather than as separate vocabulary.
+
+**Why השגחה is on the unrouted shelf.** It carries three live senses: kashrut certification
+on a restaurant sign, a lifeguard's or parent's watch, and, in `השגחה פרטית`, divine
+providence. Mike asked for it as a common word *and* for Inbal, which the routing model does
+in one move: the plain noun goes on `core_advanced`, which no character owns, so everyone
+reaches it, and `"השגחה"` is named in Inbal's `vocabWords` so it weighs for her. Only
+`השגחה פרטית` is on her own shelf, and only the theological sentence is fenced to her.
+
+**Files changed:**
+
+- `vocab-data.js` — three cards at category tails: `core_advanced-171-supervision` (השגחה),
+  `everyday_survival_expanded-040-round-trip` (הלוך ושוב, on Ido's practical-travel shelf),
+  `religion_magic_spirituality-139-divine-providence` (השגחה פרטית).
+- `app/character-data.js` — Inbal's `vocabWords` += `השגחה`.
+- `sentence-bank-data.js` — new `PROVIDENCE_TRAVEL_SENTENCES` array, 5 rows: `everyday_352`
+  (כרטיס הלוך ושוב), `colloquial_220` (בהלוך against בחזור), `inbal_108` (השגחה פרטית),
+  `everyday_353` (kashrut supervision), `everyday_354` (no lifeguard after five).
+- `tests/sentence-bank-data.test.js` — counts 1200 → 1205, category mix, new
+  `PROVIDENCE_TRAVEL_ENTRY_IDS`, a seventh `COVERAGE_TRANCHES` row, ids added to the aggregate
+  check, and two `COMPACT_ENGLISH_MULTIWORD_UNITS` entries: `divine providence`, `round trip`.
+- `tests/vocab-data.test.js` — total 2201 → 2204, playable 2113 → 2116,
+  `religion_magic_spirituality` 138 → 139. The `urban mobility tranche` test was
+  **upper-bounded** with `.slice(15, 39)` instead of `.slice(15)`, the same treatment the
+  smartphone tranche got in tranche 2: that test pins an authored tranche in locked order, and
+  הלוך ושוב at index 040 is a later append, not a 25th mobility card.
+- `tests/content-coverage.test.js` — 2204 records, exact 1056 → 1060, unsupported 1145 → 1144.
+- `tests/fixtures/vocab-id-baseline.json` — three lines inserted in place.
+- `index.html` — `?v=20260819c` for `vocab-data.js`, `sentence-bank-data.js`,
+  `app/character-data.js`; matching `__build` stamps bumped.
+
+**A pattern worth naming for whoever appends next.** Three separate tests broke on this
+work — `urban mobility`, `Ivri smartphone-interface`, and the `expectedCounts` table — all for
+the same reason: a test that pins an authored tranche by "everything at or after index N"
+silently absorbs any later append to that shelf. Where the test is about a *tranche*, the fix
+is an upper bound; where it is about a *shelf*, the fix is bumping the count. Both were used
+here, deliberately and separately. Expect the same on the next append to a shelf that has a
+named tranche test.
+
+**Behavior changed:**
+
+- Vocabulary 2204, sentences 1205. All three new cards playable exactly once and covered by a
+  sentence on arrival — verified live in the browser.
+- `הלוך ושוב` reaches Ido; `השגחה` and `השגחה פרטית` reach Inbal; `השגחה` is also reachable by
+  everyone, which is what Mike asked for. `inbal_108` is fenced to Inbal automatically by its
+  id prefix — confirmed live through `getItemAudience`, not assumed.
+- ח-ס-ל, להשוות, להתמקד, ביקורות מוצרים, ירידה, השכלה, סמכות, הסמכה, מחדל, הלוך ושוב and
+  השגחה — all ten of Mike's words now have a card, a sentence, or a conjugation paradigm, and
+  in most cases all three.
+
+**Pointing decisions** (verified against existing rows, not assumed): `בבריכה` →
+`בַּבְּרֵכָה` and `צירוף מקרים` → `צֵרוּף מִקְרִים` both drop the mater the plain spelling
+carries, while `ריק` → `רֵיק` keeps it. `ובחזור` → `וּבַחֲזוֹר` takes the soft ב after the
+`וּ` prefix, per the documented exception. `בהלוך` → `בַּהֲלוֹךְ`.
+
+**Tests run:**
+
+- `npm test` — **449 pass, 0 fail**.
+- `npm run report:characters` — all five characters clear every depth floor: Ido 502/260/68/34,
+  Inbal 342/108/87/26, Ivri 537/234/113/37, Inat 382/216/85/25, Idan 265/128/34/30.
+- `npm run report:coverage` for the real numbers.
+- Live at `localhost:3000`: no console errors, `__build` stamps read `20260819c`.
+
+**Risks / regressions to check:**
+
+- `בהלוך` and `בחזור` appear only inside `colloquial_220`; neither has a card, deliberately,
+  since neither stands alone as vocabulary. If they are ever wanted as cards they should be
+  authored as the pair, not separately.
+- `השגחה` on the unrouted shelf means Idan and Ivri can draw it. That is intended — it is an
+  ordinary word — but if the religious reading dominates in play, name it in Inbal's
+  `vocabReserveWords` rather than re-shelving it.
+- Six glossary entries were added across tranches 2 and 3. Both registries are staleness-checked,
+  so rewording any of those rows means removing the entry too.
+
 ### 2026-08-19 EDT — Tranche 2 of 3: eight noun cards and twelve sentences, with three meaning corrections
 
 **Requested:** Tranche 2 of the ten words Mike hit in play — items 3 (ביקורות מוצרים),
