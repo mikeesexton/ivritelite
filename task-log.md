@@ -125,6 +125,16 @@ sentences. Conjugation+ is untouched.
 - This branch is now six commits ahead of `main`. Anything else cut from `main` and appending
   to `military_operational` will collide at index 094.
 
+**Unrelated pre-existing failure fixed to get CI green.** PR #78 was the first time the
+`test.yml` gate added in 4418adb had ever run, and it failed on
+`tests/prepositions-data.test.js:316` — a file this change does not touch.
+`assert.deepEqual(incoherent.map(...), [])` compared a VM-realm array against a host-realm
+`[]`; `deepStrictEqual` checks prototype identity across realms, so it failed under CI's Node
+24 while passing under local Node 25. Fixed with `Array.from`, which resolves from the host
+realm and is the idiom line 200 of the same file already uses. No cache-bust: a test file is
+not loaded by `index.html`. The same trap is documented in `tests/vocab-data.test.js`, which
+spreads before comparing — worth knowing that local Node and CI Node differ here.
+
 ### 2026-08-19 EDT — Correction: the לחסל card was never covered; idan_131 added
 
 **Requested:** A parallel session working the `הורג` follow-up reported that
