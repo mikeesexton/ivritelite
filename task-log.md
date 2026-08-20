@@ -5,6 +5,108 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-19 EDT — Tranche 2 of 3: eight noun cards and twelve sentences, with three meaning corrections
+
+**Requested:** Tranche 2 of the ten words Mike hit in play — items 3 (ביקורות מוצרים),
+4 (ירידה), 5 (השכלה), 6 (הסמכות), 8 (מחדל). Three of his readings needed correcting first,
+and he chose the fuller option in each case.
+
+**The three corrections, confirmed with Mike before implementation.**
+
+- **`מחדל` does not mean "default."** Standalone it is a *systemic failure* or dereliction —
+  the word Israeli public debate uses for an institutional failure. The "default" sense exists
+  only inside the construct `ברירת מחדל`, literally a choice of last resort, and the plural
+  `ברירות מחדל` "default settings" was already on the deck at `devices_os_apps-093`. Both
+  cards added: the singular `ברירת מחדל` he was reaching for, and `מחדל` in its real sense.
+- **`הסמכות` is the plural of a different word.** `סמכות` (authority, the power to decide) and
+  `הסמכה` (accreditation, plural `הסמכות`) share the root ס-מ-כ but are separate words, so
+  `הסמכות אקדמיות` really is "academic credentials." Both cards added, split Inat / Ivri.
+- **`מוצר` was absent from the entire deck** — only the compound `מפת דרכים למוצר` existed.
+  Added alongside `ביקורות מוצרים` so the compound no longer rests on an untaught word.
+
+**A gloss collision worth recording.** `סמכות` could not be glossed "authority": that gloss
+belongs to `רשות` at `bureaucracy-027`, and "jurisdiction" belongs to `סמכות שיפוט` on the
+same shelf as the new card. It is glossed **"legal authority"**. `professional_216` then
+teaches the distinction directly — לרשות אין סמכות, "the authority has no power" — which is the
+pair a learner actually confuses. `מחדל` likewise could not be "failure" (that is `כישלון`),
+so it is **"systemic failure"**, which is also the more accurate gloss.
+
+**Files changed:**
+
+- `vocab-data.js` — eight cards, all at category tails: `core_advanced-169-education` (השכלה)
+  and `-170-systemic-failure` (מחדל); `business_finance_expanded-021-product`,
+  `-022-product-reviews`, `-023-decline`; `legal_civic-019-legal-authority`;
+  `bureaucracy-090-accreditation`; `devices_os_apps-116-default-setting`.
+- `app/character-data.js` — Inat's `vocabWords` += `ירידה`, `הסמכה`, `השכלה`. The first two sit
+  on Ivri's shelves and are genuinely both readings: he reads ירידה as a quarter's revenue and
+  הסמכה as a regulator's licence, she reads them as falling turnout and academic credentials.
+  `השכלה` is on the unrouted `core_advanced` shelf, so naming it here is what gives it an owner
+  at all while keeping it reachable by everyone.
+- `sentence-bank-data.js` — new `DECLINE_AUTHORITY_SENTENCES` array, 12 rows:
+  `professional_214`–`218`, `formal_133`–`136`, `everyday_349`–`351`. Five carry
+  `hebrewOrderAlternates`. `everyday_351` is a question, which the bank is still short of.
+- `tests/sentence-bank-data.test.js` — counts 1188 → 1200, category mix, new
+  `DECLINE_AUTHORITY_ENTRY_IDS`, a sixth `COVERAGE_TRANCHES` row, ids added to the aggregate
+  check, and four `COMPACT_ENGLISH_MULTIWORD_UNITS` entries: `product reviews`,
+  `higher education`, `academic credentials`, `default setting`. Each is an established term
+  independently worth learning, which is the documented bar for a glossary add.
+- `tests/vocab-data.test.js` — total 2193 → 2201, playable 2105 → 2113, `devices_os_apps`
+  category count 115 → 116. The `Ivri smartphone-interface tranche` test was **upper-bounded**
+  at index 115 rather than having its 40 bumped to 41: that test is about an authored tranche,
+  not about the shelf, and later appends are already covered by the category count and the
+  global niqqud and uniqueness checks.
+- `tests/content-coverage.test.js` — 2201 records, exact 1045 → 1056, unsupported 1148 → 1145;
+  `legal_civic` 18 → 19 and `business_finance_expanded` 20 → 23, both still fully exact; the
+  cast/smartphone exact-support count 60 → 61.
+- `tests/fixtures/vocab-id-baseline.json` — eight lines inserted in place.
+- `index.html` — `?v=20260819b` for `vocab-data.js`, `sentence-bank-data.js`,
+  `app/character-data.js`; matching `__build` stamps bumped.
+
+**A real gap the coverage report caught.** With eleven sentences authored, `הסמכה` still read
+`unsupported`: the only row using it, `formal_135`, uses the **plural** `הסמכות`, and
+`sentenceTestsHeadword` matches headwords with clitic tolerance, not morphological stemming.
+A twelfth row, `professional_218` ("המעבדה קיבלה הסמכה מהמשרד"), was added to give the singular
+its own context. Worth remembering when authoring for a card whose natural use is plural.
+
+**Behavior changed:**
+
+- Vocabulary 2193 → 2201, all eight new cards playable exactly once — verified live in the
+  browser, not only in tests. Sentences 1188 → 1200.
+- Every one of the eight new cards has **exact** sentence support on arrival, and three
+  pre-existing cards were pulled from unsupported into exact along with them.
+- `ירידה` reaches Ivri and Inat, `הסמכה` reaches both, `השכלה` and `מחדל` reach everyone,
+  and the rest are Ivri's. Nothing is fenced — none of these words is sensitive.
+
+**Tests run:**
+
+- `npm test` — **449 pass, 0 fail** (~105s). Same count as tranche 1: the new content is
+  covered by existing parameterised tests plus the new tranche row.
+- Per-file during authoring: `tests/vocab-data.test.js`, `tests/sentence-bank-data.test.js`,
+  `tests/content-coverage.test.js`, `tests/character-mission.test.js` — all pass. Every
+  pointing and compact-chip check passed first time; only counts and the הסמכה coverage gap
+  needed work.
+- `npm run report:coverage` for the real numbers; `npm run report:characters` for the floors.
+- Live at `localhost:3000`: no console errors, `__build` stamps read `20260819b`, all eight
+  cards present once each, all twelve sentences loaded.
+
+**Pointing decisions worth knowing** (house style, verified against existing rows rather than
+assumed): `עדיין` → `עֲדַיִן`, `שיפור` → `שִׁפּוּר`, `הסיסמה` → `הַסִּסְמָה`, `אישור` → `אִשּׁוּר`,
+`קיבלה` → `קִבְּלָה`, `החג` → `הֶחָג` — all drop the mater the plain spelling carries. `ביקורות`
+→ `בִּקּוֹרוֹת` follows the `ביקורת` → `בִּקּוֹרֶת` vocabulary card rather than the
+`בִּקֹּרֶת` used in the sentence bank; the two conventions coexist in the repo already.
+
+**Risks / regressions to check:**
+
+- `מחדל` is on the unrouted `core_advanced` shelf, so every character can draw it. If the
+  institutional-failure register feels wrong in Ido's or Inbal's mission, the fix is to name it
+  in Inat's `vocabWords` — not to re-shelve it, which would renumber ids.
+- Four glossary entries were added to `COMPACT_ENGLISH_MULTIWORD_UNITS`. Both registries are
+  checked for staleness, so if any of these four rows is ever reworded the entry must go too.
+- `everyday_349` teaches ירידה as a physical descent and `professional_215` notes the
+  ירידה מהארץ sense in passing. Neither has a card of its own; if the emigration sense is ever
+  wanted as vocabulary it belongs on one of Inat's shelves, not on the finance shelf.
+- Tranche 3 (הלוך ושוב with בהלוך/בחזור, and Inbal's השגחה / השגחה פרטית) is not started.
+
 ### 2026-08-19 EDT — Tranche 1 of 3: the חוסל misfire fixed, plus להשוות and להתמקד added to Conjugation
 
 **Requested:** Mike hit ten lexical gaps in play and asked for them in vocabulary, Conjugation

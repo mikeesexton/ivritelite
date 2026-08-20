@@ -39,14 +39,16 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
-  assert.equal(report.records.length, 2193);
+  assert.equal(report.records.length, 2201);
   // The four coverage tranches pulled twelve more vocabulary cards from
   // unsupported into exact by giving them a sentence context. The compare/focus
   // tranche adds the לחסל card already covered and pulls חוסל across too, so
-  // exact rises by two while unsupported falls by one.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1045);
+  // exact rises by two while unsupported falls by one. The decline/authority
+  // tranche adds eight cards, all eight covered on arrival, and pulls three more
+  // across with them.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1056);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1148);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1145);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {
@@ -418,7 +420,7 @@ test("Inat legal sentences give every previously unsupported legal card its inte
 
 test("Inat legal sentences bring both legal shelves to full exact support", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
-  assert.deepEqual({ ...report.categories.get("legal_civic") }, { total: 18, exact: 18, reviewed: 0, unsupported: 0 });
+  assert.deepEqual({ ...report.categories.get("legal_civic") }, { total: 19, exact: 19, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("law_legal_systems_expanded") }, { total: 16, exact: 16, reviewed: 0, unsupported: 0 });
 });
 
@@ -488,7 +490,7 @@ test("Ivri finance sentences give every previously unsupported finance card its 
 test("Ivri finance sentences bring both finance shelves to full exact support", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
   assert.deepEqual({ ...report.categories.get("finance_investing") }, { total: 17, exact: 17, reviewed: 0, unsupported: 0 });
-  assert.deepEqual({ ...report.categories.get("business_finance_expanded") }, { total: 20, exact: 20, reviewed: 0, unsupported: 0 });
+  assert.deepEqual({ ...report.categories.get("business_finance_expanded") }, { total: 23, exact: 23, reviewed: 0, unsupported: 0 });
 });
 
 test("Ivri finance sentences preserve the seven incidental exact matches", () => {
@@ -570,6 +572,8 @@ test("every card in the new cast and smartphone tranches has exact sentence supp
     return start && index >= start;
   });
 
-  assert.equal(added.length, 60);
+  // 60 authored plus ברירת מחדל at devices_os_apps-116, which arrived with its
+  // own sentence context and so keeps the "all exact" guarantee below true.
+  assert.equal(added.length, 61);
   assert.equal(added.filter((record) => record.status !== "exact").length, 0);
 });

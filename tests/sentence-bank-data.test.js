@@ -505,6 +505,12 @@ const COMPARE_FOCUS_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 347, 348),
   ...sentenceIdRange("colloquial", 219, 219),
 ];
+// Lexical tranche: five nouns a learner met in play, none of which had a card.
+const DECLINE_AUTHORITY_ENTRY_IDS = [
+  ...sentenceIdRange("professional", 214, 218),
+  ...sentenceIdRange("formal", 133, 136),
+  ...sentenceIdRange("everyday", 349, 351),
+];
 const HEALTH_ENTRY_IDS = [
   ...sentenceIdRange("everyday", 332, 346),
   ...sentenceIdRange("professional", 207, 211),
@@ -1151,6 +1157,12 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     evacuation route
     medical evacuation
   `, "term: recognized multiword vocabulary unit"),
+  ...compactUnitMap(`
+    product reviews
+    higher education
+    academic credentials
+    default setting
+  `, "term: recognized multiword vocabulary unit"),
 ]);
 
 const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
@@ -1393,15 +1405,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,188 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,200 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1188);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1188);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1188);
+  assert.equal(entries.length, 1200);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1200);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1200);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1507,12 +1519,13 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // everyday_ rows: Inbal's 96, Inat's 4, and Idan's 90 civil-defense/military rows.
   // The four coverage tranches add 110: 67 everyday, 23 colloquial, 15
   // professional, 5 formal. The compare/focus tranche adds 9: 4 everyday (two of
-  // them idan_), 2 professional, 2 formal, 1 colloquial.
+  // them idan_), 2 professional, 2 formal, 1 colloquial. The decline/authority
+  // tranche adds 12: 5 professional, 4 formal, 3 everyday.
   assert.deepEqual(categoryCounts, {
     colloquial: 259,
-    everyday: 532,
-    professional: 229,
-    formal: 168,
+    everyday: 535,
+    professional: 234,
+    formal: 172,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1816,6 +1829,13 @@ const COVERAGE_TRANCHES = [
     difficulty: { 1: 1, 2: 8 },
     category: { everyday: 4, professional: 2, formal: 2, colloquial: 1 },
   },
+  {
+    label: "decline and authority",
+    ids: DECLINE_AUTHORITY_ENTRY_IDS,
+    size: 12,
+    difficulty: { 1: 3, 2: 6, 3: 3 },
+    category: { professional: 5, formal: 4, everyday: 3 },
+  },
 ];
 
 test("the coverage tranches add reviewed handwriting-ready rows in the authored mix", () => {
@@ -1932,6 +1952,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...NUMBER_TIME_ENTRY_IDS,
     ...HEALTH_ENTRY_IDS,
     ...COMPARE_FOCUS_ENTRY_IDS,
+    ...DECLINE_AUTHORITY_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

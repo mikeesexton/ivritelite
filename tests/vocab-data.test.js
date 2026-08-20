@@ -210,8 +210,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2193);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2105);
+  assert.equal(vocabulary.length, 2201);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2113);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,
@@ -391,7 +391,9 @@ test("Inbal and Inat receive complete, pointed thematic vocabulary tranches", ()
     ["religion_magic_spirituality", 138],
     ["literature_arts_cultural_history", 35],
     ["religious_life_practice", 116],
-    ["devices_os_apps", 115],
+    // 115 authored plus ברירת מחדל, the singular of the ברירות מחדל card
+    // already on this shelf.
+    ["devices_os_apps", 116],
     ["emergency_response", 72],
   ]);
 
@@ -472,9 +474,14 @@ test("the rumor card is playable, pointed, and unique", () => {
 
 test("Ivri smartphone-interface tranche adds 40 pointed append-only cards", () => {
   const vocabulary = loadVocabulary();
-  const additions = vocabulary.filter((word) => (
-    word.category === "devices_os_apps" && Number(word.id.split("-")[1]) >= 76
-  ));
+  // Upper-bounded on purpose: this test is about the authored smartphone
+  // tranche, not about the shelf. Later appends — ברירת מחדל at 116 — are
+  // covered by the category count above and by the global niqqud and
+  // uniqueness checks.
+  const additions = vocabulary.filter((word) => {
+    const index = Number(word.id.split("-")[1]);
+    return word.category === "devices_os_apps" && index >= 76 && index <= 115;
+  });
   assert.equal(additions.length, 40);
   assert.ok(additions.every((word) => word.availability.translationQuiz));
   assert.ok(additions.every((word) => /[\u0591-\u05c7]/.test(word.heNiqqud)));

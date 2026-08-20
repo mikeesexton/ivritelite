@@ -19644,6 +19644,134 @@ const COMPARE_FOCUS_SENTENCES = [
   }),
 ];
 
+// Coverage tranche: five nouns a learner met in play, none of which existed as a
+// card. Three carry a correction worth stating in notes rather than leaving to
+// be inferred: ירידה is a decline *and* a descent (and, as ירידה מהארץ,
+// emigration); הסמכה and סמכות are different words from one root; and מחדל on
+// its own is a systemic failure — the "default" sense exists only inside
+// ברירת מחדל.
+const DECLINE_AUTHORITY_SENTENCES = [
+  buildReviewedSentence({
+    id: "professional_214", emoji: "🛒", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אנחנו קוראים ביקורות מוצרים לפני רכישה.", hebrewNiqqud: "אֲנַחְנוּ קוֹרְאִים בִּקּוֹרוֹת מוּצָרִים לִפְנֵי רְכִישָׁה.", english: "We read product reviews before a purchase.",
+    hebrewTokenPairs: [["אנחנו", "אֲנַחְנוּ"], ["קוראים", "קוֹרְאִים"], ["ביקורות מוצרים", "בִּקּוֹרוֹת מוּצָרִים"], ["לפני", "לִפְנֵי"], ["רכישה", "רְכִישָׁה"]], englishTokens: ["We", "read", "product reviews", "before", "a purchase"],
+    hebrewDistractorPairs: [["הם", "הֵם"], ["כותבים", "כּוֹתְבִים"], ["תנאים", "תְּנָאִים"], ["אחרי", "אַחֲרֵי"], ["ההזמנה", "הַהַזְמָנָה"]], englishDistractors: ["They", "write", "terms", "after", "the order"],
+    hebrewOrderAlternates: [
+      {
+        text: "לפני רכישה אנחנו קוראים ביקורות מוצרים.",
+        textNiqqud: "לִפְנֵי רְכִישָׁה אֲנַחְנוּ קוֹרְאִים בִּקּוֹרוֹת מוּצָרִים.",
+        order: [3, 4, 0, 1, 2],
+      },
+    ],
+    notes: "ביקורות מוצרים is the standard term for product reviews; ביקורת on its own is criticism or an audit."
+  }),
+  buildReviewedSentence({
+    id: "professional_215", emoji: "📉", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "הנתונים מראים ירידה בהכנסות ברבעון.", hebrewNiqqud: "הַנְּתוּנִים מַרְאִים יְרִידָה בְּהַכְנָסוֹת בָּרִבְעוֹן.", english: "The data show a decline in revenue in the quarter.",
+    hebrewTokenPairs: [["הנתונים", "הַנְּתוּנִים"], ["מראים", "מַרְאִים"], ["ירידה", "יְרִידָה"], ["בהכנסות", "בְּהַכְנָסוֹת"], ["ברבעון", "בָּרִבְעוֹן"]], englishTokens: ["The data", "show", "a decline", "in revenue", "in the quarter"],
+    hebrewDistractorPairs: [["המסמכים", "הַמִּסְמָכִים"], ["מסבירים", "מַסְבִּירִים"], ["צמיחה", "צְמִיחָה"], ["בהוצאות", "בַּהוֹצָאוֹת"], ["בשנה", "בַּשָּׁנָה"]], englishDistractors: ["The documents", "explain", "growth", "in the expenses", "in the year"],
+    hebrewOrderAlternates: [
+      {
+        text: "ברבעון הנתונים מראים ירידה בהכנסות.",
+        textNiqqud: "בָּרִבְעוֹן הַנְּתוּנִים מַרְאִים יְרִידָה בְּהַכְנָסוֹת.",
+        order: [4, 0, 1, 2, 3],
+      },
+    ],
+    notes: "ירידה is a decline; the same noun is also a descent, and ירידה מהארץ means emigrating from Israel."
+  }),
+  buildReviewedSentence({
+    id: "formal_133", emoji: "🗳️", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המחקר בדק את הירידה בהשתתפות.", hebrewNiqqud: "הַמֶּחְקָר בָּדַק אֶת הַיְרִידָה בְּהִשְׁתַּתְּפוּת.", english: "The study examined the decline in participation.",
+    hebrewTokenPairs: [["המחקר", "הַמֶּחְקָר"], ["בדק", "בָּדַק"], ["את הירידה", "אֶת הַיְרִידָה"], ["בהשתתפות", "בְּהִשְׁתַּתְּפוּת"]], englishTokens: ["The study", "examined", "the decline", "in participation"],
+    hebrewDistractorPairs: [["הספר", "הַסֵּפֶר"], ["תיאר", "תֵּאֵר"], ["את הצמיחה", "אֶת הַצְּמִיחָה"], ["בתמיכה", "בַּתְּמִיכָה"]], englishDistractors: ["The book", "described", "the growth", "in the support"],
+    notes: "ירידה בהשתתפות is the standard phrase for falling turnout."
+  }),
+  buildReviewedSentence({
+    id: "everyday_349", emoji: "🏖️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הירידה לחוף לוקחת עשר דקות.", hebrewNiqqud: "הַיְרִידָה לַחוֹף לוֹקַחַת עֶשֶׂר דַּקּוֹת.", english: "The descent to the beach takes ten minutes.",
+    hebrewTokenPairs: [["הירידה", "הַיְרִידָה"], ["לחוף", "לַחוֹף"], ["לוקחת", "לוֹקַחַת"], ["עשר", "עֶשֶׂר"], ["דקות", "דַּקּוֹת"]], englishTokens: ["The descent", "to the beach", "takes", "ten", "minutes"],
+    hebrewDistractorPairs: [["הדרך", "הַדֶּרֶךְ"], ["לשוק", "לַשּׁוּק"], ["נמשכת", "נִמְשֶׁכֶת"], ["חמש", "חָמֵשׁ"], ["שעות", "שָׁעוֹת"]], englishDistractors: ["The way", "to the market", "lasts", "five", "hours"],
+    notes: "The same noun that means a decline is also a physical descent."
+  }),
+  buildReviewedSentence({
+    id: "formal_134", emoji: "🎓", category: "formal", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "השכלה גבוהה כבר לא מבטיחה עבודה.", hebrewNiqqud: "הַשְׂכָּלָה גְּבוֹהָה כְּבָר לֹא מַבְטִיחָה עֲבוֹדָה.", english: "Higher education no longer guarantees a job.",
+    hebrewTokenPairs: [["השכלה גבוהה", "הַשְׂכָּלָה גְּבוֹהָה"], ["כבר לא", "כְּבָר לֹא"], ["מבטיחה", "מַבְטִיחָה"], ["עבודה", "עֲבוֹדָה"]], englishTokens: ["Higher education", "no longer", "guarantees", "a job"],
+    hebrewDistractorPairs: [["תעודה", "תְּעוּדָה"], ["עדיין", "עֲדַיִן"], ["מספקת", "מְסַפֶּקֶת"], ["משרה", "מִשְׂרָה"]], englishDistractors: ["A certificate", "still", "provides", "a position"],
+    notes: "השכלה is education as an attainment; השכלה גבוהה is higher education."
+  }),
+  buildReviewedSentence({
+    id: "everyday_350", emoji: "🚪", category: "everyday", difficulty: 1, wordOrderDecision: "alternates",
+    hebrew: "השכלה פותחת דלתות בעבודה.", hebrewNiqqud: "הַשְׂכָּלָה פּוֹתַחַת דְּלָתוֹת בָּעֲבוֹדָה.", english: "Education opens doors at work.",
+    hebrewTokenPairs: [["השכלה", "הַשְׂכָּלָה"], ["פותחת", "פּוֹתַחַת"], ["דלתות", "דְּלָתוֹת"], ["בעבודה", "בָּעֲבוֹדָה"]], englishTokens: ["Education", "opens", "doors", "at work"],
+    hebrewDistractorPairs: [["מקצוע", "מִקְצוֹעַ"], ["סוגרת", "סוֹגֶרֶת"], ["שערים", "שְׁעָרִים"], ["בבית", "בַּבַּיִת"]], englishDistractors: ["A profession", "closes", "gates", "at home"],
+    hebrewOrderAlternates: [
+      {
+        text: "בעבודה השכלה פותחת דלתות.",
+        textNiqqud: "בָּעֲבוֹדָה הַשְׂכָּלָה פּוֹתַחַת דְּלָתוֹת.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "השכלה is formal education as an attainment, distinct from חינוך, which is upbringing and schooling."
+  }),
+  buildReviewedSentence({
+    id: "formal_135", emoji: "📜", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הסמכות אקדמיות אינן מבטיחות דיוק.", hebrewNiqqud: "הַסְמָכוֹת אֲקָדֵמִיּוֹת אֵינָן מַבְטִיחוֹת דִּיּוּק.", english: "Academic credentials do not guarantee accuracy.",
+    hebrewTokenPairs: [["הסמכות אקדמיות", "הַסְמָכוֹת אֲקָדֵמִיּוֹת"], ["אינן", "אֵינָן"], ["מבטיחות", "מַבְטִיחוֹת"], ["דיוק", "דִּיּוּק"]], englishTokens: ["Academic credentials", "do not", "guarantee", "accuracy"],
+    hebrewDistractorPairs: [["תארים", "תְּאָרִים"], ["אינם", "אֵינָם"], ["דורשות", "דּוֹרְשׁוֹת"], ["מקוריות", "מְקוֹרִיּוּת"]], englishDistractors: ["Degrees", "are not", "require", "originality"],
+    notes: "הסמכות is the plural of הסמכה, an accreditation; אינן is the formal feminine-plural negation."
+  }),
+  buildReviewedSentence({
+    id: "professional_218", emoji: "🔬", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המעבדה קיבלה הסמכה מהמשרד.", hebrewNiqqud: "הַמַּעֲבָדָה קִבְּלָה הַסְמָכָה מֵהַמִּשְׂרָד.", english: "The laboratory received an accreditation from the ministry.",
+    hebrewTokenPairs: [["המעבדה", "הַמַּעֲבָדָה"], ["קיבלה", "קִבְּלָה"], ["הסמכה", "הַסְמָכָה"], ["מהמשרד", "מֵהַמִּשְׂרָד"]], englishTokens: ["The laboratory", "received", "an accreditation", "from the ministry"],
+    hebrewDistractorPairs: [["החברה", "הַחֶבְרָה"], ["ביקשה", "בִּקְּשָׁה"], ["אישור", "אִשּׁוּר"], ["מהוועדה", "מֵהַוַּעֲדָה"]], englishDistractors: ["The company", "requested", "an approval", "from the committee"],
+    notes: "הסמכה is an accreditation or certification; its plural הסמכות is what credentials are called."
+  }),
+  buildReviewedSentence({
+    id: "professional_216", emoji: "🏛️", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "לרשות אין סמכות לבטל את המכרז.", hebrewNiqqud: "לָרָשׁוּת אֵין סַמְכוּת לְבַטֵּל אֶת הַמִּכְרָז.", english: "The authority has no power to cancel the tender.",
+    hebrewTokenPairs: [["לרשות", "לָרָשׁוּת"], ["אין", "אֵין"], ["סמכות", "סַמְכוּת"], ["לבטל", "לְבַטֵּל"], ["את המכרז", "אֶת הַמִּכְרָז"]], englishTokens: ["The authority", "has no", "power", "to cancel", "the tender"],
+    hebrewDistractorPairs: [["לוועדה", "לַוַּעֲדָה"], ["יש", "יֵשׁ"], ["חובה", "חוֹבָה"], ["לאשר", "לְאַשֵּׁר"], ["את החוזה", "אֶת הַחוֹזֶה"]], englishDistractors: ["The committee", "has", "a duty", "to approve", "the contract"],
+    hebrewOrderAlternates: [
+      {
+        text: "אין לרשות סמכות לבטל את המכרז.",
+        textNiqqud: "אֵין לָרָשׁוּת סַמְכוּת לְבַטֵּל אֶת הַמִּכְרָז.",
+        order: [1, 0, 2, 3, 4],
+      },
+    ],
+    notes: "סמכות is the power to act; רשות is the body that holds it."
+  }),
+  buildReviewedSentence({
+    id: "everyday_351", emoji: "❓", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "למי יש סמכות להחליט על זה?", hebrewNiqqud: "לְמִי יֵשׁ סַמְכוּת לְהַחְלִיט עַל זֶה?", english: "Who has the authority to decide about this?",
+    hebrewTokenPairs: [["למי", "לְמִי"], ["יש", "יֵשׁ"], ["סמכות", "סַמְכוּת"], ["להחליט", "לְהַחְלִיט"], ["על זה", "עַל זֶה"]], englishTokens: ["Who", "has", "the authority", "to decide", "about this"],
+    hebrewDistractorPairs: [["לך", "לְךָ"], ["אין", "אֵין"], ["רשות", "רְשׁוּת"], ["לשאול", "לִשְׁאֹל"], ["על כך", "עַל כָּךְ"]], englishDistractors: ["you", "do not have", "permission", "to ask", "about that"],
+    notes: "סמכות is the power to decide; רשות is permission, and also the body that grants it."
+  }),
+  buildReviewedSentence({
+    id: "professional_217", emoji: "⚙️", category: "professional", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אפשר לשנות את ברירת המחדל בכל רגע.", hebrewNiqqud: "אֶפְשָׁר לְשַׁנּוֹת אֶת בְּרֵרַת הַמֶּחְדָּל בְּכָל רֶגַע.", english: "You can change the default setting at any time.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לשנות", "לְשַׁנּוֹת"], ["את ברירת המחדל", "אֶת בְּרֵרַת הַמֶּחְדָּל"], ["בכל רגע", "בְּכָל רֶגַע"]], englishTokens: ["You can", "change", "the default setting", "at any time"],
+    hebrewDistractorPairs: [["אסור", "אָסוּר"], ["למחוק", "לִמְחֹק"], ["את הסיסמה", "אֶת הַסִּסְמָה"], ["אחרי העדכון", "אַחֲרֵי הָעִדְכּוּן"]], englishDistractors: ["It is forbidden", "to delete", "the password", "after the update"],
+    hebrewOrderAlternates: [
+      {
+        text: "בכל רגע אפשר לשנות את ברירת המחדל.",
+        textNiqqud: "בְּכָל רֶגַע אֶפְשָׁר לְשַׁנּוֹת אֶת בְּרֵרַת הַמֶּחְדָּל.",
+        order: [3, 0, 1, 2],
+      },
+    ],
+    notes: "ברירת מחדל is literally a choice of last resort and is the standard term for a default setting."
+  }),
+  buildReviewedSentence({
+    id: "formal_136", emoji: "🚨", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הוועדה קבעה שהיה מחדל בפיקוח.", hebrewNiqqud: "הַוַּעֲדָה קָבְעָה שֶׁהָיָה מֶחְדָּל בַּפִּקּוּח.", english: "The committee determined that there was a failure in the oversight.",
+    hebrewTokenPairs: [["הוועדה", "הַוַּעֲדָה"], ["קבעה", "קָבְעָה"], ["שהיה", "שֶׁהָיָה"], ["מחדל", "מֶחְדָּל"], ["בפיקוח", "בַּפִּקּוּח"]], englishTokens: ["The committee", "determined", "that there was", "a failure", "in the oversight"],
+    hebrewDistractorPairs: [["הרשות", "הָרָשׁוּת"], ["הודיעה", "הוֹדִיעָה"], ["שיהיה", "שֶׁיִּהְיֶה"], ["שיפור", "שִׁפּוּר"], ["בתקציב", "בַּתַּקְצִיב"]], englishDistractors: ["The authority", "announced", "that there will be", "an improvement", "in the budget"],
+    notes: "מחדל is a systemic failure or dereliction, the word public debate uses for an institutional failure. On its own it never means 'default' — that sense exists only inside ברירת מחדל."
+  }),
+];
+
 // Coverage tranche: medical and health. At 24 rows this was the thinnest
 // real-life domain in the bank, well behind bureaucracy at 133 and tech at 112,
 // with almost nothing on appointments, referrals, pharmacies or describing a
@@ -19854,7 +19982,8 @@ SENTENCE_BANK.push(
   ...CONNECTIVE_SENTENCES,
   ...NUMBER_TIME_SENTENCES,
   ...HEALTH_SENTENCES,
-  ...COMPARE_FOCUS_SENTENCES
+  ...COMPARE_FOCUS_SENTENCES,
+  ...DECLINE_AUTHORITY_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -19873,6 +20002,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260819a",
+  __build: "20260819b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

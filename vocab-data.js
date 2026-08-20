@@ -572,6 +572,8 @@ const RAW = {
     ["flash of inspiration", "הברקה", "הַבְרָקָה"],
     ["mystery", "תעלומה", "תַּעֲלוּמָה"],
     ["just a handful", "ספורים", "סְפוּרִים"],
+    ["education", "השכלה", "הַשְׂכָּלָה"],
+    ["systemic failure", "מחדל", "מֶחְדָּל"],
   ],
   cooking_utensils: [
     ["knife", "סכין", "סַכִּין"],
@@ -981,6 +983,7 @@ const RAW = {
     ["process", "הליך", "הֲלִיךְ", { idEnglish: "procedure / process" }],
     ["passport", "דרכון", "דַּרְכּוֹן"],
     ["visa", "ויזה", "וִיזָה"],
+    ["accreditation", "הסמכה", "הַסְמָכָה"],
   ],
   home_everyday_life: [
     ["shelf", "מדף", "מַדָּף"],
@@ -1263,6 +1266,7 @@ const RAW = {
     ["legislation", "חקיקה", "חֲקִיקָה"],
     ["conviction", "הרשעה", "הַרְשָׁעָה"],
     ["acquittal", "זיכוי", "זִכּוּי"],
+    ["legal authority", "סמכות", "סַמְכוּת"],
   ],
   technology_ai: [
     ["algorithm", "אלגוריתם", "אַלְגוֹרִיתְם"],
@@ -1715,6 +1719,9 @@ const RAW = {
     ["risk diversification", "פיזור סיכונים", "פִּיזּוּר סִיכּוּנִים"],
     ["financial leverage", "מינוף פיננסי", "מִינוּף פִינַנְסִי"],
     ["economic leverage", "מנוף כלכלי", "מָנוֹף כַּלְכָּלִי"],
+    ["product", "מוצר", "מוּצָר"],
+    ["product reviews", "ביקורות מוצרים", "בִּקּוֹרוֹת מוּצָרִים"],
+    ["decline", "ירידה", "יְרִידָה"],
   ],
   science_research_expanded: [
     ["scientific method", "השיטה המדעית", "הַשִּׁיטָה הַמַּדָּעִית"],
@@ -2583,6 +2590,7 @@ const RAW = {
     ["to sign in", "להתחבר", "לְהִתְחַבֵּר"],
     ["to sign out", "להתנתק", "לְהִתְנַתֵּק"],
     ["to delete", "למחוק", "לִמְחֹק"],
+    ["default setting", "ברירת מחדל", "בְּרֵרַת מֶחְדָּל"],
   ],
   religious_life_practice: [
     ["Passover", "פסח", "פֶּסַח"],
@@ -2825,6 +2833,6 @@ global.IvriQuestVocab = {
   CATEGORY_META,
   EXPANSION_TRACKS,
   getBaseVocabulary,
-  __build: "20260819a",
+  __build: "20260819b",
 };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -960,6 +960,14 @@ characterData.characters = characterData.characters || Object.freeze({
         "ספורים",
         // Shared with Ivri, matching the verb route above.
         "להשוות",
+        // Her lens on cards that sit on Ivri's shelves: he reads ירידה as a
+        // quarter's revenue and הסמכה as a regulator's licence, she reads them
+        // as a decline in turnout and as academic credentials. השכלה is on the
+        // unrouted core_advanced shelf, so naming it here is what gives it an
+        // owner at all.
+        "ירידה",
+        "הסמכה",
+        "השכלה",
       ]),
       // The academic/analytical register is hers; Ivri keeps `professional`.
       sentenceCategories: Object.freeze(["formal"]),
