@@ -5,6 +5,80 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-20 EDT — Publish both fixes, and a 50% Chrome-startup flake found in the CI gate itself
+
+**Requested:** Push the two fixes, merge them, and do the workspace cleanup.
+
+**Published.** PR #79 merged as `c2aefef`, carrying `6b2744a` (Binyanim overflow) and `e4682b0`
+(collision-key delimiter). Deploy Pages on `c2aefef` succeeded, and the live site was verified
+end to end rather than assumed: `https://mikeesexton.github.io/ulpango/` serves
+`styles.css?v=20260820b`, and the CSS served under that key carries the fixed compact values
+(`gap: 0.14rem`, `padding: 0.4rem 0.54rem`).
+
+**The finding that matters more than either fix: the test gate is a coin flip.** PR #79's first
+two CI runs failed with `Error: Chrome did not expose DevTools.` — the 10-second budget in
+`waitForChromeWebSocket` (`tests/gameplay-layout.test.js:63`) expiring before Chrome printed its
+`DevTools listening on ws://` line. My first read was "unrelated flake", which was an assumption,
+so it was checked instead. `test.yml` carries `workflow_dispatch`, which allows running the suite
+on unmodified `main`, and the paired result inverted the picture:
+
+| # | Ref | Result | Layout test |
+|---|---|---|---|
+| 1 | PR #79 | **fail** | `Chrome did not expose DevTools` (10037ms) |
+| 2 | PR #79 (rerun) | **fail** | same (15028ms) |
+| 3 | `main` dispatch | pass | 14363ms |
+| 4 | PR #79 (rerun) | pass | 13756ms |
+| 5 | `main` dispatch | **fail** | same, plus `dbus/bus.cc:405 Failed to co…` (13386ms) |
+| 6 | Deploy on `c2aefef` | pass | — |
+
+Three failures in six runs, on `main` and on the branch alike, always the same error. The
+branch was exonerated structurally as well as statistically: the file spawns Chrome exactly once
+(`tests/gameplay-layout.test.js:213`) and awaits the DevTools handshake at line 229, both of
+which happen *before* the `evaluate` call this branch touched, so the changed code is not in the
+failing path at all. The D-Bus line in run 5 points at Chrome's startup environment on
+`ubuntu-latest`, not at page content.
+
+This matters because it is the same failure mode the Binyanim fix was landed to remove, one
+layer up: `deploy-pages.yml` gates the Pages deploy on this suite, so roughly half of all pushes
+will fail to publish until the launch is made robust. **Deliberately not fixed** — the ask was
+scoped to publishing, and the plausible remedies (raise the 10s budget, retry the spawn, or pass
+Chrome the flags that avoid the D-Bus probe) are a change to the harness that deserves its own
+review rather than being smuggled into a publication commit.
+
+**Cleanup performed:**
+
+- All four git worktrees under `.claude/worktrees/` removed, leaving the primary checkout as the
+  only tree and putting it on `main` for the first time in several sessions. The `main` worktree
+  was clean, so lossless. The other three held uncommitted diffs, each verified redundant before
+  removal rather than after: `youthful-bhaskara-e8a772`'s geresh tokenizer is live at
+  `app/character.js:426` and logged on 2026-07-28; `practical-robinson-31ae13`'s duplicate-card
+  suppression was superseded by a *more* complete inline design (88 `translationQuiz: false`
+  entries on `main` against that worktree's 83 via an override map); `vigorous-noyce-d56392`'s
+  Binyanim fix is what `6b2744a` just landed. All three diffs were saved before removal.
+- Twelve local branches fully merged into `main` deleted, including the three that the removed
+  worktrees had held checked out. Stale remote-tracking refs pruned; PR #79's remote branch
+  deleted.
+
+**Behavior changed:** None. Publication and workspace state only.
+
+**Tests run:** No new local suite for this session — the merged commits were each verified at
+**449 pass, 0 fail** before publication, and CI re-ran the same suite six times tonight as
+tabulated above.
+
+**Risks / regressions to check:**
+
+- **The Chrome-startup flake is the live risk.** A red Pages deploy now means the site silently
+  keeps serving the previous cache key, which is precisely the stale-module failure the
+  cache-busting rule exists to prevent. Re-running the deploy is the workaround until the launch
+  is hardened.
+- **Four local branches were kept because they are *not* merged into `main`** and may hold
+  unlanded work: `agent/hebrew-word-order-enforcement`,
+  `agent/log-sentence-feedback-publication`, `agent/sentence-feedback-and-tts-fixes`, and
+  `conjugation-feedback-and-content` (whose upstream is gone). None were inspected this session.
+- The three discarded worktree diffs were backed up only to a session scratchpad, which is
+  ephemeral. Everything in them was confirmed present on `main` first, so the backups are
+  belt-and-braces, not the record.
+
 ### 2026-08-20 EDT — Make tests/vocab-data.test.js searchable again: raw NUL byte to an escape
 
 **Requested:** Fix the NUL byte surfaced by this session's audit, immediately after the Binyanim
