@@ -57,10 +57,26 @@ function startStaticServer() {
   });
 }
 
+// Chrome's startup on a cold CI runner is not reliably fast. A 10s deadline
+// failed 4 of 9 runs on ubuntu-latest in one evening — on unchanged `main` as
+// often as on a branch — always with stderr either silent or carrying only
+// `dbus/bus.cc:405 Failed to connect`, meaning the browser was alive and
+// logging but had not yet bound the debug port. Both numbers below are
+// deliberately generous: a slow launch should cost seconds, never a red gate.
+const CHROME_LAUNCH_TIMEOUT_MS = 30000;
+const CHROME_LAUNCH_ATTEMPTS = 3;
+
 function waitForChromeWebSocket(chrome) {
   return new Promise((resolve, reject) => {
     let output = "";
-    const timer = setTimeout(() => reject(new Error(`Chrome did not expose DevTools. ${output}`)), 10000);
+    const timer = setTimeout(
+      () => reject(
+        new Error(
+          `Chrome did not expose DevTools within ${CHROME_LAUNCH_TIMEOUT_MS}ms. stderr: ${output || "(silent)"}`,
+        ),
+      ),
+      CHROME_LAUNCH_TIMEOUT_MS,
+    );
     chrome.stderr.on("data", (chunk) => {
       output += chunk.toString();
       const match = output.match(/DevTools listening on (ws:\/\/[^\s]+)/);
@@ -73,6 +89,45 @@ function waitForChromeWebSocket(chrome) {
       reject(new Error(`Chrome exited before DevTools was ready (${code}). ${output}`));
     });
   });
+}
+
+// Retrying the *launch* is safe in a way that retrying the test would not be:
+// every assertion in this file runs after the browser is up, so a real layout
+// overflow still fails on the first attempt and is never retried away. Each
+// attempt gets its own profile directory — a killed Chrome leaves a singleton
+// lock behind, and reusing the directory would turn attempt 2 into a guaranteed
+// second failure.
+async function launchChrome(chromePath) {
+  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "ivriquest-layout-"));
+  const chrome = spawn(chromePath, [
+    "--headless=new",
+    "--disable-background-networking",
+    "--disable-default-apps",
+    "--disable-extensions",
+    "--disable-gpu",
+    "--no-default-browser-check",
+    "--no-first-run",
+    // Chrome asks the D-Bus secret service (gnome-keyring/kwallet) for its
+    // password store during startup. A CI runner has no session bus, which is
+    // what the `dbus/bus.cc:405` line in the failing runs was reporting. These
+    // two skip that lookup rather than waiting on it.
+    "--password-store=basic",
+    "--use-mock-keychain",
+    "--remote-debugging-port=0",
+    `--user-data-dir=${userDataDir}`,
+    "about:blank",
+  ], { stdio: ["ignore", "ignore", "pipe"] });
+
+  try {
+    const browserWebSocketUrl = await waitForChromeWebSocket(chrome);
+    return { browserWebSocketUrl, chrome, userDataDir };
+  } catch (error) {
+    const exited = new Promise((resolve) => chrome.once("exit", resolve));
+    chrome.kill("SIGKILL");
+    await Promise.race([exited, new Promise((resolve) => setTimeout(resolve, 2000))]);
+    fs.rmSync(userDataDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
+    throw error;
+  }
 }
 
 function connectCdp(webSocketUrl) {
@@ -199,7 +254,11 @@ function assertFeedbackFooterInFlow(geometry, label) {
   );
 }
 
-test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 30000 }, async (t) => {
+// The budget has to cover the worst launch case rather than the typical one:
+// three attempts at CHROME_LAUNCH_TIMEOUT_MS plus the ~15s of measurement work.
+// At the old 30s a raised launch deadline would just have moved the failure to
+// this line instead.
+test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 150000 }, async (t) => {
   const chromePath = findChrome();
   if (!chromePath) {
     t.skip("Chrome is not installed on this machine");
@@ -209,24 +268,28 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
   const server = await startStaticServer();
   const address = server.address();
   const appUrl = `http://localhost:${address.port}/`;
-  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), "ivriquest-layout-"));
-  const chrome = spawn(chromePath, [
-    "--headless=new",
-    "--disable-background-networking",
-    "--disable-default-apps",
-    "--disable-extensions",
-    "--disable-gpu",
-    "--no-default-browser-check",
-    "--no-first-run",
-    "--remote-debugging-port=0",
-    `--user-data-dir=${userDataDir}`,
-    "about:blank",
-  ], { stdio: ["ignore", "ignore", "pipe"] });
+  let chrome;
+  let userDataDir;
+  let browserWebSocketUrl;
+  for (let attempt = 1; attempt <= CHROME_LAUNCH_ATTEMPTS; attempt += 1) {
+    try {
+      ({ browserWebSocketUrl, chrome, userDataDir } = await launchChrome(chromePath));
+      break;
+    } catch (error) {
+      if (attempt === CHROME_LAUNCH_ATTEMPTS) {
+        // Nothing below this loop has been allocated yet, so the shared
+        // teardown never runs on this path and the server has to be closed here
+        // or `node --test` hangs on the open handle instead of reporting.
+        await new Promise((resolve) => server.close(resolve));
+        throw error;
+      }
+      console.error(`Chrome launch attempt ${attempt} failed, retrying: ${error.message}`);
+    }
+  }
 
   let browserCdp;
   let pageCdp;
   try {
-    const browserWebSocketUrl = await waitForChromeWebSocket(chrome);
     browserCdp = await connectCdp(browserWebSocketUrl);
     const { targetId } = await browserCdp.send("Target.createTarget", { url: "about:blank" });
     const targetsEndpoint = new URL(browserWebSocketUrl);
