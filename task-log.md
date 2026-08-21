@@ -5,6 +5,72 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-20 EDT — Harden the Chrome launch so the test gate stops failing half the time
+
+**Requested:** Fix the CI flake recorded in the preceding entry, where the suite that gates every
+PR and the Pages deploy failed on `Chrome did not expose DevTools` in 4 of 9 runs.
+
+**Diagnosis.** `waitForChromeWebSocket` allowed Chrome 10 seconds to print
+`DevTools listening on ws://…` to stderr. On `ubuntu-latest` that is not reliably enough. The
+failures were not crashes — `chrome.once("exit")` never fired — so the browser was alive and had
+simply not bound the debug port yet. One failure carried `dbus/bus.cc:405 Failed to connect`,
+which names the cause: Chrome asks the D-Bus secret service (gnome-keyring/kwallet) for its
+password store during startup, and a CI runner has no session bus to answer.
+
+**Files changed:**
+
+- `tests/gameplay-layout.test.js` — three changes, in order of how much they matter.
+  1. **The launch is retried up to `CHROME_LAUNCH_ATTEMPTS` (3) times**, each attempt with its
+     own profile directory, because a SIGKILLed Chrome leaves a singleton lock that would make
+     attempt 2 fail by construction. The spawn-and-wait moved into a new `launchChrome`, which
+     cleans up its own process and directory before rethrowing. This is what makes a transient
+     startup cause survivable whatever its root cause, and it **cannot mask a real defect**:
+     every assertion in the file runs after the browser is up, so a genuine layout overflow
+     still fails on attempt 1. That distinction is written into the comment, since a retry in a
+     file whose whole purpose is catching overflow invites exactly that suspicion.
+  2. **`--password-store=basic` and `--use-mock-keychain`** added, skipping the D-Bus lookup
+     instead of waiting on it.
+  3. **`CHROME_LAUNCH_TIMEOUT_MS` 10s → 30s, and the test's own timeout 30s → 150s.** The second
+     is not optional: leaving the test at 30s would simply have relocated the same failure from
+     the launch deadline to the test timeout.
+  The failure message now names the deadline it missed and prints the captured stderr or
+  `(silent)`. The old message interpolated empty stderr, which is why the first two failures
+  looked causeless.
+
+**Behavior changed:** None in the app. The gate stops failing on browser startup.
+
+**Cache-busting:** Not applicable and deliberately skipped — `index.html` loads nothing under
+`tests/`, so there is no `?v=` to bump.
+
+**Tests run:**
+
+- **Both branches of the retry exercised deliberately**, using temporary probe copies of the file
+  rather than trusting the code by reading it: two synthetic launch failures followed by a real
+  one → both retries logged and the test passes; three synthetic failures → the error is
+  reported and the process exits in **0.18s** rather than hanging on the still-open static
+  server handle, which is a failure mode the early-return path had to be written to avoid.
+- `npm test` locally — **449 pass, 0 fail**.
+- **Re-measured the flake rate in CI: 6 consecutive runs on the branch, 6 green**, zero DevTools
+  timeouts and zero retries consumed. Layout-test durations: 4343ms, 10957ms, 22054ms, 12775ms,
+  14265ms, 15037ms. Against the pre-fix rate of 4 failures in 9 runs, six consecutive passes
+  would happen about 3% of the time by luck alone.
+
+**Risks / regressions to check:**
+
+- **The 22054ms run is the important number.** Runner speed varies by a factor of five, and that
+  run would very likely have failed on the old 10s deadline — it is direct evidence the deadline
+  was the defect rather than bad luck.
+- **No retry was consumed in six runs.** The timeout raise and the D-Bus flags appear to have
+  done the work by themselves; the retry is proven *functional* by the probes but not yet proven
+  *necessary* by CI. It is unused headroom, not a load-bearing part of the fix. The 4343ms run
+  against a pre-fix range of 13–14s also suggests the D-Bus probe was itself a real stall.
+- The cost of a genuinely broken Chrome is now higher: a deterministic startup failure takes
+  three 30s attempts to report instead of one 10s attempt. That is the deliberate trade, and the
+  retry lines are logged to `console.error` so the reason appears in the CI log rather than being
+  silent.
+- `--password-store=basic` changes which backend Chrome would use for saved credentials. Nothing
+  in this test logs in, and the profile is a throwaway `mkdtemp` directory removed in teardown.
+
 ### 2026-08-20 EDT — Publish both fixes, and a 50% Chrome-startup flake found in the CI gate itself
 
 **Requested:** Push the two fixes, merge them, and do the workspace cleanup.
