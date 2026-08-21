@@ -5,6 +5,72 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-20 EDT — Land the stranded Binyanim overflow fix; audit what 2026-08-19 left behind
+
+**Requested:** Mike asked whether anything needed tidying after a run of sessions on 2026-08-19
+he could not follow, and after review chose to land the one item that was genuinely unfinished.
+
+**Audit result, recorded because the answer was mostly "nothing".** All six commits from
+2026-08-19 are in `main` via PR #78, pushed, CI green and Pages deployed; `npm test` on `main`
+measured **449 pass, 0 fail**; every session has a log entry; `CLAUDE.md` and `AGENTS.md` are
+byte-identical with the new routing section ratcheted by the parity test. Two other worktrees
+hold uncommitted diffs whose substance already reached `main` by other routes — the geresh
+tokenizer fix now at `app/character.js:426`, and the duplicate-card suppression whose
+`SUPPRESSED_DUPLICATE_IDS` sits at `tests/vocab-data.test.js:134` — so they are stale copies,
+not lost work.
+
+**The one piece of stranded work.** `.claude/worktrees/vigorous-noyce-d56392` held the complete
+2026-08-17 Binyanim overflow fix — CSS, test pin, cache bump and full write-up — uncommitted,
+and none of it had reached `main`. That entry is inserted below in date order; this entry
+records only the landing and the re-verification.
+
+**Files changed:**
+
+- `styles.css` — the 2026-08-17 change applied unmodified: inside
+  `@media (max-width: 767px) and (max-height: 700px)`, `.binyan-root-tile` gap `0.22rem` →
+  `0.14rem` and padding `0.58rem 0.54rem` → `0.4rem 0.54rem`.
+- `tests/gameplay-layout.test.js` — the worst-case draw pin, applied unmodified. `main` had not
+  touched this file since the worktree's base, so it applied clean.
+- `index.html` — `styles.css?v=20260810a` → `?v=20260820b`. **Not the original diff's
+  `20260817a`, and not `20260820a`:** the latter is already spent on `vocab-data.js` and
+  `sentence-bank-data.js`.
+- `tests/character-mission.test.js` — the assertion pinning the `styles.css` key follows to
+  `20260820b`.
+
+**Behavior changed:** None beyond what the 2026-08-17 entry describes. At ≤767×≤700 the Binyanim
+root tiles lose ~9.6px of height each; nothing changes above 700px viewport height.
+
+**Tests run:**
+
+- **Reproduced before fixing, on current `main`:** pin applied with the CSS fix withheld →
+  `Binyanim board scrolls (499px > 488px)`, `shell.height 499.453125`,
+  `choices.height 467.71875`, `footer.height 0`. Identical to the numbers the 2026-08-17 entry
+  recorded three days earlier, which establishes both that the overflow was still live on `main`
+  and that the pin catches it rather than papering over it.
+- With the CSS fix: `node --test tests/gameplay-layout.test.js` — 3 consecutive runs, 3 pass.
+- `npm test` — **449 pass, 0 fail**.
+- Confirmed the layout test genuinely executes in CI rather than skipping on a missing Chrome:
+  it appears in PR #78's green run as
+  `compact gameplay and safe centering hold in rendered Chrome (11030.536209ms)`. Without this
+  fix that run had roughly a 1-in-130 chance of reddening any push, and `deploy-pages.yml` gates
+  the Pages deploy on it.
+
+**Risks / regressions to check:**
+
+- Nothing was pushed and no branch was deleted; the primary checkout moved from the merged
+  `agent/safety-net-ci-cachebust-agent-docs` onto `agent/binyan-board-overflow`, cut from `main`.
+  The now-redundant diff still sits in `.claude/worktrees/vigorous-noyce-d56392`.
+- `tests/vocab-data.test.js:656` builds its map key with a **raw NUL byte** as the delimiter
+  rather than a `\u0000` escape. It is harmless at runtime, but `file` reports the source as
+  binary and `grep` therefore matches nothing anywhere in the file, silently. It cost this
+  session a wrong intermediate conclusion — the duplicate-card guards read as absent when they
+  are present — and it is exactly the trap that makes a session redo work it cannot find.
+  Introduced 2026-07-31 in `1981a4a`, so it predates the sessions being audited. One character
+  to fix; deliberately left alone because the ask was scoped to the Binyanim fix.
+- Still open, both flagged by earlier sessions and neither a bug: the pre-existing Binyanim
+  overflow at 360×701–740 above the compact breakpoint, and the 70-versus-16 split on whether a
+  pointed infinitive keeps its helper vav in `hebrew-verbs.js`.
+
 ### 2026-08-20 EDT — Test להרוג as an infinitive with Idan; retire the הורג tile
 
 **Requested:** Two finite verb forms sit as vocabulary headwords on the unrouted
@@ -551,6 +617,41 @@ word from `סמכות` (authority); and `מוצר` is absent from the whole deck
   binyan-board tranche wants the root it should agree with this choice.
 - Tranches 2 (five nouns, ~10 sentences) and 3 (expressions plus Inbal's `השגחה`, ~5 sentences)
   are not started. Both will move the same hard-coded counts again.
+
+### 2026-08-17 20:58 EDT — Binyanim board layout flake was real content overflow, not a measurement race
+
+**Requested:** `tests/gameplay-layout.test.js` intermittently fails on the Binyanim board (reported ~1 run in 10), overshooting the 360×640 no-scroll budget by ~11px, with `footer.height: 0` in the failing capture suggesting an unsettled measurement. Establish whether it is a timing flake or genuine content-dependent overflow, fix accordingly, verify with 20+ consecutive runs plus a full `npm test`. Urgent because `.github/workflows/test.yml` and the `test` job in `deploy-pages.yml` now make `npm test` gate every PR and block the Pages deploy, so a flaky layout test trains people to ignore CI.
+
+**What it turned out to be: real overflow. The timing hypothesis was wrong.**
+
+- The board draws 6 of 80 roots at random, and a tile is as tall as the number of lines its `core_meaning` wraps to — 64 roots wrap to one line, 15 to two, and exactly one (`n-g-sh`, "approaching, submitting, and colliding") to three. A two-column grid row takes the taller tile of its pair, so a draw lands on one of five discrete board heights spaced 15.22px apart. Measured across 400 natural draws: 438.58px ×111, 453.80px ×171, 469.02px ×98, 484.23px ×17, 499.45px ×3.
+- Only the tallest bucket overflows, and reaching it needs `n-g-sh` plus a two-line root in each of the other two rows. That is **3 of 400 draws (0.75%)**, not 1 in 10 — the reported rate was an unlucky sample. It also means 20 clean runs of the *unfixed* test would have proved nothing: it had roughly an 82% chance of passing 20 times regardless.
+- Forcing that draw reproduces the reported failure capture exactly — `shell.height 499.453125`, `choices.height 467.71875`, `499px > 488px`.
+- **`footer.height: 0` is not evidence of an unsettled layout.** `#lessonFooter` ships with `class="hidden"` (`index.html:193`) and the board screen never shows it, so a zero rect at 0,0 is its normal state there. The pinned worst case was measured 60× after the existing settle and 40× unsettled at t=0: **499.45px every single time, no jitter.** The t=0 phantom-scrollHeight comment at `tests/gameplay-layout.test.js:164` concerns the feedback tray's 180ms animation, a different state. `measureGeometry` was left unchanged — no sleep and no extra settling was warranted.
+- The passing draws were not comfortable either: the second-tallest bucket sat at 484.23px against a 488px budget, 3.8px of margin.
+
+**Files changed:**
+
+- `styles.css` — in the `@media (max-width: 767px) and (max-height: 700px)` block, `.binyan-root-tile` gap `0.22rem` → `0.14rem` and padding `0.58rem 0.54rem` → `0.4rem 0.54rem`. Whitespace only: no font-size, no line-height, no `min-height`, and the base non-compact rule is untouched. This follows the viewport rule's ordering — compact whitespace and gaps before reducing Hebrew display text or touch targets. Tiles stay 122–152px tall, far above the 44px floor.
+- `tests/gameplay-layout.test.js` — the Binyanim board block now pins the draw to the six roots with the longest formatted core meanings, computed from `IvriQuestVerbGameData` at runtime by monkey-patching `utils.pickWeightedSubset` (same patch-start-restore shape as the Conjugation+ block below it), so every run measures the worst case instead of sampling it. Added an `assert.deepEqual` on the rendered deck: `selectBinyanRoundRoots` falls back to a plain random shuffle when `pickWeightedSubset` is absent, which would silently restore the sampling this pin exists to remove.
+- `tests/character-mission.test.js` — the sprite-lock guard pins the exact `styles.css` cache key; updated `20260810a` → `20260817a` to match the bump.
+- `index.html` — `styles.css?v=20260810a` → `?v=20260817a`. The only shipped `.css`/`.js` file in the diff.
+
+**Behavior changed:** At ≤767×≤700 the Binyanim root tiles are ~9.6px shorter each (one-line tile 131.56 → 121.97px). The worst-case board drops 499.45 → 470.67px, 17.3px inside the 488px budget — more than one full meaning line of headroom, so the layout now absorbs a second three-line root if one is ever authored (a 3+3+2 row split measures 485.90px). Three three-line rows would still overflow at 501.12px, and the pinned test would fail loudly and deterministically if that content ever lands. Nothing changes above 700px viewport height.
+
+**Tests run:**
+
+- `node --test tests/gameplay-layout.test.js` — **25 consecutive runs, 25 pass / 0 fail.** This is meaningful only because the pin makes every run measure the 499.45px worst case.
+- Intermediate state with the pin applied but before the CSS fix — failed deterministically with the exact reported numbers, confirming the pin catches the real bug rather than papering over it.
+- `npm test` — **441 pass, 0 fail.** (441 is this worktree's count at `d7fe07b`; the 447 in the main checkout includes `tests/agent-docs-parity.test.js` and the vocab-data changes not yet on this branch.)
+- Swept the whole content space rather than sampling it: all 411 Binyanim question/feedback states (every root × every form, with option text forced longest-first) — 0 overflow, ≥40px margin. 200 natural Prepositions feedback draws — invariant at 366.44px, 121px margin. 120 Handwriting draws — max 433.83px, 54px margin. The board was the only flake source in the file.
+- Visual check of the pinned worst-case board at 360×640: all six tiles render, no child-box overlap, no clipped ink, bottom nav visible.
+
+**Risks / regressions to check:**
+
+- **Pre-existing and not touched here: the board scrolls badly at viewport heights just above the compact breakpoint.** The compact block stops at `max-height: 700px`, so full-size 209px tiles apply while the viewport is still short — 360×701 overflows by 97px, 360×720 by 78px, 360×740 by 58px; 360×800 and 390×844 are clear. 360×720 and 360×740 are common Android sizes. Fixing it means raising the breakpoint, which shrinks tiles on those phones — a product call, so it is flagged rather than changed.
+- CI runs on `ubuntu-latest`, whose runner image ships Chrome at `/usr/bin/google-chrome`, so this test executes in CI rather than skipping. Linux font metrics can differ slightly from macOS; the 17.3px margin is the buffer. Worth a glance at the first CI run.
+- If a root with a longer `core_meaning` than `n-g-sh` is added, the pin retargets to it automatically. That is intended, but it means new verb content can turn this test red — and when it does it is a real overflow, not a flake.
 
 ### 2026-08-17 EDT — The four merged-pool verb clashes resolved; no Hebrew surface now carries two different glosses
 
