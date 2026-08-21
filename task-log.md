@@ -5,6 +5,62 @@ It is maintained by all AI agents working on this project (Claude Code and ChatG
 Every agent must append an entry here at the end of every task session, no matter how small.
 Each entry records what was requested, what changed, what was tested, and what to watch for.
 
+### 2026-08-20 EDT — Make tests/vocab-data.test.js searchable again: raw NUL byte to an escape
+
+**Requested:** Fix the NUL byte surfaced by this session's audit, immediately after the Binyanim
+overflow fix landed.
+
+**What it was.** `tests/vocab-data.test.js:656` built the merged-pool collision key by joining
+the Hebrew and the English with a **real U+0000 character sitting in the source**, rather than
+with the six-character `\u0000` escape. Introduced 2026-07-31 in `1981a4a` and unnoticed for
+three weeks, which is unsurprising: the delimiter has no glyph, so nothing about it is visible
+on the line.
+
+**Why it earned a commit rather than a shrug.** A single NUL anywhere in a file makes the
+standard text tools classify the whole file as binary. `file` reported `data`, and `grep`
+matched **nothing** across all 709 lines — exiting 1 rather than warning, so it read as a
+confident "not present" instead of "cannot read". Every content search over the test suite
+silently skipped this file. That is not hypothetical. During this session's audit, a search for
+the duplicate-card guards came back empty and the intermediate conclusion was that they were
+missing; in fact `SUPPRESSED_DUPLICATE_IDS` is at line 134 and the two guards are at lines 589
+and 648. The same byte then copied itself out of the quoted source into two draft snippets and
+was rejected by the tool layer both times. Git never flagged any of it, because its binary
+sniff reads only the first 8000 bytes and this NUL sits at offset 32,414 — so diffs, blame and
+review always looked completely normal.
+
+**Files changed:**
+
+- `tests/vocab-data.test.js` — line 656 only: the raw U+0000 replaced by the `\u0000` escape.
+  No test logic, no assertion and no other line touched.
+
+**Behavior changed:** None, and that is checked rather than assumed. A template literal's
+`\u0000` escape produces exactly U+0000, so the composed key is the same string it has always
+been. Verified by building the key both ways: `identical string: true`, codepoints
+`1513,0,100,111,103`. The delimiter is still a NUL at runtime; only the source now spells it
+instead of embedding it.
+
+**Cache-busting:** Not applicable and deliberately skipped. `index.html` loads no file under
+`tests/`, so there is no `?v=` to bump. Recorded so the omission reads as a decision.
+
+**Tests run:**
+
+- `node --test tests/vocab-data.test.js` — 27 pass, 0 fail.
+- `npm test` — **449 pass, 0 fail**.
+- `file tests/vocab-data.test.js` — `data` before, `Unicode text, UTF-8 text` after.
+- `grep` inside that file for `playable cards share both` and `SUPPRESSED_DUPLICATE_IDS` — 0 hits
+  before, correct hits at 134/175/589 after.
+- Swept every tracked non-asset file for a raw NUL: none remain. The only other matches
+  repo-wide are the PNG, MP3 and OGG assets, where NUL bytes are just the format.
+
+**Risks / regressions to check:**
+
+- If that delimiter is ever changed it must stay a character that cannot occur inside a Hebrew
+  surface or an English gloss. U+0000 was chosen for exactly that, and the escape preserves it,
+  so the collision semantics are unchanged.
+- The transferable lesson: in this repo a search returning zero hits was not proof of absence.
+  Nothing now reintroduces the problem, but if a future file ever reads as binary, confirm with
+  a NUL-tolerant reader before concluding that a guard or a symbol does not exist.
+
 ### 2026-08-20 EDT — Land the stranded Binyanim overflow fix; audit what 2026-08-19 left behind
 
 **Requested:** Mike asked whether anything needed tidying after a run of sessions on 2026-08-19
