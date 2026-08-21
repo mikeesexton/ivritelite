@@ -653,7 +653,7 @@ test("the merged Translation Match pool has no new duplicate cards", () => {
   const seen = new Map();
   const collisions = [];
   merged.forEach((word) => {
-    const key = `${word.he} ${word.en}`;
+    const key = `${word.he}\u0000${word.en}`;
     if (seen.has(key)) {
       collisions.push({ he: word.he, detail: `${word.he} / ${word.en}: ${seen.get(key)} + ${word.id}` });
     } else {

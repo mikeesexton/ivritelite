@@ -248,12 +248,55 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 3
     await evaluate(pageCdp, "document.querySelector('[data-character-action=\"free\"]')?.click()");
     await evaluate(pageCdp, "document.querySelector('#welcomeModalCloseBtn')?.click()");
 
-    await evaluate(pageCdp, `(() => {
+    // The board draws 6 of 80 roots at random, and a tile is as tall as the
+    // number of lines its core meaning wraps to (64 roots wrap to one line, 15
+    // to two, 1 to three). A grid row takes the taller tile of its pair, so a
+    // draw lands on one of five discrete board heights spaced 15.22px apart.
+    // Only the tallest — a three-line row above two two-line rows — overflows,
+    // which is why this scrolled on 3 of 400 sampled draws instead of never.
+    //
+    // Pin the draw to the tallest content the data can produce, the way the
+    // Conjugation+ block below does, so every run measures the worst case
+    // rather than sampling it. Wrapped line count is not knowable before
+    // layout, so the proxy is formatted core-meaning length. The deck
+    // assertion is load-bearing: selectBinyanRoundRoots falls back to a plain
+    // random shuffle when pickWeightedSubset is absent, which would silently
+    // restore the sampling this pin exists to remove.
+    const boardDeck = await evaluate(pageCdp, `(() => {
       IvriQuestApp.runtime.state.language = 'he';
       IvriQuestApp.i18n.applyLanguage();
-      IvriQuestApp.binyanBoard.startBinyanBoard();
-      IvriQuestApp.binyanBoard.beginBinyanBoardFromIntro();
+
+      const meaningLength = (root) => IvriQuestApp.binyanBoard
+        .formatBinyanRootMeaning(root.core_meaning || '').length;
+      const tallestRootIds = IvriQuestVerbGameData.ROOTS
+        .filter((root) => Object.values(root.forms || {}).some((form) => form && form.exists === true))
+        .sort((first, second) => (
+          meaningLength(second) - meaningLength(first) || first.id.localeCompare(second.id)
+        ))
+        .slice(0, 6)
+        .map((root) => root.id);
+
+      const originalPickWeightedSubset = IvriQuestApp.utils.pickWeightedSubset;
+      try {
+        IvriQuestApp.utils.pickWeightedSubset = (items) => tallestRootIds.map(
+          (id) => items.find((item) => item.word.id === id).word,
+        );
+        IvriQuestApp.binyanBoard.startBinyanBoard();
+        IvriQuestApp.binyanBoard.beginBinyanBoardFromIntro();
+      } finally {
+        IvriQuestApp.utils.pickWeightedSubset = originalPickWeightedSubset;
+      }
+
+      return {
+        expected: tallestRootIds,
+        rendered: IvriQuestApp.runtime.state.binyanBoard.deck.map((root) => root.id),
+      };
     })()`);
+    assert.deepEqual(
+      boardDeck.rendered,
+      boardDeck.expected,
+      "the Binyanim board draw must stay pinned to the tallest roots",
+    );
     const boardGeometry = await measureGeometry(pageCdp);
     assertNoGameplayScroll(boardGeometry, "Binyanim board");
     const compactRootTiles = await evaluate(pageCdp, `(() => {
