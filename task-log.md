@@ -8923,3 +8923,109 @@ Two things the roadmap got wrong, both corrected in `docs/product-roadmap.md`:
 **Risks / regressions to check:** The 41 `fixed_object` phrases and 15 suffix paradigms are the only hand-authored Hebrew here and are the thing to review — the skeleton check proves no letter was invented or dropped, but it cannot catch a wrong *vowel*, and the file's own history (`fix: correct 14 niqqud errors`) shows that is the failure mode. Highest-risk calls, all deliberate per the CLAUDE.md ktiv male/chaser rule, where the pointed column legitimately drops a helper letter the plain column keeps: `את התוכניות` → `אֶת הַתָּכְנִיּוֹת`, `את המילים מהפה` → `אֶת הַמִּלִּים מֵהַפֶּה`, `אוזן` → `אֹזֶן`, `פינה` → `פִּנָּה`, `משלוותי` → `מִשַּׁלְוָתִי`, `על מידותיי` → `עַל מִדּוֹתַי`. Five idioms have plain verb forms that differ from their seed by exactly this full/defective split (`yeshiva_neshama`, `yerida_gav`, `lo_yatza_rosh`, `bilbul_moach`, `dchifat_oto`); they keep their own full-spelling plain form and take the seed's defective pointed form, which is the intended shape but means idiom and seed now disagree on the plain spelling — worth reconciling in `hebrew-verbs.js` separately. On the utility side, the change makes every category *equal* rather than correctly ranked: within-category position is still the only signal, so a genuinely high-frequency word late in a shelf is still under-weighted. That is an improvement over ranking by file position but it is not a real frequency model, and adding one is separate work. **Phase 2b of the approved plan was not started** — see below.
 
 **Not done, and why:** The plan's second half was ~45 new idioms weighted to nif'al (~10) and hitpa'el (~12) to correct the binyan skew. Implementation showed that target is not reachable within the data's three object frames. The pool supports `direct`, `l_dative` and `possessive_suffix` — all of which need a transitive verb — while nif'al is the middle/passive binyan and hitpa'el the reflexive/reciprocal one, so neither takes a direct object or acts on someone's possessed noun. The evidence is in the existing distribution: the single nif'al idiom (`khnisa_rosh`, להיכנס למישהו לראש) is `l_dative`, and there are zero hitpa'el idioms of any type. `l_dative` is the only frame that fits them and it is already at 48/81 = 59.3% against a 60% test ceiling, so adding 22 there would take it to ~68% and fail. Genuine nif'al dative idioms do exist and are common (`נמאס לי`, `נשבר לי`) but they invert the subject — the verb agrees with the thing, not the person — which the current 4-slot msg/fsg/mpl/fpl frame cannot express. Correcting the binyan skew therefore needs a new `object_type` for governed prepositions (`עם`/`ב`/`על`) in `app/adv-conj.js`, i.e. a code change, not a data tranche. Expanding pi'el (55 approved verbs unused by any idiom) and pa'al/hif'il is unblocked and remains the straightforward way to deepen the pool.
+
+### 2026-08-22 13:49 EDT — Correct reported sentence fidelity and defer two-stroke handwriting grading
+
+**Requested:** Check whether `אאיר` is a real spelling; investigate two screenshots whose English
+translations appeared to omit or add meaning; audit the surrounding sentence tranche for the same
+problem; and stop the handwriting game from marking a two-stroke letter wrong after its first stroke.
+
+**Diagnosis:** `אאיר` / `אָאִיר` is correct: the first alef is the first-person future prefix and the
+second is the root alef of `אור` in `להאיר`. The other two reports were real fidelity issues.
+`קצר וברור` means “short and clear,” while the English omitted “short”; `גורם` means “causes” or
+“is causing,” while “can cause” added modality. A focused audit of the neighboring military rows
+`idan_60`–`idan_90` found one more dropped modifier: `לחייל הבא` had lost “next.” Handwriting
+auto-check used only total ink length, so a long first stroke could exceed 90% of a two-stroke
+template's combined length and submit the incomplete trace.
+
+**Files changed:**
+- `sentence-bank-data.js` — restored “short and clear” in `idan_72`, including separately testable
+  adjective chips and shape-matched distractors; changed `colloquial_181` from “can cause” to
+  “causes” and its `מפחית` distractor from “can reduce” to “reduces”; restored “next” in `idan_68`,
+  split its chips to the compact-unit standard, and authored the equally neutral
+  `העברתי לחייל הבא את המשמרת` alternate. Build stamp bumped to `20260822a`.
+- `app/handwriting-core.js` — added the tested auto-check readiness predicate: ink must reach the
+  length threshold and include at least as many completed strokes as the letter template.
+- `app/handwriting.js` — routed automatic submission through that predicate. Manual Check remains
+  available at any time.
+- `tests/handwriting-core.test.js` — regression where stroke one alone is already 95% of the
+  template length but may not trigger grading until stroke two exists.
+- `tests/sentence-bank-data.test.js` — pinned the three corrected translations, the paired
+  distractors, and the newly reviewed `idan_68` Hebrew order.
+- `index.html` — cache-busted all three edited runtime JavaScript files to `20260822a`.
+- `task-log.md` — this entry.
+
+**Behavior changed:** The reported radio sentence now teaches both adjectives; `גורם` and `מפחית`
+no longer masquerade as modal verbs; the nearby handover sentence preserves `הבא`. A two-stroke
+letter can no longer auto-fail after one long stroke. The one-stroke auto-check path and the manual
+Check button are unchanged.
+
+**Tests run:**
+- Baseline `npm test` — **449 pass, 0 fail**.
+- During implementation, `node --test tests/handwriting-core.test.js tests/sentence-bank-data.test.js`
+  first reported **70 pass, 2 fail**, then **71 pass, 1 fail**; those failures exposed cross-realm
+  array comparison and two chips that violated the compact-unit policy. Both data rows and the test
+  were corrected rather than allow-listed.
+- Final `node --test tests/handwriting-core.test.js tests/sentence-bank-data.test.js` — **72 pass,
+  0 fail**.
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail**, including the required 360×640
+  active/feedback-state geometry check.
+- Final `npm test` — **451 pass, 0 fail**.
+- `git diff --check` — **pass**. Verified `sentence-bank-data.js`, `app/handwriting-core.js`, and
+  `app/handwriting.js` each have a matching `20260822a` query in `index.html`; test files are not
+  browser-loaded and require no cache key.
+
+**Risks / regressions to check:** A learner who deliberately draws a two-stroke template as one
+continuous stroke will no longer be auto-graded; the visible manual Check button still permits that
+attempt, and the mode's numbered guides explicitly teach the separate strokes. Because the three
+sentence records changed, an in-progress persisted question using an old snapshot will be discarded
+by the existing stale-question safeguard and redrawn. No verb data changed for `אאיר` because its
+two-alef spelling was already correct.
+
+### 2026-08-22 14:38 EDT — Add a shared pragmatics sentence tranche
+
+**Requested:** Recommend the next useful sentence material, show the proposed wording before
+implementation, and then implement the approved thirty sentences.
+
+**Files changed:**
+- `sentence-bank-data.js` — added `PRAGMATICS_SENTENCES`: 10 explicit yes/no questions, 10
+  polite requests or softeners, and 10 conditions/counterfactuals. The rows use the append-only
+  reviewed builder, compact bilingual chips, pointed Hebrew, shape-matched distractors, explicit
+  word-order decisions, and gender alternatives where English leaves the speaker or group
+  unspecified. The bank grows from 1,208 to 1,238 rows; build stamp bumped to `20260822b`.
+- `tests/sentence-bank-data.test.js` — registered all 30 ids and the ten reviewed clause-order
+  alternates, pinned the 10/10/10 function split and 6/8/8/8 register distribution, extended
+  gender-alternate checks, updated bank/category totals, and recognized “as soon as possible” as
+  the fixed English counterpart of `בהקדם`.
+- `tests/content-coverage.test.js` — updated the measured ratchet to 1,066 exact and 1,139
+  unsupported cards after three incidental matches from the new sentences.
+- `docs/product-roadmap.md` — marked the `האם` and conditional/irrealis sentence gaps addressed
+  while leaving question-word production and multi-turn dialogue open.
+- `docs/character-gameplay-strategy.md` — refreshed the depth table and documented the shared,
+  unreserved pragmatics tranche and its measured routing impact.
+- `index.html` — cache-busted `sentence-bank-data.js` to `20260822b`.
+- `task-log.md` — this entry.
+
+**Behavior changed:** Sentence and Shema draws now include the approved pragmatic structures.
+Register weighting gives six new rows to Ido's owned pool, eight to Ivri's, and eight to Inat's,
+while all thirty remain drawable by every companion. No vocabulary, reservations, or character
+routing data changed.
+
+**Tests run:**
+- Baseline `npm test` — **451 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js` — **56 pass, 0 fail** final.
+- `node --test tests/content-coverage.test.js` — **27 pass, 0 fail** final.
+- `npm run report:characters` — **pass**; sentence ownership now Ido 266, Inbal 108, Ivri 242,
+  Inat 224, Idan 131, and every draw pool remains above its floor.
+- `npm run report:coverage` — **pass**; 2,205 cards, 1,066 exact, 0 reviewed, 1,139 unsupported.
+- An intermediate `npm test` correctly failed only on the stale 1,063 exact-coverage ratchet;
+  after updating it to the measured result, final `npm test` — **452 pass, 0 fail**.
+- `git diff --check` — **pass**.
+
+**Risks / regressions to check:** The principal residual risk is linguistic judgment: tests prove
+pointing skeletons, chip boundaries, buildability, and authored alternatives, but not whether every
+vowel or register choice is the best native-speaker choice. Gender-only differences that are
+invisible in unpointed spelling (for example masculine/feminine readings of `רוצה` or `מחכה`) use
+the conventional masculine pointed display; forms with a visible spelling difference are accepted
+explicitly. The longest formal counterfactuals use seven answer chips and are not Handwriting
+targets, but remain within the sentence game's supported surface limits.

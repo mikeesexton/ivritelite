@@ -619,13 +619,13 @@ Listed so future sessions can pick them up. All need little or no authoring.
 Register-swap pairs (**no paired formal/casual data exists anywhere** — ~120 must
 be hand-written); pual/hufal paradigms (**but nifal is already fully drillable at
 11 complete paradigms — that is the wedge**, and an active→passive nifal drill
-plus the 34 bridged roots is nearly free); conditional and irrealis, especially
-`היה` + participle (`הייתי רוצה`), which is among the most frequent spoken
-structures and appears in 2 of 608 sentences; question-word and `האם` cohort
-(`האם` appears in **zero** sentences, so formal yes/no question formation is
-entirely absent); formal-document frames (`לכבוד`, `בכבוד רב`, `הנדון`); the 162
-empty `examples[]` arrays, which is also the honest prerequisite for making the
-שם פעולה link worth its noisy 27 pairs.
+plus the 34 bridged roots is nearly free); question-word production beyond the
+completed `האם` cohort; formal-document frames (`לכבוד`, `בכבוד רב`, `הנדון`);
+the 162 empty `examples[]` arrays, which is also the honest prerequisite for
+making the שם פעולה link worth its noisy 27 pairs. Conditional/irrealis,
+`הייתי רוצה`, softened requests, and formal yes/no questions now have a
+30-row reviewed sentence tranche; a future exercise can reuse that authored
+material instead of starting from zero.
 
 ---
 
@@ -834,19 +834,19 @@ absence was established.
 | 3 | Passive binyanim as living morphology | 1 | pual/hufal appear only as 3ms-past recognition tiles; zero hits in vocab/verbs/sentences | C-deferred (nifal wedge first) |
 | 4 | שם פעולה / verbal nouns unlinked | 1 | ~193 pattern nouns exist as unrelated cards; no verbal-noun field on any verb | Deferred (27 pairs, ~65% precision) |
 | 5 | Number *agreement* (gender polarity, counting form) and clock/date idiom | 2 | polarity and `שלושת` undrillable — no gendered-noun data; clock time in 3 of 608 sentences. **Not** "cannot count": bare cardinals are deliberately out of scope | **C3**, optional |
-| 6 | Question words; `האם` formal questions | 2 | 0 of 1,684 cards; `האם` in 0 of 608 sentences | C-deferred cohort |
+| 6 | Question words; `האם` formal questions | 2 | `האם` now appears in 12 of 1,238 sentences, including a dedicated 10-question cohort; question-word production remains | **`PRAGMATICS_SENTENCES`** (yes/no); C-deferred (question words) |
 | 7 | Quantifiers | 2 | 0 cards; 30 incidental sentence uses | C-deferred |
 | 8 | Comparatives / superlatives | 2 | No paradigm; 22 incidental sentence uses | C-deferred |
 | 9 | Modals | 2 | 5 cards; `צריך`/`יכול`/`חייב`/`אפשר` = 0, `צריך` deliberately removed | C-deferred (inflection split + `היה`) |
 | 10 | Negation system | 2 | `אין` 22, `אל` 10, `אף` 2 sentence uses; no drill | C-deferred |
-| 11 | Conditionals / irrealis | 2 | 15 sentences with `אם`, 3 with `אילו`, 2 with `היה`+participle | C-deferred |
+| 11 | Conditionals / irrealis | 2 | 10 reviewed pragmatic rows now contrast spoken `אם הייתי` with elevated `אילו` and `לו`, including gender and clause-order alternatives | **`PRAGMATICS_SENTENCES`** |
 | 12 | Register as data | 3 | 0 `register` fields outside `verb-game-data.js` | **C1** |
 | 13 | Real frequency ranking | 3 | `utility` computed positionally from authoring order | **C1 `corpusHits`** |
 | 14 | **Production: typing** | 3 | `grep -c '<input' index.html` → 0 | **C2** |
 | 15 | Ktiv male vs haser never taught | 3 | Convention enforced by tests, never surfaced; `כתיב` not a card | **C2 (free)** |
 | 16 | Unvocalised reading as graded skill | 3 | Niqud is a global on/off preference, not a progression; only 2 vocab homographs exist | Not addressed — needs a design |
 | 17 | Listening beyond sentence rebuild | 3 | Shema grades exact token order; no comprehension questions; no human audio | **C2 dictation** (partial) |
-| 18 | Pragmatics / dialogue | 3 | All 608 items single-turn; politeness markers in 9 | **E** + C4 future-as-request |
+| 18 | Pragmatics / dialogue | 3 | A 30-row shared tranche now adds 10 questions, 10 softened requests, and 10 conditions; multi-turn dialogue remains absent | **`PRAGMATICS_SENTENCES`** + E + C4 future-as-request |
 | 19 | Formal written register / documents | 3 | No `לכבוד`/`בכבוד רב`/`הנדון`; 113 formal rows are isolated lines | C-deferred |
 | 20 | Root and mishkal awareness | 3 | Binyanim stops at glossing a 3ms-past form; no root extraction, no noun patterns | **C4** |
 

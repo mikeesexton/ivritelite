@@ -260,16 +260,16 @@ draws from, exactly as `npm run report:characters` prints it.
 
 | pool | floor | Ido | Inbal | Ivri | Inat | Idan |
 |---|---|---|---|---|---|---|
-| vocabulary | **250** | 472 | 335 | 491 | 372 | 259 |
-| sentences | **90** | 235 | 107 | 188 | 187 | 126 |
+| vocabulary | **250** | 502 | 342 | 537 | 382 | 266 |
+| sentences | **90** | 266 | 108 | 242 | 224 | 131 |
 | abbreviations | **30** | 68 | 87 | 113 | 85 | 34 |
-| verbs | **20** | 34 | 26 | 23 | 24 | 30 |
+| verbs | **20** | 34 | 26 | 37 | 25 | 30 |
 
 All five characters now clear all four floors.
 
-Read the sentence row against the fence, not only against the floor. Ivri owns 188 and can
-draw 177 of those owned rows, because Inat reserves eleven `professional_` rows that are still
-his by register. Idan owns 126 and can draw all of them; 49 of those are also cast-wide, so the other four
+Read the sentence row against the fence, not only against the floor. Ivri owns 242 and can
+draw 231 of those owned rows, because Inat reserves eleven `professional_` rows that are still
+his by register. Idan owns 131 and can draw all of them; 49 of those are also cast-wide, so the other four
 reach them too. The second table in `npm run report:characters` is the authority on what a
 character may actually be served.
 
@@ -675,6 +675,22 @@ The sentence pool is 1,069, with 269 unrouted and 266 reserved rows. Ivri's
 professional-register ownership rises from 188 to 212. Because the rows remain
 unreserved, every companion can draw them: Ido 831, Inbal 910, Ivri 819, Inat
 899, and Idan 886.
+
+### Shared pragmatics expansion
+
+`colloquial_221`–`226`, `everyday_355`–`362`, `professional_219`–`226`, and
+`formal_137`–`144` add thirty reviewed rows: ten explicit yes/no questions, ten
+softened requests, and ten conditions or counterfactuals. The distribution is
+register-led rather than artificially even: casual counterfactuals sit in
+colloquial/everyday, while `האם`, institutional requests, `אילו`, and `לו`
+concentrate in professional/formal Hebrew.
+
+All rows are unreserved. Register ownership raises Ido by six sentences, Ivri
+by eight, and Inat by eight, while all thirty remain drawable by every
+companion. The sentence pool is 1,238; drawable pools are Ido 994, Inbal 1,074,
+Ivri 982, Inat 1,062, and Idan 1,054. Conservative vocabulary support rises
+incidentally to 1,066 exact matches out of 2,205 cards without adding or routing
+any vocabulary.
 
 Binyanim, Prepositions, and Conjugation+ stay character-neutral by decision — see the Depth standard section above for the evidence.
 

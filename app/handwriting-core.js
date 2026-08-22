@@ -40,6 +40,15 @@ handwritingCore.pathLength = handwritingCore.pathLength || function pathLength(p
   return total;
 };
 
+handwritingCore.shouldAutoCheck = handwritingCore.shouldAutoCheck || function shouldAutoCheck(userStrokes, templateStrokes, lengthRatio) {
+  const user = Array.isArray(userStrokes) ? userStrokes : [];
+  const template = Array.isArray(templateStrokes) ? templateStrokes : [];
+  if (!template.length || user.length < template.length) return false;
+  const templateLength = template.reduce((sum, stroke) => sum + handwritingCore.pathLength(stroke?.points), 0);
+  const userLength = user.reduce((sum, stroke) => sum + handwritingCore.pathLength(stroke?.points), 0);
+  return templateLength > 0 && userLength >= templateLength * lengthRatio;
+};
+
 handwritingCore.resamplePoints = handwritingCore.resamplePoints || function resamplePoints(points, count) {
   const list = Array.isArray(points) ? points.map(toPoint) : [];
   const target = Math.max(2, Math.floor(count || 0));

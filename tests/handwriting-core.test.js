@@ -58,6 +58,15 @@ test("pathLength sums segment lengths", () => {
   assert.equal(core.pathLength([]), 0);
 });
 
+test("auto-check waits for every required stroke even when the first is long enough", () => {
+  const longStroke = { points: [[0, 0], [0.95, 0]] };
+  const shortStroke = { points: [[0.95, 0], [1, 0]] };
+  const template = [longStroke, shortStroke];
+
+  assert.equal(core.shouldAutoCheck([longStroke], template, 0.9), false);
+  assert.equal(core.shouldAutoCheck(template, template, 0.9), true);
+});
+
 test("scoreTrace passes a template traced against itself", () => {
   const result = core.scoreTrace(L_SHAPE, L_SHAPE);
   assert.ok(result.score >= 95, `expected near-perfect score, got ${result.score}`);
