@@ -56,10 +56,12 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   // cards, all three covered, and pulls one more across. The kill-verb tranche adds
   // one card, להרוג, covered on arrival by idan_129, and pulls the retired הורג tile
   // across with idan_130, so exact rises by two while unsupported falls by one.
-  // Both rows carry the headword form itself, per the trap above.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1063);
+  // Both rows carry the headword form itself, per the trap above. The shared
+  // pragmatics tranche adds no vocabulary but incidentally gives three existing
+  // cards an exact sentence context.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1066);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1142);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1139);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {

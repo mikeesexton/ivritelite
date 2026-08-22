@@ -489,9 +489,7 @@ function maybeAutoCheck() {
   const core = getCore();
   const letterform = getCurrentLetterform();
   if (!ctx?.active || ctx.isResolving || !letterform) return;
-  const templateLength = (letterform.strokes || []).reduce((sum, stroke) => sum + (core.pathLength?.(stroke.points) || 0), 0);
-  const userLength = (ctx.currentStrokes || []).reduce((sum, stroke) => sum + (core.pathLength?.(stroke.points) || 0), 0);
-  if (templateLength > 0 && userLength >= templateLength * AUTO_CHECK_LENGTH_RATIO) {
+  if (core.shouldAutoCheck?.(ctx.currentStrokes, letterform.strokes, AUTO_CHECK_LENGTH_RATIO)) {
     handwriting.checkHandwritingAttempt();
   }
 }

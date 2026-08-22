@@ -532,6 +532,28 @@ const HEALTH_ENTRY_IDS = [
   ...sentenceIdRange("professional", 207, 211),
   ...sentenceIdRange("formal", 126, 130),
 ];
+const PRAGMATICS_QUESTION_ENTRY_IDS = [
+  ...sentenceIdRange("everyday", 355, 356),
+  ...sentenceIdRange("professional", 219, 222),
+  ...sentenceIdRange("formal", 137, 140),
+];
+const PRAGMATICS_REQUEST_ENTRY_IDS = [
+  ...sentenceIdRange("colloquial", 221, 222),
+  ...sentenceIdRange("everyday", 357, 359),
+  ...sentenceIdRange("professional", 223, 225),
+  ...sentenceIdRange("formal", 141, 142),
+];
+const PRAGMATICS_CONDITION_ENTRY_IDS = [
+  ...sentenceIdRange("colloquial", 223, 226),
+  ...sentenceIdRange("everyday", 360, 362),
+  ...sentenceIdRange("professional", 226, 226),
+  ...sentenceIdRange("formal", 143, 144),
+];
+const PRAGMATICS_ENTRY_IDS = [
+  ...PRAGMATICS_QUESTION_ENTRY_IDS,
+  ...PRAGMATICS_REQUEST_ENTRY_IDS,
+  ...PRAGMATICS_CONDITION_ENTRY_IDS,
+];
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -969,6 +991,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     far away
     sugar free
     next day
+    soon possible
   `, "fixed-expression: lexicalized verb or paired expression"),
   ...compactUnitMap(`
     basic laws
@@ -1252,6 +1275,17 @@ const EXPANSION_WORD_ORDER_ALTERNATE_IDS = [
 ];
 
 const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
+  idan_68: ["העברתי לחייל הבא את המשמרת."],
+  colloquial_223: ["הייתי אומר לך קודם אם הייתי יודע."],
+  colloquial_224: ["הייתי בא אם היה לי זמן."],
+  colloquial_225: ["הייתי מחכה עוד יום במקומך."],
+  colloquial_226: ["הייתי שוכח אם לא היית מזכיר לי."],
+  everyday_360: ["הייתי לוקח מונית אם הייתי יודע שזה רחוק."],
+  everyday_361: ["היינו נשארים עוד לילה אילו היה מקום."],
+  everyday_362: ["הייתי עובד מהבית אם הייתי יכול לבחור."],
+  professional_226: ["היינו מסיימים את הדוח אילו קיבלנו את הנתונים בזמן."],
+  formal_143: ["היה אפשר למנוע את העיכוב אילו נבחנה החלופה מראש."],
+  formal_144: ["ההסכם היה נכנס לתוקף לו התקיימו התנאים."],
   everyday_31: ["מחר בבוקר אצטרך לקום מוקדם."],
   everyday_72: ["מחר בבוקר הטכנאי יגיע לתקן את המקרר."],
   everyday_83: ["היום חם מאוד, קחי כובע ובקבוק מים."],
@@ -1409,6 +1443,14 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "colloquial_97",
   "professional_56",
   "everyday_106",
+  "colloquial_223",
+  "colloquial_224",
+  "colloquial_225",
+  "colloquial_226",
+  "everyday_360",
+  "everyday_361",
+  "everyday_362",
+  "professional_226",
   // Round-4 expansion gender alternates
   "colloquial_106",
   "colloquial_114",
@@ -1423,15 +1465,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,208 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,238 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1208);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1208);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1208);
+  assert.equal(entries.length, 1238);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1238);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1238);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1540,12 +1582,13 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // them idan_), 2 professional, 2 formal, 1 colloquial. The decline/authority
   // tranche adds 12: 5 professional, 4 formal, 3 everyday. The
   // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
-  // The kill-verb tranche adds 2, both everyday and both idan_.
+  // The kill-verb tranche adds 2, both everyday and both idan_. The pragmatics
+  // tranche adds 30: 6 colloquial and 8 in each other register.
   assert.deepEqual(categoryCounts, {
-    colloquial: 260,
-    everyday: 542,
-    professional: 234,
-    formal: 172,
+    colloquial: 266,
+    everyday: 550,
+    professional: 242,
+    formal: 180,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));
@@ -1710,6 +1753,16 @@ test("relationship tranche adds twenty inclusive handwriting-ready colloquial ro
     { 1: 6, 2: 10, 3: 4 }
   );
   assert.ok(entries.every((entry) => !/(?:boyfriend|girlfriend|husband|wife)\b|חבר(?:ה)? שלי|בעל|אישה/iu.test(`${entry.english} ${entry.hebrew}`)));
+});
+
+test("reported sentence translations preserve modifiers and modality", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+
+  assert.equal(byId.get("idan_68").english, "I handed the shift to the next soldier.");
+  assert.equal(byId.get("idan_72").english, "The report on the radio was short and clear.");
+  assert.deepEqual(Array.from(byId.get("idan_72").english_distractors), ["The briefing", "at the parade", "stayed", "long", "and confused"]);
+  assert.equal(byId.get("colloquial_181").english, "A long-distance relationship causes dating fatigue.");
+  assert.ok(!byId.get("colloquial_181").english_distractors.includes("can reduce"));
 });
 
 test("Ivri AI tranche adds twenty reviewed professional handwriting-ready rows", () => {
@@ -1914,6 +1967,35 @@ test("the coverage tranches add reviewed handwriting-ready rows in the authored 
   });
 });
 
+test("the pragmatics tranche adds ten questions, ten requests, and ten conditions", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const questions = PRAGMATICS_QUESTION_ENTRY_IDS.map((id) => byId.get(id));
+  const requests = PRAGMATICS_REQUEST_ENTRY_IDS.map((id) => byId.get(id));
+  const conditions = PRAGMATICS_CONDITION_ENTRY_IDS.map((id) => byId.get(id));
+  const entries = [...questions, ...requests, ...conditions];
+
+  assert.ok(entries.every(Boolean));
+  assert.equal(questions.length, 10);
+  assert.equal(requests.length, 10);
+  assert.equal(conditions.length, 10);
+  assert.ok(questions.every((entry) => entry.hebrew.startsWith("האם ")));
+  assert.ok(requests.some((entry) => entry.hebrew.includes("הייתי רוצה")));
+  assert.ok(requests.some((entry) => entry.hebrew.includes("אשמח אם")));
+  assert.ok(conditions.every((entry) => /^(?:אם|אילו|לו|במקומך)/u.test(entry.hebrew)));
+  assert.ok(conditions.slice(0, 8).every((entry) => entry.hebrew_alternates.length > 0));
+  const countBy = (field) => entries.reduce((counts, entry) => {
+    counts[entry[field]] = (counts[entry[field]] || 0) + 1;
+    return counts;
+  }, {});
+  assert.deepEqual(countBy("category"), { everyday: 8, professional: 8, formal: 8, colloquial: 6 });
+  assert.deepEqual(countBy("difficulty"), { 1: 5, 2: 16, 3: 9 });
+  entries.forEach((entry) => {
+    assert.ok(entry.hebrew_tokens.length >= 3 && entry.hebrew_tokens.length <= 7);
+    assert.ok(entry.hebrew_distractors.length >= 4 && entry.hebrew_distractors.length <= 6);
+    assert.ok(entry.english_distractors.length >= 4 && entry.english_distractors.length <= 6);
+  });
+});
+
 test("the future tranche fills the conjugation slots the bank had left empty", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const has = (id, token) => byId.get(id).hebrew_tokens.includes(token);
@@ -1989,6 +2071,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...DECLINE_AUTHORITY_ENTRY_IDS,
     ...PROVIDENCE_TRAVEL_ENTRY_IDS,
     ...KILL_VERB_ENTRY_IDS,
+    ...PRAGMATICS_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);

@@ -15975,13 +15975,14 @@ const IDAN_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "idan_68", emoji: "🔄", category: "everyday", difficulty: 3,
-    wordOrderDecision: "fixed",
+    wordOrderDecision: "alternates",
     hebrew: "העברתי את המשמרת לחייל הבא.", hebrewNiqqud: "הֶעֱבַרְתִּי אֶת הַמִּשְׁמֶרֶת לְחַיָּיל הַבָּא.",
-    english: "I handed the shift to the soldier.",
-    hebrewTokenPairs: [["העברתי", "הֶעֱבַרְתִּי"], ["את המשמרת", "אֶת הַמִּשְׁמֶרֶת"], ["לחייל הבא", "לְחַיָּיל הַבָּא"]],
-    englishTokens: ["I handed", "the shift", "to the soldier"],
+    english: "I handed the shift to the next soldier.",
+    hebrewTokenPairs: [["העברתי", "הֶעֱבַרְתִּי"], ["את המשמרת", "אֶת הַמִּשְׁמֶרֶת"], ["לחייל", "לְחַיָּיל"], ["הבא", "הַבָּא"]],
+    englishTokens: ["I handed", "the shift", "to the next", "soldier"],
     hebrewDistractorPairs: [["איבדתי", "אִיבַּדְתִּי"], ["את הציוד", "אֶת הַצִּיּוּד"], ["למפקד הפלוגה", "לַמְּפַקֵּד הַפְּלוּגָה"], ["לסמל", "לַסַּמָּל"]],
     englishDistractors: ["I lost", "the equipment", "to the company commander", "to the sergeant"],
+    hebrewOrderAlternates: [{ text: "העברתי לחייל הבא את המשמרת.", textNiqqud: "הֶעֱבַרְתִּי לְחַיָּיל הַבָּא אֶת הַמִּשְׁמֶרֶת.", order: [0, 2, 3, 1] }],
     notes: "A handover includes what changed during the shift, not only the post."
   }),
   buildReviewedSentence({
@@ -16021,11 +16022,11 @@ const IDAN_SENTENCES = [
     id: "idan_72", emoji: "📻", category: "everyday", difficulty: 2,
     wordOrderDecision: "fixed",
     hebrew: "הדיווח בקשר היה קצר וברור.", hebrewNiqqud: "הַדִּיווּחַ בַּקֶּשֶׁר הָיָה קָצָר וּבָרוּר.",
-    english: "The report on the radio was clear.",
-    hebrewTokenPairs: [["הדיווח", "הַדִּיווּחַ"], ["בקשר", "בַּקֶּשֶׁר"], ["היה", "הָיָה"], ["קצר וברור", "קָצָר וּבָרוּר"]],
-    englishTokens: ["The report", "on the radio", "was", "clear"],
-    hebrewDistractorPairs: [["התדריך", "הַתַּדְרִיךְ"], ["במסדר", "בַּמִּסְדָּר"], ["נשאר", "נִשְׁאַר"], ["ארוך ומבולבל", "אָרֹךְ וּמְבוּלְבָּל"]],
-    englishDistractors: ["The briefing", "at the parade", "stayed", "confused"],
+    english: "The report on the radio was short and clear.",
+    hebrewTokenPairs: [["הדיווח", "הַדִּיווּחַ"], ["בקשר", "בַּקֶּשֶׁר"], ["היה", "הָיָה"], ["קצר", "קָצָר"], ["וברור", "וּבָרוּר"]],
+    englishTokens: ["The report", "on the radio", "was", "short", "and clear"],
+    hebrewDistractorPairs: [["התדריך", "הַתַּדְרִיךְ"], ["במסדר", "בַּמִּסְדָּר"], ["נשאר", "נִשְׁאַר"], ["ארוך", "אָרֹךְ"], ["ומבולבל", "וּמְבוּלְבָּל"]],
+    englishDistractors: ["The briefing", "at the parade", "stayed", "long", "and confused"],
     notes: "קשר is both the radio and the signaller who operates it."
   }),
   buildReviewedSentence({
@@ -18246,9 +18247,9 @@ const RELATIONSHIP_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "colloquial_181", emoji: "📱", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
-    hebrew: "קשר מרחוק גורם לעייפות מדייטים.", hebrewNiqqud: "קֶשֶׁר מֵרָחוֹק גּוֹרֵם לַעֲיֵפוּת מִדֵּיְיטִים.", english: "A long-distance relationship can cause dating fatigue.",
-    hebrewTokenPairs: [["קשר מרחוק", "קֶשֶׁר מֵרָחוֹק"], ["גורם", "גּוֹרֵם"], ["לעייפות מדייטים", "לַעֲיֵפוּת מִדֵּיְיטִים"]], englishTokens: ["A long-distance relationship", "can cause", "dating fatigue"],
-    hebrewDistractorPairs: [["מפגש", "מִפְגָּשׁ"], ["קצר", "קָצָר"], ["מפחית", "מַפְחִית"], ["לחץ", "לַחַץ"], ["חברתי", "חֶבְרָתִי"]], englishDistractors: ["A brief", "meeting", "can reduce", "social", "pressure"],
+    hebrew: "קשר מרחוק גורם לעייפות מדייטים.", hebrewNiqqud: "קֶשֶׁר מֵרָחוֹק גּוֹרֵם לַעֲיֵפוּת מִדֵּיְיטִים.", english: "A long-distance relationship causes dating fatigue.",
+    hebrewTokenPairs: [["קשר מרחוק", "קֶשֶׁר מֵרָחוֹק"], ["גורם", "גּוֹרֵם"], ["לעייפות מדייטים", "לַעֲיֵפוּת מִדֵּיְיטִים"]], englishTokens: ["A long-distance relationship", "causes", "dating fatigue"],
+    hebrewDistractorPairs: [["מפגש", "מִפְגָּשׁ"], ["קצר", "קָצָר"], ["מפחית", "מַפְחִית"], ["לחץ", "לַחַץ"], ["חברתי", "חֶבְרָתִי"]], englishDistractors: ["A brief", "meeting", "reduces", "social", "pressure"],
     notes: "קשר מרחוק is another common term for a long-distance relationship; עייפות מדייטים is dating fatigue."
   }),
   buildReviewedSentence({
@@ -20047,6 +20048,266 @@ const HEALTH_SENTENCES = [
   }),
 ];
 
+// Shared pragmatic structures: yes/no questions, softened requests, and
+// counterfactuals. Register categories affect character weighting but do not
+// fence these rows from the rest of the cast.
+const PRAGMATICS_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_355", emoji: "📅", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "האם צריך לקבוע תור מראש?", hebrewNiqqud: "הַאִם צָרִיךְ לִקְבֹּעַ תּוֹר מֵרֹאשׁ?", english: "Do I need to make an appointment in advance?",
+    hebrewTokenPairs: [["האם צריך", "הַאִם צָרִיךְ"], ["לקבוע", "לִקְבֹּעַ"], ["תור", "תּוֹר"], ["מראש", "מֵרֹאשׁ"]], englishTokens: ["Do I need", "to make", "an appointment", "in advance"],
+    hebrewDistractorPairs: [["האם אפשר", "הַאִם אֶפְשָׁר"], ["לבטל", "לְבַטֵּל"], ["פגישה", "פְּגִישָׁה"], ["מיד", "מִיָּד"]], englishDistractors: ["Can I", "cancel", "a meeting", "immediately"],
+    notes: "האם opens an explicit yes-or-no question; מראש means that the appointment is arranged ahead of time."
+  }),
+  buildReviewedSentence({
+    id: "everyday_356", emoji: "🏦", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "האם הסניף פתוח גם ביום שישי?", hebrewNiqqud: "הַאִם הַסְּנִיף פָּתוּחַ גַּם בְּיוֹם שִׁשִּׁי?", english: "Is the branch also open on Friday?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["הסניף", "הַסְּנִיף"], ["פתוח", "פָּתוּחַ"], ["גם", "גַּם"], ["ביום שישי", "בְּיוֹם שִׁשִּׁי"]], englishTokens: ["Is", "the branch", "also", "open", "on Friday"],
+    hebrewDistractorPairs: [["אולי", "אוּלַי"], ["המשרד", "הַמִּשְׂרָד"], ["סגור", "סָגוּר"], ["רק", "רַק"], ["ביום ראשון", "בְּיוֹם רִאשׁוֹן"]], englishDistractors: ["Maybe", "the office", "closed", "only", "on Sunday"],
+    notes: "גם asks whether Friday is included in the branch's existing opening days."
+  }),
+  buildReviewedSentence({
+    id: "professional_219", emoji: "📨", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "האם המסמכים ששלחתי הגיעו?", hebrewNiqqud: "הַאִם הַמִּסְמָכִים שֶׁשָּׁלַחְתִּי הִגִּיעוּ?", english: "Did the documents I sent arrive?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["המסמכים", "הַמִּסְמָכִים"], ["ששלחתי", "שֶׁשָּׁלַחְתִּי"], ["הגיעו", "הִגִּיעוּ"]], englishTokens: ["Did", "the documents", "I sent", "arrive"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["הטפסים", "הַטְּפָסִים"], ["שקיבלתי", "שֶׁקִּבַּלְתִּי"], ["נעלמו", "נֶעֶלְמוּ"]], englishDistractors: ["When did", "the forms", "I received", "disappear"],
+    notes: "The inanimate plural subject המסמכים takes the plural verb הגיעו."
+  }),
+  buildReviewedSentence({
+    id: "professional_220", emoji: "⏳", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "האם ניתן לדחות את מועד ההגשה בשבוע?", hebrewNiqqud: "הַאִם נִתָּן לִדְחוֹת אֶת מוֹעֵד הַהַגָּשָׁה בְּשָׁבוּעַ?", english: "Can the submission deadline be postponed by a week?",
+    hebrewTokenPairs: [["האם ניתן", "הַאִם נִתָּן"], ["לדחות", "לִדְחוֹת"], ["את מועד", "אֶת מוֹעֵד"], ["ההגשה", "הַהַגָּשָׁה"], ["בשבוע", "בְּשָׁבוּעַ"]], englishTokens: ["Can", "the submission", "deadline", "be postponed", "by a week"],
+    hebrewDistractorPairs: [["האם חובה", "הַאִם חוֹבָה"], ["להקדים", "לְהַקְדִּים"], ["את תאריך", "אֶת תַּאֲרִיךְ"], ["הפגישה", "הַפְּגִישָׁה"], ["מחר", "מָחָר"]], englishDistractors: ["Must", "the meeting", "date", "be advanced", "tomorrow"],
+    notes: "האם ניתן is a formal, impersonal way to ask whether something can be done."
+  }),
+  buildReviewedSentence({
+    id: "professional_221", emoji: "🛠️", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "האם ההצעה כוללת תמיכה טכנית?", hebrewNiqqud: "הַאִם הַהַצָּעָה כּוֹלֶלֶת תְּמִיכָה טֶכְנִית?", english: "Does the proposal include technical support?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["ההצעה", "הַהַצָּעָה"], ["כוללת", "כּוֹלֶלֶת"], ["תמיכה", "תְּמִיכָה"], ["טכנית", "טֶכְנִית"]], englishTokens: ["Does", "the proposal", "include", "technical", "support"],
+    hebrewDistractorPairs: [["מדוע", "מַדּוּעַ"], ["התוכנית", "הַתָּכְנִית"], ["מבטלת", "מְבַטֶּלֶת"], ["הדרכה", "הַדְרָכָה"], ["אישית", "אִישִׁית"]], englishDistractors: ["Why does", "the program", "cancel", "personal", "training"],
+    notes: "כוללת agrees with the feminine noun הצעה; תמיכה טכנית is technical support."
+  }),
+  buildReviewedSentence({
+    id: "professional_222", emoji: "✅", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "האם יש צורך באישור נוסף?", hebrewNiqqud: "הַאִם יֵשׁ צֹרֶךְ בְּאִשּׁוּר נוֹסָף?", english: "Is additional approval required?",
+    hebrewTokenPairs: [["האם יש", "הַאִם יֵשׁ"], ["צורך", "צֹרֶךְ"], ["באישור", "בְּאִשּׁוּר"], ["נוסף", "נוֹסָף"]], englishTokens: ["Is", "additional", "approval", "required"],
+    hebrewDistractorPairs: [["האם אין", "הַאִם אֵין"], ["סיבה", "סִבָּה"], ["לשינוי", "לְשִׁנּוּי"], ["מיידי", "מִיָּדִי"]], englishDistractors: ["Is no", "immediate", "change", "expected"],
+    notes: "יש צורך ב־ is the impersonal construction 'there is a need for' or 'is required.'"
+  }),
+  buildReviewedSentence({
+    id: "formal_137", emoji: "📋", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "האם ההחלטה התקבלה בהתאם לנוהל?", hebrewNiqqud: "הַאִם הַהַחְלָטָה הִתְקַבְּלָה בְּהֶתְאֵם לַנֹּהַל?", english: "Was the decision made according to procedure?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["ההחלטה", "הַהַחְלָטָה"], ["התקבלה", "הִתְקַבְּלָה"], ["בהתאם", "בְּהֶתְאֵם"], ["לנוהל", "לַנֹּהַל"]], englishTokens: ["Was", "the decision", "made", "according to", "procedure"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["הבקשה", "הַבַּקָּשָׁה"], ["נדחתה", "נִדְחֲתָה"], ["בניגוד", "בְּנִגּוּד"], ["לחוק", "לַחֹק"]], englishDistractors: ["When was", "the request", "rejected", "contrary to", "the law"],
+    notes: "בהתאם לנוהל means in accordance with the established procedure."
+  }),
+  buildReviewedSentence({
+    id: "formal_138", emoji: "⚖️", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "האם קיימת עילה לערעור?", hebrewNiqqud: "הַאִם קַיֶּמֶת עִלָּה לְעִרְעוּר?", english: "Are there grounds for an appeal?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["קיימת", "קַיֶּמֶת"], ["עילה", "עִלָּה"], ["לערעור", "לְעִרְעוּר"]], englishTokens: ["Are there", "grounds", "for", "an appeal"],
+    hebrewDistractorPairs: [["מדוע", "מַדּוּעַ"], ["נדרשת", "נִדְרֶשֶׁת"], ["ראיה", "רְאָיָה"], ["למשפט", "לְמִשְׁפָּט"]], englishDistractors: ["Why is", "evidence", "required", "for a trial"],
+    notes: "עילה is the legal basis or grounds for bringing a claim or appeal."
+  }),
+  buildReviewedSentence({
+    id: "formal_139", emoji: "🔬", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "האם הממצאים תומכים במסקנה?", hebrewNiqqud: "הַאִם הַמִּמְצָאִים תּוֹמְכִים בַּמַּסְקָנָה?", english: "Do the findings support the conclusion?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["הממצאים", "הַמִּמְצָאִים"], ["תומכים", "תּוֹמְכִים"], ["במסקנה", "בַּמַּסְקָנָה"]], englishTokens: ["Do", "the findings", "support", "the conclusion"],
+    hebrewDistractorPairs: [["כיצד", "כֵּיצַד"], ["הנתונים", "הַנְּתוּנִים"], ["סותרים", "סוֹתְרִים"], ["את ההשערה", "אֶת הַהַשְׁעָרָה"]], englishDistractors: ["How do", "the data", "contradict", "the hypothesis"],
+    notes: "The verb לתמוך takes ב־ before the conclusion or position being supported."
+  }),
+  buildReviewedSentence({
+    id: "formal_140", emoji: "🏛️", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "האם התקנות יחולו גם על גופים פרטיים?", hebrewNiqqud: "הַאִם הַתַּקָּנוֹת יָחוּלוּ גַּם עַל גּוּפִים פְּרָטִיִּים?", english: "Will the regulations also apply to private entities?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["התקנות", "הַתַּקָּנוֹת"], ["יחולו", "יָחוּלוּ"], ["גם", "גַּם"], ["על גופים", "עַל גּוּפִים"], ["פרטיים", "פְּרָטִיִּים"]], englishTokens: ["Will", "the regulations", "also", "apply", "to private", "entities"],
+    hebrewDistractorPairs: [["מתי", "מָתַי"], ["ההנחיות", "הַהַנְחָיוֹת"], ["יבוטלו", "יְבֻטְּלוּ"], ["רק", "רַק"], ["במוסדות", "בְּמוֹסָדוֹת"], ["ציבוריים", "צִבּוּרִיִּים"]], englishDistractors: ["When will", "the guidelines", "be cancelled", "only", "in public", "institutions"],
+    notes: "לחול על means for a law or rule to apply to the named body."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_221", emoji: "💬", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הייתי רוצה לדבר על מה שקרה.", hebrewNiqqud: "הָיִיתִי רוֹצֶה לְדַבֵּר עַל מַה שֶּׁקָּרָה.", english: "I'd like to talk about what happened.",
+    hebrewTokenPairs: [["הייתי רוצה", "הָיִיתִי רוֹצֶה"], ["לדבר", "לְדַבֵּר"], ["על מה", "עַל מַה"], ["שקרה", "שֶּׁקָּרָה"]], englishTokens: ["I'd like", "to talk", "about what", "happened"],
+    hebrewDistractorPairs: [["אני חייב", "אֲנִי חַיָּב"], ["לכתוב", "לִכְתֹּב"], ["על מי", "עַל מִי"], ["שהגיע", "שֶׁהִגִּיעַ"]], englishDistractors: ["I must", "to write", "about who", "arrived"],
+    notes: "הייתי רוצה is the standard softened 'I would like'; רוצה is conventionally shown in the masculine form here."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_222", emoji: "🙏", category: "colloquial", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "אפשר לבקש טובה?", hebrewNiqqud: "אֶפְשָׁר לְבַקֵּשׁ טוֹבָה?", english: "Can I ask a favor?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לבקש", "לְבַקֵּשׁ"], ["טובה", "טוֹבָה"]], englishTokens: ["Can I", "ask", "a favor"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["להציע", "לְהַצִּיעַ"], ["עזרה", "עֶזְרָה"], ["עכשיו", "עַכְשָׁו"]], englishDistractors: ["Should I", "offer", "help", "now"],
+    notes: "אפשר plus an infinitive is a common impersonal way to ask permission."
+  }),
+  buildReviewedSentence({
+    id: "everyday_357", emoji: "🍽️", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",
+    hebrew: "הייתי רוצה להזמין שולחן לשניים.", hebrewNiqqud: "הָיִיתִי רוֹצֶה לְהַזְמִין שֻׁלְחָן לִשְׁנַיִם.", english: "I'd like to reserve a table for two.",
+    hebrewTokenPairs: [["הייתי רוצה", "הָיִיתִי רוֹצֶה"], ["להזמין", "לְהַזְמִין"], ["שולחן", "שֻׁלְחָן"], ["לשניים", "לִשְׁנַיִם"]], englishTokens: ["I'd like", "to reserve", "a table", "for two"],
+    hebrewDistractorPairs: [["אנחנו רוצים", "אֲנַחְנוּ רוֹצִים"], ["לבטל", "לְבַטֵּל"], ["חדר", "חֶדֶר"], ["לשלושה", "לִשְׁלוֹשָׁה"]], englishDistractors: ["We want", "to cancel", "a room", "for three"],
+    notes: "לשניים means for two people; הייתי רוצה softens the reservation request."
+  }),
+  buildReviewedSentence({
+    id: "everyday_358", emoji: "🧾", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אשמח אם תשלחו לי את הקבלה במייל.", hebrewNiqqud: "אֶשְׂמַח אִם תִּשְׁלְחוּ לִי אֶת הַקַּבָּלָה בְּמֵייל.", english: "I would appreciate it if you sent me the receipt by email.",
+    hebrewTokenPairs: [["אשמח", "אֶשְׂמַח"], ["אם", "אִם"], ["תשלחו לי", "תִּשְׁלְחוּ לִי"], ["את הקבלה", "אֶת הַקַּבָּלָה"], ["במייל", "בְּמֵייל"]], englishTokens: ["I would", "appreciate it", "if you sent me", "the receipt", "by email"],
+    hebrewDistractorPairs: [["נעדיף", "נַעֲדִיף"], ["שתמסרו", "שֶׁתִּמְסְרוּ"], ["לו", "לוֹ"], ["את החשבון", "אֶת הַחֶשְׁבּוֹן"], ["בדואר", "בַּדֹּאַר"]], englishDistractors: ["We would", "prefer it", "if you handed him", "the bill", "by post"],
+    notes: "אשמח אם is a polite request formula; the future תשלחו addresses a business or group."
+  }),
+  buildReviewedSentence({
+    id: "everyday_359", emoji: "📝", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר לעזור לי למלא את הטופס?", hebrewNiqqud: "אֶפְשָׁר לַעֲזֹר לִי לְמַלֵּא אֶת הַטֹּפֶס?", english: "Could someone help me fill out the form?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לעזור לי", "לַעֲזֹר לִי"], ["למלא", "לְמַלֵּא"], ["את הטופס", "אֶת הַטֹּפֶס"]], englishTokens: ["Could someone", "help me", "fill out", "the form"],
+    hebrewDistractorPairs: [["צריך", "צָרִיךְ"], ["להסביר לו", "לְהַסְבִּיר לוֹ"], ["לקרוא", "לִקְרֹא"], ["את המכתב", "אֶת הַמִּכְתָּב"]], englishDistractors: ["Someone must", "explain to him", "read", "the letter"],
+    notes: "The impersonal אפשר keeps the request polite without naming a specific addressee."
+  }),
+  buildReviewedSentence({
+    id: "professional_223", emoji: "🔔", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אשמח אם תוכלו לעדכן אותי עד מחר.", hebrewNiqqud: "אֶשְׂמַח אִם תּוּכְלוּ לְעַדְכֵּן אוֹתִי עַד מָחָר.", english: "I would appreciate it if you could update me by tomorrow.",
+    hebrewTokenPairs: [["אשמח", "אֶשְׂמַח"], ["אם", "אִם"], ["תוכלו", "תּוּכְלוּ"], ["לעדכן אותי", "לְעַדְכֵּן אוֹתִי"], ["עד מחר", "עַד מָחָר"]], englishTokens: ["I would", "appreciate it", "if you could", "update me", "by tomorrow"],
+    hebrewDistractorPairs: [["אבקש", "אֲבַקֵּשׁ"], ["שתנסו", "שֶׁתְּנַסּוּ"], ["להתקשר אליו", "לְהִתְקַשֵּׁר אֵלָיו"], ["אחר כך", "אַחַר כָּךְ"]], englishDistractors: ["I request", "that you try", "to call him", "later"],
+    notes: "אשמח אם תוכלו is a conventional professional softener rather than a statement about happiness."
+  }),
+  buildReviewedSentence({
+    id: "professional_224", emoji: "📆", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "רציתי לבקש הארכה קצרה למועד ההגשה.", hebrewNiqqud: "רָצִיתִי לְבַקֵּשׁ הַאֲרָכָה קְצָרָה לְמוֹעֵד הַהַגָּשָׁה.", english: "I wanted to request a short extension of the submission deadline.",
+    hebrewTokenPairs: [["רציתי", "רָצִיתִי"], ["לבקש", "לְבַקֵּשׁ"], ["הארכה", "הַאֲרָכָה"], ["קצרה", "קְצָרָה"], ["למועד", "לְמוֹעֵד"], ["ההגשה", "הַהַגָּשָׁה"]], englishTokens: ["I wanted", "to request", "a short", "extension", "of the submission", "deadline"],
+    hebrewDistractorPairs: [["החלטתי", "הֶחְלַטְתִּי"], ["לאשר", "לְאַשֵּׁר"], ["דחייה", "דְּחִיָּה"], ["ארוכה", "אֲרֻכָּה"], ["לתאריך", "לְתַאֲרִיךְ"], ["הפגישה", "הַפְּגִישָׁה"]], englishDistractors: ["I decided", "to approve", "a long", "delay", "of the meeting", "date"],
+    notes: "The past רציתי acts as a present request softener: 'I wanted to ask.'"
+  }),
+  buildReviewedSentence({
+    id: "professional_225", emoji: "📞", category: "professional", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "האם אפשר לקבוע שיחה קצרה השבוע?", hebrewNiqqud: "הַאִם אֶפְשָׁר לִקְבֹּעַ שִׂיחָה קְצָרָה הַשָּׁבוּעַ?", english: "Could we schedule a brief call this week?",
+    hebrewTokenPairs: [["האם אפשר", "הַאִם אֶפְשָׁר"], ["לקבוע", "לִקְבֹּעַ"], ["שיחה", "שִׂיחָה"], ["קצרה", "קְצָרָה"], ["השבוע", "הַשָּׁבוּעַ"]], englishTokens: ["Could we", "schedule", "a brief", "call", "this week"],
+    hebrewDistractorPairs: [["האם צריך", "הַאִם צָרִיךְ"], ["לבטל", "לְבַטֵּל"], ["פגישה", "פְּגִישָׁה"], ["ארוכה", "אֲרֻכָּה"], ["מחר", "מָחָר"]], englishDistractors: ["Must we", "cancel", "a long", "meeting", "tomorrow"],
+    notes: "האם אפשר keeps the proposed call impersonal and collaborative."
+  }),
+  buildReviewedSentence({
+    id: "formal_141", emoji: "✍️", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "אבקש שתשובתכם תימסר בכתב.", hebrewNiqqud: "אֲבַקֵּשׁ שֶׁתְּשׁוּבַתְכֶם תִּמָּסֵר בִּכְתָב.", english: "I request that your response be provided in writing.",
+    hebrewTokenPairs: [["אבקש", "אֲבַקֵּשׁ"], ["שתשובתכם", "שֶׁתְּשׁוּבַתְכֶם"], ["תימסר", "תִּמָּסֵר"], ["בכתב", "בִּכְתָב"]], englishTokens: ["I request", "that your response", "be provided", "in writing"],
+    hebrewDistractorPairs: [["אציע", "אַצִּיעַ"], ["שהחלטתכם", "שֶׁהַחְלָטַתְכֶם"], ["תידחה", "תִּדָּחֶה"], ["בעל פה", "בְּעַל פֶּה"]], englishDistractors: ["I suggest", "that your decision", "be postponed", "orally"],
+    notes: "אבקש is future in form but functions as a formal present request; בכתב contrasts with בעל פה."
+  }),
+  buildReviewedSentence({
+    id: "formal_142", emoji: "📄", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "נודה לכם אם תעבירו את המסמכים בהקדם.", hebrewNiqqud: "נוֹדֶה לָכֶם אִם תַּעֲבִירוּ אֶת הַמִּסְמָכִים בְּהֶקְדֵּם.", english: "We would appreciate it if you forwarded the documents as soon as possible.",
+    hebrewTokenPairs: [["נודה", "נוֹדֶה"], ["לכם", "לָכֶם"], ["אם תעבירו", "אִם תַּעֲבִירוּ"], ["את המסמכים", "אֶת הַמִּסְמָכִים"], ["בהקדם", "בְּהֶקְדֵּם"]], englishTokens: ["We would", "appreciate it", "if you forwarded", "the documents", "as soon as possible"],
+    hebrewDistractorPairs: [["נבקש מהם", "נְבַקֵּשׁ מֵהֶם"], ["שיבדקו", "שֶׁיִּבְדְּקוּ"], ["את הנתונים", "אֶת הַנְּתוּנִים"], ["בהמשך", "בְּהֶמְשֵׁךְ"]], englishDistractors: ["We will ask them", "to check", "the data", "later"],
+    notes: "נודה לכם אם is a conventional institutional formula meaning 'we would appreciate it if.'"
+  }),
+  buildReviewedSentence({
+    id: "colloquial_223", emoji: "💡", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אם הייתי יודע, הייתי אומר לך קודם.", hebrewNiqqud: "אִם הָיִיתִי יוֹדֵעַ, הָיִיתִי אוֹמֵר לְךָ קֹדֶם.", english: "If I'd known, I'd have told you earlier.",
+    hebrewTokenPairs: [["אם הייתי", "אִם הָיִיתִי"], ["יודע", "יוֹדֵעַ"], ["הייתי", "הָיִיתִי"], ["אומר לך", "אוֹמֵר לְךָ"], ["קודם", "קֹדֶם"]], englishTokens: ["If I'd", "known", "I'd have", "told you", "earlier"],
+    hebrewDistractorPairs: [["אילו היינו", "אִלּוּ הָיִינוּ"], ["זוכרים", "זוֹכְרִים"], ["יכולתי", "יָכֹלְתִּי"], ["אומרת לך", "אוֹמֶרֶת לְךָ"], ["אחר כך", "אַחַר כָּךְ"], ["יודעת", "יוֹדַעַת"]], englishDistractors: ["If we'd", "remembered", "I could have", "asked him", "later", "forgotten"],
+    hebrewOrderAlternates: [{ text: "הייתי אומר לך קודם אם הייתי יודע.", textNiqqud: "הָיִיתִי אוֹמֵר לְךָ קֹדֶם אִם הָיִיתִי יוֹדֵעַ.", order: [2, 3, 4, 0, 1] }],
+    hebrewAlternates: [
+      { text: "אם הייתי יודעת, הייתי אומרת לך קודם.", textNiqqud: "אִם הָיִיתִי יוֹדַעַת, הָיִיתִי אוֹמֶרֶת לְךָ קֹדֶם.", tokenPairs: [["אם הייתי", "אִם הָיִיתִי"], ["יודעת", "יוֹדַעַת"], ["הייתי", "הָיִיתִי"], ["אומרת לך", "אוֹמֶרֶת לְךָ"], ["קודם", "קֹדֶם"]] },
+      { text: "הייתי אומרת לך קודם אם הייתי יודעת.", textNiqqud: "הָיִיתִי אוֹמֶרֶת לְךָ קֹדֶם אִם הָיִיתִי יוֹדַעַת.", tokenPairs: [["הייתי", "הָיִיתִי"], ["אומרת לך", "אוֹמֶרֶת לְךָ"], ["קודם", "קֹדֶם"], ["אם הייתי", "אִם הָיִיתִי"], ["יודעת", "יוֹדַעַת"]] }
+    ],
+    notes: "Spoken Hebrew commonly uses אם הייתי plus a participle for an unreal past; both speaker genders and both neutral clause orders are accepted."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_224", emoji: "⌛", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אם היה לי זמן, הייתי בא.", hebrewNiqqud: "אִם הָיָה לִי זְמַן, הָיִיתִי בָּא.", english: "If I had time, I'd come.",
+    hebrewTokenPairs: [["אם", "אִם"], ["היה לי", "הָיָה לִי"], ["זמן", "זְמַן"], ["הייתי", "הָיִיתִי"], ["בא", "בָּא"]], englishTokens: ["If", "I had", "time", "I'd", "come"],
+    hebrewDistractorPairs: [["כאשר", "כַּאֲשֶׁר"], ["יש לו", "יֵשׁ לוֹ"], ["כסף", "כֶּסֶף"], ["אצטרך", "אֶצְטָרֵךְ"], ["ללכת", "לָלֶכֶת"], ["באה", "בָּאָה"]], englishDistractors: ["When", "he has", "money", "I will need", "to leave", "stay"],
+    hebrewOrderAlternates: [{ text: "הייתי בא אם היה לי זמן.", textNiqqud: "הָיִיתִי בָּא אִם הָיָה לִי זְמַן.", order: [3, 4, 0, 1, 2] }],
+    hebrewAlternates: [
+      { text: "אם היה לי זמן, הייתי באה.", textNiqqud: "אִם הָיָה לִי זְמַן, הָיִיתִי בָּאָה.", tokenPairs: [["אם", "אִם"], ["היה לי", "הָיָה לִי"], ["זמן", "זְמַן"], ["הייתי", "הָיִיתִי"], ["באה", "בָּאָה"]] },
+      { text: "הייתי באה אם היה לי זמן.", textNiqqud: "הָיִיתִי בָּאָה אִם הָיָה לִי זְמַן.", tokenPairs: [["הייתי", "הָיִיתִי"], ["באה", "בָּאָה"], ["אם", "אִם"], ["היה לי", "הָיָה לִי"], ["זמן", "זְמַן"]] }
+    ],
+    notes: "This is a present unreal condition: the speaker would come if time were available. Both speaker genders are accepted."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_225", emoji: "🤔", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "במקומך, הייתי מחכה עוד יום.", hebrewNiqqud: "בִּמְקוֹמְךָ, הָיִיתִי מְחַכֶּה עוֹד יוֹם.", english: "If I were you, I would wait another day.",
+    hebrewTokenPairs: [["במקומך", "בִּמְקוֹמְךָ"], ["הייתי", "הָיִיתִי"], ["מחכה", "מְחַכֶּה"], ["עוד", "עוֹד"], ["יום", "יוֹם"]], englishTokens: ["If I were", "you", "I would", "wait another", "day"],
+    hebrewDistractorPairs: [["לדעתי", "לְדַעְתִּי"], ["כדאי", "כְּדַאי"], ["להחליט", "לְהַחְלִיט"], ["כבר", "כְּבָר"], ["שבוע", "שָׁבוּעַ"], ["ממתינה", "מַמְתִּינָה"]], englishDistractors: ["In my opinion", "you should", "decide", "already", "another week", "leave"],
+    hebrewOrderAlternates: [{ text: "הייתי מחכה עוד יום במקומך.", textNiqqud: "הָיִיתִי מְחַכֶּה עוֹד יוֹם בִּמְקוֹמְךָ.", order: [1, 2, 3, 4, 0] }],
+    hebrewAlternates: [
+      { text: "במקומך, הייתי ממתינה עוד יום.", textNiqqud: "בִּמְקוֹמְךָ, הָיִיתִי מַמְתִּינָה עוֹד יוֹם.", tokenPairs: [["במקומך", "בִּמְקוֹמְךָ"], ["הייתי", "הָיִיתִי"], ["ממתינה", "מַמְתִּינָה"], ["עוד", "עוֹד"], ["יום", "יוֹם"]] },
+      { text: "הייתי ממתינה עוד יום במקומך.", textNiqqud: "הָיִיתִי מַמְתִּינָה עוֹד יוֹם בִּמְקוֹמְךָ.", tokenPairs: [["הייתי", "הָיִיתִי"], ["ממתינה", "מַמְתִּינָה"], ["עוד", "עוֹד"], ["יום", "יוֹם"], ["במקומך", "בִּמְקוֹמְךָ"]] }
+    ],
+    notes: "במקומך is the idiomatic 'if I were you.' The feminine alternate uses the equally neutral verb ממתינה so its gender is visible in unpointed writing."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_226", emoji: "⏰", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אם לא היית מזכיר לי, הייתי שוכח.", hebrewNiqqud: "אִם לֹא הָיִיתָ מַזְכִּיר לִי, הָיִיתִי שׁוֹכֵחַ.", english: "If you hadn't reminded me, I would have forgotten.",
+    hebrewTokenPairs: [["אם לא", "אִם לֹא"], ["היית מזכיר", "הָיִיתָ מַזְכִּיר"], ["לי", "לִי"], ["הייתי", "הָיִיתִי"], ["שוכח", "שׁוֹכֵחַ"]], englishTokens: ["If you hadn't", "reminded", "me", "I would have", "forgotten"],
+    hebrewDistractorPairs: [["אחרי שכבר", "אַחֲרֵי שֶׁכְּבָר"], ["היית מזכירה", "הָיִית מַזְכִּירָה"], ["לו", "לוֹ"], ["יכולתי", "יָכֹלְתִּי"], ["לזכור", "לִזְכֹּר"], ["שוכחת", "שׁוֹכַחַת"]], englishDistractors: ["After you already", "told", "him", "I could have", "remembered", "noticed"],
+    hebrewOrderAlternates: [{ text: "הייתי שוכח אם לא היית מזכיר לי.", textNiqqud: "הָיִיתִי שׁוֹכֵחַ אִם לֹא הָיִיתָ מַזְכִּיר לִי.", order: [3, 4, 0, 1, 2] }],
+    hebrewAlternates: [
+      { text: "אם לא היית מזכירה לי, הייתי שוכח.", textNiqqud: "אִם לֹא הָיִית מַזְכִּירָה לִי, הָיִיתִי שׁוֹכֵחַ.", tokenPairs: [["אם לא", "אִם לֹא"], ["היית מזכירה", "הָיִית מַזְכִּירָה"], ["לי", "לִי"], ["הייתי", "הָיִיתִי"], ["שוכח", "שׁוֹכֵחַ"]] },
+      { text: "אם לא היית מזכיר לי, הייתי שוכחת.", textNiqqud: "אִם לֹא הָיִיתָ מַזְכִּיר לִי, הָיִיתִי שׁוֹכַחַת.", tokenPairs: [["אם לא", "אִם לֹא"], ["היית מזכיר", "הָיִיתָ מַזְכִּיר"], ["לי", "לִי"], ["הייתי", "הָיִיתִי"], ["שוכחת", "שׁוֹכַחַת"]] },
+      { text: "אם לא היית מזכירה לי, הייתי שוכחת.", textNiqqud: "אִם לֹא הָיִית מַזְכִּירָה לִי, הָיִיתִי שׁוֹכַחַת.", tokenPairs: [["אם לא", "אִם לֹא"], ["היית מזכירה", "הָיִית מַזְכִּירָה"], ["לי", "לִי"], ["הייתי", "הָיִיתִי"], ["שוכחת", "שׁוֹכַחַת"]] },
+      { text: "הייתי שוכחת אם לא היית מזכירה לי.", textNiqqud: "הָיִיתִי שׁוֹכַחַת אִם לֹא הָיִית מַזְכִּירָה לִי.", tokenPairs: [["הייתי", "הָיִיתִי"], ["שוכחת", "שׁוֹכַחַת"], ["אם לא", "אִם לֹא"], ["היית מזכירה", "הָיִית מַזְכִּירָה"], ["לי", "לִי"]] }
+    ],
+    notes: "The English leaves both people ungendered, so masculine and feminine addressee and speaker forms are accepted; the clauses may appear in either neutral order."
+  }),
+  buildReviewedSentence({
+    id: "everyday_360", emoji: "🚕", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אם הייתי יודע שזה רחוק, הייתי לוקח מונית.", hebrewNiqqud: "אִם הָיִיתִי יוֹדֵעַ שֶׁזֶּה רָחוֹק, הָיִיתִי לוֹקֵחַ מוֹנִית.", english: "If I'd known it was far away, I'd have taken a taxi.",
+    hebrewTokenPairs: [["אם הייתי", "אִם הָיִיתִי"], ["יודע", "יוֹדֵעַ"], ["שזה רחוק", "שֶׁזֶּה רָחוֹק"], ["הייתי", "הָיִיתִי"], ["לוקח", "לוֹקֵחַ"], ["מונית", "מוֹנִית"]], englishTokens: ["If I'd", "known", "it was far away", "I'd have", "taken", "a taxi"],
+    hebrewDistractorPairs: [["שזה קרוב", "שֶׁזֶּה קָרוֹב"], ["יכולתי", "יָכֹלְתִּי"], ["ללכת", "לָלֶכֶת"], ["ברגל", "בְּרֶגֶל"], ["יודעת", "יוֹדַעַת"], ["לוקחת", "לוֹקַחַת"]], englishDistractors: ["After I'd", "seen", "it was nearby", "I could have", "walked", "on foot"],
+    hebrewOrderAlternates: [{ text: "הייתי לוקח מונית אם הייתי יודע שזה רחוק.", textNiqqud: "הָיִיתִי לוֹקֵחַ מוֹנִית אִם הָיִיתִי יוֹדֵעַ שֶׁזֶּה רָחוֹק.", order: [3, 4, 5, 0, 1, 2] }],
+    hebrewAlternates: [
+      { text: "אם הייתי יודעת שזה רחוק, הייתי לוקחת מונית.", textNiqqud: "אִם הָיִיתִי יוֹדַעַת שֶׁזֶּה רָחוֹק, הָיִיתִי לוֹקַחַת מוֹנִית.", tokenPairs: [["אם הייתי", "אִם הָיִיתִי"], ["יודעת", "יוֹדַעַת"], ["שזה רחוק", "שֶׁזֶּה רָחוֹק"], ["הייתי", "הָיִיתִי"], ["לוקחת", "לוֹקַחַת"], ["מונית", "מוֹנִית"]] },
+      { text: "הייתי לוקחת מונית אם הייתי יודעת שזה רחוק.", textNiqqud: "הָיִיתִי לוֹקַחַת מוֹנִית אִם הָיִיתִי יוֹדַעַת שֶׁזֶּה רָחוֹק.", tokenPairs: [["הייתי", "הָיִיתִי"], ["לוקחת", "לוֹקַחַת"], ["מונית", "מוֹנִית"], ["אם הייתי", "אִם הָיִיתִי"], ["יודעת", "יוֹדַעַת"], ["שזה רחוק", "שֶׁזֶּה רָחוֹק"]] }
+    ],
+    notes: "The condition describes an unreal past choice; both speaker genders and both neutral clause orders are accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_361", emoji: "🏨", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אילו היה מקום, היינו נשארים עוד לילה.", hebrewNiqqud: "אִלּוּ הָיָה מָקוֹם, הָיִינוּ נִשְׁאָרִים עוֹד לַיְלָה.", english: "If there had been room, we would have stayed another night.",
+    hebrewTokenPairs: [["אילו", "אִלּוּ"], ["היה מקום", "הָיָה מָקוֹם"], ["היינו", "הָיִינוּ"], ["נשארים", "נִשְׁאָרִים"], ["עוד", "עוֹד"], ["לילה", "לַיְלָה"]], englishTokens: ["If", "there had been room", "we would have", "stayed", "another", "night"],
+    hebrewDistractorPairs: [["היה זמן", "הָיָה זְמַן"], ["החלטנו", "הֶחְלַטְנוּ"], ["לעזוב", "לַעֲזֹב"], ["באותו", "בְּאוֹתוֹ"], ["בוקר", "בֹּקֶר"], ["נשארות", "נִשְׁאָרוֹת"]], englishDistractors: ["When", "there was time", "we decided", "to leave", "that", "morning"],
+    hebrewOrderAlternates: [{ text: "היינו נשארים עוד לילה אילו היה מקום.", textNiqqud: "הָיִינוּ נִשְׁאָרִים עוֹד לַיְלָה אִלּוּ הָיָה מָקוֹם.", order: [2, 3, 4, 5, 0, 1] }],
+    hebrewAlternates: [
+      { text: "אילו היה מקום, היינו נשארות עוד לילה.", textNiqqud: "אִלּוּ הָיָה מָקוֹם, הָיִינוּ נִשְׁאָרוֹת עוֹד לַיְלָה.", tokenPairs: [["אילו", "אִלּוּ"], ["היה מקום", "הָיָה מָקוֹם"], ["היינו", "הָיִינוּ"], ["נשארות", "נִשְׁאָרוֹת"], ["עוד", "עוֹד"], ["לילה", "לַיְלָה"]] },
+      { text: "היינו נשארות עוד לילה אילו היה מקום.", textNiqqud: "הָיִינוּ נִשְׁאָרוֹת עוֹד לַיְלָה אִלּוּ הָיָה מָקוֹם.", tokenPairs: [["היינו", "הָיִינוּ"], ["נשארות", "נִשְׁאָרוֹת"], ["עוד", "עוֹד"], ["לילה", "לַיְלָה"], ["אילו", "אִלּוּ"], ["היה מקום", "הָיָה מָקוֹם"]] }
+    ],
+    notes: "אילו marks a counterfactual condition; masculine or mixed and all-feminine groups are accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_362", emoji: "🏠", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אם הייתי יכול לבחור, הייתי עובד מהבית.", hebrewNiqqud: "אִם הָיִיתִי יָכוֹל לִבְחֹר, הָיִיתִי עוֹבֵד מֵהַבַּיִת.", english: "If I could choose, I would work from home.",
+    hebrewTokenPairs: [["אם הייתי", "אִם הָיִיתִי"], ["יכול", "יָכוֹל"], ["לבחור", "לִבְחֹר"], ["הייתי", "הָיִיתִי"], ["עובד", "עוֹבֵד"], ["מהבית", "מֵהַבַּיִת"]], englishTokens: ["If I", "could", "choose", "I would", "work", "from home"],
+    hebrewDistractorPairs: [["לעבור", "לַעֲבֹר"], ["אצטרך", "אֶצְטָרֵךְ"], ["ללמוד", "לִלְמֹד"], ["במשרד", "בַּמִּשְׂרָד"], ["יכולה", "יְכוֹלָה"], ["עובדת", "עוֹבֶדֶת"]], englishDistractors: ["After I", "decided", "to move", "I will need", "to study", "at the office"],
+    hebrewOrderAlternates: [{ text: "הייתי עובד מהבית אם הייתי יכול לבחור.", textNiqqud: "הָיִיתִי עוֹבֵד מֵהַבַּיִת אִם הָיִיתִי יָכוֹל לִבְחֹר.", order: [3, 4, 5, 0, 1, 2] }],
+    hebrewAlternates: [
+      { text: "אם הייתי יכולה לבחור, הייתי עובדת מהבית.", textNiqqud: "אִם הָיִיתִי יְכוֹלָה לִבְחֹר, הָיִיתִי עוֹבֶדֶת מֵהַבַּיִת.", tokenPairs: [["אם הייתי", "אִם הָיִיתִי"], ["יכולה", "יְכוֹלָה"], ["לבחור", "לִבְחֹר"], ["הייתי", "הָיִיתִי"], ["עובדת", "עוֹבֶדֶת"], ["מהבית", "מֵהַבַּיִת"]] },
+      { text: "הייתי עובדת מהבית אם הייתי יכולה לבחור.", textNiqqud: "הָיִיתִי עוֹבֶדֶת מֵהַבַּיִת אִם הָיִיתִי יְכוֹלָה לִבְחֹר.", tokenPairs: [["הייתי", "הָיִיתִי"], ["עובדת", "עוֹבֶדֶת"], ["מהבית", "מֵהַבַּיִת"], ["אם הייתי", "אִם הָיִיתִי"], ["יכולה", "יְכוֹלָה"], ["לבחור", "לִבְחֹר"]] }
+    ],
+    notes: "The unreal condition uses היה plus a participle; both speaker genders and both clause orders are accepted."
+  }),
+  buildReviewedSentence({
+    id: "professional_226", emoji: "📊", category: "professional", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "אילו קיבלנו את הנתונים בזמן, היינו מסיימים את הדוח.", hebrewNiqqud: "אִלּוּ קִבַּלְנוּ אֶת הַנְּתוּנִים בַּזְּמַן, הָיִינוּ מְסַיְּמִים אֶת הַדּוּחַ.", english: "If we had received the data on time, we would have finished the report.",
+    hebrewTokenPairs: [["אילו", "אִלּוּ"], ["קיבלנו", "קִבַּלְנוּ"], ["את הנתונים", "אֶת הַנְּתוּנִים"], ["בזמן", "בַּזְּמַן"], ["היינו", "הָיִינוּ"], ["מסיימים", "מְסַיְּמִים"], ["את הדוח", "אֶת הַדּוּחַ"]], englishTokens: ["If", "we had received", "the data", "on time", "we would have", "finished", "the report"],
+    hebrewDistractorPairs: [["את הטפסים", "אֶת הַטְּפָסִים"], ["באיחור", "בְּאִחוּר"], ["ניסינו", "נִסִּינוּ"], ["לכתוב", "לִכְתֹּב"], ["את הסיכום", "אֶת הַסִּכּוּם"], ["מסיימות", "מְסַיְּמוֹת"]], englishDistractors: ["we sent", "the forms", "late", "we tried", "to write", "the summary"],
+    hebrewOrderAlternates: [{ text: "היינו מסיימים את הדוח אילו קיבלנו את הנתונים בזמן.", textNiqqud: "הָיִינוּ מְסַיְּמִים אֶת הַדּוּחַ אִלּוּ קִבַּלְנוּ אֶת הַנְּתוּנִים בַּזְּמַן.", order: [4, 5, 6, 0, 1, 2, 3] }],
+    hebrewAlternates: [
+      { text: "אילו קיבלנו את הנתונים בזמן, היינו מסיימות את הדוח.", textNiqqud: "אִלּוּ קִבַּלְנוּ אֶת הַנְּתוּנִים בַּזְּמַן, הָיִינוּ מְסַיְּמוֹת אֶת הַדּוּחַ.", tokenPairs: [["אילו", "אִלּוּ"], ["קיבלנו", "קִבַּלְנוּ"], ["את הנתונים", "אֶת הַנְּתוּנִים"], ["בזמן", "בַּזְּמַן"], ["היינו", "הָיִינוּ"], ["מסיימות", "מְסַיְּמוֹת"], ["את הדוח", "אֶת הַדּוּחַ"]] },
+      { text: "היינו מסיימות את הדוח אילו קיבלנו את הנתונים בזמן.", textNiqqud: "הָיִינוּ מְסַיְּמוֹת אֶת הַדּוּחַ אִלּוּ קִבַּלְנוּ אֶת הַנְּתוּנִים בַּזְּמַן.", tokenPairs: [["היינו", "הָיִינוּ"], ["מסיימות", "מְסַיְּמוֹת"], ["את הדוח", "אֶת הַדּוּחַ"], ["אילו", "אִלּוּ"], ["קיבלנו", "קִבַּלְנוּ"], ["את הנתונים", "אֶת הַנְּתוּנִים"], ["בזמן", "בַּזְּמַן"]] }
+    ],
+    notes: "אילו presents a past condition that was not met; mixed or masculine and all-feminine teams are accepted."
+  }),
+  buildReviewedSentence({
+    id: "formal_143", emoji: "🔎", category: "formal", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "אילו נבחנה החלופה מראש, היה אפשר למנוע את העיכוב.", hebrewNiqqud: "אִלּוּ נִבְחֲנָה הַחֲלוּפָה מֵרֹאשׁ, הָיָה אֶפְשָׁר לִמְנֹעַ אֶת הָעִכּוּב.", english: "Had the alternative been examined in advance, the delay could have been prevented.",
+    hebrewTokenPairs: [["אילו", "אִלּוּ"], ["נבחנה", "נִבְחֲנָה"], ["החלופה", "הַחֲלוּפָה"], ["מראש", "מֵרֹאשׁ"], ["היה אפשר", "הָיָה אֶפְשָׁר"], ["למנוע", "לִמְנֹעַ"], ["את העיכוב", "אֶת הָעִכּוּב"]], englishTokens: ["Had", "the alternative", "been examined", "in advance", "the delay", "could have been", "prevented"],
+    hebrewDistractorPairs: [["שנדחתה", "שֶׁנִּדְחֲתָה"], ["ההצעה", "הַהַצָּעָה"], ["בדיון", "בַּדִּיּוּן"], ["היה צורך", "הָיָה צֹרֶךְ"], ["לאשר", "לְאַשֵּׁר"], ["את השינוי", "אֶת הַשִּׁנּוּי"]], englishDistractors: ["the proposal", "was rejected", "in discussion", "the change", "needed to be", "approved"],
+    hebrewOrderAlternates: [{ text: "היה אפשר למנוע את העיכוב אילו נבחנה החלופה מראש.", textNiqqud: "הָיָה אֶפְשָׁר לִמְנֹעַ אֶת הָעִכּוּב אִלּוּ נִבְחֲנָה הַחֲלוּפָה מֵרֹאשׁ.", order: [4, 5, 6, 0, 1, 2, 3] }],
+    notes: "The passive נבחנה keeps the focus on the alternative; היה אפשר expresses a missed possibility."
+  }),
+  buildReviewedSentence({
+    id: "formal_144", emoji: "📜", category: "formal", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "לו התקיימו התנאים, ההסכם היה נכנס לתוקף.", hebrewNiqqud: "לוּ הִתְקַיְּמוּ הַתְּנָאִים, הַהֶסְכֵּם הָיָה נִכְנָס לְתֹקֶף.", english: "Had the conditions been met, the agreement would have entered into force.",
+    hebrewTokenPairs: [["לו", "לוּ"], ["התקיימו", "הִתְקַיְּמוּ"], ["התנאים", "הַתְּנָאִים"], ["ההסכם", "הַהֶסְכֵּם"], ["היה", "הָיָה"], ["נכנס", "נִכְנָס"], ["לתוקף", "לְתֹקֶף"]], englishTokens: ["Had", "the conditions", "been met", "the agreement", "would have", "entered", "into force"],
+    hebrewDistractorPairs: [["השתנו", "הִשְׁתַּנּוּ"], ["הכללים", "הַכְּלָלִים"], ["החוזה", "הַחוֹזֶה"], ["כבר", "כְּבָר"], ["יצא", "יָצָא"], ["מהתוקף", "מֵהַתֹּקֶף"]], englishDistractors: ["the rules", "changed", "the contract", "had already", "gone", "out of force"],
+    hebrewOrderAlternates: [{ text: "ההסכם היה נכנס לתוקף לו התקיימו התנאים.", textNiqqud: "הַהֶסְכֵּם הָיָה נִכְנָס לְתֹקֶף לוּ הִתְקַיְּמוּ הַתְּנָאִים.", order: [3, 4, 5, 6, 0, 1, 2] }],
+    notes: "לו is an elevated counterfactual conjunction; להיכנס לתוקף is the fixed legal expression 'to enter into force.'"
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -20078,7 +20339,8 @@ SENTENCE_BANK.push(
   ...COMPARE_FOCUS_SENTENCES,
   ...DECLINE_AUTHORITY_SENTENCES,
   ...PROVIDENCE_TRAVEL_SENTENCES,
-  ...KILL_VERB_SENTENCES
+  ...KILL_VERB_SENTENCES,
+  ...PRAGMATICS_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -20097,6 +20359,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260820a",
+  __build: "20260822b",
 };
 })(typeof window !== "undefined" ? window : globalThis);
