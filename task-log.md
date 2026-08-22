@@ -9029,3 +9029,22 @@ invisible in unpointed spelling (for example masculine/feminine readings of `ר�
 the conventional masculine pointed display; forms with a visible spelling difference are accepted
 explicitly. The longest formal counterfactuals use seven answer chips and are not Handwriting
 targets, but remain within the sentence game's supported surface limits.
+
+### 2026-08-22 18:14 EDT — Publish the sentence and handwriting updates
+
+**Requested:** Push and merge the completed translation corrections, handwriting grading fix, and
+approved pragmatics sentence tranche.
+
+**Files changed:**
+- `task-log.md` — recorded publication through GitHub pull request #83. No product, test, or
+  documentation behavior changed in this publication-only follow-up.
+
+**Behavior changed:** None beyond the two implementation entries immediately above. The complete
+changeset was committed on `codex/pragmatics-handwriting-fixes`, pushed to `origin`, and submitted
+to `main` as pull request #83 for merge after its checks complete.
+
+**Tests run:** No runtime files changed after the previously recorded final `npm test` result of
+**452 pass, 0 fail**. `git diff --check` passed before publication.
+
+**Risks / regressions to check:** Publication itself adds no new runtime risk. Confirm pull request
+#83 merges cleanly and the resulting `main` workflow/deployment completes successfully.
