@@ -692,6 +692,19 @@ Ivri 982, Inat 1,062, and Idan 1,054. Conservative vocabulary support rises
 incidentally to 1,066 exact matches out of 2,205 cards without adding or routing
 any vocabulary.
 
+### Shared intermediate practical expansion
+
+`everyday_363`–`378` add sixteen intermediate, real-world rows across listening
+repair, transit, travel, restaurants, health, housing, banking, and digital life.
+They use conditions, subordinate clauses, contrast, and temporal relationships
+rather than beginner phrasebook prompts. The same rows feed both Sentences and
+Listening; ten carry reviewed neutral Hebrew reorderings.
+
+All sixteen are unowned and unreserved, so every companion can draw them without
+changing character identity. The sentence pool is 1,254; drawable pools are Ido
+1,010, Inbal 1,090, Ivri 998, Inat 1,078, and Idan 1,070. Conservative vocabulary
+support rises incidentally to 1,073 exact matches out of 2,205 cards.
+
 Binyanim, Prepositions, and Conjugation+ stay character-neutral by decision — see the Depth standard section above for the evidence.
 
 ## Visual production

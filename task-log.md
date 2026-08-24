@@ -9048,3 +9048,47 @@ to `main` as pull request #83 for merge after its checks complete.
 
 **Risks / regressions to check:** Publication itself adds no new runtime risk. Confirm pull request
 #83 merges cleanly and the resulting `main` workflow/deployment completes successfully.
+
+### 2026-08-24 15:19 EDT — Add intermediate practical sentences to Sentences and Shema
+
+**Requested:** Propose genuinely intermediate, practical sentences for learners beyond Duolingo,
+show them for approval, and add the approved set to both the Sentences and listening games.
+
+**Files changed:**
+- `sentence-bank-data.js` — added 16 append-only `INTERMEDIATE_PRACTICAL_SENTENCES` covering
+  listening comprehension, transit disruption, travel, restaurants, health, housing, and banking.
+  The reviewed rows include pointed Hebrew, compact bilingual chips, distractors, notes, and ten
+  accepted Hebrew word-order alternatives. The sentence bank grows from 1,238 to 1,254 rows and
+  the build stamp is now `20260824a`.
+- `tests/sentence-bank-data.test.js` — registered the 16 ids and reviewed alternate orders, pinned
+  the difficulty/chip mix, extended alignment and gender checks, and updated bank/category totals.
+- `tests/character-mission.test.js` — verifies the practical tranche remains shared, unowned, and
+  drawable by every companion.
+- `tests/content-coverage.test.js` — updated the measured coverage ratchet to 1,073 exact and 1,132
+  unsupported cards after seven incidental matches from the new contexts.
+- `docs/character-gameplay-strategy.md` and `docs/product-roadmap.md` — documented the shared
+  intermediate expansion and refreshed the measured sentence, routing, and question counts.
+- `index.html` — cache-busted `sentence-bank-data.js` to `20260824a`.
+- `task-log.md` — this entry.
+
+**Behavior changed:** Sentences and Shema can now draw all 16 approved practical situations from
+the same shared bank. The rows are not assigned to a single character. Ten prompts accept a second
+natural Hebrew order in Sentences, while Shema continues to require the exact spoken order. The
+first approved meaning uses the gender-neutral `אפשר להבין` construction instead of imposing a
+male or female speaker while preserving the same comprehension challenge.
+
+**Tests run:**
+- Baseline `npm test` — **452 pass, 0 fail**.
+- `node --test tests/sentence-bank-data.test.js tests/character-mission.test.js` — **127 pass,
+  0 fail** final.
+- `npm run report:coverage` — **pass**; 2,205 cards, 1,073 exact, 0 reviewed, 1,132 unsupported.
+- `npm run report:characters` — **pass**; 1,254 sentence rows and every character draw pool remains
+  above its floor.
+- Final `npm test` — **454 pass, 0 fail**, including the 360×640 rendered gameplay check.
+- `git diff --check` — **pass**.
+
+**Risks / regressions to check:** Automated checks validate pointing skeletons, chips, buildability,
+accepted orders, routing, and the compact gameplay viewport, but they cannot judge every native
+register or TTS pronunciation choice. The longer transit, medical, housing, and banking prompts
+should receive a native-speaker language review and a real-device Hebrew voice listen before the
+next content publication.

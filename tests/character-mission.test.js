@@ -603,6 +603,34 @@ test("the neutral everyday tranche stays unowned and drawable for every companio
   });
 });
 
+test("the intermediate practical tranche stays unowned and drawable for every companion", () => {
+  const { characterData } = loadCharacterModule();
+  const bankContext = { console };
+  bankContext.window = bankContext;
+  bankContext.globalThis = bankContext;
+  vm.createContext(bankContext);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "sentence-bank-data.js"), "utf8"),
+    bankContext,
+    { filename: "sentence-bank-data.js" },
+  );
+  const byId = new Map(bankContext.IvriQuestSentenceBank.getSentenceBank().map((row) => [row.id, row]));
+  const characters = Object.values(characterData.characters);
+
+  for (let index = 363; index <= 378; index += 1) {
+    const row = byId.get(`everyday_${index}`);
+    assert.ok(row, `missing everyday_${index}`);
+    assert.equal(characterData.getItemAudience("sentence", row), null, `${row.id} must stay cast-wide`);
+    characters.forEach((entry) => {
+      assert.equal(
+        characterData.ownsItem(entry.route, "sentence", row),
+        false,
+        `${row.id} must remain unowned`,
+      );
+    });
+  }
+});
+
 test("the kitchen-action tranche stays unowned and drawable for every companion", () => {
   const { characterData } = loadCharacterModule();
   const bankContext = { console };

@@ -20308,6 +20308,167 @@ const PRAGMATICS_SENTENCES = [
   }),
 ];
 
+const INTERMEDIATE_PRACTICAL_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_363", emoji: "🧩", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר להבין את המילים בנפרד, אבל לא את המשמעות של המשפט כולו.", hebrewNiqqud: "אֶפְשָׁר לְהָבִין אֶת הַמִּלִּים בְּנִפְרָד, אֲבָל לֹא אֶת הַמַּשְׁמָעוּת שֶׁל הַמִּשְׁפָּט כֻּלּוֹ.",
+    english: "You can understand the words separately, but not the meaning of the sentence as a whole.",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["להבין", "לְהָבִין"], ["את המילים", "אֶת הַמִּלִּים"], ["בנפרד", "בְּנִפְרָד"], ["אבל לא", "אֲבָל לֹא"], ["את המשמעות", "אֶת הַמַּשְׁמָעוּת"], ["של המשפט", "שֶׁל הַמִּשְׁפָּט"], ["כולו", "כֻּלּוֹ"]],
+    englishTokens: ["You can", "understand", "the words", "separately", "but not", "the meaning", "of the sentence", "as a whole"],
+    hebrewDistractorPairs: [["אפשר גם", "אֶפְשָׁר גַּם"], ["לשמוע", "לִשְׁמֹעַ"], ["את הצלילים", "אֶת הַצְּלִילִים"], ["ביחד", "בְּיַחַד"], ["אבל כן", "אֲבָל כֵּן"], ["את הכוונה", "אֶת הַכַּוָּנָה"]],
+    englishDistractors: ["You can also", "hear", "the sounds", "together", "and understand", "the intention"],
+    notes: "The impersonal אפשר keeps the observation gender-neutral; בנפרד means separately, and כולו makes המשפט ‘the sentence as a whole.’"
+  }),
+  buildReviewedSentence({
+    id: "everyday_364", emoji: "👂", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "כשמדברים מהר, קשה לי להבחין בין המילים.", hebrewNiqqud: "כְּשֶׁמְּדַבְּרִים מַהֵר, קָשֶׁה לִי לְהַבְחִין בֵּין הַמִּלִּים.",
+    english: "When people speak quickly, I have trouble distinguishing between the words.",
+    hebrewTokenPairs: [["כשמדברים", "כְּשֶׁמְּדַבְּרִים"], ["מהר", "מַהֵר"], ["קשה לי", "קָשֶׁה לִי"], ["להבחין בין", "לְהַבְחִין בֵּין"], ["המילים", "הַמִּלִּים"]],
+    englishTokens: ["When people speak", "quickly", "I have trouble", "distinguishing between", "the words"],
+    hebrewDistractorPairs: [["כשכותבים", "כְּשֶׁכּוֹתְבִים"], ["לאט", "לְאַט"], ["קל לי", "קַל לִי"], ["להפריד בין", "לְהַפְרִיד בֵּין"], ["האותיות", "הָאוֹתִיּוֹת"]],
+    englishDistractors: ["When people write", "slowly", "it's easy for me", "to distinguish between", "the letters"],
+    hebrewOrderAlternates: [{ text: "קשה לי להבחין בין המילים כשמדברים מהר.", textNiqqud: "קָשֶׁה לִי לְהַבְחִין בֵּין הַמִּלִּים כְּשֶׁמְּדַבְּרִים מַהֵר.", order: [2, 3, 4, 0, 1] }],
+    notes: "להבחין בין is to distinguish between; the impersonal מדברים becomes generic ‘people speak.’ The situation may come before or after the difficulty."
+  }),
+  buildReviewedSentence({
+    id: "everyday_365", emoji: "🔢", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "לא הצלחתי להבין אם אמרת חמש־עשרה או חמישים.", hebrewNiqqud: "לֹא הִצְלַחְתִּי לְהָבִין אִם אָמַרְתָּ חֲמֵשׁ־עֶשְׂרֵה אוֹ חֲמִשִּׁים.",
+    english: "I couldn't tell whether you said fifteen or fifty.",
+    hebrewTokenPairs: [["לא הצלחתי", "לֹא הִצְלַחְתִּי"], ["להבין", "לְהָבִין"], ["אם", "אִם"], ["אמרת", "אָמַרְתָּ"], ["חמש־עשרה", "חֲמֵשׁ־עֶשְׂרֵה"], ["או חמישים", "אוֹ חֲמִשִּׁים"]],
+    englishTokens: ["I couldn't", "tell", "whether", "you said", "fifteen", "or fifty"],
+    hebrewDistractorPairs: [["כן הצלחתי", "כֵּן הִצְלַחְתִּי"], ["לשמוע", "לִשְׁמֹעַ"], ["מתי", "מָתַי"], ["כתבת", "כָּתַבְתָּ"], ["ארבע־עשרה", "אַרְבַּע־עֶשְׂרֵה"], ["או ארבעים", "אוֹ אַרְבָּעִים"]],
+    englishDistractors: ["I managed", "to hear", "when", "you wrote", "fourteen", "or forty"],
+    hebrewAlternates: [{ text: "לא הצלחתי להבין אם אמרת חמש־עשרה או חמישים.", textNiqqud: "לֹא הִצְלַחְתִּי לְהָבִין אִם אָמַרְתְּ חֲמֵשׁ־עֶשְׂרֵה אוֹ חֲמִשִּׁים.", tokenPairs: [["לא הצלחתי", "לֹא הִצְלַחְתִּי"], ["להבין", "לְהָבִין"], ["אם", "אִם"], ["אמרת", "אָמַרְתְּ"], ["חמש־עשרה", "חֲמֵשׁ־עֶשְׂרֵה"], ["או חמישים", "אוֹ חֲמִשִּׁים"]] }],
+    notes: "This drills a common listening contrast between חמש־עשרה, fifteen, and חמישים, fifty. Masculine and feminine addressee pointing is accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_366", emoji: "🗣️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אפשר לנסח את זה בצורה פחות רשמית?", hebrewNiqqud: "אֶפְשָׁר לְנַסֵּחַ אֶת זֶה בְּצוּרָה פָּחוֹת רִשְׁמִית?", english: "Can you phrase that in a less formal way?",
+    hebrewTokenPairs: [["אפשר", "אֶפְשָׁר"], ["לנסח", "לְנַסֵּחַ"], ["את זה", "אֶת זֶה"], ["בצורה", "בְּצוּרָה"], ["פחות רשמית", "פָּחוֹת רִשְׁמִית"]],
+    englishTokens: ["Can you", "phrase", "that", "in a less formal", "way"],
+    hebrewDistractorPairs: [["כדאי", "כְּדַאי"], ["לתרגם", "לְתַרְגֵּם"], ["אותו", "אוֹתוֹ"], ["באופן", "בְּאֹפֶן"], ["יותר מקצועי", "יוֹתֵר מִקְצוֹעִי"]],
+    englishDistractors: ["Should we", "translate", "it", "in a more professional", "manner"],
+    notes: "לנסח is to formulate or phrase wording; פחות רשמית asks for a less formal register."
+  }),
+  buildReviewedSentence({
+    id: "everyday_367", emoji: "🔄", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "באיזו תחנה צריך להחליף קו כדי להגיע לאוניברסיטה?", hebrewNiqqud: "בְּאֵיזוֹ תַּחֲנָה צָרִיךְ לְהַחֲלִיף קַו כְּדֵי לְהַגִּיעַ לָאוּנִיבֶרְסִיטָה?", english: "At which stop do I need to change lines to reach the university?",
+    hebrewTokenPairs: [["באיזו תחנה", "בְּאֵיזוֹ תַּחֲנָה"], ["צריך", "צָרִיךְ"], ["להחליף", "לְהַחֲלִיף"], ["קו", "קַו"], ["כדי להגיע", "כְּדֵי לְהַגִּיעַ"], ["לאוניברסיטה", "לָאוּנִיבֶרְסִיטָה"]],
+    englishTokens: ["At which stop", "do I need", "to change", "lines", "to reach", "the university"],
+    hebrewDistractorPairs: [["באיזה רחוב", "בְּאֵיזֶה רְחוֹב"], ["אפשר", "אֶפְשָׁר"], ["להמשיך", "לְהַמְשִׁיךְ"], ["ישר", "יָשָׁר"], ["כדי לחזור", "כְּדֵי לַחֲזֹר"], ["למלון", "לַמָּלוֹן"]],
+    englishDistractors: ["On which street", "can I", "continue", "straight", "to return", "to the hotel"],
+    hebrewOrderAlternates: [{ text: "כדי להגיע לאוניברסיטה, באיזו תחנה צריך להחליף קו?", textNiqqud: "כְּדֵי לְהַגִּיעַ לָאוּנִיבֶרְסִיטָה, בְּאֵיזוֹ תַּחֲנָה צָרִיךְ לְהַחֲלִיף קַו?", order: [4, 5, 0, 1, 2, 3] }],
+    notes: "להחליף קו means to transfer between transit lines; the destination phrase may naturally come first or last."
+  }),
+  buildReviewedSentence({
+    id: "everyday_368", emoji: "🚕", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "אם נפספס את הרכבת האחרונה, נצטרך לקחת מונית.", hebrewNiqqud: "אִם נְפַסְפֵּס אֶת הָרַכֶּבֶת הָאַחֲרוֹנָה, נִצְטָרֵךְ לָקַחַת מוֹנִית.", english: "If we miss the last train, we'll have to take a taxi.",
+    hebrewTokenPairs: [["אם", "אִם"], ["נפספס", "נְפַסְפֵּס"], ["את הרכבת", "אֶת הָרַכֶּבֶת"], ["האחרונה", "הָאַחֲרוֹנָה"], ["נצטרך", "נִצְטָרֵךְ"], ["לקחת", "לָקַחַת"], ["מונית", "מוֹנִית"]],
+    englishTokens: ["If", "we miss", "the last", "train", "we'll have to", "take", "a taxi"],
+    hebrewDistractorPairs: [["כשנגיע", "כְּשֶׁנַּגִּיעַ"], ["לאוטובוס", "לָאוֹטוֹבּוּס"], ["הראשון", "הָרִאשׁוֹן"], ["נוכל", "נוּכַל"], ["לחזור", "לַחֲזֹר"], ["ברגל", "בְּרֶגֶל"]],
+    englishDistractors: ["When we catch", "the first", "bus", "we can", "return", "on foot"],
+    hebrewOrderAlternates: [{ text: "נצטרך לקחת מונית אם נפספס את הרכבת האחרונה.", textNiqqud: "נִצְטָרֵךְ לָקַחַת מוֹנִית אִם נְפַסְפֵּס אֶת הָרַכֶּבֶת הָאַחֲרוֹנָה.", order: [4, 5, 6, 0, 1, 2, 3] }],
+    notes: "The real future condition uses future forms in both clauses; either neutral clause order is accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_369", emoji: "🚌", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "האוטובוס שינה מסלול בגלל עבודות בכביש.", hebrewNiqqud: "הָאוֹטוֹבּוּס שִׁנָּה מַסְלוּל בִּגְלַל עֲבוֹדוֹת בַּכְּבִישׁ.", english: "The bus changed its route because of roadwork.",
+    hebrewTokenPairs: [["האוטובוס", "הָאוֹטוֹבּוּס"], ["שינה", "שִׁנָּה"], ["מסלול", "מַסְלוּל"], ["בגלל", "בִּגְלַל"], ["עבודות בכביש", "עֲבוֹדוֹת בַּכְּבִישׁ"]],
+    englishTokens: ["The bus", "changed", "its route", "because of", "roadwork"],
+    hebrewDistractorPairs: [["הרכבת", "הָרַכֶּבֶת"], ["המשיכה", "הִמְשִׁיכָה"], ["כרגיל", "כָּרָגִיל"], ["למרות", "לַמְרוֹת"], ["העומס", "הָעֹמֶס"], ["בתחנה", "בַּתַּחֲנָה"]],
+    englishDistractors: ["The train", "continued", "as usual", "despite", "the crowding", "at the station"],
+    hebrewOrderAlternates: [{ text: "בגלל עבודות בכביש, האוטובוס שינה מסלול.", textNiqqud: "בִּגְלַל עֲבוֹדוֹת בַּכְּבִישׁ, הָאוֹטוֹבּוּס שִׁנָּה מַסְלוּל.", order: [3, 4, 0, 1, 2] }],
+    notes: "עבודות בכביש is roadwork; the reason may appear before or after the main clause."
+  }),
+  buildReviewedSentence({
+    id: "everyday_370", emoji: "🧳", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "המזוודה שלי לא הגיעה, למרות שטיסת ההמשך נחתה בזמן.", hebrewNiqqud: "הַמִּזְוָדָה שֶׁלִּי לֹא הִגִּיעָה, לַמְרוֹת שֶׁטִּסַת הַהֶמְשֵׁךְ נָחֲתָה בַּזְּמַן.", english: "My suitcase didn't arrive, even though my connecting flight landed on time.",
+    hebrewTokenPairs: [["המזוודה שלי", "הַמִּזְוָדָה שֶׁלִּי"], ["לא הגיעה", "לֹא הִגִּיעָה"], ["למרות", "לַמְרוֹת"], ["שטיסת ההמשך", "שֶׁטִּסַת הַהֶמְשֵׁךְ"], ["נחתה", "נָחֲתָה"], ["בזמן", "בַּזְּמַן"]],
+    englishTokens: ["My suitcase", "didn't arrive", "even though", "my connecting flight", "landed", "on time"],
+    hebrewDistractorPairs: [["התיק שלי", "הַתִּיק שֶׁלִּי"], ["כן הגיע", "כֵּן הִגִּיעַ"], ["אף על פי", "אַף עַל פִּי"], ["שהרכבת", "שֶׁהָרַכֶּבֶת"], ["יצאה", "יָצְאָה"], ["באיחור", "בְּאִחוּר"]],
+    englishDistractors: ["My bag", "did arrive", "although", "the train", "left", "late"],
+    hebrewOrderAlternates: [{ text: "למרות שטיסת ההמשך נחתה בזמן, המזוודה שלי לא הגיעה.", textNiqqud: "לַמְרוֹת שֶׁטִּסַת הַהֶמְשֵׁךְ נָחֲתָה בַּזְּמַן, הַמִּזְוָדָה שֶׁלִּי לֹא הִגִּיעָה.", order: [2, 3, 4, 5, 0, 1] }],
+    notes: "טיסת המשך is a connecting flight; למרות introduces the unexpected contrast, and either clause order is accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_371", emoji: "🍽️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "ביקשתי את הרוטב בצד, אבל המנה הגיעה איתו.", hebrewNiqqud: "בִּקַּשְׁתִּי אֶת הָרֹטֶב בַּצַּד, אֲבָל הַמָּנָה הִגִּיעָה אִתּוֹ.", english: "I asked for the sauce on the side, but the dish came with it.",
+    hebrewTokenPairs: [["ביקשתי", "בִּקַּשְׁתִּי"], ["את הרוטב", "אֶת הָרֹטֶב"], ["בצד", "בַּצַּד"], ["אבל", "אֲבָל"], ["המנה", "הַמָּנָה"], ["הגיעה איתו", "הִגִּיעָה אִתּוֹ"]],
+    englishTokens: ["I asked for", "the sauce", "on the side", "but", "the dish", "came with it"],
+    hebrewDistractorPairs: [["הזמנתי", "הִזְמַנְתִּי"], ["את הסלט", "אֶת הַסָּלָט"], ["בלי בצל", "בְּלִי בָּצָל"], ["ולכן", "וְלָכֵן"], ["המלצר", "הַמֶּלְצַר"], ["החליף אותו", "הֶחֱלִיף אוֹתוֹ"]],
+    englishDistractors: ["I ordered", "the salad", "without onion", "so", "the waiter", "replaced it"],
+    notes: "בצד is the standard restaurant request ‘on the side’; איתו means the dish arrived with the sauce."
+  }),
+  buildReviewedSentence({
+    id: "everyday_372", emoji: "📋", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "יש במנה הזאת מרכיבים שלא מופיעים בתפריט?", hebrewNiqqud: "יֵשׁ בַּמָּנָה הַזֹּאת מַרְכִּיבִים שֶׁלֹּא מוֹפִיעִים בַּתַּפְרִיט?", english: "Are there ingredients in this dish that aren't listed on the menu?",
+    hebrewTokenPairs: [["יש", "יֵשׁ"], ["במנה", "בַּמָּנָה"], ["הזאת", "הַזֹּאת"], ["מרכיבים", "מַרְכִּיבִים"], ["שלא מופיעים", "שֶׁלֹּא מוֹפִיעִים"], ["בתפריט", "בַּתַּפְרִיט"]],
+    englishTokens: ["Are there", "ingredients", "in this", "dish", "that aren't listed", "on the menu"],
+    hebrewDistractorPairs: [["אין", "אֵין"], ["במשקה", "בַּמַּשְׁקֶה"], ["ההוא", "הַהוּא"], ["חומרים", "חֳמָרִים"], ["שמפורטים", "שֶׁמְּפֹרָטִים"], ["על התווית", "עַל הַתָּוִית"]],
+    englishDistractors: ["Are there no", "substances", "in that", "drink", "that are listed", "on the label"],
+    hebrewOrderAlternates: [{ text: "במנה הזאת יש מרכיבים שלא מופיעים בתפריט?", textNiqqud: "בַּמָּנָה הַזֹּאת יֵשׁ מַרְכִּיבִים שֶׁלֹּא מוֹפִיעִים בַּתַּפְרִיט?", order: [1, 2, 0, 3, 4, 5] }],
+    notes: "מופיעים בתפריט means listed on the menu; the location phrase may precede or follow יש."
+  }),
+  buildReviewedSentence({
+    id: "everyday_373", emoji: "💊", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "מאז שהתחלתי לקחת את התרופה, יש לי בחילה וסחרחורת.", hebrewNiqqud: "מֵאָז שֶׁהִתְחַלְתִּי לָקַחַת אֶת הַתְּרוּפָה, יֵשׁ לִי בְּחִילָה וְסַחְרְחוֹרֶת.", english: "Since I started taking the medicine, I've had nausea and dizziness.",
+    hebrewTokenPairs: [["מאז שהתחלתי", "מֵאָז שֶׁהִתְחַלְתִּי"], ["לקחת", "לָקַחַת"], ["את התרופה", "אֶת הַתְּרוּפָה"], ["יש לי", "יֵשׁ לִי"], ["בחילה", "בְּחִילָה"], ["וסחרחורת", "וְסַחְרְחוֹרֶת"]],
+    englishTokens: ["Since I started", "taking", "the medicine", "I've had", "nausea", "and dizziness"],
+    hebrewDistractorPairs: [["לפני שהפסקתי", "לִפְנֵי שֶׁהִפְסַקְתִּי"], ["לשתות", "לִשְׁתּוֹת"], ["את המשקה", "אֶת הַמַּשְׁקֶה"], ["היו לי", "הָיוּ לִי"], ["כאב בטן", "כְּאֵב בֶּטֶן"], ["ופריחה", "וּפְרִיחָה"]],
+    englishDistractors: ["Before I stopped", "drinking", "the beverage", "I had", "a stomachache", "and a rash"],
+    hebrewOrderAlternates: [{ text: "יש לי בחילה וסחרחורת מאז שהתחלתי לקחת את התרופה.", textNiqqud: "יֵשׁ לִי בְּחִילָה וְסַחְרְחוֹרֶת מֵאָז שֶׁהִתְחַלְתִּי לָקַחַת אֶת הַתְּרוּפָה.", order: [3, 4, 5, 0, 1, 2] }],
+    notes: "מאז introduces a symptom that began after starting the medicine; both neutral clause orders are accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_374", emoji: "⚕️", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "האם תופעת הלוואי הזאת אמורה לחלוף מעצמה?", hebrewNiqqud: "הַאִם תּוֹפַעַת הַלְּוַאי הַזֹּאת אֲמוּרָה לַחֲלֹף מֵעַצְמָהּ?", english: "Is this side effect expected to resolve on its own?",
+    hebrewTokenPairs: [["האם", "הַאִם"], ["תופעת הלוואי", "תּוֹפַעַת הַלְּוַאי"], ["הזאת", "הַזֹּאת"], ["אמורה", "אֲמוּרָה"], ["לחלוף", "לַחֲלֹף"], ["מעצמה", "מֵעַצְמָהּ"]],
+    englishTokens: ["Is this", "side effect", "expected", "to resolve", "on", "its own"],
+    hebrewDistractorPairs: [["אולי", "אוּלַי"], ["התגובה", "הַתְּגוּבָה"], ["החדשה", "הַחֲדָשָׁה"], ["עלולה", "עֲלוּלָה"], ["להחמיר", "לְהַחְמִיר"], ["בלי טיפול", "בְּלִי טִפּוּל"]],
+    englishDistractors: ["Could", "the new", "reaction", "possibly", "worsen", "without treatment"],
+    notes: "לחלוף מעצמה means to resolve or pass on its own; אמורה asks about the expected course rather than certainty."
+  }),
+  buildReviewedSentence({
+    id: "everyday_375", emoji: "🚿", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "במהלך הצפייה בדירה שמנו לב שלחץ המים נמוך.", hebrewNiqqud: "בְּמַהֲלַךְ הַצְּפִיָּה בַּדִּירָה שַׂמְנוּ לֵב שֶׁלַּחַץ הַמַּיִם נָמוּךְ.", english: "During the apartment viewing, we noticed that the water pressure was low.",
+    hebrewTokenPairs: [["במהלך", "בְּמַהֲלַךְ"], ["הצפייה בדירה", "הַצְּפִיָּה בַּדִּירָה"], ["שמנו לב", "שַׂמְנוּ לֵב"], ["שלחץ המים", "שֶׁלַּחַץ הַמַּיִם"], ["נמוך", "נָמוּךְ"]],
+    englishTokens: ["During", "the apartment viewing", "we noticed that", "the water pressure", "was low"],
+    hebrewDistractorPairs: [["אחרי", "אַחֲרֵי"], ["המעבר", "הַמַּעֲבָר"], ["למשרד", "לַמִּשְׂרָד"], ["גילינו", "גִּלִּינוּ"], ["שהמזגן", "שֶׁהַמַּזְגָן"], ["רועש", "רוֹעֵשׁ"]],
+    englishDistractors: ["After", "the move", "to the office", "we discovered", "the air conditioner", "was noisy"],
+    hebrewOrderAlternates: [{ text: "שמנו לב שלחץ המים נמוך במהלך הצפייה בדירה.", textNiqqud: "שַׂמְנוּ לֵב שֶׁלַּחַץ הַמַּיִם נָמוּךְ בְּמַהֲלַךְ הַצְּפִיָּה בַּדִּירָה.", order: [2, 3, 4, 0, 1] }],
+    notes: "צפייה בדירה is an apartment viewing and לחץ מים is water pressure; the viewing phrase may come first or last."
+  }),
+  buildReviewedSentence({
+    id: "everyday_376", emoji: "📈", category: "everyday", difficulty: 3, wordOrderDecision: "alternates",
+    hebrew: "בעל הדירה הודיע שהעלאת שכר הדירה תיכנס לתוקף בחודש הבא.", hebrewNiqqud: "בַּעַל הַדִּירָה הוֹדִיעַ שֶׁהַעֲלָאַת שְׂכַר הַדִּירָה תִּכָּנֵס לְתֹקֶף בַּחֹדֶשׁ הַבָּא.", english: "The landlord said the rent increase would take effect next month.",
+    hebrewTokenPairs: [["בעל הדירה", "בַּעַל הַדִּירָה"], ["הודיע", "הוֹדִיעַ"], ["שהעלאת שכר הדירה", "שֶׁהַעֲלָאַת שְׂכַר הַדִּירָה"], ["תיכנס", "תִּכָּנֵס"], ["לתוקף", "לְתֹקֶף"], ["בחודש", "בַּחֹדֶשׁ"], ["הבא", "הַבָּא"]],
+    englishTokens: ["The landlord", "said", "the rent increase", "would take", "effect", "next", "month"],
+    hebrewDistractorPairs: [["שבחודש", "שֶׁבַּחֹדֶשׁ"], ["העלאת שכר הדירה", "הַעֲלָאַת שְׂכַר הַדִּירָה"], ["השוכר", "הַשּׂוֹכֵר"], ["טען", "טָעַן"], ["יישאר", "יִשָּׁאֵר"], ["ללא שינוי", "לְלֹא שִׁנּוּי"]],
+    englishDistractors: ["The tenant", "claimed", "the bill", "would remain", "unchanged", "this year"],
+    hebrewAlternates: [{ text: "בעל הדירה הודיע שבחודש הבא העלאת שכר הדירה תיכנס לתוקף.", textNiqqud: "בַּעַל הַדִּירָה הוֹדִיעַ שֶׁבַּחֹדֶשׁ הַבָּא הַעֲלָאַת שְׂכַר הַדִּירָה תִּכָּנֵס לְתֹקֶף.", tokenPairs: [["בעל הדירה", "בַּעַל הַדִּירָה"], ["הודיע", "הוֹדִיעַ"], ["שבחודש", "שֶׁבַּחֹדֶשׁ"], ["הבא", "הַבָּא"], ["העלאת שכר הדירה", "הַעֲלָאַת שְׂכַר הַדִּירָה"], ["תיכנס", "תִּכָּנֵס"], ["לתוקף", "לְתֹקֶף"]] }],
+    notes: "העלאת שכר דירה is a rent increase; להיכנס לתוקף means to take effect. The time phrase is accepted in either neutral subordinate-clause position."
+  }),
+  buildReviewedSentence({
+    id: "everyday_377", emoji: "🏧", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "הכספומט בלע את הכרטיס לפני שהספקתי למשוך כסף.", hebrewNiqqud: "הַכַּסְפּוֹמָט בָּלַע אֶת הַכַּרְטִיס לִפְנֵי שֶׁהִסְפַּקְתִּי לִמְשֹׁךְ כֶּסֶף.", english: "The ATM swallowed my card before I managed to withdraw any money.",
+    hebrewTokenPairs: [["הכספומט", "הַכַּסְפּוֹמָט"], ["בלע", "בָּלַע"], ["את הכרטיס", "אֶת הַכַּרְטִיס"], ["לפני", "לִפְנֵי"], ["שהספקתי", "שֶׁהִסְפַּקְתִּי"], ["למשוך", "לִמְשֹׁךְ"], ["כסף", "כֶּסֶף"]],
+    englishTokens: ["The ATM", "swallowed", "my card", "before", "I managed", "to withdraw", "any money"],
+    hebrewDistractorPairs: [["הקופאי", "הַקּוּפַּאי"], ["החזיר", "הֶחֱזִיר"], ["את המזומן", "אֶת הַמְּזֻמָּן"], ["אחרי", "אַחֲרֵי"], ["שניסיתי", "שֶׁנִּסִּיתִי"], ["לשלם", "לְשַׁלֵּם"]],
+    englishDistractors: ["The cashier", "returned", "the cash", "after", "I tried", "to pay"],
+    hebrewOrderAlternates: [{ text: "לפני שהספקתי למשוך כסף, הכספומט בלע את הכרטיס.", textNiqqud: "לִפְנֵי שֶׁהִסְפַּקְתִּי לִמְשֹׁךְ כֶּסֶף, הַכַּסְפּוֹמָט בָּלַע אֶת הַכַּרְטִיס.", order: [3, 4, 5, 6, 0, 1, 2] }],
+    notes: "למשוך כסף is to withdraw money; לפני שהספקתי means before I managed to do it. Both clause orders are accepted."
+  }),
+  buildReviewedSentence({
+    id: "everyday_378", emoji: "🔐", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הקוד החד־פעמי פג לפני שהספקתי להזין אותו.", hebrewNiqqud: "הַקּוֹד הַחַד־פַּעֲמִי פָּג לִפְנֵי שֶׁהִסְפַּקְתִּי לְהָזִין אוֹתוֹ.", english: "The one-time code expired before I managed to enter it.",
+    hebrewTokenPairs: [["הקוד החד־פעמי", "הַקּוֹד הַחַד־פַּעֲמִי"], ["פג", "פָּג"], ["לפני", "לִפְנֵי"], ["שהספקתי", "שֶׁהִסְפַּקְתִּי"], ["להזין אותו", "לְהָזִין אוֹתוֹ"]],
+    englishTokens: ["The one-time code", "expired", "before", "I managed", "to enter it"],
+    hebrewDistractorPairs: [["הסיסמה", "הַסִּסְמָה"], ["הזמנית", "הַזְּמַנִּית"], ["נשמרה", "נִשְׁמְרָה"], ["אחרי", "אַחֲרֵי"], ["שהצלחתי", "שֶׁהִצְלַחְתִּי"], ["לשנות אותה", "לְשַׁנּוֹת אוֹתָהּ"]],
+    englishDistractors: ["The temporary", "password", "was saved", "after", "I was able", "to change it"],
+    notes: "קוד חד־פעמי is a one-time code; פג means expired, and להזין is to enter information into a system."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -20340,7 +20501,8 @@ SENTENCE_BANK.push(
   ...DECLINE_AUTHORITY_SENTENCES,
   ...PROVIDENCE_TRAVEL_SENTENCES,
   ...KILL_VERB_SENTENCES,
-  ...PRAGMATICS_SENTENCES
+  ...PRAGMATICS_SENTENCES,
+  ...INTERMEDIATE_PRACTICAL_SENTENCES
 );
 
 function cloneSentence(item) {
@@ -20359,6 +20521,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260822b",
+  __build: "20260824a",
 };
 })(typeof window !== "undefined" ? window : globalThis);
