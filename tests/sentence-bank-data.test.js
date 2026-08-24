@@ -554,6 +554,7 @@ const PRAGMATICS_ENTRY_IDS = [
   ...PRAGMATICS_REQUEST_ENTRY_IDS,
   ...PRAGMATICS_CONDITION_ENTRY_IDS,
 ];
+const INTERMEDIATE_PRACTICAL_ENTRY_IDS = sentenceIdRange("everyday", 363, 378);
 
 const COMPACT_TOKEN_POLICY_START = Object.freeze({
   colloquial: 140,
@@ -564,9 +565,9 @@ const COMPACT_TOKEN_POLICY_START = Object.freeze({
 
 const ENGLISH_FUNCTION_WORDS = new Set(`
   a an the and or but nor for so yet as at by from in into of on onto to under over
-  with within without about after before during through while because although if when
+  with within without about after before during through while because although though if since when
   whether that this these those my your his her its our their i me we us you he him she
-  it they them one ones is am are was were be been being do does did have has had
+  it they them one ones is am are arent was were be been being do does did didnt have has had
   can could may might must shall should will would not no than then there here up out off
   just only more most less least very already still every each all any some another other
   which who whom whose what where why how according following based due like outside beyond
@@ -1203,6 +1204,13 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     default setting
     divine providence
     round trip
+    side effect
+    connecting flight
+    apartment viewing
+    water pressure
+    air conditioner
+    rent increase
+    time code
   `, "term: recognized multiword vocabulary unit"),
 ]);
 
@@ -1222,6 +1230,10 @@ const COMPACT_ENGLISH_CONTEXT_EXCEPTIONS = new Map([
   [compactTokenExceptionKey("idan_125", "target", "asked to see"), "grammar: English control construction mirrors the Hebrew verb pair"],
   [compactTokenExceptionKey("idan_125", "distractor", "refused to accept"), "grammar: English control construction mirrors the Hebrew verb pair"],
   [compactTokenExceptionKey("everyday_276", "target", "a word’s form"), "grammar: English possessive realizes the Hebrew construct phrase צורת המילה"],
+  [compactTokenExceptionKey("everyday_364", "target", "When people speak"), "grammar: impersonal Hebrew verb needs a generic English subject"],
+  [compactTokenExceptionKey("everyday_364", "target", "distinguishing between"), "grammar: valency-bound between stays with distinguish"],
+  [compactTokenExceptionKey("everyday_364", "distractor", "When people write"), "grammar: impersonal Hebrew verb needs a generic English subject"],
+  [compactTokenExceptionKey("everyday_364", "distractor", "to distinguish between"), "grammar: valency-bound between stays with distinguish"],
 ]);
 
 // Keep empty unless Hebrew and English genuinely cannot express a natural row
@@ -1286,6 +1298,16 @@ const WORD_ORDER_AUDIT_ALTERNATE_TEXTS = {
   professional_226: ["היינו מסיימים את הדוח אילו קיבלנו את הנתונים בזמן."],
   formal_143: ["היה אפשר למנוע את העיכוב אילו נבחנה החלופה מראש."],
   formal_144: ["ההסכם היה נכנס לתוקף לו התקיימו התנאים."],
+  everyday_364: ["קשה לי להבחין בין המילים כשמדברים מהר."],
+  everyday_367: ["כדי להגיע לאוניברסיטה, באיזו תחנה צריך להחליף קו?"],
+  everyday_368: ["נצטרך לקחת מונית אם נפספס את הרכבת האחרונה."],
+  everyday_369: ["בגלל עבודות בכביש, האוטובוס שינה מסלול."],
+  everyday_370: ["למרות שטיסת ההמשך נחתה בזמן, המזוודה שלי לא הגיעה."],
+  everyday_372: ["במנה הזאת יש מרכיבים שלא מופיעים בתפריט?"],
+  everyday_373: ["יש לי בחילה וסחרחורת מאז שהתחלתי לקחת את התרופה."],
+  everyday_375: ["שמנו לב שלחץ המים נמוך במהלך הצפייה בדירה."],
+  everyday_376: ["בעל הדירה הודיע שבחודש הבא העלאת שכר הדירה תיכנס לתוקף."],
+  everyday_377: ["לפני שהספקתי למשוך כסף, הכספומט בלע את הכרטיס."],
   everyday_31: ["מחר בבוקר אצטרך לקום מוקדם."],
   everyday_72: ["מחר בבוקר הטכנאי יגיע לתקן את המקרר."],
   everyday_83: ["היום חם מאוד, קחי כובע ובקבוק מים."],
@@ -1451,6 +1473,7 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_361",
   "everyday_362",
   "professional_226",
+  "everyday_365",
   // Round-4 expansion gender alternates
   "colloquial_106",
   "colloquial_114",
@@ -1465,15 +1488,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,238 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,254 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1238);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1238);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1238);
+  assert.equal(entries.length, 1254);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1254);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1254);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1583,10 +1606,11 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // tranche adds 12: 5 professional, 4 formal, 3 everyday. The
   // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
   // The kill-verb tranche adds 2, both everyday and both idan_. The pragmatics
-  // tranche adds 30: 6 colloquial and 8 in each other register.
+  // tranche adds 30: 6 colloquial and 8 in each other register. The intermediate
+  // practical tranche adds 16 shared everyday rows.
   assert.deepEqual(categoryCounts, {
     colloquial: 266,
-    everyday: 550,
+    everyday: 566,
     professional: 242,
     formal: 180,
   });
@@ -1996,6 +2020,24 @@ test("the pragmatics tranche adds ten questions, ten requests, and ten condition
   });
 });
 
+test("the intermediate practical tranche adds sixteen reviewed everyday rows", () => {
+  const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
+  const entries = INTERMEDIATE_PRACTICAL_ENTRY_IDS.map((id) => byId.get(id));
+
+  assert.equal(entries.length, 16);
+  assert.ok(entries.every(Boolean));
+  assert.ok(entries.every((entry) => entry.category === "everyday"));
+  assert.deepEqual(
+    entries.reduce((counts, entry) => {
+      counts[entry.difficulty] = (counts[entry.difficulty] || 0) + 1;
+      return counts;
+    }, {}),
+    { 2: 13, 3: 3 },
+  );
+  assert.equal(entries.filter((entry) => entry.hebrew_order_review === "alternates").length, 10);
+  assert.ok(entries.every((entry) => entry.hebrew_tokens.length >= 5 && entry.hebrew_tokens.length <= 8));
+});
+
 test("the future tranche fills the conjugation slots the bank had left empty", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   const has = (id, token) => byId.get(id).hebrew_tokens.includes(token);
@@ -2072,6 +2114,7 @@ test("sentence bank expansion keeps text, niqqud, chips, distractors, and altern
     ...PROVIDENCE_TRAVEL_ENTRY_IDS,
     ...KILL_VERB_ENTRY_IDS,
     ...PRAGMATICS_ENTRY_IDS,
+    ...INTERMEDIATE_PRACTICAL_ENTRY_IDS,
   ].forEach((id) => {
     const entry = byId.get(id);
     assert.ok(entry, `missing expansion entry ${id}`);
@@ -2446,14 +2489,13 @@ test("approved word-order audit rows keep every reviewed Hebrew order buildable"
       const alternate = entry.hebrew_alternates.find((variant) => variant.text === expectedText);
       assert.ok(alternate, `${id} needs reviewed order: ${expectedText}`);
       assert.equal(alternate.tokens.length, entry.hebrew_tokens.length, `${id} alternate target length`);
-      // A reordering may not introduce new lexical content, but the coordinating
-      // vav is a clitic: when two coordinated nouns swap, it detaches from one and
-      // attaches to the other. Compare without it so that movement is allowed while
-      // any genuinely new word still fails.
-      const withoutLeadingVav = (tokens) => [...tokens].map((token) => token.replace(/^ו/, "")).sort();
+      // A reordering may not introduce new lexical content, but attached ו־ and ש־
+      // can move with the unit they introduce. Compare without those clitics so
+      // that movement is allowed while any genuinely new word still fails.
+      const withoutMovableClitic = (tokens) => [...tokens].map((token) => token.replace(/^[וש]/, "")).sort();
       assert.deepEqual(
-        withoutLeadingVav(alternate.tokens),
-        withoutLeadingVav(entry.hebrew_tokens),
+        withoutMovableClitic(alternate.tokens),
+        withoutMovableClitic(entry.hebrew_tokens),
         `${id} reviewed order must reuse the primary tiles`
       );
       assert.equal(alternate.tokens_niqqud.length, alternate.tokens.length, `${id} alternate niqqud alignment`);

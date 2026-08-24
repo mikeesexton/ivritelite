@@ -58,10 +58,11 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   // across with idan_130, so exact rises by two while unsupported falls by one.
   // Both rows carry the headword form itself, per the trap above. The shared
   // pragmatics tranche adds no vocabulary but incidentally gives three existing
-  // cards an exact sentence context.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1066);
+  // cards an exact sentence context. The shared intermediate-practical tranche
+  // then gives seven more existing cards an exact context.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1073);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1139);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1132);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {

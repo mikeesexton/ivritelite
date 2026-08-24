@@ -834,7 +834,7 @@ absence was established.
 | 3 | Passive binyanim as living morphology | 1 | pual/hufal appear only as 3ms-past recognition tiles; zero hits in vocab/verbs/sentences | C-deferred (nifal wedge first) |
 | 4 | שם פעולה / verbal nouns unlinked | 1 | ~193 pattern nouns exist as unrelated cards; no verbal-noun field on any verb | Deferred (27 pairs, ~65% precision) |
 | 5 | Number *agreement* (gender polarity, counting form) and clock/date idiom | 2 | polarity and `שלושת` undrillable — no gendered-noun data; clock time in 3 of 608 sentences. **Not** "cannot count": bare cardinals are deliberately out of scope | **C3**, optional |
-| 6 | Question words; `האם` formal questions | 2 | `האם` now appears in 12 of 1,238 sentences, including a dedicated 10-question cohort; question-word production remains | **`PRAGMATICS_SENTENCES`** (yes/no); C-deferred (question words) |
+| 6 | Question words; `האם` formal questions | 2 | `האם` now appears in 13 of 1,254 sentences, including a dedicated 10-question cohort; question-word production remains | **`PRAGMATICS_SENTENCES`** (yes/no); C-deferred (question words) |
 | 7 | Quantifiers | 2 | 0 cards; 30 incidental sentence uses | C-deferred |
 | 8 | Comparatives / superlatives | 2 | No paradigm; 22 incidental sentence uses | C-deferred |
 | 9 | Modals | 2 | 5 cards; `צריך`/`יכול`/`חייב`/`אפשר` = 0, `צריך` deliberately removed | C-deferred (inflection split + `היה`) |
