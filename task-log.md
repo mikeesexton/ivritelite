@@ -9092,3 +9092,22 @@ accepted orders, routing, and the compact gameplay viewport, but they cannot jud
 register or TTS pronunciation choice. The longer transit, medical, housing, and banking prompts
 should receive a native-speaker language review and a real-device Hebrew voice listen before the
 next content publication.
+
+### 2026-08-24 15:56 EDT — Publish the intermediate practical sentence expansion
+
+**Requested:** Push and merge the completed intermediate practical sentence work.
+
+**Files changed:**
+- `task-log.md` — recorded publication through GitHub pull request #84. No product, test, or
+  documentation behavior changed in this publication-only follow-up.
+
+**Behavior changed:** None beyond the implementation entry immediately above. Commit `5525f98`
+was pushed on `codex/intermediate-practical-sentences`; pull request #84 passed its required test
+workflow and merged into `main` as `57a60f3`.
+
+**Tests run:** GitHub's required `test` workflow — **pass** in 2m59s. No runtime files changed after
+the previously recorded final local `npm test` result of **454 pass, 0 fail**. `git diff --check`
+passed before publication.
+
+**Risks / regressions to check:** Publication itself adds no new runtime risk. Confirm the Pages
+deployment from merge commit `57a60f3` completes successfully.
