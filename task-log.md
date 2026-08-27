@@ -9213,3 +9213,23 @@ policy, and free play can surface all of them. The strict filter may return an e
 artificially narrowed all-reserved pool, but production filtering now happens before narrowing and
 the measured full pools are hundreds of items above each session size. No route, reserve list,
 progress schema, stored progress record, or sentence content changed.
+
+### 2026-08-27 16:10 EDT — Publish the IvritElite fixes and strict routing policy
+
+**Requested:** Push and merge the completed layout, terminology, conjugation, and strict
+character-fencing changes.
+
+**Files changed:**
+- `task-log.md` — recorded publication through GitHub pull request #85. No runtime, content, test,
+  or routing behavior changed in this publication-only follow-up.
+
+**Behavior changed:** None beyond the two implementation entries immediately above. Commit
+`9368636` was pushed on `codex/ivritelite-routing-fixes`; pull request #85 passed its required
+test workflow and merged into `main` as `b8b63a0`.
+
+**Tests run:** GitHub's required `test` workflow — **pass** in 3m13s. No runtime files changed
+after the previously recorded final local `npm test` result of **457 pass, 0 fail**.
+`git diff --check` passed before publication.
+
+**Risks / regressions to check:** Publication itself adds no runtime risk. Confirm the GitHub Pages
+deployment from merge commit `b8b63a0` completes successfully.
