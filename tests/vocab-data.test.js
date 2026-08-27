@@ -103,6 +103,23 @@ test("logical and researcher vocabulary is available for translation", () => {
   assert.equal(entriesByHebrew.get("חוקר")?.availability?.translationQuiz, true);
 });
 
+test("hotline vocabulary distinguishes a hotline, call center, and emergency hotline", () => {
+  const byEnglish = new Map(loadVocabulary().map((word) => [word.en, word]));
+  const hotline = byEnglish.get("hotline");
+  const callCenter = byEnglish.get("call center");
+  const emergencyHotline = byEnglish.get("emergency hotline");
+
+  assert.equal(hotline?.id, "bureaucracy-053-hotline");
+  assert.equal(hotline?.he, "קו חם");
+  assert.equal(hotline?.heNiqqud, "קַו חַם");
+  assert.equal(callCenter?.id, "bureaucracy-091-call-center");
+  assert.equal(callCenter?.he, "מוקד טלפוני");
+  assert.equal(callCenter?.heNiqqud, "מוֹקֵד טֵלֵפוֹנִי");
+  assert.equal(emergencyHotline?.id, "civil_defense_safety-038-emergency-hotline");
+  assert.equal(emergencyHotline?.he, "קו חירום");
+  assert.equal(emergencyHotline?.heNiqqud, "קַו חֵירוּם");
+});
+
 test("commitment uses the correct spelling and never adds the misspelled variant", () => {
   const vocabulary = loadVocabulary();
   const entriesByHebrew = new Map(vocabulary.map((word) => [word.he, word]));
@@ -210,8 +227,8 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2205);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2116);
+  assert.equal(vocabulary.length, 2206);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2117);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,

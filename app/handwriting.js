@@ -194,7 +194,6 @@ function buildSentenceRounds() {
   // from firing even though this is the narrowest pool in the app.
   const allowed = app.character?.filterWithheldContent?.("sentence", usable, {
     getItem: (entry) => entry.source,
-    isSeen: (entry) => app.sentenceBank?.hasSentenceProgress?.(entry.sentenceId) === true,
   }) || usable;
 
   const count = Math.min(target, allowed.length);

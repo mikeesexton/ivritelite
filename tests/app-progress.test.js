@@ -1565,7 +1565,8 @@ test("sentence builder base layout trims prompt, board, and feedback spacing wit
   assert.match(styles, /\.sentence-answer-line\s*\{[^}]*min-height:\s*2\.9rem;[^}]*line-height:\s*1\.68;/s);
   assert.match(styles, /\.sentence-token-bank\s*\{[^}]*gap:\s*0\.44rem 0\.34rem;/s);
   assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*font-size:\s*0\.8rem;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.64rem 0\.8rem 0\.68rem;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.8rem;/s);
+  assert.doesNotMatch(styles, /\.lesson-shell\.mode-sentence-bank \.feedback-items:not\(\.hidden\)\s*\{/s);
 });
 
 test("binyanim function hint fits long revealed labels", () => {
@@ -1588,7 +1589,7 @@ test("sentence builder mobile breakpoint uses smaller sentence tokens and a tigh
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.34rem,\s*5\.9vw,\s*1\.66rem\);/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.lesson-footer\s*\{[^}]*bottom:\s*calc\(4\.05rem \+ env\(safe-area-inset-bottom\)\);[^}]*gap:\s*0\.34rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.52rem 0\.66rem 0\.58rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.66rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*50px;[^}]*font-size:\s*0\.96rem;/s);
 });
 
@@ -1599,7 +1600,7 @@ test("sentence builder short mobile breakpoint adds an extra compaction step", (
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.24rem,\s*5\.3vw,\s*1\.48rem\);/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*36px;[^}]*padding:\s*0\.28rem 0\.56rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.86rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.46rem 0\.6rem 0\.5rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.6rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*46px;[^}]*font-size:\s*0\.92rem;/s);
 });
 

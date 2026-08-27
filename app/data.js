@@ -232,14 +232,11 @@ data.pickBestWord = data.pickBestWord || function pickBestWord(pool, usedWordIds
   const runtime = getRuntime();
   const weightedRandomWord = getUtils().weightedRandomWord;
   const now = Date.now();
-  const freshPool = usedWordIds.length < pool.length ? pool.filter((word) => !usedWordIds.includes(word.id)) : pool;
-  // Before the due split, not after: an unmet card counts as due, so filtering
-  // later would let a withheld card shrink the due set it can never be drawn from.
-  const allowed = app.character?.filterWithheldContent?.("vocab", freshPool, {
-    isSeen: (word) => data.hasWordProgress(word.id),
-  }) || freshPool;
-  const due = data.getDueWords(allowed, now);
-  const set = due.length ? due : allowed;
+  const allowed = app.character?.filterWithheldContent?.("vocab", pool) || pool;
+  const unused = allowed.filter((word) => !usedWordIds.includes(word.id));
+  const freshPool = unused.length ? unused : allowed;
+  const due = data.getDueWords(freshPool, now);
+  const set = due.length ? due : freshPool;
   const maxLevel = runtime.constants.LEITNER_INTERVALS.length - 1;
 
   const characterWeigher = app.character?.buildContentWeigher?.("vocab", set) || (() => 1);
@@ -336,16 +333,6 @@ data.getMissCountForRecord = data.getMissCountForRecord || function getMissCount
     return Math.round(explicit);
   }
   return Math.max(0, attempts - correct);
-};
-
-// Whether the learner has already met this card, in any mode. The character
-// withholding layer exempts met material so a reserved card the learner saw on
-// its owner's day keeps its Leitner interval. Counters rather than key presence:
-// getProgressRecord synthesises a zero record for any id. `conjugationAttempts`
-// matters because a card first met in Conjugation has no `attempts`.
-data.hasWordProgress = data.hasWordProgress || function hasWordProgress(wordId) {
-  const rec = data.getProgressRecord(wordId);
-  return rec.attempts > 0 || rec.conjugationAttempts > 0 || rec.mastered === true;
 };
 
 data.getDueWords = data.getDueWords || function getDueWords(pool, now = Date.now()) {

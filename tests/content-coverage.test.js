@@ -39,7 +39,7 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = coverage.buildCoverageReport(coverage.loadProductionContent());
-  assert.equal(report.records.length, 2205);
+  assert.equal(report.records.length, 2206);
   // The four coverage tranches pulled twelve more vocabulary cards from
   // unsupported into exact by giving them a sentence context.
   //
@@ -59,10 +59,11 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   // Both rows carry the headword form itself, per the trap above. The shared
   // pragmatics tranche adds no vocabulary but incidentally gives three existing
   // cards an exact sentence context. The shared intermediate-practical tranche
-  // then gives seven more existing cards an exact context.
+  // then gives seven more existing cards an exact context. The appended מוקד
+  // טלפוני card remains unsupported because formal_130 teaches מוקד ארצי instead.
   assert.equal(report.records.filter((record) => record.status === "exact").length, 1073);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
-  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1132);
+  assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1133);
 });
 
 test("kitchen-action sentences give every selected cooking verb its intended exact context", () => {

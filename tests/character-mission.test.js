@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260820b/);
+  assert.match(indexHtml, /styles\.css\?v=20260827a/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -519,7 +519,7 @@ test("military abbreviations belong to Idan alone", () => {
 });
 
 // Routing has two layers: a boost, tested above, and a fence. Content strongly
-// coded to one character is withheld from the rest as new material, so a siren
+// coded to one character is withheld from the rest, so a siren
 // or a coalition row stops arriving as neutral filler in someone else's mission.
 test("strongly coded content is withheld from the rest of the cast", () => {
   const { character, app } = loadCharacterModule();
@@ -961,25 +961,26 @@ test("a deliberately multi-owner row stays available to both owners", () => {
   assert.equal(character.isContentWithheld("sentence", evilEye), true);
 });
 
-// Withholding applies to new material only. A row the learner already met keeps
-// its Leitner interval and may return under any character.
-test("already-met content is exempt from withholding", () => {
+test("reviewed content stays fenced across every reservable content type", () => {
   const { character, app } = loadCharacterModule();
   app.runtime.characterState = { dailyChoice: "ido", mission: { active: true } };
+  const reserved = [
+    ["sentence", { id: "colloquial_144", category: "colloquial" }],
+    ["vocab", { category: "military_operational", he: "שירות מילואים" }],
+    ["abbreviation", { id: "abbr-144" }],
+    ["verb", { id: "advanced-verb-laharog--sense-1" }],
+  ];
+
+  reserved.forEach(([kind, item]) => {
+    assert.deepEqual(
+      character.filterWithheldContent(kind, [item], { isSeen: () => true }),
+      [],
+      `${kind} review progress must not reopen its character fence`,
+    );
+  });
+
   const rows = [{ id: "idan_01", category: "everyday" }, { id: "colloquial_01", category: "colloquial" }];
-
-  assert.deepEqual(
-    character.filterWithheldContent("sentence", rows, { isSeen: () => false }).map((row) => row.id),
-    ["colloquial_01"],
-  );
-  assert.deepEqual(
-    character.filterWithheldContent("sentence", rows, { isSeen: () => true }).map((row) => row.id),
-    ["idan_01", "colloquial_01"],
-  );
-
-  // A pool with nothing left must fall back rather than starve the mode.
-  const fenced = [{ id: "idan_01", category: "everyday" }, { id: "idan_29", category: "everyday" }];
-  assert.deepEqual(character.filterWithheldContent("sentence", fenced), fenced);
+  assert.deepEqual(character.filterWithheldContent("sentence", rows).map((row) => row.id), ["colloquial_01"]);
 
   // Free play draws the whole course.
   app.runtime.characterState.dailyChoice = "free";
@@ -1044,6 +1045,15 @@ test("every content draw site applies the withholding filter", () => {
   ].forEach((modulePath) => {
     const source = fs.readFileSync(path.join(PROJECT_ROOT, modulePath), "utf8");
     assert.match(source, /filterWithheldContent\?\.\(/, `${modulePath} must filter withheld content`);
+    assert.doesNotMatch(source, /\bisSeen\b/, `${modulePath} must not exempt reviewed content`);
+  });
+
+  ["app/data.js", "app/sentence-bank.js", "app/abbreviation.js"].forEach((modulePath) => {
+    const source = fs.readFileSync(path.join(PROJECT_ROOT, modulePath), "utf8");
+    assert.ok(
+      source.indexOf("filterWithheldContent?.(") < source.indexOf("const unused ="),
+      `${modulePath} must fence the full pool before excluding used items`,
+    );
   });
 });
 

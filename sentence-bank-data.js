@@ -19992,10 +19992,10 @@ const HEALTH_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "formal_130", emoji: "🚨", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
-    hebrew: "במקרה חירום יש לפנות למוקד הארצי.", hebrewNiqqud: "בְּמִקְרֵה חֵרוּם יֵשׁ לִפְנוֹת לַמּוֹקֵד הָאַרְצִי.", english: "In an emergency one should turn to the national hotline.",
-    hebrewTokenPairs: [["במקרה חירום", "בְּמִקְרֵה חֵרוּם"], ["יש", "יֵשׁ"], ["לפנות", "לִפְנוֹת"], ["למוקד", "לַמּוֹקֵד"], ["הארצי", "הָאַרְצִי"]], englishTokens: ["In an emergency", "one should", "turn", "to the national", "hotline"],
-    hebrewDistractorPairs: [["במצב רגיל", "בְּמַצָּב רָגִיל"], ["אפשר", "אֶפְשָׁר"], ["לגשת", "לָגֶשֶׁת"], ["לסניף", "לַסְּנִיף"], ["המקומי", "הַמְּקוֹמִי"]], englishDistractors: ["Normally", "it is possible", "to approach", "to the local", "branch"],
-    notes: "יש plus an infinitive is the impersonal 'one should' of official notices."
+    hebrew: "במקרה חירום יש לפנות למוקד הארצי.", hebrewNiqqud: "בְּמִקְרֵה חֵרוּם יֵשׁ לִפְנוֹת לַמּוֹקֵד הָאַרְצִי.", english: "In an emergency one should contact the national call center.",
+    hebrewTokenPairs: [["במקרה חירום", "בְּמִקְרֵה חֵרוּם"], ["יש", "יֵשׁ"], ["לפנות", "לִפְנוֹת"], ["למוקד", "לַמּוֹקֵד"], ["הארצי", "הָאַרְצִי"]], englishTokens: ["In an emergency", "one should", "contact", "the national", "call center"],
+    hebrewDistractorPairs: [["במצב רגיל", "בְּמַצָּב רָגִיל"], ["אפשר", "אֶפְשָׁר"], ["לגשת", "לָגֶשֶׁת"], ["לסניף", "לַסְּנִיף"], ["המקומי", "הַמְּקוֹמִי"]], englishDistractors: ["Normally", "one can", "go", "to the local", "branch"],
+    notes: "יש plus an infinitive is the impersonal 'one should' of official notices. מוקד ארצי is a national call center; קו חם is a general hotline, while קו חירום is specifically an emergency hotline."
   }),
   buildReviewedSentence({
     id: "everyday_340", emoji: "🦷", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",

@@ -56,7 +56,7 @@ function buildReport() {
       pool.kind,
       pool.items.filter((item) => ownsItem(entry.route, pool.kind, item)).length,
     ])),
-    // What the picker may actually draw for this character as new material:
+    // What the picker may actually draw for this character:
     // the pool minus everything reserved to somebody else.
     available: Object.fromEntries(pools.map((pool) => [
       pool.kind,
@@ -118,7 +118,7 @@ function render({ pools, rows, unowned, multiOwned, fenced }) {
 
   // The counts above are ownership, which is what the depth-standard floors in
   // docs/character-gameplay-strategy.md are measured on. This second table is the
-  // draw pool: what the picker may serve as new material once content reserved to
+  // draw pool: what the picker may serve once content reserved to
   // another character is withheld. Watch it for a character being starved.
   lines.push("");
   lines.push("Draw pool after withholding");
