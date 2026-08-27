@@ -110,7 +110,6 @@ verbMatch.pickVerbMatchQueue = verbMatch.pickVerbMatchQueue || function pickVerb
   // doing nothing.
   const allowed = app.character?.filterWithheldContent?.("verb", deck, {
     getItem: (entry) => ({ id: entry?.id || entry?.word?.id || "" }),
-    isSeen: (entry) => data.hasWordProgress?.(entry?.id || entry?.word?.id || "") === true,
   }) || deck;
   const characterWeigher = app.character?.buildContentWeigher?.(
     "verb",

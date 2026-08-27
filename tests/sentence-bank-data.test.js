@@ -595,6 +595,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     annual growth
     budget analysis
     business relationship
+    call center
     central government
     centrist parties
     city limits
@@ -2214,6 +2215,22 @@ test("sentence bank includes requested lips and two-languages examples", () => {
   const byId = new Map(loadSentenceBankApi().getSentenceBank().map((entry) => [entry.id, entry]));
   assert.match(byId.get("everyday_137")?.hebrew || "", /שפתיים/);
   assert.match(byId.get("everyday_138")?.hebrew || "", /שתי שפות/);
+});
+
+test("formal_130 teaches national call center separately from hotline vocabulary", () => {
+  const row = loadSentenceBankApi().getSentenceBank().find((entry) => entry.id === "formal_130");
+
+  assert.ok(row);
+  assert.equal(row.english, "In an emergency one should contact the national call center.");
+  assert.deepEqual(Array.from(row.english_tokens), [
+    "In an emergency", "one should", "contact", "the national", "call center",
+  ]);
+  assert.deepEqual(Array.from(row.english_distractors), [
+    "Normally", "one can", "go", "to the local", "branch",
+  ]);
+  assert.match(row.notes, /מוקד ארצי is a national call center/);
+  assert.match(row.notes, /קו חם is a general hotline/);
+  assert.match(row.notes, /קו חירום is specifically an emergency hotline/);
 });
 
 test("political sentence expansion has 50 aligned, broad, non-graphic learning rows", () => {

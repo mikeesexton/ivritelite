@@ -770,6 +770,38 @@ test("past-tense English labels inflect phrasal and copular glosses correctly", 
   assert.equal(labelFor("להתלבש", "past_first_person_plural"), "we got dressed");
 });
 
+test("past-tense English labels use the audited irregular and doubled forms", () => {
+  const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
+  const expectedByLemma = new Map([
+    ["לפוצץ", "blew up"],
+    ["לבאס", "bummed out"],
+    ["להפיל", "dropped"],
+    ["להעיף", "flung"],
+    ["להאיר", "lit up"],
+    ["לסחוב", "lugged"],
+    ["לאפס", "reset (past)"],
+    ["לסובב", "spun"],
+    ["לגנוב", "stole"],
+    ["לדרוך", "stepped"],
+    ["להגיש", "submitted"],
+    ["לקרוע", "tore"],
+    ["לזרוק", "threw"],
+    ["להעביר", "transferred"],
+  ]);
+
+  expectedByLemma.forEach((expected, lemma) => {
+    const item = deck.find((entry) => entry.word.he.startsWith(lemma));
+    assert.ok(item, `missing conjugation item for ${lemma}`);
+    const pastLabels = item.forms
+      .filter((form) => form.id.startsWith("past_"))
+      .map((form) => form.englishText);
+    assert.equal(pastLabels.length, 9, `${lemma} should expose all nine past slots`);
+    pastLabels.forEach((label) => {
+      assert.ok(label.endsWith(expected), `${lemma} produced ${label}; expected ${expected}`);
+    });
+  });
+});
+
 test("starter run verb appears in conjugation with the expected English labels", () => {
   const deck = verbApi.buildVerbConjugationDeck({ vocabulary: [] });
   const item = deck.find((entry) => entry.id === "starter-verb-larutz--sense-1");

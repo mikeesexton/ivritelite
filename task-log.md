@@ -9111,3 +9111,105 @@ passed before publication.
 
 **Risks / regressions to check:** Publication itself adds no new runtime risk. Confirm the Pages
 deployment from merge commit `57a60f3` completes successfully.
+
+### 2026-08-27 15:49 EDT — Fix Sentence Builder spacing, hotline terminology, and past-tense labels
+
+**Requested:** Give the Sentence Builder feedback box even inset spacing; distinguish `hotline`,
+`call center`, and `emergency hotline`; correct `dropped` and scan the conjugation game for other
+bad English past forms. Defer every occupation/Inat routing or taxonomy change to a later round.
+
+**Files changed:**
+- `styles.css` — made feedback-tray padding equal on all four sides at the base, mobile, and
+  short-mobile breakpoints and removed the feedback item's extra bottom-padding workaround.
+- `vocab-data.js` — kept the existing `hotline` ID while changing its Hebrew to `קו חם` /
+  `קַו חַם`; appended `call center` ↔ `מוקד טלפוני` / `מוֹקֵד טֵלֵפוֹנִי` as the new tail of the
+  bureaucracy shelf; left `emergency hotline` ↔ `קו חירום` unchanged.
+- `sentence-bank-data.js` — revised `formal_130` to “In an emergency one should contact the
+  national call center,” with matching chips, natural distractors, and a note distinguishing the
+  three terms.
+- `hebrew-verbs.js` — added explicit shared past forms for `blew`, `bummed`, `dropped`, `flung`,
+  `lit`, `lugged`, `reset`, `spun`, `stole`, `stepped`, `submitted`, `tore`, `threw`, and
+  `transferred`.
+- `tests/vocab-data.test.js`, `tests/fixtures/vocab-id-baseline.json`,
+  `tests/sentence-bank-data.test.js`, `tests/hebrew-verbs.test.js`, `tests/app-progress.test.js`,
+  `tests/gameplay-layout.test.js`, `tests/character-mission.test.js`, and
+  `tests/content-coverage.test.js` — added terminology, stable-ID, sentence, table-driven
+  conjugation, cache-key, CSS, and computed-layout regressions and refreshed exact measured pins.
+- `index.html` — bumped every edited runtime JS/CSS asset to `20260827a`.
+- `task-log.md` — this entry.
+
+**Behavior changed:** Sentence Builder feedback now has a uniform inset without introducing
+vertical overflow at the supported viewport floor. Learners see three intentionally separate
+terms: `hotline` = `קו חם`, `call center` = `מוקד טלפוני`, and `emergency hotline` = `קו חירום`.
+The formal emergency sentence uses the more precise national-call-center wording. Conjugation
+labels use the correct American-English past forms listed above. Occupation content, character
+routing, reserve lists, and taxonomy are byte-for-byte untouched.
+
+**Tests run:**
+- Baseline `npm test` — **454 pass, 0 fail**.
+- `node --test tests/hebrew-verbs.test.js tests/vocab-data.test.js tests/sentence-bank-data.test.js tests/app-progress.test.js`
+  — **262 pass, 0 fail**.
+- `node --test tests/gameplay-layout.test.js` — **1 pass, 0 fail**; computed feedback padding was
+  equal at 360×640, 360×800, and 1024×900.
+- In-app browser check at 360×640 — completed a Sentence round; feedback padding measured
+  **9.6px on every side**, with shell `clientHeight` and `scrollHeight` both 488.
+- Generated-label audit — **0** remaining instances of the 14 incorrect fallback spellings.
+- The first post-change full run exposed two expected stale fixture pins; after correcting them,
+  the final `npm test` — **457 pass, 0 fail**.
+
+**Risks / regressions to check:** The stable `hotline` card intentionally keeps learner progress
+while its translation changes; the appended call-center card starts with a new ID. Exact coverage
+still treats `מוקד טלפוני` as unsupported because `formal_130` teaches the related but distinct
+`מוקד ארצי`; this is expected. Automated and visual checks cover layout and spelling, but the
+terminology note remains a linguistic judgment worth validating during the next native-speaker
+content review. Occupation/Inat routing remains deliberately deferred.
+
+### 2026-08-27 16:04 EDT — Keep reviewed content behind strict character fences
+
+**Requested:** Remove the rule that an attempted item may cross a character fence, apply strict
+withholding to every reservable content type, preserve shared/free-play and live-session
+continuity, and keep the Review page's due count course-wide.
+
+**Files changed:**
+- `app/character.js` and `app/character-data.js` — removed the seen-item exemption and the
+  empty-pool leak fallback from the shared audience filter; clarified that reserved audiences
+  apply to adaptive review as well as first attempts.
+- `app/data.js`, `app/sentence-bank.js`, and `app/abbreviation.js` — removed progress-based fence
+  exemptions and now filter the complete eligible pool before excluding already-used items and
+  splitting due/fresh candidates. Removed the now-unused word and sentence progress helpers.
+- `app/verb-match.js` and `app/handwriting.js` — removed their seen-item callbacks while retaining
+  the existing item resolvers.
+- `docs/project-rules.md`, `docs/character-gameplay-strategy.md`, and
+  `scripts/character-content-report.js` — made strict review fencing authoritative, documented
+  the course-wide due count, and retained active restored questions and in-session second chances
+  as continuity rather than new candidate draws.
+- `tests/character-mission.test.js` — replaced the old review exemption with a table-driven strict
+  fence regression over vocabulary, sentences, abbreviations, and verbs; pinned empty-filter,
+  free-play, shared/multi-owner, full-pool ordering, and picker wiring behavior.
+- `index.html` — cache-busted all seven edited runtime modules to `20260827b`.
+- `task-log.md` — this entry.
+
+**Behavior changed:** Previously attempted reserved items no longer surface under a different
+character. In particular, Inat-reserved `colloquial_144` cannot return in Ido's Sentences, Shema,
+or sentence-backed Handwriting play merely because it was attempted earlier. The same strict rule
+now covers the existing reserved vocabulary, abbreviation, and verb sets. Progress is preserved;
+an overdue reserved item waits for its owner or free play. Shared/register content, multi-owner
+content, active/restored questions, same-session retries, and the course-wide due count are
+unchanged.
+
+**Tests run:**
+- Baseline `npm test` — **457 pass, 0 fail**.
+- `node --test tests/character-mission.test.js tests/app-progress.test.js` — **205 pass, 0 fail**,
+  including restored sentence questions and same-session second chances.
+- `npm run report:characters` — **pass**; ownership and drawable pools are unchanged. The smallest
+  sentence pool remains Ivri's 998 rows, and all routed pools remain above their canary floors.
+- Cache audit — **7/7** edited runtime modules use `20260827b` in `index.html`.
+- Final `npm test` — **457 pass, 0 fail**, including the rendered 360×640 gameplay regression.
+- `git diff --check` — **pass** after the log entry.
+
+**Risks / regressions to check:** A learner who stays with one character may see a course-wide due
+count that includes reserved items waiting for another character; this is the explicitly chosen
+policy, and free play can surface all of them. The strict filter may return an empty array for an
+artificially narrowed all-reserved pool, but production filtering now happens before narrowing and
+the measured full pools are hundreds of items above each session size. No route, reserve list,
+progress schema, stored progress record, or sentence content changed.

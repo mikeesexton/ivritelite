@@ -254,6 +254,32 @@ function assertFeedbackFooterInFlow(geometry, label) {
   );
 }
 
+async function measureFeedbackPadding(cdp, width, height) {
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width,
+    height,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  await measureGeometry(cdp);
+  return evaluate(cdp, `(() => {
+    const styles = getComputedStyle(document.querySelector('#feedbackTray'));
+    return {
+      top: parseFloat(styles.paddingTop),
+      right: parseFloat(styles.paddingRight),
+      bottom: parseFloat(styles.paddingBottom),
+      left: parseFloat(styles.paddingLeft),
+    };
+  })()`);
+}
+
+function assertEvenFeedbackPadding(padding, label) {
+  assert.ok(padding.top > 0, `${label} feedback padding must stay visible`);
+  [padding.right, padding.bottom, padding.left].forEach((value) => {
+    assert.ok(Math.abs(value - padding.top) <= 0.01, `${label} feedback padding is uneven: ${JSON.stringify(padding)}`);
+  });
+}
+
 // The budget has to cover the worst launch case rather than the typical one:
 // three attempts at CHROME_LAUNCH_TIMEOUT_MS plus the ~15s of measurement work.
 // At the old 30s a raised launch deadline would just have moved the failure to
@@ -526,13 +552,10 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       ],
     );
 
-    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
-      width: 360,
-      height: 720,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
-    await measureGeometry(pageCdp);
+    const shortMobileFeedbackPadding = await measureFeedbackPadding(pageCdp, 360, 640);
+    assertEvenFeedbackPadding(shortMobileFeedbackPadding, "short mobile");
+    const mobileFeedbackPadding = await measureFeedbackPadding(pageCdp, 360, 800);
+    assertEvenFeedbackPadding(mobileFeedbackPadding, "mobile");
     const mobileFeedbackBottomSpace = await evaluate(pageCdp, `(() => {
       const tray = document.querySelector('#feedbackTray').getBoundingClientRect();
       const lastRow = document.querySelector('#feedbackItems .feedback-item:last-child').getBoundingClientRect();
@@ -542,12 +565,9 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       mobileFeedbackBottomSpace >= 10,
       `wrapped feedback keeps visible space above the tray edge (${mobileFeedbackBottomSpace}px)`,
     );
-    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
-      width: 360,
-      height: 640,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
+    const baseFeedbackPadding = await measureFeedbackPadding(pageCdp, 1024, 900);
+    assertEvenFeedbackPadding(baseFeedbackPadding, "base");
+    await measureFeedbackPadding(pageCdp, 360, 640);
 
     await evaluate(pageCdp, `(() => {
       IvriQuestApp.handwriting.startHandwriting();

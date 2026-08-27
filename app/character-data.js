@@ -950,7 +950,7 @@ characterData.characters = characterData.characters || Object.freeze({
         // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
         "civil_defense_safety",
       ]),
-      // Withheld from the rest of the cast as new material. Only the partisan
+      // Withheld from the rest of the cast under their active lenses. Only the partisan
       // shelf is named: her literature, law, and philosophy shelves are
       // distinctive rather than sensitive, and fencing a topic shelf merely
       // because one character owns it would put 72% of the vocabulary deck out
@@ -1105,7 +1105,7 @@ characterData.characters = characterData.characters || Object.freeze({
         ...MILITARY_ABBR_IDS,
         ...POLICE_COMMAND_ABBR_IDS,
       ]),
-      // Withheld from the rest of the cast as new material. His two own shelves
+      // Withheld from the rest of the cast under their active lenses. His two own shelves
       // are named; `civil_defense_safety` deliberately is not, because a single
       // card carries no scenario and the everyday security tier is course policy.
       vocabReserveCategories: Object.freeze([
@@ -1261,9 +1261,9 @@ function reservesItem(route, kind, item) {
   return false;
 }
 
-// Which characters may be shown an item the learner has not met yet. `null` means
-// everyone, which is the ordinary case — register, style, buckets, verbs, topic
-// shelves and the cast-wide security tier are all shared.
+// Which characters may be shown an item under an active character lens. `null`
+// means everyone, which is the ordinary case — register, style, buckets, verbs,
+// topic shelves and the cast-wide security tier are all shared.
 //
 // Precedence, mirroring the abbrExcludeIds convention that an explicit list is
 // checked before a derived one:

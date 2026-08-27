@@ -1624,7 +1624,7 @@ body[data-theme="light"] .sentence-answer-line {
 
 .lesson-shell.mode-sentence-bank .feedback-tray {
   gap: 0.22rem;
-  padding: 0.64rem 0.8rem 0.68rem;
+  padding: 0.8rem;
 }
 
 .lesson-shell.mode-sentence-bank .feedback-sentence {
@@ -1766,12 +1766,6 @@ body[data-theme="light"] .sentence-answer-line {
 .feedback-items {
   display: grid;
   gap: 0.34rem;
-}
-
-/* Wrapped final lines need a little optical breathing room beyond the tray's
-   compact mobile padding. */
-.lesson-shell.mode-sentence-bank .feedback-items:not(.hidden) {
-  padding-bottom: 0.12rem;
 }
 
 .feedback-items.hidden {
@@ -4631,7 +4625,7 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
 
   .lesson-shell.mode-sentence-bank .feedback-tray {
     gap: 0.18rem;
-    padding: 0.52rem 0.66rem 0.58rem;
+    padding: 0.66rem;
   }
 
   .lesson-shell.mode-sentence-bank .feedback-sentence,
@@ -4857,7 +4851,7 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
   }
 
   .lesson-shell.mode-sentence-bank .feedback-tray {
-    padding: 0.46rem 0.6rem 0.5rem;
+    padding: 0.6rem;
   }
 
   .lesson-shell.mode-sentence-bank .feedback-sentence,

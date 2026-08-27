@@ -6,7 +6,7 @@ Status: live working document. Update this file as character content, visual des
 
 Each day the learner chooses a Tel Aviv character. The choice changes the day's emphasis and voice without locking the learner out of the rest of the course.
 
-- Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review. The shared tier draws from the un-fenced pool — see "Content withholding" below.
+- Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review. Shared and adaptive material draw from the active character's un-fenced pool — see "Content withholding" below.
 - Idan mix: security, safety, and military material in two tiers, plus the learner's weak points. He weighs content like everyone else, so the 65% boost is uniform across his owned set and each mode's weak/missed/overdue ordering still decides what he drills inside it. He has no protected comfort zone because his shelf is small and hard, not because he is exempt from routing.
 - Character assignment is a lens, not an exclusive taxonomy. A word or sentence may belong to multiple characters.
 - Routing works on existing item fields, never on a `character` tag in the content files. Keep a word on its true topic shelf and reach it through `route.vocabWords`; never move it between vocabulary categories, because vocabulary ids embed a positional index and re-shelving orphans learner progress.
@@ -14,7 +14,7 @@ Each day the learner chooses a Tel Aviv character. The choice changes the day's 
 - Keep the initial cast at five. Ido's practical-life coverage closes the largest remaining gap without adding a sixth character.
 - `civil_defense_safety` is the one vocabulary category routed to the **entire cast** by policy. Everyday security is something a resident needs regardless of whose day it is, so it is not a balance bug when it lifts every character's vocabulary count in `npm run report:characters`. The same rule covers six home-front acronyms (`CIVIL_DEFENSE_ABBR_IDS`).
 - Abbreviations can also be routed by id. `route.abbrIds` grants one and `route.abbrExcludeIds` withholds one; an exclusion is checked first, so it beats a bucket grant. This exists because the four buckets are too coarse to lift the military register out of Ivri's and Inat's shelves.
-- **Routing has two layers: a boost and a fence.** Ownership decides weight, as above. A second, narrower rule decides *audience*: content strongly coded to one character is withheld from the rest as new material, so it stops arriving as neutral filler in someone else's mission. See "Content withholding".
+- **Routing has two layers: a boost and a fence.** Ownership decides weight, as above. A second, narrower rule decides *audience*: content strongly coded to one character is withheld from the rest, including adaptive review, so it stops arriving as neutral filler in someone else's mission. See "Content withholding".
 
 ## Content withholding
 
@@ -25,8 +25,8 @@ surfaced during Ido's and Inbal's missions. A political tranche authored into ot
 characters' register banks leaked the same way, and Ido and Inbal drew צה״ל because
 `abbrExcludeIds` had only ever been applied to the two bucket holders.
 
-`characterData.getItemAudience(kind, item)` answers who may be shown an item the learner
-has not met yet. `null` means everyone, which is the ordinary case. Precedence, mirroring
+`characterData.getItemAudience(kind, item)` answers who may be shown an item under an active
+character lens. `null` means everyone, which is the ordinary case. Precedence, mirroring
 the convention that an explicit list is checked before a derived one:
 
 1. `SHARED_ITEM_IDS[kind]` un-fences a named row outright.
@@ -54,11 +54,10 @@ Two policies follow from this rather than needing carve-outs:
 - **`civil_defense_safety` is not reserved.** A single card carries no scenario — `אזעקה` as
   a word is something any resident needs — and the everyday security tier is course policy.
   Fencing happens at sentence level, where the register and the scenario actually land.
-- **Review ignores reservation.** Withholding applies to new material only, defined as a
-  progress record with `attempts > 0` (`data.hasWordProgress`,
-  `sentenceBank.hasSentenceProgress`). Once a learner has met an item it stays eligible under
-  any character and its Leitner interval is preserved. The in-session second-chance queue in
-  `buildSentenceBankReviewQuestion` is unfiltered for the same reason.
+- **Review respects reservation.** Previously attempted content remains fenced, so an overdue
+  reserved item waits for its owning character or free play rather than crossing into another
+  character's session. The Review page's due count remains course-wide. An active restored
+  question and the in-session second-chance queue are not candidate draws and finish normally.
 
 `abbrExcludeIds` is **not** subsumed by this layer and must stay. It is the *input* to rule 3:
 `MILITARY_ABBR_IDS` is fenceable only because the exclusions reduce it to a single owner.
@@ -73,8 +72,9 @@ Implementation notes for whoever extends this:
   everything when the total weight is zero, and `pickWeightedSubset` re-draws until it has
   its count. It is applied **before** each mode's due/fresh split, because an unmet item
   counts as due.
-- `filterWithheldContent` never returns an empty array — a mode with nothing to draw is a
-  worse failure than one leaked row.
+- `filterWithheldContent` may return an empty array and must run on the complete eligible pool
+  before due/fresh or already-used narrowing. Current draw-pool floors keep every routed mode
+  far above its session size; reopening the fence is not an acceptable starvation fallback.
 - Reservation data cannot live on the content row. `prepareSentenceBankDeck` whitelists the
   fields it copies, so a new field on a sentence would be silently dropped before the picker
   ever saw it — and a `character` tag in a content file is forbidden regardless.

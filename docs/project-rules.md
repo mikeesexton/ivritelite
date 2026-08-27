@@ -131,7 +131,9 @@ that roughly `TARGET_OWNED_SHARE` (0.65) of a draw lands in the active character
 strongly coded row authored into a shared register bank still reaches the entire cast unless
 it is named in `sentenceReserveIds`, `vocabReserveCategories`, `vocabReserveWords`,
 `abbrReserveIds` or `verbReserveIds`. A row carrying an `inbal_`/`inat_`/`idan_` prefix is
-fenced automatically.
+fenced automatically. **The fence does not expire after review:** previously attempted reserved
+content waits for its owning character or free play, while active questions and same-session
+second chances finish normally.
 
 Two traps, both of which have already cost real bugs:
 

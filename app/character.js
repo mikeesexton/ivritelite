@@ -338,9 +338,9 @@ function ownsItem(route, kind, item) {
   return getCharacterData().ownsItem?.(route, kind, item) === true;
 }
 
-// Content strongly coded to one character is withheld from the rest as *new*
-// material, per docs/character-gameplay-strategy.md. Free play draws the whole
-// course: an empty routing id means no lens, and choosing a lens is deliberate.
+// Content strongly coded to one character is withheld from the rest, including
+// adaptive review. Free play draws the whole course: an empty routing id means
+// no lens, and choosing a lens is deliberate.
 character.isContentWithheld = character.isContentWithheld || function isContentWithheld(kind, item) {
   // Must name a real character, not merely be non-empty: `dailyChoice` carries
   // the "free" sentinel on a free-play day, the same reason getActiveRoute
@@ -358,20 +358,10 @@ character.isContentWithheld = character.isContentWithheld || function isContentW
 // fence. Filtering also keeps withheld rows out of the due/fresh split and out
 // of the denominator `buildContentWeigher` solves the boost from.
 //
-// `isSeen` is the review exemption: once a learner has met an item it stays
-// eligible under any character, so its Leitner interval is preserved. Each mode
-// owns the definition, because progress lives in that mode's own record shape.
 character.filterWithheldContent = character.filterWithheldContent || function filterWithheldContent(kind, items, options = {}) {
   if (!Array.isArray(items) || !items.length || !getCharacterById(getRoutingCharacterId())) return items;
   const resolve = typeof options.getItem === "function" ? options.getItem : (entry) => entry;
-  const isSeen = typeof options.isSeen === "function" ? options.isSeen : () => false;
-  const kept = items.filter(
-    (entry) => !character.isContentWithheld(kind, resolve(entry)) || isSeen(entry) === true,
-  );
-  // Withholding must never empty a pool: a mode with nothing to draw is a worse
-  // failure than one leaked row. A character's own material is never withheld
-  // from them, so this can only fire on a pool a caller has already narrowed.
-  return kept.length ? kept : items;
+  return items.filter((entry) => !character.isContentWithheld(kind, resolve(entry)));
 };
 
 character.getContentWeight = character.getContentWeight || function getContentWeight(kind, item) {
