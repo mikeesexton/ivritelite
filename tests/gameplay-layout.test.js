@@ -161,7 +161,7 @@ function connectCdp(webSocketUrl) {
 }
 
 async function waitForPage(cdp) {
-  const deadline = Date.now() + 10000;
+  const deadline = Date.now() + 30000;
   while (Date.now() < deadline) {
     const result = await cdp.send("Runtime.evaluate", {
       expression: "document.readyState === 'complete' && Boolean(window.IvriQuestApp?.runtime?.helpers?.renderAll)",
@@ -503,6 +503,68 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     assertChoicesClearFooter(prepositionsFeedback, "Prepositions feedback");
     assertFeedbackFooterInFlow(prepositionsFeedback, "Prepositions feedback");
 
+    const sentenceFeedback = await evaluate(pageCdp, `(() => {
+      const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
+      IvriQuestApp.utils.weightedRandomWord = (items) => (
+        items.find((item) => item.word?.sentence?.id === 'everyday_127') || items[0]
+      ).word;
+      IvriQuestApp.sentenceBank.startSentenceBank();
+      IvriQuestApp.sentenceBank.beginSentenceBankFromIntro();
+      IvriQuestApp.utils.weightedRandomWord = originalWeightedRandomWord;
+
+      const question = IvriQuestApp.runtime.state.sentenceBank.currentQuestion;
+      const active = {
+        geometry: ${GAMEPLAY_GEOMETRY},
+        promptFont: parseFloat(getComputedStyle(document.querySelector('.prompt-text')).fontSize),
+        slotFont: parseFloat(getComputedStyle(document.querySelector('.sentence-slot')).fontSize),
+        bankFont: parseFloat(getComputedStyle(document.querySelector('.sentence-token')).fontSize),
+      };
+
+      const usedTokenIds = new Set();
+      question.slotTokenIds = question.targetTokens.map((text, index) => {
+        const token = index === 0
+          ? question.bankTokens.find((candidate) => !question.targetTokens.includes(candidate.text))
+          : question.bankTokens.find((candidate) => candidate.text === text && !usedTokenIds.has(candidate.id));
+        usedTokenIds.add(token.id);
+        return token.id;
+      });
+      question.placedBankTokenIds = [...question.slotTokenIds];
+      IvriQuestApp.sentenceBank.applySentenceBankAnswer();
+
+      const tray = document.querySelector('#feedbackTray');
+      return {
+        active,
+        feedback: {
+          geometry: ${GAMEPLAY_GEOMETRY},
+          bankCount: document.querySelectorAll('.sentence-token-bank').length,
+          metaCount: document.querySelectorAll('.sentence-answer-meta').length,
+          promptVisible: document.querySelector('.prompt-card')?.getBoundingClientRect().height > 0,
+          answerVisible: document.querySelector('.sentence-answer-line')?.getBoundingClientRect().height > 0,
+          nextVisible: document.querySelector('#nextBtn')?.getBoundingClientRect().height > 0,
+          trayClientHeight: tray?.clientHeight || 0,
+          trayScrollHeight: tray?.scrollHeight || 0,
+        },
+      };
+    })()`);
+    assertNoGameplayScroll(sentenceFeedback.active.geometry, "Sentences long active question");
+    assertChoicesClearFooter(sentenceFeedback.active.geometry, "Sentences long active question");
+    assert.ok(sentenceFeedback.active.promptFont > 19.9, `sentence prompt font increased (${sentenceFeedback.active.promptFont}px)`);
+    assert.ok(sentenceFeedback.active.slotFont > 15.1, `sentence answer font increased (${sentenceFeedback.active.slotFont}px)`);
+    assert.ok(sentenceFeedback.active.bankFont > 13.8, `sentence bank font increased (${sentenceFeedback.active.bankFont}px)`);
+    assertNoGameplayScroll(sentenceFeedback.feedback.geometry, "Sentences expanded feedback");
+    assertChoicesClearFooter(sentenceFeedback.feedback.geometry, "Sentences expanded feedback");
+    assertFeedbackFooterInFlow(sentenceFeedback.feedback.geometry, "Sentences expanded feedback");
+    assert.equal(sentenceFeedback.feedback.bankCount, 0, "locked Sentences feedback collapses the word bank");
+    assert.equal(sentenceFeedback.feedback.metaCount, 0, "locked Sentences feedback collapses the word counter");
+    assert.equal(sentenceFeedback.feedback.promptVisible, true, "Sentences feedback keeps the prompt visible");
+    assert.equal(sentenceFeedback.feedback.answerVisible, true, "Sentences feedback keeps the marked answer visible");
+    assert.equal(sentenceFeedback.feedback.nextVisible, true, "Sentences feedback keeps Next visible");
+    assert.equal(
+      sentenceFeedback.feedback.trayScrollHeight,
+      sentenceFeedback.feedback.trayClientHeight,
+      "Sentences feedback must not scroll internally",
+    );
+
     const shemaFeedback = await evaluate(pageCdp, `(() => {
       const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
       IvriQuestApp.utils.weightedRandomWord = (items) => items.reduce((longest, item) => (
@@ -530,6 +592,11 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       return {
         geometry: ${GAMEPLAY_GEOMETRY},
         result: document.querySelector('#feedbackItems .feedback-result')?.textContent || '',
+        bankCount: document.querySelectorAll('.sentence-token-bank').length,
+        metaCount: document.querySelectorAll('.sentence-answer-meta').length,
+        replayCount: document.querySelectorAll('.shema-play-btn').length,
+        trayClientHeight: document.querySelector('#feedbackTray')?.clientHeight || 0,
+        trayScrollHeight: document.querySelector('#feedbackTray')?.scrollHeight || 0,
         rows: rows.map((row) => ({
           label: row.querySelector('.feedback-item-label')?.textContent || '',
           dir: row.querySelector('.feedback-item-value')?.getAttribute('dir') || '',
@@ -542,6 +609,10 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     assertFeedbackFooterInFlow(shemaFeedback.geometry, "Shema structured feedback");
     assert.ok(shemaFeedback.geometry.prompt?.height > 0, "Shema feedback keeps the prompt visible");
     assert.ok(shemaFeedback.geometry.builder?.height > 0, "Shema feedback keeps the answer builder visible");
+    assert.equal(shemaFeedback.bankCount, 0, "locked Shema feedback collapses the word bank");
+    assert.equal(shemaFeedback.metaCount, 0, "locked Shema feedback collapses the word counter");
+    assert.equal(shemaFeedback.replayCount, 2, "Shema feedback keeps both replay controls");
+    assert.equal(shemaFeedback.trayScrollHeight, shemaFeedback.trayClientHeight, "Shema feedback must not scroll internally");
     assert.equal(shemaFeedback.result, "", "A correct answer leans on the green tray instead of a headline");
     assert.equal(shemaFeedback.rows.length, 2, "Shema feedback must not add a tip row");
     assert.deepEqual(

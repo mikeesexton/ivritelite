@@ -1516,6 +1516,14 @@ test("sentence bank data exposes 1,254 complete entries with notes, distractors,
   });
 });
 
+test("colloquial_217 translates אסור לחנות as a direct prohibition", () => {
+  const entry = loadSentenceBankApi().getSentenceBank().find((item) => item.id === "colloquial_217");
+
+  assert.equal(entry?.english, "It is forbidden to park here from eight to five.");
+  assert.deepEqual(Array.from(entry?.english_tokens || []), ["It is forbidden", "to park", "here", "from eight", "to five"]);
+  assert.deepEqual(Array.from(entry?.english_distractors || []), ["You may", "pass", "there", "from nine", "to seven"]);
+});
+
 // The pointed/plain alignment check above is scoped to POLITICAL_ENTRY_IDS, which
 // is how 90 idan_ rows shipped with nothing stronger than "one mark exists
 // somewhere in the sentence". This runs over every row instead, the way

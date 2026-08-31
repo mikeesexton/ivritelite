@@ -1685,32 +1685,32 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
     answerRow.append(staticText);
   }
 
-  const answerMeta = global.document.createElement("p");
-  answerMeta.className = "sentence-answer-meta small-note";
-  answerMeta.textContent = translate("session.words", {
-    count: `${getFilledSlotCount(question)}/${question.targetTokens.length}`,
-  });
+  board.append(answerRow);
+  if (!question.locked) {
+    const answerMeta = global.document.createElement("p");
+    answerMeta.className = "sentence-answer-meta small-note";
+    answerMeta.textContent = translate("session.words", {
+      count: `${getFilledSlotCount(question)}/${question.targetTokens.length}`,
+    });
 
-  const bankGrid = global.document.createElement("section");
-  bankGrid.className = `sentence-token-bank ${question.answerIsHebrew ? "hebrew" : "english"}`;
-  bankGrid.setAttribute("dir", question.answerIsHebrew ? "rtl" : "ltr");
+    const bankGrid = global.document.createElement("section");
+    bankGrid.className = `sentence-token-bank ${question.answerIsHebrew ? "hebrew" : "english"}`;
+    bankGrid.setAttribute("dir", question.answerIsHebrew ? "rtl" : "ltr");
 
-  question.bankTokens.forEach((token) => {
-    if (slotTokenIds.includes(token.id)) {
-      return;
-    }
-    const btn = global.document.createElement("button");
-    btn.type = "button";
-    btn.className = `choice-btn sentence-token ${question.answerIsHebrew ? "hebrew" : ""}`;
-    btn.textContent = sentenceTokenDisplayText(token);
-    const isSelected = question.selectedBankTokenId === token.id;
-    btn.classList.toggle("selected", isSelected);
-    btn.setAttribute("aria-label", buildSentenceBankTokenAriaLabel(token));
-    btn.setAttribute("aria-description", buildSentenceBankTokenAriaDescription(isSelected));
-    btn.setAttribute("aria-pressed", isSelected ? "true" : "false");
-    btn.disabled = Boolean(question.locked);
-    btn.draggable = !btn.disabled;
-    if (!btn.disabled) {
+    question.bankTokens.forEach((token) => {
+      if (slotTokenIds.includes(token.id)) {
+        return;
+      }
+      const btn = global.document.createElement("button");
+      btn.type = "button";
+      btn.className = `choice-btn sentence-token ${question.answerIsHebrew ? "hebrew" : ""}`;
+      btn.textContent = sentenceTokenDisplayText(token);
+      const isSelected = question.selectedBankTokenId === token.id;
+      btn.classList.toggle("selected", isSelected);
+      btn.setAttribute("aria-label", buildSentenceBankTokenAriaLabel(token));
+      btn.setAttribute("aria-description", buildSentenceBankTokenAriaDescription(isSelected));
+      btn.setAttribute("aria-pressed", isSelected ? "true" : "false");
+      btn.draggable = true;
       btn.addEventListener("click", () => sentenceBank.selectBankToken(token.id));
       btn.addEventListener("keydown", (event) => {
         sentenceBank.handleSentenceBankTokenKeydown(token.id, event);
@@ -1739,12 +1739,11 @@ sentenceBank.renderSentenceBankBoard = sentenceBank.renderSentenceBankBoard || f
       btn.addEventListener("touchcancel", () => {
         clearSentenceDragState();
       });
-    }
-    bankGrid.append(btn);
-  });
+      bankGrid.append(btn);
+    });
 
-  board.append(answerRow);
-  board.append(answerMeta, bankGrid);
+    board.append(answerMeta, bankGrid);
+  }
   runtime.el.choiceContainer.append(board);
 };
 

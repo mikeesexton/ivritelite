@@ -262,7 +262,7 @@ draws from, exactly as `npm run report:characters` prints it.
 |---|---|---|---|---|---|---|
 | vocabulary | **250** | 502 | 342 | 537 | 382 | 266 |
 | sentences | **90** | 266 | 108 | 242 | 224 | 131 |
-| abbreviations | **30** | 68 | 87 | 113 | 85 | 34 |
+| abbreviations | **30** | 69 | 87 | 113 | 85 | 34 |
 | verbs | **20** | 34 | 26 | 37 | 25 | 30 |
 
 All five characters now clear all four floors.

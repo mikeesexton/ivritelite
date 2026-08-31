@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260827a/);
+  assert.match(indexHtml, /styles\.css\?v=20260830a/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -446,6 +446,7 @@ test("Idan routes both security tiers and stays neutral elsewhere", () => {
     ["sentence", { id: "colloquial_01", category: "colloquial", style: "whatsapp" }],
     ["verb", { id: "character-verb-lirkod" }],
     ["abbreviation", { id: "abbr-001", bucket: "Daily Life & Home" }],
+    ["abbreviation", { id: "abbr-284", bucket: "Daily Life & Home" }],
   ];
   unowned.forEach(([kind, item]) => {
     assert.equal(character.getContentWeight(kind, item), 1, `${kind} ${item.he || item.id} should stay neutral`);
