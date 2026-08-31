@@ -14,7 +14,7 @@ and retention mechanics are not.
 
 Content coverage is large and still growing: 1,693 vocabulary cards, 3,780
 hand-authored verb forms (3,756 of them fully pointed), 608 sentences, 800
-generated preposition items, 282 abbreviations, 77 idioms, 297 binyan tiles, 27
+generated preposition items, 283 abbreviations, 77 idioms, 297 binyan tiles, 27
 letterforms. Recent
 sessions have been spending their effort on niqqud sourcing, word-order audits,
 and character routing — real work with a shrinking learner-visible return.

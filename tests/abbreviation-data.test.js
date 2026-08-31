@@ -243,7 +243,7 @@ test("political and identity expansion adds the high-value modern abbreviation s
   const deckIds = new Set(context.IvriQuestApp.abbreviation.prepareAbbreviationDeck(rows).map((entry) => entry.id));
   const expansion = Array.from({ length: 20 }, (_, index) => byId.get(`abbr-${210 + index}`));
 
-  assert.equal(rows.length, 282);
+  assert.equal(rows.length, 283);
   assert.equal(expansion.length, 20);
   assert.ok(expansion.every(Boolean));
   assert.ok(expansion.every((entry) => deckIds.has(entry.id)));
@@ -304,4 +304,20 @@ test("the everyday and measurement tranche deepens the two thinnest buckets", ()
   assert.equal(byId.get("abbr-233")?.abbr, "עפ״י");
   assert.equal(byId.get("abbr-242")?.expansionHe, "סך הכול");
   assert.equal(byId.get("abbr-283")?.expansionHe, "תת אלוף");
+});
+
+test("דל״פ is a playable shared colloquial abbreviation weighted through Ido's bucket", () => {
+  const context = loadAbbreviationContext();
+  const rows = context.IvriQuestAbbreviations.getAbbreviations();
+  const byId = new Map(rows.map((entry) => [entry.id, entry]));
+  const deckIds = new Set(context.IvriQuestApp.abbreviation.prepareAbbreviationDeck(rows).map((entry) => entry.id));
+  const entry = byId.get("abbr-284");
+
+  assert.equal(rows.length, 283);
+  assert.equal(entry?.abbr, "דל״פ");
+  assert.equal(entry?.expansionHe, "דעה לא פופולרית");
+  assert.equal(entry?.english, "unpopular opinion");
+  assert.equal(entry?.bucket, "Daily Life & Home");
+  assert.match(entry?.notes || "", /social-media shorthand/i);
+  assert.equal(deckIds.has("abbr-284"), true);
 });

@@ -9233,3 +9233,55 @@ after the previously recorded final local `npm test` result of **457 pass, 0 fai
 
 **Risks / regressions to check:** Publication itself adds no runtime risk. Confirm the GitHub Pages
 deployment from merge commit `b8b63a0` completes successfully.
+
+### 2026-08-30 20:48 EDT — Expand sentence feedback and add colloquial content
+
+**Requested:** Replace the cramped scrolling Sentences/Shema feedback with an inline state that
+keeps the prompt and marked answer, modestly enlarge sentence-game typography, correct the
+translation of `אסור לחנות`, and add `דל״פ` as Ido-weighted but cast-wide abbreviation content.
+
+**Files changed:**
+- `app/sentence-bank.js` — locked Sentences and Shema boards retain the answer row but no longer
+  render the disabled word bank or `Words: n/n` counter.
+- `styles.css` — increased prompt, answer-slot, and word-bank type by roughly one pixel at each
+  breakpoint; removed the Sentences/Shema 5.5rem feedback cap and internal scrolling; compacted
+  short-mobile gaps and horizontal tile padding while preserving the existing touch heights.
+- `sentence-bank-data.js` — corrected `colloquial_217` to “It is forbidden to park here from eight
+  to five.” with the approved target chunks and natural distractors; bumped the build marker.
+- `abbreviation-data.js` — appended playable `abbr-284`, `דל״פ` / `דעה לא פופולרית` / “unpopular
+  opinion,” in `Daily Life & Home` with a social-media shorthand note and no reserve or explicit
+  route.
+- `docs/product-roadmap.md` and `docs/character-gameplay-strategy.md` — updated the abbreviation
+  total to 283 and Ido's weighted abbreviation count to 69.
+- `index.html` — cache-busted all four edited runtime/style assets to `20260830a`.
+- `tests/abbreviation-data.test.js`, `tests/app-progress.test.js`,
+  `tests/character-mission.test.js`, `tests/gameplay-layout.test.js`, and
+  `tests/sentence-bank-data.test.js` — pinned the new content and routing behavior, the collapsed
+  post-answer board, the larger computed type, and 360×640 active/feedback geometry for Sentences
+  and Shema. The rendered test's page-readiness allowance increased from 10s to 30s after the
+  full parallel suite demonstrated that Chrome could launch but the app could miss the shorter
+  deadline under load.
+- `task-log.md` — this entry.
+
+**Behavior changed:** Submitted Sentences and Shema rounds now spend the reclaimed word-bank space
+on fully visible inline feedback, with no nested scroll area; Shema keeps both playback controls.
+Active prompts, slots, and tiles are slightly easier to read without smaller touch targets. The
+parking sentence now teaches a direct prohibition. `דל״פ` can be drawn by every companion, while
+its existing bucket gives it Ido's ordinary extra weight.
+
+**Tests run:**
+- Baseline `npm test` — **457 pass, 0 fail**.
+- `node --check app/sentence-bank.js sentence-bank-data.js abbreviation-data.js` — **pass**.
+- Focused content/app/layout suite — **207 pass, 0 fail**; isolated character-routing and rendered
+  layout tests also **pass**.
+- Live browser at **360×640** — wrong-answer Sentences feedback measured `99px` client and scroll
+  heights, with prompt, marked answer, Next, and larger computed type visible and no bank/counter.
+- `npm run report:characters` — **pass**; Ido owns 69 abbreviation-weighted rows and all character
+  pools remain above their canary floors.
+- Final `npm test` — **459 pass, 0 fail**, including the expanded rendered regression.
+- `git diff --check` — **pass** before this log entry.
+
+**Risks / regressions to check:** Very long future target rows may need the same horizontal
+compaction treatment, but the current ten-chip stress row fits active, correct-feedback, and
+incorrect-feedback states at the 360×640 floor. The new abbreviation intentionally has no explicit
+owner or reserve; changing its bucket would also change Ido's extra draw weight.

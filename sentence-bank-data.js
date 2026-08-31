@@ -19341,9 +19341,9 @@ const CONNECTIVE_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "colloquial_217", emoji: "🅿️", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
-    hebrew: "אסור לחנות כאן משמונה עד חמש.", hebrewNiqqud: "אָסוּר לַחֲנוֹת כָּאן מִשְּׁמוֹנֶה עַד חָמֵשׁ.", english: "No parking is allowed here from eight to five.",
-    hebrewTokenPairs: [["אסור", "אָסוּר"], ["לחנות", "לַחֲנוֹת"], ["כאן", "כָּאן"], ["משמונה", "מִשְּׁמוֹנֶה"], ["עד חמש", "עַד חָמֵשׁ"]], englishTokens: ["No parking", "is allowed", "here", "from eight", "to five"],
-    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["לעבור", "לַעֲבֹר"], ["שם", "שָׁם"], ["מתשע", "מִתֵּשַׁע"], ["עד שבע", "עַד שֶׁבַע"]], englishDistractors: ["Passage", "is permitted", "there", "from nine", "to seven"],
+    hebrew: "אסור לחנות כאן משמונה עד חמש.", hebrewNiqqud: "אָסוּר לַחֲנוֹת כָּאן מִשְּׁמוֹנֶה עַד חָמֵשׁ.", english: "It is forbidden to park here from eight to five.",
+    hebrewTokenPairs: [["אסור", "אָסוּר"], ["לחנות", "לַחֲנוֹת"], ["כאן", "כָּאן"], ["משמונה", "מִשְּׁמוֹנֶה"], ["עד חמש", "עַד חָמֵשׁ"]], englishTokens: ["It is forbidden", "to park", "here", "from eight", "to five"],
+    hebrewDistractorPairs: [["מותר", "מֻתָּר"], ["לעבור", "לַעֲבֹר"], ["שם", "שָׁם"], ["מתשע", "מִתֵּשַׁע"], ["עד שבע", "עַד שֶׁבַע"]], englishDistractors: ["You may", "pass", "there", "from nine", "to seven"],
     notes: "אסור plus an infinitive is the standard prohibition on signs and notices."
   }),
   buildReviewedSentence({
@@ -20521,6 +20521,6 @@ global.IvriQuestSentenceBank = {
   getSentenceBank() {
     return SENTENCE_BANK.map(cloneSentence);
   },
-  __build: "20260824a",
+  __build: "20260830a",
 };
 })(typeof window !== "undefined" ? window : globalThis);

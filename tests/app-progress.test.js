@@ -877,7 +877,9 @@ test("sentence builder renders english answer lines left-to-right and omits post
   );
   assert.doesNotMatch(getFeedbackText(document), /Tip:/);
   assert.equal(document.querySelector(".prompt-card").classList.contains("hidden"), false);
-  assert.equal(document.querySelector(".sentence-token-bank") !== null, true);
+  assert.equal(document.querySelector("#choiceContainer").querySelectorAll(".sentence-answer-line").length, 1);
+  assert.equal(document.querySelector("#choiceContainer").querySelectorAll(".sentence-token-bank").length, 0);
+  assert.equal(document.querySelector("#choiceContainer").querySelectorAll(".sentence-answer-meta").length, 0);
   assert.equal(state.sentenceProgress["sb-1::he2en"].attempts, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"].correct, 1);
   assert.equal(state.sentenceProgress["sb-1::he2en"].level, 1);
@@ -1560,9 +1562,13 @@ test("sentence builder base layout trims prompt, board, and feedback spacing wit
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\s*\{[^}]*padding:\s*0\.7rem 0\.8rem;[^}]*border:\s*1px solid var\(--line\);[^}]*background:\s*var\(--prompt-bg\);[^}]*gap:\s*0\.2rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*clamp\(3\.35rem,\s*5\.8vw,\s*4rem\);[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*0\.16rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.16rem;[^}]*padding-right:\s*0\.16rem;/s);
-  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.36rem,\s*3\.7vw,\s*1\.86rem\);[^}]*line-height:\s*1\.18;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*width:\s*100%;[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.42rem,\s*3\.7vw,\s*1\.92rem\);[^}]*line-height:\s*1\.18;/s);
   assert.match(styles, /\.sentence-builder\s*\{[^}]*gap:\s*0\.68rem;/s);
   assert.match(styles, /\.sentence-answer-line\s*\{[^}]*min-height:\s*2\.9rem;[^}]*line-height:\s*1\.68;/s);
+  assert.match(styles, /\.sentence-slot,\s*\.sentence-token\s*\{[^}]*font-size:\s*1\.12rem;/s);
+  assert.match(styles, /\.sentence-slot\.hebrew,\s*\.sentence-token\.hebrew\s*\{[^}]*font-size:\s*1\.26rem;/s);
+  assert.match(styles, /\.sentence-slot\.empty\s*\{[^}]*min-width:\s*3rem;/s);
+  assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.sentence-builder\.is-feedback \.sentence-slot\s*\{[^}]*min-width:\s*0;[^}]*min-height:\s*auto;[^}]*padding:\s*0 0\.1rem 0\.12rem;/s);
   assert.match(styles, /\.sentence-token-bank\s*\{[^}]*gap:\s*0\.44rem 0\.34rem;/s);
   assert.match(styles, /\.sentence-answer-meta\s*\{[^}]*font-size:\s*0\.8rem;/s);
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.8rem;/s);
@@ -1580,14 +1586,14 @@ test("binyanim function hint fits long revealed labels", () => {
 test("sentence builder mobile breakpoint uses smaller sentence tokens and a tighter footer stack", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
   const mobileChoiceBtn = styles.match(/@media \(max-width: 767px\)\s*\{[\s\S]*?\.choice-btn\s*\{[^}]*min-height:\s*(\d+)px;/s);
-  const mobileSentenceToken = styles.match(/@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*(\d+)px;[^}]*padding:\s*0\.32rem 0\.6rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.9rem;/s);
+  const mobileSentenceToken = styles.match(/@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*(\d+)px;[^}]*padding:\s*0\.32rem 0\.6rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.96rem;/s);
 
   assert.ok(mobileChoiceBtn);
   assert.ok(mobileSentenceToken);
   assert.ok(Number(mobileSentenceToken[1]) < Number(mobileChoiceBtn[1]));
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*3\.08rem;[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.04rem;[^}]*padding-right:\s*0\.04rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.34rem,\s*5\.9vw,\s*1\.66rem\);/s);
+  assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.4rem,\s*5\.9vw,\s*1\.72rem\);/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.lesson-footer\s*\{[^}]*bottom:\s*calc\(4\.05rem \+ env\(safe-area-inset-bottom\)\);[^}]*gap:\s*0\.34rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.66rem;/s);
   assert.match(styles, /@media \(max-width: 767px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*50px;[^}]*font-size:\s*0\.96rem;/s);
@@ -1596,11 +1602,18 @@ test("sentence builder mobile breakpoint uses smaller sentence tokens and a tigh
 test("sentence builder short mobile breakpoint adds an extra compaction step", () => {
   const styles = fs.readFileSync(path.join(__dirname, "..", "styles.css"), "utf8");
 
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank\s*\{[^}]*gap:\s*0\.28rem;[^}]*padding:\s*0\.52rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-content-row\s*\{[^}]*min-height:\s*2\.9rem;[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-card\.has-prompt-control \.prompt-content-row\s*\{[^}]*padding-left:\s*0\.02rem;[^}]*padding-right:\s*0\.02rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.24rem,\s*5\.3vw,\s*1\.48rem\);/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*36px;[^}]*padding:\s*0\.28rem 0\.56rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.86rem;/s);
-  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.6rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.prompt-text\s*\{[^}]*max-width:\s*100%;[^}]*font-size:\s*clamp\(1\.3rem,\s*5\.3vw,\s*1\.54rem\);/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-builder\s*\{[^}]*gap:\s*0\.28rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token-bank\s*\{[^}]*gap:\s*0\.14rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-slot\s*\{[^}]*min-width:\s*max\(3rem,\s*calc\(var\(--slot-ch,\s*4\) \* 0\.56ch \+ 0\.9rem\)\);[^}]*font-size:\s*1rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-slot\.empty\s*\{[^}]*min-width:\s*2\.75rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.sentence-token\s*\{[^}]*min-height:\s*36px;[^}]*padding:\s*0\.28rem 0\.42rem;[^}]*border-radius:\s*4px;[^}]*font-size:\s*0\.92rem;/s);
+  assert.equal(styles.includes(".lesson-shell.mode-sentence-bank .feedback-tray {\n    max-height: 5.5rem"), false);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.feedback-tray\s*\{[^}]*padding:\s*0\.48rem;/s);
+  assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.lesson-footer\s*\{[^}]*margin-top:\s*0\.1rem;/s);
   assert.match(styles, /@media \(max-width: 767px\) and \(max-height: 760px\)\s*\{[\s\S]*?\.lesson-shell\.mode-sentence-bank \.next-btn\s*\{[^}]*min-height:\s*46px;[^}]*font-size:\s*0\.92rem;/s);
 });
 

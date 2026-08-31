@@ -2823,6 +2823,15 @@ const ABBREVIATIONS = [
     "bucket": "Ideas, Science & Tech",
     "notes": "The first general officer rank, below אלוף.",
     "source": "manual"
+  },
+  {
+    "id": "abbr-284",
+    "abbr": "דל״פ",
+    "expansionHe": "דעה לא פופולרית",
+    "english": "unpopular opinion",
+    "bucket": "Daily Life & Home",
+    "notes": "Social-media shorthand placed before a take expected to be unpopular.",
+    "source": "manual"
   }
 ];
 
