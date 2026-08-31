@@ -9285,3 +9285,22 @@ its existing bucket gives it Ido's ordinary extra weight.
 compaction treatment, but the current ten-chip stress row fits active, correct-feedback, and
 incorrect-feedback states at the 360×640 floor. The new abbreviation intentionally has no explicit
 owner or reserve; changing its bucket would also change Ido's extra draw weight.
+
+### 2026-08-30 20:58 EDT — Publish expanded sentence feedback and colloquial content
+
+**Requested:** Push and merge the completed Sentences/Shema feedback, typography, translation,
+and abbreviation changes.
+
+**Files changed:**
+- `task-log.md` — recorded publication through GitHub pull request #86. No runtime, content, test,
+  or routing behavior changed in this publication-only follow-up.
+
+**Behavior changed:** None beyond the implementation entry immediately above. Commit `0f20dce`
+was pushed on `codex/sentence-feedback-content`; pull request #86 passed its required test workflow
+and merged into `main` as `99cb1bd`.
+
+**Tests run:** GitHub's required `test` workflow — **pass** in 3m05s. No runtime files changed after
+the previously recorded final local `npm test` result of **459 pass, 0 fail**.
+
+**Risks / regressions to check:** Publication itself adds no runtime risk. Confirm the GitHub Pages
+deployment from the final publication-log commit completes successfully.
