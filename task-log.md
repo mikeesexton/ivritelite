@@ -21,6 +21,103 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 19:49 EDT — Add social, canonical and favicon tags for the new domain
+
+**Requested:** Alongside the `ivritelite.app` cutover, add the social/canonical metadata the
+page has never had (tranche 4 of 5). Kept as its own commit, separate from the CNAME work.
+
+**Files changed:**
+- `index.html` — inserted 22 lines after `<title>`: `meta description`, `link rel=canonical`,
+  three icon links, nine Open Graph tags, and four Twitter card tags.
+
+**Behavior changed:** The page previously had no `og:`, no `twitter:`, no canonical and no
+favicon at all, so sharing the URL produced a bare link and the tab showed a blank icon.
+Now a share renders a card with the gold-ayin logo, and the tab has an icon. The two
+`rel=icon` links are `prefers-color-scheme`-scoped: `logo-dark.png` (dark tile) on light
+browser chrome, `logo-light.png` (light tile) on dark, so the tile edge stays visible either
+way. `apple-touch-icon` falls back to the dark tile, which has no media-query support.
+
+`og:image`, `og:url`, `twitter:image` and the canonical are absolute
+`https://ivritelite.app/...` URLs — they have to be, since scrapers do not resolve relative
+paths. The favicon links stay `./`-relative like the rest of the app.
+
+**Cache-busting:** No `?v=` bump. `index.html` is the entry document, not something it
+loads, and no `.js`/`.css` was touched. The favicon PNGs are new files with nothing cached
+to bust; the sprite-style `?v=` on image URLs was deliberately not copied here, since an
+unbumped version string is worse than none.
+
+**Tests run:** `npm test` — 463/463 pass, 0 skipped, exit 0. `tests/gameplay-layout.test.js`
+ran rather than skipping, so the new `<head>` was parsed and rendered by real headless
+Chrome. Also re-ran `tests/cache-bust.test.js` (4/4) — its merge-base check confirms no
+shipped `.js`/`.css` on this branch was owed a bump. Separately parsed `index.html` with
+`html.parser` and read back all 13 expected meta tags, the canonical, and the three icon
+links, and confirmed both PNG targets exist on disk.
+
+**Risks / regressions to check:**
+- `og:image` is the 1000x1000 square logo, so shares render as a small square thumbnail
+  (`twitter:card` is `summary`, matching). A 1200x630 banner would give a wide hero card;
+  that is a design task, not a fix.
+- The logo has transparent corners. Scrapers that flatten alpha will composite it on white,
+  which suits the dark tile; the light tile is not used for sharing for that reason.
+- Social caches are sticky. Facebook and LinkedIn cache OG data for days, so if the card is
+  ever wrong it needs their debugger to force a re-scrape, not just a redeploy.
+- `og:url` and the canonical hardcode the apex. If the domain ever changes they must change
+  with it, and nothing tests that.
+
+### 2026-09-03 19:45 EDT — Point the site at ivritelite.app (CNAME + Pages artifact)
+
+**Requested:** `ivritelite.app` was bought at GoDaddy; asked what to take care of next.
+Planned the full cutover and started executing it. This entry covers the repo change only
+(tranche 2 of 5); DNS was tranche 1, and the GitHub Pages settings are tranche 3.
+
+**Files changed:**
+- `CNAME` — new. Contains exactly `ivritelite.app`.
+- `.github/workflows/deploy-pages.yml` — added `cp CNAME dist/` after `cp .nojekyll dist/`.
+
+**Why the workflow line is not optional:** the `deploy` job builds `dist/` from a
+hand-maintained allowlist of `cp` commands rather than copying the tree. A `CNAME` at the
+repo root therefore never reaches the uploaded artifact on its own. Because Pages is
+deployed from an Actions artifact (`build_type: workflow`), GitHub reads the custom domain
+from what the artifact contains — so without this line every deploy would silently drop the
+custom-domain setting and detach `ivritelite.app`. This is the same hand-maintained-list
+trap already noted for `.nojekyll`.
+
+**Behavior changed:** None in the app. Once tranche 3 sets the Pages custom domain, the
+site moves from `https://mikeesexton.github.io/ulpango/` (a subpath) to
+`https://ivritelite.app/` (the apex), and the old URL redirects. Verified beforehand that
+the app is strictly path-relative — every script tag is `./app/x.js`, every asset is
+`url('./assets/...')`, and `app/audio.js:23-24` builds `./assets/sounds/...` at runtime —
+so no path in the app depends on the prefix. No manifest, no service worker, no `<base>`,
+no absolute self-URLs.
+
+**Cache-busting:** No `?v=` bump required. Neither file is a `.js`/`.css` that `index.html`
+loads.
+
+**Tests run:**
+- `npm test` before the change — 463/463 pass, 0 skipped, exit 0.
+- `npm test` after the change — 463/463 pass, 0 skipped, exit 0.
+- Simulated the deploy job's build locally by extracting the `cp` block from the workflow
+  and running it into a temp dir: exit 0, and the artifact root contains `CNAME` with the
+  bytes `ivritelite.app\n` alongside `.nojekyll` and the other 14 entries.
+- DNS verified from the authoritative nameserver (`@ns63.domaincontrol.com`, bypassing
+  caches) and via `1.1.1.1`/`8.8.8.8`: apex `A` is exactly the four `185.199.*.153` GitHub
+  IPs, apex `AAAA` the four `2606:50c0:800*::153`, `www` CNAME `mikeesexton.github.io.`,
+  no CAA record. `https://mikeesexton.github.io/ulpango/` still 200.
+
+**Risks / regressions to check:**
+- `.app` is an HSTS-preloaded TLD, so there is no plain-HTTP fallback. Between the Pages
+  custom domain being set and Let's Encrypt issuing, `ivritelite.app` is a hard browser
+  block rather than a warning. Expect minutes, occasionally up to an hour.
+- The GoDaddy apex was previously attached to a **Website Builder product**, not raw
+  parking IPs. The DNS record was deleted and Domain Forwarding was already off, but the
+  product remains attached at the account level. Accepting any future GoDaddy "reconnect
+  your website" prompt would rewrite the apex `A` record and take the site down.
+- If anyone ever adds a file to `dist/` they must add it to the `cp` allowlist too. This
+  change adds a second entry to that trap; it is now 15 lines that must be kept in sync by
+  hand.
+- Do not add a CAA record at GoDaddy: there is none today, and a restrictive one would
+  stop Let's Encrypt from renewing the certificate.
+
 ### 2026-09-02 20:55 EDT — Move off iCloud, rename Ulpango to IvritElite, harden for two machines
 
 **Requested:** Move the working copy out of iCloud Drive ahead of adding a Mac mini for
