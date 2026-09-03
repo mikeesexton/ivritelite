@@ -44,14 +44,20 @@ Codex, Antigravity) edit it from two machines.
 - `.claude/launch.json` — now tracked; configs renamed off `ulpango-dev*`; dropped a
   fourth config pointing at a deleted session scratchpad.
 - `CLAUDE.md`, `AGENTS.md` — task-log rule reworded, mirrored to keep parity.
+- `tests/cache-bust.test.js` — new. Enforces the `?v=` rule: three structural checks
+  that always run, plus a merge-base check that every shipped file changed on a branch
+  had its key bumped. Verified by deliberate violation in both directions.
+- `.github/workflows/test.yml` — `fetch-depth: 0`, without which the merge-base check
+  would silently skip on exactly the PRs it exists to guard.
 - `task-log.md` — header retitled and rewritten to state "newest first"; Entry Format
   block hoisted from line 3769 to the top. All 383 prior entries unchanged.
 
 **Behavior changed:** None in the app. No `.js`/`.css` that `deploy-pages.yml` ships was
 touched, so no `?v=` bump was required.
 
-**Tests run:** `npm test` — passed, 459/459, 0 skipped, exit 0. Run after the rename,
-after the toolchain changes, and after the doc changes.
+**Tests run:** `npm test` — passed, 463/463, 0 skipped, exit 0. Run after the rename,
+after the toolchain changes, after the doc changes, and after adding the cache-bust test
+(459 before that file added its 4).
 `node --test tests/agent-docs-parity.test.js` — passed, 4/4.
 
 **Risks / regressions to check:**
