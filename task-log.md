@@ -21,6 +21,60 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 19:45 EDT — Point the site at ivritelite.app (CNAME + Pages artifact)
+
+**Requested:** `ivritelite.app` was bought at GoDaddy; asked what to take care of next.
+Planned the full cutover and started executing it. This entry covers the repo change only
+(tranche 2 of 5); DNS was tranche 1, and the GitHub Pages settings are tranche 3.
+
+**Files changed:**
+- `CNAME` — new. Contains exactly `ivritelite.app`.
+- `.github/workflows/deploy-pages.yml` — added `cp CNAME dist/` after `cp .nojekyll dist/`.
+
+**Why the workflow line is not optional:** the `deploy` job builds `dist/` from a
+hand-maintained allowlist of `cp` commands rather than copying the tree. A `CNAME` at the
+repo root therefore never reaches the uploaded artifact on its own. Because Pages is
+deployed from an Actions artifact (`build_type: workflow`), GitHub reads the custom domain
+from what the artifact contains — so without this line every deploy would silently drop the
+custom-domain setting and detach `ivritelite.app`. This is the same hand-maintained-list
+trap already noted for `.nojekyll`.
+
+**Behavior changed:** None in the app. Once tranche 3 sets the Pages custom domain, the
+site moves from `https://mikeesexton.github.io/ulpango/` (a subpath) to
+`https://ivritelite.app/` (the apex), and the old URL redirects. Verified beforehand that
+the app is strictly path-relative — every script tag is `./app/x.js`, every asset is
+`url('./assets/...')`, and `app/audio.js:23-24` builds `./assets/sounds/...` at runtime —
+so no path in the app depends on the prefix. No manifest, no service worker, no `<base>`,
+no absolute self-URLs.
+
+**Cache-busting:** No `?v=` bump required. Neither file is a `.js`/`.css` that `index.html`
+loads.
+
+**Tests run:**
+- `npm test` before the change — 463/463 pass, 0 skipped, exit 0.
+- `npm test` after the change — 463/463 pass, 0 skipped, exit 0.
+- Simulated the deploy job's build locally by extracting the `cp` block from the workflow
+  and running it into a temp dir: exit 0, and the artifact root contains `CNAME` with the
+  bytes `ivritelite.app\n` alongside `.nojekyll` and the other 14 entries.
+- DNS verified from the authoritative nameserver (`@ns63.domaincontrol.com`, bypassing
+  caches) and via `1.1.1.1`/`8.8.8.8`: apex `A` is exactly the four `185.199.*.153` GitHub
+  IPs, apex `AAAA` the four `2606:50c0:800*::153`, `www` CNAME `mikeesexton.github.io.`,
+  no CAA record. `https://mikeesexton.github.io/ulpango/` still 200.
+
+**Risks / regressions to check:**
+- `.app` is an HSTS-preloaded TLD, so there is no plain-HTTP fallback. Between the Pages
+  custom domain being set and Let's Encrypt issuing, `ivritelite.app` is a hard browser
+  block rather than a warning. Expect minutes, occasionally up to an hour.
+- The GoDaddy apex was previously attached to a **Website Builder product**, not raw
+  parking IPs. The DNS record was deleted and Domain Forwarding was already off, but the
+  product remains attached at the account level. Accepting any future GoDaddy "reconnect
+  your website" prompt would rewrite the apex `A` record and take the site down.
+- If anyone ever adds a file to `dist/` they must add it to the `cp` allowlist too. This
+  change adds a second entry to that trap; it is now 15 lines that must be kept in sync by
+  hand.
+- Do not add a CAA record at GoDaddy: there is none today, and a restrictive one would
+  stop Let's Encrypt from renewing the certificate.
+
 ### 2026-09-02 20:55 EDT — Move off iCloud, rename Ulpango to IvritElite, harden for two machines
 
 **Requested:** Move the working copy out of iCloud Drive ahead of adding a Mac mini for
