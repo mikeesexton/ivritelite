@@ -1,4 +1,4 @@
-# Ulpango (Advanced Duolingo-Style Hebrew Trainer)
+# IvritElite (Advanced Duolingo-Style Hebrew Trainer)
 
 Browser-only vocabulary trainer focused on advanced, practical Hebrew.
 
@@ -42,7 +42,7 @@ Option A (quick): double-click `index.html`.
 Option B (recommended local server):
 
 ```bash
-cd "/Users/mikesexton/Documents/Ulpango"
+cd ~/Developer/ivritelite
 /usr/bin/python3 -m http.server 8080
 ```
 

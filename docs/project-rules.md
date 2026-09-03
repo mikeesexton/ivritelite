@@ -1,4 +1,4 @@
-# Ulpango project rules
+# IvritElite project rules
 
 **This file is the single source of truth for how agents work in this repo.**
 

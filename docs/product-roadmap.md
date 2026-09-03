@@ -1,4 +1,4 @@
-# Ulpango product roadmap
+# IvritElite product roadmap
 
 Status: live working document. Update this file as tranches ship, are cut, or are
 resequenced. Written 2026-07-29 after a full-codebase review; supersedes nothing,

@@ -347,7 +347,7 @@ def validate_locked_metrics(actual: dict, locked: dict) -> None:
 
 
 def validate_rebuilds() -> None:
-    with tempfile.TemporaryDirectory(prefix="ulpango-sprite-audit-") as temp:
+    with tempfile.TemporaryDirectory(prefix="ivritelite-sprite-audit-") as temp:
         temp_root = Path(temp)
         for pass_name in ("first", "second"):
             for character in APPROVED_CHARACTERS:
