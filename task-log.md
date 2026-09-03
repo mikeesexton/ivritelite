@@ -21,6 +21,49 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 19:49 EDT — Add social, canonical and favicon tags for the new domain
+
+**Requested:** Alongside the `ivritelite.app` cutover, add the social/canonical metadata the
+page has never had (tranche 4 of 5). Kept as its own commit, separate from the CNAME work.
+
+**Files changed:**
+- `index.html` — inserted 22 lines after `<title>`: `meta description`, `link rel=canonical`,
+  three icon links, nine Open Graph tags, and four Twitter card tags.
+
+**Behavior changed:** The page previously had no `og:`, no `twitter:`, no canonical and no
+favicon at all, so sharing the URL produced a bare link and the tab showed a blank icon.
+Now a share renders a card with the gold-ayin logo, and the tab has an icon. The two
+`rel=icon` links are `prefers-color-scheme`-scoped: `logo-dark.png` (dark tile) on light
+browser chrome, `logo-light.png` (light tile) on dark, so the tile edge stays visible either
+way. `apple-touch-icon` falls back to the dark tile, which has no media-query support.
+
+`og:image`, `og:url`, `twitter:image` and the canonical are absolute
+`https://ivritelite.app/...` URLs — they have to be, since scrapers do not resolve relative
+paths. The favicon links stay `./`-relative like the rest of the app.
+
+**Cache-busting:** No `?v=` bump. `index.html` is the entry document, not something it
+loads, and no `.js`/`.css` was touched. The favicon PNGs are new files with nothing cached
+to bust; the sprite-style `?v=` on image URLs was deliberately not copied here, since an
+unbumped version string is worse than none.
+
+**Tests run:** `npm test` — 463/463 pass, 0 skipped, exit 0. `tests/gameplay-layout.test.js`
+ran rather than skipping, so the new `<head>` was parsed and rendered by real headless
+Chrome. Also re-ran `tests/cache-bust.test.js` (4/4) — its merge-base check confirms no
+shipped `.js`/`.css` on this branch was owed a bump. Separately parsed `index.html` with
+`html.parser` and read back all 13 expected meta tags, the canonical, and the three icon
+links, and confirmed both PNG targets exist on disk.
+
+**Risks / regressions to check:**
+- `og:image` is the 1000x1000 square logo, so shares render as a small square thumbnail
+  (`twitter:card` is `summary`, matching). A 1200x630 banner would give a wide hero card;
+  that is a design task, not a fix.
+- The logo has transparent corners. Scrapers that flatten alpha will composite it on white,
+  which suits the dark tile; the light tile is not used for sharing for that reason.
+- Social caches are sticky. Facebook and LinkedIn cache OG data for days, so if the card is
+  ever wrong it needs their debugger to force a re-scrape, not just a redeploy.
+- `og:url` and the canonical hardcode the apex. If the domain ever changes they must change
+  with it, and nothing tests that.
+
 ### 2026-09-03 19:45 EDT — Point the site at ivritelite.app (CNAME + Pages artifact)
 
 **Requested:** `ivritelite.app` was bought at GoDaddy; asked what to take care of next.
