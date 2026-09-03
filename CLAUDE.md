@@ -16,8 +16,9 @@ cache-bust.
 The rules most often violated in practice. Full text, and the rest of the rules,
 in [`docs/project-rules.md`](docs/project-rules.md).
 
-1. **Task log.** Append an entry to `task-log.md` at the end of *every* session,
-   including documentation-only ones.
+1. **Task log.** Add an entry to `task-log.md` at the end of *every* session,
+   including documentation-only ones. **Newest first** — insert below the Entry
+   Format block at the top, never append at the end of the file.
 2. **Cache-busting.** Every `.js`/`.css` file you edit needs its `?v=` bumped in
    `index.html` in the same commit — data files included. A change does not go
    live without it, and because exports use `x = x || function`, a stale cached

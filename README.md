@@ -1,4 +1,4 @@
-# Ulpango (Advanced Duolingo-Style Hebrew Trainer)
+# IvritElite (Advanced Duolingo-Style Hebrew Trainer)
 
 Browser-only vocabulary trainer focused on advanced, practical Hebrew.
 
@@ -35,6 +35,38 @@ Browser-only vocabulary trainer focused on advanced, practical Hebrew.
 - Migration/report workflow for existing verb vocab (`migrate-hebrew-verbs.mjs`)
 - Automated regression tests for conjugation routing and fake-form rejection
 
+## Setup on a new machine
+
+Clone to `~/Developer/ivritelite`. Use the same absolute path on every machine — the
+agent tools (Claude Code, Codex, Antigravity) store project paths absolutely.
+
+**Do not keep this repo under `~/Documents` or `~/Desktop`.** With iCloud "Desktop &
+Documents Folders" sync on, macOS evicts `.git` objects to the cloud (`dataless`,
+zero blocks on disk) and writes sync-conflict files such as `.git/index 2` into git's
+own metadata. That stalls git commands for minutes and can corrupt the repository.
+
+Node — required for the test suite:
+
+```bash
+nvm use          # reads .nvmrc (Node 24, matching CI)
+npm test         # expect 459 tests
+```
+
+`node --test` discovers test files by glob. On Node below 20 it finds none and exits
+0, so an unexpectedly low test count is a failure, not a pass. CI enforces a floor of
+400; locally you have to read the number.
+
+Python — required only for the sprite pipeline (`npm run sprites:*`):
+
+```bash
+python3 -m pip install -r requirements.txt   # Pillow
+npm run sprites:audit                        # exercises the whole toolchain
+```
+
+Chrome or Chromium is optional but worth installing: `tests/gameplay-layout.test.js`
+skips itself when neither is present, which silently retires the rendered-layout
+guard.
+
 ## Run
 
 Option A (quick): double-click `index.html`.
@@ -42,7 +74,7 @@ Option A (quick): double-click `index.html`.
 Option B (recommended local server):
 
 ```bash
-cd "/Users/mikesexton/Documents/Ulpango"
+cd ~/Developer/ivritelite
 /usr/bin/python3 -m http.server 8080
 ```
 

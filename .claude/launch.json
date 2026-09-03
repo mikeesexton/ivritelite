@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ivritelite-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3000", "--no-clipboard"],
+      "port": 3000
+    },
+    {
+      "name": "ivritelite-dev-3100",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3100", "--no-clipboard"],
+      "port": 3100
+    },
+    {
+      "name": "ivritelite-dev-3242",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3242", "--no-clipboard"],
+      "port": 3242
+    }
+  ]
+}

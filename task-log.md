@@ -1,9 +1,82 @@
-# Ulpango Task Log
+# IvritElite Task Log
 
-This file is the shared development log for the Ulpango Hebrew language-learning app.
-It is maintained by all AI agents working on this project (Claude Code and ChatGPT Codex).
-Every agent must append an entry here at the end of every task session, no matter how small.
-Each entry records what was requested, what changed, what was tested, and what to watch for.
+Shared development log for the IvritElite Hebrew language-learning app,
+maintained by every AI agent that works on it (Claude Code, Codex, Antigravity).
+Write an entry at the end of every session, no matter how small.
+
+**Newest first.** Add your entry directly below this Entry Format block, above
+the most recent existing entry. Do not append at the end of the file: entries
+below the `## Log` heading are the original oldest-first region, kept as-is for
+history. Two agents writing to two different ends is how this file ended up
+split, and it conflicts on every overlapping session.
+
+## Entry Format
+
+```
+### [DATE TIME] — <Short task title>
+**Requested:** <What the user asked for>
+**Files changed:** <List of files and what changed>
+**Behavior changed:** <Observable changes to app behavior, or "None">
+**Tests run:** <Commands run and outcomes>
+**Risks / regressions to check:** <What could break or degrade>
+```
+
+### 2026-09-02 20:55 EDT — Move off iCloud, rename Ulpango to IvritElite, harden for two machines
+
+**Requested:** Move the working copy out of iCloud Drive ahead of adding a Mac mini for
+remote iPhone work and 24/7 agents; rename the project from Ulpango to IvritElite
+wherever it still said Ulpango; make whatever GitHub changes that requires; and say what
+else about the repo's organization should change now that three agent tools (Claude Code,
+Codex, Antigravity) edit it from two machines.
+
+**Files changed:**
+- `README.md` — retitled; replaced the hardcoded `cd "/Users/mikesexton/Documents/Ulpango"`
+  run instruction with `~/Developer/ivritelite`; added a "Setup on a new machine" section
+  covering Node, Python/Pillow, Chrome, and why the repo must not live under `~/Documents`.
+- `docs/product-roadmap.md`, `docs/project-rules.md` — retitled; project-rules also now
+  states the task-log insertion point unambiguously.
+- `package.json` — name to `ivritelite`; `python` to `python3` in all three `sprites:*`
+  scripts; added an `engines` floor of Node >=20.
+- `scripts/audit-sprites.py` — temp-dir prefix.
+- `.nvmrc`, `requirements.txt` — new. Node 24 (matching CI); Pillow.
+- `.gitignore` — narrowed `.claude/` to `.claude/*` with `!.claude/launch.json`; corrected
+  the `assets/*/source/` comment, which falsely claimed sprite masters stay local.
+- `.claude/launch.json` — now tracked; configs renamed off `ulpango-dev*`; dropped a
+  fourth config pointing at a deleted session scratchpad.
+- `CLAUDE.md`, `AGENTS.md` — task-log rule reworded, mirrored to keep parity.
+- `tests/cache-bust.test.js` — new. Enforces the `?v=` rule: three structural checks
+  that always run, plus a merge-base check that every shipped file changed on a branch
+  had its key bumped. Verified by deliberate violation in both directions.
+- `.github/workflows/test.yml` — `fetch-depth: 0`, without which the merge-base check
+  would silently skip on exactly the PRs it exists to guard.
+- `task-log.md` — header retitled and rewritten to state "newest first"; Entry Format
+  block hoisted from line 3769 to the top. All 383 prior entries unchanged.
+
+**Behavior changed:** None in the app. No `.js`/`.css` that `deploy-pages.yml` ships was
+touched, so no `?v=` bump was required.
+
+**Tests run:** `npm test` — passed, 463/463, 0 skipped, exit 0. Run after the rename,
+after the toolchain changes, after the doc changes, and after adding the cache-bust test
+(459 before that file added its 4).
+`node --test tests/agent-docs-parity.test.js` — passed, 4/4.
+
+**Risks / regressions to check:**
+- The canonical checkout is now `~/Developer/ivritelite` (fresh clone, verified: no
+  `dataless` objects, no `.git/index 2` conflict files, `git fsck` clean, 1 packfile
+  instead of 2,527 loose objects). The old `~/Documents/Ulpango` copy is intentionally
+  left in place as a safety net and should be deleted only once the Mac mini works.
+- iCloud "Desktop & Documents Folders" sync is still ON at the account level and must be
+  turned off by hand in System Settings — only after the new clone is trusted.
+- Still outstanding: the GitHub repo is still named `ulpango`, and the custom domain is
+  not yet bought or configured. Renaming the repo before the domain exists would break
+  `mikeesexton.github.io/ulpango/`, which GitHub does not redirect.
+- `CNAME` must be added to the file list in `deploy-pages.yml` when the domain lands, or
+  the deploy will drop it and silently detach the domain.
+- The oldest-first region of this log below `## Log` was left as-is; reordering it into
+  one newest-first sequence is still an open decision.
+- `~/.codex/config.toml` still has a `[projects."/Users/mikesexton/Documents/Ulpango"]`
+  entry pointing at the old path.
+
 
 ### 2026-08-20 EDT — Harden the Chrome launch so the test gate stops failing half the time
 
@@ -3764,18 +3837,6 @@ Verified no programmatic scrolling exists in JS (`grep` for scrollTo/scrollIntoV
 **Tests run:** `node --test tests/app-progress.test.js` — passed, 27/27. `node --test` — passed, 41/41.
 
 **Risks / regressions to check:** The browser now depends on a longer ordered `defer` chain under `index.html`, so a quick live smoke test is still worthwhile. The larger mode-specific renderers and selectors still live in `app.js`, so future extractions should keep following the same test-backed, low-risk pattern.
-
-
-## Entry Format
-
-```
-### [DATE TIME] — <Short task title>
-**Requested:** <What the user asked for>
-**Files changed:** <List of files and what changed>
-**Behavior changed:** <Observable changes to app behavior, or "None">
-**Tests run:** <Commands run and outcomes>
-**Risks / regressions to check:** <What could break or degrade>
-```
 
 
 ## Log
