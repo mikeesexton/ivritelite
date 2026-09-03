@@ -1,13 +1,17 @@
 .DS_Store
 node_modules/
 tmp/
-.claude/
+.claude/*
+!.claude/launch.json
 
 # Unrelated local project was removed from the repo root.
 strike-timeline/
 
 __pycache__/
 
-# Sprite originals used by scripts/build-*-sprites.py. Only the generated
-# PNGs that styles.css loads are tracked; the source art stays local.
+# Legacy rule. Sprite masters are NOT local-only: they live in tracked
+# assets/sprite-masters/ (30 PNGs, ~38 MB) and build-approved-sprites.py
+# defaults --source-root there, so a fresh clone can rebuild sprites.
+# No assets/*/source/ directory currently exists; kept only in case the
+# older layout returns.
 assets/*/source/
