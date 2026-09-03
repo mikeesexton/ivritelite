@@ -14,7 +14,7 @@ ever being told the Hebrew pointing convention or the cache-busting requirement.
 
 `task-log.md` is a shared log maintained by all AI agents (Claude Code and ChatGPT Codex).
 
-**At the end of every task session, append a new entry to `task-log.md`** using the format defined at the top of that file. An entry must include:
+**At the end of every task session, add a new entry to `task-log.md`** using the Entry Format block at the top of that file. **Newest first**: insert directly below that block, above the most recent entry — never append at the end of the file. An entry must include:
 
 - Date and time
 - Short title summarizing the task
