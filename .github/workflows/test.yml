@@ -17,6 +17,11 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
+        with:
+          # tests/cache-bust.test.js needs a merge base with origin/main to tell
+          # which shipped files changed. The default shallow checkout has none,
+          # and the test would skip exactly where it matters most.
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v5
