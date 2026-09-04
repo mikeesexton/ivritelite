@@ -21,6 +21,150 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-04 EDT — Topic picker: the learner chooses the vocabulary
+
+**Requested:** Mike stepped back from the two focus-picker tranches. Reviewing Ido's shelves,
+he asked whether generic household vocabulary — "which drawer is the spatula in" — should be
+pinned to a personality, and whether unrouting it would fix the cast-wide safety tier eating
+the draw. The answer to the first was yes and to the second was no, so he redesigned it: pick a
+character, then pick topics from two tiers — character-specific and everyday, the everyday tier
+including public safety — with a minimum number of topics, and the same picker reachable from
+the Review page where the companion is chosen.
+
+**Three measured problems this replaces, all consequences of one flaw.** Focus groups were
+defined as a partition of what a character *owns*, so narrowing could only subtract from that
+character's domain:
+
+1. **Generic vocabulary was pinned to a personality.** A read of all 225 cards on
+   `home_everyday_life`, `everyday_survival_expanded` and `groceries_food` found four slang
+   entries and about ten colloquial loanwords — **roughly 2% carried Ido's register.** The
+   content was already split against itself: all 24 home-care rows (`everyday_242`–`265`) and
+   all 24 kitchen rows (`everyday_218`–`241`) that teach those shelves are unowned and drawn by
+   the whole cast, and `cooking_utensils`/`cooking_verbs` were left shared as "technique rather
+   than street life" while the same kitchen's `groceries_food` was not.
+2. **The safety tier swallowed the boost, worse than tranche 1 reported.** Owned by all five
+   and named by no group for four of them, `civil_defense_safety` could not be narrowed away, so
+   it kept its full 70 cards while the pool shrank. Narrowing to a small group gave the
+   **chosen** topic 20–23% of draws and the safety tier **42–45%** — pick Money & Finance, get
+   twice as much civil defense as finance.
+3. **515 cards were unaskable.** `core_advanced` (171 — the largest shelf in the deck), cooking
+   (147), health (122), emotions (40), grammar (35) were unrouted, so no learner could ask for
+   them.
+
+**Also measured, and worth recording because it corrected the premise:** unrouting does *not*
+help problem 2. It raises safety's share of Ido's owned pool from 14% to 20%, and leaves the
+narrowed case untouched, because narrowing to Dating never involved those shelves. And these
+shelves were never "pinned" in the exclusive sense — none is in any `vocabReserveCategories`,
+so `getItemAudience` returns `null` and all five characters already drew them. Routing is
+emphasis, not exclusivity.
+
+**Files changed:**
+- `app/character-data.js` — new `SHARED_FOCUS_TOPICS` (8 everyday topics, 810 cards).
+  `civil_defense_safety` removed from all five routes and the three practical shelves from
+  Ido's. Character `focusGroups` trimmed to specialists (Ido 3, Inbal 2, Ivri 5, Inat 4,
+  Idan 2 — 1,396 cards). Every `route.vocabWords` entry folded onto the topic that should
+  carry it as an optional `words: []`. `applyFocusToRoute`/`getFocusableCategories` replaced by
+  `getTopicsFor`, `getSelectableCategories`, `resolveTopicCategories`, `resolveTopicWords`,
+  `applyTopicsToRoute`.
+- `app/character.js` — `MIN_FOCUS_TOPICS = 3`; persistent `characterState.topics` keyed by
+  character, surviving the day rollover next to `lensCharacter`; `mission.focus` as the
+  snapshot. `getActiveFocus` reads the snapshot on a mission and the standing selection off
+  it. `isOutsideFocus` inverted to "not selected". `renderFocus` rebuilt with two labelled
+  sections, a scrolling list, the `≥3` gate and a live readout. New `setCharacterTopics` /
+  `toggleCharacterTopic` / `getCharacterTopicSelection` / `getMinimumTopics`, and a collapsed
+  topic editor on every Review → Characters bond card, gated on the existing `canChangeLens()`.
+- `styles.css` — `.character-focus-scroll` / `-section` / `-readout` / `.character-topic-editor`.
+- `index.html` — `?v=20260904c` for `character-data.js`, `character.js`, `styles.css`.
+- `docs/character-gameplay-strategy.md`, `docs/project-rules.md` — see below.
+- `tests/character-mission.test.js` — the seven tranche-1 focus tests replaced by eleven;
+  five pre-existing routing tests updated to the new content truth.
+- `tests/gameplay-layout.test.js` — the focus block rewritten for 13 rows.
+
+**The model, in one line:** the two tiers name **all 42 vocabulary categories — 810 shared +
+1,396 character = 2,206, every card in the deck selectable** — and for vocabulary the selection
+*is* the pool. Anything unselected is fenced, so `TARGET_OWNED_SHARE`'s 65/35 split no longer
+applies to that kind and `buildContentWeigher` returns neutral for it; Leitner, weakness,
+miss-bias and `utility` still order the draw. Sentences, verbs and abbreviations still route on
+the character's register. Tranche 2's derived sentence bias survives unchanged and improves —
+selecting Everyday Life & Errands now weights the 24 home-care rows that no character could
+previously be biased toward.
+
+**Decisions worth keeping:**
+- **The invariant inverted on purpose.** Tranche 1 asserted "topics partition ownership, never
+  extend it"; the everyday tier exists to extend it. A test now asserts the extension directly.
+- **Public Safety is on by default** (`DEFAULT_SHARED_TOPICS`). Found while verifying: without
+  it, the course policy that every resident drills everyday security silently stopped holding,
+  because it was previously carried by five identical route entries. Default-on preserves the
+  policy while leaving it narrowable, which is the whole point.
+- **Three is enough, and it is measured.** The thinnest legal pick in the cast is 105–145 cards,
+  so a learner meets their chosen words about once a week. That is the Leitner scheduler working;
+  the old 250-card floor guarded against *unwanted* repetition under a lens nobody chose, which
+  an explicit selection retires.
+- **Defaults are a real selection, not everything.** "Everything" is the whole 2,206-card deck
+  and defeats the point of choosing, so the default is the character's own topics plus Core
+  Advanced, Everyday Life and Public Safety.
+- **`route.vocabWords` had to move onto topics.** With a flat pool there is no boost to apply,
+  so 60 cards — Idan's trauma vocabulary, Inbal's secular-identity words — would have gone
+  silently inert. A test now pins that every routed word survives on one of its character's
+  topics.
+
+**Behavior changed:** the daily flow is picker → **topics** → mission length. The topic screen
+shows the character's specialists then the everyday tier, each row with its live card count, a
+readout ("3 topics · 354 words" / "2 of 3 topics chosen"), and Continue dead below three. The
+selection persists per character across days and is editable from Review → Characters when no
+mission is running, where it also steers free play. Vocabulary draws only from the selection;
+every other activity is unchanged.
+
+**Verified end-to-end in the browser at 360×640:**
+- Inat → Politics + Cooking + Grammar: Continue dead at 0/1/2 and live at 3; pool 2,467 → **354**
+  cards (17.7 sessions), holding only those three topics' shelves plus the one
+  `business_finance_expanded` card her Politics topic claims by name; **zero**
+  `civil_defense_safety`; the live board drew cooking and politics only.
+- Idan: safety selected → not fenced; safety removed → fenced. Both directions.
+- Review → Characters: all five bond cards carry an editor; mid-mission every row is held with
+  "Finish today's mission to change topics"; off-mission toggling Cooking for Inbal moved her
+  free-play pool to 1,055 cards with cooking present and politics absent.
+- Reload mid-mission kept the snapshot; a forced day rollover wiped the mission and kept both
+  `topics` and `lensCharacter`.
+- Layout: zero card overflow for all five (13 rows for Ivri down to 10), rows at 46px, the list
+  scrolling inside its own container so the title, readout and Continue stay on screen.
+
+**Doc updates, required rather than optional.** `docs/character-gameplay-strategy.md`: the
+cast-wide `civil_defense_safety` policy bullet, the Product model (now describing the picker and
+the vocabulary/voice division), Gate 1 — whose 250-card vocabulary floor was measuring the wrong
+pool and is now measured on the **selectable** pool (Ido 1017, Inbal 1065, Ivri 1272, Inat 1116,
+Idan 976) with the routed figures kept for reference — Gate 2's Ido row, and Ido's ledger entry.
+`docs/project-rules.md`: the "an unrouted shelf belongs to nobody" bullet.
+
+**Tests run:** `npm test` — **478 pass, 0 fail** (475 before this tranche, 463 at session start).
+`node --test tests/gameplay-layout.test.js` passes in rendered Chrome.
+`npm run report:coverage` byte-identical (`Total: 2206; exact 1073`).
+`npm run report:characters` — vocabulary ownership **intentionally** drops to Ido 207, Inbal 272,
+Ivri 468, Inat 312, Idan 196, while the "draw pool after withholding" table is byte-identical
+(1858/1858/1858/2028/2041), which is the check that nothing new was reserved.
+
+**Risks / regressions to check:**
+- **A bug found and fixed during verification:** `chooseTier` did not enforce the minimum, so any
+  path other than the disabled button — a restored save on the tier screen, a direct call — could
+  build a mission below the floor. Guarded now, with a test.
+- Ido at 207 routed vocabulary and Idan at 196 sit **below** the old 250 routed floor. Intended,
+  and the reason Gate 1 was restated; both can select from over 970 cards. Do not "fix" this by
+  re-routing the everyday shelves to a character.
+- `defaultFocusIds` names `"core"`, `"home"` and `"safety"` as string ids. Renaming a shared
+  topic id silently changes every learner's default; the sanitizer drops unknown ids rather than
+  failing, which is deliberate but quiet.
+- Cross-realm assertions bit a fourth and fifth time: `instanceof Map` is false for a Map built
+  inside the test `vm` context, and vm-originated arrays still need spreading. Also
+  `character-mission.test.js` had a bond-card test indexing `children.at(-1)` for the lens
+  button, which broke the moment the topic editor was appended after it — it now finds the
+  button by `dataset.characterLens` instead.
+- Still recorded, not fixed: four rows in `everyday_survival_expanded` are half-pointed
+  (`חשבון חַשְׁמַל`, `חשבון מַיִם`, `תלונת לָקוֹחַ`, `תּוֹר פנוי`), and that shelf mixes `שֵׁירוּת`
+  with `שֵׁרוּת`. Nine `vocabWords` routes still grant ownership a reserve field makes
+  undrawable — five of Inbal's now sit on her `practice` topic's `words` and are still fenced to
+  Inat, which is noted in place. The strategy doc's other drifted figures (81 idioms against 105,
+  148 unrouted `everyday_` rows against 368) have a task chip queued.
+
 ### 2026-09-04 EDT — Focus picker, tranche 2: derived sentence bias
 
 **Requested:** The approved plan's second tranche — let the focus groups bias **Sentences**

@@ -679,6 +679,74 @@ characterData.DIALOGUE_FALLBACKS = characterData.DIALOGUE_FALLBACKS || Object.fr
   handwriting: "greeting",
 });
 
+// The everyday tier, offered to every character alongside their own topics.
+// Together the two tiers name all 42 vocabulary categories, which is what makes
+// "unselected means fenced" total: the learner's selection *is* the vocabulary
+// pool, so there is no unselected remainder for a shelf to hide in.
+//
+// Three of these were Ido's until the tiers split. They are here because they
+// are nobody's identity — a wardrobe, a drain, a bag of flour — and because the
+// sentences that teach them were already unowned and drawn by the whole cast.
+// Five more were unrouted, which meant no learner could ask for them at all:
+// core_advanced alone is the largest shelf in the deck at 171 cards.
+//
+// Public Safety is here rather than on Idan for a different reason. Course
+// policy is that every resident drills the everyday security tier, and a shared
+// topic keeps that true while making it narrowable. As an unnarrowable shelf
+// owned by all five it used to hold its full 70 cards while a narrowed pool
+// shrank around it, taking 42-45% of the draw against 20-23% for the topic the
+// learner had actually chosen.
+const SHARED_FOCUS_TOPICS = Object.freeze([
+  Object.freeze({
+    id: "core",
+    labelEn: "Core Advanced",
+    labelHe: "אוצר מילים מרכזי",
+    categories: Object.freeze(["core_advanced"]),
+  }),
+  Object.freeze({
+    id: "cooking",
+    labelEn: "Cooking & Kitchen",
+    labelHe: "בישול ומטבח",
+    categories: Object.freeze(["cooking_utensils", "cooking_verbs"]),
+  }),
+  Object.freeze({
+    id: "home",
+    labelEn: "Everyday Life & Errands",
+    labelHe: "חיי יום־יום וסידורים",
+    categories: Object.freeze(["home_everyday_life", "everyday_survival_expanded"]),
+  }),
+  Object.freeze({
+    id: "health",
+    labelEn: "Health & Body",
+    labelHe: "בריאות וגוף",
+    categories: Object.freeze(["health", "health_body_expanded", "pharmacy_personal_care"]),
+  }),
+  Object.freeze({
+    id: "food",
+    labelEn: "Food & Groceries",
+    labelHe: "אוכל וקניות",
+    categories: Object.freeze(["groceries_food"]),
+  }),
+  Object.freeze({
+    id: "safety",
+    labelEn: "Public Safety",
+    labelHe: "בטיחות הציבור",
+    categories: Object.freeze(["civil_defense_safety"]),
+  }),
+  Object.freeze({
+    id: "feelings",
+    labelEn: "Feelings & Emotions",
+    labelHe: "רגשות ותחושות",
+    categories: Object.freeze(["emotional_nuance", "emotional_psychological_expanded"]),
+  }),
+  Object.freeze({
+    id: "grammar",
+    labelEn: "Grammar & Language",
+    labelHe: "דקדוק ולשון",
+    categories: Object.freeze(["meta_language", "advanced_grammar_meta_expanded"]),
+  }),
+]);
+
 characterData.characters = characterData.characters || Object.freeze({
   ido: Object.freeze({
     id: "ido",
@@ -694,15 +762,22 @@ characterData.characters = characterData.characters || Object.freeze({
         "relationships_dating_expanded",
         "conversation_glue",
         "media_digital_life_expanded",
-        // Practical Tel Aviv life, which the strategy doc always gave him but
-        // the route table never carried. Groceries and the kitchen come with
-        // it; cooking_utensils and cooking_verbs stay shared because they are
-        // technique rather than street life.
-        "home_everyday_life",
-        "groceries_food",
-        "everyday_survival_expanded",
-        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
-        "civil_defense_safety",
+        // The practical-life shelves are gone from here on purpose. A read of
+        // all 225 of their cards found four slang entries and about ten
+        // colloquial loanwords — roughly 2% of them carry his register, and the
+        // rest is a spatula drawer, a drain and a bag of flour. The content was
+        // already split against itself: the 24 home-care rows
+        // (everyday_242-265) and 24 kitchen rows (everyday_218-241) that teach
+        // those shelves are unowned and drawn by the whole cast, and
+        // cooking_utensils/cooking_verbs were left shared as "technique rather
+        // than street life" while the same kitchen's groceries_food was not.
+        // They are shared topics now, so any learner can ask for them.
+        //
+        // civil_defense_safety is gone from every route for a different reason:
+        // it is a shared Public Safety topic, which is what stops it swallowing
+        // the draw. Owned by all five and narrowable by none, it used to keep
+        // its full 70 cards while the pool shrank around it — 42-45% of a narrow
+        // selection against 20-23% for the topic the learner actually chose.
       ]),
       sentenceCategories: Object.freeze(["colloquial"]),
       sentenceStyles: Object.freeze(["whatsapp"]),
@@ -750,36 +825,23 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lakum",
       ]),
     }),
-    // What the learner may narrow the day to, one indirection above the shelves.
-    // A group bundles shelves that are one topic split by authoring history
-    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
-    // twin are one choice instead of two, and no group is thinner than a
-    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
-    // in `route.vocabCategories`: the groups partition ownership, they never
-    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
-    // absent from the four non-Idan casts, so narrowing can never fence the
-    // shared safety tier out of anyone's day.
+    // This character's specialist topics. The learner also gets
+    // SHARED_FOCUS_TOPICS, and the two tiers together cover all 42 vocabulary
+    // categories, so every card in the deck is selectable and anything left
+    // unselected is fenced. A topic bundles shelves that are one subject split
+    // by authoring history rather than by meaning — `dating_relationships` and
+    // its `(Expanded)` twin are one choice, not two. `words` names cards that
+    // belong to the topic but live on someone else's shelf; they are matched on
+    // `he`, never re-shelved, because vocabulary ids embed a positional index.
     focusGroups: Object.freeze([
       Object.freeze({
-        id: "everyday",
-        labelEn: "Everyday Life & Errands",
-        labelHe: "חיי יום־יום וסידורים",
-        categories: Object.freeze([
-          "home_everyday_life",
-          "everyday_survival_expanded",
-        ]),
-      }),
-      Object.freeze({
+        // Discourse glue stays his. It is not Tel Aviv-specific, but it is
+        // colloquial *register*, which is his stated axis — the same
+        // register-not-topic test the strategy doc applies to his routed verbs.
         id: "small_talk",
         labelEn: "Small Talk & Reactions",
         labelHe: "שיחות חולין ותגובות",
         categories: Object.freeze(["conversation_glue"]),
-      }),
-      Object.freeze({
-        id: "food",
-        labelEn: "Food & Groceries",
-        labelHe: "אוכל וקניות",
-        categories: Object.freeze(["groceries_food"]),
       }),
       Object.freeze({
         // Youth culture and the digital layer it lives on are one register: the
@@ -817,8 +879,6 @@ characterData.characters = characterData.characters || Object.freeze({
         // carries the lived half of the same brief — the calendar, kashrut,
         // services, lifecycle rites, denominations, and other faiths.
         "religious_life_practice",
-        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
-        "civil_defense_safety",
       ]),
       // Words squarely in her territory that live in other categories. Several
       // sit in categories Ido owns; the strategy doc sanctions multi-owner
@@ -883,15 +943,14 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lachzor",
       ]),
     }),
-    // What the learner may narrow the day to, one indirection above the shelves.
-    // A group bundles shelves that are one topic split by authoring history
-    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
-    // twin are one choice instead of two, and no group is thinner than a
-    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
-    // in `route.vocabCategories`: the groups partition ownership, they never
-    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
-    // absent from the four non-Idan casts, so narrowing can never fence the
-    // shared safety tier out of anyone's day.
+    // This character's specialist topics. The learner also gets
+    // SHARED_FOCUS_TOPICS, and the two tiers together cover all 42 vocabulary
+    // categories, so every card in the deck is selectable and anything left
+    // unselected is fenced. A topic bundles shelves that are one subject split
+    // by authoring history rather than by meaning — `dating_relationships` and
+    // its `(Expanded)` twin are one choice, not two. `words` names cards that
+    // belong to the topic but live on someone else's shelf; they are matched on
+    // `he`, never re-shelved, because vocabulary ids embed a positional index.
     focusGroups: Object.freeze([
       Object.freeze({
         // Two groups rather than five: she owns exactly two shelves, and the
@@ -900,12 +959,21 @@ characterData.characters = characterData.characters || Object.freeze({
         labelEn: "Mysticism & Folk Magic",
         labelHe: "מיסטיקה וכישוף עממי",
         categories: Object.freeze(["religion_magic_spirituality"]),
+        words: Object.freeze(["לחש", "תעלומה", "אמונה", "השגחה"]),
       }),
       Object.freeze({
         id: "practice",
         labelEn: "Religious Life & Practice",
         labelHe: "חיי דת ומעשה",
         categories: Object.freeze(["religious_life_practice"]),
+        // Secular/religious identity, on shelves Ido and Inat hold. Five of
+        // these sit on politics_society_expanded, which Inat reserves, so they
+        // stay undrawable for her until that reservation is revisited.
+        words: Object.freeze([
+          "חילוני", "דתי", "חרדי", "חילוניות", "חופש דת", "חופש מדת",
+          "דת ומדינה", "כפייה דתית", "טקס חג", "פרקטיקה דתית",
+          "קהילת בית כנסת", "סלנג חילוני", "פילוסופיה דתית",
+        ]),
       }),
     ]),
   }),
@@ -934,8 +1002,6 @@ characterData.characters = characterData.characters || Object.freeze({
         // social and gesture layer in `media_digital_life_expanded`; the split is
         // that Ido uses the phone and Ivri administers the machine.
         "devices_os_apps",
-        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
-        "civil_defense_safety",
       ]),
       // Device words that already sit on Ido's shelves and are genuinely both
       // readings. Matched on `he`, never re-shelved: a card stays on its own
@@ -1006,15 +1072,14 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-lehashvot",
       ]),
     }),
-    // What the learner may narrow the day to, one indirection above the shelves.
-    // A group bundles shelves that are one topic split by authoring history
-    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
-    // twin are one choice instead of two, and no group is thinner than a
-    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
-    // in `route.vocabCategories`: the groups partition ownership, they never
-    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
-    // absent from the four non-Idan casts, so narrowing can never fence the
-    // shared safety tier out of anyone's day.
+    // This character's specialist topics. The learner also gets
+    // SHARED_FOCUS_TOPICS, and the two tiers together cover all 42 vocabulary
+    // categories, so every card in the deck is selectable and anything left
+    // unselected is fenced. A topic bundles shelves that are one subject split
+    // by authoring history rather than by meaning — `dating_relationships` and
+    // its `(Expanded)` twin are one choice, not two. `words` names cards that
+    // belong to the topic but live on someone else's shelf; they are matched on
+    // `he`, never re-shelved, because vocabulary ids embed a positional index.
     focusGroups: Object.freeze([
       Object.freeze({
         // Kept out of Science & High-Tech on purpose. This shelf is the consumer
@@ -1025,11 +1090,17 @@ characterData.characters = characterData.characters || Object.freeze({
         labelEn: "Devices & Software",
         labelHe: "מכשירים ותוכנה",
         categories: Object.freeze(["devices_os_apps"]),
+        // The five dual words the strategy doc keeps off his shelf on purpose:
+        // Ido uses the phone, Ivri administers the machine. סוללה and אחסון sit
+        // on home_everyday_life, now a shared topic, so the shelf's own
+        // מטען / אחסון בענן pairing still stands.
+        words: Object.freeze(["הגדרות", "עדכון", "באג", "סוללה", "אחסון"]),
       }),
       Object.freeze({
         id: "science_tech",
         labelEn: "Science & High-Tech",
         labelHe: "מדע והייטק",
+        words: Object.freeze(["להשוות", "להתמקד"]),
         categories: Object.freeze([
           "scientific_analytical",
           "science_research_expanded",
@@ -1081,8 +1152,6 @@ characterData.characters = characterData.characters || Object.freeze({
         "philosophy_intellectual_expanded",
         "high_level_discourse_expanded",
         "abstract_concepts_expanded",
-        // Cast-wide by policy, not a topic claim — see CIVIL_DEFENSE_ABBR_IDS.
-        "civil_defense_safety",
       ]),
       // Withheld from the rest of the cast under their active lenses. Only the partisan
       // shelf is named: her literature, law, and philosophy shelves are
@@ -1172,15 +1241,14 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-lehashvot",
       ]),
     }),
-    // What the learner may narrow the day to, one indirection above the shelves.
-    // A group bundles shelves that are one topic split by authoring history
-    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
-    // twin are one choice instead of two, and no group is thinner than a
-    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
-    // in `route.vocabCategories`: the groups partition ownership, they never
-    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
-    // absent from the four non-Idan casts, so narrowing can never fence the
-    // shared safety tier out of anyone's day.
+    // This character's specialist topics. The learner also gets
+    // SHARED_FOCUS_TOPICS, and the two tiers together cover all 42 vocabulary
+    // categories, so every card in the deck is selectable and anything left
+    // unselected is fenced. A topic bundles shelves that are one subject split
+    // by authoring history rather than by meaning — `dating_relationships` and
+    // its `(Expanded)` twin are one choice, not two. `words` names cards that
+    // belong to the topic but live on someone else's shelf; they are matched on
+    // `he`, never re-shelved, because vocabulary ids embed a positional index.
     focusGroups: Object.freeze([
       Object.freeze({
         // Her largest shelf by far, and the only vocabulary shelf any character
@@ -1189,12 +1257,14 @@ characterData.characters = characterData.characters || Object.freeze({
         id: "politics",
         labelEn: "Politics & Society",
         labelHe: "פוליטיקה וחברה",
+        words: Object.freeze(["ירידה"]),
         categories: Object.freeze(["politics_society_expanded"]),
       }),
       Object.freeze({
         id: "ideas",
         labelEn: "Ideas & Philosophy",
         labelHe: "רעיונות ופילוסופיה",
+        words: Object.freeze(["תחרותי", "ספורים", "להשוות", "השכלה"]),
         categories: Object.freeze([
           "abstract_philosophy",
           "philosophy_intellectual_expanded",
@@ -1212,6 +1282,7 @@ characterData.characters = characterData.characters || Object.freeze({
         id: "law",
         labelEn: "Law & Courts",
         labelHe: "משפט ובתי משפט",
+        words: Object.freeze(["הסמכה"]),
         categories: Object.freeze([
           "legal_civic",
           "law_legal_systems_expanded",
@@ -1225,14 +1296,12 @@ characterData.characters = characterData.characters || Object.freeze({
     nameHe: "עידן",
     order: 5,
     dialogue: IDAN_DIALOGUE,
-    // Three shelves. `civil_defense_safety` is what a civilian needs and is
-    // shared with the whole cast; `military_operational` and `emergency_response`
-    // are his alone. The boost stays uniform across the owned subset, so each
-    // mode's weak, missed, and overdue ordering still decides what he drills
-    // inside it.
+    // Two shelves now. `civil_defense_safety` moved out to the shared Public
+    // Safety topic: every learner can still ask for it — which is the course
+    // policy that mattered — but it is now narrowable, so it can no longer keep
+    // its full 70 cards while a narrowed pool shrinks around it.
     route: Object.freeze({
       vocabCategories: Object.freeze([
-        "civil_defense_safety",
         "military_operational",
         // Professional first-responder and police-procedure register. Inat keeps
         // the critical reading of policing — brutality, oversight, occupation —
@@ -1369,36 +1438,39 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-lefotzetz",
       ]),
     }),
-    // What the learner may narrow the day to, one indirection above the shelves.
-    // A group bundles shelves that are one topic split by authoring history
-    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
-    // twin are one choice instead of two, and no group is thinner than a
-    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
-    // in `route.vocabCategories`: the groups partition ownership, they never
-    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
-    // absent from the four non-Idan casts, so narrowing can never fence the
-    // shared safety tier out of anyone's day.
+    // This character's specialist topics. The learner also gets
+    // SHARED_FOCUS_TOPICS, and the two tiers together cover all 42 vocabulary
+    // categories, so every card in the deck is selectable and anything left
+    // unselected is fenced. A topic bundles shelves that are one subject split
+    // by authoring history rather than by meaning — `dating_relationships` and
+    // its `(Expanded)` twin are one choice, not two. `words` names cards that
+    // belong to the topic but live on someone else's shelf; they are matched on
+    // `he`, never re-shelved, because vocabulary ids embed a positional index.
     focusGroups: Object.freeze([
       Object.freeze({
         id: "military",
         labelEn: "Military & Service",
         labelHe: "צבא ושירות",
+        words: Object.freeze([
+          "חזית", "ביטחון לאומי", "מחסום צבאי", "פיגוע", "הפסקת אש", "כיבוש",
+          "חוק הגיוס", "פטור מגיוס", "שירות צבאי", "שירות מילואים",
+          "דוקטרינת ביטחון", "מדד התרעה מוקדמת", "יירוט", "היערכות", "נוהל",
+          "משמעת",
+        ]),
         categories: Object.freeze(["military_operational"]),
       }),
       Object.freeze({
         id: "emergency",
         labelEn: "Emergency Response & Policing",
         labelHe: "חירום ומשטרה",
+        // The trauma cards on the unrouted health shelf are reached here rather
+        // than re-shelved, the same way the route always did it.
+        words: Object.freeze([
+          "אבטחה", "בטיחות", "אזהרה", "הנחיות", "חירום", "תיקון חירום",
+          "עזרה ראשונה", "אמבולנס", "חובש", "חדר מיון", "תחבושת", "תפרים",
+          "שבר", "נקע",
+        ]),
         categories: Object.freeze(["emergency_response"]),
-      }),
-      Object.freeze({
-        // The one focus group over a cast-wide shelf. It is his to narrow because
-        // the tier is his subject; for the other four the shelf is named by no
-        // group at all, which is what keeps it unfenceable on their days.
-        id: "home_front",
-        labelEn: "Home Front & Public Safety",
-        labelHe: "העורף ובטיחות הציבור",
-        categories: Object.freeze(["civil_defense_safety"]),
       }),
     ]),
   }),
@@ -1513,44 +1585,76 @@ characterData.getItemAudience = characterData.getItemAudience || function getIte
 
 characterData.RESERVE_FIELDS = characterData.RESERVE_FIELDS || RESERVE_FIELDS;
 
-// The groups a learner may check off after picking a character, in the order the
-// picker shows them. Empty for an unknown id, so the caller can treat "no groups"
-// and "no character" the same way.
+characterData.SHARED_FOCUS_TOPICS = characterData.SHARED_FOCUS_TOPICS || SHARED_FOCUS_TOPICS;
+
+// This character's own specialist topics, in picker order. Empty for an unknown
+// id, so a caller can treat "no topics" and "no character" alike.
 characterData.getFocusGroups = characterData.getFocusGroups || function getFocusGroups(characterId) {
   return characterData.characters[String(characterId || "")]?.focusGroups || EMPTY_FOCUS_GROUPS;
 };
 
-// Every category any of this character's groups names. This is the set the focus
-// filter is allowed to act on, and the reason narrowing cannot reach the
-// cast-wide safety tier or a `route.vocabWords` card: neither is named by a
-// group, so neither is ever in here.
-characterData.getFocusableCategories = characterData.getFocusableCategories || function getFocusableCategories(characterId) {
-  const groups = characterData.getFocusGroups(characterId);
+// Everything the learner may pick: their character's topics first, then the
+// everyday tier. Topic ids are unique across both tiers, which the test suite
+// pins, so a flat selection list needs no tier qualifier.
+characterData.getTopicsFor = characterData.getTopicsFor || function getTopicsFor(characterId) {
+  const own = characterData.getFocusGroups(characterId);
+  if (!own.length) return SHARED_FOCUS_TOPICS;
+  return Object.freeze([...own, ...SHARED_FOCUS_TOPICS]);
+};
+
+function topicsById(characterId, topicIds) {
+  const wanted = Array.isArray(topicIds) ? topicIds.map((id) => String(id || "")) : [];
+  if (!wanted.length) return [];
+  return characterData.getTopicsFor(characterId).filter((topic) => wanted.includes(topic.id));
+}
+
+// Every category the two tiers name for this character. Because the tiers cover
+// all 42 categories, this is effectively the whole deck — which is what makes
+// "offered but unselected is fenced" total rather than leaving shelves hiding in
+// an unselected remainder.
+characterData.getSelectableCategories = characterData.getSelectableCategories || function getSelectableCategories(characterId) {
   const categories = new Set();
-  groups.forEach((group) => group.categories.forEach((category) => categories.add(category)));
+  characterData.getTopicsFor(characterId).forEach((topic) => {
+    topic.categories.forEach((category) => categories.add(category));
+  });
   return categories;
 };
 
-// The route a picker should weigh against: `route`, with `vocabCategories`
-// narrowed to the checked groups. Ownership of everything else — vocabWords,
-// registers, verb ids, abbreviation buckets — is untouched, so only the
-// vocabulary boost moves. An empty or unrecognised selection returns the route
-// unchanged, which is what makes the feature inert until a learner uses it.
-characterData.applyFocusToRoute = characterData.applyFocusToRoute || function applyFocusToRoute(characterId, route, focusIds) {
-  if (!route || !Array.isArray(focusIds) || !focusIds.length) return route;
-  const groups = characterData.getFocusGroups(characterId);
-  if (!groups.length) return route;
-  const checked = groups.filter((group) => focusIds.includes(group.id));
-  if (!checked.length || checked.length === groups.length) return route;
-  const focusable = characterData.getFocusableCategories(characterId);
-  const kept = new Set();
-  checked.forEach((group) => group.categories.forEach((category) => kept.add(category)));
-  // A shelf no group names — the cast-wide safety tier — is not the learner's to
-  // narrow, so it stays owned regardless of what is checked.
-  (route.vocabCategories || []).forEach((category) => {
-    if (!focusable.has(category)) kept.add(category);
+characterData.resolveTopicCategories = characterData.resolveTopicCategories || function resolveTopicCategories(characterId, topicIds) {
+  const categories = new Set();
+  topicsById(characterId, topicIds).forEach((topic) => {
+    topic.categories.forEach((category) => categories.add(category));
   });
-  return Object.freeze({ ...route, vocabCategories: Object.freeze([...kept]) });
+  return categories;
+};
+
+// Off-shelf cards the selected topics claim, as plain-Hebrew strings. Matched on
+// `he` rather than `id` for the reason `ownsItem` gives: vocabulary ids embed a
+// positional index, so naming a card by id would rot the moment a row is
+// inserted above it.
+characterData.resolveTopicWords = characterData.resolveTopicWords || function resolveTopicWords(characterId, topicIds) {
+  const words = new Set();
+  topicsById(characterId, topicIds).forEach((topic) => {
+    (topic.words || []).forEach((word) => words.add(word));
+  });
+  return words;
+};
+
+// The route the vocabulary pickers weigh against: `route` with its vocabulary
+// signals replaced by the learner's selection. This *extends* ownership rather
+// than only narrowing it — a selected shared topic reaches shelves the character
+// never owned, which is the whole point of the everyday tier. Every other signal
+// — registers, verb ids, abbreviation buckets — is untouched, because sentences,
+// verbs and abbreviations still route on the character's voice.
+characterData.applyTopicsToRoute = characterData.applyTopicsToRoute || function applyTopicsToRoute(characterId, route, topicIds) {
+  if (!route) return route;
+  const selected = topicsById(characterId, topicIds);
+  if (!selected.length) return route;
+  return Object.freeze({
+    ...route,
+    vocabCategories: Object.freeze([...characterData.resolveTopicCategories(characterId, topicIds)]),
+    vocabWords: Object.freeze([...characterData.resolveTopicWords(characterId, topicIds)]),
+  });
 };
 
 characterData.getCharacter = characterData.getCharacter || function getCharacter(id) {

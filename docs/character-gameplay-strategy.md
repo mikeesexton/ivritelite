@@ -4,15 +4,18 @@ Status: live working document. Update this file as character content, visual des
 
 ## Product model
 
-Each day the learner chooses a Tel Aviv character. The choice changes the day's emphasis and voice without locking the learner out of the rest of the course.
+Each day the learner chooses a Tel Aviv character, then chooses the vocabulary topics the day will cover. **The learner chooses the vocabulary; the character chooses the voice.**
 
-- Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review. Shared and adaptive material draw from the active character's un-fenced pool — see "Content withholding" below.
+- **The topic picker.** After picking a character the learner checks off topics from two tiers: that character's specialist topics, and a shared everyday tier every character is offered. The two tiers name all 42 vocabulary categories between them, so every card in the deck is selectable — including the 515 that used to sit on unrouted shelves nobody could ask for, `core_advanced` among them. At least three topics are required (`MIN_FOCUS_TOPICS`), and the selection is remembered per character across days, editable from the Review → Characters tab whenever no mission is running. A mission snapshots it at start, so a later edit cannot shift the deck under a mission in progress.
+- **For vocabulary the selection *is* the pool.** Anything unselected is filtered out, so the 65/35 owned split below does not apply to the Vocabulary activity and `buildContentWeigher` returns neutral for that kind. Leitner level, weakness, miss-bias and `utility` still order the draw. This is why no shelf can dominate a narrowed day: there is no unselected remainder for one to hide in.
+- **Sentences, verbs and abbreviations are unchanged.** They route on the character's register, which is where identity actually lives, and none of them carries a topic field to check off. Sentences additionally take a *weight* from the selected topics — derived from the vocabulary each sentence contains, never fenced, because `getRoundTarget` measures the unfiltered deck and fencing a register bank would repeat rows inside one session.
+- Standard character mix: 65% primary material, 20% shared or overlapping material, 15% adaptive review, for every mode except Vocabulary. Shared and adaptive material draw from the active character's un-fenced pool — see "Content withholding" below.
 - Idan mix: security, safety, and military material in two tiers, plus the learner's weak points. He weighs content like everyone else, so the 65% boost is uniform across his owned set and each mode's weak/missed/overdue ordering still decides what he drills inside it. He has no protected comfort zone because his shelf is small and hard, not because he is exempt from routing.
 - Character assignment is a lens, not an exclusive taxonomy. A word or sentence may belong to multiple characters.
 - Routing works on existing item fields, never on a `character` tag in the content files. Keep a word on its true topic shelf and reach it through `route.vocabWords`; never move it between vocabulary categories, because vocabulary ids embed a positional index and re-shelving orphans learner progress.
 - A conjugation route may name a whole verb or a single sense. `route.verbIds` accepts either an entry id (`character-verb-lehaklit`, which matches every sense) or a full deck id (`character-verb-liklot--sense-2`, which matches one). Use the sense form when one paradigm carries meanings that belong to different characters. `npm run report:characters` counts the conjugation deck rather than the seed entries so per-sense routes are visible.
-- Keep the initial cast at five. Ido's practical-life coverage closes the largest remaining gap without adding a sixth character.
-- `civil_defense_safety` is the one vocabulary category routed to the **entire cast** by policy. Everyday security is something a resident needs regardless of whose day it is, so it is not a balance bug when it lifts every character's vocabulary count in `npm run report:characters`. The same rule covers six home-front acronyms (`CIVIL_DEFENSE_ABBR_IDS`).
+- Keep the initial cast at five. Practical life is covered by the shared everyday tier rather than by a character, which is what the "technique rather than street life" test always implied.
+- `civil_defense_safety` is no longer routed to anyone. Everyday security is still something a resident needs regardless of whose day it is, so it is now the shared **Public Safety** topic, offered to every character and on by default. That keeps the policy while making it narrowable, which routing could not: owned by all five and named by no topic, the shelf held its full 70 cards while a narrowed pool shrank around it, taking 42–45% of the draw against 20–23% for the topic the learner had actually chosen. The six home-front acronyms (`CIVIL_DEFENSE_ABBR_IDS`) are unaffected — abbreviations route on the character, not on the learner's topics.
 - Abbreviations can also be routed by id. `route.abbrIds` grants one and `route.abbrExcludeIds` withholds one; an exclusion is checked first, so it beats a bucket grant. This exists because the four buckets are too coarse to lift the military register out of Ivri's and Inat's shelves.
 - **Routing has two layers: a boost and a fence.** Ownership decides weight, as above. A second, narrower rule decides *audience*: content strongly coded to one character is withheld from the rest, including adaptive review, so it stops arriving as neutral filler in someone else's mission. See "Content withholding".
 
@@ -255,17 +258,33 @@ well-covered characters beats 1.0x reached by padding.
 "Fleshed out" is two gates, and a character has to pass both. Neither is a parity target: a
 character may exceed a floor by 3x without that being a problem.
 
-**Gate 1 — per-mode floors**, measured on the **routed** pool — the set the picker actually
-draws from, exactly as `npm run report:characters` prints it.
+**Gate 1 — per-mode floors.** Sentences, abbreviations and verbs are measured on the
+**routed** pool, exactly as `npm run report:characters` prints it. Vocabulary is not,
+any more: the topic picker means the learner draws from their own selection rather
+than from the character's route, so the routed figure no longer describes what they
+see. It is measured on the **selectable** pool instead — the character's specialist
+topics plus the shared everyday tier.
 
 | pool | floor | Ido | Inbal | Ivri | Inat | Idan |
 |---|---|---|---|---|---|---|
-| vocabulary | **250** | 502 | 342 | 537 | 382 | 266 |
+| vocabulary (selectable) | **250** | 1017 | 1065 | 1272 | 1116 | 976 |
+| vocabulary (routed, for reference) | — | 207 | 272 | 468 | 312 | 196 |
 | sentences | **90** | 266 | 108 | 242 | 224 | 131 |
 | abbreviations | **30** | 69 | 87 | 113 | 85 | 34 |
 | verbs | **20** | 34 | 26 | 37 | 25 | 30 |
 
-All five characters now clear all four floors.
+All five characters clear all four floors. Note that Ido at 207 routed and Idan at
+196 now sit **below** the old 250 routed-vocabulary floor, and that this is not a
+regression: 225 of Ido's cards were the generic practical-life shelves and 70 of
+Idan's were the cast-wide safety tier, all of which moved to the shared tier where
+every learner can ask for them. Both characters can select from over 970 cards.
+
+A second floor guards the thing the routed floor used to: the **three-topic
+minimum** (`MIN_FOCUS_TOPICS`). Because the selection is the whole vocabulary pool,
+the thinnest legal pick is what determines repetition. Measured across the cast it
+is 105–145 cards, so a learner meets their chosen words roughly once a week — which
+is the spaced-repetition scheduler working rather than a starved pool.
+`tests/character-mission.test.js` pins it.
 
 Read the sentence row against the fence, not only against the floor. Ivri owns 242 and can
 draw 231 of those owned rows, because Inat reserves eleven `professional_` rows that are still
@@ -273,31 +292,42 @@ his by register. Idan owns 131 and can draw all of them; 49 of those are also ca
 reach them too. The second table in `npm run report:characters` is the authority on what a
 character may actually be served.
 
-The vocabulary floor is derived, not chosen. A vocabulary session serves
-`WORD_MATCH_SESSION_SIZE = 20` words and the owned share is `TARGET_OWNED_SHARE = 0.65`, so
-about 13 of them come from the character's own pool. 250 cards is therefore roughly 19 sessions
-before the pool starts cycling — about three weeks of daily play. Measured today: Ido 36
-sessions, Ivri 38, Inat 29, Inbal 26, Idan 20.
+The vocabulary floor is derived, not chosen. It used to be derived against
+`TARGET_OWNED_SHARE = 0.65`, on the reasoning that about 13 of a session's
+`WORD_MATCH_SESSION_SIZE = 20` words came from the character's own pool. That share no
+longer applies to vocabulary: the selection *is* the pool, so all 20 come from it and
+`buildContentWeigher` returns neutral for the kind. 250 selectable cards is therefore
+12.5 sessions rather than 19, and every character clears it by roughly 4x.
+
+The old floor also carried an assumption worth retiring explicitly: that repetition is
+something to be protected *from*. It was, when the pool was a lens the learner had not
+chosen. Once they pick the topics, cycling their own 105–145 words weekly is the
+desired behaviour, not starvation.
 
 An earlier version of this section set the floor at 250 *own-domain* cards, meaning the routed
 total minus the 70 cast-wide `civil_defense_safety` cards. That was a fitted number — it was
 chosen so Inbal passed after her tranche — and the subtraction made it partly unreachable:
-growing the shared tier cannot raise anyone's own-domain figure, and Idan would have needed ~156
-more cards when his honest headroom was ~130 before drifting from terminology into tactics.
-Repetition is what a learner feels, and repetition is a function of the routed pool, so that is
-what the floor measures.
+growing the shared tier cannot raise anyone's own-domain figure. That subtraction is now moot,
+since no character routes the safety shelf at all.
 
 Own-domain is still worth reporting, because it is the fair way to compare *identity* rather
-than pool size: Ido 402, Ivri 421, Inat 302, Inbal 265, Idan 189. Gate 2 is what actually proves
-a domain is covered.
+than pool size, and it is now simply the routed figure: Ido 207, Inbal 272, Ivri 468, Inat 312,
+Idan 196. Gate 2 is what actually proves a domain is covered.
 
 **Gate 2 — domain checklist.** Gate 1 alone is not enough: it would have passed Ivri on 341
 cards while every one of his technology cards was abstract AI register and none named an object
 a person touches. Each character needs the clusters their subject actually contains, marked
 covered or open.
 
-- **Ido** — slang, nightlife, dating, texting, olim language, practical apartment life,
-  groceries, social media and gesture register. No open clusters.
+- **Ido** — slang, nightlife, dating, texting, olim language, social media and gesture
+  register, and the colloquial discourse glue. No open clusters. *Practical apartment life
+  and groceries were struck from this list:* a read of all 225 cards on
+  `home_everyday_life`, `everyday_survival_expanded` and `groceries_food` found four slang
+  entries and about ten colloquial loanwords, so roughly 2% of them carried his register.
+  A wardrobe, a drain and a bag of flour are nobody's identity, and the sentences that teach
+  them (`everyday_218`–`241`, `everyday_242`–`265`) were already unowned and drawn by the
+  whole cast. `conversation_glue` stays his on the register-not-topic test the routed verbs
+  already use: discourse glue is not Tel Aviv-specific, but it is colloquial speech.
 - **Inbal** — Kabbalah and mysticism ✓, folk magic and the supernatural ✓, ritual objects ✓,
   liturgy ✓, holidays and calendar ✓, prayer services ✓, kashrut ✓, lifecycle rites ✓,
   denominations and institutions ✓, synagogue interior ✓, religious roles ✓, ex-religious life ✓,
@@ -337,7 +367,7 @@ voiced without content routing. Revisit only if a non-colloquial idiom tranche i
 
 The existing colloquial tranche includes the newer LGBTQ+ and camp slang material and its related sentences. Preserve it as the current Ido content baseline.
 
-- Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories, plus the practical-life shelves added later — `home_everyday_life`, `groceries_food`, and `everyday_survival_expanded` — for 402 cards. This document always assigned him practical Tel Aviv life, but the route table did not carry it until then. `cooking_utensils` and `cooking_verbs` stay shared: they are technique rather than street life.
+- Vocabulary: the six routed `social_cultural`, `culture_identity_expanded`, `dating_relationships`, `relationships_dating_expanded`, `conversation_glue`, and `media_digital_life_expanded` categories — 207 cards. The practical-life shelves `home_everyday_life`, `groceries_food` and `everyday_survival_expanded` were routed to him for a period and have been moved to the shared everyday tier. The "technique rather than street life" test that kept `cooking_utensils` and `cooking_verbs` shared was the right test and was applied inconsistently: the same kitchen's `groceries_food` was his, and household maintenance is technique too. All of it is now selectable by any learner as **Everyday Life & Errands**, **Food & Groceries** and **Cooking & Kitchen**.
 - Sentences: the `colloquial` category plus the `whatsapp` style — 235 owned in total after
   the shared relationship expansion. The `everyday` register is deliberately **not** his.
   Adding it would blur the colloquial identity that distinguishes him.

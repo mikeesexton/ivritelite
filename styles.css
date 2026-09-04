@@ -3013,6 +3013,67 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   color: inherit;
 }
 
+/* Two tiers with headings, and a bounded scroller: with the everyday tier the
+   longest menu is 13 rows, which no phone viewport fits. The scene card already
+   scrolls by design, but scrolling the list instead keeps the title, the readout
+   and Continue on screen while the learner works down it. */
+.character-focus-scroll {
+  display: grid;
+  gap: 0.7rem;
+  max-height: min(46vh, 340px);
+  overflow-y: auto;
+  padding-inline-end: 0.2rem;
+}
+
+.character-focus-section {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.character-focus-section-label {
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.character-focus-readout {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  margin: 0.1rem 0 0;
+  text-align: center;
+}
+
+/* The Review page lists all five characters, so the editor stays collapsed
+   until asked for rather than burying the bond cards under five topic lists. */
+.character-topic-editor {
+  border-top: 1px solid var(--line);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.character-topic-editor > summary {
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 0.82rem;
+  min-height: 32px;
+}
+
+.character-topic-editor .character-focus-options {
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.character-topic-editor .character-focus-option[disabled] {
+  cursor: default;
+  opacity: 0.55;
+}
+
 .character-back-button {
   margin-top: 0.25rem;
 }
@@ -3619,6 +3680,14 @@ body[data-ui-lang="he"] .character-mission-copy {
 
   .character-focus-options {
     gap: 0.35rem;
+  }
+
+  /* Measured, not guessed: at 360x640 the fixed chrome around the list —
+     compacted sprite, title, note, readout, Continue and Back — leaves about
+     230px, and a taller list pushed Continue out of the card entirely. Roughly
+     four and a half rows show at a time and the rest scrolls. */
+  .character-focus-scroll {
+    max-height: min(34vh, 220px);
   }
 
   /* The panel gap already separates Back from Continue, so its own top margin is
