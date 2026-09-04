@@ -21,6 +21,185 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-04 00:05 EDT — Fix the gameplay-layout flake (unsettled geometry reads)
+
+**Requested:** Investigate and fix `tests/gameplay-layout.test.js`, which failed roughly one
+full-suite run in four while passing in isolation.
+
+**Files changed:**
+- `tests/gameplay-layout.test.js` — replaced the fixed-frame settle with a stability poll and
+  applied it at every geometry read, including the three inline reads that had no settle at
+  all. `GAMEPLAY_GEOMETRY` became `GAMEPLAY_GEOMETRY_FN` (uncalled) so the poll can invoke it
+  repeatedly; the old called-form constant had no remaining users and was removed.
+
+**Root cause.** Every assertion failure was a geometry `assert.ok`, never the Chrome-launch
+timeout this file already guards. Two settle defects:
+
+1. `measureGeometry` awaited `document.getAnimations()` once and then two frames.
+   `getAnimations()` lists only animations that have *already started*, so one queued during
+   the current frame is never awaited; and `document.fonts.ready` resolves immediately when no
+   load is pending *at that moment*, which is exactly the case for the Hebrew display faces on
+   `.choice-btn` — Chrome has not requested them yet for choices rendered in that frame.
+2. The Sentences and Shema blocks started a question and read `GAMEPLAY_GEOMETRY` in the *same
+   synchronous tick*, with no settle whatsoever. `assertNoGameplayScroll` on that value is
+   precisely the phantom-scrollHeight case the file's own comment describes, so this is the
+   likelier origin of the two.
+
+The decisive evidence is the timing. Failing runs finished in **3.6s** while passing runs took
+**5–9s**: the test was tripping *faster* than it passed, which is the signature of an assertion
+firing before layout settled rather than of anything being slow. After the fix, the same test
+under a parallel `npm test` spends **16.9s** — against 6.2s run on its own — because the poll
+now waits for geometry that genuinely takes that long to settle under contention. That gap is
+the window the old two-frame settle was walking into.
+
+**Why this does not paper over real bugs.** The poll waits for geometry to stop changing and
+then asserts on the stable value. A genuine layout overflow is stable, so it still fails on the
+first attempt; nothing retries an assertion. If the 4s deadline expires the last measurement is
+used, which is no weaker than the previous behavior.
+
+**Behavior changed:** None in the app. Test-only.
+
+**Tests run:**
+- `tests/gameplay-layout.test.js` alone, 6 runs before the fix: 6 pass (as expected — the
+  failure does not reproduce in isolation).
+- `npm test` after the fix, 7 consecutive full-suite runs: 464 pass, 0 fail every time.
+
+The settle duration across those 7 runs is the strongest confirmation of the mechanism. Runs
+1-3 landed while the machine was busy and the test spent 16.9s, 18.5s and 24.1s; runs 4-7 ran
+on a quiet machine and took 5.6s, 4.2s, 4.6s and 5.6s. The poll cost tracks system contention
+exactly as a settle-time race predicts, and the idle figures are at or below the 5-9s the test
+used to take when it passed — so the fix is not simply "wait longer everywhere", it waits only
+when the layout is genuinely still moving. Against the pre-fix rate of 2 failures in about 8
+full-suite runs, 7 clean runs is suggestive rather than conclusive on its own (roughly a 13%
+chance of a clean streak that long at a 25% failure rate); the mechanism evidence is what
+carries the diagnosis.
+
+**Risks / regressions to check:**
+- No pre-fix repro of the specific failing assertion was ever captured; the diagnosis rests on
+  the failure timing plus the code, not on a caught failure. If it recurs, the next step is
+  capturing which assertion fails — all ~60 live in one `test()` block, so a failure names a
+  line but not a phase, and splitting that block would make the next occurrence legible.
+- An honest caveat on an earlier attempt: a deliberate CPU-load experiment spawned eight shell
+  loops that survived their `kill` (reparented to init) and pegged eight cores for ~11 minutes.
+  They were found and killed. One full-suite run recorded during that window (600s, "437 pass,
+  1 cancelled") is an artifact of that, not a real result.
+
+### 2026-09-03 23:40 EDT — Close the per-word niqqud test gap
+
+**Requested:** Fix the test gap that let 63 half-pointed vocabulary cards pass for months.
+
+**Files changed:**
+- `tests/vocab-data.test.js` — added "every word of a pointed vocabulary value carries
+  niqqud", directly below the existing card-level niqqud test. No cache bump: `index.html`
+  does not ship test files.
+
+**What it checks:** every whitespace-, maqaf- or hyphen-separated word of `heNiqqud` carries
+a mark, with `אג״ח` documented as the one unpointable token and a stale-exception guard so a
+dead entry cannot silently re-open the gap. The existing test only required one mark
+*somewhere* in the value, which a half-pointed multi-word string satisfies.
+
+Two encoding notes are recorded in the test comment because both have already produced a wrong
+answer in this repo:
+- The class is built from explicit `\uXXXX` escapes. Pasting the combining marks yields
+  `[ְ-ׇ]`, which spans U+05B0–U+05C7 and therefore matches the maqaf U+05BE — a hyphen, not a
+  vowel — so a half-pointed hyphenated compound reads as fully pointed.
+- U+05BC belongs in the set: shuruk (`וּ`) is a vav carrying a dagesh, so `שׁוּם`, `דּוּד` and
+  `גּוּשׁ` hold their vowel there and have no vowel point at all. A vowel-only class reports 12
+  false positives.
+
+**Behavior changed:** None. Test-only.
+
+**Tests run:**
+- `npm test`: 464 pass, 0 fail.
+- Negative check: re-breaking `בְּדִיקַת נְאוֹתוּת` back to `בְּדִיקַת נאותות` turns the new
+  test red with `business_finance_expanded-008-due-diligence: נאותות in בְּדִיקַת נאותות`,
+  while the pre-existing test stays green. `vocab-data.js` was restored afterwards.
+
+**Risks / regressions to check:**
+- A future acronym card fails until it is added to `UNPOINTABLE`, which is intended: it forces
+  the same justification the neighbouring `ACRONYM_EXCEPTIONS` list asks for.
+- `sentence-bank-data.js` has no equivalent per-word guard. Its only current offenders are
+  acronyms (`ד״ר`, `אג״ח`), and it carries ~186 documented legacy words, so adding one there
+  needs an exemption policy decision first.
+
+### 2026-09-03 22:40 EDT — Complete every partially-pointed vocabulary card (63 cards)
+
+**Requested:** Fix the `due diligence` card, whose pointed column marked only the first of its
+two words; then sweep the data files for the same defect, report the batch before fixing it,
+apply the mechanically resolvable ones, and decide the ambiguous remainder.
+
+**Files changed:**
+- `vocab-data.js` — 63 pointed columns completed. Only the third (pointed) element of each
+  card changed; no id, category, gloss, plain column or availability flag was touched, so no
+  learner progress is re-keyed.
+- `index.html` — `vocab-data.js?v=20260827a` → `?v=20260903b`. (The `a` letter was
+  written to the file and then rolled back mid-edit, so it was never committed and nothing
+  else references it; `b` is the only 2026-09-03 key that ships.)
+- `task-log.md` — this entry.
+
+**The defect.** The pointed column is supposed to mark every vowel in the value, but 63 cards
+marked some words and left others bare (`בְּדִיקַת נאותות`). All 63 sat in `*_expanded`
+categories and all were playable. `tests/vocab-data.test.js` did not catch them because
+"every vocabulary card carries real niqqud" only asserts that *at least one* mark appears
+somewhere in `heNiqqud`, which a half-pointed multi-word value satisfies.
+
+**How the words were resolved.** 40 were copied from an existing unambiguous pointing already
+in the repo. 20 were pointed fresh, each anchored to a precedent where one existed:
+`אִינְטֶרְנֶט` gave `אִינְטֶרְנֶטִי`; `לְאוּמִּי` plus the repo's `־ִיִּים` plural gave
+`בֵּינְלְאוּמִּיִּים`; `יִישּׂוּם` (sin, not shin) gave `לְיִישּׂוּם`; `דֶּדוּקְטִיבִית`
+confirmed the /v/ ב takes no dagesh, giving `אִינְדּוּקְטִיבִית`. `נְאוֹתוּת` is נָאוֹת + ־וּת,
+parallel to נָכוֹן → נְכוֹנוּת, and matches `sentence-bank-data.js:18895`, which points the
+identical phrase. `לַמּוּצָר` matches `sentence-bank-data.js:18497`, same phrase, glossed
+"The product roadmap".
+
+The last 13 words could not be chosen by frequency because the repo points each of them more
+than one way; all were settled by syntax and reviewed with the user before applying:
+construct vs absolute (`סְעִיף אַחֲרָיוּת`, `הַמְלָצַת מְדִינִיּוּת`, `זְמַן מָסָךְ` and
+`כְּתַב עֵת` construct; `מַעֲמָד חֶבְרָתִי` and `מַצָּב כְּרוֹנִי` absolute, since a following
+adjective is not a construct chain), and noun vs verb (`שֵׁם` not `שָׁם`, `פָּנוּי` "vacant"
+not `פִּנּוּי` "evacuation", `גּוּשׁ` not the non-word `גוֹשׁ`).
+
+Two entries deliberately drop a helper letter, which is ktiv chaser and correct:
+`בעיית` → `בְּעָיַת` (one yod) and `עכשווי` → `עַכְשָׁוִי` (one vav — `docs/project-rules.md`
+documents the plain `וו` collapsing to one pointed `ו`).
+
+**Not defects, deliberately left alone:** 11 triliteral roots in `verb-game-data.js`
+(`נ־ג־שׁ` — the shin dot identifies the letter; root letters carry no vowels), 6 acronym
+values (`אג״ח`, `ד״ר`) of which `אג״ח` is already a documented exception, and 81 `notes:`
+prose fields that mix pointed examples with unpointed citation forms.
+
+**One judgment call worth revisiting:** `תוכנית` was pointed `תּוֹכְנִית`, the only precedent
+inside `vocab-data.js`. `docs/project-rules.md` cites `תוכנית` → `תָּכְנִית`, and
+`sentence-bank-data.js` prefers that form 11 to 4. Flipping it is a one-word change.
+
+**Behavior changed:** 63 Translation Match cards now render a fully pointed Hebrew form
+instead of a half-pointed one. No card was added, removed, re-shelved or re-keyed.
+
+**Tests run:**
+- `npm test` before: 463 pass, 0 fail.
+- `npm test` after: 463 pass, 0 fail.
+
+**Normalization trap — read this before scripting a data-file edit.** The first apply script
+did `readFileSync(...).normalize("NFC")` and wrote the whole file back. That rewrote 145
+Hebrew strings nobody had touched into a visually identical but byte-different mark order, and
+`tests/vocab-data.test.js` failed on `אַנְדַּרְטָה` — a word in a different tranche, whose
+`actual` and `expected` printed identically in the assertion diff. The change was reverted and
+re-applied by replacing only the unpointed tokens on the target lines, leaving every other
+byte alone. Never normalize a whole data file: unpointed search keys carry no combining marks,
+so exact substring matching works on the original bytes without it.
+
+**Risks / regressions to check:**
+- `tests/vocab-data.test.js` still only requires one mark somewhere in `heNiqqud`. With the
+  backlog now at zero, a per-word assertion would close the gap permanently and would pass
+  today — worth adding before more content lands.
+- Watch for a scripted check that builds its niqqud character class from pasted combining
+  marks: `[ְ-ׇ]` spans U+05B0–U+05C7 and so matches the maqaf U+05BE, which is a hyphen, not a
+  vowel. That produced 18 spurious hits during the sweep until the class was rebuilt from
+  explicit `\uXXXX` escapes.
+- `tests/gameplay-layout.test.js` ("compact gameplay and safe centering hold in rendered
+  Chrome") failed twice under full-suite load and passed in five isolated runs and in every
+  full run since. It does not read pointed vocabulary, so it is unrelated to this change, but
+  it looks load-sensitive.
 ### 2026-09-03 22:00 EDT — Ship a real Open Graph card image
 
 **Requested:** Design a proper `og:image` to replace the square logo, using Claude Design.

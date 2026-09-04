@@ -185,7 +185,7 @@ async function evaluate(cdp, expression) {
   return result.result.value;
 }
 
-const GAMEPLAY_GEOMETRY = `(() => {
+const GAMEPLAY_GEOMETRY_FN = `(() => {
   const body = document.querySelector('.shell-body');
   const shell = document.querySelector('.lesson-shell:not(.hidden)');
   const header = shell?.querySelector('.lesson-header-main');
@@ -214,21 +214,61 @@ const GAMEPLAY_GEOMETRY = `(() => {
     } : null,
     footerPosition: footer ? getComputedStyle(footer).position : "",
   };
-})()`;
+})`;
 
 // The feedback tray animates in with `feedbackTrayIn 180ms` (styles.css), and a
 // transformed descendant still contributes to an ancestor's scrollable overflow
 // in Chrome. Measuring at t=0 therefore reports up to 6px of phantom
-// scrollHeight — the animation's starting translateY. Settle first, and re-check
-// fonts: the boot-time `document.fonts.ready` only settles loads pending on the
-// home screen, and the Hebrew display faces used by .choice-btn load later.
-async function measureGeometry(cdp) {
-  await evaluate(cdp, `(async () => {
-    await document.fonts.ready;
+// scrollHeight — the animation's starting translateY.
+//
+// Awaiting the animations once and then waiting two frames is not enough, and
+// this test failed roughly one full-suite run in four because of it:
+//
+//   * `getAnimations()` lists only animations that have ALREADY started, so one
+//     queued during the current frame is never awaited; and
+//   * `document.fonts.ready` resolves immediately when no load is pending *at
+//     that moment*, which is exactly the case for the Hebrew display faces on
+//     .choice-btn — Chrome has not yet requested them for choices that rendered
+//     in this frame.
+//
+// Either one lands after the settle and reflows the shell before the read, which
+// is why the failures were geometry assertions that tripped FASTER than a passing
+// run. Under a parallel `npm test` the local static server is slow enough to make
+// the font case likely; run on its own the file passes.
+//
+// So poll the real measurement rather than guess a duration: sample until nothing
+// is animating and two consecutive frames agree.
+//
+// Use this at EVERY geometry read. The Sentences and Shema blocks below start a
+// question and measured in the same synchronous tick, so they never settled at
+// all — that is the most likely origin of the failures, since
+// `assertNoGameplayScroll` is exactly the phantom-scrollHeight assertion the
+// paragraph above describes.
+const SETTLED_GEOMETRY = `(async () => {
+  const measure = ${GAMEPLAY_GEOMETRY_FN};
+  const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve()));
+  const deadline = performance.now() + 4000;
+  await document.fonts.ready;
+  let current = measure();
+  let agreements = 0;
+  while (performance.now() < deadline) {
     await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {})));
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-  })()`);
-  return evaluate(cdp, GAMEPLAY_GEOMETRY);
+    await nextFrame();
+    const previous = current;
+    current = measure();
+    const animating = document.getAnimations().some((animation) => animation.playState === 'running');
+    if (!animating && JSON.stringify(current) === JSON.stringify(previous)) {
+      agreements += 1;
+      if (agreements >= 2) break;
+    } else {
+      agreements = 0;
+    }
+  }
+  return current;
+})()`;
+
+async function measureGeometry(cdp) {
+  return evaluate(cdp, SETTLED_GEOMETRY);
 }
 
 function assertNoGameplayScroll(geometry, label) {
@@ -503,7 +543,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     assertChoicesClearFooter(prepositionsFeedback, "Prepositions feedback");
     assertFeedbackFooterInFlow(prepositionsFeedback, "Prepositions feedback");
 
-    const sentenceFeedback = await evaluate(pageCdp, `(() => {
+    const sentenceFeedback = await evaluate(pageCdp, `(async () => {
       const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
       IvriQuestApp.utils.weightedRandomWord = (items) => (
         items.find((item) => item.word?.sentence?.id === 'everyday_127') || items[0]
@@ -514,7 +554,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
 
       const question = IvriQuestApp.runtime.state.sentenceBank.currentQuestion;
       const active = {
-        geometry: ${GAMEPLAY_GEOMETRY},
+        geometry: await ${SETTLED_GEOMETRY},
         promptFont: parseFloat(getComputedStyle(document.querySelector('.prompt-text')).fontSize),
         slotFont: parseFloat(getComputedStyle(document.querySelector('.sentence-slot')).fontSize),
         bankFont: parseFloat(getComputedStyle(document.querySelector('.sentence-token')).fontSize),
@@ -535,7 +575,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       return {
         active,
         feedback: {
-          geometry: ${GAMEPLAY_GEOMETRY},
+          geometry: await ${SETTLED_GEOMETRY},
           bankCount: document.querySelectorAll('.sentence-token-bank').length,
           metaCount: document.querySelectorAll('.sentence-answer-meta').length,
           promptVisible: document.querySelector('.prompt-card')?.getBoundingClientRect().height > 0,
@@ -565,7 +605,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       "Sentences feedback must not scroll internally",
     );
 
-    const shemaFeedback = await evaluate(pageCdp, `(() => {
+    const shemaFeedback = await evaluate(pageCdp, `(async () => {
       const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
       IvriQuestApp.utils.weightedRandomWord = (items) => items.reduce((longest, item) => (
         String(item.word?.sentence?.english || '').length > String(longest.word?.sentence?.english || '').length
@@ -590,7 +630,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
 
       const rows = [...document.querySelectorAll('#feedbackItems .feedback-item')];
       return {
-        geometry: ${GAMEPLAY_GEOMETRY},
+        geometry: await ${SETTLED_GEOMETRY},
         result: document.querySelector('#feedbackItems .feedback-result')?.textContent || '',
         bankCount: document.querySelectorAll('.sentence-token-bank').length,
         metaCount: document.querySelectorAll('.sentence-answer-meta').length,
