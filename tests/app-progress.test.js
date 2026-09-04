@@ -2706,11 +2706,63 @@ test("sentence builder caps distractor tiles on long sentences but keeps alterna
   harness.nextSentenceBankQuestion();
 
   const tiles = Array.from(state.sentenceBank.currentQuestion.bankTokens);
-  // 10 target tokens + capped distractors (12 - 10 floored at 3) = 3 distractors = 13 tiles.
-  assert.equal(tiles.length, 13);
-  assert.equal(tiles.filter((token) => token.isCorrect === false).length, 3);
+  // 10 target tokens leave room for 2 distractors under the 12-tile cap. This
+  // read 13 until the cap stopped being floored at 3 distractors: the floor beat
+  // the ceiling, and the extra tile could wrap the word bank to a sixth row,
+  // which overflows the 360x640 gameplay floor on an unlucky shuffle.
+  assert.equal(tiles.length, 12);
+  assert.equal(tiles.filter((token) => token.isCorrect === false).length, 2);
   // The gender-alternate's distinct token must survive the cap so the alternate stays buildable.
   assert.ok(tiles.some((token) => token.text === "סומכת"));
+});
+
+test("sentence builder drops distractors whose text would not fit the word bank", () => {
+  // The tile cap counts tiles; the row count depends on how wide they are. These
+  // 10 target tokens are 129 characters on their own, over
+  // SENTENCE_BANK_MAX_TILE_CHARS, so the character budget must admit no
+  // distractor even though the 12-tile cap would still allow two.
+  const longTokens = [
+    "extraordinarily complicated",
+    "administrative",
+    "correspondence",
+    "responsibilities",
+    "unfortunately",
+    "nevertheless",
+    "yesterday",
+    "afternoon",
+    "unopened",
+    "arrived",
+  ];
+  const sentenceBank = [
+    {
+      id: "sb-char-budget",
+      category: "formal",
+      difficulty: 3,
+      english: longTokens.join(" "),
+      hebrew: "היא עשתה לי קטע מסריח.",
+      hebrew_alternates: [],
+      english_tokens: longTokens,
+      hebrew_tokens: ["היא", "עשתה", "לי", "קטע", "מסריח"],
+      english_distractors: ["however", "although", "moreover", "regardless"],
+      hebrew_distractors: ["הוא", "עשה", "טוב"],
+      notes: "",
+    },
+  ];
+  const harness = loadAppHarness([], [], [], { sentenceBank });
+  const { state } = harness;
+
+  harness.app.utils.weightedRandomWord = (items) => items.find((item) => item.word.direction === "he2en")?.word || items[0]?.word;
+  state.mode = "sentenceBank";
+  state.sentenceBank.active = true;
+  harness.nextSentenceBankQuestion();
+
+  const tiles = Array.from(state.sentenceBank.currentQuestion.bankTokens);
+  assert.ok(
+    longTokens.join("").length > 120,
+    `the fixture must exceed the character budget on its own (${longTokens.join("").length})`,
+  );
+  assert.equal(tiles.filter((token) => token.isCorrect === false).length, 0);
+  assert.equal(tiles.length, longTokens.length);
 });
 
 test("sentence builder keeps מוצאי שבת split and accepts both כאילו orders", () => {

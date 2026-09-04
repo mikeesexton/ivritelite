@@ -928,7 +928,37 @@ function getDuePairs(pairs, now = Date.now()) {
 }
 
 const SENTENCE_BANK_MAX_TILES = 12;
-const SENTENCE_BANK_MIN_DISTRACTORS = 3;
+// A tile count cannot express the constraint that actually matters. The bank is
+// `flex-wrap` with `white-space: nowrap` tiles, so its row count depends on the
+// shuffled tile ORDER, not just how many tiles there are: everyday_127's twelve
+// tiles sum to 1217px against a five-row capacity of 1610px and still pack into
+// six rows on an unlucky shuffle.
+//
+// Five rows is the budget the layout was already built to and never enforced. At
+// five the shell measures 488.41px against the 488px the 360x640 floor allows --
+// no headroom at all -- so a sixth row overflows.
+//
+// Total tile text length is the cheap stand-in for total tile width. Measuring
+// real tile widths for all 2,508 sentence/direction pairs and searching random
+// permutations for each pair's worst packing: the tile cap alone leaves 19 pairs
+// able to reach six rows, 150 leaves 5 and 140 leaves 1. A budget of 130 is the
+// first that holds every pair to five; 120 takes the margin, and costs 59 pairs
+// their third distractor, 4 of them every distractor.
+//
+// Two traps if this is ever recalibrated, both of which produced a confidently
+// wrong number here first:
+//
+//   * search random permutations, not a sorted order. Sorting tiles widest-first
+//     is first-fit-decreasing, a good packer -- every sorted order lands on five
+//     rows for the pair that a plain shuffle wraps to six.
+//   * measure tiles inside .lesson-shell.mode-sentence-bank. The compact tile
+//     rules are descendant selectors, so a measuring element parked on the body
+//     is styled at the full 1.12rem and reads far too wide.
+const SENTENCE_BANK_MAX_TILE_CHARS = 120;
+
+function countTokenChars(tokens) {
+  return tokens.reduce((total, token) => total + String(token).length, 0);
+}
 
 function getAlternateRequiredDistractors(sentence, direction, targetTokens) {
   if (direction === "listen") return new Set();
@@ -947,18 +977,27 @@ function getAlternateRequiredDistractors(sentence, direction, targetTokens) {
 function capSentenceBankDistractors(targetTokens, distractorTokens, sentence, direction, doShuffle) {
   const available = distractorTokens.length;
   if (!available) return distractorTokens;
-  const cap = Math.max(
-    SENTENCE_BANK_MIN_DISTRACTORS,
-    Math.min(available, SENTENCE_BANK_MAX_TILES - targetTokens.length)
-  );
+  // Both budgets are ceilings, not suggestions. The tile cap used to read
+  // `Math.max(SENTENCE_BANK_MIN_DISTRACTORS, ...)`, so a 3-distractor floor beat
+  // it outright: everyday_127 has 10 target tokens, leaving room for 2, and got
+  // 3 anyway for 13 tiles. That floor is not lost by going -- it only ever bound
+  // when it exceeded the tile cap, and under the cap every distractor the card
+  // supplies is kept regardless.
+  //
+  // Alternate-answer tokens are exempt from the character budget. Dropping one
+  // would make an accepted answer unbuildable, which is a correctness bug rather
+  // than a layout one; they are few enough not to reach six rows on their own.
+  const cap = Math.min(available, Math.max(0, SENTENCE_BANK_MAX_TILES - targetTokens.length));
   const shuffled = doShuffle(distractorTokens);
-  if (cap >= available) return shuffled;
-
   const required = getAlternateRequiredDistractors(sentence, direction, targetTokens);
   const kept = shuffled.filter((token) => required.has(token));
+  let usedChars = countTokenChars(targetTokens) + countTokenChars(kept);
   for (const token of shuffled) {
     if (kept.length >= cap) break;
-    if (!required.has(token)) kept.push(token);
+    if (required.has(token)) continue;
+    if (usedChars + String(token).length > SENTENCE_BANK_MAX_TILE_CHARS) continue;
+    kept.push(token);
+    usedChars += String(token).length;
   }
   return kept;
 }
