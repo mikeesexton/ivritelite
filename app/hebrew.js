@@ -50,6 +50,79 @@ hebrew.stripNiqqud = hebrew.stripNiqqud || function stripNiqqud(text) {
   return String(text || "").normalize("NFC").replace(/[\u0591-\u05c7]/g, "");
 };
 
+// Prefixes that attach to a Hebrew noun without changing which word it is, so a
+// headword still counts as present under one. Kept to the single-letter clitics:
+// anything longer starts guessing at morphology, which docs/sentence-bank-authoring.md
+// says automation cannot do reliably.
+const HEADWORD_CLITICS = new Set(["ה", "ו", "ב", "כ", "ל", "מ", "ש"]);
+
+// Comparison form for headword matching: unpointed, unpunctuated, single-spaced,
+// with maqaf and dashes treated as word breaks. scripts/content-coverage-report.js
+// reads this from here rather than keeping its own copy, because the report and
+// the runtime have to agree on what "this sentence uses this word" means.
+hebrew.normalizeHeadwordText = hebrew.normalizeHeadwordText || function normalizeHeadwordText(text) {
+  return String(text || "")
+    .normalize("NFD")
+    .replace(/[\u0591-\u05c7]/g, "")
+    .replace(/[\u05f4"'\u05f3\u2019.,!?;:()[\]{}]/g, "")
+    // Maqaf (U+05BE) is not listed: it falls inside the U+0591-U+05C7 sweep above
+    // and is already gone by here. That makes a maqaf compound one token, so a
+    // card written with a space cannot match a sentence written with a maqaf —
+    // under-reporting, which is the direction this matcher errs in on purpose.
+    // Twelve cards and ten sentences use one, and both sides normalize alike.
+    .replace(/[\u2013\u2014-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+// One already-normalized token against one already-normalized headword part,
+// allowing attached clitics. Exposed because an indexed caller has already done
+// the normalizing and splitting and only needs this comparison — running the
+// full n-gram scan per token instead would re-normalize thousands of times.
+hebrew.headwordSurfaceMatches = hebrew.headwordSurfaceMatches || headwordSurfaceMatches;
+
+function headwordSurfaceMatches(surface, headword) {
+  if (surface === headword) return true;
+  let candidate = surface;
+  for (let depth = 0; depth < 3 && candidate.length > headword.length; depth += 1) {
+    if (!HEADWORD_CLITICS.has(candidate[0])) break;
+    candidate = candidate.slice(1);
+    if (candidate === headword) return true;
+  }
+  return false;
+}
+
+// True when `text` contains `headword` as a whole word or n-gram, allowing only
+// attached clitics. Deliberately conservative: it will not match an inflected or
+// construct form, so it under-reports rather than claiming a relationship that is
+// not there.
+hebrew.textContainsHeadword = hebrew.textContainsHeadword || function textContainsHeadword(text, headword) {
+  const words = hebrew.normalizeHeadwordText(text).split(" ").filter(Boolean);
+  const headwordWords = hebrew.normalizeHeadwordText(headword).split(" ").filter(Boolean);
+  if (!headwordWords.length || words.length < headwordWords.length) return false;
+  for (let start = 0; start <= words.length - headwordWords.length; start += 1) {
+    if (headwordWords.every((word, offset) => headwordSurfaceMatches(words[start + offset], word))) {
+      return true;
+    }
+  }
+  return false;
+};
+
+// The first normalized word of a headword, so a caller can index headwords and
+// test only the plausible candidates for a given position instead of every card.
+// Matching 1,254 sentences against 2,206 cards naively is 2.8M n-gram checks;
+// indexed it is a few thousand and runs in single-digit milliseconds.
+hebrew.headwordIndexKeys = hebrew.headwordIndexKeys || function headwordIndexKeys(surface) {
+  const keys = [surface];
+  let candidate = surface;
+  for (let depth = 0; depth < 3 && candidate.length > 1; depth += 1) {
+    if (!HEADWORD_CLITICS.has(candidate[0])) break;
+    candidate = candidate.slice(1);
+    keys.push(candidate);
+  }
+  return keys;
+};
+
 hebrew.applyFallbackNiqqud = hebrew.applyFallbackNiqqud || function applyFallbackNiqqud(text) {
   return String(text || "");
 };

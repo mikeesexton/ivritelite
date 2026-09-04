@@ -8,7 +8,6 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 const PROJECT_ROOT = path.resolve(__dirname, "..");
-const HEBREW_CLITICS = new Set(["ה", "ו", "ב", "כ", "ל", "מ", "ש"]);
 
 // Keyed by vocabulary id. Each value lists sentence ids whose target text was
 // manually reviewed as testing an inflected or construct form of the card.
@@ -28,38 +27,15 @@ function loadInSandbox(relativePath) {
   return context;
 }
 
-function normalizeHebrew(text) {
-  return String(text || "")
-    .normalize("NFD")
-    .replace(/[\u0591-\u05c7]/g, "")
-    .replace(/[״"'׳’.,!?;:()[\]{}]/g, "")
-    .replace(/[־–—-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function surfaceMatchesHeadword(surface, headword) {
-  if (surface === headword) return true;
-  let candidate = surface;
-  for (let depth = 0; depth < 3 && candidate.length > headword.length; depth += 1) {
-    if (!HEBREW_CLITICS.has(candidate[0])) break;
-    candidate = candidate.slice(1);
-    if (candidate === headword) return true;
-  }
-  return false;
-}
+// The runtime's matcher, loaded rather than reimplemented. This report and
+// app/character.js both answer "does this sentence use this word", and the
+// character route table already learned the cost of keeping two copies of a
+// shared predicate — see the comment above characterData.ownsItem.
+const hebrewApi = loadInSandbox("app/hebrew.js").IvriQuestApp.hebrew;
+const normalizeHebrew = hebrewApi.normalizeHeadwordText;
 
 function sentenceTestsHeadword(sentence, headword) {
-  const sentenceWords = normalizeHebrew(sentence.hebrew).split(" ").filter(Boolean);
-  const headwordWords = normalizeHebrew(headword).split(" ").filter(Boolean);
-  if (!headwordWords.length || sentenceWords.length < headwordWords.length) return false;
-
-  for (let start = 0; start <= sentenceWords.length - headwordWords.length; start += 1) {
-    if (headwordWords.every((word, offset) => surfaceMatchesHeadword(sentenceWords[start + offset], word))) {
-      return true;
-    }
-  }
-  return false;
+  return hebrewApi.textContainsHeadword(sentence.hebrew, headword);
 }
 
 function buildCoverageReport({ vocabulary, sentences, reviewedSupport = REVIEWED_SENTENCE_SUPPORT }) {

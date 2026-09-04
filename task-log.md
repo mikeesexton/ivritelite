@@ -21,6 +21,105 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-04 EDT — Focus picker, tranche 2: derived sentence bias
+
+**Requested:** The approved plan's second tranche — let the focus groups bias **Sentences**
+as well as vocabulary.
+
+**The plan's approach was replaced, and this is the important part.** The plan called for a
+hand-authored `sentenceIds` list per focus group, transcribed from the content ledger in
+`docs/character-gameplay-strategy.md`. I verified the ledger's id ranges against the real
+rows first, and two findings killed that design:
+
+- **The single-topic ranges check out** — `professional_153`–`172` really is AI/ML,
+  `professional_173`–`196` finance, `professional_123`–`152` devices, `formal_108`–`125` law,
+  `colloquial_176`–`195` dating, `everyday_242`–`265` home care, and the boundaries are clean.
+- **But the rest is interleaved row by row.** `professional_098`–`122` alone runs contracts,
+  regulation, formal logic, bureaucracy, procurement, payroll and cash flow. Inbal's bank is
+  worse: `inbal_25`–`26` are Kabbalah, `27`–`28` secular/religious identity, `35` the evil eye,
+  `37` a Yom Kippur rite, `38` coffee divination. A block map would silently mis-assign, which
+  is the exact mistake the strategy doc already records for `professional_74`–`84`. And Inbal —
+  the character with the thinnest menu — would have gotten **zero** coverage from the ranges
+  that are safely blockable.
+
+**So the map is derived instead of authored.** A sentence carries no topic field and
+`docs/project-rules.md` forbids adding one, so the tie is read off the vocabulary the sentence
+actually contains — the same "exact support" relationship the ledger reports tranche by
+tranche. This follows the roadmap's own C1 precedent for `corpusHits`: "100% derivable,
+deterministic, re-runnable, zero authoring."
+
+**Files changed:**
+- `app/hebrew.js` — `normalizeHeadwordText`, `textContainsHeadword`, `headwordSurfaceMatches`,
+  `headwordIndexKeys`. Lifted from `scripts/content-coverage-report.js` so there is **one**
+  implementation; the report now loads these instead of keeping its own copies, for the same
+  reason `characterData.ownsItem` lives in the data module.
+- `app/character.js` — `getSentenceTopicIndex` builds `sentenceId -> (category -> distinct card
+  count)` lazily; `getSentenceFocusHits` scores a row against the checked groups;
+  `buildContentWeigher` layers a graded focus factor over the owned boost for
+  `kind === "sentence"` only.
+- `scripts/content-coverage-report.js` — three local functions replaced by the shared matcher.
+- `index.html` — `?v=` to `20260904b` for `app/hebrew.js` and `app/character.js`.
+- `tests/character-mission.test.js` — 5 new tests, with a second harness that loads the
+  content decks and `app/hebrew.js` (the existing `loadCharacterModule` deliberately omits them).
+
+**Two design decisions with measurements behind them:**
+
+1. **The bias is graded, not binary.** A first pass counted any match, and it was wrong for
+   Ivri: "Could you send me the report by the end of the day?" and "The meeting was postponed"
+   landed in Science & High-Tech. The cause is not the matcher — it is that
+   `scientific_analytical` itself carries **ישיבה** ("work meeting"), **צוות** ("team"),
+   **דוח** ("report") and **נתונים** ("data") alongside the research register. So the derived
+   map is only ever as clean as the shelf it derives from. A frequency threshold did not help
+   (the top headword appears in just 25 of 1,254 rows — the distribution is flat). Grading by
+   *distinct cards used* did: at two or more, the same group yields token/prompt/context window,
+   encryption/dataset, model collapse, fine-tuning/benchmark. Multiplier is
+   `1 + 0.6 * min(hits, 3)`, so one hit is a nudge and three is a statement.
+2. **The factor is normalized to average 1 across the owned subset.** Without that, biasing
+   would have pushed the owned share above `TARGET_OWNED_SHARE` and broken the invariant the
+   existing weigher test asserts. Measured in the browser: the share is **0.6500** with
+   everything checked, narrowed to mysticism, and narrowed to practice. Focus redistributes
+   weight *inside* the character's own bank and takes nothing from the shared tier.
+
+**Behavior changed:** With a narrowed focus, sentences whose vocabulary belongs to the checked
+groups are drawn more often. No sentence is ever removed. Verified with Inbal narrowed to her
+mystical half: `inbal_01` (3 mysticism cards) 38.05, two-card rows 29.90, one-card rows 21.74,
+an unanchored owned row 13.59, and every shared/unowned row exactly 1.00.
+
+**Coverage:** 577 of 971 owned rows (59%) carry at least one anchor — Idan 82%, Ivri 71%,
+Inbal 70%, Inat 49%, Ido 42%. Partial by design; an unanchored row simply gets no bias. Every
+one of the 19 groups has at least some support, which a new test now pins.
+
+**Performance:** the full 1,254 x 2,206 match is **3ms** standalone, ~18ms in the browser on
+first use, then cached on `runtime.characterSentenceTopics`. Fast enough to derive at runtime,
+so no generated data file was needed. The trick is indexing headwords by their first
+normalized word and testing only plausible candidates per position.
+
+**Tests run:** `npm test` — **475 pass, 0 fail** (463 at session start, 470 after tranche 1).
+`npm run report:characters` and `npm run report:coverage` are both byte-identical to baseline,
+which is what proves the matcher de-duplication changed no behavior (coverage still reads
+`Total: 2206; exact 1073; reviewed 0; unsupported 1133`). End-to-end in the browser: the real
+UI flow picker → focus → tier → greeting → hub → Vocabulary, a live board holding 2 mysticism
+cards, 2 shared `core_advanced` and 1 `meta_language` with **0** from the fenced
+`religious_life_practice`, and a simulated 10-round sentence session drawing 10 distinct rows,
+6 of them Inbal's.
+
+**Risks / regressions to check:**
+- **The derived map inherits shelf impurity.** Ivri's Science & High-Tech will keep drawing a
+  mild nudge onto generic office rows, because the words really are on that shelf. Grading
+  contains it rather than removing it. If it ever needs fixing, the honest fix is on the shelf,
+  not the matcher.
+- The focus factor is memoized on the **sentence id**, not the entry object. An earlier version
+  keyed on identity and silently returned a neutral factor whenever a caller rebuilt its pair
+  wrappers — a bias that quietly does nothing is worse than none. Keep it keyed on the id.
+- `hebrew.normalizeHeadwordText` strips maqaf (U+05BE) as part of the U+0591–U+05C7 sweep, so a
+  maqaf compound is one token and a space-written card cannot match a maqaf-written sentence.
+  Pre-existing, affects 12 cards and 10 sentences, and both sides normalize alike. The dead
+  `\u05be` alternative was removed from the dash rule and the ordering documented in place.
+- Cross-realm assertions bit again, twice: `instanceof Map` is false for a Map built inside the
+  test's `vm` context (use a duck-typed `typeof index.get`), and vm-originated arrays still need
+  spreading. Third time this session.
+- `app/hebrew.js` had not been bumped since `20260315o`. It is now `20260904b`.
+
 ### 2026-09-04 EDT — Focus picker, tranche 1: per-character vocabulary groups
 
 **Requested:** Go a level deeper than the character choice — pick a character, see the

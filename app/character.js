@@ -461,6 +461,99 @@ character.getContentWeight = character.getContentWeight || function getContentWe
   return ownsItem(getActiveRoute(), kind, item) ? 2 : 1;
 };
 
+// How strongly a focus-matched sentence outweighs an unmatched one, and how many
+// distinct group words are allowed to count. The bias is graded rather than
+// binary because the evidence is graded: a row using three mysticism words is
+// unmistakably Inbal's mystical half, while a row using one word off the
+// "Scientific & Analytical" shelf may only be using it in its ordinary office
+// sense — that shelf carries ישיבה ("work meeting"), צוות ("team") and דוח
+// ("report") alongside the research register. One hit is a nudge; three is a
+// statement.
+const FOCUS_SENTENCE_BIAS = 0.6;
+const FOCUS_SENTENCE_HIT_CAP = 3;
+
+// sentenceId -> (vocabulary category -> how many distinct cards from it the
+// sentence uses). Derived, never authored: a sentence carries no topic field, and
+// docs/project-rules.md forbids adding one, so the relationship is read off the
+// vocabulary the sentence actually contains. This is the same "exact support"
+// relationship docs/character-gameplay-strategy.md already reports tranche by
+// tranche, and scripts/content-coverage-report.js measures with the same matcher.
+//
+// Built once, lazily, from an index keyed on each headword's first word: the
+// naive pass is 1,254 sentences x 2,206 cards, and indexed it lands in single-digit
+// milliseconds.
+function getSentenceTopicIndex() {
+  const runtime = getRuntime();
+  if (runtime.characterSentenceTopics !== undefined) return runtime.characterSentenceTopics;
+  const deck = runtime.sentenceBankDeck;
+  const vocabulary = runtime.baseVocabulary;
+  const hebrewApi = app.hebrew;
+  if (!Array.isArray(deck) || !Array.isArray(vocabulary) || !hebrewApi?.normalizeHeadwordText) {
+    // The picker tests load character.js without the content decks. No index
+    // means no sentence bias, which is the correct neutral answer.
+    runtime.characterSentenceTopics = null;
+    return null;
+  }
+
+  const byFirstWord = new Map();
+  vocabulary.forEach((word) => {
+    const parts = hebrewApi.normalizeHeadwordText(word?.he).split(" ").filter(Boolean);
+    if (!parts.length) return;
+    if (!byFirstWord.has(parts[0])) byFirstWord.set(parts[0], []);
+    byFirstWord.get(parts[0]).push({ parts, category: word.category, he: word.he });
+  });
+
+  const index = new Map();
+  deck.forEach((sentence) => {
+    const words = hebrewApi.normalizeHeadwordText(sentence?.hebrew).split(" ").filter(Boolean);
+    const seen = new Map();
+    words.forEach((surface, position) => {
+      hebrewApi.headwordIndexKeys(surface).forEach((key) => {
+        (byFirstWord.get(key) || []).forEach((candidate) => {
+          if (words.length - position < candidate.parts.length) return;
+          const matches = candidate.parts.every(
+            (part, offset) => hebrewApi.headwordSurfaceMatches(words[position + offset], part),
+          );
+          if (!matches) return;
+          if (!seen.has(candidate.category)) seen.set(candidate.category, new Set());
+          seen.get(candidate.category).add(candidate.he);
+        });
+      });
+    });
+    if (!seen.size) return;
+    const counts = new Map();
+    seen.forEach((cards, category) => counts.set(category, cards.size));
+    index.set(String(sentence.id || ""), counts);
+  });
+  runtime.characterSentenceTopics = index;
+  return index;
+}
+
+// Distinct cards a sentence uses from the checked groups, capped. Zero means the
+// row carries no evidence either way, which is the common case: coverage is
+// partial by construction and a row with no vocabulary anchor simply gets no bias.
+function getSentenceFocusHits(item) {
+  const index = getSentenceTopicIndex();
+  if (!index) return 0;
+  const counts = index.get(String(item?.id || ""));
+  if (!counts) return 0;
+  const id = getRoutingCharacterId();
+  const focus = getActiveFocus();
+  if (!focus.length) return 0;
+  const groups = getCharacterData().getFocusGroups?.(id) || [];
+  if (!groups.length || focus.length === groups.length) return 0;
+  let best = 0;
+  groups.forEach((group) => {
+    if (!focus.includes(group.id)) return;
+    let hits = 0;
+    group.categories.forEach((category) => {
+      hits += counts.get(category) || 0;
+    });
+    if (hits > best) best = hits;
+  });
+  return Math.min(best, FOCUS_SENTENCE_HIT_CAP);
+}
+
 // Returns a per-item multiplier for one draw. The boost is solved from the
 // candidate list so the owned share lands near TARGET_OWNED_SHARE regardless of
 // how much material a character owns — a fixed constant would drift badly as
@@ -478,7 +571,41 @@ character.buildContentWeigher = character.buildContentWeigher || function buildC
   if (!ownedCount || !restCount) return neutral;
 
   const boost = (TARGET_OWNED_SHARE * restCount) / ((1 - TARGET_OWNED_SHARE) * ownedCount);
-  return (entry) => (isOwned(entry) ? boost : 1);
+  if (kind !== "sentence") return (entry) => (isOwned(entry) ? boost : 1);
+
+  // Sentences are biased, never filtered: getRoundTarget measures the unfiltered
+  // deck and always asks for LESSON_ROUNDS rounds, and buildCandidatePairs falls
+  // back to the full allowed set, so fencing a register bank would serve the same
+  // row twice in one session.
+  //
+  // The factor is normalized to average 1 across the owned subset, so the owned
+  // share still lands on TARGET_OWNED_SHARE exactly as the test above it asserts.
+  // Focus redistributes weight *inside* the character's own bank rather than
+  // taking any from the shared tier.
+  // Memoized on the sentence id rather than on the entry object. The pair
+  // wrappers are rebuilt per draw, and an identity key would silently fall back
+  // to a neutral factor for any caller that did not hand back the very same
+  // objects — a bias that quietly does nothing is worse than none.
+  const factorById = new Map();
+  const factorFor = (entry) => {
+    const item = resolve(entry);
+    const id = String(item?.id || "");
+    if (factorById.has(id)) return factorById.get(id);
+    const factor = 1 + FOCUS_SENTENCE_BIAS * getSentenceFocusHits(item);
+    factorById.set(id, factor);
+    return factor;
+  };
+
+  let total = 0;
+  let ownedSeen = 0;
+  items.forEach((entry) => {
+    if (!isOwned(entry)) return;
+    total += factorFor(entry);
+    ownedSeen += 1;
+  });
+  const mean = ownedSeen ? total / ownedSeen : 0;
+  if (!mean) return (entry) => (isOwned(entry) ? boost : 1);
+  return (entry) => (isOwned(entry) ? boost * (factorFor(entry) / mean) : 1);
 };
 
 function getDialogue(key, characterId) {

@@ -2514,3 +2514,184 @@ test("a reload on the focus screen lands on it rather than skipping past it", ()
     false,
   );
 });
+
+// --- Derived sentence bias ---------------------------------------------------
+// A sentence carries no topic field and may not be given one, so the tie between
+// a focus group and a sentence is derived from the vocabulary the sentence
+// actually contains — the same "exact support" relationship
+// scripts/content-coverage-report.js measures, with the same matcher.
+
+// The picker harness above deliberately omits the content decks; the sentence
+// bias needs them, plus app/hebrew.js for the matcher.
+function loadCharacterModuleWithContent() {
+  const saved = {};
+  const context = {
+    console,
+    Date,
+    setTimeout,
+    clearTimeout,
+    IvriQuestApp: {
+      runtime: {
+        constants: { STORAGE_KEYS: { character: "character", characterBond: "characterBond" } },
+        state: { language: "en", route: "home", summary: { active: false, game: "" } },
+        helpers: { renderAll: () => {} },
+        storageApi: { loadJson: () => saved, saveJson: () => {} },
+      },
+    },
+  };
+  context.window = context;
+  context.globalThis = context;
+  vm.createContext(context);
+  [
+    "app/utils.js",
+    "app/hebrew.js",
+    "vocab-data.js",
+    "sentence-bank-data.js",
+    "app/character-data.js",
+    "app/character.js",
+  ].forEach((modulePath) => {
+    vm.runInContext(
+      fs.readFileSync(path.join(PROJECT_ROOT, modulePath), "utf8"),
+      context,
+      { filename: modulePath },
+    );
+  });
+  const runtime = context.IvriQuestApp.runtime;
+  runtime.baseVocabulary = context.IvriQuestVocab.getBaseVocabulary();
+  const bankKey = Object.keys(context).find((key) => /Sentence/i.test(key));
+  const bank = context[bankKey];
+  runtime.sentenceBankDeck = bank.getSentenceBank
+    ? bank.getSentenceBank()
+    : (bank.SENTENCES || bank.sentences);
+  return { ...context.IvriQuestApp, context, runtime };
+}
+
+test("the headword matcher allows clitics and refuses inflection", () => {
+  const { hebrew } = loadCharacterModuleWithContent();
+
+  assert.equal(hebrew.textContainsHeadword("בדקתי את הדוח לפני האישור", "דוח"), true);
+  assert.equal(hebrew.textContainsHeadword("קערת השבעה נמצאה מתחת למפתן", "קערת השבעה"), true);
+  assert.equal(hebrew.textContainsHeadword("אין כאן שום דבר", "דוח"), false);
+  // Inflection is not inferred: docs/sentence-bank-authoring.md says automation
+  // cannot do Hebrew morphology reliably, so the matcher under-reports instead.
+  assert.equal(hebrew.headwordSurfaceMatches("דוחות", "דוח"), false);
+  assert.equal(hebrew.headwordSurfaceMatches("ולדוח", "דוח"), true);
+  assert.deepEqual([...hebrew.headwordIndexKeys("ולדוח")], ["ולדוח", "לדוח", "דוח"]);
+  assert.equal(hebrew.normalizeHeadwordText("שָׁלוֹם, עוֹלָם!"), "שלום עולם");
+});
+
+test("the coverage report and the runtime share one headword matcher", () => {
+  // Two copies of this predicate would drift, which is the reason
+  // characterData.ownsItem lives in the data module rather than in app/.
+  const script = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts/content-coverage-report.js"),
+    "utf8",
+  );
+  assert.match(script, /loadInSandbox\("app\/hebrew\.js"\)/);
+  assert.match(script, /hebrewApi\.textContainsHeadword/);
+  assert.doesNotMatch(
+    script,
+    /function\s+(normalizeHebrew|surfaceMatchesHeadword)\s*\(/,
+    "the report must not reimplement the matcher",
+  );
+});
+
+test("sentence topics are derived from the vocabulary a sentence contains", () => {
+  const { character, runtime } = loadCharacterModuleWithContent();
+  runtime.characterState = {
+    dailyChoice: "inbal",
+    mission: { active: true, focus: ["mysticism"], characterId: "inbal" },
+  };
+  // Build the index by asking for a weight, then read it off the runtime.
+  const pairs = runtime.sentenceBankDeck.map((sentence) => ({ sentence }));
+  character.buildContentWeigher("sentence", pairs, (pair) => pair.sentence);
+  const index = runtime.characterSentenceTopics;
+  assert.equal(typeof index?.get, "function", "the index must be built lazily on first use");
+  assert.ok(index.size > 500, `only ${index.size} sentences carry a vocabulary anchor`);
+
+  // The incantation-bowl row uses several cards off Inbal's mysticism shelf.
+  const bowl = index.get("inbal_01");
+  assert.ok(bowl?.get("religion_magic_spirituality") >= 2, "inbal_01 must anchor to the mystical shelf");
+  // A home-care row anchors to the home shelf and to nothing religious.
+  const home = index.get("everyday_242");
+  assert.ok(home?.get("home_everyday_life") >= 1);
+  assert.equal(home?.has("religion_magic_spirituality"), false);
+});
+
+test("the sentence bias grades by evidence and never removes a row", () => {
+  const { character, characterData, runtime } = loadCharacterModuleWithContent();
+  const deck = runtime.sentenceBankDeck;
+  runtime.characterState = {
+    dailyChoice: "inbal",
+    mission: { active: true, focus: ["mysticism"], characterId: "inbal" },
+  };
+
+  const pairs = deck.map((sentence) => ({ sentence }));
+  const weigh = character.buildContentWeigher("sentence", pairs, (pair) => pair.sentence);
+  const weightOf = (id) => weigh(pairs.find((pair) => pair.sentence.id === id));
+
+  // Three mysticism cards outweigh two, which outweigh one, which outweighs a
+  // row with no anchor in the checked group. One generic hit is a nudge rather
+  // than a verdict, because a single card off a shelf like Ivri's
+  // "Scientific & Analytical" may only be its ordinary office sense.
+  const strong = weightOf("inbal_01");
+  const weak = weightOf("inbal_39");
+  const anchorless = weightOf("inbal_98");
+  assert.ok(strong > weak, `expected ${strong} > ${weak}`);
+  assert.ok(weak > anchorless, `expected ${weak} > ${anchorless}`);
+  // The shared tier keeps its neutral weight: focus redistributes inside the
+  // character's own bank and takes nothing from the rest of the course.
+  assert.equal(weightOf("everyday_242"), 1);
+
+  // Sentences are biased, never filtered. Fencing them would repeat rows inside
+  // one session, because getRoundTarget measures the unfiltered deck.
+  assert.equal(character.filterOutsideFocus("sentence", deck).length, deck.length);
+  assert.equal(character.isOutsideFocus("sentence", deck[0]), false);
+
+  // And the documented owned share still holds, because the focus factor is
+  // normalized to average 1 across the owned subset.
+  const route = characterData.getCharacter("inbal").route;
+  const shareFor = (focus) => {
+    runtime.characterState.mission.focus = focus;
+    const fresh = deck.map((sentence) => ({ sentence }));
+    const w = character.buildContentWeigher("sentence", fresh, (pair) => pair.sentence);
+    let owned = 0;
+    let rest = 0;
+    fresh.forEach((pair) => {
+      const value = w(pair);
+      if (characterData.ownsItem(route, "sentence", pair.sentence)) owned += value;
+      else rest += value;
+    });
+    return owned / (owned + rest);
+  };
+  const all = [...characterData.getFocusGroups("inbal")].map((group) => group.id);
+  [all, ["mysticism"], ["practice"]].forEach((focus) => {
+    const share = shareFor(focus);
+    assert.ok(
+      Math.abs(share - 0.65) < 0.005,
+      `owned share drifted to ${share.toFixed(4)} for focus ${focus.join("+")}`,
+    );
+  });
+});
+
+test("every focus group has derived sentence support for at least some rows", () => {
+  const { character, characterData, runtime } = loadCharacterModuleWithContent();
+  const deck = runtime.sentenceBankDeck;
+  runtime.characterState = { dailyChoice: "inbal", mission: { active: true, focus: ["mysticism"], characterId: "inbal" } };
+  character.buildContentWeigher("sentence", deck.map((sentence) => ({ sentence })), (pair) => pair.sentence);
+  const index = runtime.characterSentenceTopics;
+
+  // Coverage is partial by construction — an unanchored row simply gets no bias
+  // — but a group with zero supported rows would make the sentence half of the
+  // feature silently inert for it, which is worth failing on.
+  characterData.getCharacterIds().forEach((id) => {
+    [...characterData.getFocusGroups(id)].forEach((group) => {
+      const supported = deck.filter((sentence) => {
+        const counts = index.get(sentence.id);
+        if (!counts) return false;
+        return [...group.categories].some((category) => counts.has(category));
+      }).length;
+      assert.ok(supported > 0, `${id}/${group.id} has no sentence anchored to it at all`);
+    });
+  });
+});
