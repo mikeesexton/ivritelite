@@ -21,6 +21,83 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 22:40 EDT — Complete every partially-pointed vocabulary card (63 cards)
+
+**Requested:** Fix the `due diligence` card, whose pointed column marked only the first of its
+two words; then sweep the data files for the same defect, report the batch before fixing it,
+apply the mechanically resolvable ones, and decide the ambiguous remainder.
+
+**Files changed:**
+- `vocab-data.js` — 63 pointed columns completed. Only the third (pointed) element of each
+  card changed; no id, category, gloss, plain column or availability flag was touched, so no
+  learner progress is re-keyed.
+- `index.html` — `vocab-data.js?v=20260827a` → `?v=20260903a`.
+- `task-log.md` — this entry.
+
+**The defect.** The pointed column is supposed to mark every vowel in the value, but 63 cards
+marked some words and left others bare (`בְּדִיקַת נאותות`). All 63 sat in `*_expanded`
+categories and all were playable. `tests/vocab-data.test.js` did not catch them because
+"every vocabulary card carries real niqqud" only asserts that *at least one* mark appears
+somewhere in `heNiqqud`, which a half-pointed multi-word value satisfies.
+
+**How the words were resolved.** 40 were copied from an existing unambiguous pointing already
+in the repo. 20 were pointed fresh, each anchored to a precedent where one existed:
+`אִינְטֶרְנֶט` gave `אִינְטֶרְנֶטִי`; `לְאוּמִּי` plus the repo's `־ִיִּים` plural gave
+`בֵּינְלְאוּמִּיִּים`; `יִישּׂוּם` (sin, not shin) gave `לְיִישּׂוּם`; `דֶּדוּקְטִיבִית`
+confirmed the /v/ ב takes no dagesh, giving `אִינְדּוּקְטִיבִית`. `נְאוֹתוּת` is נָאוֹת + ־וּת,
+parallel to נָכוֹן → נְכוֹנוּת, and matches `sentence-bank-data.js:18895`, which points the
+identical phrase. `לַמּוּצָר` matches `sentence-bank-data.js:18497`, same phrase, glossed
+"The product roadmap".
+
+The last 13 words could not be chosen by frequency because the repo points each of them more
+than one way; all were settled by syntax and reviewed with the user before applying:
+construct vs absolute (`סְעִיף אַחֲרָיוּת`, `הַמְלָצַת מְדִינִיּוּת`, `זְמַן מָסָךְ` and
+`כְּתַב עֵת` construct; `מַעֲמָד חֶבְרָתִי` and `מַצָּב כְּרוֹנִי` absolute, since a following
+adjective is not a construct chain), and noun vs verb (`שֵׁם` not `שָׁם`, `פָּנוּי` "vacant"
+not `פִּנּוּי` "evacuation", `גּוּשׁ` not the non-word `גוֹשׁ`).
+
+Two entries deliberately drop a helper letter, which is ktiv chaser and correct:
+`בעיית` → `בְּעָיַת` (one yod) and `עכשווי` → `עַכְשָׁוִי` (one vav — `docs/project-rules.md`
+documents the plain `וו` collapsing to one pointed `ו`).
+
+**Not defects, deliberately left alone:** 11 triliteral roots in `verb-game-data.js`
+(`נ־ג־שׁ` — the shin dot identifies the letter; root letters carry no vowels), 6 acronym
+values (`אג״ח`, `ד״ר`) of which `אג״ח` is already a documented exception, and 81 `notes:`
+prose fields that mix pointed examples with unpointed citation forms.
+
+**One judgment call worth revisiting:** `תוכנית` was pointed `תּוֹכְנִית`, the only precedent
+inside `vocab-data.js`. `docs/project-rules.md` cites `תוכנית` → `תָּכְנִית`, and
+`sentence-bank-data.js` prefers that form 11 to 4. Flipping it is a one-word change.
+
+**Behavior changed:** 63 Translation Match cards now render a fully pointed Hebrew form
+instead of a half-pointed one. No card was added, removed, re-shelved or re-keyed.
+
+**Tests run:**
+- `npm test` before: 463 pass, 0 fail.
+- `npm test` after: 463 pass, 0 fail.
+
+**Normalization trap — read this before scripting a data-file edit.** The first apply script
+did `readFileSync(...).normalize("NFC")` and wrote the whole file back. That rewrote 145
+Hebrew strings nobody had touched into a visually identical but byte-different mark order, and
+`tests/vocab-data.test.js` failed on `אַנְדַּרְטָה` — a word in a different tranche, whose
+`actual` and `expected` printed identically in the assertion diff. The change was reverted and
+re-applied by replacing only the unpointed tokens on the target lines, leaving every other
+byte alone. Never normalize a whole data file: unpointed search keys carry no combining marks,
+so exact substring matching works on the original bytes without it.
+
+**Risks / regressions to check:**
+- `tests/vocab-data.test.js` still only requires one mark somewhere in `heNiqqud`. With the
+  backlog now at zero, a per-word assertion would close the gap permanently and would pass
+  today — worth adding before more content lands.
+- Watch for a scripted check that builds its niqqud character class from pasted combining
+  marks: `[ְ-ׇ]` spans U+05B0–U+05C7 and so matches the maqaf U+05BE, which is a hyphen, not a
+  vowel. That produced 18 spurious hits during the sweep until the class was rebuilt from
+  explicit `\uXXXX` escapes.
+- `tests/gameplay-layout.test.js` ("compact gameplay and safe centering hold in rendered
+  Chrome") failed twice under full-suite load and passed in five isolated runs and in every
+  full run since. It does not read pointed vocabulary, so it is unrelated to this change, but
+  it looks load-sensitive.
+
 ### 2026-09-03 20:33 EDT — Verify ivritelite.app against the GitHub account
 
 **Requested:** Finish the last outstanding item from the domain cutover.
