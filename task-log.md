@@ -21,6 +21,69 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-04 00:05 EDT — Fix the gameplay-layout flake (unsettled geometry reads)
+
+**Requested:** Investigate and fix `tests/gameplay-layout.test.js`, which failed roughly one
+full-suite run in four while passing in isolation.
+
+**Files changed:**
+- `tests/gameplay-layout.test.js` — replaced the fixed-frame settle with a stability poll and
+  applied it at every geometry read, including the three inline reads that had no settle at
+  all. `GAMEPLAY_GEOMETRY` became `GAMEPLAY_GEOMETRY_FN` (uncalled) so the poll can invoke it
+  repeatedly; the old called-form constant had no remaining users and was removed.
+
+**Root cause.** Every assertion failure was a geometry `assert.ok`, never the Chrome-launch
+timeout this file already guards. Two settle defects:
+
+1. `measureGeometry` awaited `document.getAnimations()` once and then two frames.
+   `getAnimations()` lists only animations that have *already started*, so one queued during
+   the current frame is never awaited; and `document.fonts.ready` resolves immediately when no
+   load is pending *at that moment*, which is exactly the case for the Hebrew display faces on
+   `.choice-btn` — Chrome has not requested them yet for choices rendered in that frame.
+2. The Sentences and Shema blocks started a question and read `GAMEPLAY_GEOMETRY` in the *same
+   synchronous tick*, with no settle whatsoever. `assertNoGameplayScroll` on that value is
+   precisely the phantom-scrollHeight case the file's own comment describes, so this is the
+   likelier origin of the two.
+
+The decisive evidence is the timing. Failing runs finished in **3.6s** while passing runs took
+**5–9s**: the test was tripping *faster* than it passed, which is the signature of an assertion
+firing before layout settled rather than of anything being slow. After the fix, the same test
+under a parallel `npm test` spends **16.9s** — against 6.2s run on its own — because the poll
+now waits for geometry that genuinely takes that long to settle under contention. That gap is
+the window the old two-frame settle was walking into.
+
+**Why this does not paper over real bugs.** The poll waits for geometry to stop changing and
+then asserts on the stable value. A genuine layout overflow is stable, so it still fails on the
+first attempt; nothing retries an assertion. If the 4s deadline expires the last measurement is
+used, which is no weaker than the previous behavior.
+
+**Behavior changed:** None in the app. Test-only.
+
+**Tests run:**
+- `tests/gameplay-layout.test.js` alone, 6 runs before the fix: 6 pass (as expected — the
+  failure does not reproduce in isolation).
+- `npm test` after the fix, 7 consecutive full-suite runs: 464 pass, 0 fail every time.
+
+The settle duration across those 7 runs is the strongest confirmation of the mechanism. Runs
+1-3 landed while the machine was busy and the test spent 16.9s, 18.5s and 24.1s; runs 4-7 ran
+on a quiet machine and took 5.6s, 4.2s, 4.6s and 5.6s. The poll cost tracks system contention
+exactly as a settle-time race predicts, and the idle figures are at or below the 5-9s the test
+used to take when it passed — so the fix is not simply "wait longer everywhere", it waits only
+when the layout is genuinely still moving. Against the pre-fix rate of 2 failures in about 8
+full-suite runs, 7 clean runs is suggestive rather than conclusive on its own (roughly a 13%
+chance of a clean streak that long at a 25% failure rate); the mechanism evidence is what
+carries the diagnosis.
+
+**Risks / regressions to check:**
+- No pre-fix repro of the specific failing assertion was ever captured; the diagnosis rests on
+  the failure timing plus the code, not on a caught failure. If it recurs, the next step is
+  capturing which assertion fails — all ~60 live in one `test()` block, so a failure names a
+  line but not a phase, and splitting that block would make the next occurrence legible.
+- An honest caveat on an earlier attempt: a deliberate CPU-load experiment spawned eight shell
+  loops that survived their `kill` (reparented to init) and pegged eight cores for ~11 minutes.
+  They were found and killed. One full-suite run recorded during that window (600s, "437 pass,
+  1 cancelled") is an artifact of that, not a real result.
+
 ### 2026-09-03 23:40 EDT — Close the per-word niqqud test gap
 
 **Requested:** Fix the test gap that let 63 half-pointed vocabulary cards pass for months.
