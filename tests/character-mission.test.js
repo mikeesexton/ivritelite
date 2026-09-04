@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260830a/);
+  assert.match(indexHtml, /styles\.css\?v=20260904c/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -419,15 +419,23 @@ test("Idan routes both security tiers and stays neutral elsewhere", () => {
   const { character, characterData, app } = loadCharacterModule();
   const idan = characterData.characters.idan;
   assert.equal(idan.route.adaptive, undefined, "the adaptive short-circuit is retired");
+  // civil_defense_safety left every route to become the shared Public Safety
+  // topic. Course policy is that any resident can drill it, which a shared topic
+  // keeps true; as an unnarrowable owned shelf it used to hold its full 70 cards
+  // while a narrowed pool shrank around it.
   assert.deepEqual(
     [...idan.route.vocabCategories],
-    ["civil_defense_safety", "military_operational", "emergency_response"],
+    ["military_operational", "emergency_response"],
+  );
+  assert.equal(
+    characterData.SHARED_FOCUS_TOPICS.some((topic) => topic.id === "safety"),
+    true,
+    "the safety shelf must still be reachable, as a shared topic",
   );
   assert.deepEqual([...idan.route.sentenceIdPrefixes], ["idan_"]);
 
   app.runtime.characterState = { dailyChoice: "idan", mission: { active: true } };
   const owned = [
-    ["vocab", { he: "אזעקה", category: "civil_defense_safety" }],
     ["vocab", { he: "גדוד", category: "military_operational" }],
     ["vocab", { he: "שוטר", category: "emergency_response" }],
     // Reached through vocabWords while staying on its own shelf.
@@ -455,23 +463,41 @@ test("Idan routes both security tiers and stays neutral elsewhere", () => {
 
 // The everyday tier is course policy rather than one character's shelf, so it
 // has to reach a learner who never picks Idan.
-test("every character drills the everyday security tier", () => {
+test("every character can still drill the everyday security tier", () => {
   const { character, characterData, app } = loadCharacterModule();
   const ids = characterData.getCharacterIds();
   assert.deepEqual([...ids], ["ido", "inbal", "ivri", "inat", "idan"]);
 
+  // The policy is unchanged — any resident drills everyday security — but it is
+  // now carried by a shared topic rather than by five identical route entries.
+  // That is what makes it narrowable: as an owned shelf no topic named, it kept
+  // its full 70 cards while a narrowed pool shrank around it, taking 42-45% of
+  // the draw against 20-23% for the topic the learner had chosen.
   ids.forEach((id) => {
-    assert.ok(
-      characterData.characters[id].route.vocabCategories?.includes("civil_defense_safety"),
-      `${id} should drill civil_defense_safety`,
-    );
-    app.runtime.characterState = { dailyChoice: id, mission: { active: true } };
     assert.equal(
-      character.getContentWeight("vocab", { he: "אזעקה", category: "civil_defense_safety" }),
-      2,
-      `${id} should weigh the civil-defense shelf`,
+      characterData.characters[id].route.vocabCategories?.includes("civil_defense_safety"),
+      false,
+      `${id} should no longer route the safety shelf directly`,
     );
-    // ממ״ד reaches everyone by id, even out of its bucket owner's hands.
+    assert.equal(
+      characterData.getTopicsFor(id).some((topic) => topic.id === "safety"),
+      true,
+      `${id} must be offered Public Safety`,
+    );
+    // Selecting it reaches the shelf; leaving it out fences it, which is the
+    // whole point of moving it.
+    app.runtime.characterState = {
+      dailyChoice: id,
+      mission: { active: true, focus: ["safety"], characterId: id },
+    };
+    const siren = { he: "אזעקה", category: "civil_defense_safety" };
+    assert.equal(character.isOutsideFocus("vocab", siren), false, `${id} selected safety`);
+    app.runtime.characterState.mission.focus = ["core"];
+    assert.equal(character.isOutsideFocus("vocab", siren), true, `${id} did not select safety`);
+
+    // ממ״ד still reaches everyone by id: abbreviations route on the character,
+    // not on the learner's topics.
+    app.runtime.characterState = { dailyChoice: id, mission: { active: true } };
     assert.equal(
       character.getContentWeight("abbreviation", { id: "abbr-184", bucket: "Daily Life & Home" }),
       2,
@@ -891,9 +917,19 @@ test("urban and practical additions preserve shared routing while character back
     assert.deepEqual(Array.from(characterData.getItemAudience("sentence", row)), ["idan"]);
   }
 
+  // The practical-life shelves left Ido's route for the shared everyday tier. A
+  // read of all 225 of their cards found four slang entries and about ten
+  // colloquial loanwords, so roughly 2% carried his register; the sentences that
+  // teach them were already unowned and drawn by the whole cast. They stay
+  // unfenced and now any learner can ask for them by topic.
   const practicalCard = { category: "everyday_survival_expanded", he: "תחבורה ציבורית" };
   assert.equal(characterData.getItemAudience("vocab", practicalCard), null);
-  assert.equal(characterData.ownsItem(characters.ido.route, "vocab", practicalCard), true);
+  assert.equal(characterData.ownsItem(characters.ido.route, "vocab", practicalCard), false);
+  assert.equal(
+    characterData.SHARED_FOCUS_TOPICS.some((topic) => topic.categories.includes("everyday_survival_expanded")),
+    true,
+    "the practical shelves must be reachable as a shared topic",
+  );
 });
 
 // A mild row inside a fenced tranche is opted back out by id, because Idan's bank
@@ -1512,11 +1548,21 @@ test("the free-play lens routes content and reacts without a mission", () => {
     screen: "none", reviewOpen: false, mission: null,
   };
 
-  // Routing follows the lens even though no mission is running.
+  // Routing follows the lens even though no mission is running — and off-mission
+  // the lens now carries the learner's standing topic selection too, which is
+  // what makes the Review and Settings editors mean anything for free play.
   assert.ok(character.getContentWeight("vocab", { category: "religion_magic_spirituality" }) > 1);
+  // A category the selection does not name is not owned, so it is not boosted.
+  // In a real draw it never reaches the weigher at all: the fence removes it
+  // first, which is where the learner's choice actually bites.
   assert.ok(character.buildContentWeigher("vocab", [
-    { category: "religion_magic_spirituality" }, { category: "core_advanced" },
+    { category: "religion_magic_spirituality" }, { category: "military_operational" },
   ])({ category: "religion_magic_spirituality" }) > 1);
+  assert.equal(
+    character.isOutsideFocus("vocab", { category: "military_operational" }),
+    true,
+    "an unselected shelf is fenced from free play, not merely unboosted",
+  );
 
   // Reactions accumulate on the free-play container, not on a mission.
   for (let index = 0; index < 4; index += 1) character.recordAnswer(false);
@@ -2157,7 +2203,11 @@ test("the review character panel picks the free-play companion like Settings doe
   const note = createStubElement("p");
   app.runtime.el = { reviewCharacterBonds: bonds, reviewCharacterLensNote: note };
 
-  const readChoices = () => bonds.children.map((card) => card.children[1].children.at(-1));
+  // Found rather than indexed: the bond body also carries the topic editor now,
+  // and positional indexing broke the moment it was appended.
+  const readChoices = () => bonds.children.map(
+    (card) => card.children[1].children.find((node) => node.dataset?.characterLens),
+  );
   character.renderBondPanel();
   assert.deepEqual(
     readChoices().map((button) => button.dataset.characterLens),
@@ -2181,6 +2231,19 @@ test("the review character panel picks the free-play companion like Settings doe
   assert.deepEqual(readChoices().map((button) => button.disabled), [true, true, true, true, true]);
   assert.equal(note.className.includes("hidden"), false);
   assert.equal(note.textContent, "Finish today’s mission to change your companion.");
+
+  // Topics are editable from the same place the companion is chosen, and a
+  // running mission holds them for the same reason it holds the lens.
+  const readEditors = () => bonds.children.map(
+    (card) => card.children[1].children.find((node) => node.className === "character-topic-editor"),
+  );
+  assert.equal(readEditors().every(Boolean), true, "every bond card carries a topic editor");
+  const idoRows = () => readEditors()[0].children
+    .find((node) => node.className === "character-focus-options").children;
+  assert.equal(idoRows().every((row) => row.disabled), true, "mid-mission the rows are held");
+  app.runtime.characterState.mission = null;
+  character.renderBondPanel();
+  assert.equal(idoRows().some((row) => !row.disabled), true, "off-mission the rows are live");
 });
 
 test("Settings character names and address labels follow the UI language", () => {
@@ -2223,5 +2286,496 @@ test("Settings character names and address labels follow the UI language", () =>
     gender: ["זכר", "נקבה"],
     lens: ["ללא", "עידו", "ענבל", "עברי", "עינת", "עידן"],
     label: "דמות למשחק חופשי",
+  });
+});
+
+// --- Topic picker ------------------------------------------------------------
+// The learner chooses the vocabulary; the character chooses the voice. Two tiers
+// of topics — the character's own and a shared everyday set — cover all 42
+// vocabulary categories between them, and the selection *is* the pool: anything
+// unselected is fenced. Sentences, verbs and abbreviations keep routing on the
+// character's register.
+
+function loadVocabData() {
+  const context = { window: {}, globalThis: {} };
+  context.window = context;
+  context.globalThis = context;
+  vm.createContext(context);
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "vocab-data.js"), "utf8"),
+    context,
+    { filename: "vocab-data.js" },
+  );
+  return context.IvriQuestVocab;
+}
+
+test("the two topic tiers cover all 42 vocabulary categories exactly once", () => {
+  const { characterData } = loadCharacterModule();
+  const meta = loadVocabData().CATEGORY_META;
+
+  // This totality is load-bearing: it is what lets "unselected means fenced" be
+  // a complete rule, with no shelf left hiding in an unselected remainder. It is
+  // also what dissolved the safety-tier problem — an owned shelf no topic named
+  // kept its full 70 cards while a narrowed pool shrank around it.
+  const named = [];
+  characterData.getCharacterIds().forEach((id) => {
+    characterData.getFocusGroups(id).forEach((topic) => {
+      topic.categories.forEach((category) => named.push(category));
+    });
+  });
+  characterData.SHARED_FOCUS_TOPICS.forEach((topic) => {
+    topic.categories.forEach((category) => named.push(category));
+  });
+
+  assert.equal(new Set(named).size, named.length, `a category is claimed twice: ${named}`);
+  assert.deepEqual(
+    [...named].sort(),
+    Object.keys(meta).sort(),
+    "the tiers must name every shelf in CATEGORY_META and nothing else",
+  );
+});
+
+test("every topic is labelled in both languages and names only real content", () => {
+  const { characterData } = loadCharacterModule();
+  const vocab = loadVocabData();
+  const meta = vocab.CATEGORY_META;
+  const surfaces = new Set(vocab.getBaseVocabulary().map((word) => word.he));
+  // A topic may claim a verb card, which lives in the verb deck rather than on a
+  // vocabulary shelf but is merged into the runtime pool all the same.
+  const verbSource = fs.readFileSync(path.join(PROJECT_ROOT, "hebrew-verbs.js"), "utf8");
+  (verbSource.match(/lemma: "([^"]+)"/g) || []).forEach((match) => {
+    surfaces.add(match.replace(/^lemma: "/, "").replace(/"$/, ""));
+  });
+
+  characterData.getCharacterIds().forEach((id) => {
+    const topics = characterData.getTopicsFor(id);
+    // Ids must be unique across both tiers, or a flat selection list would need
+    // a tier qualifier to say which topic it meant.
+    const ids = topics.map((topic) => topic.id);
+    assert.equal(new Set(ids).size, ids.length, `${id} has colliding topic ids: ${ids}`);
+    assert.ok(topics.length >= 10, `${id} is offered only ${topics.length} topics`);
+
+    topics.forEach((topic) => {
+      assert.ok(topic.labelEn, `${id}/${topic.id} needs an English label`);
+      assert.ok(topic.labelHe, `${id}/${topic.id} needs a Hebrew label`);
+      assert.ok(/[֐-׿]/.test(topic.labelHe), `${id}/${topic.id} Hebrew label is not Hebrew`);
+      topic.categories.forEach((category) => {
+        assert.ok(meta[category], `${id}/${topic.id} names unknown shelf ${category}`);
+      });
+      (topic.words || []).forEach((word) => {
+        assert.ok(surfaces.has(word), `${id}/${topic.id} names ${word}, which is no card`);
+      });
+    });
+  });
+});
+
+test("every route.vocabWords entry survives on a topic", () => {
+  const { characterData } = loadCharacterModule();
+  // A flat selected pool has no boost to apply, so a card left only on
+  // route.vocabWords would go inert. Naming it on a topic makes it join that
+  // topic's pool instead, which is what the route always meant.
+  characterData.getCharacterIds().forEach((id) => {
+    const routed = new Set(characterData.getCharacter(id).route.vocabWords || []);
+    const onTopics = new Set();
+    characterData.getFocusGroups(id).forEach((topic) => {
+      (topic.words || []).forEach((word) => onTopics.add(word));
+    });
+    [...routed].forEach((word) => {
+      assert.ok(onTopics.has(word), `${id} routes ${word} but no topic of theirs carries it`);
+    });
+  });
+});
+
+test("the three-topic minimum keeps every legal selection playable", () => {
+  const { character, characterData } = loadCharacterModule();
+  const deck = loadVocabData().getBaseVocabulary();
+  const minimum = character.getMinimumTopics();
+  assert.equal(minimum, 3);
+
+  // With the selection as the whole pool, the floor is what stops a session
+  // cycling immediately. The thinnest legal pick in the cast is measured rather
+  // than assumed, and must clear a full session's worth of cards.
+  const SESSION_SIZE = 20;
+  characterData.getCharacterIds().forEach((id) => {
+    const sizes = characterData.getTopicsFor(id)
+      .map((topic) => deck.filter((word) => topic.categories.includes(word.category)).length)
+      .sort((left, right) => left - right);
+    const thinnest = sizes.slice(0, minimum).reduce((total, size) => total + size, 0);
+    assert.ok(
+      thinnest > SESSION_SIZE * 4,
+      `${id}'s thinnest legal ${minimum}-topic pick is only ${thinnest} cards`,
+    );
+  });
+});
+
+test("a selected shared topic extends the pool beyond the character's own route", () => {
+  const { character, characterData, app } = loadCharacterModule();
+  const route = characterData.getCharacter("inat").route;
+  // The inverted invariant, asserted on purpose. Tranche 1 held that topics
+  // partition ownership and never extend it; the everyday tier exists precisely
+  // to extend it, which is how household Hebrew stopped being Ido's property.
+  assert.equal(route.vocabCategories.includes("cooking_verbs"), false);
+  const extended = characterData.applyTopicsToRoute("inat", route, ["politics", "cooking"]);
+  assert.equal(extended.vocabCategories.includes("cooking_verbs"), true);
+  assert.equal(extended.vocabCategories.includes("politics_society_expanded"), true);
+  // Her own shelves that she did not select drop out.
+  assert.equal(extended.vocabCategories.includes("legal_civic"), false);
+  // Registers are untouched: the character still owns the voice.
+  assert.deepEqual([...extended.sentenceCategories || []], [...route.sentenceCategories || []]);
+
+  app.runtime.characterState = {
+    dailyChoice: "inat",
+    mission: { active: true, focus: ["politics", "cooking"], characterId: "inat" },
+  };
+  assert.ok(character.getContentWeight("vocab", { category: "cooking_verbs" }) > 1);
+  assert.ok(character.getContentWeight("sentence", { id: "formal_01", category: "formal" }) > 1);
+  assert.equal(character.getContentWeight("vocab", { category: "legal_civic" }), 1);
+});
+
+test("unselecting Public Safety actually removes the safety shelf", () => {
+  const { character, app } = loadCharacterModule();
+  const siren = { he: "אזעקה", category: "civil_defense_safety" };
+
+  // The regression this whole design exists for. As an owned shelf that no topic
+  // named, civil_defense_safety could not be narrowed away, so it held its full
+  // 70 cards while the pool shrank: 42-45% of a narrow selection against 20-23%
+  // for the topic the learner had actually chosen.
+  app.runtime.characterState = {
+    dailyChoice: "ivri",
+    mission: { active: true, focus: ["finance", "core", "home"], characterId: "ivri" },
+  };
+  assert.equal(character.isOutsideFocus("vocab", siren), true);
+  assert.deepEqual(character.filterOutsideFocus("vocab", [siren]).length, 1,
+    "a filter that emptied the pool would fall back rather than starve");
+
+  app.runtime.characterState.mission.focus = ["finance", "safety", "home"];
+  assert.equal(character.isOutsideFocus("vocab", siren), false);
+});
+
+test("the selection is the pool, and only for vocabulary", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dailyChoice: "ivri",
+    mission: { active: true, focus: ["science_tech", "core", "grammar"], characterId: "ivri" },
+  };
+
+  const kept = [
+    { he: "אלגוריתם", category: "technology_ai" },
+    { he: "מדף", category: "core_advanced" },
+    { he: "שם פועל", category: "meta_language" },
+    // Claimed by a selected topic's `words` even though its shelf is unselected.
+    { he: "להשוות", category: "core_advanced" },
+  ];
+  const dropped = [
+    { he: "חוזה שכירות", category: "home_everyday_life" },
+    { he: "טופס", category: "bureaucracy" },
+    { he: "עגבנייה", category: "groceries_food" },
+    { he: "אזעקה", category: "civil_defense_safety" },
+  ];
+  kept.forEach((word) => assert.equal(character.isOutsideFocus("vocab", word), false, `${word.he} kept`));
+  dropped.forEach((word) => assert.equal(character.isOutsideFocus("vocab", word), true, `${word.he} dropped`));
+  assert.deepEqual(
+    character.filterOutsideFocus("vocab", [...kept, ...dropped]).map((word) => word.he),
+    kept.map((word) => word.he),
+  );
+
+  // Every other kind is the character's, not the learner's.
+  ["sentence", "verb", "abbreviation"].forEach((kind) => {
+    assert.equal(character.isOutsideFocus(kind, { id: "x", category: "bureaucracy" }), false);
+  });
+  const rows = [{ id: "professional_01", category: "professional" }];
+  assert.equal(character.filterOutsideFocus("sentence", rows).length, 1);
+});
+
+test("the topic selection persists across the day rollover", () => {
+  const { character, app, savedWrites } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: {}, topics: {},
+    dailyChoice: "", pendingChoice: "", lensCharacter: "", screen: "picker", mission: null,
+  };
+
+  character.chooseCharacter("idan");
+  const state = app.runtime.characterState;
+  assert.equal(state.screen, "focus");
+  // Opens on a real default rather than everything: "everything" is the whole
+  // 2,206-card deck, which defeats the point of choosing.
+  assert.ok(state.pendingFocus.length >= 3);
+  assert.equal(state.pendingFocus.includes("military"), true);
+
+  character.toggleFocusGroup("safety");
+  character.confirmFocus();
+  assert.equal(state.screen, "duration");
+  const chosen = [...state.pendingFocus];
+  character.chooseTier("short");
+  assert.deepEqual([...state.mission.focus], chosen);
+  assert.deepEqual([...state.topics.idan], chosen);
+
+  // A brand-new day wipes the mission but must keep the standing selection, the
+  // way it keeps lensCharacter — re-picking topics every morning is tedious.
+  const written = savedWrites[savedWrites.length - 1];
+  const tomorrow = loadCharacterModule({ saved: { ...written, dayKey: "1999-01-01" } });
+  assert.equal(tomorrow.character.initialize(), false);
+  assert.equal(tomorrow.app.runtime.characterState.mission, null);
+  assert.deepEqual([...tomorrow.app.runtime.characterState.topics.idan], chosen);
+});
+
+test("Continue is dead below the minimum and a mission holds its snapshot", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: {}, topics: {},
+    dailyChoice: "", pendingChoice: "", lensCharacter: "", screen: "picker", mission: null,
+  };
+  character.chooseCharacter("inbal");
+  const state = app.runtime.characterState;
+
+  // Strip down to two and the gate holds.
+  while (state.pendingFocus.length > 2) character.toggleFocusGroup(state.pendingFocus[0]);
+  assert.equal(state.pendingFocus.length, 2);
+  character.confirmFocus();
+  assert.equal(state.screen, "focus", "two topics must not open the tier screen");
+  // "food" is not in the default selection, so toggling it adds rather than removes.
+  assert.equal(state.pendingFocus.includes("food"), false);
+  character.toggleFocusGroup("food");
+  assert.equal(state.pendingFocus.length, 3);
+  character.confirmFocus();
+  assert.equal(state.screen, "duration");
+
+  // The floor holds at the state layer too, not only on the disabled button:
+  // a restored save or any other path into chooseTier must not build a mission
+  // below it.
+  state.pendingFocus = ["mysticism", "practice"];
+  character.chooseTier("short");
+  assert.equal(state.mission, null, "two topics must not build a mission");
+  state.pendingFocus = ["mysticism", "practice", "food"];
+  character.chooseTier("short");
+  const snapshot = [...state.mission.focus];
+  // Editing the standing selection must not move a running mission's deck.
+  assert.equal(character.setCharacterTopics("inbal", ["mysticism", "practice", "food"]), false,
+    "a running mission holds the topics the way it holds the lens");
+  app.runtime.characterState.mission.active = false;
+  assert.equal(character.setCharacterTopics("inbal", ["mysticism", "practice", "food"]), true);
+  assert.deepEqual([...app.runtime.characterState.mission.focus], snapshot);
+  // And the minimum applies to that surface too.
+  assert.equal(character.setCharacterTopics("inbal", ["mysticism"]), false);
+});
+
+test("a reload mid-flow lands on the focus screen with a live selection", () => {
+  const today = new Date().toISOString().slice(0, 10);
+  const mid = loadCharacterModule({
+    saved: { dayKey: today, gender: "m", pendingChoice: "ido", pendingFocus: ["food"], screen: "focus", mission: null },
+  });
+  assert.equal(mid.character.initialize(), true);
+  assert.equal(mid.app.runtime.characterState.screen, "focus");
+  assert.deepEqual([...mid.app.runtime.characterState.pendingFocus], ["food"]);
+  assert.equal(mid.character.isBlocking(), true, "the focus screen must block, or the overlay never shows");
+
+  // Without a pending pick there is nothing to narrow, so the flow rewinds.
+  const orphan = loadCharacterModule({
+    saved: { dayKey: today, gender: "m", pendingChoice: "", screen: "focus", mission: null },
+  });
+  orphan.character.initialize();
+  assert.equal(orphan.app.runtime.characterState.screen, "picker");
+
+  // A save from before this feature reaches the tier screen with no selection;
+  // seeding the stored default beats fencing on empty.
+  const legacy = loadCharacterModule({
+    saved: { dayKey: today, gender: "m", pendingChoice: "inat", screen: "duration", mission: null },
+  });
+  legacy.character.initialize();
+  assert.ok(legacy.app.runtime.characterState.pendingFocus.length >= 3);
+
+  // A legacy mission carrying no focus field must not fence anything.
+  const legacyMission = loadCharacterModule({
+    saved: {
+      dayKey: today, gender: "m", dailyChoice: "inat", screen: "none",
+      mission: { active: true, tier: "short", activities: ["lessonMatch"], currentIndex: 0 },
+    },
+  });
+  legacyMission.character.initialize();
+  assert.deepEqual([...legacyMission.app.runtime.characterState.mission.focus], []);
+  assert.equal(
+    legacyMission.character.isOutsideFocus("vocab", { category: "politics_society_expanded" }),
+    false,
+  );
+});
+
+// --- Derived sentence bias ---------------------------------------------------
+// A sentence carries no topic field and may not be given one, so the tie between
+// a focus group and a sentence is derived from the vocabulary the sentence
+// actually contains — the same "exact support" relationship
+// scripts/content-coverage-report.js measures, with the same matcher.
+
+// The picker harness above deliberately omits the content decks; the sentence
+// bias needs them, plus app/hebrew.js for the matcher.
+function loadCharacterModuleWithContent() {
+  const saved = {};
+  const context = {
+    console,
+    Date,
+    setTimeout,
+    clearTimeout,
+    IvriQuestApp: {
+      runtime: {
+        constants: { STORAGE_KEYS: { character: "character", characterBond: "characterBond" } },
+        state: { language: "en", route: "home", summary: { active: false, game: "" } },
+        helpers: { renderAll: () => {} },
+        storageApi: { loadJson: () => saved, saveJson: () => {} },
+      },
+    },
+  };
+  context.window = context;
+  context.globalThis = context;
+  vm.createContext(context);
+  [
+    "app/utils.js",
+    "app/hebrew.js",
+    "vocab-data.js",
+    "sentence-bank-data.js",
+    "app/character-data.js",
+    "app/character.js",
+  ].forEach((modulePath) => {
+    vm.runInContext(
+      fs.readFileSync(path.join(PROJECT_ROOT, modulePath), "utf8"),
+      context,
+      { filename: modulePath },
+    );
+  });
+  const runtime = context.IvriQuestApp.runtime;
+  runtime.baseVocabulary = context.IvriQuestVocab.getBaseVocabulary();
+  const bankKey = Object.keys(context).find((key) => /Sentence/i.test(key));
+  const bank = context[bankKey];
+  runtime.sentenceBankDeck = bank.getSentenceBank
+    ? bank.getSentenceBank()
+    : (bank.SENTENCES || bank.sentences);
+  return { ...context.IvriQuestApp, context, runtime };
+}
+
+test("the headword matcher allows clitics and refuses inflection", () => {
+  const { hebrew } = loadCharacterModuleWithContent();
+
+  assert.equal(hebrew.textContainsHeadword("בדקתי את הדוח לפני האישור", "דוח"), true);
+  assert.equal(hebrew.textContainsHeadword("קערת השבעה נמצאה מתחת למפתן", "קערת השבעה"), true);
+  assert.equal(hebrew.textContainsHeadword("אין כאן שום דבר", "דוח"), false);
+  // Inflection is not inferred: docs/sentence-bank-authoring.md says automation
+  // cannot do Hebrew morphology reliably, so the matcher under-reports instead.
+  assert.equal(hebrew.headwordSurfaceMatches("דוחות", "דוח"), false);
+  assert.equal(hebrew.headwordSurfaceMatches("ולדוח", "דוח"), true);
+  assert.deepEqual([...hebrew.headwordIndexKeys("ולדוח")], ["ולדוח", "לדוח", "דוח"]);
+  assert.equal(hebrew.normalizeHeadwordText("שָׁלוֹם, עוֹלָם!"), "שלום עולם");
+});
+
+test("the coverage report and the runtime share one headword matcher", () => {
+  // Two copies of this predicate would drift, which is the reason
+  // characterData.ownsItem lives in the data module rather than in app/.
+  const script = fs.readFileSync(
+    path.join(PROJECT_ROOT, "scripts/content-coverage-report.js"),
+    "utf8",
+  );
+  assert.match(script, /loadInSandbox\("app\/hebrew\.js"\)/);
+  assert.match(script, /hebrewApi\.textContainsHeadword/);
+  assert.doesNotMatch(
+    script,
+    /function\s+(normalizeHebrew|surfaceMatchesHeadword)\s*\(/,
+    "the report must not reimplement the matcher",
+  );
+});
+
+test("sentence topics are derived from the vocabulary a sentence contains", () => {
+  const { character, runtime } = loadCharacterModuleWithContent();
+  runtime.characterState = {
+    dailyChoice: "inbal",
+    mission: { active: true, focus: ["mysticism"], characterId: "inbal" },
+  };
+  // Build the index by asking for a weight, then read it off the runtime.
+  const pairs = runtime.sentenceBankDeck.map((sentence) => ({ sentence }));
+  character.buildContentWeigher("sentence", pairs, (pair) => pair.sentence);
+  const index = runtime.characterSentenceTopics;
+  assert.equal(typeof index?.get, "function", "the index must be built lazily on first use");
+  assert.ok(index.size > 500, `only ${index.size} sentences carry a vocabulary anchor`);
+
+  // The incantation-bowl row uses several cards off Inbal's mysticism shelf.
+  const bowl = index.get("inbal_01");
+  assert.ok(bowl?.get("religion_magic_spirituality") >= 2, "inbal_01 must anchor to the mystical shelf");
+  // A home-care row anchors to the home shelf and to nothing religious.
+  const home = index.get("everyday_242");
+  assert.ok(home?.get("home_everyday_life") >= 1);
+  assert.equal(home?.has("religion_magic_spirituality"), false);
+});
+
+test("the sentence bias grades by evidence and never removes a row", () => {
+  const { character, characterData, runtime } = loadCharacterModuleWithContent();
+  const deck = runtime.sentenceBankDeck;
+  runtime.characterState = {
+    dailyChoice: "inbal",
+    mission: { active: true, focus: ["mysticism"], characterId: "inbal" },
+  };
+
+  const pairs = deck.map((sentence) => ({ sentence }));
+  const weigh = character.buildContentWeigher("sentence", pairs, (pair) => pair.sentence);
+  const weightOf = (id) => weigh(pairs.find((pair) => pair.sentence.id === id));
+
+  // Three mysticism cards outweigh two, which outweigh one, which outweighs a
+  // row with no anchor in the checked group. One generic hit is a nudge rather
+  // than a verdict, because a single card off a shelf like Ivri's
+  // "Scientific & Analytical" may only be its ordinary office sense.
+  const strong = weightOf("inbal_01");
+  const weak = weightOf("inbal_39");
+  const anchorless = weightOf("inbal_98");
+  assert.ok(strong > weak, `expected ${strong} > ${weak}`);
+  assert.ok(weak > anchorless, `expected ${weak} > ${anchorless}`);
+  // The shared tier keeps its neutral weight: focus redistributes inside the
+  // character's own bank and takes nothing from the rest of the course.
+  assert.equal(weightOf("everyday_242"), 1);
+
+  // Sentences are biased, never filtered. Fencing them would repeat rows inside
+  // one session, because getRoundTarget measures the unfiltered deck.
+  assert.equal(character.filterOutsideFocus("sentence", deck).length, deck.length);
+  assert.equal(character.isOutsideFocus("sentence", deck[0]), false);
+
+  // And the documented owned share still holds, because the focus factor is
+  // normalized to average 1 across the owned subset.
+  const route = characterData.getCharacter("inbal").route;
+  const shareFor = (focus) => {
+    runtime.characterState.mission.focus = focus;
+    const fresh = deck.map((sentence) => ({ sentence }));
+    const w = character.buildContentWeigher("sentence", fresh, (pair) => pair.sentence);
+    let owned = 0;
+    let rest = 0;
+    fresh.forEach((pair) => {
+      const value = w(pair);
+      if (characterData.ownsItem(route, "sentence", pair.sentence)) owned += value;
+      else rest += value;
+    });
+    return owned / (owned + rest);
+  };
+  const all = [...characterData.getFocusGroups("inbal")].map((group) => group.id);
+  [all, ["mysticism"], ["practice"]].forEach((focus) => {
+    const share = shareFor(focus);
+    assert.ok(
+      Math.abs(share - 0.65) < 0.005,
+      `owned share drifted to ${share.toFixed(4)} for focus ${focus.join("+")}`,
+    );
+  });
+});
+
+test("every focus group has derived sentence support for at least some rows", () => {
+  const { character, characterData, runtime } = loadCharacterModuleWithContent();
+  const deck = runtime.sentenceBankDeck;
+  runtime.characterState = { dailyChoice: "inbal", mission: { active: true, focus: ["mysticism"], characterId: "inbal" } };
+  character.buildContentWeigher("sentence", deck.map((sentence) => ({ sentence })), (pair) => pair.sentence);
+  const index = runtime.characterSentenceTopics;
+
+  // Coverage is partial by construction — an unanchored row simply gets no bias
+  // — but a group with zero supported rows would make the sentence half of the
+  // feature silently inert for it, which is worth failing on.
+  characterData.getCharacterIds().forEach((id) => {
+    [...characterData.getFocusGroups(id)].forEach((group) => {
+      const supported = deck.filter((sentence) => {
+        const counts = index.get(sentence.id);
+        if (!counts) return false;
+        return [...group.categories].some((category) => counts.has(category));
+      }).length;
+      assert.ok(supported > 0, `${id}/${group.id} has no sentence anchored to it at all`);
+    });
   });
 });

@@ -119,8 +119,13 @@ function createInitialCharacterState(saved, dayKey) {
     hasChosen: sanitizeHasChosen(saved),
     dailyChoice: "",
     pendingChoice: "",
+    // The selection being made on the focus screen, before a tier exists to
+    // hang a mission off. It is cleared the moment the mission takes a copy.
+    pendingFocus: [],
     // The free-play lens outlives the day-keyed mission state deliberately.
     lensCharacter: isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "",
+    // So does the topic selection, for the same reason.
+    topics: sanitizeTopicMap(saved?.topics),
     freePlay: createReactionContainer(saved?.freePlay),
     screen: "picker",
     reviewOpen: false,
@@ -163,6 +168,70 @@ function createReactionContainer(saved) {
   };
 }
 
+// Group ids the named character actually offers, in the registry's own order so
+// a hand-edited save cannot reorder the picker. An unrecognised id is dropped
+// rather than rejected: a group renamed in a later release would otherwise strand
+// a mid-day save on a screen it cannot leave.
+// A mission needs at least this many topics. Measured rather than chosen: the
+// thinnest legal pick in the cast is 105 cards, so a learner meets their chosen
+// words about once a week, which is the spaced-repetition scheduler working
+// rather than a starved pool. The old 250-card depth floor guarded against
+// *unwanted* repetition under a lens nobody picked; an explicit selection
+// retires that concern.
+const MIN_FOCUS_TOPICS = 3;
+
+// Topic ids the named character actually offers, across both tiers, in the
+// order the picker shows them so a hand-edited save cannot reorder it. An
+// unrecognised id is dropped rather than rejected: a topic renamed in a later
+// release would otherwise strand a saved selection.
+function sanitizeFocus(characterId, focus) {
+  const topics = getCharacterData().getTopicsFor?.(characterId) || [];
+  if (!topics.length || !Array.isArray(focus)) return [];
+  const wanted = focus.map((id) => String(id || ""));
+  return topics.filter((topic) => wanted.includes(topic.id)).map((topic) => topic.id);
+}
+
+function allFocusIds(characterId) {
+  return (getCharacterData().getTopicsFor?.(characterId) || []).map((topic) => topic.id);
+}
+
+// What the picker opens with when the learner has never chosen for this
+// character: their own specialist topics, plus the everyday topics that should
+// be on by default. Deliberately a real selection rather than everything,
+// because "everything" is the whole 2,206-card deck and defeats the point of
+// choosing.
+//
+// `safety` is in here to keep a course policy true: every resident drills the
+// everyday security tier. It used to hold by being routed to all five
+// characters, which is also what made it unnarrowable and let it swallow
+// 42-45% of a narrowed draw. Defaulting it on preserves the policy while
+// leaving the learner free to turn it off.
+const DEFAULT_SHARED_TOPICS = Object.freeze(["core", "home", "safety"]);
+
+function defaultFocusIds(characterId) {
+  const own = (getCharacterData().getFocusGroups?.(characterId) || []).map((topic) => topic.id);
+  return sanitizeFocus(characterId, [...own, ...DEFAULT_SHARED_TOPICS]);
+}
+
+function sanitizeTopicMap(saved) {
+  const map = {};
+  if (!saved || typeof saved !== "object") return map;
+  getCharacterIds().forEach((id) => {
+    const picked = sanitizeFocus(id, saved[id]);
+    if (picked.length) map[id] = picked;
+  });
+  return map;
+}
+
+// The learner's standing choice for a character, or the default. Persistent, so
+// it survives the day rollover the way `lensCharacter` does — re-picking three
+// topics every morning would be tedious, and the Review surface that edits it
+// has no day-scoped home to live in.
+function getStoredFocus(characterId) {
+  const stored = getState()?.topics?.[String(characterId || "")];
+  return stored?.length ? stored : defaultFocusIds(characterId);
+}
+
 function sanitizeMission(mission) {
   if (!mission || typeof mission !== "object") return null;
   return {
@@ -171,6 +240,12 @@ function sanitizeMission(mission) {
     completed: mission.completed === true,
     onHub: mission.onHub === true,
     tier: TIERS[mission.tier] ? mission.tier : "short",
+    focus: sanitizeFocus(mission.characterId, mission.focus),
+    // Which character's groups `focus` was sanitized against. `dailyChoice` says
+    // the same thing today, but it lives one level up and is cleared on some
+    // paths before the mission is, and a focus list read against the wrong cast
+    // would silently sanitize to empty.
+    characterId: isCharacterChoice(mission.characterId) ? String(mission.characterId) : "",
     activities: Array.isArray(mission.activities)
       ? mission.activities.map((id) => String(id || "")).filter((id) => ACTIVITY_ORDER.some((activity) => activity.id === id))
       : [],
@@ -194,10 +269,12 @@ function sanitizeCharacterState(saved, today) {
     ? saved.dailyChoice
     : "";
   state.pendingChoice = isCharacterChoice(saved?.pendingChoice) ? saved.pendingChoice : "";
+  state.topics = sanitizeTopicMap(saved?.topics);
+  state.pendingFocus = sanitizeFocus(state.pendingChoice, saved?.pendingFocus);
   state.lensCharacter = isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "";
   // "perfect" was its own blocking scene before flawless rounds folded into the
   // results screen; a save still carrying it falls through to "none".
-  state.screen = ["picker", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
+  state.screen = ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
     ? saved.screen
     : (state.dailyChoice ? "none" : "picker");
   state.reviewOpen = saved?.reviewOpen === true;
@@ -211,8 +288,13 @@ function sanitizeCharacterState(saved, today) {
     state.dailyChoice = "";
     state.screen = "picker";
   }
-  if (state.screen === "duration" && !state.pendingChoice) {
+  if ((state.screen === "duration" || state.screen === "focus") && !state.pendingChoice) {
     state.screen = "picker";
+  }
+  // A restore mid-flow with nothing checked would show a dead Continue button,
+  // so re-seed from the learner's standing choice the way chooseCharacter does.
+  if ((state.screen === "focus" || state.screen === "duration") && !state.pendingFocus.length) {
+    state.pendingFocus = getStoredFocus(state.pendingChoice);
   }
   return state;
 }
@@ -263,6 +345,10 @@ character.bindUi = character.bindUi || function bindUi() {
       character.chooseCharacter(button.dataset.characterId);
     } else if (action === "back") {
       character.backToPicker();
+    } else if (action === "focusGroup") {
+      character.toggleFocusGroup(button.dataset.focusGroup);
+    } else if (action === "confirmFocus") {
+      character.confirmFocus();
     } else if (action === "tier") {
       character.chooseTier(button.dataset.tier);
     } else if (action === "continue") {
@@ -289,6 +375,11 @@ character.bindUi = character.bindUi || function bindUi() {
 
   const bindLensPicker = (container) => {
     container?.addEventListener("click", (event) => {
+      const topicRow = event.target?.closest?.("[data-topic-id]");
+      if (topicRow && !topicRow.disabled) {
+        character.toggleCharacterTopic(topicRow.dataset.topicCharacter, topicRow.dataset.topicId);
+        return;
+      }
       const option = event.target?.closest?.("[data-character-lens]");
       if (!option || option.disabled) return;
       character.setLensCharacter(option.dataset.characterLens);
@@ -317,7 +408,7 @@ character.checkDayRollover = character.checkDayRollover || function checkDayRoll
 };
 
 character.isBlocking = character.isBlocking || function isBlocking() {
-  return ["picker", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
+  return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
 };
 
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
@@ -328,9 +419,64 @@ character.isMissionActive = character.isMissionActive || function isMissionActiv
 // material, per docs/character-gameplay-strategy.md.
 const TARGET_OWNED_SHARE = 0.65;
 
-function getActiveRoute() {
-  return getCharacterById(getRoutingCharacterId())?.route || null;
+// Which topics are steering the draw right now. A running mission uses the
+// snapshot it took at start, so editing the standing selection cannot shift the
+// deck under a mission in progress. Off-mission the standing selection applies,
+// which is what makes the Review and Settings surfaces mean anything for free
+// play. No character lens at all means no selection and the whole course.
+function getActiveFocus() {
+  const state = getState();
+  const mission = state?.mission;
+  if (mission?.active) return Array.isArray(mission.focus) ? mission.focus : [];
+  const id = getRoutingCharacterId();
+  return getCharacterById(id) ? getStoredFocus(id) : [];
 }
+
+function getActiveRoute() {
+  const id = getRoutingCharacterId();
+  const route = getCharacterById(id)?.route || null;
+  if (!route) return null;
+  // Rewriting the route rather than the predicate keeps topics out of
+  // characterData.ownsItem, which scripts/character-content-report.js shares:
+  // the report must keep measuring authored ownership.
+  return getCharacterData().applyTopicsToRoute?.(id, route, getActiveFocus()) || route;
+}
+
+// A vocabulary card the learner did not ask for. The selection *is* the pool:
+// the two topic tiers name all 42 categories between them, so anything unselected
+// is out, and a card is kept only by its category being selected or by a selected
+// topic naming it in `words`. That totality is the point — it is what stopped the
+// 70-card cast-wide safety shelf holding its full size while a narrowed pool
+// shrank around it and swallowing 42-45% of the draw.
+//
+// Vocabulary only. Sentences carry no topic field, so steering them is a weight
+// and never a filter: getRoundTarget measures the unfiltered deck and
+// buildCandidatePairs falls back to the full allowed set, so fencing a register
+// bank would serve the same sentence twice in one session.
+character.isOutsideFocus = character.isOutsideFocus || function isOutsideFocus(kind, item) {
+  if (kind !== "vocab" || !item) return false;
+  const id = getRoutingCharacterId();
+  if (!getCharacterById(id)) return false;
+  const focus = getActiveFocus();
+  if (!focus.length) return false;
+  const data = getCharacterData();
+  if (data.resolveTopicCategories?.(id, focus)?.has(String(item.category || ""))) return false;
+  // A selected topic may claim a card that lives on an unselected shelf; those
+  // are named by `he`, because vocabulary ids embed a positional index.
+  return data.resolveTopicWords?.(id, focus)?.has(String(item.he || "")) !== true;
+};
+
+// Same contract as filterWithheldContent: a hard pool filter applied before the
+// due/fresh split, never a weight of zero, which app/utils.js would ignore.
+character.filterOutsideFocus = character.filterOutsideFocus || function filterOutsideFocus(kind, items, options = {}) {
+  if (kind !== "vocab" || !Array.isArray(items) || !items.length) return items;
+  const resolve = typeof options.getItem === "function" ? options.getItem : (entry) => entry;
+  const kept = items.filter((entry) => !character.isOutsideFocus(kind, resolve(entry)));
+  // The unrouted shelves and the cast-wide tier are never fenced, so this cannot
+  // empty a real pool. Returning the input if it somehow did keeps the same
+  // no-starvation guarantee the withholding layer documents.
+  return kept.length ? kept : items;
+};
 
 // Delegated to app/character-data.js so this module, the content report, and the
 // audience derivation cannot disagree about who owns what.
@@ -368,6 +514,99 @@ character.getContentWeight = character.getContentWeight || function getContentWe
   return ownsItem(getActiveRoute(), kind, item) ? 2 : 1;
 };
 
+// How strongly a focus-matched sentence outweighs an unmatched one, and how many
+// distinct group words are allowed to count. The bias is graded rather than
+// binary because the evidence is graded: a row using three mysticism words is
+// unmistakably Inbal's mystical half, while a row using one word off the
+// "Scientific & Analytical" shelf may only be using it in its ordinary office
+// sense — that shelf carries ישיבה ("work meeting"), צוות ("team") and דוח
+// ("report") alongside the research register. One hit is a nudge; three is a
+// statement.
+const FOCUS_SENTENCE_BIAS = 0.6;
+const FOCUS_SENTENCE_HIT_CAP = 3;
+
+// sentenceId -> (vocabulary category -> how many distinct cards from it the
+// sentence uses). Derived, never authored: a sentence carries no topic field, and
+// docs/project-rules.md forbids adding one, so the relationship is read off the
+// vocabulary the sentence actually contains. This is the same "exact support"
+// relationship docs/character-gameplay-strategy.md already reports tranche by
+// tranche, and scripts/content-coverage-report.js measures with the same matcher.
+//
+// Built once, lazily, from an index keyed on each headword's first word: the
+// naive pass is 1,254 sentences x 2,206 cards, and indexed it lands in single-digit
+// milliseconds.
+function getSentenceTopicIndex() {
+  const runtime = getRuntime();
+  if (runtime.characterSentenceTopics !== undefined) return runtime.characterSentenceTopics;
+  const deck = runtime.sentenceBankDeck;
+  const vocabulary = runtime.baseVocabulary;
+  const hebrewApi = app.hebrew;
+  if (!Array.isArray(deck) || !Array.isArray(vocabulary) || !hebrewApi?.normalizeHeadwordText) {
+    // The picker tests load character.js without the content decks. No index
+    // means no sentence bias, which is the correct neutral answer.
+    runtime.characterSentenceTopics = null;
+    return null;
+  }
+
+  const byFirstWord = new Map();
+  vocabulary.forEach((word) => {
+    const parts = hebrewApi.normalizeHeadwordText(word?.he).split(" ").filter(Boolean);
+    if (!parts.length) return;
+    if (!byFirstWord.has(parts[0])) byFirstWord.set(parts[0], []);
+    byFirstWord.get(parts[0]).push({ parts, category: word.category, he: word.he });
+  });
+
+  const index = new Map();
+  deck.forEach((sentence) => {
+    const words = hebrewApi.normalizeHeadwordText(sentence?.hebrew).split(" ").filter(Boolean);
+    const seen = new Map();
+    words.forEach((surface, position) => {
+      hebrewApi.headwordIndexKeys(surface).forEach((key) => {
+        (byFirstWord.get(key) || []).forEach((candidate) => {
+          if (words.length - position < candidate.parts.length) return;
+          const matches = candidate.parts.every(
+            (part, offset) => hebrewApi.headwordSurfaceMatches(words[position + offset], part),
+          );
+          if (!matches) return;
+          if (!seen.has(candidate.category)) seen.set(candidate.category, new Set());
+          seen.get(candidate.category).add(candidate.he);
+        });
+      });
+    });
+    if (!seen.size) return;
+    const counts = new Map();
+    seen.forEach((cards, category) => counts.set(category, cards.size));
+    index.set(String(sentence.id || ""), counts);
+  });
+  runtime.characterSentenceTopics = index;
+  return index;
+}
+
+// Distinct cards a sentence uses from the checked groups, capped. Zero means the
+// row carries no evidence either way, which is the common case: coverage is
+// partial by construction and a row with no vocabulary anchor simply gets no bias.
+function getSentenceFocusHits(item) {
+  const index = getSentenceTopicIndex();
+  if (!index) return 0;
+  const counts = index.get(String(item?.id || ""));
+  if (!counts) return 0;
+  const id = getRoutingCharacterId();
+  const focus = getActiveFocus();
+  if (!focus.length) return 0;
+  const topics = getCharacterData().getTopicsFor?.(id) || [];
+  if (!topics.length || focus.length === topics.length) return 0;
+  let best = 0;
+  topics.forEach((topic) => {
+    if (!focus.includes(topic.id)) return;
+    let hits = 0;
+    topic.categories.forEach((category) => {
+      hits += counts.get(category) || 0;
+    });
+    if (hits > best) best = hits;
+  });
+  return Math.min(best, FOCUS_SENTENCE_HIT_CAP);
+}
+
 // Returns a per-item multiplier for one draw. The boost is solved from the
 // candidate list so the owned share lands near TARGET_OWNED_SHARE regardless of
 // how much material a character owns — a fixed constant would drift badly as
@@ -385,7 +624,41 @@ character.buildContentWeigher = character.buildContentWeigher || function buildC
   if (!ownedCount || !restCount) return neutral;
 
   const boost = (TARGET_OWNED_SHARE * restCount) / ((1 - TARGET_OWNED_SHARE) * ownedCount);
-  return (entry) => (isOwned(entry) ? boost : 1);
+  if (kind !== "sentence") return (entry) => (isOwned(entry) ? boost : 1);
+
+  // Sentences are biased, never filtered: getRoundTarget measures the unfiltered
+  // deck and always asks for LESSON_ROUNDS rounds, and buildCandidatePairs falls
+  // back to the full allowed set, so fencing a register bank would serve the same
+  // row twice in one session.
+  //
+  // The factor is normalized to average 1 across the owned subset, so the owned
+  // share still lands on TARGET_OWNED_SHARE exactly as the test above it asserts.
+  // Focus redistributes weight *inside* the character's own bank rather than
+  // taking any from the shared tier.
+  // Memoized on the sentence id rather than on the entry object. The pair
+  // wrappers are rebuilt per draw, and an identity key would silently fall back
+  // to a neutral factor for any caller that did not hand back the very same
+  // objects — a bias that quietly does nothing is worse than none.
+  const factorById = new Map();
+  const factorFor = (entry) => {
+    const item = resolve(entry);
+    const id = String(item?.id || "");
+    if (factorById.has(id)) return factorById.get(id);
+    const factor = 1 + FOCUS_SENTENCE_BIAS * getSentenceFocusHits(item);
+    factorById.set(id, factor);
+    return factor;
+  };
+
+  let total = 0;
+  let ownedSeen = 0;
+  items.forEach((entry) => {
+    if (!isOwned(entry)) return;
+    total += factorFor(entry);
+    ownedSeen += 1;
+  });
+  const mean = ownedSeen ? total / ownedSeen : 0;
+  if (!mean) return (entry) => (isOwned(entry) ? boost : 1);
+  return (entry) => (isOwned(entry) ? boost * (factorFor(entry) / mean) : 1);
 };
 
 function getDialogue(key, characterId) {
@@ -569,6 +842,139 @@ function renderPicker(target) {
   target.append(cards);
 }
 
+// How many vocabulary cards a topic is worth, so a learner can see that Money &
+// Finance costs less to drop than Devices & Software. Counted off the live deck
+// rather than stored, because the shelves grow — and off `baseVocabulary` rather
+// than the raw shelves, because that is the pool the picker actually draws from.
+function countFocusGroupCards(group) {
+  const deck = getRuntime().baseVocabulary;
+  if (!Array.isArray(deck)) return 0;
+  const words = new Set(group.words || []);
+  return deck.reduce(
+    (total, word) => total + (
+      group.categories.includes(word.category) || words.has(word.he) ? 1 : 0
+    ),
+    0,
+  );
+}
+
+function countSelectedCards(characterId, selected) {
+  const deck = getRuntime().baseVocabulary;
+  const data = getCharacterData();
+  if (!Array.isArray(deck) || !selected.length) return 0;
+  const categories = data.resolveTopicCategories?.(characterId, selected) || new Set();
+  const words = data.resolveTopicWords?.(characterId, selected) || new Set();
+  return deck.reduce(
+    (total, word) => total + (
+      categories.has(word.category) || words.has(word.he) ? 1 : 0
+    ),
+    0,
+  );
+}
+
+function createTopicRow(topic, isOn, action = "focusGroup") {
+  const button = createSceneButton("", action, "quiet character-focus-option");
+  if (action === "focusGroup") button.dataset.focusGroup = topic.id;
+  button.classList.toggle("selected", isOn);
+  button.setAttribute("aria-pressed", String(isOn));
+  const name = global.document.createElement("strong");
+  name.textContent = isHebrewUi() ? topic.labelHe : topic.labelEn;
+  const count = global.document.createElement("span");
+  count.className = "character-focus-count";
+  const cards = countFocusGroupCards(topic);
+  count.textContent = uiText(`${cards} words`, `${cards} מילים`);
+  button.append(name, count);
+  return button;
+}
+
+function createTopicSection(labelEn, labelHe, topics, checked) {
+  const section = global.document.createElement("div");
+  section.className = "character-focus-section";
+  const heading = global.document.createElement("p");
+  heading.className = "character-focus-section-label";
+  heading.textContent = uiText(labelEn, labelHe);
+  const list = global.document.createElement("div");
+  list.className = "character-focus-options";
+  topics.forEach((topic) => list.append(createTopicRow(topic, checked.includes(topic.id))));
+  section.append(heading, list);
+  return section;
+}
+
+function renderFocus(target) {
+  const state = getState();
+  const characterId = state?.pendingChoice || "";
+  const data = getCharacterData();
+  const own = data.getFocusGroups?.(characterId) || [];
+  const shared = data.SHARED_FOCUS_TOPICS || [];
+  const checked = Array.isArray(state?.pendingFocus) ? state.pendingFocus : [];
+  const minimum = character.getMinimumTopics();
+
+  const layout = global.document.createElement("div");
+  // The marker class exists so the narrow-screen rules can compact this screen's
+  // companion art without touching the duration screen, which shares the layout
+  // but carries three buttons instead of a two-tier topic list.
+  layout.className = "character-scene-layout character-focus-layout";
+  const visual = global.document.createElement("div");
+  visual.className = "character-scene-visual";
+  visual.append(createSprite("neutral", "character-scene-sprite"));
+  renderDialogue(visual, getDialogue("description"));
+
+  const choices = global.document.createElement("div");
+  choices.className = "character-focus-panel";
+  const title = global.document.createElement("h2");
+  title.id = "characterSceneTitle";
+  title.textContent = uiText("What are we covering?", "על מה נעבוד?");
+  // Said plainly because the screen cannot show it: the tier that comes next
+  // still runs every activity, and this list governs the vocabulary only.
+  // Sentences, conjugation and abbreviations route on the character's register,
+  // which carries no topic to check off.
+  const note = global.document.createElement("p");
+  note.className = "character-focus-note";
+  note.textContent = uiText(
+    `Pick at least ${minimum}. This sets the vocabulary; the other activities follow your companion.`,
+    `לבחור ${minimum} לפחות. זה קובע את אוצר המילים; שאר הפעילויות נשארות של הדמות.`,
+  );
+  choices.append(title, note);
+
+  const scroller = global.document.createElement("div");
+  scroller.className = "character-focus-scroll";
+  if (own.length) {
+    scroller.append(createTopicSection(
+      `${getActiveCharacter()?.nameEn || "Your companion"}'s topics`,
+      `הנושאים של ${getActiveCharacter()?.nameHe || "הדמות"}`,
+      own,
+      checked,
+    ));
+  }
+  scroller.append(createTopicSection("Everyday topics", "נושאים יומיומיים", shared, checked));
+  choices.append(scroller);
+
+  // The live readout carries the consequence the row counts cannot: how much
+  // material the current selection actually adds up to.
+  const readout = global.document.createElement("p");
+  readout.className = "character-focus-readout";
+  const words = countSelectedCards(characterId, checked);
+  readout.textContent = checked.length < minimum
+    ? uiText(
+      `${checked.length} of ${minimum} topics chosen`,
+      `נבחרו ${checked.length} מתוך ${minimum} נושאים`,
+    )
+    : uiText(
+      `${checked.length} topics · ${words} words`,
+      `${checked.length} נושאים · ${words} מילים`,
+    );
+  choices.append(readout);
+
+  const confirm = createSceneButton(uiText("Continue", "להמשיך"), "confirmFocus");
+  // Below the minimum the pool gets thin enough to feel repetitive, so the screen
+  // gates on it the way the picker gates on gender.
+  confirm.disabled = checked.length < minimum;
+  choices.append(confirm);
+  choices.append(createSceneButton(uiText("Back", "חזרה"), "back", "quiet character-back-button"));
+  layout.append(choices, visual);
+  target.append(layout);
+}
+
 function renderDuration(target) {
   const state = getState();
   const layout = global.document.createElement("div");
@@ -666,6 +1072,7 @@ character.renderScene = character.renderScene || function renderScene() {
   }
   content.innerHTML = "";
   if (screen === "picker") renderPicker(content);
+  else if (screen === "focus") renderFocus(content);
   else if (screen === "duration") renderDuration(content);
   else if (screen === "greeting") renderGreeting(content);
   else if (screen === "activityIntro") renderActivityIntro(content);
@@ -1196,6 +1603,54 @@ function syncStaticSprites() {
   });
 }
 
+// The standing topic selection, editable where the learner already chooses a
+// companion. Collapsed behind a summary line, because the Review page lists all
+// five characters and five expanded topic lists would bury the bond cards.
+function createTopicEditor(characterId, changeable) {
+  const data = getCharacterData();
+  const own = data.getFocusGroups?.(characterId) || [];
+  const shared = data.SHARED_FOCUS_TOPICS || [];
+  const selected = character.getCharacterTopicSelection(characterId);
+  const minimum = character.getMinimumTopics();
+
+  const wrap = global.document.createElement("details");
+  wrap.className = "character-topic-editor";
+  const summary = global.document.createElement("summary");
+  const words = countSelectedCards(characterId, selected);
+  summary.textContent = uiText(
+    `Topics · ${selected.length} chosen · ${words} words`,
+    `נושאים · ${selected.length} נבחרו · ${words} מילים`,
+  );
+  wrap.append(summary);
+
+  const list = global.document.createElement("div");
+  list.className = "character-focus-options";
+  [...own, ...shared].forEach((topic) => {
+    const isOn = selected.includes(topic.id);
+    // No scene action: this surface writes the standing selection through its
+    // own hook rather than the daily picker's.
+    const row = createTopicRow(topic, isOn, "");
+    row.dataset.topicCharacter = characterId;
+    row.dataset.topicId = topic.id;
+    // Unchecking the last legal topic would drop below the minimum, so the row
+    // that would break it is held rather than silently refused on click.
+    row.disabled = !changeable || (isOn && selected.length <= minimum);
+    list.append(row);
+  });
+  wrap.append(list);
+
+  const hint = global.document.createElement("p");
+  hint.className = "character-focus-note";
+  hint.textContent = changeable
+    ? uiText(`Pick at least ${minimum}.`, `לבחור ${minimum} לפחות.`)
+    : uiText(
+      "Finish today’s mission to change topics.",
+      "אפשר לשנות נושאים בסיום המשימה של היום.",
+    );
+  wrap.append(hint);
+  return wrap;
+}
+
 character.renderBondPanel = character.renderBondPanel || function renderBondPanel() {
   const runtime = getRuntime();
   const target = runtime.el?.reviewCharacterBonds;
@@ -1264,7 +1719,7 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
     choose.disabled = selected || !changeable;
     choose.setAttribute("aria-pressed", String(selected));
 
-    body.append(heading, level, track, stats, choose);
+    body.append(heading, level, track, stats, choose, createTopicEditor(bond.id, changeable));
     card.append(body);
     target.append(card);
   });
@@ -1479,15 +1934,79 @@ character.chooseCharacter = character.chooseCharacter || function chooseCharacte
   const state = getState();
   if (!state?.gender || !isCharacterChoice(characterId)) return;
   state.pendingChoice = String(characterId);
+  // Opens on whatever the learner last chose for this character, or the default
+  // if they never have. The everyday tier means every character always has
+  // topics to offer, so the screen is never skipped.
+  state.pendingFocus = getStoredFocus(state.pendingChoice);
+  state.screen = "focus";
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+};
+
+character.toggleFocusGroup = character.toggleFocusGroup || function toggleFocusGroup(groupId) {
+  const state = getState();
+  if (!state || state.screen !== "focus" || !isCharacterChoice(state.pendingChoice)) return;
+  const id = String(groupId || "");
+  if (!allFocusIds(state.pendingChoice).includes(id)) return;
+  const next = state.pendingFocus.includes(id)
+    ? state.pendingFocus.filter((entry) => entry !== id)
+    : [...state.pendingFocus, id];
+  // Re-sanitized so the stored order always matches the registry's, which is
+  // the order the picker renders in.
+  state.pendingFocus = sanitizeFocus(state.pendingChoice, next);
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+};
+
+character.confirmFocus = character.confirmFocus || function confirmFocus() {
+  const state = getState();
+  if (!state || state.screen !== "focus" || !isCharacterChoice(state.pendingChoice)) return;
+  // Below the minimum the pool gets thin enough to feel repetitive. The Continue
+  // button is disabled for it and this is the guard behind that.
+  if (state.pendingFocus.length < MIN_FOCUS_TOPICS) return;
+  // Remember it, so tomorrow opens on the same choice and free play follows it.
+  state.topics = { ...state.topics, [state.pendingChoice]: [...state.pendingFocus] };
   state.screen = "duration";
   saveState();
   getRuntime().helpers?.renderAll?.();
+};
+
+// Editing the standing selection outside the daily picker — the Review
+// Characters tab and Settings. Gated on canChangeLens for the same reason
+// changing the lens is: a running mission owns what it is drilling.
+character.setCharacterTopics = character.setCharacterTopics || function setCharacterTopics(characterId, topicIds) {
+  const state = getState();
+  if (!state || !isCharacterChoice(characterId) || !character.canChangeLens()) return false;
+  const picked = sanitizeFocus(characterId, topicIds);
+  if (picked.length < MIN_FOCUS_TOPICS) return false;
+  state.topics = { ...state.topics, [String(characterId)]: picked };
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+  return true;
+};
+
+character.toggleCharacterTopic = character.toggleCharacterTopic || function toggleCharacterTopic(characterId, topicId) {
+  const current = getStoredFocus(characterId);
+  const id = String(topicId || "");
+  const next = current.includes(id)
+    ? current.filter((entry) => entry !== id)
+    : [...current, id];
+  return character.setCharacterTopics(characterId, next);
+};
+
+character.getCharacterTopicSelection = character.getCharacterTopicSelection || function getCharacterTopicSelection(characterId) {
+  return getStoredFocus(characterId);
+};
+
+character.getMinimumTopics = character.getMinimumTopics || function getMinimumTopics() {
+  return MIN_FOCUS_TOPICS;
 };
 
 character.backToPicker = character.backToPicker || function backToPicker() {
   const state = getState();
   if (!state) return;
   state.pendingChoice = "";
+  state.pendingFocus = [];
   state.screen = "picker";
   saveState();
   getRuntime().helpers?.renderAll?.();
@@ -1520,12 +2039,24 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
   const state = getState();
   const tier = TIERS[tierId];
   if (!state?.gender || !tier || !isCharacterChoice(state.pendingChoice)) return;
+  // The minimum is enforced here as well as on the focus screen. Continue being
+  // disabled stops a click, but a restored save or any other path into this
+  // function would otherwise build a mission below the floor.
+  if (state.pendingFocus.length && state.pendingFocus.length < MIN_FOCUS_TOPICS) return;
   const itinerary = buildItinerary(tier.count);
+  // The mission takes a snapshot, so editing the standing selection from Review
+  // or Settings later cannot shift the deck under a mission already running.
+  const focus = state.pendingFocus.length
+    ? sanitizeFocus(state.pendingChoice, state.pendingFocus)
+    : getStoredFocus(state.pendingChoice);
+  const focusCharacterId = state.pendingChoice;
+  state.topics = { ...state.topics, [focusCharacterId]: [...focus] };
   state.dailyChoice = state.pendingChoice;
   state.hasChosen[state.pendingChoice] = true;
   // Today's character also becomes the free-play lens once the mission ends.
   state.lensCharacter = state.pendingChoice;
   state.pendingChoice = "";
+  state.pendingFocus = [];
   state.screen = "greeting";
   state.reviewOpen = false;
   state.mission = {
@@ -1533,6 +2064,8 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
     completed: false,
     onHub: false,
     tier: tierId,
+    focus,
+    characterId: focusCharacterId,
     activities: itinerary.playable,
     skippedActivities: itinerary.skipped,
     currentIndex: 0,

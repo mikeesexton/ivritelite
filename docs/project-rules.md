@@ -144,7 +144,12 @@ Two traps, both of which have already cost real bugs:
   `tests/vocab-data.test.js` diffs every id against `tests/fixtures/vocab-id-baseline.json`.
   Append at a category **tail**, and reach an off-shelf word through `route.vocabWords`.
   Retiring a card means `availability: { translationQuiz: false }`, never deletion.
-- **An unrouted shelf belongs to nobody, which means everybody draws it.** Ten of the 42
+- **An unrouted shelf belongs to nobody, and is reached through the shared topic tier.**
+  Since the topic picker landed, all 42 vocabulary categories are named by a topic — a
+  character's own or the shared everyday tier — so an unrouted shelf is still nobody's
+  identity but is now something a learner can deliberately ask for. What it is *not* is
+  ambient: for vocabulary the learner's selection is the whole pool, so an unselected shelf
+  is filtered out rather than quietly filling the remainder. Before that, ten of the 42
   vocabulary categories have no owner, `core_advanced` among them. That is how `חוסל` — a
   finite passive form sitting on `core_advanced` — reached an Ido mission on 2026-08-19:
   nothing said it should not. Before adding a card, check whether its shelf actually has the

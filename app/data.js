@@ -232,7 +232,12 @@ data.pickBestWord = data.pickBestWord || function pickBestWord(pool, usedWordIds
   const runtime = getRuntime();
   const weightedRandomWord = getUtils().weightedRandomWord;
   const now = Date.now();
-  const allowed = app.character?.filterWithheldContent?.("vocab", pool) || pool;
+  const withheldFiltered = app.character?.filterWithheldContent?.("vocab", pool) || pool;
+  // The learner's focus groups narrow the same way withholding does, and for the
+  // same reason: a zero weight is a no-op here, because weightedRandomWord falls
+  // back to a uniform pick when the total weight is zero. Both run before the
+  // due/fresh split below, since an unmet item counts as due.
+  const allowed = app.character?.filterOutsideFocus?.("vocab", withheldFiltered) || withheldFiltered;
   const unused = allowed.filter((word) => !usedWordIds.includes(word.id));
   const freshPool = unused.length ? unused : allowed;
   const due = data.getDueWords(freshPool, now);

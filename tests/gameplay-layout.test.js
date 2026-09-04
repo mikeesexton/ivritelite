@@ -374,6 +374,59 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     await pageCdp.send("Page.navigate", { url: appUrl });
     await waitForPage(pageCdp);
     await evaluate(pageCdp, "document.fonts.ready");
+    // The topic screen carries the longest list in the daily flow — Ivri is
+    // offered 13 topics across the two tiers — and the rest of this test
+    // dismisses the picker before it measures anything, so this is the only
+    // place it is seen. The scene card is allowed to scroll by design
+    // (.character-scene { overflow: auto }), unlike a gameplay surface; what
+    // must hold is that the list scrolls *inside* its own container so the
+    // title, the readout and Continue stay on screen, and that a row keeps its
+    // 44px touch target.
+    await evaluate(pageCdp, "document.querySelector('#welcomeModalCloseBtn')?.click()");
+    const focusScreen = await evaluate(pageCdp, `(() => {
+      IvriQuestApp.character.setGender('m');
+      IvriQuestApp.character.chooseCharacter('ivri');
+      return IvriQuestApp.runtime.characterState.screen;
+    })()`);
+    assert.equal(focusScreen, "focus", "choosing a character must open the topic screen");
+    await measureGeometry(pageCdp);
+    const focusGeometry = await evaluate(pageCdp, `(() => {
+      const card = document.querySelector('.character-scene-card');
+      const scroller = document.querySelector('.character-focus-scroll');
+      const options = [...document.querySelectorAll('.character-focus-option')];
+      const readout = document.querySelector('.character-focus-readout');
+      const confirm = document.querySelector('[data-character-action="confirmFocus"]');
+      const cardRect = card.getBoundingClientRect();
+      return {
+        topics: options.length,
+        sections: document.querySelectorAll('.character-focus-section').length,
+        cardScrolls: card.scrollHeight > card.clientHeight + 1,
+        listScrolls: scroller.scrollHeight > scroller.clientHeight + 1,
+        minOptionHeight: Math.min(...options.map((el) => el.getBoundingClientRect().height)),
+        selected: options.filter((el) => el.getAttribute('aria-pressed') === 'true').length,
+        readoutText: readout.textContent,
+        confirmEnabled: confirm && !confirm.disabled,
+        confirmInsideCard: confirm.getBoundingClientRect().bottom <= cardRect.bottom + 0.5,
+        confirmInViewport: confirm.getBoundingClientRect().bottom <= window.innerHeight + 0.5,
+      };
+    })()`);
+    assert.equal(focusGeometry.topics, 13, "Ivri must be offered 13 topics");
+    assert.equal(focusGeometry.sections, 2, "the two tiers must render as two sections");
+    assert.equal(focusGeometry.cardScrolls, false, `topic screen scrolls: ${JSON.stringify(focusGeometry)}`);
+    assert.equal(focusGeometry.listScrolls, true, "13 rows must scroll inside the list, not the card");
+    assert.ok(
+      focusGeometry.minOptionHeight >= 44,
+      `topic rows are ${focusGeometry.minOptionHeight}px, under the 44px touch floor`,
+    );
+    // The default is a real selection, not everything: "everything" is the whole
+    // 2,206-card deck, which defeats the point of choosing.
+    assert.ok(focusGeometry.selected >= 3, "the default selection must clear the minimum");
+    assert.ok(focusGeometry.selected < focusGeometry.topics, "the default must not be everything");
+    assert.match(focusGeometry.readoutText, /\d+ topics · \d+ words/);
+    assert.equal(focusGeometry.confirmEnabled, true, "Continue must be live at the default selection");
+    assert.equal(focusGeometry.confirmInsideCard, true, "Continue must sit inside the scene card");
+    assert.equal(focusGeometry.confirmInViewport, true, "Continue must be reachable without scrolling");
+
     await evaluate(pageCdp, "document.querySelector('[data-character-action=\"free\"]')?.click()");
     await evaluate(pageCdp, "document.querySelector('#welcomeModalCloseBtn')?.click()");
 

@@ -2962,6 +2962,118 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   min-height: 50px;
 }
 
+.character-focus-panel {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.character-focus-panel > button {
+  width: 100%;
+  min-height: 50px;
+}
+
+.character-focus-note {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  margin: -0.25rem 0 0.15rem;
+}
+
+.character-focus-options {
+  display: grid;
+  gap: 0.45rem;
+}
+
+/* A row, not a centred button: the label and its card count sit on one line so
+   five groups still clear the fold at 360px. 46px keeps the touch target above
+   the 44px floor without letting Ido's and Ivri's five rows overflow. */
+.character-focus-option {
+  align-items: center;
+  display: flex;
+  gap: 0.6rem;
+  justify-content: space-between;
+  min-height: 46px;
+  text-align: start;
+  width: 100%;
+}
+
+.character-focus-option.selected {
+  background: var(--paper-2);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.character-focus-count {
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.character-focus-option.selected .character-focus-count {
+  color: inherit;
+}
+
+/* Two tiers with headings, and a bounded scroller: with the everyday tier the
+   longest menu is 13 rows, which no phone viewport fits. The scene card already
+   scrolls by design, but scrolling the list instead keeps the title, the readout
+   and Continue on screen while the learner works down it. */
+.character-focus-scroll {
+  display: grid;
+  gap: 0.7rem;
+  max-height: min(46vh, 340px);
+  overflow-y: auto;
+  padding-inline-end: 0.2rem;
+}
+
+.character-focus-section {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.character-focus-section-label {
+  color: var(--ink-soft);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.character-focus-readout {
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  margin: 0.1rem 0 0;
+  text-align: center;
+}
+
+/* The Review page lists all five characters, so the editor stays collapsed
+   until asked for rather than burying the bond cards under five topic lists. */
+.character-topic-editor {
+  border-top: 1px solid var(--line);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.character-topic-editor > summary {
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 0.82rem;
+  min-height: 32px;
+}
+
+.character-topic-editor .character-focus-options {
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.character-topic-editor .character-focus-option[disabled] {
+  cursor: default;
+  opacity: 0.55;
+}
+
 .character-back-button {
   margin-top: 0.25rem;
 }
@@ -3539,6 +3651,52 @@ body[data-ui-lang="he"] .character-mission-copy {
   .character-scene-layout .character-duration-panel {
     order: 2;
   }
+
+  .character-scene-layout .character-focus-panel {
+    order: 2;
+  }
+  /* Five focus rows plus the panel chrome do not fit beside a 300px companion
+     at 360x640, and a Continue button below the fold is worse than smaller art.
+     The layout rule is to compact flexible media before reducing Hebrew display
+     text or touch-target size, so the sprite is what gives way — and the learner
+     has just chosen this character on the previous screen and sees them again on
+     the next one. */
+  .character-focus-layout .character-scene-sprite {
+    width: min(28vw, 108px);
+  }
+
+  .character-focus-layout .character-scene-visual {
+    gap: 0.4rem;
+  }
+
+  .character-focus-layout .character-dialogue {
+    display: none;
+  }
+
+
+  .character-focus-panel {
+    gap: 0.45rem;
+  }
+
+  .character-focus-options {
+    gap: 0.35rem;
+  }
+
+  /* Measured, not guessed: at 360x640 the fixed chrome around the list —
+     compacted sprite, title, note, readout, Continue and Back — leaves about
+     230px, and a taller list pushed Continue out of the card entirely. Roughly
+     four and a half rows show at a time and the rest scrolls. */
+  .character-focus-scroll {
+    max-height: min(34vh, 220px);
+  }
+
+  /* The panel gap already separates Back from Continue, so its own top margin is
+     the redundant whitespace the layout rule says to compact first. Together
+     with the gap above this buys the last few pixels the fifth row needs. */
+  .character-focus-panel .character-back-button {
+    margin-top: 0;
+  }
+
 
   .character-scene-layout .character-scene-visual {
     order: 1;
