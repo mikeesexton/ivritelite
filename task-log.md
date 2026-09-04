@@ -21,6 +21,109 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-04 EDT — The gameplay-layout flake was a real 360x640 overflow
+
+**Requested:** Fix `tests/gameplay-layout.test.js`, which failed roughly one full-suite run in
+four and gates the Pages deploy. The brief proposed that `SETTLED_GEOMETRY` was settling on a
+stale viewport and returning a confidently wrong geometry, and asked explicitly not to widen the
+tolerance, since the 360x640 no-vertical-scroll rule is a real product requirement.
+
+**The premise was wrong, and the test was right.** The CI log's `body.clientHeight: 488` is the
+correct value at 360x640 (`640 - 12.8 top pad - 43.55 topbar - 12.8 gap - 92.8 bottom pad`), and
+its `shell.top: 69.15625` matches a healthy local run to the last decimal, so the app chrome was
+laid out at exactly the emulated width. Blocking Google Fonts outright produced byte-identical
+geometry, ruling out a font swap too.
+
+Running the test's own pinned sentence 200 times reproduced the failure: the bank packed to 4
+rows 23 times, 5 rows 171 times and **6 rows 6 times, overflowing 527px into 488px**. The 6-row
+builder height is 316.84375px -- the CI log's figure exactly. `.sentence-token-bank` is
+`flex-wrap` with `white-space: nowrap` tiles and `buildQuestionFromPair` shuffles the tile order,
+so the row count depends on the ORDER, not the tile count. The floor was genuinely broken on
+about 3% of draws; the test was reporting it correctly on a draw it had no way to reproduce.
+
+This is the bug class the Binyanim block in the same file already documents -- "scrolled on 3 of
+400 sampled draws instead of never" -- and fixed by pinning the draw to its worst case. The
+Sentences block pinned the sentence but never the shuffle.
+
+**Files changed:**
+- `app/sentence-bank.js` — `capSentenceBankDistractors` read
+  `Math.max(SENTENCE_BANK_MIN_DISTRACTORS, ...)`, so the 3-distractor floor beat the 12-tile cap
+  outright: everyday_127 has 10 target tokens, room for 2, and got 3 for 13 tiles. The tile cap
+  is a ceiling now, and a new `SENTENCE_BANK_MAX_TILE_CHARS = 120` bounds total tile text as a
+  stand-in for total tile width, which is what actually sets the row count. `?v=` bumped.
+- `tests/gameplay-layout.test.js` — the Sentences block now pins the direction as well as the
+  sentence, measures the rendered tiles, searches 20,000 seeded permutations for the order that
+  wraps to the most rows, re-renders in it, and asserts the result is exactly 5 rows: over is the
+  product regression, under means the search stopped finding the tallest bank. Also the three hardening items from the brief: the settle
+  verifies the page reports the emulated viewport before accepting agreement, its deadline throws
+  instead of returning an unsettled read, and every `setDeviceMetricsOverride` goes through
+  `setViewport`, which waits for the page to observe the new size.
+
+- `tests/app-progress.test.js` — "sentence builder caps distractor tiles on long sentences" was
+  asserting 13 tiles, and its comment spelled the bug out as intent: "capped distractors (12 - 10
+  floored at 3) = 3 distractors = 13 tiles". It expects 12 now. Added "sentence builder drops
+  distractors whose text would not fit the word bank", a fixture whose 10 target tokens are 129
+  characters on their own, so the tile cap would still allow two distractors and the character
+  budget must admit none.
+- `docs/project-rules.md` — two bullets under the gameplay viewport floor: a random-draw gameplay
+  surface must be pinned to its worst case rather than sampled, and the Sentences word bank fits
+  five rows and no more.
+
+**Why 120.** Five rows is the budget the layout was already built to and never enforced: at five
+rows the shell is 488.41px against the 488px the floor allows, so a sixth overflows. Measuring
+real tile widths for all 2,508 sentence/direction pairs and searching each pair's worst packing,
+the tile cap alone leaves 19 pairs able to reach six rows, 150 leaves 5, 140 leaves 1, and 130 is
+the first that holds every pair to five. 120 takes the margin. It costs 59 pairs their third
+distractor and 4 pairs every distractor; 2,449 are unchanged or keep 4 or more.
+
+**Two wrong turns worth recording, because both produced a confident number before they were
+caught.** They are in the code comments too.
+
+1. **Widest-first is not adversarial.** The first calibration scored each pair by sorting tiles
+   widest-first, which is first-fit-decreasing -- a *good* packer. Every sorted order, by width
+   or length, ascending or descending, lands on five rows for the pair a plain shuffle wraps to
+   six. The first pin was built on this and passed against the unfixed app: a negative control
+   caught it. Worst-case packing has to be searched over random permutations.
+2. **A measuring element must live inside `.lesson-shell.mode-sentence-bank`.** The compact tile
+   rules are descendant selectors, so an offscreen rig parked on `document.body` was styled at
+   the full 1.12rem and read far too wide. That inflated the sweep and argued for a 90-character
+   budget costing 224 pairs their distractors; corrected, 120 gives the same guarantee for 59.
+3. **The first pin reintroduced the exact bug it was fixing.** It pinned the sentence id but not
+   the direction, and the two build different banks: `he2en` gets 11 tiles of long English tokens
+   and packs to 5 rows, `en2he` gets 12 shorter Hebrew ones and packs to 4. So the block still
+   sampled, and a full-suite run failed on the new `worstBankRows >= 5` assertion when the
+   weighting picked `en2he`. The direction is pinned now, and a `deepEqual` on the drawn
+   sentence and direction makes the `items[0]` fallback loud instead of silent.
+
+**Behavior changed:** The longest sentences draw fewer distractors -- 59 of 2,508
+sentence/direction pairs drop below three, 4 of them to zero, where the tokens alone exceed the
+budget. The 360x640 floor now holds on every draw rather than 97% of them.
+
+**Tests run:**
+- `npm test` before any change: 479 pass, 0 fail.
+- Negative control: with the old `Math.max` rule restored, the rebuilt pin finds a 6-row packing
+  and the test fails deterministically. The pre-fix flake was 1 run in 4; it is now 1 in 1.
+- 5,016 questions built through the shipped code path across the whole corpus, worst-case packing
+  measured on real tile widths: nothing above 5 rows.
+- `npm test` after, 8 consecutive full-suite runs: **480 pass, 0 fail every time** (479 before,
+  plus the new character-budget test).
+- An intermediate 8-run set failed 8 for 8 on `tests/app-progress.test.js`, not on the file this
+  session set out to fix. Running the gameplay test alone after an app change is not a check:
+  `capSentenceBankDistractors` is shared question-building logic, and its unit coverage lives in
+  another suite. The full suite is the only signal that would have caught it, and taking a
+  baseline at the start is worthless without re-running it after the change.
+
+**Risks / regressions to check:**
+- `SENTENCE_BANK_MAX_TILE_CHARS` is a character count standing in for pixel width, calibrated on
+  one machine's rendering of Heebo and Assistant. It is a proxy: a future card whose tokens are
+  unusually wide per character could still reach six rows under the budget. The pinned test
+  covers only everyday_127, so the corpus-wide guarantee rests on the sweep, not on CI.
+- The settle now throws on an 8s deadline instead of returning its last read. If CI is slow
+  enough to hit that, the failure will name the deadline rather than a geometry -- that is the
+  intended behavior, but it is a new way for this file to go red.
+- Alternate-answer tokens are exempt from the character budget, so a card with many alternates
+  could exceed it. None does today.
+
 ### 2026-09-04 EDT — Topic picker: the learner chooses the vocabulary
 
 **Requested:** Mike stepped back from the two focus-picker tranches. Reviewing Ido's shelves,

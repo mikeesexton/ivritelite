@@ -166,6 +166,8 @@ you meant and that no character was starved.
 - When space is tight, compact redundant whitespace, gaps, and flexible media/canvas areas before reducing Hebrew display text or touch-target size.
 - Preserve safe vertical centering: center gameplay when it fits, but keep the top reachable for content that genuinely exceeds the viewport.
 - Run the rendered layout regression in `tests/gameplay-layout.test.js` after gameplay layout changes.
+- A gameplay surface whose size depends on a random draw must be pinned to the worst case the data can produce, never sampled. The Binyanim board pins its deck and the Sentences word bank pins its tile packing for this reason: both scrolled on a few draws in a few hundred, which reads as a flaky test rather than the real overflow it is.
+- The Sentences word bank fits five rows and no more — at five, the shell already measures 488.41px against the 488px the floor allows. `SENTENCE_BANK_MAX_TILE_CHARS` in `app/sentence-bank.js` holds every card to that by trimming distractors; a card whose own tokens are unusually wide per character is the way past it.
 
 ## Character sprite visual review (required)
 
