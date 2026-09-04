@@ -334,6 +334,53 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     await pageCdp.send("Page.navigate", { url: appUrl });
     await waitForPage(pageCdp);
     await evaluate(pageCdp, "document.fonts.ready");
+    // The focus screen carries the longest list in the daily flow — Ido and Ivri
+    // each offer five groups — and the rest of this test dismisses the picker
+    // before it measures anything, so this is the only place it is seen. The
+    // scene card is allowed to scroll by design (.character-scene { overflow:
+    // auto }), unlike a gameplay surface; what must hold is that the longest
+    // menu does not need to, and that a row stays above the 44px touch floor.
+    // The welcome modal outranks the daily picker in renderScene, so the scene
+    // is not in the DOM until it is dismissed.
+    await evaluate(pageCdp, "document.querySelector('#welcomeModalCloseBtn')?.click()");
+    const focusScreen = await evaluate(pageCdp, `(() => {
+      IvriQuestApp.character.setGender('m');
+      IvriQuestApp.character.chooseCharacter('ivri');
+      return IvriQuestApp.runtime.characterState.screen;
+    })()`);
+    assert.equal(focusScreen, "focus", "choosing a character must open the focus screen");
+    await measureGeometry(pageCdp);
+    const focusRendered = await evaluate(
+      pageCdp,
+      "document.querySelectorAll('.character-focus-option').length",
+    );
+    assert.equal(focusRendered, 5, "Ivri's five focus groups must render before measuring");
+    const focusGeometry = await evaluate(pageCdp, `(() => {
+      const card = document.querySelector('.character-scene-card');
+      const options = [...document.querySelectorAll('.character-focus-option')];
+      const confirm = document.querySelector('[data-character-action="confirmFocus"]');
+      const cardRect = card.getBoundingClientRect();
+      return {
+        groups: options.length,
+        cardScrolls: card.scrollHeight > card.clientHeight + 1,
+        minOptionHeight: Math.min(...options.map((el) => el.getBoundingClientRect().height)),
+        allChecked: options.every((el) => el.getAttribute('aria-pressed') === 'true'),
+        confirmEnabled: confirm && !confirm.disabled,
+        confirmInsideCard: confirm.getBoundingClientRect().bottom <= cardRect.bottom + 0.5,
+      };
+    })()`);
+    assert.equal(focusGeometry.groups, 5, "Ivri must offer five focus groups");
+    assert.equal(focusGeometry.cardScrolls, false, `focus screen scrolls: ${JSON.stringify(focusGeometry)}`);
+    assert.ok(
+      focusGeometry.minOptionHeight >= 44,
+      `focus rows are ${focusGeometry.minOptionHeight}px, under the 44px touch floor`,
+    );
+    // Every group checked is what makes the screen a no-op for a learner who
+    // just presses Continue, so an empty default would be a real regression.
+    assert.equal(focusGeometry.allChecked, true, "focus groups must default to all checked");
+    assert.equal(focusGeometry.confirmEnabled, true, "Continue must be live when groups are checked");
+    assert.equal(focusGeometry.confirmInsideCard, true, "Continue must sit inside the scene card");
+
     await evaluate(pageCdp, "document.querySelector('[data-character-action=\"free\"]')?.click()");
     await evaluate(pageCdp, "document.querySelector('#welcomeModalCloseBtn')?.click()");
 

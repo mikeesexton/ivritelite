@@ -2962,6 +2962,57 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   min-height: 50px;
 }
 
+.character-focus-panel {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.character-focus-panel > button {
+  width: 100%;
+  min-height: 50px;
+}
+
+.character-focus-note {
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  margin: -0.25rem 0 0.15rem;
+}
+
+.character-focus-options {
+  display: grid;
+  gap: 0.45rem;
+}
+
+/* A row, not a centred button: the label and its card count sit on one line so
+   five groups still clear the fold at 360px. 46px keeps the touch target above
+   the 44px floor without letting Ido's and Ivri's five rows overflow. */
+.character-focus-option {
+  align-items: center;
+  display: flex;
+  gap: 0.6rem;
+  justify-content: space-between;
+  min-height: 46px;
+  text-align: start;
+  width: 100%;
+}
+
+.character-focus-option.selected {
+  background: var(--paper-2);
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.character-focus-count {
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.character-focus-option.selected .character-focus-count {
+  color: inherit;
+}
+
 .character-back-button {
   margin-top: 0.25rem;
 }
@@ -3539,6 +3590,44 @@ body[data-ui-lang="he"] .character-mission-copy {
   .character-scene-layout .character-duration-panel {
     order: 2;
   }
+
+  .character-scene-layout .character-focus-panel {
+    order: 2;
+  }
+  /* Five focus rows plus the panel chrome do not fit beside a 300px companion
+     at 360x640, and a Continue button below the fold is worse than smaller art.
+     The layout rule is to compact flexible media before reducing Hebrew display
+     text or touch-target size, so the sprite is what gives way — and the learner
+     has just chosen this character on the previous screen and sees them again on
+     the next one. */
+  .character-focus-layout .character-scene-sprite {
+    width: min(28vw, 108px);
+  }
+
+  .character-focus-layout .character-scene-visual {
+    gap: 0.4rem;
+  }
+
+  .character-focus-layout .character-dialogue {
+    display: none;
+  }
+
+
+  .character-focus-panel {
+    gap: 0.45rem;
+  }
+
+  .character-focus-options {
+    gap: 0.35rem;
+  }
+
+  /* The panel gap already separates Back from Continue, so its own top margin is
+     the redundant whitespace the layout rule says to compact first. Together
+     with the gap above this buys the last few pixels the fifth row needs. */
+  .character-focus-panel .character-back-button {
+    margin-top: 0;
+  }
+
 
   .character-scene-layout .character-scene-visual {
     order: 1;

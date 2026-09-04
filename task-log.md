@@ -21,6 +21,125 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-04 EDT — Focus picker, tranche 1: per-character vocabulary groups
+
+**Requested:** Go a level deeper than the character choice — pick a character, see the
+subcategories of vocab you'll learn, check off the ones you want, then proceed to choosing
+the mission length. Also: what should the subcategories be, and are any characters or
+categories abnormally strong or weak? Mid-plan, Mike asked to consolidate Ido's
+street/slang/identity with phone/social media, and Ivri's science/research with tech/AI, to
+make the menus less lopsided.
+
+**Two premises corrected during planning, both recorded because they shaped the design:**
+- **There is no "number of lessons" step.** `renderDuration` picks a mission *tier* —
+  `short: 3`, `medium: 5`, `full: 9` **activities** (game modes). `LESSON_ROUNDS` is a fixed
+  10 and is not user-facing. The new screen therefore sits between `picker` and `duration`.
+- **Only vocabulary carries a topic axis.** Sentences route on register, verbs on an id list,
+  abbreviations on four buckets, and Conjugation+/Prepositions/Binyanim have no topic field at
+  all. So the picker governs the Vocabulary activity and the screen says so out loud.
+
+**Files changed:**
+- `app/character-data.js` — added a `focusGroups` array beside each character's `route`
+  (`{ id, labelEn, labelHe, categories }`), plus `getFocusGroups`, `getFocusableCategories`
+  and `applyFocusToRoute`. `route.vocabCategories` is untouched, and **`ownsItem` was
+  deliberately not changed**: `scripts/character-content-report.js` shares that predicate and
+  must keep measuring whole-domain ownership.
+- `app/character.js` — `getActiveRoute` now narrows through `applyFocusToRoute`, so every
+  existing caller (`getContentWeight`, `buildContentWeigher`, the Review owner check) inherits
+  the narrowing without knowing focus exists. New `isOutsideFocus` / `filterOutsideFocus`
+  (vocab only), a `focus` screen (`renderFocus`, dispatch, `isBlocking`, the `sanitizeCharacterState`
+  whitelist and two restore guards), `mission.focus` + `mission.characterId` in `sanitizeMission`,
+  `state.pendingFocus`, and `toggleFocusGroup` / `confirmFocus` wired through the existing
+  delegated `data-character-action` listener.
+- `app/data.js` — chained `filterOutsideFocus` onto the existing `filterWithheldContent` call in
+  `pickBestWord`, so it lands before the due/fresh split. No other draw site touched.
+- `styles.css` — `.character-focus-panel` / `.character-focus-option` / `.character-focus-count`,
+  plus narrow-screen compaction (see below).
+- `index.html` — `?v=` bumped to `20260904a` for `styles.css`, `app/data.js`,
+  `app/character-data.js`, `app/character.js`.
+- `tests/character-mission.test.js` — 7 new tests; also re-pinned the `styles.css` version
+  assertion inside the sprite-lock test from `20260830a` to `20260904a`.
+- `tests/gameplay-layout.test.js` — a focus-screen measurement block at 360x640.
+
+**The groups** (card counts from the merged runtime pool):
+- **Ido 5** — Everyday Life & Errands 146, Small Talk & Reactions 99, Food & Groceries 79,
+  Slang/Culture & Online 69, Dating & Relationships 39.
+- **Ivri 5** — Devices & Software 116, Science & High-Tech 110, Work & Management 106,
+  Bureaucracy & Forms 91, Money & Finance 40.
+- **Inat 4** — Politics & Society 170, Ideas & Philosophy 66, Literature & the Arts 35,
+  Law & Courts 35.
+- **Idan 3** — Military & Service 94, Emergency Response & Policing 72, Home Front & Public
+  Safety 70.
+- **Inbal 2** — Mysticism & Folk Magic 139, Religious Life & Practice 116.
+
+Merging Ido's and Ivri's twin shelves took the menu spread from 6/6/4/3/2 to 5/5/4/3/2.
+Lifting it further needs a card-level split of a single shelf — Inbal owns only two shelves
+and Idan three — which was **deliberately deferred**: `ownsItem` already matches vocabulary on
+`he` rather than `id`, so a group could name Hebrew strings the way `route.vocabWords` does
+with no re-shelving and no id churn, but it costs a ~139-card triage for Inbal and ~94 for
+Idan, and splitting a shelf so a screen looks symmetrical is close to the "author filler to
+make the numbers match" move `docs/character-gameplay-strategy.md` forbids.
+
+**Design decisions worth keeping:**
+- **Vocabulary is fenced, sentences are not.** A fence on sentences would repeat rows in one
+  session: `getRoundTarget` measures the *unfiltered* 1,254-row deck and always asks for 10
+  rounds, and `buildCandidatePairs` falls back to the full allowed set when the fresh pool
+  empties. Sentence biasing is tranche 2 and will be a weight only.
+- **The fence only touches shelves a group names.** That is what keeps the cast-wide
+  `civil_defense_safety` tier and every `route.vocabWords` card unfenceable — no group names
+  either. Idan is the one exception, because for him that tier *is* a group.
+- **Every group defaults to checked**, so a learner who presses Continue gets exactly the
+  pre-focus behaviour. Selection lives on the day-keyed `mission`, so it resets on rollover.
+- A hard pool filter, never a weight of zero — `app/utils.js` treats a zero-total-weight list
+  as unweighted, so a zero weight here would be silently ignored.
+
+**Behavior changed:** A new blocking scene between the character picker and the mission-length
+picker, listing that character's vocabulary groups with live card counts, all checked by
+default. Unchecking a group removes its shelves from the Vocabulary activity's draw pool and
+moves the ownership boost onto what remains. Every other activity is unchanged.
+
+**Measured end-to-end in the browser** (Ivri narrowed to Science & High-Tech only): the draw
+pool goes 2,467 to 1,766 cards against a 20-card session; the four unchecked Ivri shelves fall
+to exactly 0; `civil_defense_safety` (70), `core_advanced` (427), `health` (65) and
+`cooking_verbs` (73) all survive. Over 600 sampled draws the owned share was 62% against the
+0.65 target. **Worth knowing:** the focused group itself took 40% and the cast-wide safety
+tier 23%, because that tier stays owned and unfenceable — 70 cards against 110 science cards,
+so narrowing amplifies its share from ~15% of Ivri's owned pool to ~39%. Correct per course
+policy, but a candidate for tuning if it feels heavy in practice.
+
+**Layout:** five rows plus a 300px companion did not fit at 360x640 — the card overflowed and
+Continue fell outside it. Fixed per the layout rule's own order of preference, compacting
+flexible media and redundant whitespace rather than Hebrew text or touch targets: a
+`.character-focus-layout` marker class shrinks the sprite to `min(28vw, 108px)` and hides the
+dialogue bubble below 720px, plus a tighter panel gap and no top margin on Back. Verified at
+360x640 for Ivri and Ido (5 rows), and Inbal (2): zero overflow, rows 46px (above the 44px
+floor), Continue and Back both inside the card.
+
+**Tests run:** `npm test` before (463 pass, 0 fail) and after (**470 pass, 0 fail**).
+`node --test tests/gameplay-layout.test.js` passes in rendered Chrome.
+`npm run report:characters` output is byte-identical to the baseline, which is the check that
+`route.*` and `ownsItem` were genuinely left alone.
+
+**Risks / regressions to check:**
+- `assert.deepStrictEqual` compares prototypes, and arrays built inside the test's `vm` context
+  carry that context's `Array.prototype`. Three of the new tests failed on this until every
+  vm-originated array was spread into the test realm (`[...x]`), the idiom lines 426/461
+  already use. Expect it again when extending these tests.
+- The `styles.css` version is pinned inside the sprite-lock test in
+  `tests/character-mission.test.js`, not in `tests/cache-bust.test.js` — a future CSS bump has
+  to update it there too.
+- `runtime.baseVocabulary` (2,467) is the merged pool, not `getBaseVocabulary()` (2,206): it
+  adds 261 verb-deck cards, and one of them (`לנתח`) sits on `scientific_analytical`, which is
+  why the UI shows 110 for Science & High-Tech where a static count of the shelves gives 109.
+  The UI number is the right one — it is the pool the picker actually draws from.
+- Out of scope and recorded, not fixed: nine `vocabWords` routes grant ownership that can never
+  be drawn, because a reserve field beats the grant (Inbal's five politics words fenced to Inat;
+  Ido's שירות צבאי / שירות מילואים / פטור מגיוס and Inat's ביטחון לאומי fenced to Idan). And
+  `docs/character-gameplay-strategy.md` has drifted from the data — 81 idioms against an actual
+  105, 148 unrouted `everyday_` rows against 368, `emergency_response` 67 cards against 72,
+  115 `idan_` sentences against 131, a 2,108-card pool against 2,206, and stale own-domain
+  figures.
+
 ### 2026-09-03 22:00 EDT — Ship a real Open Graph card image
 
 **Requested:** Design a proper `og:image` to replace the square logo, using Claude Design.

@@ -750,6 +750,59 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lakum",
       ]),
     }),
+    // What the learner may narrow the day to, one indirection above the shelves.
+    // A group bundles shelves that are one topic split by authoring history
+    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
+    // twin are one choice instead of two, and no group is thinner than a
+    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
+    // in `route.vocabCategories`: the groups partition ownership, they never
+    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
+    // absent from the four non-Idan casts, so narrowing can never fence the
+    // shared safety tier out of anyone's day.
+    focusGroups: Object.freeze([
+      Object.freeze({
+        id: "everyday",
+        labelEn: "Everyday Life & Errands",
+        labelHe: "חיי יום־יום וסידורים",
+        categories: Object.freeze([
+          "home_everyday_life",
+          "everyday_survival_expanded",
+        ]),
+      }),
+      Object.freeze({
+        id: "small_talk",
+        labelEn: "Small Talk & Reactions",
+        labelHe: "שיחות חולין ותגובות",
+        categories: Object.freeze(["conversation_glue"]),
+      }),
+      Object.freeze({
+        id: "food",
+        labelEn: "Food & Groceries",
+        labelHe: "אוכל וקניות",
+        categories: Object.freeze(["groceries_food"]),
+      }),
+      Object.freeze({
+        // Youth culture and the digital layer it lives on are one register: the
+        // phone half is his social and gesture vocabulary, not Ivri's machine.
+        id: "slang_online",
+        labelEn: "Slang, Culture & Online",
+        labelHe: "סלנג, תרבות ורשתות",
+        categories: Object.freeze([
+          "social_cultural",
+          "culture_identity_expanded",
+          "media_digital_life_expanded",
+        ]),
+      }),
+      Object.freeze({
+        id: "dating",
+        labelEn: "Dating & Relationships",
+        labelHe: "דייטים ומערכות יחסים",
+        categories: Object.freeze([
+          "dating_relationships",
+          "relationships_dating_expanded",
+        ]),
+      }),
+    ]),
   }),
   inbal: Object.freeze({
     id: "inbal",
@@ -830,6 +883,31 @@ characterData.characters = characterData.characters || Object.freeze({
         "common-verb-lachzor",
       ]),
     }),
+    // What the learner may narrow the day to, one indirection above the shelves.
+    // A group bundles shelves that are one topic split by authoring history
+    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
+    // twin are one choice instead of two, and no group is thinner than a
+    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
+    // in `route.vocabCategories`: the groups partition ownership, they never
+    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
+    // absent from the four non-Idan casts, so narrowing can never fence the
+    // shared safety tier out of anyone's day.
+    focusGroups: Object.freeze([
+      Object.freeze({
+        // Two groups rather than five: she owns exactly two shelves, and the
+        // strategy doc splits them as the uncanny half and the lived half.
+        id: "mysticism",
+        labelEn: "Mysticism & Folk Magic",
+        labelHe: "מיסטיקה וכישוף עממי",
+        categories: Object.freeze(["religion_magic_spirituality"]),
+      }),
+      Object.freeze({
+        id: "practice",
+        labelEn: "Religious Life & Practice",
+        labelHe: "חיי דת ומעשה",
+        categories: Object.freeze(["religious_life_practice"]),
+      }),
+    ]),
   }),
   ivri: Object.freeze({
     id: "ivri",
@@ -928,6 +1006,62 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-lehashvot",
       ]),
     }),
+    // What the learner may narrow the day to, one indirection above the shelves.
+    // A group bundles shelves that are one topic split by authoring history
+    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
+    // twin are one choice instead of two, and no group is thinner than a
+    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
+    // in `route.vocabCategories`: the groups partition ownership, they never
+    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
+    // absent from the four non-Idan casts, so narrowing can never fence the
+    // shared safety tier out of anyone's day.
+    focusGroups: Object.freeze([
+      Object.freeze({
+        // Kept out of Science & High-Tech on purpose. This shelf is the consumer
+        // layer -- a person with their own laptop, not an institution -- and
+        // folding it in would undo the Ido-uses-the-phone / Ivri-administers-
+        // the-machine split.
+        id: "devices",
+        labelEn: "Devices & Software",
+        labelHe: "מכשירים ותוכנה",
+        categories: Object.freeze(["devices_os_apps"]),
+      }),
+      Object.freeze({
+        id: "science_tech",
+        labelEn: "Science & High-Tech",
+        labelHe: "מדע והייטק",
+        categories: Object.freeze([
+          "scientific_analytical",
+          "science_research_expanded",
+          "technology_ai",
+          "technology_ai_expanded",
+        ]),
+      }),
+      Object.freeze({
+        id: "work",
+        labelEn: "Work & Management",
+        labelHe: "עבודה וניהול",
+        categories: Object.freeze([
+          "work_business",
+          "communication_mastery_expanded",
+        ]),
+      }),
+      Object.freeze({
+        id: "bureaucracy",
+        labelEn: "Bureaucracy & Forms",
+        labelHe: "בירוקרטיה וטפסים",
+        categories: Object.freeze(["bureaucracy"]),
+      }),
+      Object.freeze({
+        id: "finance",
+        labelEn: "Money & Finance",
+        labelHe: "כספים ופיננסים",
+        categories: Object.freeze([
+          "finance_investing",
+          "business_finance_expanded",
+        ]),
+      }),
+    ]),
   }),
   inat: Object.freeze({
     id: "inat",
@@ -1038,6 +1172,52 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-lehashvot",
       ]),
     }),
+    // What the learner may narrow the day to, one indirection above the shelves.
+    // A group bundles shelves that are one topic split by authoring history
+    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
+    // twin are one choice instead of two, and no group is thinner than a
+    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
+    // in `route.vocabCategories`: the groups partition ownership, they never
+    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
+    // absent from the four non-Idan casts, so narrowing can never fence the
+    // shared safety tier out of anyone's day.
+    focusGroups: Object.freeze([
+      Object.freeze({
+        // Her largest shelf by far, and the only vocabulary shelf any character
+        // reserves. Unchecking it removes over half her own pool; checking only
+        // it serves the one shelf the rest of the cast cannot reach.
+        id: "politics",
+        labelEn: "Politics & Society",
+        labelHe: "פוליטיקה וחברה",
+        categories: Object.freeze(["politics_society_expanded"]),
+      }),
+      Object.freeze({
+        id: "ideas",
+        labelEn: "Ideas & Philosophy",
+        labelHe: "רעיונות ופילוסופיה",
+        categories: Object.freeze([
+          "abstract_philosophy",
+          "philosophy_intellectual_expanded",
+          "high_level_discourse_expanded",
+          "abstract_concepts_expanded",
+        ]),
+      }),
+      Object.freeze({
+        id: "literature",
+        labelEn: "Literature & the Arts",
+        labelHe: "ספרות ואומנויות",
+        categories: Object.freeze(["literature_arts_cultural_history"]),
+      }),
+      Object.freeze({
+        id: "law",
+        labelEn: "Law & Courts",
+        labelHe: "משפט ובתי משפט",
+        categories: Object.freeze([
+          "legal_civic",
+          "law_legal_systems_expanded",
+        ]),
+      }),
+    ]),
   }),
   idan: Object.freeze({
     id: "idan",
@@ -1189,6 +1369,38 @@ characterData.characters = characterData.characters || Object.freeze({
         "advanced-verb-lefotzetz",
       ]),
     }),
+    // What the learner may narrow the day to, one indirection above the shelves.
+    // A group bundles shelves that are one topic split by authoring history
+    // rather than by meaning, so `dating_relationships` and its `(Expanded)`
+    // twin are one choice instead of two, and no group is thinner than a
+    // WORD_MATCH_SESSION_SIZE draw. Every category named here must also appear
+    // in `route.vocabCategories`: the groups partition ownership, they never
+    // extend it. The cast-wide `civil_defense_safety` shelf is deliberately
+    // absent from the four non-Idan casts, so narrowing can never fence the
+    // shared safety tier out of anyone's day.
+    focusGroups: Object.freeze([
+      Object.freeze({
+        id: "military",
+        labelEn: "Military & Service",
+        labelHe: "צבא ושירות",
+        categories: Object.freeze(["military_operational"]),
+      }),
+      Object.freeze({
+        id: "emergency",
+        labelEn: "Emergency Response & Policing",
+        labelHe: "חירום ומשטרה",
+        categories: Object.freeze(["emergency_response"]),
+      }),
+      Object.freeze({
+        // The one focus group over a cast-wide shelf. It is his to narrow because
+        // the tier is his subject; for the other four the shelf is named by no
+        // group at all, which is what keeps it unfenceable on their days.
+        id: "home_front",
+        labelEn: "Home Front & Public Safety",
+        labelHe: "העורף ובטיחות הציבור",
+        categories: Object.freeze(["civil_defense_safety"]),
+      }),
+    ]),
   }),
 });
 
@@ -1235,6 +1447,8 @@ characterData.ownsItem = characterData.ownsItem || function ownsItem(route, kind
 // do not: they carry register and grammar, which every character needs, and a
 // blanket rule over them would leave each character with little more than its
 // own bank.
+const EMPTY_FOCUS_GROUPS = Object.freeze([]);
+
 const RESERVE_FIELDS = Object.freeze({
   sentence: Object.freeze(["sentenceReserveIds"]),
   vocab: Object.freeze(["vocabReserveCategories", "vocabReserveWords"]),
@@ -1298,6 +1512,46 @@ characterData.getItemAudience = characterData.getItemAudience || function getIte
 };
 
 characterData.RESERVE_FIELDS = characterData.RESERVE_FIELDS || RESERVE_FIELDS;
+
+// The groups a learner may check off after picking a character, in the order the
+// picker shows them. Empty for an unknown id, so the caller can treat "no groups"
+// and "no character" the same way.
+characterData.getFocusGroups = characterData.getFocusGroups || function getFocusGroups(characterId) {
+  return characterData.characters[String(characterId || "")]?.focusGroups || EMPTY_FOCUS_GROUPS;
+};
+
+// Every category any of this character's groups names. This is the set the focus
+// filter is allowed to act on, and the reason narrowing cannot reach the
+// cast-wide safety tier or a `route.vocabWords` card: neither is named by a
+// group, so neither is ever in here.
+characterData.getFocusableCategories = characterData.getFocusableCategories || function getFocusableCategories(characterId) {
+  const groups = characterData.getFocusGroups(characterId);
+  const categories = new Set();
+  groups.forEach((group) => group.categories.forEach((category) => categories.add(category)));
+  return categories;
+};
+
+// The route a picker should weigh against: `route`, with `vocabCategories`
+// narrowed to the checked groups. Ownership of everything else — vocabWords,
+// registers, verb ids, abbreviation buckets — is untouched, so only the
+// vocabulary boost moves. An empty or unrecognised selection returns the route
+// unchanged, which is what makes the feature inert until a learner uses it.
+characterData.applyFocusToRoute = characterData.applyFocusToRoute || function applyFocusToRoute(characterId, route, focusIds) {
+  if (!route || !Array.isArray(focusIds) || !focusIds.length) return route;
+  const groups = characterData.getFocusGroups(characterId);
+  if (!groups.length) return route;
+  const checked = groups.filter((group) => focusIds.includes(group.id));
+  if (!checked.length || checked.length === groups.length) return route;
+  const focusable = characterData.getFocusableCategories(characterId);
+  const kept = new Set();
+  checked.forEach((group) => group.categories.forEach((category) => kept.add(category)));
+  // A shelf no group names — the cast-wide safety tier — is not the learner's to
+  // narrow, so it stays owned regardless of what is checked.
+  (route.vocabCategories || []).forEach((category) => {
+    if (!focusable.has(category)) kept.add(category);
+  });
+  return Object.freeze({ ...route, vocabCategories: Object.freeze([...kept]) });
+};
 
 characterData.getCharacter = characterData.getCharacter || function getCharacter(id) {
   return characterData.characters[String(id || "")] || null;

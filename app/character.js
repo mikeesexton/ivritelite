@@ -119,6 +119,9 @@ function createInitialCharacterState(saved, dayKey) {
     hasChosen: sanitizeHasChosen(saved),
     dailyChoice: "",
     pendingChoice: "",
+    // The selection being made on the focus screen, before a tier exists to
+    // hang a mission off. It is cleared the moment the mission takes a copy.
+    pendingFocus: [],
     // The free-play lens outlives the day-keyed mission state deliberately.
     lensCharacter: isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "",
     freePlay: createReactionContainer(saved?.freePlay),
@@ -163,6 +166,21 @@ function createReactionContainer(saved) {
   };
 }
 
+// Group ids the named character actually offers, in the registry's own order so
+// a hand-edited save cannot reorder the picker. An unrecognised id is dropped
+// rather than rejected: a group renamed in a later release would otherwise strand
+// a mid-day save on a screen it cannot leave.
+function sanitizeFocus(characterId, focus) {
+  const groups = getCharacterData().getFocusGroups?.(characterId) || [];
+  if (!groups.length || !Array.isArray(focus)) return [];
+  const wanted = focus.map((id) => String(id || ""));
+  return groups.filter((group) => wanted.includes(group.id)).map((group) => group.id);
+}
+
+function allFocusIds(characterId) {
+  return (getCharacterData().getFocusGroups?.(characterId) || []).map((group) => group.id);
+}
+
 function sanitizeMission(mission) {
   if (!mission || typeof mission !== "object") return null;
   return {
@@ -171,6 +189,12 @@ function sanitizeMission(mission) {
     completed: mission.completed === true,
     onHub: mission.onHub === true,
     tier: TIERS[mission.tier] ? mission.tier : "short",
+    focus: sanitizeFocus(mission.characterId, mission.focus),
+    // Which character's groups `focus` was sanitized against. `dailyChoice` says
+    // the same thing today, but it lives one level up and is cleared on some
+    // paths before the mission is, and a focus list read against the wrong cast
+    // would silently sanitize to empty.
+    characterId: isCharacterChoice(mission.characterId) ? String(mission.characterId) : "",
     activities: Array.isArray(mission.activities)
       ? mission.activities.map((id) => String(id || "")).filter((id) => ACTIVITY_ORDER.some((activity) => activity.id === id))
       : [],
@@ -194,10 +218,11 @@ function sanitizeCharacterState(saved, today) {
     ? saved.dailyChoice
     : "";
   state.pendingChoice = isCharacterChoice(saved?.pendingChoice) ? saved.pendingChoice : "";
+  state.pendingFocus = sanitizeFocus(state.pendingChoice, saved?.pendingFocus);
   state.lensCharacter = isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "";
   // "perfect" was its own blocking scene before flawless rounds folded into the
   // results screen; a save still carrying it falls through to "none".
-  state.screen = ["picker", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
+  state.screen = ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
     ? saved.screen
     : (state.dailyChoice ? "none" : "picker");
   state.reviewOpen = saved?.reviewOpen === true;
@@ -211,8 +236,19 @@ function sanitizeCharacterState(saved, today) {
     state.dailyChoice = "";
     state.screen = "picker";
   }
-  if (state.screen === "duration" && !state.pendingChoice) {
+  if ((state.screen === "duration" || state.screen === "focus") && !state.pendingChoice) {
     state.screen = "picker";
+  }
+  // A restore that lands on the focus screen with nothing checked would show a
+  // dead Continue button, so re-seed it the way chooseCharacter does.
+  if (state.screen === "focus" && !state.pendingFocus.length) {
+    state.pendingFocus = allFocusIds(state.pendingChoice);
+  }
+  // The tier screen is reached only through the focus screen, so a save that
+  // sits on it without a selection predates this feature. Seeding the full set
+  // reproduces the old all-shelves behaviour rather than fencing on empty.
+  if (state.screen === "duration" && !state.pendingFocus.length) {
+    state.pendingFocus = allFocusIds(state.pendingChoice);
   }
   return state;
 }
@@ -263,6 +299,10 @@ character.bindUi = character.bindUi || function bindUi() {
       character.chooseCharacter(button.dataset.characterId);
     } else if (action === "back") {
       character.backToPicker();
+    } else if (action === "focusGroup") {
+      character.toggleFocusGroup(button.dataset.focusGroup);
+    } else if (action === "confirmFocus") {
+      character.confirmFocus();
     } else if (action === "tier") {
       character.chooseTier(button.dataset.tier);
     } else if (action === "continue") {
@@ -317,7 +357,7 @@ character.checkDayRollover = character.checkDayRollover || function checkDayRoll
 };
 
 character.isBlocking = character.isBlocking || function isBlocking() {
-  return ["picker", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
+  return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
 };
 
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
@@ -328,9 +368,62 @@ character.isMissionActive = character.isMissionActive || function isMissionActiv
 // material, per docs/character-gameplay-strategy.md.
 const TARGET_OWNED_SHARE = 0.65;
 
-function getActiveRoute() {
-  return getCharacterById(getRoutingCharacterId())?.route || null;
+// The active character's focus selection, or an empty list when there is none.
+// Only a live mission carries one: the Settings free-play lens is a whole-domain
+// choice by design, and free play deliberately draws the entire course.
+function getActiveFocus() {
+  const state = getState();
+  const mission = state?.mission;
+  if (!mission?.active) return [];
+  return Array.isArray(mission.focus) ? mission.focus : [];
 }
+
+function getActiveRoute() {
+  const id = getRoutingCharacterId();
+  const route = getCharacterById(id)?.route || null;
+  if (!route) return null;
+  // Narrowing the route rather than the predicate keeps focus out of
+  // characterData.ownsItem, which scripts/character-content-report.js shares:
+  // the report must keep measuring whole-domain ownership.
+  return getCharacterData().applyFocusToRoute?.(id, route, getActiveFocus()) || route;
+}
+
+// A vocabulary card on an unchecked group. The category has to be one the active
+// character's groups actually name, which is what keeps the cast-wide safety
+// tier and every `route.vocabWords` card out of the fence — no group names
+// either, so neither is the learner's to narrow away.
+//
+// Vocabulary only. Sentences carry no topic field, so narrowing them is a weight
+// and never a filter: getRoundTarget measures the unfiltered deck and
+// buildCandidatePairs falls back to the full allowed set, so fencing a register
+// bank would serve the same sentence twice in one session.
+character.isOutsideFocus = character.isOutsideFocus || function isOutsideFocus(kind, item) {
+  if (kind !== "vocab" || !item) return false;
+  const id = getRoutingCharacterId();
+  if (!getCharacterById(id)) return false;
+  const focus = getActiveFocus();
+  if (!focus.length) return false;
+  const groups = getCharacterData().getFocusGroups?.(id) || [];
+  if (!groups.length || focus.length === groups.length) return false;
+  const category = String(item.category || "");
+  const focusable = getCharacterData().getFocusableCategories?.(id);
+  if (!focusable?.has(category)) return false;
+  return !groups.some(
+    (group) => focus.includes(group.id) && group.categories.includes(category),
+  );
+};
+
+// Same contract as filterWithheldContent: a hard pool filter applied before the
+// due/fresh split, never a weight of zero, which app/utils.js would ignore.
+character.filterOutsideFocus = character.filterOutsideFocus || function filterOutsideFocus(kind, items, options = {}) {
+  if (kind !== "vocab" || !Array.isArray(items) || !items.length) return items;
+  const resolve = typeof options.getItem === "function" ? options.getItem : (entry) => entry;
+  const kept = items.filter((entry) => !character.isOutsideFocus(kind, resolve(entry)));
+  // The unrouted shelves and the cast-wide tier are never fenced, so this cannot
+  // empty a real pool. Returning the input if it somehow did keeps the same
+  // no-starvation guarantee the withholding layer documents.
+  return kept.length ? kept : items;
+};
 
 // Delegated to app/character-data.js so this module, the content report, and the
 // audience derivation cannot disagree about who owns what.
@@ -569,6 +662,80 @@ function renderPicker(target) {
   target.append(cards);
 }
 
+// How many vocabulary cards a group is worth, so a learner can see that
+// unchecking Money & Finance costs less than unchecking Devices & Software.
+// Counted off the live deck rather than stored, because the shelves grow.
+function countFocusGroupCards(group) {
+  const deck = getRuntime().baseVocabulary;
+  if (!Array.isArray(deck)) return 0;
+  return deck.reduce(
+    (total, word) => total + (group.categories.includes(word.category) ? 1 : 0),
+    0,
+  );
+}
+
+function renderFocus(target) {
+  const state = getState();
+  const characterId = state?.pendingChoice || "";
+  const groups = getCharacterData().getFocusGroups?.(characterId) || [];
+  const checked = Array.isArray(state?.pendingFocus) ? state.pendingFocus : [];
+
+  const layout = global.document.createElement("div");
+  // The marker class exists so the narrow-screen rules can compact this screen's
+  // companion art without touching the duration screen, which shares the layout
+  // but carries three buttons instead of five checkbox rows.
+  layout.className = "character-scene-layout character-focus-layout";
+  const visual = global.document.createElement("div");
+  visual.className = "character-scene-visual";
+  visual.append(createSprite("neutral", "character-scene-sprite"));
+  renderDialogue(visual, getDialogue("description"));
+
+  const choices = global.document.createElement("div");
+  choices.className = "character-focus-panel";
+  const title = global.document.createElement("h2");
+  title.id = "characterSceneTitle";
+  title.textContent = uiText("What are we covering?", "על מה נעבוד?");
+  // Said plainly because it is not obvious from the screen: the tier that comes
+  // next still runs every activity, and only the vocabulary a character owns is
+  // narrowed. The other modes route on register and grammar, which carry no
+  // topic to check off.
+  const note = global.document.createElement("p");
+  note.className = "character-focus-note";
+  note.textContent = uiText(
+    "Shapes the vocabulary your companion brings. Other activities are unchanged.",
+    "משפיע על אוצר המילים שהדמות מביאה. שאר הפעילויות לא משתנות.",
+  );
+  choices.append(title, note);
+
+  const list = global.document.createElement("div");
+  list.className = "character-focus-options";
+  groups.forEach((group) => {
+    const isOn = checked.includes(group.id);
+    const button = createSceneButton("", "focusGroup", "quiet character-focus-option");
+    button.dataset.focusGroup = group.id;
+    button.classList.toggle("selected", isOn);
+    button.setAttribute("aria-pressed", String(isOn));
+    const name = global.document.createElement("strong");
+    name.textContent = isHebrewUi() ? group.labelHe : group.labelEn;
+    const count = global.document.createElement("span");
+    count.className = "character-focus-count";
+    const cards = countFocusGroupCards(group);
+    count.textContent = uiText(`${cards} words`, `${cards} מילים`);
+    button.append(name, count);
+    list.append(button);
+  });
+  choices.append(list);
+
+  const confirm = createSceneButton(uiText("Continue", "להמשיך"), "confirmFocus");
+  // Nothing checked would fence every shelf the character owns, so the screen
+  // gates on it the same way the picker gates on gender.
+  confirm.disabled = !checked.length;
+  choices.append(confirm);
+  choices.append(createSceneButton(uiText("Back", "חזרה"), "back", "quiet character-back-button"));
+  layout.append(choices, visual);
+  target.append(layout);
+}
+
 function renderDuration(target) {
   const state = getState();
   const layout = global.document.createElement("div");
@@ -666,6 +833,7 @@ character.renderScene = character.renderScene || function renderScene() {
   }
   content.innerHTML = "";
   if (screen === "picker") renderPicker(content);
+  else if (screen === "focus") renderFocus(content);
   else if (screen === "duration") renderDuration(content);
   else if (screen === "greeting") renderGreeting(content);
   else if (screen === "activityIntro") renderActivityIntro(content);
@@ -1479,6 +1647,35 @@ character.chooseCharacter = character.chooseCharacter || function chooseCharacte
   const state = getState();
   if (!state?.gender || !isCharacterChoice(characterId)) return;
   state.pendingChoice = String(characterId);
+  // Every group checked is the pre-focus behaviour: the whole domain, weighed
+  // exactly as before. A character with no groups skips the screen entirely.
+  state.pendingFocus = allFocusIds(state.pendingChoice);
+  state.screen = state.pendingFocus.length ? "focus" : "duration";
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+};
+
+character.toggleFocusGroup = character.toggleFocusGroup || function toggleFocusGroup(groupId) {
+  const state = getState();
+  if (!state || state.screen !== "focus" || !isCharacterChoice(state.pendingChoice)) return;
+  const id = String(groupId || "");
+  if (!allFocusIds(state.pendingChoice).includes(id)) return;
+  const next = state.pendingFocus.includes(id)
+    ? state.pendingFocus.filter((entry) => entry !== id)
+    : [...state.pendingFocus, id];
+  // Re-sanitized so the stored order always matches the registry's, which is
+  // the order the picker renders in.
+  state.pendingFocus = sanitizeFocus(state.pendingChoice, next);
+  saveState();
+  getRuntime().helpers?.renderAll?.();
+};
+
+character.confirmFocus = character.confirmFocus || function confirmFocus() {
+  const state = getState();
+  if (!state || state.screen !== "focus" || !isCharacterChoice(state.pendingChoice)) return;
+  // An empty selection would fence every shelf the character owns; the Continue
+  // button is disabled for it, and this is the guard behind that.
+  if (!state.pendingFocus.length) return;
   state.screen = "duration";
   saveState();
   getRuntime().helpers?.renderAll?.();
@@ -1488,6 +1685,7 @@ character.backToPicker = character.backToPicker || function backToPicker() {
   const state = getState();
   if (!state) return;
   state.pendingChoice = "";
+  state.pendingFocus = [];
   state.screen = "picker";
   saveState();
   getRuntime().helpers?.renderAll?.();
@@ -1521,11 +1719,18 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
   const tier = TIERS[tierId];
   if (!state?.gender || !tier || !isCharacterChoice(state.pendingChoice)) return;
   const itinerary = buildItinerary(tier.count);
+  // A tier reached without passing the focus screen — a character with no groups
+  // — means the whole domain, so seed the full set rather than an empty fence.
+  const focus = state.pendingFocus.length
+    ? sanitizeFocus(state.pendingChoice, state.pendingFocus)
+    : allFocusIds(state.pendingChoice);
+  const focusCharacterId = state.pendingChoice;
   state.dailyChoice = state.pendingChoice;
   state.hasChosen[state.pendingChoice] = true;
   // Today's character also becomes the free-play lens once the mission ends.
   state.lensCharacter = state.pendingChoice;
   state.pendingChoice = "";
+  state.pendingFocus = [];
   state.screen = "greeting";
   state.reviewOpen = false;
   state.mission = {
@@ -1533,6 +1738,8 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
     completed: false,
     onHub: false,
     tier: tierId,
+    focus,
+    characterId: focusCharacterId,
     activities: itinerary.playable,
     skippedActivities: itinerary.skipped,
     currentIndex: 0,
