@@ -21,6 +21,51 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 22:00 EDT — Ship a real Open Graph card image
+
+**Requested:** Design a proper `og:image` to replace the square logo, using Claude Design.
+
+**Files changed:**
+- `assets/og-image.png` — new. 1200x630, 111 KB.
+- `index.html` — six meta values: `og:image` and `twitter:image` repointed at the new asset,
+  `og:image:width`/`height` corrected from 1000x1000 to 1200x630, `og:image:alt` rewritten,
+  and **`twitter:card` changed from `summary` to `summary_large_image`** — the previous value
+  would have rendered the new wide image as a small square thumbnail, wasting it.
+
+**Design:** Laid out as a magazine advertisement. A vocabulary pair is the whole ad — English
+`scope creep` against Hebrew `זליגת היקף`, with the pointed form `זְלִיגַת הֶקֵּף` beneath — and
+the logo, name, tagline and URL sign it along the bottom. The two tiles are equal on both axes
+so neither language reads as subordinate. Built from the app's own tokens (`--paper` #16130D,
+`--brand` #C9A54D, Heebo, Frank Ruhl Libre, Assistant), so the card and the product match.
+
+The vocabulary is **real data read out of `vocab-data.js`, not hand-typed** — which matters,
+because hand-typing Hebrew into a design file would put the pointing rules at risk with no test
+covering it. Six candidates were rendered and compared before choosing.
+
+**How the PNG is produced:** rendered from the design source with the repo's own headless Chrome
+(the same binary `tests/gameplay-layout.test.js` drives) at `--force-device-scale-factor=2`, then
+downsampled 2400x1260 -> 1200x630 with Pillow for clean antialiasing. Worth recording because the
+design canvas's own PNG export cannot embed Google Fonts and would have produced fallback faces.
+
+**Behavior changed:** None in the app. Sharing the URL now renders a wide card showing real
+Hebrew vocabulary instead of a small square logo tile.
+
+**Cache-busting:** No `?v=` bump. No `.js`/`.css` that `index.html` loads was touched; the new
+PNG is referenced by absolute URL from meta tags, which social scrapers fetch without any cache
+key. `tests/cache-bust.test.js` (4/4) confirms nothing on this branch was owed a bump.
+
+**Tests run:** `npm test` — 463/463 pass, 0 skipped, exit 0, before and after. Parsed
+`index.html` with `html.parser` afterwards and read back all seven card tags as a scraper would.
+Confirmed `deploy-pages.yml:76` already ships the file via `cp -r assets dist/`, so the
+hand-maintained copy allowlist needed no new line.
+
+**Risks / regressions to check:**
+- Social caches are sticky: Facebook and LinkedIn hold OG data for days. If the card ever needs
+  correcting, their debuggers must be used to force a re-scrape — a redeploy alone will not do it.
+- `og:url` and the image URL hardcode the apex domain; nothing tests that they stay correct.
+- The card stakes itself on one vocabulary entry. If `scope creep` were ever removed or
+  re-pointed in `vocab-data.js`, the image would silently disagree with the app.
+
 ### 2026-09-03 20:33 EDT — Verify ivritelite.app against the GitHub account
 
 **Requested:** Finish the last outstanding item from the domain cutover.
