@@ -244,31 +244,87 @@ const GAMEPLAY_GEOMETRY_FN = `(() => {
 // all — that is the most likely origin of the failures, since
 // `assertNoGameplayScroll` is exactly the phantom-scrollHeight assertion the
 // paragraph above describes.
-const SETTLED_GEOMETRY = `(async () => {
+//
+// Two further defects, neither of which caused a failure we have caught but both
+// of which let one through silently:
+//
+//   * agreement alone does not prove the measurement came from the viewport the
+//     test asked for, so the settle now refuses to accept one until the page
+//     reports the emulated size; and
+//   * the deadline used to `return current`, handing an assertion a value the
+//     loop had just failed to settle. It throws now. A settle that runs out of
+//     budget is a fact about the test, not a geometry to assert on.
+let emulatedViewport = { width: 0, height: 0 };
+
+// Chrome applies Emulation.setDeviceMetricsOverride asynchronously, so measuring
+// straight after the CDP call can read the previous size. Wait for the page to
+// report the new one before anything downstream measures.
+async function setViewport(cdp, width, height) {
+  emulatedViewport = { width, height };
+  await cdp.send("Emulation.setDeviceMetricsOverride", {
+    width,
+    height,
+    deviceScaleFactor: 1,
+    mobile: false,
+  });
+  const deadline = Date.now() + 5000;
+  for (;;) {
+    const observed = await evaluate(cdp, "[window.innerWidth, window.innerHeight]");
+    if (observed[0] === width && observed[1] === height) return;
+    if (Date.now() >= deadline) {
+      throw new Error(
+        `Chrome did not apply the ${width}x${height} viewport within 5000ms; the page reports ${observed[0]}x${observed[1]}.`,
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 25));
+  }
+}
+
+function settledGeometry() {
+  const { width, height } = emulatedViewport;
+  return `(async () => {
   const measure = ${GAMEPLAY_GEOMETRY_FN};
+  const viewport = () => ({
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+    clientWidth: document.documentElement.clientWidth,
+    clientHeight: document.documentElement.clientHeight,
+  });
+  const atExpectedSize = () => window.innerWidth === ${width} && window.innerHeight === ${height};
   const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve()));
-  const deadline = performance.now() + 4000;
+  const deadline = performance.now() + 8000;
   await document.fonts.ready;
   let current = measure();
+  let previous = current;
   let agreements = 0;
   while (performance.now() < deadline) {
     await Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => {})));
     await nextFrame();
-    const previous = current;
+    previous = current;
     current = measure();
     const animating = document.getAnimations().some((animation) => animation.playState === 'running');
-    if (!animating && JSON.stringify(current) === JSON.stringify(previous)) {
+    if (!animating && atExpectedSize() && JSON.stringify(current) === JSON.stringify(previous)) {
       agreements += 1;
-      if (agreements >= 2) break;
+      if (agreements >= 2) return current;
     } else {
       agreements = 0;
     }
   }
-  return current;
+  if (!atExpectedSize()) {
+    throw new Error(
+      'Geometry never settled: the page is ' + JSON.stringify(viewport())
+      + ' but the test emulated ${width}x${height}.'
+    );
+  }
+  throw new Error(
+    'Geometry never settled within 8000ms at ${width}x${height}. Last two reads: '
+    + JSON.stringify(previous) + ' then ' + JSON.stringify(current)
+  );
 })()`;
+}
 
 async function measureGeometry(cdp) {
-  return evaluate(cdp, SETTLED_GEOMETRY);
+  return evaluate(cdp, settledGeometry());
 }
 
 function assertNoGameplayScroll(geometry, label) {
@@ -295,12 +351,7 @@ function assertFeedbackFooterInFlow(geometry, label) {
 }
 
 async function measureFeedbackPadding(cdp, width, height) {
-  await cdp.send("Emulation.setDeviceMetricsOverride", {
-    width,
-    height,
-    deviceScaleFactor: 1,
-    mobile: false,
-  });
+  await setViewport(cdp, width, height);
   await measureGeometry(cdp);
   return evaluate(cdp, `(() => {
     const styles = getComputedStyle(document.querySelector('#feedbackTray'));
@@ -365,12 +416,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     pageCdp = await connectCdp(pageTarget.webSocketDebuggerUrl);
     await pageCdp.send("Page.enable");
     await pageCdp.send("Runtime.enable");
-    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
-      width: 360,
-      height: 640,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
+    await setViewport(pageCdp, 360, 640);
     await pageCdp.send("Page.navigate", { url: appUrl });
     await waitForPage(pageCdp);
     await evaluate(pageCdp, "document.fonts.ready");
@@ -596,39 +642,133 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     assertChoicesClearFooter(prepositionsFeedback, "Prepositions feedback");
     assertFeedbackFooterInFlow(prepositionsFeedback, "Prepositions feedback");
 
+    // Pinning the sentence is not enough to pin the geometry. The word bank is
+    // `flex-wrap` with `white-space: nowrap` tiles, so its row count depends on
+    // the ORDER the tiles are shuffled into, not just how many there are: this
+    // sentence packed into 4, 5 or 6 rows across 200 draws of the identical
+    // question, and the 6-row packing overflowed by 39px on 3% of them. That is
+    // the flake this file failed on in CI -- a real overflow, reported
+    // correctly, on a draw the test had no way to reproduce.
+    //
+    // So pin the packing the way the Binyanim block above pins its deck, and for
+    // the same reason: measure the worst case every run instead of sampling it.
+    //
+    // There is no sort that does this. Widest-first is first-fit-decreasing, a
+    // good packer: measured against the pre-fix bank, every sorted order -- by
+    // width or by length, ascending or descending -- landed on five rows while a
+    // plain random shuffle reached six, so a sorted pin would have hidden the
+    // very bug. So measure the rendered tiles and search for the order that
+    // wraps to the most rows, seeded so every run searches the same
+    // permutations, then re-render in that order. `worstCaseSeed` is arbitrary;
+    // any seed that finds the maximum will do, and the assertions below are what
+    // prove it found one.
     const sentenceFeedback = await evaluate(pageCdp, `(async () => {
       const originalWeightedRandomWord = IvriQuestApp.utils.weightedRandomWord;
+      // Pin the direction as well as the sentence. Each direction builds a
+      // different bank -- he2en gets 11 tiles of long English tokens, en2he 12
+      // shorter Hebrew ones -- so pinning the id alone still sampled two
+      // different geometries and the row assertions below saw whichever the
+      // weighting happened to pick.
       IvriQuestApp.utils.weightedRandomWord = (items) => (
-        items.find((item) => item.word?.sentence?.id === 'everyday_127') || items[0]
+        items.find((item) => (
+          item.word?.sentence?.id === 'everyday_127' && item.word?.direction === 'he2en'
+        )) || items[0]
       ).word;
       IvriQuestApp.sentenceBank.startSentenceBank();
       IvriQuestApp.sentenceBank.beginSentenceBankFromIntro();
       IvriQuestApp.utils.weightedRandomWord = originalWeightedRandomWord;
 
+      const worstCaseSeed = 0x9e3779b9;
+      const rowsIn = (bank) => new Set(
+        [...bank.querySelectorAll('.sentence-token')].map((tile) => Math.round(tile.getBoundingClientRect().top))
+      ).size;
+      const pinWorstPacking = () => {
+        const question = IvriQuestApp.runtime.state.sentenceBank.currentQuestion;
+        const bank = document.querySelector('.sentence-token-bank');
+        if (!bank || !question) return 0;
+        // A tile is nowrap and sized to max-content, so its width does not
+        // depend on where it lands. Measure once and wrap the widths
+        // arithmetically -- searching by re-rendering is thousands of layouts
+        // slower and shallow enough to miss the tallest packing.
+        const tiles = [...bank.querySelectorAll('.sentence-token')];
+        const bankWidth = bank.clientWidth;
+        const columnGap = parseFloat(getComputedStyle(bank).columnGap) || 0;
+        // Tiles carry no token id, so this pairs them with bankTokens by index.
+        // That holds only while nothing is placed in a slot, because the renderer
+        // skips placed tokens -- bail loudly rather than measure a shifted map.
+        if (tiles.length !== question.bankTokens.length) return 0;
+        const widthById = new Map(tiles.map((tile, index) => [
+          question.bankTokens[index].id,
+          tile.getBoundingClientRect().width,
+        ]));
+        const rowsFor = (order) => {
+          let rows = 1;
+          let used = 0;
+          for (const token of order) {
+            const width = widthById.get(token.id) || 0;
+            const extended = used === 0 ? width : used + columnGap + width;
+            if (extended > bankWidth + 0.5) { rows += 1; used = width; } else { used = extended; }
+          }
+          return rows;
+        };
+        let seed = worstCaseSeed;
+        const random = () => {
+          seed = (seed * 1664525 + 1013904223) >>> 0;
+          return seed / 4294967296;
+        };
+        let bestOrder = [...question.bankTokens];
+        let bestRows = rowsFor(bestOrder);
+        const candidate = [...question.bankTokens];
+        for (let attempt = 0; attempt < 20000; attempt += 1) {
+          for (let index = candidate.length - 1; index > 0; index -= 1) {
+            const swap = Math.floor(random() * (index + 1));
+            [candidate[index], candidate[swap]] = [candidate[swap], candidate[index]];
+          }
+          const rows = rowsFor(candidate);
+          if (rows > bestRows) { bestRows = rows; bestOrder = [...candidate]; }
+        }
+        question.bankTokens = bestOrder;
+        IvriQuestApp.sentenceBank.renderSentenceBankQuestion();
+        return rowsIn(document.querySelector('.sentence-token-bank'));
+      };
+      const worstBankRows = pinWorstPacking();
+
       const question = IvriQuestApp.runtime.state.sentenceBank.currentQuestion;
       const active = {
-        geometry: await ${SETTLED_GEOMETRY},
+        geometry: await ${settledGeometry()},
         promptFont: parseFloat(getComputedStyle(document.querySelector('.prompt-text')).fontSize),
         slotFont: parseFloat(getComputedStyle(document.querySelector('.sentence-slot')).fontSize),
         bankFont: parseFloat(getComputedStyle(document.querySelector('.sentence-token')).fontSize),
       };
 
+      // Fill every slot correctly, then spoil one so the feedback tray opens. A
+      // distractor in slot 0 is the clearest spoiler, but this sentence's ten
+      // target tokens exceed the bank's character budget on their own, so it now
+      // draws none -- swap the first two slots when that happens.
       const usedTokenIds = new Set();
-      question.slotTokenIds = question.targetTokens.map((text, index) => {
-        const token = index === 0
-          ? question.bankTokens.find((candidate) => !question.targetTokens.includes(candidate.text))
-          : question.bankTokens.find((candidate) => candidate.text === text && !usedTokenIds.has(candidate.id));
+      question.slotTokenIds = question.targetTokens.map((text) => {
+        const token = question.bankTokens.find(
+          (candidate) => candidate.text === text && !usedTokenIds.has(candidate.id),
+        );
         usedTokenIds.add(token.id);
         return token.id;
       });
+      const spoiler = question.bankTokens.find((candidate) => !question.targetTokens.includes(candidate.text));
+      if (spoiler) {
+        question.slotTokenIds[0] = spoiler.id;
+      } else {
+        [question.slotTokenIds[0], question.slotTokenIds[1]] = [question.slotTokenIds[1], question.slotTokenIds[0]];
+      }
       question.placedBankTokenIds = [...question.slotTokenIds];
       IvriQuestApp.sentenceBank.applySentenceBankAnswer();
 
       const tray = document.querySelector('#feedbackTray');
       return {
+        pinned: { id: question.sentence?.id, direction: question.direction },
+        worstBankRows,
         active,
         feedback: {
-          geometry: await ${SETTLED_GEOMETRY},
+          geometry: await ${settledGeometry()},
           bankCount: document.querySelectorAll('.sentence-token-bank').length,
           metaCount: document.querySelectorAll('.sentence-answer-meta').length,
           promptVisible: document.querySelector('.prompt-card')?.getBoundingClientRect().height > 0,
@@ -639,6 +779,26 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         },
       };
     })()`);
+    // The pin falls back to items[0] when the pair is missing, so say so out loud
+    // rather than measuring an unrelated sentence.
+    assert.deepEqual(
+      sentenceFeedback.pinned,
+      { id: "everyday_127", direction: "he2en" },
+      "the Sentences block must draw the sentence and direction it pins",
+    );
+    // Two opposite failures, so two assertions. Too many rows is the product
+    // regression: five rows already put the shell at 488.41px against the 488px
+    // the floor allows, so a sixth overflows. Too few means the search stopped
+    // finding the tallest packing, and the block is quietly measuring an easy
+    // draw -- which is how this surface went ungated in the first place.
+    assert.ok(
+      sentenceFeedback.worstBankRows <= 5,
+      `Sentences word bank packs to ${sentenceFeedback.worstBankRows} rows, over the 5 the 360x640 floor allows`,
+    );
+    assert.ok(
+      sentenceFeedback.worstBankRows >= 5,
+      `Sentences worst-case search found only ${sentenceFeedback.worstBankRows} rows, so this block is no longer measuring the tallest bank`,
+    );
     assertNoGameplayScroll(sentenceFeedback.active.geometry, "Sentences long active question");
     assertChoicesClearFooter(sentenceFeedback.active.geometry, "Sentences long active question");
     assert.ok(sentenceFeedback.active.promptFont > 19.9, `sentence prompt font increased (${sentenceFeedback.active.promptFont}px)`);
@@ -683,7 +843,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
 
       const rows = [...document.querySelectorAll('#feedbackItems .feedback-item')];
       return {
-        geometry: await ${SETTLED_GEOMETRY},
+        geometry: await ${settledGeometry()},
         result: document.querySelector('#feedbackItems .feedback-result')?.textContent || '',
         bankCount: document.querySelectorAll('.sentence-token-bank').length,
         metaCount: document.querySelectorAll('.sentence-answer-meta').length,
@@ -911,12 +1071,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       "mission character starts at the top of the completion hero",
     );
 
-    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
-      width: 1366,
-      height: 768,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
+    await setViewport(pageCdp, 1366, 768);
     await evaluate(pageCdp, `(() => {
       IvriQuestApp.binyanBoard.startBinyanBoard();
       IvriQuestApp.binyanBoard.beginBinyanBoardFromIntro();
@@ -930,12 +1085,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     })()`);
     assert.ok(Math.abs(gameplayCentering.bodyMid - gameplayCentering.stageMid) <= 1);
 
-    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
-      width: 1366,
-      height: 1000,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
+    await setViewport(pageCdp, 1366, 1000);
     await evaluate(pageCdp, "IvriQuestApp.session.endSessionAndNavigate('settings')");
     const settingsCentering = await evaluate(pageCdp, `(() => {
       const body = document.querySelector('.shell-body');
@@ -959,12 +1109,7 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       assert.equal(settingsCentering.topIsReachable, true);
     }
 
-    await pageCdp.send("Emulation.setDeviceMetricsOverride", {
-      width: 360,
-      height: 640,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
+    await setViewport(pageCdp, 360, 640);
     const compactSettings = await evaluate(pageCdp, `(() => {
       const body = document.querySelector('.shell-body');
       const bodyRect = body.getBoundingClientRect();
