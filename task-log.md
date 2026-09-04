@@ -21,6 +21,56 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 20:06 EDT — ivritelite.app is live (Pages custom domain + HTTPS)
+
+**Requested:** Finish the cutover after merging #88 (tranche 3 of 5).
+
+**Files changed:** None. This entry records an infrastructure change made through the
+GitHub API, so that the state is discoverable from the repo.
+
+**What was done:**
+- Merged #88 (`31bd80a`). The deploy ran green: `test` and `deploy` both success.
+- **The artifact's `CNAME` did *not* set the custom domain on its own** — after a
+  successful deploy `gh api repos/mikeesexton/ulpango/pages` still reported
+  `"cname": null`. The domain had to be set explicitly:
+  `gh api -X PUT repos/mikeesexton/ulpango/pages -f cname=ivritelite.app`. Worth knowing:
+  the `cp CNAME dist/` line is what *preserves* the setting across later deploys, not what
+  establishes it. Both are needed, for different reasons.
+- Setting the domain reset `https_enforced` to `false` automatically, since no certificate
+  covered the new host yet. Re-enabled once the cert issued.
+
+**Behavior changed:** The site is now served at `https://ivritelite.app/` instead of
+`https://mikeesexton.github.io/ulpango/`. `www.ivritelite.app` 301s to the apex. The old
+Pages URL 301s to `http://ivritelite.app/`, which then 301s to HTTPS — a two-hop chain that
+browsers never actually walk, since `.app` is HSTS-preloaded and the upgrade happens
+client-side before any request is made.
+
+**Tests run / verification:**
+- Let's Encrypt issued in **41 seconds**. Cert `CN=ivritelite.app`, SAN covers
+  `ivritelite.app` and `www.ivritelite.app`, valid to 2026-12-02.
+- `gh api .../pages` → `cname: ivritelite.app`, `https_enforced: true`,
+  `html_url: https://ivritelite.app/`.
+- `https://ivritelite.app/CNAME` returns 200, confirming the file reached the artifact.
+- Fetched the live apex and confirmed the new canonical/og/twitter/icon tags shipped.
+- Drove the live site in a browser: dismissed the welcome modal, picked a character,
+  started a Short mission, and completed a Vocabulary match (streak x0 -> x1). All five
+  character sprites rendered.
+- **Zero console errors, and every network request returned 200** — all 40 scripts, all
+  eight data files, all sprites and the favicon. Nothing 404s at the apex, which is the
+  real proof the `./`-relative convention survived the move off the `/ulpango/` subpath.
+
+**Risks / regressions to check:**
+- **Still outstanding:** account-level domain verification (a
+  `_github-pages-challenge-mikeesexton` TXT record, created from GitHub Settings -> Pages).
+  Until then `protected_domain_state` is null and the domain could be claimed by another
+  GitHub account if this site were ever taken down.
+- The repo rename `ulpango` -> `ivritelite` is now unblocked but not yet done.
+- Do not accept any GoDaddy "reconnect your website" prompt: the apex was previously
+  attached to a Website Builder product, which is still attached at the account level and
+  would rewrite the apex A record.
+- The certificate renews automatically, but only while the four A records stay put and no
+  CAA record is added.
+
 ### 2026-09-03 19:49 EDT — Add social, canonical and favicon tags for the new domain
 
 **Requested:** Alongside the `ivritelite.app` cutover, add the social/canonical metadata the
