@@ -553,6 +553,54 @@ test("every vocabulary card carries real niqqud, apart from documented acronyms"
   });
 });
 
+// The test above only proves that SOME mark appears SOMEWHERE in heNiqqud, so a
+// multi-word value passes while half of it is still bare: "בְּדִיקַת נאותות"
+// satisfied it, and 63 cards sat in that state for months. This checks each word.
+//
+// Two encoding details this depends on, both of which have already produced a
+// wrong answer here:
+//
+//   * The class is built from explicit escapes on purpose. Pasting the combining
+//     marks into a literal writes [ְ-ׇ], which spans U+05B0-U+05C7 and so also
+//     matches the maqaf U+05BE — a hyphen, not a vowel — which makes a
+//     half-pointed hyphenated compound read as fully pointed.
+//   * U+05BC belongs in the set. Shuruk (וּ) is a vav carrying a dagesh, so
+//     שׁוּם, דּוּד and גּוּשׁ hold their vowel there and have no vowel point at all.
+test("every word of a pointed vocabulary value carries niqqud", () => {
+  const vocabulary = loadVocabulary();
+  const NIQQUD = new RegExp("[\\u05B0-\\u05BC\\u05C1\\u05C2\\u05C7]");
+  const HEBREW_LETTER = new RegExp("[\\u05D0-\\u05EA]");
+  // Whitespace, maqaf and hyphens each separate words that need their own vowels.
+  const WORD_SEPARATOR = new RegExp("[\\s\\u05BE\\u2010-\\u2015-]+");
+
+  // An acronym has no vowels of its own, so pointing it would be wrong rather
+  // than missing. Same bar as ACRONYM_EXCEPTIONS above: an addition here needs
+  // that justification, not merely a red test.
+  const UNPOINTABLE = new Set(["אג״ח"]);
+
+  const bare = [];
+  vocabulary.forEach((word) => {
+    String(word.heNiqqud || "")
+      .split(WORD_SEPARATOR)
+      .filter((token) => HEBREW_LETTER.test(token))
+      .forEach((token) => {
+        if (NIQQUD.test(token) || UNPOINTABLE.has(token)) return;
+        bare.push(`${word.id}: ${token} in ${word.heNiqqud}`);
+      });
+  });
+
+  assert.deepEqual(bare, [], `these words are missing niqqud: ${bare.join(" | ")}`);
+
+  // A stale exception would silently re-open the gap it was added to document.
+  UNPOINTABLE.forEach((token) => {
+    assert.ok(
+      vocabulary.some((word) =>
+        String(word.heNiqqud || "").split(WORD_SEPARATOR).includes(token)),
+      `stale unpointable exception: ${token}`,
+    );
+  });
+});
+
 // Two playable cards sharing BOTH Hebrew and English can be drawn onto the same
 // Translation Match board, where the grader keys on pair id — so matching the
 // first Hebrew to the second English is marked wrong although it is correct.
