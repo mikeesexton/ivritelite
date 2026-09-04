@@ -21,6 +21,43 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 20:11 EDT — Rename the GitHub repo ulpango -> ivritelite
+
+**Requested:** Complete the last step gated on the domain (tranche 5 of 5).
+
+**Files changed:** None in the tree. `git remote set-url origin` was run on the working
+copy to point at the new URL.
+
+**What was done:** `gh api -X PATCH repos/mikeesexton/ulpango -f name=ivritelite`. This was
+blocked until a custom domain was serving, because GitHub does not redirect project-site
+Pages URLs — renaming first would have moved the live site to
+`mikeesexton.github.io/ivritelite/` and left the old URL dead. With `ivritelite.app` serving
+from the apex, the repo name no longer appears in any URL a user sees.
+
+**Behavior changed:** None. The site is unaffected: Pages still reports
+`cname: ivritelite.app`, `https_enforced: true`, and the apex still returns 200.
+
+**Tests run / verification:**
+- Immediately before the rename, a second deploy ran (the task-log push). The custom domain
+  survived it — `cname` still `ivritelite.app` afterwards. That is the real test of the
+  `cp CNAME dist/` line added in `a052b68`: this is precisely the deploy that would
+  otherwise have detached the domain.
+- After the rename: `git fetch origin` succeeds from the new URL,
+  `gh api repos/mikeesexton/ivritelite/pages` is unchanged, `https://ivritelite.app/`
+  returns 200, and `github.com/mikeesexton/ulpango` 301s to the new repo.
+
+**Risks / regressions to check:**
+- **Still outstanding:** account-level domain verification, the one item of the cutover not
+  yet done. From GitHub Settings -> Pages -> Verified domains, which issues a
+  `_github-pages-challenge-mikeesexton` TXT record to add at GoDaddy. Until then
+  `protected_domain_state` is null.
+- The old checkout at `~/Documents/Ulpango` still has the `ulpango` remote. GitHub redirects
+  it, so it keeps working; it is due for deletion anyway once the Mac mini is proven.
+- GitHub only holds the old name free while nothing else claims it. Creating a new repo
+  called `ulpango` under this account would break the redirect.
+- 42 historical `ulpango` references remain in this file. They are a record of what
+  happened and were deliberately left alone.
+
 ### 2026-09-03 20:06 EDT — ivritelite.app is live (Pages custom domain + HTTPS)
 
 **Requested:** Finish the cutover after merging #88 (tranche 3 of 5).
