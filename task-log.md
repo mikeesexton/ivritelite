@@ -21,6 +21,38 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 20:33 EDT — Verify ivritelite.app against the GitHub account
+
+**Requested:** Finish the last outstanding item from the domain cutover.
+
+**Files changed:** None. Recorded here because it is an infrastructure change with no trace
+in the tree.
+
+**What was done:** Mike added the domain under GitHub Settings → Pages → Verified domains and
+published the resulting `_github-pages-challenge-mikeesexton` TXT record at GoDaddy. There is
+**no REST API for account-level domain verification** — `gh api user/pages/verified-domains`
+returns 404 — so this step is UI-only and cannot be scripted.
+
+**Behavior changed:** None visible. `protected_domain_state` moved from `null` to
+`"verified"`, which stops any other GitHub account from claiming `ivritelite.app` as its own
+Pages custom domain. The failure mode this closes is a specific one: if this site were ever
+taken down while DNS still pointed at GitHub, an unverified name could be picked up by
+someone else and served from their repo.
+
+**Tests run / verification:**
+- The TXT record resolves from GoDaddy's authoritative nameserver and from `1.1.1.1`.
+- `gh api repos/mikeesexton/ivritelite/pages` → `protected_domain_state: "verified"`,
+  `pending_domain_unverified_at: null`, `cname: ivritelite.app`, `https_enforced: true`.
+- `https://ivritelite.app/` still returns 200.
+
+**Risks / regressions to check:**
+- The TXT record can be deleted without losing verification, and has been left in place.
+- Verification is per-account. It does not survive the domain moving to a different GitHub
+  account, and it does not protect the domain at the registrar — that is still GoDaddy
+  account security.
+- The cutover is now complete end to end. The two standing DNS landmines remain: never accept
+  a GoDaddy "reconnect your website" prompt, and never add a CAA record.
+
 ### 2026-09-03 20:11 EDT — Rename the GitHub repo ulpango -> ivritelite
 
 **Requested:** Complete the last step gated on the domain (tranche 5 of 5).
