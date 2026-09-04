@@ -21,6 +21,44 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-03 23:40 EDT — Close the per-word niqqud test gap
+
+**Requested:** Fix the test gap that let 63 half-pointed vocabulary cards pass for months.
+
+**Files changed:**
+- `tests/vocab-data.test.js` — added "every word of a pointed vocabulary value carries
+  niqqud", directly below the existing card-level niqqud test. No cache bump: `index.html`
+  does not ship test files.
+
+**What it checks:** every whitespace-, maqaf- or hyphen-separated word of `heNiqqud` carries
+a mark, with `אג״ח` documented as the one unpointable token and a stale-exception guard so a
+dead entry cannot silently re-open the gap. The existing test only required one mark
+*somewhere* in the value, which a half-pointed multi-word string satisfies.
+
+Two encoding notes are recorded in the test comment because both have already produced a wrong
+answer in this repo:
+- The class is built from explicit `\uXXXX` escapes. Pasting the combining marks yields
+  `[ְ-ׇ]`, which spans U+05B0–U+05C7 and therefore matches the maqaf U+05BE — a hyphen, not a
+  vowel — so a half-pointed hyphenated compound reads as fully pointed.
+- U+05BC belongs in the set: shuruk (`וּ`) is a vav carrying a dagesh, so `שׁוּם`, `דּוּד` and
+  `גּוּשׁ` hold their vowel there and have no vowel point at all. A vowel-only class reports 12
+  false positives.
+
+**Behavior changed:** None. Test-only.
+
+**Tests run:**
+- `npm test`: 464 pass, 0 fail.
+- Negative check: re-breaking `בְּדִיקַת נְאוֹתוּת` back to `בְּדִיקַת נאותות` turns the new
+  test red with `business_finance_expanded-008-due-diligence: נאותות in בְּדִיקַת נאותות`,
+  while the pre-existing test stays green. `vocab-data.js` was restored afterwards.
+
+**Risks / regressions to check:**
+- A future acronym card fails until it is added to `UNPOINTABLE`, which is intended: it forces
+  the same justification the neighbouring `ACRONYM_EXCEPTIONS` list asks for.
+- `sentence-bank-data.js` has no equivalent per-word guard. Its only current offenders are
+  acronyms (`ד״ר`, `אג״ח`), and it carries ~186 documented legacy words, so adding one there
+  needs an exemption policy decision first.
+
 ### 2026-09-03 22:40 EDT — Complete every partially-pointed vocabulary card (63 cards)
 
 **Requested:** Fix the `due diligence` card, whose pointed column marked only the first of its
