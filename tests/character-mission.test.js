@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260905n/);
+  assert.match(indexHtml, /styles\.css\?v=20260905q/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3096,7 +3096,10 @@ test("the gameplay pill carries the beat position, and only during a mission", (
   // The flash goes on a node no renderer rebuilds, and has a reduced-motion path:
   // this is the first animation on a gameplay surface.
   assert.match(source, /strip\.classList\.add\("is-beat-change"\)/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*\.progress-strip\.is-beat-change \{\s*animation: none;/);
+  // Coverage, not position: the reduced-motion rules live in one shared block,
+  // so assert this selector is in it rather than that it comes first.
+  const reducedMotion = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.ok(reducedMotion.includes(".progress-strip.is-beat-change"));
 
   // .app-shell is a grid, so the topbar needs min-width: 0 or it can never
   // shrink and the whole shell overflows 360px instead of the title truncating.
@@ -3330,4 +3333,34 @@ test("a death screen restored without a live mission does not trap the app", () 
   character.initialize();
   assert.notEqual(app.runtime.characterState.screen, "death");
   assert.equal(character.respawnAtBeat(), false);
+});
+
+// --- Feel: motion foundation and the answer pulse ----------------------------
+
+test("one hook pulses every mode, and every animation has a reduced-motion path", () => {
+  const audio = fs.readFileSync(path.join(PROJECT_ROOT, "app/audio.js"), "utf8");
+  const ui = fs.readFileSync(path.join(PROJECT_ROOT, "app/ui.js"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+
+  // playAnswerFeedbackSound is the single call every mode makes on an answer.
+  assert.match(audio, /app\.ui\?\.pulseAnswerFeedback\?\.\(isCorrect === true\);/);
+  // On a node no renderer rebuilds, or a renderAll mid-answer cuts the animation.
+  assert.match(ui, /const stage = runtime\.el\?\.homeLessonStage;/);
+  assert.match(ui, /void stage\.offsetWidth;/, "a replayed animation needs a reflow between remove and add");
+
+  // Motion tokens exist and are load-bearing, not decorative.
+  ["--dur-fast", "--dur", "--dur-slow", "--ease-out", "--ease-spring"].forEach((token) => {
+    assert.match(css, new RegExp(`\\n\\s+\\${token}:`), `${token} is not defined`);
+  });
+  assert.ok(css.includes("var(--dur-fast) var(--ease-out)"), "tokens must drive real transitions");
+  assert.ok(css.includes("animation: matchCardIn var(--dur)"), "existing animations must read the tokens");
+
+  // Exactly one reduced-motion block, so a new animation has one place to go.
+  const blocks = css.match(/@media \(prefers-reduced-motion: reduce\)/g) || [];
+  assert.equal(blocks.length, 1, "keep reduced-motion in a single block");
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  ["is-answer-correct", "is-answer-wrong", "is-beat-change", "character-death-title"].forEach((name) => {
+    assert.ok(reduced.includes(name), `${name} has no reduced-motion path`);
+  });
+  assert.match(reduced, /--dur-fast: 0ms;/);
 });

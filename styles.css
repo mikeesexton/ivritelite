@@ -22,6 +22,15 @@
   --line-strong: #4A3F22;
   --radius: 6px;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  /* Motion. These are the values the file already used before they had names —
+     120ms on buttons, 180ms on the match cards and feedback tray, and the 650ms
+     spring on the second-chance bubble — so adopting them changes nothing and
+     gives later work one place to tune. Zeroed under prefers-reduced-motion. */
+  --dur-fast: 120ms;
+  --dur: 180ms;
+  --dur-slow: 650ms;
+  --ease-out: ease;
+  --ease-spring: cubic-bezier(0.15, 0.8, 0.22, 1);
   --body-bg: #16130D;
   --boot-bg: #3a201b;
   --boot-border: rgba(201, 123, 107, 0.4);
@@ -151,7 +160,7 @@ button {
   font-weight: 600;
   color: var(--ink);
   background: var(--button-bg);
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
 }
 
 button:disabled {
@@ -930,16 +939,6 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
   }
 }
 
-/* Without this the death card is a full-screen scale-and-flash on every fourth
-   wrong answer, which is exactly what this media query exists to prevent. The
-   button's delayed fade-in has to be cancelled too, or it stays invisible. */
-@media (prefers-reduced-motion: reduce) {
-  .character-death-title,
-  .character-death-button {
-    animation: none;
-  }
-}
-
 /* The beat changed. Applied to the progress strip rather than the badge, which
    is rebuilt on every render, and removed on a timer. */
 .progress-strip.is-beat-change {
@@ -955,15 +954,6 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
   }
   100% {
     box-shadow: 0 0 0 0 transparent;
-  }
-}
-
-/* An app that flashes on every mode switch with no reduced-motion path is an
-   accessibility regression, and this is the first animation on a gameplay
-   surface. Kept scoped to what this tranche added. */
-@media (prefers-reduced-motion: reduce) {
-  .progress-strip.is-beat-change {
-    animation: none;
   }
 }
 
@@ -997,7 +987,7 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
   height: 100%;
   border-radius: inherit;
   background: var(--brand);
-  transition: width 180ms ease, filter 180ms ease;
+  transition: width var(--dur) var(--ease-out), filter var(--dur) var(--ease-out);
 }
 
 body[data-ui-lang="he"] .progress-fill {
@@ -1800,7 +1790,7 @@ body[data-theme="light"] .sentence-answer-line {
 }
 
 .match-card.incoming {
-  animation: matchCardIn 180ms ease;
+  animation: matchCardIn var(--dur) var(--ease-out);
 }
 
 @keyframes matchCardIn {
@@ -1843,7 +1833,7 @@ body[data-theme="light"] .sentence-answer-line {
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: var(--surface-bg);
-  animation: feedbackTrayIn 180ms ease;
+  animation: feedbackTrayIn var(--dur) var(--ease-out);
 }
 
 .feedback-tray.hidden {
@@ -2497,7 +2487,7 @@ body[data-ui-lang="he"] .settings-block > .settings-row--static {
   color: var(--ink);
   text-decoration: none;
   background: var(--quiet-bg);
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background-color 120ms ease;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
 }
 
 .danger-block {
@@ -4055,7 +4045,7 @@ body[data-ui-locked="true"] .app-shell {
 }
 
 .second-chance-intro.active .second-chance-bubble {
-  animation: secondChanceBubbleIn 650ms cubic-bezier(0.15, 0.8, 0.22, 1) 120ms forwards;
+  animation: secondChanceBubbleIn var(--dur-slow) var(--ease-spring) var(--dur-fast) forwards;
   opacity: 0;
 }
 
@@ -5597,5 +5587,81 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
 
   .handwriting-tool-btn {
     font-size: 0.84rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Answer feedback pulse
+
+   Driven by ui.pulseAnswerFeedback from the single call every mode makes on an
+   answer, so all nine modes get this from one place. Deliberately small: this
+   fires on every question, and anything larger becomes exhausting by the tenth.
+   --------------------------------------------------------------------------- */
+.home-lesson-stage.is-answer-correct {
+  animation: answerCorrectPop var(--dur-slow) var(--ease-spring);
+}
+
+.home-lesson-stage.is-answer-wrong {
+  animation: answerWrongShake 380ms var(--ease-out);
+}
+
+@keyframes answerCorrectPop {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  28% {
+    transform: scale(1.012);
+    box-shadow: 0 0 0 3px var(--success-border);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Translation only. Scaling or colouring the stage on a wrong answer fights the
+   per-choice red the modes already paint on the option itself. */
+@keyframes answerWrongShake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-4px); }
+  35% { transform: translateX(4px); }
+  55% { transform: translateX(-3px); }
+  75% { transform: translateX(2px); }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+
+   One block rather than a guard beside each animation, so a new animation is
+   covered by adding its selector here and nothing can ship without a path.
+   Zeroing the tokens handles everything that reads them; the explicit rules
+   cover the keyframes, which do not.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+  }
+
+  .home-lesson-stage.is-answer-correct,
+  .home-lesson-stage.is-answer-wrong,
+  .progress-strip.is-beat-change,
+  .character-death-title,
+  .character-death-button,
+  .match-card.incoming,
+  .feedback-tray,
+  .second-chance-intro.active .second-chance-bubble,
+  .character-sprite {
+    animation: none;
+  }
+
+  .match-card,
+  .feedback-tray,
+  .character-sprite,
+  button,
+  .progress-fill {
+    transition: none;
   }
 }

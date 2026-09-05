@@ -21,6 +21,67 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Feel, part 1: motion foundation and the answer pulse
+
+**Requested:** "Now do the feel work — motion, sound on, streak." This is the motion half
+(roadmap A0 + A1). Sound and the two streaks follow separately.
+
+**Starting position:** `styles.css` had **three `@keyframes` and five `transition` declarations
+in 5,500 lines**, and no motion tokens. Answering a question changed a background colour.
+
+**Files changed:**
+- `app/audio.js` — one line. `playAnswerFeedbackSound` now also calls
+  `app.ui?.pulseAnswerFeedback?.()`. That function is the single call every mode makes on every
+  answer — it is already how the character reaction system got universal coverage — so one line
+  animates all nine modes. Placed *after* `recordAnswer`, which can open the death card: the
+  pulse belongs to the question being answered, not to the card replacing it.
+- `app/ui.js` — `ui.pulseAnswerFeedback(isCorrect)`. Adds a class, clears it on a 420ms timer.
+  The class goes on `#homeLessonStage`, a container in `index.html` that no renderer rebuilds,
+  because a `renderAll()` mid-answer would otherwise replace the node and cut the animation.
+  Remove-reflow-add so a fast streak replays the animation instead of ignoring it.
+- `styles.css` — motion tokens on `:root` (`--dur-fast` 120ms, `--dur` 180ms, `--dur-slow`
+  650ms, `--ease-out`, `--ease-spring`), the two pulse keyframes, and **one** consolidated
+  `prefers-reduced-motion` block.
+- `tests/character-mission.test.js` — one new test; one T4 assertion relaxed.
+
+**Two decisions:**
+
+1. **The tokens are the values the file already used**, not new ones: 120ms on buttons, 180ms on
+   the match cards and feedback tray, the 650ms spring on the second-chance bubble. All six
+   existing declarations were rewired to read them, so the tokens are load-bearing rather than
+   decorative and zeroing them under reduced motion actually does something.
+2. **The two ad-hoc reduced-motion blocks added in T4 and T6 were folded into one.** Three
+   scattered blocks would mean a new animation could ship with no path and nobody would notice.
+   One block is one place to add a selector, and the new test asserts there is exactly one.
+
+**Behavior changed:**
+- Every correct answer in every mode gives the gameplay card a small spring pop with a green
+  ring; every wrong answer shakes it horizontally. Deliberately small — this fires on every
+  question, and anything larger becomes exhausting by the tenth.
+- Under `prefers-reduced-motion: reduce` all of it, plus the beat flash, the death card, the
+  match-card deal, the feedback tray and the sprite, is off.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **509 pass / 0 fail** (508 before, +1).
+- Verified live: correct and wrong each apply their class, `answerWrongShake` was observed
+  actually running, the class clears, and the tokens resolve (`--dur` 180ms, `--ease-spring`
+  the codified spring).
+- **Checked the reduced-motion block parsed rather than assuming it**: read it back through the
+  CSSOM, one media rule with all three inner rules intact. A malformed block is dropped silently.
+
+**Risks / regressions to check:**
+- The pulse animates `#homeLessonStage`, which contains the prompt and the choices. A `scale`
+  on a container can blur text mid-animation on some displays; it is 1.012 for ~180ms, but it
+  is worth a look on a real device.
+- `prefers-reduced-motion` was verified statically and through the CSSOM, not by emulating the
+  setting in a browser. The rules are present and parsed; that they *suppress* the animation is
+  inferred from `animation: none`.
+- The pulse timer lives on `runtime.answerPulseTimer`, so two rapid answers cancel the first
+  timer rather than stacking. If a mode ever answered twice in one frame the class could be
+  left on until the next answer.
+- `--dur-fast` is now also the second-chance bubble's animation *delay*, which was already
+  120ms. If that token is retuned, that delay moves with it.
+
 ### 2026-09-05 EDT — Missions become beats (T6: the bonfire)
 
 **Requested:** Mike's idea. Four wrong answers in a row shows a Dark Souls-style **אתה מת** and

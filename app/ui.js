@@ -137,6 +137,29 @@ ui.renderSoundToggle = ui.renderSoundToggle || function renderSoundToggle() {
   runtime.el.soundToggle.setAttribute("aria-pressed", String(runtime.state.audio.enabled));
 };
 
+// Every mode routes its answer through audio.playAnswerFeedbackSound, which is
+// how the character reaction system got universal coverage for free. The pulse
+// rides the same call, so one function animates all nine modes.
+//
+// The class goes on #homeLessonStage — a container in index.html that no
+// renderer rebuilds — because a renderAll() mid-answer would otherwise replace
+// the node and cut the animation. Re-triggering removes and re-adds across a
+// reflow so a fast streak restarts the animation instead of ignoring it.
+ui.pulseAnswerFeedback = ui.pulseAnswerFeedback || function pulseAnswerFeedback(isCorrect) {
+  const runtime = getRuntime();
+  const stage = runtime.el?.homeLessonStage;
+  if (!stage) return;
+  const next = isCorrect === true ? "correct" : "wrong";
+  stage.classList.remove("is-answer-correct", "is-answer-wrong");
+  // Reading offsetWidth forces the reflow that lets the same animation replay.
+  void stage.offsetWidth;
+  stage.classList.add(next === "correct" ? "is-answer-correct" : "is-answer-wrong");
+  runtime.global?.clearTimeout?.(runtime.answerPulseTimer);
+  runtime.answerPulseTimer = runtime.global?.setTimeout?.(() => {
+    stage.classList.remove("is-answer-correct", "is-answer-wrong");
+  }, 420);
+};
+
 ui.renderBonfireToggle = ui.renderBonfireToggle || function renderBonfireToggle() {
   const runtime = getRuntime();
   if (!runtime.el?.bonfireToggle) return;
