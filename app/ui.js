@@ -338,9 +338,36 @@ ui.renderGameplayPill = ui.renderGameplayPill || function renderGameplayPill() {
     runtime.el.shellGameplayCombo.textContent = meta.comboText;
   }
 
+  // Beats hand off with no hub or intro screen between them, so without this
+  // nothing on a gameplay screen says how far through the mission the learner
+  // is. It goes in the pill rather than beside the mode name because
+  // .lesson-title-row is hidden during gameplay — the topbar is the header —
+  // and that row has no spare width at the 360px floor.
+  const beat = app.character?.getActiveBeat?.();
+  const showBeat = shouldShow && Boolean(beat) && beat.total > 1;
+  const beatText = showBeat ? `${beat.index + 1}/${beat.total}` : "";
+  if (runtime.el.shellGameplayBeat && showBeat) {
+    runtime.el.shellGameplayBeat.textContent = beatText;
+  }
+  runtime.el.shellGameplayBeatStat?.classList.toggle("hidden", !showBeat);
+  runtime.el.shellGameplayBeatDivider?.classList.toggle("hidden", !showBeat);
+
+  // Mark the handoff. The class goes on the progress strip, a node no renderer
+  // rebuilds, and comes off on a timer so a re-render cannot cut it short.
+  if (showBeat && runtime.lastBeatFlashIndex !== beat.index) {
+    runtime.lastBeatFlashIndex = beat.index;
+    const strip = runtime.el?.lessonProgressBar;
+    if (strip) {
+      strip.classList.add("is-beat-change");
+      runtime.global?.setTimeout?.(() => strip.classList.remove("is-beat-change"), 700);
+    }
+  }
+  if (!showBeat) runtime.lastBeatFlashIndex = null;
+
   runtime.el.shellGameplayPill.classList.toggle("hidden", !shouldShow);
   runtime.el.shellGameplayPill.setAttribute("aria-hidden", shouldShow ? "false" : "true");
-  runtime.el.shellGameplayPill.setAttribute("aria-label", `${meta.timeAriaText} • ${meta.comboAriaText}`);
+  const beatAria = showBeat ? ` • activity ${beat.index + 1} of ${beat.total}` : "";
+  runtime.el.shellGameplayPill.setAttribute("aria-label", `${meta.timeAriaText} • ${meta.comboAriaText}${beatAria}`);
 };
 
 const SUMMARY_GAME_NAME_KEYS = {

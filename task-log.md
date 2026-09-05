@@ -21,6 +21,74 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T4: beat position in the gameplay HUD)
+
+**Requested:** Continue the approved beat plan. T4 shows the learner where they are in the
+mission, which nothing did after T3 removed the hub and intro screen from between beats.
+
+**Files changed:**
+- `index.html` — a third stat in `#shellGameplayPill` (`#shellGameplayBeatStat`,
+  `#shellGameplayBeat`, `#shellGameplayBeatDivider`), hidden by default; `?v=` bumps.
+- `app/bootstrap-runtime.js` — registered the three new elements.
+- `app/ui.js` — `renderGameplayPill` fills the beat stat from `character.getActiveBeat()`,
+  hides it in free play and in single-beat missions, appends "activity N of M" to the pill's
+  aria-label, and flashes `.is-beat-change` on the progress strip when the index changes.
+- `app/session.js` — `resetAllModeSessions` now clears `sentence-bank-board` / `match-grid`
+  from the shared choice container.
+- `styles.css` — `.progress-strip.is-beat-change` + `@keyframes beatChange` + a
+  `prefers-reduced-motion` block; `min-width: 0` on `.shell-topbar`; ellipsis on
+  `.shell-brand-title h1`; the brand glyph hidden while `.gameplay-active`.
+- `tests/character-mission.test.js` — T4 test rewritten for the pill.
+
+**Two false starts worth recording, because both cost real time:**
+
+1. **The badge was first put beside the mode name, where it is never visible.**
+   `.lesson-title-row` carries `hidden` during gameplay — the topbar *is* the header on this
+   layout — so `#modeTitle` has zero width in every mode. The badge rendered, passed its test,
+   and could not be seen. Mirroring it into the topbar via `renderShellChrome` made it visible
+   but broke the 360px floor, and truncating the title then ate the badge anyway. The pill is
+   the only always-visible gameplay chrome, so it belongs there. **Check that an element is on
+   screen before building on it.**
+2. **The 360px overflow was misdiagnosed twice.** First blamed on the badge and cleared by a
+   bad experiment (removing the badge from `#modeTitle` does not re-render the topbar mirror,
+   so the measurement did not move and looked exonerating). Then blamed on a stale
+   `sentence-bank-board` class, which turned out to be real but *pre-existing* — verified by
+   running the same two modes on a `main` worktree, which produced the identical
+   `choices sentence-bank-board match-grid`. Fixed anyway, since T3 makes mode switches
+   routine. The actual cause was third: `.app-shell` is `display: grid`, and a grid item
+   defaults to `min-width: auto`, so `.shell-topbar` could never shrink below its content and
+   widened the whole shell instead of letting the title ellipsis engage.
+
+**Behavior changed:**
+- The gameplay pill reads `⏱ time · ▮ N/M · 🔥 combo` during a mission; the beat stat is
+  absent in free play and in single-beat missions.
+- The progress strip flashes for 700ms on a beat handoff. First animation on a gameplay
+  surface, so it ships with the `prefers-reduced-motion` block.
+- The brand glyph is hidden during gameplay so the mode name is not truncated.
+- The topbar can now shrink, and a too-long mode name ellipses rather than overflowing the
+  shell. This is a behaviour change for long names in any mode, mission or not.
+- Fixes a pre-existing bug where the choice container could carry two board layouts at once.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **495 pass / 0 fail** (494 before, +1).
+- `node --test tests/gameplay-layout.test.js` → 1/1, run three times (this tranche's gate).
+- `node --test tests/cache-bust.test.js` → 4/4.
+- Manual at 360×640: title fully visible; `1/3` shown; advancing a beat updates to `2/3`,
+  flashes, and clears after 700ms; free play hides the stat; no horizontal overflow in any
+  of those states.
+
+**Risks / regressions to check:**
+- `tests/character-mission.test.js` pins the exact `styles.css` `?v=` string. Every CSS bump
+  must update it — it broke once during this tranche.
+- The T4 test is a source-and-markup assertion, not a rendered one. It would pass if the pill
+  were hidden by CSS. The rendered check was manual.
+- Hiding the brand glyph during gameplay is a visual change nobody has approved.
+- The title ellipsis is new: a long Hebrew mode name may now truncate where it previously
+  pushed the layout wide. Worth a look in the Hebrew UI.
+- `runtime.lastBeatFlashIndex` lives on the runtime, not persisted state. A reload mid-beat
+  re-flashes once. Harmless, but it is why the flash is not a reliable "this just changed"
+  signal for anything else to key on.
+
 ### 2026-09-05 EDT — Missions become beats (T3: the interleaved plan and the chaining loop)
 
 **Requested:** Continue the approved beat plan. T3 is the user-visible tranche: build the

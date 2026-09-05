@@ -258,6 +258,10 @@ h2,
   gap: 1rem;
   padding: 0.82rem 0.96rem;
   direction: ltr;
+  /* .app-shell is a grid, and a grid item defaults to min-width: auto, so this
+     row could never shrink below its own content — it widened the whole shell
+     instead, and the ellipsis on the title never engaged. */
+  min-width: 0;
 }
 
 .shell-topbar.gameplay-active {
@@ -289,6 +293,14 @@ h2,
 }
 
 .shell-brand-title h1 {
+  /* The topbar mirrors the mode name here during gameplay, and at the 360px
+     floor the brand plus the timer/combo pill plus the home button already fill
+     the row. Without this the h1's content sets a min width and the whole shell
+     overflows horizontally rather than the title giving way. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: "Frank Ruhl Libre", serif;
   font-weight: 900;
   letter-spacing: 0.01em;
@@ -860,6 +872,41 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
   font-size: 1.05rem;
   line-height: 1.2;
   overflow-wrap: anywhere;
+}
+
+/* During gameplay the topbar is the header: it carries the mode name plus the
+   timer, beat and combo pill. At the 360px floor that does not fit alongside the
+   decorative brand glyph, and the mode name is what gets truncated. The glyph is
+   the one thing here carrying no information, so it stands down while playing. */
+.shell-topbar.gameplay-active .shell-logo {
+  display: none;
+}
+
+/* The beat changed. Applied to the progress strip rather than the badge, which
+   is rebuilt on every render, and removed on a timer. */
+.progress-strip.is-beat-change {
+  animation: beatChange 700ms ease-out;
+}
+
+@keyframes beatChange {
+  0% {
+    box-shadow: 0 0 0 0 var(--selection-glow);
+  }
+  35% {
+    box-shadow: 0 0 0 4px var(--selection-glow);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* An app that flashes on every mode switch with no reduced-motion path is an
+   accessibility regression, and this is the first animation on a gameplay
+   surface. Kept scoped to what this tranche added. */
+@media (prefers-reduced-motion: reduce) {
+  .progress-strip.is-beat-change {
+    animation: none;
+  }
 }
 
 .lesson-home-btn {

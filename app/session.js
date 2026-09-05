@@ -617,6 +617,13 @@ session.resetAllModeSessions = session.resetAllModeSessions || function resetAll
   const runtime = getRuntime();
   const h = getHelpers();
 
+  // Each mode adds its own board class to the shared choice container and none
+  // of them ever removed it, so a container could carry two layouts at once —
+  // sentence-bank-board sizing plus match-grid columns. Latent before beats,
+  // because a mode switch was rare; now every beat switches mode, and the
+  // doubled layout overflows the 360px floor whenever a wide card is drawn.
+  runtime.el?.choiceContainer?.classList.remove("sentence-bank-board", "match-grid");
+
   session.stopVerbMatchTimer();
   session.stopLessonTimer();
   session.stopSentenceBankTimer();

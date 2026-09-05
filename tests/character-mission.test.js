@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260904c/);
+  assert.match(indexHtml, /styles\.css\?v=20260905k/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3072,4 +3072,38 @@ test("a mission of starved decks falls back to the hub instead of recursing", ()
 
   assert.doesNotThrow(() => finishInstantly());
   assert.equal(app.runtime.characterState.mission.onHub, true);
+});
+
+// --- T4: beat identity in the gameplay header --------------------------------
+
+test("the gameplay pill carries the beat position, and only during a mission", () => {
+  const source = fs.readFileSync(path.join(PROJECT_ROOT, "app/ui.js"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  const bootstrap = fs.readFileSync(path.join(PROJECT_ROOT, "app/bootstrap-runtime.js"), "utf8");
+
+  // It lives in the pill, not beside the mode name: .lesson-title-row is hidden
+  // during gameplay, so #modeTitle is never visible there, and the topbar has no
+  // spare width at the 360px floor.
+  assert.match(markup, /id="shellGameplayBeatStat"[^>]*class="shell-gameplay-stat hidden"/);
+  assert.match(bootstrap, /shellGameplayBeat: document\.querySelector\("#shellGameplayBeat"\)/);
+  assert.match(source, /const showBeat = shouldShow && Boolean\(beat\) && beat\.total > 1;/);
+  // Free play and single-beat missions show nothing.
+  assert.match(source, /runtime\.el\.shellGameplayBeatStat\?\.classList\.toggle\("hidden", !showBeat\);/);
+  // Announced too, not just drawn.
+  assert.match(source, /activity \$\{beat\.index \+ 1\} of \$\{beat\.total\}/);
+
+  // The flash goes on a node no renderer rebuilds, and has a reduced-motion path:
+  // this is the first animation on a gameplay surface.
+  assert.match(source, /strip\.classList\.add\("is-beat-change"\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*\.progress-strip\.is-beat-change \{\s*animation: none;/);
+
+  // .app-shell is a grid, so the topbar needs min-width: 0 or it can never
+  // shrink and the whole shell overflows 360px instead of the title truncating.
+  assert.match(css, /\.shell-topbar \{[^}]*min-width: 0;/s);
+  assert.match(css, /\.shell-brand-title h1 \{[^}]*text-overflow: ellipsis;/s);
+
+  ["--ink-soft", "--selection-glow"].forEach((token) => {
+    assert.match(css, new RegExp(`\\n\\s+\\${token}:`), `${token} is not defined`);
+  });
 });
