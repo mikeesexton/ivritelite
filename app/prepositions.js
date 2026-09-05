@@ -321,8 +321,13 @@ prepositions.startPrepositions = prepositions.startPrepositions || function star
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "prepositions";
   const deck = prepositions.buildPrepositionsDeck();
-  const rounds = s.getModeRoundTarget?.("prepositions", runtime.constants.PREPOSITIONS_ROUNDS) || runtime.constants.PREPOSITIONS_ROUNDS;
+  const beat = app.character?.getActiveBeat?.();
+  const rounds = beat?.repair
+    ? 0
+    : (s.getModeRoundTarget?.("prepositions", runtime.constants.PREPOSITIONS_ROUNDS) || runtime.constants.PREPOSITIONS_ROUNDS);
   runtime.state.prepositions.questionQueue = prepositions.pickPrepositionsQuestions(deck, rounds);
+  const repair = app.character?.takeRepairQueue?.("prepositions") || [];
+  if (repair.length) runtime.state.prepositions.reviewQueue = repair;
   runtime.state.prepositions.active = true;
   runtime.state.prepositions.startMs = Date.now();
   runtime.state.prepositions.timerId = runtime.global.setInterval(() => {
@@ -351,6 +356,13 @@ prepositions.beginPrepositionsFromIntro = prepositions.beginPrepositionsFromIntr
 prepositions.tryStartPrepositionsReviewPhase = prepositions.tryStartPrepositionsReviewPhase || function tryStartPrepositionsReviewPhase() {
   const state = getRuntime().state.prepositions;
   if (state.inReview || !state.reviewQueue.length) return false;
+  // Inside a mission the misses are held back to a repair beat at the end
+  // instead of being re-asked two questions later. Returns false in free play,
+  // which keeps today's per-session behaviour there byte for byte.
+  if (app.character?.deferReviewQueue?.("prepositions", state.reviewQueue)) {
+    state.reviewQueue = [];
+    return false;
+  }
   state.inReview = true;
   state.secondChanceTotal = state.reviewQueue.length;
   state.secondChanceCurrent = 0;

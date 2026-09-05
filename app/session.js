@@ -685,7 +685,11 @@ session.goHome = session.goHome || function goHome() {
 // free play, and for any mode the running beat is not for.
 session.getModeRoundTarget = session.getModeRoundTarget || function getModeRoundTarget(modeId, fallback) {
   const beat = app.character?.getActiveBeat?.();
-  return beat && beat.mode === modeId && beat.rounds > 0 ? beat.rounds : fallback;
+  if (!beat || beat.mode !== modeId) return fallback;
+  // A repair beat plays only what was missed, so it asks for no fresh rounds and
+  // the mode falls straight through to its second-chance phase.
+  if (beat.repair) return 0;
+  return beat.rounds > 0 ? beat.rounds : fallback;
 };
 
 session.showSessionSummary = session.showSessionSummary || function showSessionSummary(config = {}) {

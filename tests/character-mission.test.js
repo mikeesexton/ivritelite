@@ -3107,3 +3107,129 @@ test("the gameplay pill carries the beat position, and only during a mission", (
     assert.match(css, new RegExp(`\\n\\s+\\${token}:`), `${token} is not defined`);
   });
 });
+
+// --- T5: the mission-wide repair beat ----------------------------------------
+
+function missionWithBeats(beats, currentIndex = 0, extra = {}) {
+  return {
+    dayKey: null, gender: "m", dailyChoice: "ido", screen: "none", reviewOpen: false,
+    mission: {
+      active: true, completed: false, beats, skippedActivities: [],
+      currentIndex, currentActivity: beats[currentIndex]?.mode || "", results: [], visible: true,
+      ...extra,
+    },
+  };
+}
+
+test("misses are held back to the end of the mission instead of re-asked in place", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 4 }, { mode: "lessonMatch", rounds: 5 }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  assert.equal(character.deferReviewQueue("advConj", [{ key: "a" }, { key: "b" }]), true);
+  assert.equal(app.runtime.characterState.mission.repairQueue.length, 2);
+  // Free play keeps its own per-session review: nothing to defer to.
+  const free = loadCharacterModule();
+  free.app.runtime.characterState = {
+    dayKey: free.character.getTodayKey(), gender: "m", dailyChoice: "free", screen: "none", mission: null,
+  };
+  assert.equal(free.character.deferReviewQueue("advConj", [{ key: "a" }]), false);
+});
+
+test("binyanBoard is never deferred, because its queue cannot survive its beat", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "binyanBoard", rounds: 2 }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  // Its reviewQueue holds bare formIds that only resolve against the root deck
+  // built for that one beat, so it keeps reviewing in place.
+  assert.equal(character.deferReviewQueue("binyanBoard", ["paal-1"]), false);
+  // Refused early, so the queue is never even created on this hand-built mission.
+  assert.ok(!app.runtime.characterState.mission.repairQueue?.length);
+});
+
+test("a finished mission appends one repair beat per mode that owes something", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 4 }], 0, {
+    repairQueue: [
+      { mode: "advConj", entry: { key: "a" } },
+      { mode: "advConj", entry: { key: "b" } },
+      { mode: "sentenceBank", entry: { sentenceId: "s1", direction: "he2en" } },
+    ],
+  });
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  app.session = { showSessionSummary: () => {} };
+
+  // The last ordinary beat ends; repairs are appended rather than finishing.
+  assert.equal(character.captureActivitySummary({ correctCount: 2, incorrectCount: 2, elapsedSeconds: 30, mistakes: [] }), true);
+  const mission = app.runtime.characterState.mission;
+  const appended = mission.beats.slice(1).map((b) => `${b.mode}:${b.rounds}:${b.repair === true}`);
+  assert.deepEqual([...appended], ["sentenceBank:1:true", "advConj:2:true"]);
+  assert.equal(mission.completed, false, "the mission must not finish before its repairs");
+});
+
+test("repairs are spent exactly once, so the mission cannot loop on them", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 4 }], 0, {
+    repairQueue: [{ mode: "advConj", entry: { key: "a" } }],
+  });
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  let finished = 0;
+  app.session = { showSessionSummary: () => { finished += 1; } };
+
+  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, elapsedSeconds: 20, mistakes: [] });
+  const mission = app.runtime.characterState.mission;
+  assert.equal(mission.beats.length, 2, "one repair beat appended");
+
+  // Finishing the repair beat itself must end the mission, not append again.
+  mission.currentActivity = "advConj";
+  character.captureActivitySummary({ correctCount: 1, incorrectCount: 0, elapsedSeconds: 10, mistakes: [] });
+  assert.equal(mission.beats.length, 2, "repairs must not append a second time");
+  assert.equal(mission.completed, true);
+  assert.equal(finished, 1);
+});
+
+test("a repair beat's own misses stay in that beat", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 2, repair: true }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  // Otherwise the mission would append a repair beat for the repair beat.
+  assert.equal(character.deferReviewQueue("advConj", [{ key: "a" }]), false);
+});
+
+test("taking a repair queue hands over only that mode's entries, once", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 2, repair: true }], 0, {
+    repairQueue: [
+      { mode: "advConj", entry: { key: "a" } },
+      { mode: "prepositions", entry: { key: "p" } },
+      { mode: "advConj", entry: { key: "b" } },
+    ],
+  });
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  assert.equal(character.takeRepairQueue("advConj").length, 2);
+  assert.equal(character.takeRepairQueue("advConj").length, 0, "a queue is handed over once");
+  assert.equal(app.runtime.characterState.mission.repairQueue.length, 1, "other modes keep theirs");
+});
+
+test("a repair beat asks for no fresh rounds", () => {
+  const { character, app, context } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 3, repair: true }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "app/session.js"), "utf8"),
+    context, { filename: "app/session.js" },
+  );
+
+  assert.equal(character.getActiveBeat().repair, true);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 0);
+});

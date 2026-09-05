@@ -21,6 +21,83 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T5: mission-wide repair beat)
+
+**Requested:** Continue the approved beat plan. T5 holds a mode's misses back to the end of the
+mission instead of re-asking them two questions later, and spends them as one short repair beat
+per mode that owes something.
+
+**Why it is worth the churn:** the same spacing argument the whole interleave rests on. An
+immediate second chance is massed practice; the miss comes back while the answer is still in
+working memory. Deferring it to the end of the session puts real questions in between.
+
+**Files changed:**
+- `app/character.js` — `REPAIRABLE_MODES`; `deferReviewQueue(modeId, entries)`,
+  `takeRepairQueue(modeId)`, `appendRepairBeats(mission)`; `getActiveBeat` now reports `repair`;
+  `sanitizeBeats` preserves the `repair` flag; `sanitizeMission` gains `repairQueue` and
+  `repairAppended`; `captureActivitySummary` appends repair beats before finishing.
+- `app/session.js` — `getModeRoundTarget` returns 0 for a repair beat, so the mode asks for no
+  fresh rounds and falls straight through to its second-chance phase.
+- `app/sentence-bank.js` — defers in `tryStartReviewPhase` (keyed `shema` or `sentenceBank`
+  by `shemaMode`), seeds `reviewQueue` from the repair queue in `startSentenceBank`, and the
+  `!targetRounds` guard now also checks for a pending review — otherwise a repair beat finished
+  before the review it exists for.
+- `app/adv-conj.js`, `app/prepositions.js` — same defer + seed.
+- `tests/character-mission.test.js` — seven new tests.
+- `index.html` — `?v=` bumped to `20260905m` for the five changed files.
+
+**Scope call: binyanBoard keeps reviewing in-beat, deliberately.** The other three modes queue
+portable entries — sentenceBank stores `{sentenceId, direction}` resolved against the global
+sentence pool, advConj and prepositions store whole question objects. binyanBoard stores bare
+`formId` strings resolved through a `byId` map built from `board.deck`, the root deck selected
+for that one beat. A deferred formId would silently fail to rebuild against a later deck and be
+skipped, so the learner would lose the miss entirely rather than repeat it. Making it portable
+means changing the entry shape, which is a bigger change than this tranche should carry.
+binyanBoard appears at most once in a mission, so an in-beat review there is no loss.
+
+**Behavior changed:**
+- Inside a mission, a missed item no longer comes back inside its own beat. It returns in a
+  repair beat appended after the last ordinary beat, one per mode, sized to what that mode owes.
+- Free play is untouched: `deferReviewQueue` returns false with no active mission, so the
+  per-session second chance behaves exactly as before.
+- A repair beat's own misses stay in that beat, or the mission would append a repair beat for
+  the repair beat and never end.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **502 pass / 0 fail** (495 before, +7).
+- New: misses defer inside a mission and not in free play; binyanBoard is never deferred; a
+  finished mission appends one beat per owing mode; repairs are spent exactly once; a repair
+  beat's own misses stay put; `takeRepairQueue` hands over one mode's entries once; a repair
+  beat asks for no fresh rounds.
+- Manual end-to-end in the browser, driving the real `applyAdvConjAnswer` path: 3 deliberate
+  misses in an advConj beat → 3 entries deferred, **no in-beat review**, beat advanced → last
+  beat finished → `advConj:3:REPAIR` appended, mission did not complete → chained into review
+  with `secondChanceTotal` 3 → all 3 asked, **every deferred item verified present by key** →
+  mission completed with 3 beats and `repairQueue` empty.
+
+**Two instrumentation traps hit while verifying, worth knowing:**
+- `advConj.selectAdvConjOption` / `submitAdvConjAnswer` do not exist. The real path is setting
+  `question.selectedOptionId` then `applyAdvConjAnswer()`. Calling the imagined names through
+  `?.()` no-ops silently and looked like the feature failing.
+- A per-mode `correctCount` is computed as `rounds + reviewRounds - wrong`, not counted from
+  answers, so it cannot be used to check how many questions were actually asked. Count the
+  questions.
+
+**Risks / regressions to check:**
+- `finishAdvConj` / `finishPrepositions` / `finishSentenceBank` score a repair beat as
+  `0 + reviewRounds - wrong`. Correct, but only because a repair beat's round target is 0 —
+  the formula and the repair flag are now coupled.
+- Repair beats are appended *after* `buildBeatPlan` has run, so they are not budgeted. A
+  mission where every answer was wrong appends a repair beat for every repairable mode and
+  runs meaningfully longer than its tier promises.
+- Repair beats append at the end of `mission.beats`, so a mode can repair immediately after
+  its own last ordinary beat — the no-adjacent-family rule does not apply to them.
+- `sanitizeMission` drops repair entries whose `mode` is not in `REPAIRABLE_MODES`, so adding
+  a mode to that list without a migration silently discards a restored save's pending repairs.
+- The `!targetRounds` guard in sentence-bank now also fires on a genuinely empty deck only when
+  there is nothing to review. An empty deck plus a stale reviewQueue would loop rather than
+  finish; the queue is cleared at start, so this needs both to go wrong at once.
+
 ### 2026-09-05 EDT — Missions become beats (T4: beat position in the gameplay HUD)
 
 **Requested:** Continue the approved beat plan. T4 shows the learner where they are in the

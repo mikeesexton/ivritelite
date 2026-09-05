@@ -48,6 +48,12 @@ const ATOMIC_BUDGET_PER_SLOT = 35;
 // A mission opens on one of these: a cheap, familiar win rather than whatever
 // the shuffle happened to put first.
 const OPENING_ACTIVITIES = Object.freeze(["lessonMatch", "sentenceBank"]);
+// Modes whose second-chance queue survives leaving its beat. binyanBoard is
+// deliberately absent: its queue holds bare formIds that only resolve against
+// the root deck built for that one beat, so a deferred entry would silently fail
+// to rebuild. It keeps reviewing in-beat, which is fine — it appears at most
+// once in a mission.
+const REPAIRABLE_MODES = Object.freeze(["sentenceBank", "shema", "advConj", "prepositions"]);
 // Every beat finishing instantly means starved decks, not progress. Past this
 // many chained starts the mission falls back to the hub rather than recursing.
 const MAX_BEAT_CHAIN_DEPTH = 30;
@@ -272,6 +278,7 @@ function sanitizeBeats(mission) {
       .map((beat) => ({
         mode: String(beat?.mode || ""),
         rounds: Math.max(0, Math.floor(Number(beat?.rounds) || 0)),
+        ...(beat?.repair === true ? { repair: true } : {}),
       }))
       .filter((beat) => known(beat.mode));
   }
@@ -312,6 +319,12 @@ function sanitizeMission(mission) {
     currentIndex: Math.min(Math.max(0, Number(mission.currentIndex || 0)), beats.length),
     currentActivity: String(mission.currentActivity || ""),
     results: Array.isArray(mission.results) ? mission.results.map(sanitizeResult) : [],
+    repairQueue: Array.isArray(mission.repairQueue)
+      ? mission.repairQueue
+        .filter((row) => REPAIRABLE_MODES.includes(String(row?.mode || "")) && row?.entry)
+        .map((row) => ({ mode: String(row.mode), entry: row.entry }))
+      : [],
+    repairAppended: mission.repairAppended === true,
     startedAt: Math.max(0, Number(mission.startedAt || 0)),
   };
 }
@@ -477,7 +490,13 @@ character.getActiveBeat = character.getActiveBeat || function getActiveBeat() {
   const beats = getBeats(mission);
   const beat = beats[mission.currentIndex];
   if (!beat || beat.mode !== mission.currentActivity) return null;
-  return { mode: beat.mode, rounds: beat.rounds, index: mission.currentIndex, total: beats.length };
+  return {
+    mode: beat.mode,
+    rounds: beat.rounds,
+    repair: beat.repair === true,
+    index: mission.currentIndex,
+    total: beats.length,
+  };
 };
 
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
@@ -2366,6 +2385,15 @@ character.captureActivitySummary = character.captureActivitySummary || function 
   mission.currentIndex += 1;
   mission.currentActivity = "";
   if (mission.currentIndex >= getBeats(mission).length) {
+    // Everything missed along the way comes back now, as one short beat per mode
+    // that owes something. Guarded by repairAppended so repairs are spent once.
+    if (appendRepairBeats(mission)) {
+      state.screen = "none";
+      mission.onHub = false;
+      saveState();
+      startNextBeat();
+      return true;
+    }
     // The mission-results screen already lists every activity and every
     // mistake, so the last game goes straight there rather than showing its own
     // recap first.
@@ -2397,6 +2425,57 @@ function mergeActivityResult(mission, result) {
   existing.incorrectCount += result.incorrectCount;
   existing.elapsedSeconds += result.elapsedSeconds;
   existing.mistakes = [...existing.mistakes, ...result.mistakes];
+}
+
+// A mode calls this instead of opening its own second-chance phase. Misses then
+// come back at the end of the mission rather than two questions later, which is
+// the same spacing argument the interleaving itself rests on: an immediate
+// re-ask is massed practice.
+character.deferReviewQueue = character.deferReviewQueue || function deferReviewQueue(modeId, entries) {
+  const state = getState();
+  const mission = state?.mission;
+  const mode = String(modeId || "");
+  if (!mission?.active || !REPAIRABLE_MODES.includes(mode)) return false;
+  if (!Array.isArray(entries) || !entries.length) return false;
+  // A repair beat's own misses stay in that beat, or the mission would append a
+  // repair beat for the repair beat and never end.
+  if (character.getActiveBeat()?.repair) return false;
+  if (!Array.isArray(mission.repairQueue)) mission.repairQueue = [];
+  entries.forEach((entry) => mission.repairQueue.push({ mode, entry }));
+  saveState();
+  return true;
+};
+
+character.takeRepairQueue = character.takeRepairQueue || function takeRepairQueue(modeId) {
+  const state = getState();
+  const mission = state?.mission;
+  const mode = String(modeId || "");
+  if (!Array.isArray(mission?.repairQueue) || !mission.repairQueue.length) return [];
+  const mine = mission.repairQueue.filter((row) => row.mode === mode).map((row) => row.entry);
+  if (!mine.length) return [];
+  mission.repairQueue = mission.repairQueue.filter((row) => row.mode !== mode);
+  saveState();
+  return mine;
+};
+
+// Repair is one appended beat per mode that owes something — the engines are
+// per-mode, so it cannot be a single closing round.
+function appendRepairBeats(mission) {
+  if (mission.repairAppended === true) return false;
+  mission.repairAppended = true;
+  if (!Array.isArray(mission.repairQueue) || !mission.repairQueue.length) return false;
+  const counts = new Map();
+  mission.repairQueue.forEach((row) => counts.set(row.mode, (counts.get(row.mode) || 0) + 1));
+  const beats = getBeats(mission);
+  let appended = false;
+  REPAIRABLE_MODES.forEach((mode) => {
+    const count = counts.get(mode) || 0;
+    if (!count) return;
+    beats.push({ mode, rounds: count, repair: true });
+    appended = true;
+  });
+  if (appended) mission.beats = beats;
+  return appended;
 }
 
 // A starved deck finishes the moment it starts, which would chain start ->
