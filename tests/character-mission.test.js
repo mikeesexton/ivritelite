@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260905s/);
+  assert.match(indexHtml, /styles\.css\?v=20260905t/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3390,14 +3390,13 @@ test("the four streak tiers are actually perceptible", () => {
   // A ramp: each tier must do something the one below it does not.
   assert.ok(tier(1).includes("box-shadow"));
   assert.ok(tier(2).includes("box-shadow") && tier(2).includes("saturate"));
-  assert.ok(tier(3).includes("streakBreathe"), "tier 3 should breathe");
+  assert.ok(tier(3).includes("brightness"), "tier 3 should lift beyond tier 2's glow");
   assert.ok(tier(4).includes("var(--gold)"), "tier 4 should add the gold edge");
-  assert.match(css, /@keyframes streakBreathe \{/);
 
-  // The breathing loop is an infinite animation, so it needs the same path as the rest.
-  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
-  assert.ok(reduced.includes('.progress-fill[data-streak-tier="3"]'));
-  assert.ok(reduced.includes('.progress-fill[data-streak-tier="4"]'));
+  // No infinite animations anywhere. document.getAnimations() must be able to
+  // drain: an animation that never finishes both repaints forever and hangs the
+  // rendered layout gate, whose settle loop awaits every finished promise.
+  assert.doesNotMatch(css, /animation:[^;]*\binfinite\b/, "an infinite animation never lets the page settle");
 });
 
 // --- Feel: the daily streak --------------------------------------------------

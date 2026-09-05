@@ -21,6 +21,61 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Fix: an infinite animation broke the rendered layout gate
+
+**What happened:** PR #94 merged and the Pages deploy **failed**. CI's `npm test` failed on
+`gameplay-layout` with "Shema structured feedback scrolls (499px > 488px)". The site was not
+updated, so production stayed on the previous build throughout.
+
+**This was my regression, not the known flake.** The distinguishing evidence was the timing:
+the failure took **6908ms** where passing runs take ~3500ms. The test file's header documents a
+flake that trips *faster* than a passing run; this was ~3400ms **slower**, which is almost
+exactly the settle loop's 4000ms deadline being exhausted.
+
+**Root cause:** the streak tiers 3 and 4 added in the previous entry used
+`animation: streakBreathe … infinite`. `SETTLED_GEOMETRY` does
+`await Promise.all(document.getAnimations().map((a) => a.finished…))`, and **an infinite
+animation's `finished` promise never resolves**. The loop could never settle, burned its
+deadline, and returned an unsettled measurement. That was the app's first always-running
+animation, so nothing had exercised this before.
+
+**Files changed:**
+- `styles.css` — `streakBreathe` deleted. Tiers 3 and 4 are static again, differentiated by
+  glow radius, saturation and the gold inset edge; the ramp is still four distinct steps. Their
+  now-pointless reduced-motion entries removed.
+- `app/ui.js` — the pulse cleanup timer 420ms → 720ms. **A second, separate defect found while
+  fixing the first:** the correct-answer pop is `var(--dur-slow)` = 650ms, and the timer that
+  removed its class fired at 420ms, cancelling the animation a third of the way from the end.
+  It had never played to completion.
+- `tests/character-mission.test.js` — the tier test now asserts
+  `assert.doesNotMatch(css, /animation:[^;]*\binfinite\b/)` instead of asserting the breathe.
+  A general guard: no infinite animations anywhere, because they both repaint forever and hang
+  the layout gate.
+- `index.html` — `?v=` bumps.
+
+**Tests run:**
+- `node --test tests/gameplay-layout.test.js` → 4 consecutive passes.
+- `npm test` **in parallel, exactly as CI invokes it** → 515/0, three consecutive runs.
+  Serialized runs were not sufficient here: the failure only appeared under CI's parallel
+  invocation, which is what made the previous verification miss it.
+- Verified live that `answerCorrectPop` now appears in `document.getAnimations()` during a pulse
+  and is gone afterwards, and that tier 4 renders the 18px glow plus gold edge.
+
+**A measurement error worth recording:** while checking whether animations drain, a
+`Promise.all(...finished)` in the browser console hung for 45s and two `CSSTransition`s showed
+as permanently `running`. That was an artifact of the Browser pane being **hidden** — a
+non-rendering page does not advance transitions. It was not evidence of a second bug, and it
+would have been easy to chase. Do not draw animation conclusions from a hidden pane.
+
+**Risks / regressions to check:**
+- The streak ramp is now entirely static. Tiers 3 and 4 differ from 1 and 2 by glow size,
+  saturation and the gold edge only — worth confirming they still read as distinct steps.
+- The pulse class now lingers 720ms. Two answers inside that window cancel and restart cleanly
+  (the timer is cleared first), but the class is present slightly longer than before.
+- The new no-infinite-animation assertion is a blunt regex over the whole stylesheet. A future
+  animation that legitimately needs to loop will fail it and will need a considered exception
+  plus a fix to the layout gate's settle loop.
+
 ### 2026-09-05 EDT — Feel, part 3: the daily streak (roadmap B1)
 
 **Requested:** the last third of "motion, sound on, streak" — the daily streak.
