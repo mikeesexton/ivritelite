@@ -1842,10 +1842,15 @@ body[data-theme="light"] .sentence-answer-line {
   display: none;
 }
 
+/* Compacted to buy back vertical room on the tightest gameplay screen (Shema
+   feedback at 360x640, which had zero margin and overflowed outright once the
+   CI runner's fallback font metrics were taller than the webfonts'). Whitespace
+   and leading only — no Hebrew text was shrunk and no touch target moved, per
+   the viewport rule in docs/project-rules.md. */
 .feedback-tray {
   display: grid;
-  gap: 0.26rem;
-  padding: 0.72rem 0.88rem 0.76rem;
+  gap: 0.2rem;
+  padding: 0.56rem 0.88rem 0.6rem;
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: var(--surface-bg);
@@ -1890,7 +1895,7 @@ body[data-theme="light"] .sentence-answer-line {
 
 .feedback-items {
   display: grid;
-  gap: 0.34rem;
+  gap: 0.24rem;
 }
 
 .feedback-items.hidden {
@@ -1906,7 +1911,10 @@ body[data-theme="light"] .sentence-answer-line {
   grid-template-columns: auto minmax(0, 1fr);
   gap: 0.44rem;
   align-items: baseline;
-  padding-top: 0.3rem;
+  /* `normal` leading on Heebo is generous; a wrapped feedback row paid for it on
+     every line. This is the single biggest saving here and it costs no text size. */
+  line-height: 1.35;
+  padding-top: 0.24rem;
   border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
 }
 
@@ -1926,7 +1934,14 @@ body[data-theme="light"] .sentence-answer-line {
 .feedback-item-content {
   display: flex;
   min-width: 0;
-  gap: 0.34rem;
+  /* 0.94rem rather than the inherited 1rem. This row is a wrapped Hebrew
+     sentence, so a smaller size removes a whole line rather than trimming
+     leading — which is the only thing that helps when the overflow is caused by
+     the text wrapping one line further under different font metrics. The prompt
+     and the answer builder keep their full size; only this explanation row is
+     reduced. */
+  font-size: 0.94rem;
+  gap: 0.28rem;
   align-items: baseline;
   flex-wrap: wrap;
 }

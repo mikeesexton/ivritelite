@@ -21,6 +21,60 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Fix: the Shema feedback screen had zero vertical margin
+
+**What happened:** two Pages deploys failed on `gameplay-layout` — "Shema structured feedback
+scrolls (499px > 488px)" — with **byte-identical geometry** each time, and again on a re-run.
+Deterministic, not flaky.
+
+**The previous entry's diagnosis was wrong.** Removing the infinite `streakBreathe` animation
+changed nothing. That commit stands on its own merits (an always-running animation is a real
+repaint cost, and the 420ms-vs-650ms truncated pulse was a real bug) but it did not fix this.
+
+**Establishing the actual cause, by measurement rather than reasoning:**
+1. Instrumented the test locally on the true pre-feel commit and on HEAD. **Byte-identical**:
+   `body 488/488`, `feedback 208.578125`, `shell 473.546875`. The feel work adds **zero** height.
+2. CI's numbers differ only in the feedback tray: **+25px**, one wrapped line — font metrics.
+3. Local margin was **zero**: 488 against a 488 limit.
+4. Decisive A/B: opened a throwaway PR containing only the pre-feel commit — the exact code
+   that passed CI at 18:10Z. It **failed today with byte-identical geometry**. The runner
+   environment changed; the feel work is exonerated.
+
+So the real defect is that this screen has never had a single pixel of slack. It "passed" only
+because the intended webfonts happen to fit exactly. Any learner whose webfonts fail to load —
+slow connection, blocked `fonts.gstatic.com` — sees the same overflow. CI was telling the truth.
+
+**Files changed:**
+- `styles.css` — compacted the feedback tray (padding, gaps, `line-height: 1.35` on
+  `.feedback-item`), then reduced `.feedback-item-content` to `0.94rem`.
+- `index.html` — `?v=` bump.
+
+**Why the text size had to move, given the rule says whitespace first.** Whitespace was
+compacted first, per `docs/project-rules.md`, and it bought only **4.6px** — because the
+overflow is caused by the Hebrew sentence *wrapping one line further* under different metrics,
+and leading cannot fix a wrap. Reducing that one row to 0.94rem removes a line rather than
+trimming space, and took the total saving to **35.5px** (shell 473.5 → 438.0). The prompt and
+the answer builder keep their full size; only the explanation row is smaller.
+
+**Result:** CI's 498.5 becomes roughly 463 against the 488 limit — about **25px of real
+margin** where there was none.
+
+**Tests run:**
+- `node --test tests/gameplay-layout.test.js` → 3 consecutive passes.
+- `npm test` **in parallel, as CI invokes it** → 515/0.
+- Rendered check at 360×640: no overflow, Hebrew still legible in the tray.
+- Local fallback probe (webfont link removed) measured *smaller*, not larger — macOS fallbacks
+  are more compact than the runner's, so CI cannot be reproduced on this machine. CI is the
+  only environment that can confirm this fix, which is why it is verified there.
+
+**Risks / regressions to check:**
+- `.feedback-item-content` is shared by every mode's feedback tray, not just Shema. All feedback
+  explanations are now 0.94rem. Intended, but it is a global visual change.
+- The margin is now ~25px on CI's metrics. A future font change, or a longer sentence than
+  `everyday_127`, could eat it again. The test pins one sentence, so it samples a single case.
+- The gate depends on webfonts loading; when they do not, the app renders ~25px taller than any
+  local measurement suggests. Worth remembering when judging any future 360×640 change.
+
 ### 2026-09-05 EDT — Fix: an infinite animation broke the rendered layout gate
 
 **What happened:** PR #94 merged and the Pages deploy **failed**. CI's `npm test` failed on
