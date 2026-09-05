@@ -105,6 +105,19 @@ persistence.loadSoundPreference = persistence.loadSoundPreference || function lo
   };
 };
 
+// Opt-out rather than opt-in: absent means on, so an existing save gets the
+// mechanic without a migration and only a deliberate "off" turns it back off.
+persistence.loadBonfirePreference = persistence.loadBonfirePreference || function loadBonfirePreference() {
+  const runtime = getRuntime();
+  const raw = runtime.storageApi.loadJson(runtime.constants.STORAGE_KEYS.bonfire, null);
+  return { enabled: raw?.enabled !== false };
+};
+
+persistence.saveBonfirePreference = persistence.saveBonfirePreference || function saveBonfirePreference(enabled) {
+  const runtime = getRuntime();
+  runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.bonfire, { enabled: enabled === true });
+};
+
 persistence.saveSoundPreference = persistence.saveSoundPreference || function saveSoundPreference(enabled) {
   const runtime = getRuntime();
   runtime.storageApi.saveJson(runtime.constants.STORAGE_KEYS.sound, {

@@ -113,6 +113,7 @@ const loadDisplayFontPreference = persistenceModule.loadDisplayFontPreference;
 const saveDisplayFontPreference = persistenceModule.saveDisplayFontPreference;
 const loadSoundPreference = persistenceModule.loadSoundPreference;
 const saveSoundPreference = persistenceModule.saveSoundPreference;
+const loadBonfirePreference = persistenceModule.loadBonfirePreference;
 const loadSpeechPreference = persistenceModule.loadSpeechPreference;
 const saveSpeechPreference = persistenceModule.saveSpeechPreference;
 const hasSeenWelcomeModal = persistenceModule.hasSeenWelcomeModal;
@@ -651,6 +652,7 @@ const state = createInitialState({
   theme: loadThemePreference(),
   displayFont: loadDisplayFontPreference(),
   audio: loadSoundPreference(),
+  bonfire: loadBonfirePreference ? loadBonfirePreference() : { enabled: true },
   speech: loadSpeechPreference(),
   welcomeModalSeen: hasSeenWelcomeModal(),
 });

@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260905k/);
+  assert.match(indexHtml, /styles\.css\?v=20260905n/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3232,4 +3232,102 @@ test("a repair beat asks for no fresh rounds", () => {
 
   assert.equal(character.getActiveBeat().repair, true);
   assert.equal(app.session.getModeRoundTarget("advConj", 10), 0);
+});
+
+// --- T6: the bonfire ---------------------------------------------------------
+
+function missionForDeath(beats = [{ mode: "advConj", rounds: 4 }], extra = {}) {
+  return {
+    dayKey: null, gender: "m", dailyChoice: "ido", screen: "none", reviewOpen: false,
+    mission: {
+      active: true, completed: false, beats, skippedActivities: [],
+      currentIndex: 0, currentActivity: beats[0].mode, results: [], visible: true,
+      correctStreak: 0, wrongStreak: 0, ...extra,
+    },
+  };
+}
+
+function killIt(character, app, times = 4) {
+  for (let i = 0; i < times; i += 1) character.recordAnswer(false);
+  return app.runtime.characterState;
+}
+
+test("four wrong in a row inside a mission opens the death card", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath();
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  killIt(character, app, 3);
+  assert.equal(app.runtime.characterState.screen, "none", "three wrong is not death");
+
+  killIt(character, app, 1);
+  assert.equal(app.runtime.characterState.screen, "death");
+  assert.equal(app.runtime.characterState.mission.deaths, 1);
+  assert.equal(character.isBlocking(), true);
+});
+
+test("free play never dies", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", dailyChoice: "free",
+    screen: "none", mission: null, freePlay: { correctStreak: 0, wrongStreak: 0 },
+  };
+  killIt(character, app, 6);
+  assert.equal(app.runtime.characterState.screen, "none");
+});
+
+test("a repair beat is already the second chance, so it cannot kill", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath([{ mode: "advConj", rounds: 3, repair: true }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  killIt(character, app, 5);
+  assert.equal(app.runtime.characterState.screen, "none",
+    "dying inside a repair beat would send the learner back through the items they are recovering");
+});
+
+test("the bonfire can be switched off", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath();
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  app.runtime.state.bonfire = { enabled: false };
+
+  killIt(character, app, 6);
+  assert.equal(app.runtime.characterState.screen, "none");
+  // The companion still reacts; only the card is suppressed.
+  assert.equal(app.runtime.characterState.mission.sprite, "struggling");
+});
+
+test("respawn returns to the start of the current beat, never an earlier one", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath(
+    [{ mode: "advConj", rounds: 4 }, { mode: "lessonMatch", rounds: 5 }],
+    { currentIndex: 1, currentActivity: "lessonMatch", results: [{ id: "advConj", nameEn: "Conjugation+", nameHe: "נטיות+", correctCount: 3, incorrectCount: 1, elapsedSeconds: 20, mistakes: [], skipped: false }] },
+  );
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  killIt(character, app, 4);
+  assert.equal(app.runtime.characterState.screen, "death");
+
+  assert.equal(character.respawnAtBeat(), true);
+  const mission = app.runtime.characterState.mission;
+  assert.equal(mission.currentIndex, 1, "completed beats never replay");
+  assert.equal(mission.currentActivity, "lessonMatch", "the same beat starts again");
+  assert.equal(mission.wrongStreak, 0);
+  assert.equal(mission.sprite, "neutral");
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(mission.results.length, 1, "an earlier beat's result survives the death");
+});
+
+test("a death screen restored without a live mission does not trap the app", () => {
+  const { character, app } = loadCharacterModule({
+    saved: { dayKey: new Date().toISOString().slice(0, 10), gender: "m", dailyChoice: "ido", screen: "death", mission: null },
+  });
+  character.initialize();
+  assert.notEqual(app.runtime.characterState.screen, "death");
+  assert.equal(character.respawnAtBeat(), false);
 });

@@ -137,6 +137,15 @@ ui.renderSoundToggle = ui.renderSoundToggle || function renderSoundToggle() {
   runtime.el.soundToggle.setAttribute("aria-pressed", String(runtime.state.audio.enabled));
 };
 
+ui.renderBonfireToggle = ui.renderBonfireToggle || function renderBonfireToggle() {
+  const runtime = getRuntime();
+  if (!runtime.el?.bonfireToggle) return;
+  const enabled = runtime.state.bonfire?.enabled !== false;
+  const label = `${translate("bonfire.label")}: ${enabled ? translate("audio.on") : translate("audio.off")}`;
+  runtime.el.bonfireToggle.setAttribute("aria-label", label);
+  runtime.el.bonfireToggle.setAttribute("aria-pressed", String(enabled));
+};
+
 ui.renderSpeechToggle = ui.renderSpeechToggle || function renderSpeechToggle() {
   const runtime = getRuntime();
   const supported = app.speech?.isSupported?.() || false;
@@ -1552,6 +1561,7 @@ ui.renderSettingsState = ui.renderSettingsState || function renderSettingsState(
   ui.renderDisplayFontToggle();
   ui.renderNiqqudToggle();
   ui.renderSoundToggle();
+  ui.renderBonfireToggle();
   ui.renderSpeechToggle();
   ui.renderPromptSpeechButton();
 };

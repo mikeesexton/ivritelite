@@ -882,6 +882,64 @@ body[data-ui-lang="he"] .home-lessons-card .section-head h2 {
   display: none;
 }
 
+/* The death card. Deliberately the loudest thing in the app: it is the one
+   moment that is meant to land. Colour comes from the existing error token
+   rather than a new red, so it stays theme-correct in light and dark. */
+.character-death-title {
+  font-family: var(--display-font);
+  font-size: clamp(2.1rem, 11vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1.05;
+  color: var(--error-border);
+  text-align: center;
+  margin: 0;
+  animation: deathTitleIn 900ms cubic-bezier(0.15, 0.8, 0.22, 1) both;
+}
+
+.character-death-note {
+  margin: 0;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+}
+
+.character-death-button {
+  animation: deathButtonIn 320ms ease-out 700ms both;
+}
+
+@keyframes deathTitleIn {
+  from {
+    opacity: 0;
+    transform: scale(1.18);
+    letter-spacing: 0.16em;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    letter-spacing: 0.04em;
+  }
+}
+
+@keyframes deathButtonIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Without this the death card is a full-screen scale-and-flash on every fourth
+   wrong answer, which is exactly what this media query exists to prevent. The
+   button's delayed fade-in has to be cancelled too, or it stays invisible. */
+@media (prefers-reduced-motion: reduce) {
+  .character-death-title,
+  .character-death-button {
+    animation: none;
+  }
+}
+
 /* The beat changed. Applied to the progress strip rather than the badge, which
    is rebuilt on every render, and removed on a timer. */
 .progress-strip.is-beat-change {

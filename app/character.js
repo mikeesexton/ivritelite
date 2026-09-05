@@ -53,6 +53,9 @@ const OPENING_ACTIVITIES = Object.freeze(["lessonMatch", "sentenceBank"]);
 // the root deck built for that one beat, so a deferred entry would silently fail
 // to rebuild. It keeps reviewing in-beat, which is fine — it appears at most
 // once in a mission.
+// The bonfire fires on the same streak that already turns the companion to
+// `struggling`, so the two never disagree about when things have gone wrong.
+const DEATH_WRONG_STREAK = 4;
 const REPAIRABLE_MODES = Object.freeze(["sentenceBank", "shema", "advConj", "prepositions"]);
 // Every beat finishing instantly means starved decks, not progress. Past this
 // many chained starts the mission falls back to the hub rather than recursing.
@@ -325,6 +328,7 @@ function sanitizeMission(mission) {
         .map((row) => ({ mode: String(row.mode), entry: row.entry }))
       : [],
     repairAppended: mission.repairAppended === true,
+    deaths: Math.max(0, Number(mission.deaths || 0)),
     startedAt: Math.max(0, Number(mission.startedAt || 0)),
   };
 }
@@ -344,14 +348,14 @@ function sanitizeCharacterState(saved, today) {
   state.lensCharacter = isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "";
   // "perfect" was its own blocking scene before flawless rounds folded into the
   // results screen; a save still carrying it falls through to "none".
-  state.screen = ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
+  state.screen = ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "death", "results", "none"].includes(saved?.screen)
     ? saved.screen
     : (state.dailyChoice ? "none" : "picker");
   state.reviewOpen = saved?.reviewOpen === true;
   state.mission = sanitizeMission(saved?.mission);
   // The quit prompt only exists on top of a running mission; without one it
   // would block the app on a scene whose buttons have nothing to act on.
-  if (state.screen === "quitConfirm" && !state.mission?.active) {
+  if ((state.screen === "quitConfirm" || state.screen === "death") && !state.mission?.active) {
     state.screen = "none";
   }
   if (isCharacterChoice(state.dailyChoice) && !state.mission) {
@@ -427,6 +431,8 @@ character.bindUi = character.bindUi || function bindUi() {
       character.cancelQuitMission();
     } else if (action === "quitMission") {
       character.confirmQuitMission();
+    } else if (action === "respawn") {
+      character.respawnAtBeat();
     }
   });
 
@@ -478,7 +484,7 @@ character.checkDayRollover = character.checkDayRollover || function checkDayRoll
 };
 
 character.isBlocking = character.isBlocking || function isBlocking() {
-  return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
+  return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "death"].includes(getState()?.screen);
 };
 
 // The beat a mode should size itself to right now, or null when no mission is
@@ -1127,6 +1133,30 @@ function renderActivityIntro(target) {
   target.append(layout);
 }
 
+function renderDeath(target) {
+  const state = getState();
+  const layout = global.document.createElement("div");
+  layout.className = "character-scene-focus character-death";
+  const title = global.document.createElement("h2");
+  title.id = "characterSceneTitle";
+  title.className = "character-death-title";
+  // Gendered from the same setting the dialogue uses. Unpointed on purpose: this
+  // is a title card, not teaching copy.
+  title.textContent = state?.gender === "f" ? "את מתה" : "אתה מת";
+  title.lang = "he";
+  title.dir = "rtl";
+  const note = global.document.createElement("p");
+  note.className = "character-death-note";
+  const beat = character.getActiveBeat();
+  note.textContent = beat
+    ? uiText(`Back to the start of activity ${beat.index + 1}.`, `חוזרים לתחילת פעילות ${beat.index + 1}.`)
+    : uiText("Back to the start.", "חוזרים להתחלה.");
+  layout.append(title, note, createSprite("struggling", "character-scene-sprite"));
+  renderDialogue(layout, getDialogue("fourWrong"));
+  layout.append(createSceneButton(uiText("Get up", "קמים"), "respawn", "accent character-death-button"));
+  target.append(layout);
+}
+
 function renderQuitConfirm(target) {
   const layout = global.document.createElement("div");
   layout.className = "character-scene-focus";
@@ -1165,6 +1195,7 @@ character.renderScene = character.renderScene || function renderScene() {
   else if (screen === "greeting") renderGreeting(content);
   else if (screen === "activityIntro") renderActivityIntro(content);
   else if (screen === "quitConfirm") renderQuitConfirm(content);
+  else if (screen === "death") renderDeath(content);
 };
 
 character.renderSettings = character.renderSettings || function renderSettings() {
@@ -2600,8 +2631,69 @@ character.recordAnswer = character.recordAnswer || function recordAnswer(isCorre
     scheduleTransientReactionCheck(context.reactionQuestionKey);
   }
   if (correct) awardAnswerBond();
+
+  // Four wrong in a row is already the app's "you have lost the thread" signal —
+  // it is what turns the companion to `struggling`. The bonfire hangs off the
+  // same threshold rather than inventing a second one.
+  if (!correct && context.wrongStreak >= DEATH_WRONG_STREAK && shouldDie()) {
+    triggerDeath();
+    return;
+  }
+
   saveState();
   character.renderCompanion();
+};
+
+function bonfireEnabled() {
+  const stored = getRuntime().state?.bonfire;
+  return stored ? stored.enabled === true : true;
+}
+
+function shouldDie() {
+  const state = getState();
+  const mission = state?.mission;
+  if (!mission?.active || state.screen !== "none") return false;
+  if (!bonfireEnabled()) return false;
+  // A repair beat is already the second chance. Dying inside one would send the
+  // learner back through the very items they are there to recover.
+  return character.getActiveBeat()?.repair !== true;
+}
+
+function triggerDeath() {
+  const state = getState();
+  const mission = state.mission;
+  mission.deaths = Math.max(0, Number(mission.deaths || 0)) + 1;
+  mission.sprite = "struggling";
+  mission.dialogueKey = "fourWrong";
+  mission.reactionTransient = false;
+  state.screen = "death";
+  saveState();
+  // Deliberately no teardown here. This runs from inside the mode's own answer
+  // handler, which carries on rendering feedback after it returns — clearing the
+  // session out from under it nulls currentQuestion mid-call and throws. The
+  // mode simply sits behind the modal, and respawnAtBeat's startCurrentActivity
+  // resets it the way every other start path does.
+  getRuntime().helpers?.renderAll?.();
+}
+
+// Back to the start of the current beat — the bonfire, not the exact tile. The
+// beat index does not move, so completed beats never replay, and nothing here
+// touches progress: every wrong answer already updated its Leitner record, so
+// death costs position and never learning.
+character.respawnAtBeat = character.respawnAtBeat || function respawnAtBeat() {
+  const state = getState();
+  const mission = state?.mission;
+  if (!mission?.active || state.screen !== "death") return false;
+  mission.correctStreak = 0;
+  mission.wrongStreak = 0;
+  mission.sprite = "neutral";
+  mission.dialogueKey = "";
+  mission.reactionTransient = false;
+  mission.currentActivity = "";
+  state.screen = "none";
+  saveState();
+  character.startCurrentActivity();
+  return true;
 };
 
 // Hiding the sprite collapses the companion's box, and the box is anchored by

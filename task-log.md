@@ -21,6 +21,83 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T6: the bonfire)
+
+**Requested:** Mike's idea. Four wrong answers in a row shows a Dark Souls-style **אתה מת** and
+sends the learner back to the start of the current beat. Agreed conditions: it ships after the
+restructure, death costs position and never learning, and there is an escape valve.
+
+**Files changed:**
+- `app/character.js` — `DEATH_WRONG_STREAK = 4`; `bonfireEnabled`, `shouldDie`, `triggerDeath`
+  hooked into `recordAnswer`; `character.respawnAtBeat()`; `renderDeath` scene; `"death"` added
+  to the screen whitelist, `isBlocking`, `renderScene` and the "no live mission" fallback;
+  `sanitizeMission` keeps `deaths`; scene dispatch gained `respawn`.
+- `app/constants.js`, `app/persistence.js` — `ivriquest-bonfire-v1` plus load/save. **Opt-out:**
+  absent means on, so an existing save gets it with no migration.
+- `app.js`, `app/bootstrap-runtime.js` — `state.bonfire` seeded from the preference.
+- `index.html`, `app/controller.js`, `app/ui.js`, `app/bootstrap-data.js` — a Gameplay settings
+  group with `#bonfireToggle`, its handler, its aria state, and en/he labels.
+- `styles.css` — the death card, and a `prefers-reduced-motion` block covering it.
+- `tests/character-mission.test.js` — six new tests.
+
+**Design decisions:**
+- **The bonfire is the beat, not the question.** "Back to the first wrong answer" is undefined
+  in four of nine modes: lessonMatch, abbrMatch and verbMatch are boards matched in any order,
+  and handwriting is one traced sentence. Questions are also drawn adaptively at the moment they
+  are needed, so there is no stable list to rewind — only a per-mode replay buffer would do it.
+  Beat boundaries are already persisted state, so respawn is `startCurrentActivity()` again.
+- **It reuses the existing four-wrong threshold**, the one that already turns the companion to
+  `struggling`, so the two can never disagree about when things have gone wrong.
+- **A repair beat cannot kill.** It is already the second chance; dying inside one would send
+  the learner back through the very items they are there to recover.
+- **The doom loop is handled by the respawn, not by a teach step.** Restarting the beat re-draws
+  questions through the adaptive picker rather than replaying the same four, so a learner who
+  does not know those items is not locked against them. The plan's "show what killed you" step
+  was not built: the death card names the beat and shows the character's line instead.
+
+**Behavior changed:**
+- Four wrong in a row during a mission opens a blocking death card — gendered **אתה מת** /
+  **את מתה**, the beat it will restart, the `struggling` sprite, the character's existing
+  `fourWrong` line, and a "Get up" button. Free play never dies.
+- Respawn restarts the current beat. `currentIndex` does not move, so completed beats never
+  replay and their results survive.
+- New Gameplay settings group with a toggle, on by default.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **508 pass / 0 fail** (502 before, +6).
+- `node --test tests/gameplay-layout.test.js` → 1/1, twice (the death card is a new full-screen
+  surface).
+- New: three wrong is not death and four is; free play never dies; a repair beat cannot kill;
+  the toggle suppresses the card but not the companion reaction; respawn returns to the current
+  beat and keeps earlier results; a restored `death` screen with no live mission does not trap
+  the app.
+- Manual at 360×640: died for real through `applyAdvConjAnswer`; card rendered; "Get up"
+  restarted the beat with a fresh 8-question queue and a cleared streak; female variant reads
+  `את מתה`; toggle flips, persists to localStorage and restores.
+- **Verified the "costs position, never learning" claim rather than asserting it:**
+  `ivriquest-adv-conj-item-stats-v1` held 4 attempts after the death, because every wrong
+  answer had already written its record before the card appeared.
+
+**One real bug found and fixed during verification:** `triggerDeath` originally called
+`session.resetAllModeSessions()`. That runs from inside the mode's own answer handler — via
+`playAnswerFeedbackSound` → `recordAnswer` — and the handler carries on rendering feedback after
+it returns, so clearing the session nulled `currentQuestion` mid-call and threw in
+`markAdvConjChoiceResults`. No teardown happens at death now; the mode sits behind the modal and
+`respawnAtBeat`'s `startCurrentActivity` resets it the way every other start path does. The unit
+tests did not catch this because they call `recordAnswer` directly rather than through a mode.
+
+**Risks / regressions to check:**
+- The mode is left mid-question behind the modal. Harmless today because advancing is
+  user-driven, but a mode that auto-advanced on a timer would keep running behind the death card.
+- `deaths` is counted per mission and shown nowhere. It exists for a later "died N times" line.
+- The death card is the loudest surface in the app and nobody has approved its look. Colour is
+  `--error-border` rather than a new red, so it stays theme-correct, but the size and the
+  900ms entrance are unreviewed.
+- No sound plays on death. The three existing cues are correct/wrong/streak; a death cue would
+  need new audio, which is a content decision.
+- Dying in the *last* beat still appends repair beats afterwards, so a death near the end can be
+  followed by repairs — correct, but it makes a bad run noticeably longer than its tier promises.
+
 ### 2026-09-05 EDT — Missions become beats (T5: mission-wide repair beat)
 
 **Requested:** Continue the approved beat plan. T5 holds a mode's misses back to the end of the

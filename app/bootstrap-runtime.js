@@ -46,6 +46,7 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     langToggle: document.querySelector("#langToggle"),
     themeToggle: document.querySelector("#themeToggle"),
     displayFontToggle: document.querySelector("#displayFontToggle"),
+    bonfireToggle: document.querySelector("#bonfireToggle"),
     soundToggle: document.querySelector("#soundToggle"),
     speechToggle: document.querySelector("#speechToggle"),
     feedbackSurveyLink: document.querySelector("#feedbackSurveyLink"),
@@ -158,6 +159,7 @@ bootstrapRuntime.createInitialState = bootstrapRuntime.createInitialState || fun
     theme,
     displayFont,
     audio,
+    bonfire,
     speech,
     welcomeModalSeen,
   } = options;
@@ -169,6 +171,7 @@ bootstrapRuntime.createInitialState = bootstrapRuntime.createInitialState || fun
     theme,
     displayFont,
     audio,
+    bonfire: bonfire || { enabled: true },
     speech,
     route: restoredUi.route || "home",
     lastPlayedMode: restoredUi.lastPlayedMode || "lesson",

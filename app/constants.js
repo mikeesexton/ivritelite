@@ -19,6 +19,7 @@ constants.STORAGE_KEYS = constants.STORAGE_KEYS || Object.freeze({
   // every date change. Relationship progress has to outlive that reset.
   characterBond: "ivriquest-character-bond-v1",
   welcomeSeen: "ivriquest-welcome-seen-v1",
+  bonfire: "ivriquest-bonfire-v1",
   advConjStats: "advConjStats",
   prepositionsStats: "ivriquest-prepositions-stats-v1",
   binyanBoardStats: "ivriquest-binyan-board-stats-v1",
