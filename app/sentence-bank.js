@@ -1306,7 +1306,12 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
 sentenceBank.getRoundTarget = sentenceBank.getRoundTarget || function getRoundTarget() {
   const runtime = getRuntime();
   if (!runtime.sentenceBankDeck?.length) return 0;
-  return Math.min(runtime.constants.LESSON_ROUNDS, runtime.sentenceBankDeck.length);
+  // Shema runs on this slice via `shemaMode`, so a beat for either mode sizes it.
+  const beat = app.character?.getActiveBeat?.();
+  const target = beat && (beat.mode === "sentenceBank" || beat.mode === "shema") && beat.rounds > 0
+    ? beat.rounds
+    : runtime.constants.LESSON_ROUNDS;
+  return Math.min(target, runtime.sentenceBankDeck.length);
 };
 
 sentenceBank.resetSentenceBankState = sentenceBank.resetSentenceBankState || function resetSentenceBankState() {
@@ -1369,6 +1374,9 @@ sentenceBank.startSentenceBank = sentenceBank.startSentenceBank || function star
   runtime.el.choiceContainer.innerHTML = "";
   runtime.el.choiceContainer.classList.remove("match-grid", "match-bubble-grid");
   h.clearFeedback?.();
+
+  const repair = app.character?.takeRepairQueue?.(options.shema === true ? "shema" : "sentenceBank") || [];
+  if (repair.length) runtime.state.sentenceBank.reviewQueue = repair;
 
   if (!runtime.sentenceBankDeck?.length) {
     runtime.state.sentenceBank.active = false;
@@ -1442,6 +1450,14 @@ sentenceBank.buildSentenceBankReviewQuestion = sentenceBank.buildSentenceBankRev
 sentenceBank.tryStartReviewPhase = sentenceBank.tryStartReviewPhase || function tryStartReviewPhase() {
   const runtime = getRuntime();
   if (runtime.state.sentenceBank.inReview || !runtime.state.sentenceBank.reviewQueue.length) return false;
+  // Inside a mission the misses are held back to a repair beat at the end
+  // instead of being re-asked two questions later. Returns false in free play,
+  // which keeps today's per-session behaviour there byte for byte.
+  const mode = runtime.state.sentenceBank.shemaMode ? "shema" : "sentenceBank";
+  if (app.character?.deferReviewQueue?.(mode, runtime.state.sentenceBank.reviewQueue)) {
+    runtime.state.sentenceBank.reviewQueue = [];
+    return false;
+  }
   runtime.state.sentenceBank.inReview = true;
   runtime.state.sentenceBank.secondChanceTotal = runtime.state.sentenceBank.reviewQueue.length;
   runtime.state.sentenceBank.secondChanceCurrent = 0;
@@ -1462,7 +1478,7 @@ sentenceBank.nextSentenceBankQuestion = sentenceBank.nextSentenceBankQuestion ||
   if (runtime.state.sentenceBank.introActive) return;
 
   const targetRounds = sentenceBank.getRoundTarget();
-  if (!targetRounds) {
+  if (!targetRounds && !runtime.state.sentenceBank.inReview && !runtime.state.sentenceBank.reviewQueue.length) {
     session.finishSentenceBank?.();
     return;
   }

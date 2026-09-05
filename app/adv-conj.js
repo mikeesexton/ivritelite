@@ -424,7 +424,13 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "advConj";
   const deck = advConj.buildAdvConjDeck();
-  runtime.state.advConj.questionQueue = advConj.pickAdvConjQuestions(deck, runtime.constants.ADV_CONJ_ROUNDS);
+  const beat = app.character?.getActiveBeat?.();
+  const rounds = beat?.repair
+    ? 0
+    : (s.getModeRoundTarget?.("advConj", runtime.constants.ADV_CONJ_ROUNDS) || runtime.constants.ADV_CONJ_ROUNDS);
+  runtime.state.advConj.questionQueue = advConj.pickAdvConjQuestions(deck, rounds);
+  const repair = app.character?.takeRepairQueue?.("advConj") || [];
+  if (repair.length) runtime.state.advConj.reviewQueue = repair;
   runtime.state.advConj.active = true;
   runtime.state.advConj.startMs = Date.now();
   runtime.state.advConj.timerId = runtime.global.setInterval(() => {
@@ -453,6 +459,13 @@ advConj.beginAdvConjFromIntro = advConj.beginAdvConjFromIntro || function beginA
 advConj.tryStartAdvConjReviewPhase = advConj.tryStartAdvConjReviewPhase || function tryStartAdvConjReviewPhase() {
   const state = getRuntime().state.advConj;
   if (state.inReview || !state.reviewQueue.length) return false;
+  // Inside a mission the misses are held back to a repair beat at the end
+  // instead of being re-asked two questions later. Returns false in free play,
+  // which keeps today's per-session behaviour there byte for byte.
+  if (app.character?.deferReviewQueue?.("advConj", state.reviewQueue)) {
+    state.reviewQueue = [];
+    return false;
+  }
   state.inReview = true;
   state.secondChanceTotal = state.reviewQueue.length;
   state.secondChanceCurrent = 0;

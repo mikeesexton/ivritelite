@@ -98,7 +98,8 @@ function pickPairs(game) {
   const data = getData();
   const constants = runtime.constants || {};
   const maxLen = constants.MATCH_MAX_LEN || 40;
-  const target = constants.WORD_MATCH_SESSION_SIZE || 20;
+  const defaultTarget = constants.WORD_MATCH_SESSION_SIZE || 20;
+  const target = app.session?.getModeRoundTarget?.(game, defaultTarget) || defaultTarget;
 
   if (game === "lessonMatch") {
     const pool = (data.getSelectedPool?.() || []).filter((word) => word && word.he);

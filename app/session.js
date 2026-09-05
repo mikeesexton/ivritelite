@@ -617,6 +617,13 @@ session.resetAllModeSessions = session.resetAllModeSessions || function resetAll
   const runtime = getRuntime();
   const h = getHelpers();
 
+  // Each mode adds its own board class to the shared choice container and none
+  // of them ever removed it, so a container could carry two layouts at once —
+  // sentence-bank-board sizing plus match-grid columns. Latent before beats,
+  // because a mode switch was rare; now every beat switches mode, and the
+  // doubled layout overflows the 360px floor whenever a wide card is drawn.
+  runtime.el?.choiceContainer?.classList.remove("sentence-bank-board", "match-grid");
+
   session.stopVerbMatchTimer();
   session.stopLessonTimer();
   session.stopSentenceBankTimer();
@@ -671,6 +678,18 @@ session.endSessionAndNavigate = session.endSessionAndNavigate || function endSes
 
 session.goHome = session.goHome || function goHome() {
   session.endSessionAndNavigate("home");
+};
+
+// Modes pull their round target through here rather than reading their constant
+// directly, so a mission beat can shorten them. Falls back to the constant in
+// free play, and for any mode the running beat is not for.
+session.getModeRoundTarget = session.getModeRoundTarget || function getModeRoundTarget(modeId, fallback) {
+  const beat = app.character?.getActiveBeat?.();
+  if (!beat || beat.mode !== modeId) return fallback;
+  // A repair beat plays only what was missed, so it asks for no fresh rounds and
+  // the mode falls straight through to its second-chance phase.
+  if (beat.repair) return 0;
+  return beat.rounds > 0 ? beat.rounds : fallback;
 };
 
 session.showSessionSummary = session.showSessionSummary || function showSessionSummary(config = {}) {
@@ -794,7 +813,9 @@ session.finishSentenceBank = session.finishSentenceBank || function finishSenten
     noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: Math.max(
       0,
-      runtime.constants.LESSON_ROUNDS + reviewRounds - runtime.state.sentenceBank.wrongAnswers
+      (app.sentenceBank?.getRoundTarget?.() || runtime.constants.LESSON_ROUNDS)
+        + reviewRounds
+        - runtime.state.sentenceBank.wrongAnswers
     ),
     incorrectCount: runtime.state.sentenceBank.wrongAnswers,
     elapsedSeconds: runtime.state.sentenceBank.elapsedSeconds,
@@ -946,7 +967,7 @@ session.clearPrepositionsIntro = session.clearPrepositionsIntro || function clea
 
 session.finishPrepositions = session.finishPrepositions || function finishPrepositions() {
   const runtime = getRuntime();
-  const rounds = runtime.constants.PREPOSITIONS_ROUNDS || 0;
+  const rounds = session.getModeRoundTarget("prepositions", runtime.constants.PREPOSITIONS_ROUNDS) || 0;
 
   if (runtime.state.prepositions.timerId) {
     runtime.global.clearInterval(runtime.state.prepositions.timerId);
@@ -990,7 +1011,7 @@ session.clearHandwritingIntro = session.clearHandwritingIntro || function clearH
 session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {
   const runtime = getRuntime();
   const h = getHelpers();
-  const rounds = runtime.constants.ADV_CONJ_ROUNDS || 0;
+  const rounds = session.getModeRoundTarget("advConj", runtime.constants.ADV_CONJ_ROUNDS) || 0;
 
   if (runtime.state.advConj.timerId) {
     runtime.global.clearInterval(runtime.state.advConj.timerId);

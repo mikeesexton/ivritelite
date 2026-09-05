@@ -21,6 +21,439 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T6: the bonfire)
+
+**Requested:** Mike's idea. Four wrong answers in a row shows a Dark Souls-style **אתה מת** and
+sends the learner back to the start of the current beat. Agreed conditions: it ships after the
+restructure, death costs position and never learning, and there is an escape valve.
+
+**Files changed:**
+- `app/character.js` — `DEATH_WRONG_STREAK = 4`; `bonfireEnabled`, `shouldDie`, `triggerDeath`
+  hooked into `recordAnswer`; `character.respawnAtBeat()`; `renderDeath` scene; `"death"` added
+  to the screen whitelist, `isBlocking`, `renderScene` and the "no live mission" fallback;
+  `sanitizeMission` keeps `deaths`; scene dispatch gained `respawn`.
+- `app/constants.js`, `app/persistence.js` — `ivriquest-bonfire-v1` plus load/save. **Opt-out:**
+  absent means on, so an existing save gets it with no migration.
+- `app.js`, `app/bootstrap-runtime.js` — `state.bonfire` seeded from the preference.
+- `index.html`, `app/controller.js`, `app/ui.js`, `app/bootstrap-data.js` — a Gameplay settings
+  group with `#bonfireToggle`, its handler, its aria state, and en/he labels.
+- `styles.css` — the death card, and a `prefers-reduced-motion` block covering it.
+- `tests/character-mission.test.js` — six new tests.
+
+**Design decisions:**
+- **The bonfire is the beat, not the question.** "Back to the first wrong answer" is undefined
+  in four of nine modes: lessonMatch, abbrMatch and verbMatch are boards matched in any order,
+  and handwriting is one traced sentence. Questions are also drawn adaptively at the moment they
+  are needed, so there is no stable list to rewind — only a per-mode replay buffer would do it.
+  Beat boundaries are already persisted state, so respawn is `startCurrentActivity()` again.
+- **It reuses the existing four-wrong threshold**, the one that already turns the companion to
+  `struggling`, so the two can never disagree about when things have gone wrong.
+- **A repair beat cannot kill.** It is already the second chance; dying inside one would send
+  the learner back through the very items they are there to recover.
+- **The doom loop is handled by the respawn, not by a teach step.** Restarting the beat re-draws
+  questions through the adaptive picker rather than replaying the same four, so a learner who
+  does not know those items is not locked against them. The plan's "show what killed you" step
+  was not built: the death card names the beat and shows the character's line instead.
+
+**Behavior changed:**
+- Four wrong in a row during a mission opens a blocking death card — gendered **אתה מת** /
+  **את מתה**, the beat it will restart, the `struggling` sprite, the character's existing
+  `fourWrong` line, and a "Get up" button. Free play never dies.
+- Respawn restarts the current beat. `currentIndex` does not move, so completed beats never
+  replay and their results survive.
+- New Gameplay settings group with a toggle, on by default.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **508 pass / 0 fail** (502 before, +6).
+- `node --test tests/gameplay-layout.test.js` → 1/1, twice (the death card is a new full-screen
+  surface).
+- New: three wrong is not death and four is; free play never dies; a repair beat cannot kill;
+  the toggle suppresses the card but not the companion reaction; respawn returns to the current
+  beat and keeps earlier results; a restored `death` screen with no live mission does not trap
+  the app.
+- Manual at 360×640: died for real through `applyAdvConjAnswer`; card rendered; "Get up"
+  restarted the beat with a fresh 8-question queue and a cleared streak; female variant reads
+  `את מתה`; toggle flips, persists to localStorage and restores.
+- **Verified the "costs position, never learning" claim rather than asserting it:**
+  `ivriquest-adv-conj-item-stats-v1` held 4 attempts after the death, because every wrong
+  answer had already written its record before the card appeared.
+
+**One real bug found and fixed during verification:** `triggerDeath` originally called
+`session.resetAllModeSessions()`. That runs from inside the mode's own answer handler — via
+`playAnswerFeedbackSound` → `recordAnswer` — and the handler carries on rendering feedback after
+it returns, so clearing the session nulled `currentQuestion` mid-call and threw in
+`markAdvConjChoiceResults`. No teardown happens at death now; the mode sits behind the modal and
+`respawnAtBeat`'s `startCurrentActivity` resets it the way every other start path does. The unit
+tests did not catch this because they call `recordAnswer` directly rather than through a mode.
+
+**Risks / regressions to check:**
+- The mode is left mid-question behind the modal. Harmless today because advancing is
+  user-driven, but a mode that auto-advanced on a timer would keep running behind the death card.
+- `deaths` is counted per mission and shown nowhere. It exists for a later "died N times" line.
+- The death card is the loudest surface in the app and nobody has approved its look. Colour is
+  `--error-border` rather than a new red, so it stays theme-correct, but the size and the
+  900ms entrance are unreviewed.
+- No sound plays on death. The three existing cues are correct/wrong/streak; a death cue would
+  need new audio, which is a content decision.
+- Dying in the *last* beat still appends repair beats afterwards, so a death near the end can be
+  followed by repairs — correct, but it makes a bad run noticeably longer than its tier promises.
+
+### 2026-09-05 EDT — Missions become beats (T5: mission-wide repair beat)
+
+**Requested:** Continue the approved beat plan. T5 holds a mode's misses back to the end of the
+mission instead of re-asking them two questions later, and spends them as one short repair beat
+per mode that owes something.
+
+**Why it is worth the churn:** the same spacing argument the whole interleave rests on. An
+immediate second chance is massed practice; the miss comes back while the answer is still in
+working memory. Deferring it to the end of the session puts real questions in between.
+
+**Files changed:**
+- `app/character.js` — `REPAIRABLE_MODES`; `deferReviewQueue(modeId, entries)`,
+  `takeRepairQueue(modeId)`, `appendRepairBeats(mission)`; `getActiveBeat` now reports `repair`;
+  `sanitizeBeats` preserves the `repair` flag; `sanitizeMission` gains `repairQueue` and
+  `repairAppended`; `captureActivitySummary` appends repair beats before finishing.
+- `app/session.js` — `getModeRoundTarget` returns 0 for a repair beat, so the mode asks for no
+  fresh rounds and falls straight through to its second-chance phase.
+- `app/sentence-bank.js` — defers in `tryStartReviewPhase` (keyed `shema` or `sentenceBank`
+  by `shemaMode`), seeds `reviewQueue` from the repair queue in `startSentenceBank`, and the
+  `!targetRounds` guard now also checks for a pending review — otherwise a repair beat finished
+  before the review it exists for.
+- `app/adv-conj.js`, `app/prepositions.js` — same defer + seed.
+- `tests/character-mission.test.js` — seven new tests.
+- `index.html` — `?v=` bumped to `20260905m` for the five changed files.
+
+**Scope call: binyanBoard keeps reviewing in-beat, deliberately.** The other three modes queue
+portable entries — sentenceBank stores `{sentenceId, direction}` resolved against the global
+sentence pool, advConj and prepositions store whole question objects. binyanBoard stores bare
+`formId` strings resolved through a `byId` map built from `board.deck`, the root deck selected
+for that one beat. A deferred formId would silently fail to rebuild against a later deck and be
+skipped, so the learner would lose the miss entirely rather than repeat it. Making it portable
+means changing the entry shape, which is a bigger change than this tranche should carry.
+binyanBoard appears at most once in a mission, so an in-beat review there is no loss.
+
+**Behavior changed:**
+- Inside a mission, a missed item no longer comes back inside its own beat. It returns in a
+  repair beat appended after the last ordinary beat, one per mode, sized to what that mode owes.
+- Free play is untouched: `deferReviewQueue` returns false with no active mission, so the
+  per-session second chance behaves exactly as before.
+- A repair beat's own misses stay in that beat, or the mission would append a repair beat for
+  the repair beat and never end.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **502 pass / 0 fail** (495 before, +7).
+- New: misses defer inside a mission and not in free play; binyanBoard is never deferred; a
+  finished mission appends one beat per owing mode; repairs are spent exactly once; a repair
+  beat's own misses stay put; `takeRepairQueue` hands over one mode's entries once; a repair
+  beat asks for no fresh rounds.
+- Manual end-to-end in the browser, driving the real `applyAdvConjAnswer` path: 3 deliberate
+  misses in an advConj beat → 3 entries deferred, **no in-beat review**, beat advanced → last
+  beat finished → `advConj:3:REPAIR` appended, mission did not complete → chained into review
+  with `secondChanceTotal` 3 → all 3 asked, **every deferred item verified present by key** →
+  mission completed with 3 beats and `repairQueue` empty.
+
+**Two instrumentation traps hit while verifying, worth knowing:**
+- `advConj.selectAdvConjOption` / `submitAdvConjAnswer` do not exist. The real path is setting
+  `question.selectedOptionId` then `applyAdvConjAnswer()`. Calling the imagined names through
+  `?.()` no-ops silently and looked like the feature failing.
+- A per-mode `correctCount` is computed as `rounds + reviewRounds - wrong`, not counted from
+  answers, so it cannot be used to check how many questions were actually asked. Count the
+  questions.
+
+**Risks / regressions to check:**
+- `finishAdvConj` / `finishPrepositions` / `finishSentenceBank` score a repair beat as
+  `0 + reviewRounds - wrong`. Correct, but only because a repair beat's round target is 0 —
+  the formula and the repair flag are now coupled.
+- Repair beats are appended *after* `buildBeatPlan` has run, so they are not budgeted. A
+  mission where every answer was wrong appends a repair beat for every repairable mode and
+  runs meaningfully longer than its tier promises.
+- Repair beats append at the end of `mission.beats`, so a mode can repair immediately after
+  its own last ordinary beat — the no-adjacent-family rule does not apply to them.
+- `sanitizeMission` drops repair entries whose `mode` is not in `REPAIRABLE_MODES`, so adding
+  a mode to that list without a migration silently discards a restored save's pending repairs.
+- The `!targetRounds` guard in sentence-bank now also fires on a genuinely empty deck only when
+  there is nothing to review. An empty deck plus a stale reviewQueue would loop rather than
+  finish; the queue is cleared at start, so this needs both to go wrong at once.
+
+### 2026-09-05 EDT — Missions become beats (T4: beat position in the gameplay HUD)
+
+**Requested:** Continue the approved beat plan. T4 shows the learner where they are in the
+mission, which nothing did after T3 removed the hub and intro screen from between beats.
+
+**Files changed:**
+- `index.html` — a third stat in `#shellGameplayPill` (`#shellGameplayBeatStat`,
+  `#shellGameplayBeat`, `#shellGameplayBeatDivider`), hidden by default; `?v=` bumps.
+- `app/bootstrap-runtime.js` — registered the three new elements.
+- `app/ui.js` — `renderGameplayPill` fills the beat stat from `character.getActiveBeat()`,
+  hides it in free play and in single-beat missions, appends "activity N of M" to the pill's
+  aria-label, and flashes `.is-beat-change` on the progress strip when the index changes.
+- `app/session.js` — `resetAllModeSessions` now clears `sentence-bank-board` / `match-grid`
+  from the shared choice container.
+- `styles.css` — `.progress-strip.is-beat-change` + `@keyframes beatChange` + a
+  `prefers-reduced-motion` block; `min-width: 0` on `.shell-topbar`; ellipsis on
+  `.shell-brand-title h1`; the brand glyph hidden while `.gameplay-active`.
+- `tests/character-mission.test.js` — T4 test rewritten for the pill.
+
+**Two false starts worth recording, because both cost real time:**
+
+1. **The badge was first put beside the mode name, where it is never visible.**
+   `.lesson-title-row` carries `hidden` during gameplay — the topbar *is* the header on this
+   layout — so `#modeTitle` has zero width in every mode. The badge rendered, passed its test,
+   and could not be seen. Mirroring it into the topbar via `renderShellChrome` made it visible
+   but broke the 360px floor, and truncating the title then ate the badge anyway. The pill is
+   the only always-visible gameplay chrome, so it belongs there. **Check that an element is on
+   screen before building on it.**
+2. **The 360px overflow was misdiagnosed twice.** First blamed on the badge and cleared by a
+   bad experiment (removing the badge from `#modeTitle` does not re-render the topbar mirror,
+   so the measurement did not move and looked exonerating). Then blamed on a stale
+   `sentence-bank-board` class, which turned out to be real but *pre-existing* — verified by
+   running the same two modes on a `main` worktree, which produced the identical
+   `choices sentence-bank-board match-grid`. Fixed anyway, since T3 makes mode switches
+   routine. The actual cause was third: `.app-shell` is `display: grid`, and a grid item
+   defaults to `min-width: auto`, so `.shell-topbar` could never shrink below its content and
+   widened the whole shell instead of letting the title ellipsis engage.
+
+**Behavior changed:**
+- The gameplay pill reads `⏱ time · ▮ N/M · 🔥 combo` during a mission; the beat stat is
+  absent in free play and in single-beat missions.
+- The progress strip flashes for 700ms on a beat handoff. First animation on a gameplay
+  surface, so it ships with the `prefers-reduced-motion` block.
+- The brand glyph is hidden during gameplay so the mode name is not truncated.
+- The topbar can now shrink, and a too-long mode name ellipses rather than overflowing the
+  shell. This is a behaviour change for long names in any mode, mission or not.
+- Fixes a pre-existing bug where the choice container could carry two board layouts at once.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **495 pass / 0 fail** (494 before, +1).
+- `node --test tests/gameplay-layout.test.js` → 1/1, run three times (this tranche's gate).
+- `node --test tests/cache-bust.test.js` → 4/4.
+- Manual at 360×640: title fully visible; `1/3` shown; advancing a beat updates to `2/3`,
+  flashes, and clears after 700ms; free play hides the stat; no horizontal overflow in any
+  of those states.
+
+**Risks / regressions to check:**
+- `tests/character-mission.test.js` pins the exact `styles.css` `?v=` string. Every CSS bump
+  must update it — it broke once during this tranche.
+- The T4 test is a source-and-markup assertion, not a rendered one. It would pass if the pill
+  were hidden by CSS. The rendered check was manual.
+- Hiding the brand glyph during gameplay is a visual change nobody has approved.
+- The title ellipsis is new: a long Hebrew mode name may now truncate where it previously
+  pushed the layout wide. Worth a look in the Hebrew UI.
+- `runtime.lastBeatFlashIndex` lives on the runtime, not persisted state. A reload mid-beat
+  re-flashes once. Harmless, but it is why the flash is not a reliable "this just changed"
+  signal for anything else to key on.
+
+### 2026-09-05 EDT — Missions become beats (T3: the interleaved plan and the chaining loop)
+
+**Requested:** Continue the approved beat plan. T3 is the user-visible tranche: build the
+mission as an interleaved, day-seeded list of short beats, and chain from one beat to the next
+without the hub and activity-intro modal in between.
+
+**Files changed:**
+- `app/utils.js` — added `hashSeed` (FNV-1a), `seededRandom` (mulberry32) and `seededShuffle`
+  (accepts a seed *or* a live generator so several draws share one stream). Exists so plan
+  building is a pure function testable without stubbing `Math.random`.
+- `app/character.js` —
+  - `ACTIVITY_ORDER` entries gained `beatRounds` (the beat's length in the mode's own unit),
+    `beatCost` (roughly how many answers that is), `atomic`, and `family`.
+  - `TIERS` gained `budget`: short 18, medium 36, full 70 questions. `count` kept only so a
+    pre-T3 save still sanitizes.
+  - `buildItinerary` → `buildBeatPlan(tierId, {speechSupported, seed})`. Two-phase: decide how
+    many beats each mode gets by cycling until the budget is spent, then order them by always
+    taking from the mode with the most beats left whose *family* differs from the one just
+    played. Atomic beats are chosen first (they cannot be trimmed to fit), then inserted around
+    the middle, spaced, back to front so precomputed positions stay valid.
+  - `captureActivitySummary` now merges results by mode, returns **true** mid-mission, and
+    chains into the next beat via `startNextBeat()`.
+  - `mergeActivityResult`, `startNextBeat` + `beatChainDepth` guard added.
+  - Hub: progress from `currentIndex` (merged results no longer count beats), rows keyed
+    `data-mission-beat`, repeated modes labelled "· 2/3", completion derived positionally.
+  - `openMissionActivity` → `openMissionBeat(index)`.
+- `tests/character-mission.test.js` — two contract tests rewritten, ten new tests.
+- `index.html` — `?v=` bumped to `20260905c` for `utils.js` and `character.js`.
+
+**Two design decisions worth recording:**
+
+1. **Budget, not beat count.** Beats are not interchangeable: a verbMatch beat is ~18 answers
+   and a shema beat is 3. A raw beat count would let a 5-beat "short" that happened to draw
+   verbMatch run 30+ questions. `MAX_BEAT_SHARE = 0.4` (no beat may exceed 40% of the session)
+   plus `ATOMIC_BUDGET_PER_SLOT = 35` price the long modes out of short missions by arithmetic
+   rather than a hand-kept exclusion list that would drift from the costs.
+2. **Families, not just mode ids.** The first working plan produced `sentenceBank → shema`
+   adjacent in a short mission. That passes "no mode twice in a row" but is exactly the
+   complaint that started this work: both are the same chip-building interaction, read versus
+   heard, so back to back they read as one long block. `family` groups sentenceBank+shema and
+   lessonMatch+abbrMatch; atomic modes each get their own family, which is what lets them be
+   inserted later without a clash check.
+
+**Behavior changed — the visible one:**
+- A mission is now an interleaved list of short beats, reshuffled per day/character/tier.
+  Real short plan: `sentenceBank(4) → advConj(4) → shema(3) → lessonMatch(5)` — 4 beats,
+  ~16 questions, down from ~40. Medium: 7 beats ~36. Full: 11 beats ~68, down from ~150.
+- **No hub visit, no activity-intro modal and no per-beat results screen between beats.** The
+  intro and hub now appear only on a deliberate pause. Verified live: finishing beat 1 through
+  `session.finishSentenceBank()` left `summaryActive: false`, `onHub: false`, `route: "home"`
+  and started advConj immediately.
+- Modes are shortened to their beat: sentenceBank ran 4 rounds, advConj built a 4-question
+  beat (3 queued + 1 loaded) and its header read 4.
+- Hub rows label repeats ("Sentences · 1/2").
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **494 pass / 0 fail** (484 before; +10 net).
+- `node --test tests/character-mission.test.js` → 100/100.
+- New: budget spent but never exceeded; no mode twice in a row; no two same-family beats
+  adjacent; missions open on a cheap win; long modes priced out of short; atomics never open,
+  close or double up; same day+character+tier rebuilds an identical plan; shema is *skipped*
+  rather than dropped without a voice; several beats of one mode fold into one results row;
+  a mission of starved decks falls back to the hub instead of recursing.
+- Manual, in the browser at localhost:3000: full picker → focus → tier → mission; beat 1
+  sized to 4; chained to beat 2 with no interstitial; **reload mid-mission returned the
+  identical plan at the same beat index with the right round target**.
+- The cross-realm trap from the T2 entry bit twice more here. `assert.deepEqual` on anything
+  built inside a VM context fails on prototype identity. Compare field by field, or flatten
+  to a string — `Array.prototype.map` on a VM array returns a VM array, so mapping does not
+  escape the realm.
+
+**Risks / regressions to check:**
+- `captureActivitySummary` returning `true` mid-mission depends on `showSessionSummary`
+  returning early *after* its teardown. If that ordering in `app/session.js:676` ever changes,
+  beats will chain on a half-torn-down session.
+- The chain is synchronous and re-entrant by design (`startNextBeat` → `startCurrentActivity`
+  → `startGame` → possibly straight back). `MAX_BEAT_CHAIN_DEPTH = 30` is the only stop;
+  the fallback is the hub, which is recoverable but not obvious to a learner.
+- The three `finish*` score formulas from T2 now really do run on short beats. Their
+  correctness depends on the beat still being live when the summary is built, which holds
+  only because `captureActivitySummary` clears `currentActivity` after the config is assembled.
+- `mission.results` is per-mode, so the results screen shows summed totals across beats. Per
+  beat scores are no longer recoverable — the hub shows "Done" rather than a score.
+- Tier budgets (18/36/70) and the nine `beatCost` values are guesses calibrated by reading, not
+  by timing real sessions. They are one table in `character.js` and are meant to be tuned.
+- `buildBeatPlan`'s phase-two loop has a 500-iteration guard. It cannot currently be reached,
+  but a future mode with a zero `beatCost` would spin against it.
+
+### 2026-09-05 EDT — Missions become beats (T2: round parameterization, no behaviour change)
+
+**Requested:** Continue the approved beat plan. T2 threads a per-beat round-count override
+through every mode's round-decision site, still with zero observable change: all beats are
+written with `rounds: 0`, which means "use the mode's own constant".
+
+**Files changed:**
+- `app/character.js` — added `character.getActiveBeat()`. Returns `{mode, rounds, index, total}`
+  for the beat currently being played, or `null` when no mission is active or when the running
+  beat is not for the mode asking. The `beat.mode !== mission.currentActivity` guard is what
+  stops a stale beat from shortening the next mode between beats.
+- `app/session.js` — added `session.getModeRoundTarget(modeId, fallback)`, the single
+  consumer-facing helper (returns `fallback` unless a beat for that exact mode carries
+  `rounds > 0`). Also switched the three `finish*` correctness formulas to it:
+  `finishSentenceBank`, `finishPrepositions`, `finishAdvConj` each computed
+  `correctCount = rounds + reviewRounds - wrong` off the **raw constant**, which on a
+  shortened beat would clamp to zero and report a silently wrong score.
+- `app/word-match.js` — `pickPairs(game)` pulls the target for `lessonMatch` and `abbrMatch`.
+- `app/sentence-bank.js` — `getRoundTarget()` accepts a beat for `sentenceBank` **or** `shema`,
+  since shema runs on this slice through `shemaMode`.
+- `app/adv-conj.js`, `app/prepositions.js` — queue length pulled at `start*`.
+- `app/binyan-board.js` — `selectBinyanRoundRoots` reads the override in place; the count is a
+  module-private const, deliberately not moved to `constants.js`.
+- `app/handwriting.js` — round target pulled. **See the deviation note below.**
+- `app/ui.js` — the four live denominators (advConj and prepositions, header text and progress
+  percentage). The sentenceBank denominators already call `getRoundTarget()` and were free.
+- `tests/character-mission.test.js` — five new tests.
+- `index.html` — `?v=` bumped to `20260905b` for all nine changed `.js` files.
+
+**Deviation from the plan, deliberate:** the plan had handwriting's beat tighten
+`HANDWRITING_SENTENCE_MAX_LETTERS` to ~14. Not done. That would make `beat.rounds` mean
+*letters* for one mode and *rounds* for the other eight, and a field whose unit changes per
+mode will cause a bug later. Handwriting now pulls its round target like everything else
+(no effect: it is atomic at 1). If a mission beat needs a shorter handwriting sentence, T3
+should add an explicit second field rather than overload `rounds`.
+
+**Deliberately not touched:** the `ABBREVIATION_ROUNDS` denominators (`ui.js:243`, `:918`) and
+the `LESSON_ROUNDS` ones at `ui.js:310`, `:1045`, `:1051`. These belong to the dead `abbreviation`
+and `lesson` modes (roadmap D1) — `startAbbreviation` / `startLesson` are called but never
+defined. `ABBREVIATION_ROUNDS` does **not** govern `abbrMatch`; `abbrMatch` reaches
+`pickPairs` and reads `WORD_MATCH_SESSION_SIZE`. Threading an override into those constants
+would have been dead code.
+
+**Behavior changed:** None. Every beat still carries `rounds: 0`, so every mode plays at its
+own constant. Verified live in the browser: with no mission, `getRoundTarget()` = 10,
+`getModeRoundTarget("advConj", 10)` = 10, `("lessonMatch", 20)` = 20. With a hand-built
+mission `[{sentenceBank, 3}, {advConj, 4}]`, beat 0 gave sentences 3 / advConj 10 / vocab 20,
+and beat 1 gave advConj 4 / sentences 10 — a beat sizes only its own mode.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **484 pass / 0 fail** (479 before + 5 new).
+- `node --test tests/character-mission.test.js` → 90/90.
+- New tests: a running beat sizes only its own mode; a cleared `currentActivity` sizes nothing;
+  a legacy `activities` mission plays at default length; free play falls back for every mode;
+  an index past the end of the beat list sizes nothing.
+- Note for future test authors: `getActiveBeat` builds its return object inside the VM realm,
+  so `assert.deepEqual` against a host-realm literal fails on prototype identity even when
+  every value matches. Compare field by field. This cost two failing tests before it was spotted.
+
+**Risks / regressions to check:**
+- `getActiveBeat` keys on `mission.currentActivity`. Any future path that sets `currentIndex`
+  without also setting `currentActivity` will silently fall back to default lengths rather than
+  erroring. T3 changes exactly this code, so watch it there.
+- `getModeRoundTarget` treats `rounds: 0` as "no override" rather than "zero rounds". A beat
+  genuinely meaning zero questions is unrepresentable, which is intended.
+- The three `finish*` formulas now depend on the beat still being live when the summary is
+  built. That holds today because `captureActivitySummary` clears `currentActivity` only after
+  the config is assembled; T3 must preserve that ordering or scores will be wrong.
+- `ui.js` progress percentages now read through an optional chain. If `app.session` were ever
+  unavailable at render time the total becomes `undefined`; the surrounding ternaries treat
+  that as falsy and render 0 rather than throwing.
+
+### 2026-09-05 EDT — Missions become beats (T1: data structure, no behaviour change)
+
+**Requested:** Mike asked for a fresh-eyes product review aimed at making the app more addictive
+and more sellable, with missions replaced so long single-mode blocks (sentences, shema, binyanim)
+get broken up and the main flow feels less choppy. Diagnosis: the atomic unit of play is the
+*mode*, not the *question* — `buildItinerary` takes the first N of a frozen nine-item order, so
+Short is permanently Vocabulary/Sentences/Shema (~40 answers, ~15 min) and four of nine modes are
+unreachable without a ~30-minute Full mission. The approved plan replaces
+`mission.activities: [modeId]` with `mission.beats: [{mode, rounds}]` over six tranches. This
+entry covers **T1 only**: the data structure, deliberately with zero observable change.
+
+**Files changed:**
+- `app/character.js` — added `sanitizeBeats(mission)` (reads `mission.beats` when present,
+  otherwise migrates a pre-beats save to one `rounds: 0` beat per activity, filtering unknown
+  mode ids exactly as the old code filtered unknown activity ids) and `getBeats(mission)`.
+  `sanitizeMission` now emits `beats` in place of `activities` and clamps `currentIndex` to
+  `beats.length`. All nine read sites converted to `getBeats`. `chooseTier` writes
+  `beats: itinerary.playable.map((mode) => ({ mode, rounds: 0 }))`.
+- `index.html` — `app/character.js` cache key `?v=20260904c` → `?v=20260905a`.
+
+**Behavior changed:** None intended. Every beat still carries `rounds: 0`, meaning "use the mode's
+own default length", so missions play at exactly the length they did before. One latent bug fixed
+incidentally: `currentIndex` was clamped only at the bottom (`Math.max(0, …)`), so a restored save
+with an index past the end of its itinerary could never satisfy `currentIndex >= length` and so
+never reached `finishMission`.
+
+**Tests run:**
+- `npm test` → **479 pass / 0 fail** (baseline before the change: also 479/0).
+- `node --test tests/character-mission.test.js` → 85/85.
+- `node --test tests/gameplay-layout.test.js` → 1/1 standalone (4.2s).
+- `node --test tests/cache-bust.test.js` → 4/4, including the changed-file `?v=` bump check.
+- `node --test tests/content-coverage.test.js` → 27/27.
+- Caveat worth recording: a *parallel* `npm test` run timed out `gameplay-layout` at its internal
+  150s limit, and `content-coverage` twice ran for tens of minutes. Both pass standalone, and
+  `content-coverage` also hung on a clean stashed tree. This machine had ~20 unrelated node
+  processes (ChatGPT.app / Codex) during the session. Re-running with `--test-concurrency=1`
+  gave a clean 479/0. Treat these as contention, not regressions — neither test loads either
+  changed file.
+
+**Risks / regressions to check:**
+- `mission.activities` is now read in exactly one place: the migration path inside
+  `sanitizeBeats`. Verified by grep across `app/`, `tests/`, `scripts/`, `app.js`, `index.html`.
+- 15 tests construct missions with `activities: [...]` and assign `runtime.characterState`
+  directly, bypassing `sanitizeMission`. They pass because every read site goes through
+  `getBeats`, which migrates on the fly. **A future read site that touches `mission.beats`
+  directly will break them silently — always use `getBeats`.**
+- The `currentIndex` clamp changes behaviour for a corrupted or hand-edited save: an
+  out-of-range index now finishes the mission rather than stalling on it.
+- T2 onward threads a real `rounds` value. Until then a non-zero `rounds` in a save is accepted
+  by `sanitizeBeats` and ignored by every mode.
+
 ### 2026-09-04 EDT — Topic picker: the learner chooses the vocabulary
 
 **Requested:** Mike stepped back from the two focus-picker tranches. Reviewing Ido's shelves,

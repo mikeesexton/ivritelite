@@ -33,7 +33,7 @@
       href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260904c" />
+    <link rel="stylesheet" href="./styles.css?v=20260905n" />
   </head>
   <body data-theme="dark" data-display-font="heebo">
     <div class="ambient ambient-a" aria-hidden="true"></div>
@@ -56,6 +56,13 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13.5" r="7"/><path d="M12 10.5v3.2l2.2 2"/><path d="M9.8 3h4.4"/><path d="M12 3v3"/></svg>
               </span>
               <span id="shellGameplayTime">0s</span>
+            </span>
+            <span id="shellGameplayBeatDivider" class="shell-gameplay-divider hidden" aria-hidden="true"></span>
+            <span id="shellGameplayBeatStat" class="shell-gameplay-stat hidden">
+              <span class="shell-gameplay-icon" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h4v10H4z"/><path d="M11 7h4v10h-4z"/><path d="M18 7h2v10h-2z"/></svg>
+              </span>
+              <span id="shellGameplayBeat">1/1</span>
             </span>
             <span class="shell-gameplay-divider" aria-hidden="true"></span>
             <span class="shell-gameplay-stat">
@@ -432,6 +439,19 @@
                   </section>
 
                   <section class="settings-group">
+                    <p class="settings-eyebrow" data-i18n="settings.groupGameplay">Gameplay</p>
+                    <div class="settings-list">
+                      <section class="settings-block">
+                        <button id="bonfireToggle" type="button" class="quiet settings-row">
+                          <span class="settings-row-icon" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.6 2.8-.6 4.4-1.9 6-1.3 1.7-2.1 3-2.1 5a6 6 0 0 0 12 0c0-2.6-1.3-4.3-2.6-6-.6.9-1.1 1.9-1.1 3.2C14.9 8.9 13.4 6 12 3z"/></svg></span>
+                          <span class="settings-row-label" data-i18n="bonfire.label">Restart on four wrong</span>
+                          <span class="settings-switch" aria-hidden="true"></span>
+                        </button>
+                      </section>
+                    </div>
+                  </section>
+
+                  <section class="settings-group">
                     <p class="settings-eyebrow" data-i18n="settings.groupAudio">Audio</p>
                     <div class="settings-list">
                       <section class="settings-block">
@@ -673,34 +693,34 @@
     <script defer src="./preposition-data.js?v=20260731a"></script>
     <script defer src="./verb-game-data.js?v=20260811a"></script>
     <script defer src="./handwriting-data.js?v=20260702d"></script>
-    <script defer src="./app/constants.js?v=20260731a"></script>
+    <script defer src="./app/constants.js?v=20260905n"></script>
     <script defer src="./app/storage.js?v=20260315o"></script>
-    <script defer src="./app/utils.js?v=20260713a"></script>
+    <script defer src="./app/utils.js?v=20260905c"></script>
     <script defer src="./app/hebrew.js?v=20260904b"></script>
     <script defer src="./app/handwriting-core.js?v=20260822a"></script>
-    <script defer src="./app/bootstrap-data.js?v=20260811a"></script>
+    <script defer src="./app/bootstrap-data.js?v=20260905n"></script>
     <script defer src="./app/content-sources.js?v=20260817a"></script>
-    <script defer src="./app/bootstrap-runtime.js?v=20260801d"></script>
+    <script defer src="./app/bootstrap-runtime.js?v=20260905n"></script>
     <script defer src="./app/audio.js?v=20260725a"></script>
     <script defer src="./app/speech.js?v=20260728a"></script>
-    <script defer src="./app/persistence.js?v=20260725a"></script>
-    <script defer src="./app/session.js?v=20260729c"></script>
-    <script defer src="./app/i18n.js?v=20260718e"></script>
-    <script defer src="./app/ui.js?v=20260810a"></script>
+    <script defer src="./app/persistence.js?v=20260905n"></script>
+    <script defer src="./app/session.js?v=20260905m"></script>
+    <script defer src="./app/i18n.js?v=20260905n"></script>
+    <script defer src="./app/ui.js?v=20260905n"></script>
     <script defer src="./app/data.js?v=20260904a"></script>
     <script defer src="./app/lesson.js?v=20260817a"></script>
-    <script defer src="./app/sentence-bank.js?v=20260830a"></script>
+    <script defer src="./app/sentence-bank.js?v=20260905m"></script>
     <script defer src="./app/abbreviation.js?v=20260827b"></script>
-    <script defer src="./app/adv-conj.js?v=20260731a"></script>
-    <script defer src="./app/prepositions.js?v=20260729c"></script>
+    <script defer src="./app/adv-conj.js?v=20260905m"></script>
+    <script defer src="./app/prepositions.js?v=20260905m"></script>
     <script defer src="./app/verb-match.js?v=20260827b"></script>
     <script defer src="./app/match-engine.js?v=20260725d"></script>
-    <script defer src="./app/word-match.js?v=20260810a"></script>
-    <script defer src="./app/binyan-board.js?v=20260811a"></script>
-    <script defer src="./app/handwriting.js?v=20260827b"></script>
+    <script defer src="./app/word-match.js?v=20260905b"></script>
+    <script defer src="./app/binyan-board.js?v=20260905b"></script>
+    <script defer src="./app/handwriting.js?v=20260905b"></script>
     <script defer src="./app/character-data.js?v=20260904c"></script>
-    <script defer src="./app/character.js?v=20260904c"></script>
-    <script defer src="./app/controller.js?v=20260726d"></script>
-    <script defer src="./app.js?v=20260725a"></script>
+    <script defer src="./app/character.js?v=20260905p"></script>
+    <script defer src="./app/controller.js?v=20260905n"></script>
+    <script defer src="./app.js?v=20260905n"></script>
   </body>
 </html>

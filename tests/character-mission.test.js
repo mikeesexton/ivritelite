@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260904c/);
+  assert.match(indexHtml, /styles\.css\?v=20260905n/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -1246,18 +1246,19 @@ test("capturing a completed activity advances the mission without shortening the
     },
   };
 
-  // false hands the screen back to showSessionSummary, which renders this
-  // activity's own results; the hub waits until Continue.
+  // true makes showSessionSummary return before it populates state.summary or
+  // routes to results, so no per-beat recap is ever shown. The next beat has
+  // already been started by the time this returns.
   assert.equal(character.captureActivitySummary({
     correctCount: 20,
     incorrectCount: 2,
     elapsedSeconds: 187,
     mistakes: [{ primary: "test" }],
-  }), false);
+  }), true);
   assert.equal(app.runtime.characterState.screen, "none");
   assert.equal(app.runtime.characterState.mission.onHub, false);
   assert.equal(app.runtime.characterState.mission.currentIndex, 1);
-  assert.equal(app.runtime.characterState.mission.currentActivity, "");
+  assert.equal(app.runtime.characterState.mission.currentActivity, "sentenceBank");
   assert.deepEqual(
     JSON.parse(JSON.stringify(app.runtime.characterState.mission.results[0])),
     {
@@ -1304,7 +1305,7 @@ test("a flawless mid-mission activity no longer opens a blocking Perfect scene",
     incorrectCount: 0,
     elapsedSeconds: 90,
     mistakes: [],
-  }), false);
+  }), true);
   assert.equal(app.runtime.characterState.screen, "none");
   assert.equal(character.isBlocking(), false);
   assert.equal(app.runtime.characterState.mission.onHub, false);
@@ -2778,4 +2779,555 @@ test("every focus group has derived sentence support for at least some rows", ()
       assert.ok(supported > 0, `${id}/${group.id} has no sentence anchored to it at all`);
     });
   });
+});
+
+// --- T2: beat round parameterization -----------------------------------------
+
+function loadSessionWithMission(mission) {
+  const { character, app, context } = loadCharacterModule();
+  app.runtime.characterState = mission === null ? {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "free",
+    screen: "none",
+    mission: null,
+  } : {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    mission: {
+      active: true,
+      completed: false,
+      skippedActivities: [],
+      results: [],
+      visible: true,
+      ...mission,
+    },
+  };
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "app/session.js"), "utf8"),
+    context,
+    { filename: "app/session.js" },
+  );
+  return { character, app };
+}
+
+test("a running beat sizes the mode it belongs to and no other", () => {
+  const { character, app } = loadSessionWithMission({
+    beats: [{ mode: "advConj", rounds: 3 }],
+    currentIndex: 0,
+    currentActivity: "advConj",
+  });
+
+  // Field by field: getActiveBeat builds its object inside the VM realm, so a
+  // deepStrictEqual against a host-realm literal fails on prototype identity
+  // even when every value matches.
+  const beat = character.getActiveBeat();
+  assert.equal(beat.mode, "advConj");
+  assert.equal(beat.rounds, 3);
+  assert.equal(beat.index, 0);
+  assert.equal(beat.total, 1);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 3);
+  // The beat belongs to advConj, so prepositions keeps its own constant even
+  // though a mission is running.
+  assert.equal(app.session.getModeRoundTarget("prepositions", 10), 10);
+});
+
+test("a beat whose mode is not the running activity does not size anything", () => {
+  const { character, app } = loadSessionWithMission({
+    beats: [{ mode: "advConj", rounds: 3 }],
+    currentIndex: 0,
+    // The mission is between beats: currentActivity is cleared while the hub or
+    // the next start path runs, and a stale beat must not shorten the next mode.
+    currentActivity: "",
+  });
+
+  assert.equal(character.getActiveBeat(), null);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+});
+
+test("a legacy activities mission plays at every mode's default length", () => {
+  const { character, app } = loadSessionWithMission({
+    activities: ["lessonMatch"],
+    currentIndex: 0,
+    currentActivity: "lessonMatch",
+  });
+
+  // sanitizeBeats migrates the pre-beats save to rounds: 0, which means "use the
+  // mode's own constant" — so a save written before T1 plays exactly as it did.
+  const beat = character.getActiveBeat();
+  assert.equal(beat.mode, "lessonMatch");
+  assert.equal(beat.rounds, 0);
+  assert.equal(beat.total, 1);
+  assert.equal(app.session.getModeRoundTarget("lessonMatch", 20), 20);
+});
+
+test("free play keeps every mode at its own default length", () => {
+  const { character, app } = loadSessionWithMission(null);
+
+  assert.equal(character.getActiveBeat(), null);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+  assert.equal(app.session.getModeRoundTarget("lessonMatch", 20), 20);
+});
+
+test("an index past the end of the beat list sizes nothing", () => {
+  const { character, app } = loadSessionWithMission({
+    beats: [{ mode: "advConj", rounds: 3 }],
+    currentIndex: 1,
+    currentActivity: "advConj",
+  });
+
+  assert.equal(character.getActiveBeat(), null);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+});
+
+// --- T3: the interleaved beat plan and the chaining loop ---------------------
+
+// Mirrors the contract in ACTIVITY_ORDER/TIERS. Kept here deliberately: if a
+// cost or budget changes, these tests should fail and be re-read, not silently
+// track the source.
+const BEAT_COST = {
+  lessonMatch: 5, sentenceBank: 4, shema: 3, verbMatch: 18, abbrMatch: 5,
+  advConj: 4, prepositions: 4, binyanBoard: 11, handwriting: 14,
+};
+const TIER_BUDGET = { short: 18, medium: 36, full: 70 };
+const ATOMIC_MODES = ["verbMatch", "binyanBoard", "handwriting"];
+
+function buildMission(tierId, characterId = "ido") {
+  const { character, app } = loadCharacterModule();
+  // Seeded the way the other picker tests do it: the module does not build
+  // characterState until initialize(), and these tests drive the scene directly.
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: {}, topics: {},
+    dailyChoice: "", pendingChoice: "", lensCharacter: "", screen: "picker", mission: null,
+  };
+  character.chooseCharacter(characterId);
+  character.confirmFocus();
+  character.chooseTier(tierId);
+  const mission = app.runtime.characterState.mission;
+  return {
+    character,
+    app,
+    mission,
+    beats: mission.beats.map((beat) => ({ mode: beat.mode, rounds: beat.rounds })),
+    modes: mission.beats.map((beat) => beat.mode),
+    cost: mission.beats.reduce((sum, beat) => sum + BEAT_COST[beat.mode], 0),
+  };
+}
+
+test("every tier spends its question budget without exceeding it", () => {
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { beats, cost } = buildMission(tierId);
+    assert.ok(beats.length > 0, `${tierId} produced no beats`);
+    assert.ok(cost <= TIER_BUDGET[tierId], `${tierId} spent ${cost} of ${TIER_BUDGET[tierId]}`);
+    // An unspent remainder is only a bug if another beat would have fit, so it
+    // is judged against the cheapest mode the plan actually drew on.
+    const cheapest = Math.min(...beats.map((beat) => BEAT_COST[beat.mode]));
+    const unspent = TIER_BUDGET[tierId] - cost;
+    assert.ok(unspent < cheapest, `${tierId} left ${unspent} unspent, cheapest beat is ${cheapest}`);
+  });
+});
+
+test("no mode runs twice in a row, in any tier", () => {
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { modes } = buildMission(tierId);
+    modes.forEach((mode, index) => {
+      if (index === 0) return;
+      assert.notEqual(mode, modes[index - 1], `${tierId} repeats ${mode} at ${index}`);
+    });
+  });
+});
+
+test("modes that feel the same never sit back to back", () => {
+  // Coarser than the mode id: sentenceBank and shema are the same chip-building
+  // interaction read versus heard, and lessonMatch and abbrMatch are the same
+  // matching board. Adjacent, either pair reads as one long block, which is the
+  // blocked practice this whole change exists to break up.
+  const FAMILY = {
+    lessonMatch: "match", abbrMatch: "match",
+    sentenceBank: "sentence", shema: "sentence",
+    advConj: "conjugation", prepositions: "prepositions",
+    verbMatch: "verbMatch", binyanBoard: "binyan", handwriting: "handwriting",
+  };
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { modes } = buildMission(tierId);
+    modes.forEach((mode, index) => {
+      if (index === 0) return;
+      assert.notEqual(
+        FAMILY[mode], FAMILY[modes[index - 1]],
+        `${tierId}: ${modes[index - 1]} → ${mode} at ${index} are the same interaction`,
+      );
+    });
+  });
+});
+
+test("a mission opens on a cheap familiar win", () => {
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { modes } = buildMission(tierId);
+    assert.ok(["lessonMatch", "sentenceBank"].includes(modes[0]), `${tierId} opened on ${modes[0]}`);
+  });
+});
+
+test("the long atomic modes are priced out of a short mission", () => {
+  const { modes } = buildMission("short");
+  ATOMIC_MODES.forEach((mode) => {
+    assert.equal(modes.includes(mode), false, `short should not reach ${mode}`);
+  });
+});
+
+test("a long atomic beat never opens, closes, or doubles up on a mission", () => {
+  const { modes } = buildMission("full");
+  const atomicAt = modes
+    .map((mode, index) => (ATOMIC_MODES.includes(mode) ? index : -1))
+    .filter((index) => index >= 0);
+
+  assert.ok(atomicAt.length > 0, "full should afford at least one long beat");
+  assert.equal(atomicAt.includes(0), false, "a mission must not open on a long grind");
+  assert.equal(atomicAt.includes(modes.length - 1), false, "a mission must not end on a long grind");
+  atomicAt.forEach((index, i) => {
+    if (i === 0) return;
+    assert.ok(index - atomicAt[i - 1] > 1, "two long beats must not sit back to back");
+  });
+});
+
+test("the same day, character and tier rebuild the identical plan", () => {
+  // Flattened to a string on purpose: each mission is built in its own VM
+  // context, so deepStrictEqual would fail on prototype identity even when the
+  // plans match exactly.
+  const flatten = (built) => built.beats.map((b) => `${b.mode}:${b.rounds}`).join(" > ");
+
+  assert.equal(flatten(buildMission("full", "inat")), flatten(buildMission("full", "inat")));
+  // A different tier is a different seed, so it must not be the same plan.
+  assert.notEqual(flatten(buildMission("full", "inat")), flatten(buildMission("medium", "inat")));
+});
+
+test("shema is skipped, not silently dropped, when there is no Hebrew voice", () => {
+  // The VM harness has no app.speech, which is the no-voice case.
+  const { modes, mission } = buildMission("full");
+  assert.equal(modes.includes("shema"), false);
+  assert.equal(mission.skippedActivities.some((row) => row.id === "shema" && row.skipped === true), true);
+});
+
+test("several beats of one mode fold into a single results row", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true,
+      completed: false,
+      beats: [
+        { mode: "lessonMatch", rounds: 5 },
+        { mode: "sentenceBank", rounds: 4 },
+        { mode: "lessonMatch", rounds: 5 },
+      ],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "lessonMatch",
+      results: [],
+      visible: true,
+    },
+  };
+
+  character.captureActivitySummary({ correctCount: 4, incorrectCount: 1, elapsedSeconds: 30, mistakes: [{ primary: "a" }] });
+  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, elapsedSeconds: 40, mistakes: [{ primary: "b" }] });
+  character.captureActivitySummary({ correctCount: 5, incorrectCount: 0, elapsedSeconds: 25, mistakes: [] });
+
+  const results = app.runtime.characterState.mission.results;
+  assert.equal(results.length, 2, "one row per mode, not one per beat");
+  const vocab = results.find((row) => row.id === "lessonMatch");
+  assert.equal(vocab.correctCount, 9);
+  assert.equal(vocab.incorrectCount, 1);
+  assert.equal(vocab.elapsedSeconds, 55);
+  assert.equal(vocab.mistakes.length, 1);
+});
+
+test("a mission of starved decks falls back to the hub instead of recursing", () => {
+  const { character, app } = loadCharacterModule();
+  const beats = Array.from({ length: 40 }, (_, index) => (
+    index % 2 === 0 ? { mode: "lessonMatch", rounds: 5 } : { mode: "sentenceBank", rounds: 4 }
+  ));
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true, completed: false, beats, skippedActivities: [],
+      currentIndex: 0, currentActivity: "lessonMatch", results: [], visible: true,
+    },
+  };
+  // A starved deck finishes the instant it starts, which is what makes the
+  // chain recurse: start -> finish -> capture -> start.
+  const finishInstantly = () => character.captureActivitySummary({
+    correctCount: 0, incorrectCount: 0, elapsedSeconds: 0, mistakes: [],
+  });
+  app.wordMatch = { startLessonMatch: finishInstantly, beginWordMatchFromIntro: () => {} };
+  app.sentenceBank = { startSentenceBank: finishInstantly, beginSentenceBankFromIntro: () => {} };
+
+  assert.doesNotThrow(() => finishInstantly());
+  assert.equal(app.runtime.characterState.mission.onHub, true);
+});
+
+// --- T4: beat identity in the gameplay header --------------------------------
+
+test("the gameplay pill carries the beat position, and only during a mission", () => {
+  const source = fs.readFileSync(path.join(PROJECT_ROOT, "app/ui.js"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  const markup = fs.readFileSync(path.join(PROJECT_ROOT, "index.html"), "utf8");
+  const bootstrap = fs.readFileSync(path.join(PROJECT_ROOT, "app/bootstrap-runtime.js"), "utf8");
+
+  // It lives in the pill, not beside the mode name: .lesson-title-row is hidden
+  // during gameplay, so #modeTitle is never visible there, and the topbar has no
+  // spare width at the 360px floor.
+  assert.match(markup, /id="shellGameplayBeatStat"[^>]*class="shell-gameplay-stat hidden"/);
+  assert.match(bootstrap, /shellGameplayBeat: document\.querySelector\("#shellGameplayBeat"\)/);
+  assert.match(source, /const showBeat = shouldShow && Boolean\(beat\) && beat\.total > 1;/);
+  // Free play and single-beat missions show nothing.
+  assert.match(source, /runtime\.el\.shellGameplayBeatStat\?\.classList\.toggle\("hidden", !showBeat\);/);
+  // Announced too, not just drawn.
+  assert.match(source, /activity \$\{beat\.index \+ 1\} of \$\{beat\.total\}/);
+
+  // The flash goes on a node no renderer rebuilds, and has a reduced-motion path:
+  // this is the first animation on a gameplay surface.
+  assert.match(source, /strip\.classList\.add\("is-beat-change"\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*\.progress-strip\.is-beat-change \{\s*animation: none;/);
+
+  // .app-shell is a grid, so the topbar needs min-width: 0 or it can never
+  // shrink and the whole shell overflows 360px instead of the title truncating.
+  assert.match(css, /\.shell-topbar \{[^}]*min-width: 0;/s);
+  assert.match(css, /\.shell-brand-title h1 \{[^}]*text-overflow: ellipsis;/s);
+
+  ["--ink-soft", "--selection-glow"].forEach((token) => {
+    assert.match(css, new RegExp(`\\n\\s+\\${token}:`), `${token} is not defined`);
+  });
+});
+
+// --- T5: the mission-wide repair beat ----------------------------------------
+
+function missionWithBeats(beats, currentIndex = 0, extra = {}) {
+  return {
+    dayKey: null, gender: "m", dailyChoice: "ido", screen: "none", reviewOpen: false,
+    mission: {
+      active: true, completed: false, beats, skippedActivities: [],
+      currentIndex, currentActivity: beats[currentIndex]?.mode || "", results: [], visible: true,
+      ...extra,
+    },
+  };
+}
+
+test("misses are held back to the end of the mission instead of re-asked in place", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 4 }, { mode: "lessonMatch", rounds: 5 }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  assert.equal(character.deferReviewQueue("advConj", [{ key: "a" }, { key: "b" }]), true);
+  assert.equal(app.runtime.characterState.mission.repairQueue.length, 2);
+  // Free play keeps its own per-session review: nothing to defer to.
+  const free = loadCharacterModule();
+  free.app.runtime.characterState = {
+    dayKey: free.character.getTodayKey(), gender: "m", dailyChoice: "free", screen: "none", mission: null,
+  };
+  assert.equal(free.character.deferReviewQueue("advConj", [{ key: "a" }]), false);
+});
+
+test("binyanBoard is never deferred, because its queue cannot survive its beat", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "binyanBoard", rounds: 2 }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  // Its reviewQueue holds bare formIds that only resolve against the root deck
+  // built for that one beat, so it keeps reviewing in place.
+  assert.equal(character.deferReviewQueue("binyanBoard", ["paal-1"]), false);
+  // Refused early, so the queue is never even created on this hand-built mission.
+  assert.ok(!app.runtime.characterState.mission.repairQueue?.length);
+});
+
+test("a finished mission appends one repair beat per mode that owes something", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 4 }], 0, {
+    repairQueue: [
+      { mode: "advConj", entry: { key: "a" } },
+      { mode: "advConj", entry: { key: "b" } },
+      { mode: "sentenceBank", entry: { sentenceId: "s1", direction: "he2en" } },
+    ],
+  });
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  app.session = { showSessionSummary: () => {} };
+
+  // The last ordinary beat ends; repairs are appended rather than finishing.
+  assert.equal(character.captureActivitySummary({ correctCount: 2, incorrectCount: 2, elapsedSeconds: 30, mistakes: [] }), true);
+  const mission = app.runtime.characterState.mission;
+  const appended = mission.beats.slice(1).map((b) => `${b.mode}:${b.rounds}:${b.repair === true}`);
+  assert.deepEqual([...appended], ["sentenceBank:1:true", "advConj:2:true"]);
+  assert.equal(mission.completed, false, "the mission must not finish before its repairs");
+});
+
+test("repairs are spent exactly once, so the mission cannot loop on them", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 4 }], 0, {
+    repairQueue: [{ mode: "advConj", entry: { key: "a" } }],
+  });
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  let finished = 0;
+  app.session = { showSessionSummary: () => { finished += 1; } };
+
+  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, elapsedSeconds: 20, mistakes: [] });
+  const mission = app.runtime.characterState.mission;
+  assert.equal(mission.beats.length, 2, "one repair beat appended");
+
+  // Finishing the repair beat itself must end the mission, not append again.
+  mission.currentActivity = "advConj";
+  character.captureActivitySummary({ correctCount: 1, incorrectCount: 0, elapsedSeconds: 10, mistakes: [] });
+  assert.equal(mission.beats.length, 2, "repairs must not append a second time");
+  assert.equal(mission.completed, true);
+  assert.equal(finished, 1);
+});
+
+test("a repair beat's own misses stay in that beat", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 2, repair: true }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  // Otherwise the mission would append a repair beat for the repair beat.
+  assert.equal(character.deferReviewQueue("advConj", [{ key: "a" }]), false);
+});
+
+test("taking a repair queue hands over only that mode's entries, once", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 2, repair: true }], 0, {
+    repairQueue: [
+      { mode: "advConj", entry: { key: "a" } },
+      { mode: "prepositions", entry: { key: "p" } },
+      { mode: "advConj", entry: { key: "b" } },
+    ],
+  });
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  assert.equal(character.takeRepairQueue("advConj").length, 2);
+  assert.equal(character.takeRepairQueue("advConj").length, 0, "a queue is handed over once");
+  assert.equal(app.runtime.characterState.mission.repairQueue.length, 1, "other modes keep theirs");
+});
+
+test("a repair beat asks for no fresh rounds", () => {
+  const { character, app, context } = loadCharacterModule();
+  const state = missionWithBeats([{ mode: "advConj", rounds: 3, repair: true }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "app/session.js"), "utf8"),
+    context, { filename: "app/session.js" },
+  );
+
+  assert.equal(character.getActiveBeat().repair, true);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 0);
+});
+
+// --- T6: the bonfire ---------------------------------------------------------
+
+function missionForDeath(beats = [{ mode: "advConj", rounds: 4 }], extra = {}) {
+  return {
+    dayKey: null, gender: "m", dailyChoice: "ido", screen: "none", reviewOpen: false,
+    mission: {
+      active: true, completed: false, beats, skippedActivities: [],
+      currentIndex: 0, currentActivity: beats[0].mode, results: [], visible: true,
+      correctStreak: 0, wrongStreak: 0, ...extra,
+    },
+  };
+}
+
+function killIt(character, app, times = 4) {
+  for (let i = 0; i < times; i += 1) character.recordAnswer(false);
+  return app.runtime.characterState;
+}
+
+test("four wrong in a row inside a mission opens the death card", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath();
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  killIt(character, app, 3);
+  assert.equal(app.runtime.characterState.screen, "none", "three wrong is not death");
+
+  killIt(character, app, 1);
+  assert.equal(app.runtime.characterState.screen, "death");
+  assert.equal(app.runtime.characterState.mission.deaths, 1);
+  assert.equal(character.isBlocking(), true);
+});
+
+test("free play never dies", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", dailyChoice: "free",
+    screen: "none", mission: null, freePlay: { correctStreak: 0, wrongStreak: 0 },
+  };
+  killIt(character, app, 6);
+  assert.equal(app.runtime.characterState.screen, "none");
+});
+
+test("a repair beat is already the second chance, so it cannot kill", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath([{ mode: "advConj", rounds: 3, repair: true }]);
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  killIt(character, app, 5);
+  assert.equal(app.runtime.characterState.screen, "none",
+    "dying inside a repair beat would send the learner back through the items they are recovering");
+});
+
+test("the bonfire can be switched off", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath();
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+  app.runtime.state.bonfire = { enabled: false };
+
+  killIt(character, app, 6);
+  assert.equal(app.runtime.characterState.screen, "none");
+  // The companion still reacts; only the card is suppressed.
+  assert.equal(app.runtime.characterState.mission.sprite, "struggling");
+});
+
+test("respawn returns to the start of the current beat, never an earlier one", () => {
+  const { character, app } = loadCharacterModule();
+  const state = missionForDeath(
+    [{ mode: "advConj", rounds: 4 }, { mode: "lessonMatch", rounds: 5 }],
+    { currentIndex: 1, currentActivity: "lessonMatch", results: [{ id: "advConj", nameEn: "Conjugation+", nameHe: "נטיות+", correctCount: 3, incorrectCount: 1, elapsedSeconds: 20, mistakes: [], skipped: false }] },
+  );
+  state.dayKey = character.getTodayKey();
+  app.runtime.characterState = state;
+
+  killIt(character, app, 4);
+  assert.equal(app.runtime.characterState.screen, "death");
+
+  assert.equal(character.respawnAtBeat(), true);
+  const mission = app.runtime.characterState.mission;
+  assert.equal(mission.currentIndex, 1, "completed beats never replay");
+  assert.equal(mission.currentActivity, "lessonMatch", "the same beat starts again");
+  assert.equal(mission.wrongStreak, 0);
+  assert.equal(mission.sprite, "neutral");
+  assert.equal(app.runtime.characterState.screen, "none");
+  assert.equal(mission.results.length, 1, "an earlier beat's result survives the death");
+});
+
+test("a death screen restored without a live mission does not trap the app", () => {
+  const { character, app } = loadCharacterModule({
+    saved: { dayKey: new Date().toISOString().slice(0, 10), gender: "m", dailyChoice: "ido", screen: "death", mission: null },
+  });
+  character.initialize();
+  assert.notEqual(app.runtime.characterState.screen, "death");
+  assert.equal(character.respawnAtBeat(), false);
 });

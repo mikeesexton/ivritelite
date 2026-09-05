@@ -77,6 +77,7 @@ controller.bindUi = controller.bindUi || function bindUi() {
   runtime.el.themeToggle?.addEventListener("click", () => app.i18n?.toggleTheme?.());
   runtime.el.displayFontToggle?.addEventListener("click", () => app.i18n?.toggleDisplayFont?.());
   runtime.el.soundToggle?.addEventListener("click", () => app.i18n?.toggleSoundPreference?.());
+  runtime.el.bonfireToggle?.addEventListener("click", () => controller.toggleBonfirePreference());
   runtime.el.speechToggle?.addEventListener("click", () => app.i18n?.toggleSpeechPreference?.());
   getDesktopHubPanels(runtime).forEach(({ card, toggle }) => {
     if (!card || !toggle) return;
@@ -185,6 +186,14 @@ controller.syncDesktopHubPanels = controller.syncDesktopHubPanels || function sy
     toggle.setAttribute("aria-expanded", String(expanded));
     toggle.setAttribute("aria-disabled", desktopHubActive ? "false" : "true");
   });
+};
+
+controller.toggleBonfirePreference = controller.toggleBonfirePreference || function toggleBonfirePreference() {
+  const runtime = getRuntime();
+  if (!runtime.state.bonfire) runtime.state.bonfire = { enabled: true };
+  runtime.state.bonfire.enabled = !runtime.state.bonfire.enabled;
+  app.persistence?.saveBonfirePreference?.(runtime.state.bonfire.enabled);
+  getHelpers().renderAll?.();
 };
 
 controller.handleRouteButtonPress = controller.handleRouteButtonPress || function handleRouteButtonPress(route) {

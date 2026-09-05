@@ -256,6 +256,9 @@ bootstrapData.I18N = bootstrapData.I18N || {
       on: "On",
       off: "Off",
     },
+    bonfire: {
+      label: "Restart on four wrong",
+    },
     speech: {
       label: "Speech",
       on: "On",
@@ -383,6 +386,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       resetNote: "Clear saved spacing, streaks, and review data.",
       groupLanguage: "Language & content",
       groupCharacters: "Characters",
+      groupGameplay: "Gameplay",
       groupAudio: "Audio",
       groupAppearance: "Appearance",
       groupMore: "More",
@@ -708,6 +712,9 @@ bootstrapData.I18N = bootstrapData.I18N || {
       on: "פועל",
       off: "כבוי",
     },
+    bonfire: {
+      label: "מתחילים מחדש אחרי ארבע טעויות",
+    },
     speech: {
       label: "דיבור",
       on: "פועל",
@@ -835,6 +842,7 @@ bootstrapData.I18N = bootstrapData.I18N || {
       resetNote: "נקה שמירות, רצפים ונתוני סקירה.",
       groupLanguage: "שפה ותוכן",
       groupCharacters: "דמויות",
+      groupGameplay: "משחק",
       groupAudio: "שמע",
       groupAppearance: "מראה",
       groupMore: "עוד",

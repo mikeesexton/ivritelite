@@ -4,23 +4,62 @@
 const app = global.IvriQuestApp = global.IvriQuestApp || {};
 const character = app.character = app.character || {};
 
+// `beatRounds` is what one beat of this mode asks for in its own unit (pairs,
+// rounds, questions, roots, sentences). `beatCost` is roughly how many answers
+// that works out to, which is the unit the tier budget is spent in — they differ
+// because a "round" is not the same size in every mode.
+//
+// `atomic` marks the three modes a beat cannot subdivide: verbMatch is one verb
+// but a whole paradigm, handwriting is one traced sentence, and binyanBoard has
+// to show its root grid to be itself.
+//
+// `family` is what a beat feels like, which is coarser than its id. sentenceBank
+// and shema are the same chip-building interaction read versus heard, and
+// lessonMatch and abbrMatch are the same matching board over different decks —
+// so back to back they read as one long block even though the ids differ.
+// Atomic modes each get their own family, which is what lets them be inserted
+// later without checking for a clash.
 const ACTIVITY_ORDER = Object.freeze([
-  { id: "lessonMatch", nameEn: "Vocabulary", nameHe: "אוצר מילים", intro: "vocabulary" },
-  { id: "sentenceBank", nameEn: "Sentences", nameHe: "משפטים", intro: "sentences" },
-  { id: "shema", nameEn: "Shema", nameHe: "שמע", intro: "listening" },
-  { id: "verbMatch", nameEn: "Conjugation", nameHe: "נטיות", intro: "conjugation" },
-  { id: "abbrMatch", nameEn: "Abbreviations", nameHe: "קיצורים", intro: "abbreviations" },
-  { id: "advConj", nameEn: "Conjugation+", nameHe: "נטיות+", intro: "advConj" },
-  { id: "prepositions", nameEn: "Prepositions", nameHe: "מילות יחס", intro: "prepositions" },
-  { id: "binyanBoard", nameEn: "Binyanim", nameHe: "בניינים", intro: "binyanim" },
-  { id: "handwriting", nameEn: "Handwriting", nameHe: "כתב יד", intro: "handwriting" },
+  { id: "lessonMatch", family: "match", nameEn: "Vocabulary", nameHe: "אוצר מילים", intro: "vocabulary", beatRounds: 5, beatCost: 5 },
+  { id: "sentenceBank", family: "sentence", nameEn: "Sentences", nameHe: "משפטים", intro: "sentences", beatRounds: 4, beatCost: 4 },
+  { id: "shema", family: "sentence", nameEn: "Shema", nameHe: "שמע", intro: "listening", beatRounds: 3, beatCost: 3 },
+  { id: "verbMatch", family: "verbMatch", nameEn: "Conjugation", nameHe: "נטיות", intro: "conjugation", beatRounds: 1, beatCost: 18, atomic: true },
+  { id: "abbrMatch", family: "match", nameEn: "Abbreviations", nameHe: "קיצורים", intro: "abbreviations", beatRounds: 5, beatCost: 5 },
+  { id: "advConj", family: "conjugation", nameEn: "Conjugation+", nameHe: "נטיות+", intro: "advConj", beatRounds: 4, beatCost: 4 },
+  { id: "prepositions", family: "prepositions", nameEn: "Prepositions", nameHe: "מילות יחס", intro: "prepositions", beatRounds: 4, beatCost: 4 },
+  { id: "binyanBoard", family: "binyan", nameEn: "Binyanim", nameHe: "בניינים", intro: "binyanim", beatRounds: 2, beatCost: 11, atomic: true },
+  { id: "handwriting", family: "handwriting", nameEn: "Handwriting", nameHe: "כתב יד", intro: "handwriting", beatRounds: 1, beatCost: 14, atomic: true },
 ]);
 
+// A tier is a question budget now, not a count of distinct modes. `count` is
+// kept only so a mission saved before this change still sanitizes.
 const TIERS = Object.freeze({
-  short: { count: 3, labelEn: "Short", labelHe: "קצר" },
-  medium: { count: 5, labelEn: "Medium", labelHe: "בינוני" },
-  full: { count: 9, labelEn: "Full", labelHe: "מלא" },
+  short: { count: 3, budget: 18, labelEn: "Short", labelHe: "קצר" },
+  medium: { count: 5, budget: 36, labelEn: "Medium", labelHe: "בינוני" },
+  full: { count: 9, budget: 70, labelEn: "Full", labelHe: "מלא" },
 });
+
+// No single beat may take more than this share of a mission. It is what keeps
+// the long atomic modes out of a short session by arithmetic instead of a
+// hand-maintained eligibility list that would drift from the costs above.
+const MAX_BEAT_SHARE = 0.4;
+// One long atomic beat earns its place per this much budget.
+const ATOMIC_BUDGET_PER_SLOT = 35;
+// A mission opens on one of these: a cheap, familiar win rather than whatever
+// the shuffle happened to put first.
+const OPENING_ACTIVITIES = Object.freeze(["lessonMatch", "sentenceBank"]);
+// Modes whose second-chance queue survives leaving its beat. binyanBoard is
+// deliberately absent: its queue holds bare formIds that only resolve against
+// the root deck built for that one beat, so a deferred entry would silently fail
+// to rebuild. It keeps reviewing in-beat, which is fine — it appears at most
+// once in a mission.
+// The bonfire fires on the same streak that already turns the companion to
+// `struggling`, so the two never disagree about when things have gone wrong.
+const DEATH_WRONG_STREAK = 4;
+const REPAIRABLE_MODES = Object.freeze(["sentenceBank", "shema", "advConj", "prepositions"]);
+// Every beat finishing instantly means starved decks, not progress. Past this
+// many chained starts the mission falls back to the hub rather than recursing.
+const MAX_BEAT_CHAIN_DEPTH = 30;
 
 const SPRITE_NAMES = new Set([
   "neutral", "frustrated", "celebrating", "struggling", "mission-complete", "nervous-laugh",
@@ -232,8 +271,38 @@ function getStoredFocus(characterId) {
   return stored?.length ? stored : defaultFocusIds(characterId);
 }
 
+// A beat is one short visit to a mode. `rounds: 0` means "use the mode's own
+// default length", which is what a migrated pre-beats save gets so that the
+// itinerary it describes still plays at exactly the length it was saved at.
+function sanitizeBeats(mission) {
+  const known = (mode) => ACTIVITY_ORDER.some((activity) => activity.id === mode);
+  if (Array.isArray(mission?.beats)) {
+    return mission.beats
+      .map((beat) => ({
+        mode: String(beat?.mode || ""),
+        rounds: Math.max(0, Math.floor(Number(beat?.rounds) || 0)),
+        ...(beat?.repair === true ? { repair: true } : {}),
+      }))
+      .filter((beat) => known(beat.mode));
+  }
+  return Array.isArray(mission?.activities)
+    ? mission.activities
+      .map((id) => ({ mode: String(id || ""), rounds: 0 }))
+      .filter((beat) => known(beat.mode))
+    : [];
+}
+
+// Read sites go through this rather than `mission.beats` directly. The mission
+// tests assign `runtime.characterState` without passing it through
+// `sanitizeMission`, so a mission reaching a renderer may still carry the
+// pre-beats shape.
+function getBeats(mission) {
+  return Array.isArray(mission?.beats) ? mission.beats : sanitizeBeats(mission);
+}
+
 function sanitizeMission(mission) {
   if (!mission || typeof mission !== "object") return null;
+  const beats = sanitizeBeats(mission);
   return {
     ...createReactionContainer(mission),
     active: mission.active === true,
@@ -246,15 +315,20 @@ function sanitizeMission(mission) {
     // paths before the mission is, and a focus list read against the wrong cast
     // would silently sanitize to empty.
     characterId: isCharacterChoice(mission.characterId) ? String(mission.characterId) : "",
-    activities: Array.isArray(mission.activities)
-      ? mission.activities.map((id) => String(id || "")).filter((id) => ACTIVITY_ORDER.some((activity) => activity.id === id))
-      : [],
+    beats,
     skippedActivities: Array.isArray(mission.skippedActivities)
       ? mission.skippedActivities.map(sanitizeResult)
       : [],
-    currentIndex: Math.max(0, Number(mission.currentIndex || 0)),
+    currentIndex: Math.min(Math.max(0, Number(mission.currentIndex || 0)), beats.length),
     currentActivity: String(mission.currentActivity || ""),
     results: Array.isArray(mission.results) ? mission.results.map(sanitizeResult) : [],
+    repairQueue: Array.isArray(mission.repairQueue)
+      ? mission.repairQueue
+        .filter((row) => REPAIRABLE_MODES.includes(String(row?.mode || "")) && row?.entry)
+        .map((row) => ({ mode: String(row.mode), entry: row.entry }))
+      : [],
+    repairAppended: mission.repairAppended === true,
+    deaths: Math.max(0, Number(mission.deaths || 0)),
     startedAt: Math.max(0, Number(mission.startedAt || 0)),
   };
 }
@@ -274,14 +348,14 @@ function sanitizeCharacterState(saved, today) {
   state.lensCharacter = isCharacterChoice(saved?.lensCharacter) ? saved.lensCharacter : "";
   // "perfect" was its own blocking scene before flawless rounds folded into the
   // results screen; a save still carrying it falls through to "none".
-  state.screen = ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "results", "none"].includes(saved?.screen)
+  state.screen = ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "death", "results", "none"].includes(saved?.screen)
     ? saved.screen
     : (state.dailyChoice ? "none" : "picker");
   state.reviewOpen = saved?.reviewOpen === true;
   state.mission = sanitizeMission(saved?.mission);
   // The quit prompt only exists on top of a running mission; without one it
   // would block the app on a scene whose buttons have nothing to act on.
-  if (state.screen === "quitConfirm" && !state.mission?.active) {
+  if ((state.screen === "quitConfirm" || state.screen === "death") && !state.mission?.active) {
     state.screen = "none";
   }
   if (isCharacterChoice(state.dailyChoice) && !state.mission) {
@@ -357,13 +431,15 @@ character.bindUi = character.bindUi || function bindUi() {
       character.cancelQuitMission();
     } else if (action === "quitMission") {
       character.confirmQuitMission();
+    } else if (action === "respawn") {
+      character.respawnAtBeat();
     }
   });
 
   runtime.el?.characterMissionHub?.addEventListener("click", (event) => {
-    const button = event.target?.closest?.("[data-mission-activity]");
+    const button = event.target?.closest?.("[data-mission-beat]");
     if (!button || button.disabled) return;
-    character.openMissionActivity(button.dataset.missionActivity);
+    character.openMissionBeat(button.dataset.missionBeat);
   });
   runtime.el?.characterVisibilityToggle?.addEventListener("click", () => character.toggleVisibility());
   runtime.el?.characterQuitMission?.addEventListener("click", () => character.requestQuitMission());
@@ -408,7 +484,25 @@ character.checkDayRollover = character.checkDayRollover || function checkDayRoll
 };
 
 character.isBlocking = character.isBlocking || function isBlocking() {
-  return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
+  return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm", "death"].includes(getState()?.screen);
+};
+
+// The beat a mode should size itself to right now, or null when no mission is
+// running (free play) or the running beat is not for the mode that is asking.
+// `rounds: 0` means the mode keeps its own default length.
+character.getActiveBeat = character.getActiveBeat || function getActiveBeat() {
+  const mission = getState()?.mission;
+  if (!mission?.active) return null;
+  const beats = getBeats(mission);
+  const beat = beats[mission.currentIndex];
+  if (!beat || beat.mode !== mission.currentActivity) return null;
+  return {
+    mode: beat.mode,
+    rounds: beat.rounds,
+    repair: beat.repair === true,
+    index: mission.currentIndex,
+    total: beats.length,
+  };
 };
 
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
@@ -1023,19 +1117,43 @@ function getActivity(id) {
 
 function renderActivityIntro(target) {
   const mission = getState()?.mission;
-  const activity = getActivity(mission?.activities?.[mission.currentIndex]);
+  const activity = getActivity(getBeats(mission)[mission?.currentIndex]?.mode);
   if (!activity) return;
   const layout = global.document.createElement("div");
   layout.className = "character-scene-focus";
   const eyebrow = global.document.createElement("p");
   eyebrow.className = "character-scene-eyebrow";
-  eyebrow.textContent = `${mission.currentIndex + 1}/${mission.activities.length}`;
+  eyebrow.textContent = `${mission.currentIndex + 1}/${getBeats(mission).length}`;
   const title = global.document.createElement("h2");
   title.id = "characterSceneTitle";
   title.textContent = isHebrewUi() ? activity.nameHe : activity.nameEn;
   layout.append(eyebrow, title, createSprite("neutral", "character-scene-sprite"));
   renderDialogue(layout, getDialogue(activity.intro));
   layout.append(createSceneButton("יאללה", "continue", "accent character-yalla-button"));
+  target.append(layout);
+}
+
+function renderDeath(target) {
+  const state = getState();
+  const layout = global.document.createElement("div");
+  layout.className = "character-scene-focus character-death";
+  const title = global.document.createElement("h2");
+  title.id = "characterSceneTitle";
+  title.className = "character-death-title";
+  // Gendered from the same setting the dialogue uses. Unpointed on purpose: this
+  // is a title card, not teaching copy.
+  title.textContent = state?.gender === "f" ? "את מתה" : "אתה מת";
+  title.lang = "he";
+  title.dir = "rtl";
+  const note = global.document.createElement("p");
+  note.className = "character-death-note";
+  const beat = character.getActiveBeat();
+  note.textContent = beat
+    ? uiText(`Back to the start of activity ${beat.index + 1}.`, `חוזרים לתחילת פעילות ${beat.index + 1}.`)
+    : uiText("Back to the start.", "חוזרים להתחלה.");
+  layout.append(title, note, createSprite("struggling", "character-scene-sprite"));
+  renderDialogue(layout, getDialogue("fourWrong"));
+  layout.append(createSceneButton(uiText("Get up", "קמים"), "respawn", "accent character-death-button"));
   target.append(layout);
 }
 
@@ -1077,6 +1195,7 @@ character.renderScene = character.renderScene || function renderScene() {
   else if (screen === "greeting") renderGreeting(content);
   else if (screen === "activityIntro") renderActivityIntro(content);
   else if (screen === "quitConfirm") renderQuitConfirm(content);
+  else if (screen === "death") renderDeath(content);
 };
 
 character.renderSettings = character.renderSettings || function renderSettings() {
@@ -1153,8 +1272,11 @@ character.renderMissionHub = character.renderMissionHub || function renderMissio
   if (!show) return;
 
   const mission = getState().mission;
-  const completedCount = Math.min(mission.results.length, mission.activities.length);
-  const progress = mission.activities.length ? Math.round((completedCount / mission.activities.length) * 100) : 0;
+  const beats = getBeats(mission);
+  // Merged results no longer count beats, and currentIndex is the truer figure
+  // anyway: it counts what has actually been played.
+  const completedCount = Math.min(Math.max(0, mission.currentIndex), beats.length);
+  const progress = beats.length ? Math.round((completedCount / beats.length) * 100) : 0;
 
   const card = global.document.createElement("article");
   card.className = "page-card character-mission-card";
@@ -1170,8 +1292,8 @@ character.renderMissionHub = character.renderMissionHub || function renderMissio
   const progressText = global.document.createElement("p");
   progressText.className = "character-mission-progress-text";
   progressText.textContent = uiText(
-    `${completedCount} of ${mission.activities.length} activities complete`,
-    `${completedCount} מתוך ${mission.activities.length} פעילויות הושלמו`
+    `${completedCount} of ${beats.length} activities complete`,
+    `${completedCount} מתוך ${beats.length} פעילויות הושלמו`
   );
   const progressTrack = global.document.createElement("div");
   progressTrack.className = "character-mission-progress";
@@ -1187,29 +1309,41 @@ character.renderMissionHub = character.renderMissionHub || function renderMissio
 
   const list = global.document.createElement("div");
   list.className = "character-mission-list";
-  mission.activities.forEach((activityId, index) => {
+  // A mode can hold several beats, so rows say which part they are rather than
+  // repeating one name down the list.
+  const partTotals = new Map();
+  beats.forEach((beat) => partTotals.set(beat.mode, (partTotals.get(beat.mode) || 0) + 1));
+  const partSeen = new Map();
+  beats.forEach((beat, index) => {
+    const activityId = beat.mode;
     const activity = getActivity(activityId);
     if (!activity) return;
-    const result = mission.results.find((item) => item.id === activityId);
+    const part = (partSeen.get(activityId) || 0) + 1;
+    partSeen.set(activityId, part);
+    const parts = partTotals.get(activityId) || 1;
+    // Completion is positional now: a merged result exists as soon as a mode's
+    // first beat lands, so it can no longer say whether *this* beat is done.
+    const isComplete = index < mission.currentIndex;
     const isCurrent = index === mission.currentIndex;
     const isUpcoming = index > mission.currentIndex;
     const row = global.document.createElement("button");
     row.type = "button";
     row.className = "character-mission-row";
-    row.dataset.missionActivity = activityId;
-    row.classList.toggle("is-complete", Boolean(result));
+    row.dataset.missionBeat = String(index);
+    row.classList.toggle("is-complete", isComplete);
     row.classList.toggle("is-current", isCurrent);
     row.disabled = !isCurrent;
 
     const number = global.document.createElement("span");
     number.className = "character-mission-number";
-    number.textContent = result ? "✓" : String(index + 1);
+    number.textContent = isComplete ? "✓" : String(index + 1);
     const name = global.document.createElement("strong");
-    name.textContent = isHebrewUi() ? activity.nameHe : activity.nameEn;
+    const baseName = isHebrewUi() ? activity.nameHe : activity.nameEn;
+    name.textContent = parts > 1 ? `${baseName} · ${part}/${parts}` : baseName;
     const status = global.document.createElement("span");
     status.className = "character-mission-status";
-    if (result) {
-      status.textContent = `${result.correctCount}/${result.correctCount + result.incorrectCount} · ${formatTime(result.elapsedSeconds)}`;
+    if (isComplete) {
+      status.textContent = uiText("Done", "הושלם");
     } else if (isCurrent) {
       status.textContent = mission.currentActivity
         ? uiText("Resume", "להמשיך")
@@ -2012,10 +2146,23 @@ character.backToPicker = character.backToPicker || function backToPicker() {
   getRuntime().helpers?.renderAll?.();
 };
 
-function buildItinerary(targetCount) {
-  const speechSupported = app.speech?.isSupported?.() === true;
-  const playable = [];
+// Builds one mission's beat list. Pure given its options, so it is testable
+// without stubbing Math.random, and stable across a reload because the result
+// is persisted rather than rebuilt.
+function buildBeatPlan(tierId, options = {}) {
+  const tier = TIERS[tierId] || TIERS.short;
+  const budget = Math.max(0, Number(tier.budget) || 0);
+  const speechSupported = options.speechSupported === true;
+  const utils = app.utils || {};
+  const random = typeof utils.seededRandom === "function"
+    ? utils.seededRandom(utils.hashSeed?.(options.seed) ?? 1)
+    : Math.random;
+  const shuffle = (items) => (typeof utils.seededShuffle === "function"
+    ? utils.seededShuffle(items, random)
+    : [...items]);
+
   const skipped = [];
+  const eligible = [];
   ACTIVITY_ORDER.forEach((activity) => {
     if (activity.id === "shema" && !speechSupported) {
       skipped.push({
@@ -2030,8 +2177,79 @@ function buildItinerary(targetCount) {
       });
       return;
     }
-    if (playable.length < targetCount) playable.push(activity.id);
+    if (activity.beatCost <= budget * MAX_BEAT_SHARE) eligible.push(activity);
   });
+
+  let remaining = budget;
+
+  // Atomic modes cannot be trimmed to fit, so they claim their space before the
+  // divisible ones spend the budget down past what they need.
+  const atomicSlots = Math.floor(budget / ATOMIC_BUDGET_PER_SLOT);
+  const atomicBeats = [];
+  shuffle(eligible.filter((activity) => activity.atomic === true)).forEach((activity) => {
+    if (atomicBeats.length >= atomicSlots || activity.beatCost > remaining) return;
+    atomicBeats.push({ mode: activity.id, rounds: activity.beatRounds });
+    remaining -= activity.beatCost;
+  });
+
+  // Divisible modes cycle rather than being exhausted one at a time, which is
+  // what keeps a mode from ever running twice in a row.
+  const divisible = shuffle(eligible.filter((activity) => activity.atomic !== true));
+  const opener = divisible.findIndex((activity) => OPENING_ACTIVITIES.includes(activity.id));
+  if (opener > 0) divisible.unshift(...divisible.splice(opener, 1));
+
+  // Phase one: how many beats each mode gets. Cycling rather than exhausting one
+  // mode at a time is what keeps the mix even.
+  const counts = new Map();
+  let progressed = divisible.length > 0;
+  while (progressed) {
+    progressed = false;
+    divisible.forEach((activity) => {
+      if (activity.beatCost > remaining) return;
+      // One divisible mode left means every beat would be that mode, which is the
+      // blocked practice this whole change exists to stop.
+      if (divisible.length === 1 && counts.size) return;
+      counts.set(activity.id, (counts.get(activity.id) || 0) + 1);
+      remaining -= activity.beatCost;
+      progressed = true;
+    });
+  }
+
+  // Phase two: order them. Always take from the mode with the most beats left
+  // whose family differs from the one just played, so the plan cannot paint
+  // itself into a corner and end on a run of whatever was left over.
+  const sequence = [];
+  let previousFamily = "";
+  let guard = 0;
+  while (guard < 500) {
+    guard += 1;
+    const remainingModes = divisible.filter((activity) => (counts.get(activity.id) || 0) > 0);
+    if (!remainingModes.length) break;
+    const openers = sequence.length
+      ? []
+      : remainingModes.filter((activity) => OPENING_ACTIVITIES.includes(activity.id));
+    const preferredPool = openers.length ? openers : remainingModes;
+    const spaced = preferredPool.filter((activity) => activity.family !== previousFamily);
+    const pool = spaced.length ? spaced : preferredPool;
+    // `divisible` is already in seeded order, so reduce() breaks ties stably.
+    const pick = pool.reduce(
+      (best, activity) => ((counts.get(activity.id) || 0) > (counts.get(best.id) || 0) ? activity : best),
+      pool[0],
+    );
+    counts.set(pick.id, (counts.get(pick.id) || 0) - 1);
+    sequence.push({ mode: pick.id, rounds: pick.beatRounds });
+    previousFamily = pick.family;
+  }
+
+  // Atomic beats land around the middle, spaced, so a long grind is never the
+  // first or last thing in a mission and two never sit back to back. Inserted
+  // back to front so the precomputed positions stay valid.
+  const playable = [...sequence];
+  atomicBeats
+    .map((beat, index) => ({ beat, at: Math.min(sequence.length, Math.round(sequence.length / 3) + index * 3) }))
+    .sort((a, b) => b.at - a.at)
+    .forEach(({ beat, at }) => playable.splice(at, 0, beat));
+
   return { playable, skipped };
 }
 
@@ -2043,7 +2261,10 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
   // disabled stops a click, but a restored save or any other path into this
   // function would otherwise build a mission below the floor.
   if (state.pendingFocus.length && state.pendingFocus.length < MIN_FOCUS_TOPICS) return;
-  const itinerary = buildItinerary(tier.count);
+  const itinerary = buildBeatPlan(tierId, {
+    speechSupported: app.speech?.isSupported?.() === true,
+    seed: `${getTodayKey()}:${state.pendingChoice}:${tierId}`,
+  });
   // The mission takes a snapshot, so editing the standing selection from Review
   // or Settings later cannot shift the deck under a mission already running.
   const focus = state.pendingFocus.length
@@ -2066,7 +2287,7 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
     tier: tierId,
     focus,
     characterId: focusCharacterId,
-    activities: itinerary.playable,
+    beats: itinerary.playable,
     skippedActivities: itinerary.skipped,
     currentIndex: 0,
     currentActivity: "",
@@ -2098,7 +2319,7 @@ character.continueScene = character.continueScene || function continueScene() {
     return;
   }
   if (state.screen === "perfect") {
-    if (mission.currentIndex >= mission.activities.length) character.finishMission();
+    if (mission.currentIndex >= getBeats(mission).length) character.finishMission();
     else character.showMissionHub();
   }
 };
@@ -2149,7 +2370,7 @@ character.startCurrentActivity = character.startCurrentActivity || function star
   const runtime = getRuntime();
   const state = getState();
   const mission = state?.mission;
-  const activityId = mission?.activities?.[mission.currentIndex];
+  const activityId = getBeats(mission)[mission?.currentIndex]?.mode;
   if (!activityId) {
     character.finishMission();
     return;
@@ -2191,24 +2412,121 @@ character.captureActivitySummary = character.captureActivitySummary || function 
   const activity = getActivity(mission.currentActivity);
   if (!activity) return false;
 
-  const result = normalizeActivityResult(config, activity);
-  mission.results.push(result);
+  mergeActivityResult(mission, normalizeActivityResult(config, activity));
   mission.currentIndex += 1;
   mission.currentActivity = "";
-  if (mission.currentIndex >= mission.activities.length) {
+  if (mission.currentIndex >= getBeats(mission).length) {
+    // Everything missed along the way comes back now, as one short beat per mode
+    // that owes something. Guarded by repairAppended so repairs are spent once.
+    if (appendRepairBeats(mission)) {
+      state.screen = "none";
+      mission.onHub = false;
+      saveState();
+      startNextBeat();
+      return true;
+    }
     // The mission-results screen already lists every activity and every
     // mistake, so the last game goes straight there rather than showing its own
     // recap first.
     character.finishMission();
     return true;
   }
-  // Returning false lets showSessionSummary fall through and render this game's
-  // own results screen; Continue then hands off to the hub.
+  // Chain straight into the next beat. Returning true makes showSessionSummary
+  // return before it populates state.summary or routes to results — but after
+  // its own teardown has run — so the learner crosses from one beat to the next
+  // without a per-beat recap, the hub, or the activity intro in between.
   state.screen = "none";
   mission.onHub = false;
   saveState();
-  return false;
+  startNextBeat();
+  return true;
 };
+
+// A mode owns several beats now, and the results screen lists one row per mode,
+// so a beat folds into the row it belongs to instead of adding a row. Keeping
+// the shape per-mode is what lets renderMissionResults and finishMission stay
+// exactly as they were.
+function mergeActivityResult(mission, result) {
+  const existing = mission.results.find((row) => row.id === result.id);
+  if (!existing) {
+    mission.results.push(result);
+    return;
+  }
+  existing.correctCount += result.correctCount;
+  existing.incorrectCount += result.incorrectCount;
+  existing.elapsedSeconds += result.elapsedSeconds;
+  existing.mistakes = [...existing.mistakes, ...result.mistakes];
+}
+
+// A mode calls this instead of opening its own second-chance phase. Misses then
+// come back at the end of the mission rather than two questions later, which is
+// the same spacing argument the interleaving itself rests on: an immediate
+// re-ask is massed practice.
+character.deferReviewQueue = character.deferReviewQueue || function deferReviewQueue(modeId, entries) {
+  const state = getState();
+  const mission = state?.mission;
+  const mode = String(modeId || "");
+  if (!mission?.active || !REPAIRABLE_MODES.includes(mode)) return false;
+  if (!Array.isArray(entries) || !entries.length) return false;
+  // A repair beat's own misses stay in that beat, or the mission would append a
+  // repair beat for the repair beat and never end.
+  if (character.getActiveBeat()?.repair) return false;
+  if (!Array.isArray(mission.repairQueue)) mission.repairQueue = [];
+  entries.forEach((entry) => mission.repairQueue.push({ mode, entry }));
+  saveState();
+  return true;
+};
+
+character.takeRepairQueue = character.takeRepairQueue || function takeRepairQueue(modeId) {
+  const state = getState();
+  const mission = state?.mission;
+  const mode = String(modeId || "");
+  if (!Array.isArray(mission?.repairQueue) || !mission.repairQueue.length) return [];
+  const mine = mission.repairQueue.filter((row) => row.mode === mode).map((row) => row.entry);
+  if (!mine.length) return [];
+  mission.repairQueue = mission.repairQueue.filter((row) => row.mode !== mode);
+  saveState();
+  return mine;
+};
+
+// Repair is one appended beat per mode that owes something — the engines are
+// per-mode, so it cannot be a single closing round.
+function appendRepairBeats(mission) {
+  if (mission.repairAppended === true) return false;
+  mission.repairAppended = true;
+  if (!Array.isArray(mission.repairQueue) || !mission.repairQueue.length) return false;
+  const counts = new Map();
+  mission.repairQueue.forEach((row) => counts.set(row.mode, (counts.get(row.mode) || 0) + 1));
+  const beats = getBeats(mission);
+  let appended = false;
+  REPAIRABLE_MODES.forEach((mode) => {
+    const count = counts.get(mode) || 0;
+    if (!count) return;
+    beats.push({ mode, rounds: count, repair: true });
+    appended = true;
+  });
+  if (appended) mission.beats = beats;
+  return appended;
+}
+
+// A starved deck finishes the moment it starts, which would chain start ->
+// finish -> start until the stack gave out. Depth is tracked rather than
+// deferred through setTimeout because the mission tests drive this path
+// synchronously.
+let beatChainDepth = 0;
+
+function startNextBeat() {
+  if (beatChainDepth >= MAX_BEAT_CHAIN_DEPTH) {
+    character.showMissionHub();
+    return;
+  }
+  beatChainDepth += 1;
+  try {
+    character.startCurrentActivity();
+  } finally {
+    beatChainDepth -= 1;
+  }
+}
 
 character.finishMission = character.finishMission || function finishMission() {
   const runtime = getRuntime();
@@ -2313,8 +2631,69 @@ character.recordAnswer = character.recordAnswer || function recordAnswer(isCorre
     scheduleTransientReactionCheck(context.reactionQuestionKey);
   }
   if (correct) awardAnswerBond();
+
+  // Four wrong in a row is already the app's "you have lost the thread" signal —
+  // it is what turns the companion to `struggling`. The bonfire hangs off the
+  // same threshold rather than inventing a second one.
+  if (!correct && context.wrongStreak >= DEATH_WRONG_STREAK && shouldDie()) {
+    triggerDeath();
+    return;
+  }
+
   saveState();
   character.renderCompanion();
+};
+
+function bonfireEnabled() {
+  const stored = getRuntime().state?.bonfire;
+  return stored ? stored.enabled === true : true;
+}
+
+function shouldDie() {
+  const state = getState();
+  const mission = state?.mission;
+  if (!mission?.active || state.screen !== "none") return false;
+  if (!bonfireEnabled()) return false;
+  // A repair beat is already the second chance. Dying inside one would send the
+  // learner back through the very items they are there to recover.
+  return character.getActiveBeat()?.repair !== true;
+}
+
+function triggerDeath() {
+  const state = getState();
+  const mission = state.mission;
+  mission.deaths = Math.max(0, Number(mission.deaths || 0)) + 1;
+  mission.sprite = "struggling";
+  mission.dialogueKey = "fourWrong";
+  mission.reactionTransient = false;
+  state.screen = "death";
+  saveState();
+  // Deliberately no teardown here. This runs from inside the mode's own answer
+  // handler, which carries on rendering feedback after it returns — clearing the
+  // session out from under it nulls currentQuestion mid-call and throws. The
+  // mode simply sits behind the modal, and respawnAtBeat's startCurrentActivity
+  // resets it the way every other start path does.
+  getRuntime().helpers?.renderAll?.();
+}
+
+// Back to the start of the current beat — the bonfire, not the exact tile. The
+// beat index does not move, so completed beats never replay, and nothing here
+// touches progress: every wrong answer already updated its Leitner record, so
+// death costs position and never learning.
+character.respawnAtBeat = character.respawnAtBeat || function respawnAtBeat() {
+  const state = getState();
+  const mission = state?.mission;
+  if (!mission?.active || state.screen !== "death") return false;
+  mission.correctStreak = 0;
+  mission.wrongStreak = 0;
+  mission.sprite = "neutral";
+  mission.dialogueKey = "";
+  mission.reactionTransient = false;
+  mission.currentActivity = "";
+  state.screen = "none";
+  saveState();
+  character.startCurrentActivity();
+  return true;
 };
 
 // Hiding the sprite collapses the companion's box, and the box is anchored by
@@ -2417,12 +2796,14 @@ character.showMissionHub = character.showMissionHub || function showMissionHub(t
   return true;
 };
 
-character.openMissionActivity = character.openMissionActivity || function openMissionActivity(activityId) {
+character.openMissionBeat = character.openMissionBeat || function openMissionBeat(index) {
   const runtime = getRuntime();
   const state = getState();
   const mission = state?.mission;
-  const expectedActivityId = mission?.activities?.[mission.currentIndex];
-  if (!mission?.active || activityId !== expectedActivityId) return false;
+  const beatIndex = Number(index);
+  if (!mission?.active || !Number.isInteger(beatIndex) || beatIndex !== mission.currentIndex) return false;
+  const activityId = getBeats(mission)[beatIndex]?.mode;
+  if (!activityId) return false;
 
   mission.onHub = false;
   if (mission.currentActivity === activityId && app.session?.hasActiveLearnSession?.()) {
