@@ -21,6 +21,69 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Feel, part 2: sound on by default, and a visible streak
+
+**Requested:** the sound and in-session streak halves of "motion, sound on, streak"
+(roadmap A2 plus the sound default).
+
+**Files changed:**
+- `app/persistence.js` — `loadSoundPreference` returns `enabled: raw?.enabled !== false`.
+  Opt-out, matching the bonfire preference, so no existing save needs migrating and only a
+  deliberate "off" sticks.
+- `styles.css` — the four streak tiers rewritten; `@keyframes streakBreathe`; tiers 3 and 4
+  added to the reduced-motion block.
+- `tests/character-mission.test.js` — two new tests.
+- `tests/app-progress.test.js` — three existing tests updated (see below).
+- `index.html` — `?v=` bumps.
+
+**Why the streak change is CSS only:** the four tiers were already computed by
+`ui.getProgressStreakTier` and already written to the DOM as `data-streak-tier`, and all four
+rules already existed. They just ramped `filter: brightness/saturate` from 1.06 to 1.28, which
+is imperceptible. Same tiers, same zero JS, a ramp a person can see:
+
+| tier | streak | before | after |
+|---|---|---|---|
+| 1 | 2+ | brightness(1.06) | a faint 6px glow |
+| 2 | 4+ | brightness(1.14) | a 10px glow, more saturated |
+| 3 | 6+ | brightness(1.2) | 12px glow that breathes on a 2s loop |
+| 4 | 8+ | brightness(1.28) | 16px glow, gold top edge, faster breathe |
+
+**Three existing tests updated rather than deleted**, each pinning the behaviour this tranche
+deliberately changed. Recorded because updating a test to match new code is exactly how a real
+regression gets waved through, so what each one still guards:
+- `sound preference defaults to disabled…` → `…defaults to enabled`. Still asserts a default
+  and that the toggle persists; only the expected value flipped.
+- `enabling sounds primes all feedback cues` — with sound on by default the cues are already
+  primed at startup, so there is nothing left to enable. Now seeds an explicit
+  `{"enabled": false}` and asserts the identical priming guarantee from there.
+- `gameplay header styling…` — one assertion pinned `brightness(1.28)`, the exact invisible
+  value this work exists to replace. Repointed at tier 4's new signature (the gold inset edge),
+  so it still asserts tier 4 is the top of the ramp. Every other assertion in that test is
+  untouched.
+
+**Behavior changed:**
+- Sound is on for a new learner. A first session is no longer silent *and* motionless.
+- The streak now reads as a growing glow on the progress bar, breathing from six in a row.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **511 pass / 0 fail** (509 before, +2).
+- Verified live: a fresh install reports `state.audio.enabled === true`, and driving
+  `sessionStreak` 0 → 2 → 4 → 6 → 8 produced computed `box-shadow` none → 6px → 10px → 12px →
+  16px-plus-gold, with `animationName` becoming `streakBreathe` at tiers 3 and 4.
+
+**Risks / regressions to check:**
+- **iOS autoplay.** Sound on by default does not mean sound *plays* — Safari blocks audio until
+  a user gesture, so the very first cue of a session may be dropped. Answering is itself a
+  gesture, so in practice this costs at most one cue, and `primeAudioCues` already runs on the
+  language path. Not verified on a real device.
+- Someone who had deliberately left sound off before this change keeps it off; someone who
+  simply never touched it now gets sound. That is the intent, but it is a change they did not
+  ask for.
+- The breathing loop is infinite. It is in the reduced-motion block, but an always-animating
+  element is a battery and repaint cost that the previous static filter did not have.
+- `--selection-glow` is reused for the streak glow. Retuning it for selection states will move
+  the streak ramp with it.
+
 ### 2026-09-05 EDT — Feel, part 1: motion foundation and the answer pulse
 
 **Requested:** "Now do the feel work — motion, sound on, streak." This is the motion half

@@ -1629,7 +1629,9 @@ test("gameplay header styling uses a flat accent progress bar and a top-right st
   assert.match(styles, /\.progress-strip\s*\{[^}]*height:\s*8px;[^}]*background:\s*var\(--line\);/s);
   assert.match(styles, /\.progress-fill\s*\{[^}]*background:\s*var\(--brand\);/s);
   assert.doesNotMatch(styles, /\.progress-fill::after/);
-  assert.match(styles, /\.progress-strip\[data-streak-tier="4"\] \.progress-fill,\s*\.progress-fill\[data-streak-tier="4"\]\s*\{[^}]*brightness\(1\.28\)/s);
+  // Tier 4 is still the top of the streak ramp, but it is a glow plus a gold
+  // edge rather than the brightness(1.28) nobody could see.
+  assert.match(styles, /\.progress-strip\[data-streak-tier="4"\] \.progress-fill,\s*\.progress-fill\[data-streak-tier="4"\]\s*\{[^}]*inset 0 1px 0 var\(--gold\)/s);
 });
 
 test("all viewports share the single-page layout with the bottom nav", () => {
@@ -3317,7 +3319,7 @@ test("verb match rounds preserve all modern imperative forms for every imperativ
   });
 });
 
-test("sound preference defaults to disabled and toggle persists to localStorage", () => {
+test("sound preference defaults to enabled and toggle persists to localStorage", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
   ];
@@ -3327,10 +3329,11 @@ test("sound preference defaults to disabled and toggle persists to localStorage"
     },
   });
 
-  assert.equal(state.audio.enabled, false);
-  toggleSoundPreference();
+  // Opt-out: a first session should not be silent. Only a deliberate "off" sticks.
   assert.equal(state.audio.enabled, true);
-  assert.equal(localStorage.getItem("ivriquest-sound-v1"), JSON.stringify({ enabled: true }));
+  toggleSoundPreference();
+  assert.equal(state.audio.enabled, false);
+  assert.equal(localStorage.getItem("ivriquest-sound-v1"), JSON.stringify({ enabled: false }));
 });
 
 test("display font defaults to Heebo and persists Frank Ruhl Libre as the alternative", () => {
@@ -4308,9 +4311,13 @@ test("enabling sounds primes all feedback cues", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
   ];
+  // Sound is on by default now, so this starts from an explicit opt-out —
+  // otherwise the cues are already primed at startup and there is nothing to
+  // enable. The guarantee under test is unchanged.
   const { audioLoadLog, toggleSoundPreference } = loadAppHarness(vocabulary, [], [], {
     localStorageData: {
       "ivriquest-welcome-seen-v1": "1",
+      "ivriquest-sound-v1": JSON.stringify({ enabled: false }),
     },
   });
 

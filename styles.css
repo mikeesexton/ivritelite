@@ -995,24 +995,42 @@ body[data-ui-lang="he"] .progress-fill {
   margin-right: 0;
 }
 
+/* The four streak tiers were already computed and already written to the DOM as
+   data-streak-tier; they just ramped filter: brightness/saturate from 1.06 to
+   1.28, which is invisible in practice. Same four tiers, same zero JS — the
+   ramp is now something a person can actually see:
+     1  a faint glow
+     2  a brighter, wider glow
+     3  the glow breathes
+     4  the glow plus a gold top edge  */
 .progress-strip[data-streak-tier="1"] .progress-fill,
 .progress-fill[data-streak-tier="1"] {
-  filter: brightness(1.06) saturate(1.08);
+  box-shadow: 0 0 6px var(--selection-glow);
 }
 
 .progress-strip[data-streak-tier="2"] .progress-fill,
 .progress-fill[data-streak-tier="2"] {
-  filter: brightness(1.14) saturate(1.16);
+  box-shadow: 0 0 10px 1px var(--selection-glow);
+  filter: saturate(1.15);
 }
 
 .progress-strip[data-streak-tier="3"] .progress-fill,
 .progress-fill[data-streak-tier="3"] {
-  filter: brightness(1.2) saturate(1.22);
+  box-shadow: 0 0 12px 2px var(--selection-glow);
+  filter: saturate(1.25);
+  animation: streakBreathe 2s var(--ease-out) infinite;
 }
 
 .progress-strip[data-streak-tier="4"] .progress-fill,
 .progress-fill[data-streak-tier="4"] {
-  filter: brightness(1.28) saturate(1.3);
+  box-shadow: 0 0 16px 3px var(--selection-glow), inset 0 1px 0 var(--gold);
+  filter: saturate(1.35) brightness(1.1);
+  animation: streakBreathe 1.4s var(--ease-out) infinite;
+}
+
+@keyframes streakBreathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.82; }
 }
 
 .prompt-card {
@@ -5653,7 +5671,11 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
   .match-card.incoming,
   .feedback-tray,
   .second-chance-intro.active .second-chance-bubble,
-  .character-sprite {
+  .character-sprite,
+  .progress-strip[data-streak-tier="3"] .progress-fill,
+  .progress-strip[data-streak-tier="4"] .progress-fill,
+  .progress-fill[data-streak-tier="3"],
+  .progress-fill[data-streak-tier="4"] {
     animation: none;
   }
 

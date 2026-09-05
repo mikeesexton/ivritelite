@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260905q/);
+  assert.match(indexHtml, /styles\.css\?v=20260905r/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3363,4 +3363,39 @@ test("one hook pulses every mode, and every animation has a reduced-motion path"
     assert.ok(reduced.includes(name), `${name} has no reduced-motion path`);
   });
   assert.match(reduced, /--dur-fast: 0ms;/);
+});
+
+// --- Feel: sound on by default, and a visible streak -------------------------
+
+test("sound is on unless the learner turned it off", () => {
+  const persistence = fs.readFileSync(path.join(PROJECT_ROOT, "app/persistence.js"), "utf8");
+  const block = persistence.slice(persistence.indexOf("function loadSoundPreference"));
+  // Opt-out, not opt-in: absent means on, so no existing save needs migrating.
+  assert.match(block.slice(0, 260), /enabled: raw\?\.enabled !== false/);
+});
+
+test("the four streak tiers are actually perceptible", () => {
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  const tier = (n) => {
+    const start = css.indexOf(`.progress-fill[data-streak-tier="${n}"] {`);
+    assert.ok(start > -1, `tier ${n} rule is missing`);
+    return css.slice(start, css.indexOf("}", start));
+  };
+
+  // The tiers were already computed and written to the DOM; they just ramped
+  // brightness/saturate 1.06 -> 1.28, which nobody can see.
+  [1, 2, 3, 4].forEach((n) => {
+    assert.ok(!/^\s*filter: brightness\(1\.0/m.test(tier(n)), `tier ${n} is still an invisible filter ramp`);
+  });
+  // A ramp: each tier must do something the one below it does not.
+  assert.ok(tier(1).includes("box-shadow"));
+  assert.ok(tier(2).includes("box-shadow") && tier(2).includes("saturate"));
+  assert.ok(tier(3).includes("streakBreathe"), "tier 3 should breathe");
+  assert.ok(tier(4).includes("var(--gold)"), "tier 4 should add the gold edge");
+  assert.match(css, /@keyframes streakBreathe \{/);
+
+  // The breathing loop is an infinite animation, so it needs the same path as the rest.
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.ok(reduced.includes('.progress-fill[data-streak-tier="3"]'));
+  assert.ok(reduced.includes('.progress-fill[data-streak-tier="4"]'));
 });
