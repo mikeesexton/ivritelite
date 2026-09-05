@@ -21,6 +21,57 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T1: data structure, no behaviour change)
+
+**Requested:** Mike asked for a fresh-eyes product review aimed at making the app more addictive
+and more sellable, with missions replaced so long single-mode blocks (sentences, shema, binyanim)
+get broken up and the main flow feels less choppy. Diagnosis: the atomic unit of play is the
+*mode*, not the *question* — `buildItinerary` takes the first N of a frozen nine-item order, so
+Short is permanently Vocabulary/Sentences/Shema (~40 answers, ~15 min) and four of nine modes are
+unreachable without a ~30-minute Full mission. The approved plan replaces
+`mission.activities: [modeId]` with `mission.beats: [{mode, rounds}]` over six tranches. This
+entry covers **T1 only**: the data structure, deliberately with zero observable change.
+
+**Files changed:**
+- `app/character.js` — added `sanitizeBeats(mission)` (reads `mission.beats` when present,
+  otherwise migrates a pre-beats save to one `rounds: 0` beat per activity, filtering unknown
+  mode ids exactly as the old code filtered unknown activity ids) and `getBeats(mission)`.
+  `sanitizeMission` now emits `beats` in place of `activities` and clamps `currentIndex` to
+  `beats.length`. All nine read sites converted to `getBeats`. `chooseTier` writes
+  `beats: itinerary.playable.map((mode) => ({ mode, rounds: 0 }))`.
+- `index.html` — `app/character.js` cache key `?v=20260904c` → `?v=20260905a`.
+
+**Behavior changed:** None intended. Every beat still carries `rounds: 0`, meaning "use the mode's
+own default length", so missions play at exactly the length they did before. One latent bug fixed
+incidentally: `currentIndex` was clamped only at the bottom (`Math.max(0, …)`), so a restored save
+with an index past the end of its itinerary could never satisfy `currentIndex >= length` and so
+never reached `finishMission`.
+
+**Tests run:**
+- `npm test` → **479 pass / 0 fail** (baseline before the change: also 479/0).
+- `node --test tests/character-mission.test.js` → 85/85.
+- `node --test tests/gameplay-layout.test.js` → 1/1 standalone (4.2s).
+- `node --test tests/cache-bust.test.js` → 4/4, including the changed-file `?v=` bump check.
+- `node --test tests/content-coverage.test.js` → 27/27.
+- Caveat worth recording: a *parallel* `npm test` run timed out `gameplay-layout` at its internal
+  150s limit, and `content-coverage` twice ran for tens of minutes. Both pass standalone, and
+  `content-coverage` also hung on a clean stashed tree. This machine had ~20 unrelated node
+  processes (ChatGPT.app / Codex) during the session. Re-running with `--test-concurrency=1`
+  gave a clean 479/0. Treat these as contention, not regressions — neither test loads either
+  changed file.
+
+**Risks / regressions to check:**
+- `mission.activities` is now read in exactly one place: the migration path inside
+  `sanitizeBeats`. Verified by grep across `app/`, `tests/`, `scripts/`, `app.js`, `index.html`.
+- 15 tests construct missions with `activities: [...]` and assign `runtime.characterState`
+  directly, bypassing `sanitizeMission`. They pass because every read site goes through
+  `getBeats`, which migrates on the fly. **A future read site that touches `mission.beats`
+  directly will break them silently — always use `getBeats`.**
+- The `currentIndex` clamp changes behaviour for a corrupted or hand-edited save: an
+  out-of-range index now finishes the mission rather than stalling on it.
+- T2 onward threads a real `rounds` value. Until then a non-zero `rounds` in a save is accepted
+  by `sanitizeBeats` and ignored by every mode.
+
 ### 2026-09-04 EDT — Topic picker: the learner chooses the vocabulary
 
 **Requested:** Mike stepped back from the two focus-picker tranches. Reviewing Ido's shelves,

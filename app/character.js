@@ -232,8 +232,37 @@ function getStoredFocus(characterId) {
   return stored?.length ? stored : defaultFocusIds(characterId);
 }
 
+// A beat is one short visit to a mode. `rounds: 0` means "use the mode's own
+// default length", which is what a migrated pre-beats save gets so that the
+// itinerary it describes still plays at exactly the length it was saved at.
+function sanitizeBeats(mission) {
+  const known = (mode) => ACTIVITY_ORDER.some((activity) => activity.id === mode);
+  if (Array.isArray(mission?.beats)) {
+    return mission.beats
+      .map((beat) => ({
+        mode: String(beat?.mode || ""),
+        rounds: Math.max(0, Math.floor(Number(beat?.rounds) || 0)),
+      }))
+      .filter((beat) => known(beat.mode));
+  }
+  return Array.isArray(mission?.activities)
+    ? mission.activities
+      .map((id) => ({ mode: String(id || ""), rounds: 0 }))
+      .filter((beat) => known(beat.mode))
+    : [];
+}
+
+// Read sites go through this rather than `mission.beats` directly. The mission
+// tests assign `runtime.characterState` without passing it through
+// `sanitizeMission`, so a mission reaching a renderer may still carry the
+// pre-beats shape.
+function getBeats(mission) {
+  return Array.isArray(mission?.beats) ? mission.beats : sanitizeBeats(mission);
+}
+
 function sanitizeMission(mission) {
   if (!mission || typeof mission !== "object") return null;
+  const beats = sanitizeBeats(mission);
   return {
     ...createReactionContainer(mission),
     active: mission.active === true,
@@ -246,13 +275,11 @@ function sanitizeMission(mission) {
     // paths before the mission is, and a focus list read against the wrong cast
     // would silently sanitize to empty.
     characterId: isCharacterChoice(mission.characterId) ? String(mission.characterId) : "",
-    activities: Array.isArray(mission.activities)
-      ? mission.activities.map((id) => String(id || "")).filter((id) => ACTIVITY_ORDER.some((activity) => activity.id === id))
-      : [],
+    beats,
     skippedActivities: Array.isArray(mission.skippedActivities)
       ? mission.skippedActivities.map(sanitizeResult)
       : [],
-    currentIndex: Math.max(0, Number(mission.currentIndex || 0)),
+    currentIndex: Math.min(Math.max(0, Number(mission.currentIndex || 0)), beats.length),
     currentActivity: String(mission.currentActivity || ""),
     results: Array.isArray(mission.results) ? mission.results.map(sanitizeResult) : [],
     startedAt: Math.max(0, Number(mission.startedAt || 0)),
@@ -1023,13 +1050,13 @@ function getActivity(id) {
 
 function renderActivityIntro(target) {
   const mission = getState()?.mission;
-  const activity = getActivity(mission?.activities?.[mission.currentIndex]);
+  const activity = getActivity(getBeats(mission)[mission?.currentIndex]?.mode);
   if (!activity) return;
   const layout = global.document.createElement("div");
   layout.className = "character-scene-focus";
   const eyebrow = global.document.createElement("p");
   eyebrow.className = "character-scene-eyebrow";
-  eyebrow.textContent = `${mission.currentIndex + 1}/${mission.activities.length}`;
+  eyebrow.textContent = `${mission.currentIndex + 1}/${getBeats(mission).length}`;
   const title = global.document.createElement("h2");
   title.id = "characterSceneTitle";
   title.textContent = isHebrewUi() ? activity.nameHe : activity.nameEn;
@@ -1153,8 +1180,9 @@ character.renderMissionHub = character.renderMissionHub || function renderMissio
   if (!show) return;
 
   const mission = getState().mission;
-  const completedCount = Math.min(mission.results.length, mission.activities.length);
-  const progress = mission.activities.length ? Math.round((completedCount / mission.activities.length) * 100) : 0;
+  const beats = getBeats(mission);
+  const completedCount = Math.min(mission.results.length, beats.length);
+  const progress = beats.length ? Math.round((completedCount / beats.length) * 100) : 0;
 
   const card = global.document.createElement("article");
   card.className = "page-card character-mission-card";
@@ -1170,8 +1198,8 @@ character.renderMissionHub = character.renderMissionHub || function renderMissio
   const progressText = global.document.createElement("p");
   progressText.className = "character-mission-progress-text";
   progressText.textContent = uiText(
-    `${completedCount} of ${mission.activities.length} activities complete`,
-    `${completedCount} מתוך ${mission.activities.length} פעילויות הושלמו`
+    `${completedCount} of ${beats.length} activities complete`,
+    `${completedCount} מתוך ${beats.length} פעילויות הושלמו`
   );
   const progressTrack = global.document.createElement("div");
   progressTrack.className = "character-mission-progress";
@@ -1187,7 +1215,8 @@ character.renderMissionHub = character.renderMissionHub || function renderMissio
 
   const list = global.document.createElement("div");
   list.className = "character-mission-list";
-  mission.activities.forEach((activityId, index) => {
+  beats.forEach((beat, index) => {
+    const activityId = beat.mode;
     const activity = getActivity(activityId);
     if (!activity) return;
     const result = mission.results.find((item) => item.id === activityId);
@@ -2066,7 +2095,7 @@ character.chooseTier = character.chooseTier || function chooseTier(tierId) {
     tier: tierId,
     focus,
     characterId: focusCharacterId,
-    activities: itinerary.playable,
+    beats: itinerary.playable.map((mode) => ({ mode, rounds: 0 })),
     skippedActivities: itinerary.skipped,
     currentIndex: 0,
     currentActivity: "",
@@ -2098,7 +2127,7 @@ character.continueScene = character.continueScene || function continueScene() {
     return;
   }
   if (state.screen === "perfect") {
-    if (mission.currentIndex >= mission.activities.length) character.finishMission();
+    if (mission.currentIndex >= getBeats(mission).length) character.finishMission();
     else character.showMissionHub();
   }
 };
@@ -2149,7 +2178,7 @@ character.startCurrentActivity = character.startCurrentActivity || function star
   const runtime = getRuntime();
   const state = getState();
   const mission = state?.mission;
-  const activityId = mission?.activities?.[mission.currentIndex];
+  const activityId = getBeats(mission)[mission?.currentIndex]?.mode;
   if (!activityId) {
     character.finishMission();
     return;
@@ -2195,7 +2224,7 @@ character.captureActivitySummary = character.captureActivitySummary || function 
   mission.results.push(result);
   mission.currentIndex += 1;
   mission.currentActivity = "";
-  if (mission.currentIndex >= mission.activities.length) {
+  if (mission.currentIndex >= getBeats(mission).length) {
     // The mission-results screen already lists every activity and every
     // mistake, so the last game goes straight there rather than showing its own
     // recap first.
@@ -2421,7 +2450,7 @@ character.openMissionActivity = character.openMissionActivity || function openMi
   const runtime = getRuntime();
   const state = getState();
   const mission = state?.mission;
-  const expectedActivityId = mission?.activities?.[mission.currentIndex];
+  const expectedActivityId = getBeats(mission)[mission?.currentIndex]?.mode;
   if (!mission?.active || activityId !== expectedActivityId) return false;
 
   mission.onHub = false;
