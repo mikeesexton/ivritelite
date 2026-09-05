@@ -5608,6 +5608,47 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
   }
 }
 
+/* Daily streak. The one number that measures the behaviour that actually
+   produces acquisition: showing up. Dimmed until today is practised, so it
+   reads as "keep it alive" rather than "already done". */
+.streak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  margin: 0;
+  padding: 0.22rem 0.6rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--panel-bg);
+  color: var(--gold);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.streak-pill.is-pending {
+  color: var(--ink-soft);
+  border-color: var(--line);
+}
+
+.streak-pill-icon {
+  display: inline-flex;
+  opacity: 0.9;
+}
+
+.streak-pill.is-pending .streak-pill-icon {
+  opacity: 0.55;
+}
+
+.home-lessons-card .section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
 /* ---------------------------------------------------------------------------
    Answer feedback pulse
 

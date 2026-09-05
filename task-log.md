@@ -21,6 +21,63 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Feel, part 3: the daily streak (roadmap B1)
+
+**Requested:** the last third of "motion, sound on, streak" — the daily streak.
+
+**The data did not already exist, contrary to the roadmap.** B1 says to promote the bond
+`days: []`. Reading the code, bond days cannot serve as a record of showing up:
+`addBondXp` is only reached from `awardAnswerBond`, which runs **only on correct answers** and
+**returns early when no character is routing**. A day of free play with no lens, or a day of
+nothing but wrong answers, records nothing. So this adds a learner-global list instead, and
+seeds it once from the union of every character's bond days so existing history is kept.
+
+**Files changed:**
+- `app/constants.js` — `STORAGE_KEYS.learnerDays`.
+- `app/character.js` — `loadLearnerDays` (seeds from the bond union on first read),
+  `saveLearnerDays`, `recordLearnerDay`, `shiftDay`, `character.getDailyStreak()`,
+  `character.renderStreak()`, wired into `character.render()`.
+- `index.html`, `app/bootstrap-runtime.js`, `styles.css` — the pill in the lessons card header.
+- `tests/character-mission.test.js` — four new tests.
+
+**A real bug my own test caught.** `recordLearnerDay()` was first placed at the end of
+`recordAnswer`, after `const context = getReactionContext(); if (!context) return;`. That guard
+returns null in free play with no lens — the *exact* case the streak exists to cover, and the
+case I had written a test to prove. So the feature did not work in the situation I claimed it
+did, and only the test found it. The call now sits before the context guard, after the screen
+guard, since a streak does not depend on which character you practised with.
+
+**Design notes:**
+- **A day counts for any answer, right or wrong, in any mode, with or without a character.**
+  Accuracy is measured everywhere else; this measures showing up.
+- **The current streak counts back from today, or from yesterday if today is untouched**, so
+  opening the app on a new morning does not read as broken before the day has been missed. The
+  pill dims (`.is-pending`) in that state and the aria label says "not practised today yet".
+- Date maths uses local dates via `getTodayKey`, matching the rest of the app. A UTC basis
+  would roll the streak at the wrong hour for anyone outside UTC.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **515 pass / 0 fail** (511 before, +4).
+- New: consecutive days count; a streak survives an unopened today and breaks after a full day
+  missed while still counting toward longest; the seed takes the union of every character's
+  bond days; a wrong answer in lens-less free play records the day.
+- Verified live: seeded a 3-day run ending yesterday → pill read "Day 3", dimmed, "not
+  practised today yet"; one **wrong** answer in **lens-less free play** → "Day 4", undimmed,
+  "practised today", four days stored.
+
+**Risks / regressions to check:**
+- The seed runs on the first read after this ships. If `ivriquest-learner-days-v1` is ever
+  cleared while bond records survive, it re-seeds from bond days and a learner could see a
+  *different* streak than before — bond days are a subset, so it can only shrink.
+- `recordLearnerDay` reads and writes the whole list on every answer. It is one small array,
+  but it is now on the hot path of every question in every mode.
+- The streak is device-local like everything else. Practising on a second machine builds a
+  separate streak, and nothing reconciles them.
+- Nothing yet shows the longest streak or total days; `getDailyStreak` returns both and only
+  `current` is rendered.
+- Travelling across time zones can double-count or skip a day, since the key is local-date
+  based. Acceptable, and the same basis the day-keyed character reset already uses.
+
 ### 2026-09-05 EDT — Feel, part 2: sound on by default, and a visible streak
 
 **Requested:** the sound and in-session streak halves of "motion, sound on, streak"

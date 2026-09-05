@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260905r/);
+  assert.match(indexHtml, /styles\.css\?v=20260905s/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3398,4 +3398,77 @@ test("the four streak tiers are actually perceptible", () => {
   const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
   assert.ok(reduced.includes('.progress-fill[data-streak-tier="3"]'));
   assert.ok(reduced.includes('.progress-fill[data-streak-tier="4"]'));
+});
+
+// --- Feel: the daily streak --------------------------------------------------
+
+function streakHarness(savedDays, savedBonds) {
+  const { character, app } = loadCharacterModule({
+    saved: {}, savedBonds: savedBonds || {},
+  });
+  const store = new Map();
+  if (savedDays) store.set("ivriquest-learner-days-v1", { days: savedDays });
+  app.runtime.constants.STORAGE_KEYS.learnerDays = "ivriquest-learner-days-v1";
+  const original = app.runtime.storageApi;
+  app.runtime.storageApi = {
+    loadJson: (key, fallback) => (store.has(key) ? store.get(key) : original.loadJson(key, fallback)),
+    saveJson: (key, value) => store.set(key, value),
+  };
+  return { character, app, store };
+}
+
+function daysBack(n) {
+  const out = [];
+  for (let i = n - 1; i >= 0; i -= 1) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  }
+  return out;
+}
+
+test("the daily streak counts consecutive days up to today", () => {
+  const { character } = streakHarness(daysBack(5));
+  const streak = character.getDailyStreak();
+  assert.equal(streak.current, 5);
+  assert.equal(streak.longest, 5);
+  assert.equal(streak.practisedToday, true);
+});
+
+test("a streak survives today being unopened, and breaks after a full day missed", () => {
+  const yesterdayRun = daysBack(4).slice(0, 3);
+  const alive = streakHarness(yesterdayRun).character.getDailyStreak();
+  // Counted from yesterday, so opening the app tomorrow morning does not read
+  // as broken before the day has even been missed.
+  assert.equal(alive.current, 3);
+  assert.equal(alive.practisedToday, false);
+
+  const stale = streakHarness(daysBack(6).slice(0, 3)).character.getDailyStreak();
+  assert.equal(stale.current, 0, "three days ago is a broken streak");
+  assert.equal(stale.longest, 3, "but it still counts as the longest run");
+});
+
+test("the streak seeds from bond history so nobody loses days they earned", () => {
+  // Bond days only record correct answers under an active character, so they
+  // cannot be the source of truth going forward — but they are real history.
+  const { character } = streakHarness(null, {
+    ido: { xp: 10, missions: 1, days: daysBack(3).slice(0, 2) },
+    inat: { xp: 5, missions: 0, days: daysBack(3) },
+  });
+  const streak = character.getDailyStreak();
+  assert.equal(streak.totalDays, 3, "the union of every character's days");
+  assert.equal(streak.current, 3);
+});
+
+test("a day is recorded for a wrong answer too", () => {
+  const { character, app, store } = streakHarness([]);
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", dailyChoice: "free",
+    screen: "none", mission: null, freePlay: { correctStreak: 0, wrongStreak: 0 },
+  };
+  // The streak measures showing up, not accuracy — and free play with no lens
+  // awards no bond XP at all, so this cannot ride on the bond record.
+  character.recordAnswer(false);
+  // Joined rather than deepEqual: the array is built inside the VM realm.
+  assert.equal([...store.get("ivriquest-learner-days-v1").days].join(","), character.getTodayKey());
 });

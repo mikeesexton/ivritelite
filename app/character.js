@@ -1785,6 +1785,27 @@ function createTopicEditor(characterId, changeable) {
   return wrap;
 }
 
+character.renderStreak = character.renderStreak || function renderStreak() {
+  const runtime = getRuntime();
+  const pill = runtime.el?.streakPill;
+  const text = runtime.el?.streakPillText;
+  if (!pill || !text) return;
+  const streak = character.getDailyStreak();
+  // Nothing to boast about on day zero, and an empty pill is worse than none.
+  pill.classList.toggle("hidden", streak.current < 1);
+  if (streak.current < 1) return;
+  const label = isHebrewUi() ? `יום ${streak.current}` : `Day ${streak.current}`;
+  text.textContent = label;
+  // Today still open reads differently from today already done.
+  pill.classList.toggle("is-pending", !streak.practisedToday);
+  pill.setAttribute(
+    "aria-label",
+    streak.practisedToday
+      ? uiText(`${streak.current} day streak, practised today`, `רצף של ${streak.current} ימים, תורגל היום`)
+      : uiText(`${streak.current} day streak, not practised today yet`, `רצף של ${streak.current} ימים, עוד לא תורגל היום`),
+  );
+};
+
 character.renderBondPanel = character.renderBondPanel || function renderBondPanel() {
   const runtime = getRuntime();
   const target = runtime.el?.reviewCharacterBonds;
@@ -1895,6 +1916,7 @@ character.render = character.render || function render() {
   character.renderMissionHub();
   character.renderCompanion();
   character.renderMissionResults();
+  character.renderStreak();
 };
 
 character.setGender = character.setGender || function setGender(value) {
@@ -1947,6 +1969,75 @@ function saveBonds() {
 function xpForLevel(level) {
   return BOND_LEVEL_STEP * ((level * (level + 1)) / 2);
 }
+
+// --- Daily streak -----------------------------------------------------------
+// A day counts if the learner answered anything at all, right or wrong, in any
+// mode, with or without a character. Bond `days` cannot serve this: addBondXp
+// runs only from awardAnswerBond, which is called on correct answers only and
+// returns early when no character is routing. Seeded once from the union of the
+// bond days so existing learners keep the history they earned.
+
+function loadLearnerDays() {
+  const runtime = getRuntime();
+  const key = runtime.constants?.STORAGE_KEYS?.learnerDays;
+  const raw = key ? runtime.storageApi?.loadJson?.(key, null) : null;
+  const valid = (list) => (Array.isArray(list) ? list : [])
+    .map((day) => String(day || ""))
+    .filter((day) => /^\d{4}-\d{2}-\d{2}$/.test(day));
+  if (raw && Array.isArray(raw.days)) return [...new Set(valid(raw.days))].sort();
+  const seeded = new Set();
+  Object.values(loadBonds()).forEach((record) => valid(record?.days).forEach((day) => seeded.add(day)));
+  return [...seeded].sort();
+}
+
+function saveLearnerDays(days) {
+  const runtime = getRuntime();
+  const key = runtime.constants?.STORAGE_KEYS?.learnerDays;
+  if (key) runtime.storageApi?.saveJson?.(key, { days });
+}
+
+function recordLearnerDay() {
+  const days = loadLearnerDays();
+  const today = getTodayKey();
+  if (days.includes(today)) return;
+  days.push(today);
+  days.sort();
+  saveLearnerDays(days);
+}
+
+function shiftDay(key, delta) {
+  const [year, month, day] = String(key).split("-").map(Number);
+  // Local, matching getTodayKey — a UTC basis would roll the streak at the wrong
+  // hour for anyone not on UTC.
+  const date = new Date(year, month - 1, day + delta);
+  return getTodayKey(date);
+}
+
+// Current streak counts back from today, or from yesterday when today has not
+// been practised yet — so an unopened app does not read as broken until a full
+// day has been missed.
+character.getDailyStreak = character.getDailyStreak || function getDailyStreak() {
+  const days = loadLearnerDays();
+  const set = new Set(days);
+  const today = getTodayKey();
+  let current = 0;
+  let cursor = set.has(today) ? today : shiftDay(today, -1);
+  while (set.has(cursor)) {
+    current += 1;
+    cursor = shiftDay(cursor, -1);
+  }
+
+  let longest = 0;
+  let run = 0;
+  let previous = "";
+  days.forEach((day) => {
+    run = previous && shiftDay(previous, 1) === day ? run + 1 : 1;
+    previous = day;
+    if (run > longest) longest = run;
+  });
+
+  return { current, longest, totalDays: days.length, practisedToday: set.has(today) };
+};
 
 character.getBondProgress = character.getBondProgress || function getBondProgress(characterId) {
   const record = loadBonds()[String(characterId || "")];
@@ -2622,8 +2713,13 @@ character.reduceAnswerState = character.reduceAnswerState || function reduceAnsw
 
 character.recordAnswer = character.recordAnswer || function recordAnswer(isCorrect) {
   if (character.checkDayRollover()) return;
+  if (getState()?.screen !== "none") return;
+  // Before the context guard on purpose. getReactionContext returns null in free
+  // play with no lens, and those answers are still practice — the streak
+  // measures showing up, not who you showed up with.
+  recordLearnerDay();
   const context = getReactionContext();
-  if (!context || getState()?.screen !== "none") return;
+  if (!context) return;
   const correct = isCorrect === true;
   Object.assign(context, character.reduceAnswerState(context, correct));
   if (context.reactionTransient) {

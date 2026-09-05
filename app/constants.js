@@ -20,6 +20,10 @@ constants.STORAGE_KEYS = constants.STORAGE_KEYS || Object.freeze({
   characterBond: "ivriquest-character-bond-v1",
   welcomeSeen: "ivriquest-welcome-seen-v1",
   bonfire: "ivriquest-bonfire-v1",
+  // Days the learner practised at all. Separate from the bond records because
+  // those only count *correct* answers under an active character, so they are
+  // not a record of showing up. Outside the day-keyed character reset.
+  learnerDays: "ivriquest-learner-days-v1",
   advConjStats: "advConjStats",
   prepositionsStats: "ivriquest-prepositions-stats-v1",
   binyanBoardStats: "ivriquest-binyan-board-stats-v1",
