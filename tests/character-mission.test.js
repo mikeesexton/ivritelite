@@ -1246,18 +1246,19 @@ test("capturing a completed activity advances the mission without shortening the
     },
   };
 
-  // false hands the screen back to showSessionSummary, which renders this
-  // activity's own results; the hub waits until Continue.
+  // true makes showSessionSummary return before it populates state.summary or
+  // routes to results, so no per-beat recap is ever shown. The next beat has
+  // already been started by the time this returns.
   assert.equal(character.captureActivitySummary({
     correctCount: 20,
     incorrectCount: 2,
     elapsedSeconds: 187,
     mistakes: [{ primary: "test" }],
-  }), false);
+  }), true);
   assert.equal(app.runtime.characterState.screen, "none");
   assert.equal(app.runtime.characterState.mission.onHub, false);
   assert.equal(app.runtime.characterState.mission.currentIndex, 1);
-  assert.equal(app.runtime.characterState.mission.currentActivity, "");
+  assert.equal(app.runtime.characterState.mission.currentActivity, "sentenceBank");
   assert.deepEqual(
     JSON.parse(JSON.stringify(app.runtime.characterState.mission.results[0])),
     {
@@ -1304,7 +1305,7 @@ test("a flawless mid-mission activity no longer opens a blocking Perfect scene",
     incorrectCount: 0,
     elapsedSeconds: 90,
     mistakes: [],
-  }), false);
+  }), true);
   assert.equal(app.runtime.characterState.screen, "none");
   assert.equal(character.isBlocking(), false);
   assert.equal(app.runtime.characterState.mission.onHub, false);
@@ -2879,4 +2880,196 @@ test("an index past the end of the beat list sizes nothing", () => {
 
   assert.equal(character.getActiveBeat(), null);
   assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+});
+
+// --- T3: the interleaved beat plan and the chaining loop ---------------------
+
+// Mirrors the contract in ACTIVITY_ORDER/TIERS. Kept here deliberately: if a
+// cost or budget changes, these tests should fail and be re-read, not silently
+// track the source.
+const BEAT_COST = {
+  lessonMatch: 5, sentenceBank: 4, shema: 3, verbMatch: 18, abbrMatch: 5,
+  advConj: 4, prepositions: 4, binyanBoard: 11, handwriting: 14,
+};
+const TIER_BUDGET = { short: 18, medium: 36, full: 70 };
+const ATOMIC_MODES = ["verbMatch", "binyanBoard", "handwriting"];
+
+function buildMission(tierId, characterId = "ido") {
+  const { character, app } = loadCharacterModule();
+  // Seeded the way the other picker tests do it: the module does not build
+  // characterState until initialize(), and these tests drive the scene directly.
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", hasChosen: {}, topics: {},
+    dailyChoice: "", pendingChoice: "", lensCharacter: "", screen: "picker", mission: null,
+  };
+  character.chooseCharacter(characterId);
+  character.confirmFocus();
+  character.chooseTier(tierId);
+  const mission = app.runtime.characterState.mission;
+  return {
+    character,
+    app,
+    mission,
+    beats: mission.beats.map((beat) => ({ mode: beat.mode, rounds: beat.rounds })),
+    modes: mission.beats.map((beat) => beat.mode),
+    cost: mission.beats.reduce((sum, beat) => sum + BEAT_COST[beat.mode], 0),
+  };
+}
+
+test("every tier spends its question budget without exceeding it", () => {
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { beats, cost } = buildMission(tierId);
+    assert.ok(beats.length > 0, `${tierId} produced no beats`);
+    assert.ok(cost <= TIER_BUDGET[tierId], `${tierId} spent ${cost} of ${TIER_BUDGET[tierId]}`);
+    // An unspent remainder is only a bug if another beat would have fit, so it
+    // is judged against the cheapest mode the plan actually drew on.
+    const cheapest = Math.min(...beats.map((beat) => BEAT_COST[beat.mode]));
+    const unspent = TIER_BUDGET[tierId] - cost;
+    assert.ok(unspent < cheapest, `${tierId} left ${unspent} unspent, cheapest beat is ${cheapest}`);
+  });
+});
+
+test("no mode runs twice in a row, in any tier", () => {
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { modes } = buildMission(tierId);
+    modes.forEach((mode, index) => {
+      if (index === 0) return;
+      assert.notEqual(mode, modes[index - 1], `${tierId} repeats ${mode} at ${index}`);
+    });
+  });
+});
+
+test("modes that feel the same never sit back to back", () => {
+  // Coarser than the mode id: sentenceBank and shema are the same chip-building
+  // interaction read versus heard, and lessonMatch and abbrMatch are the same
+  // matching board. Adjacent, either pair reads as one long block, which is the
+  // blocked practice this whole change exists to break up.
+  const FAMILY = {
+    lessonMatch: "match", abbrMatch: "match",
+    sentenceBank: "sentence", shema: "sentence",
+    advConj: "conjugation", prepositions: "prepositions",
+    verbMatch: "verbMatch", binyanBoard: "binyan", handwriting: "handwriting",
+  };
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { modes } = buildMission(tierId);
+    modes.forEach((mode, index) => {
+      if (index === 0) return;
+      assert.notEqual(
+        FAMILY[mode], FAMILY[modes[index - 1]],
+        `${tierId}: ${modes[index - 1]} → ${mode} at ${index} are the same interaction`,
+      );
+    });
+  });
+});
+
+test("a mission opens on a cheap familiar win", () => {
+  ["short", "medium", "full"].forEach((tierId) => {
+    const { modes } = buildMission(tierId);
+    assert.ok(["lessonMatch", "sentenceBank"].includes(modes[0]), `${tierId} opened on ${modes[0]}`);
+  });
+});
+
+test("the long atomic modes are priced out of a short mission", () => {
+  const { modes } = buildMission("short");
+  ATOMIC_MODES.forEach((mode) => {
+    assert.equal(modes.includes(mode), false, `short should not reach ${mode}`);
+  });
+});
+
+test("a long atomic beat never opens, closes, or doubles up on a mission", () => {
+  const { modes } = buildMission("full");
+  const atomicAt = modes
+    .map((mode, index) => (ATOMIC_MODES.includes(mode) ? index : -1))
+    .filter((index) => index >= 0);
+
+  assert.ok(atomicAt.length > 0, "full should afford at least one long beat");
+  assert.equal(atomicAt.includes(0), false, "a mission must not open on a long grind");
+  assert.equal(atomicAt.includes(modes.length - 1), false, "a mission must not end on a long grind");
+  atomicAt.forEach((index, i) => {
+    if (i === 0) return;
+    assert.ok(index - atomicAt[i - 1] > 1, "two long beats must not sit back to back");
+  });
+});
+
+test("the same day, character and tier rebuild the identical plan", () => {
+  // Flattened to a string on purpose: each mission is built in its own VM
+  // context, so deepStrictEqual would fail on prototype identity even when the
+  // plans match exactly.
+  const flatten = (built) => built.beats.map((b) => `${b.mode}:${b.rounds}`).join(" > ");
+
+  assert.equal(flatten(buildMission("full", "inat")), flatten(buildMission("full", "inat")));
+  // A different tier is a different seed, so it must not be the same plan.
+  assert.notEqual(flatten(buildMission("full", "inat")), flatten(buildMission("medium", "inat")));
+});
+
+test("shema is skipped, not silently dropped, when there is no Hebrew voice", () => {
+  // The VM harness has no app.speech, which is the no-voice case.
+  const { modes, mission } = buildMission("full");
+  assert.equal(modes.includes("shema"), false);
+  assert.equal(mission.skippedActivities.some((row) => row.id === "shema" && row.skipped === true), true);
+});
+
+test("several beats of one mode fold into a single results row", () => {
+  const { character, app } = loadCharacterModule();
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true,
+      completed: false,
+      beats: [
+        { mode: "lessonMatch", rounds: 5 },
+        { mode: "sentenceBank", rounds: 4 },
+        { mode: "lessonMatch", rounds: 5 },
+      ],
+      skippedActivities: [],
+      currentIndex: 0,
+      currentActivity: "lessonMatch",
+      results: [],
+      visible: true,
+    },
+  };
+
+  character.captureActivitySummary({ correctCount: 4, incorrectCount: 1, elapsedSeconds: 30, mistakes: [{ primary: "a" }] });
+  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, elapsedSeconds: 40, mistakes: [{ primary: "b" }] });
+  character.captureActivitySummary({ correctCount: 5, incorrectCount: 0, elapsedSeconds: 25, mistakes: [] });
+
+  const results = app.runtime.characterState.mission.results;
+  assert.equal(results.length, 2, "one row per mode, not one per beat");
+  const vocab = results.find((row) => row.id === "lessonMatch");
+  assert.equal(vocab.correctCount, 9);
+  assert.equal(vocab.incorrectCount, 1);
+  assert.equal(vocab.elapsedSeconds, 55);
+  assert.equal(vocab.mistakes.length, 1);
+});
+
+test("a mission of starved decks falls back to the hub instead of recursing", () => {
+  const { character, app } = loadCharacterModule();
+  const beats = Array.from({ length: 40 }, (_, index) => (
+    index % 2 === 0 ? { mode: "lessonMatch", rounds: 5 } : { mode: "sentenceBank", rounds: 4 }
+  ));
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    reviewOpen: false,
+    mission: {
+      active: true, completed: false, beats, skippedActivities: [],
+      currentIndex: 0, currentActivity: "lessonMatch", results: [], visible: true,
+    },
+  };
+  // A starved deck finishes the instant it starts, which is what makes the
+  // chain recurse: start -> finish -> capture -> start.
+  const finishInstantly = () => character.captureActivitySummary({
+    correctCount: 0, incorrectCount: 0, elapsedSeconds: 0, mistakes: [],
+  });
+  app.wordMatch = { startLessonMatch: finishInstantly, beginWordMatchFromIntro: () => {} };
+  app.sentenceBank = { startSentenceBank: finishInstantly, beginSentenceBankFromIntro: () => {} };
+
+  assert.doesNotThrow(() => finishInstantly());
+  assert.equal(app.runtime.characterState.mission.onHub, true);
 });

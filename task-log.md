@@ -21,6 +21,94 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T3: the interleaved plan and the chaining loop)
+
+**Requested:** Continue the approved beat plan. T3 is the user-visible tranche: build the
+mission as an interleaved, day-seeded list of short beats, and chain from one beat to the next
+without the hub and activity-intro modal in between.
+
+**Files changed:**
+- `app/utils.js` — added `hashSeed` (FNV-1a), `seededRandom` (mulberry32) and `seededShuffle`
+  (accepts a seed *or* a live generator so several draws share one stream). Exists so plan
+  building is a pure function testable without stubbing `Math.random`.
+- `app/character.js` —
+  - `ACTIVITY_ORDER` entries gained `beatRounds` (the beat's length in the mode's own unit),
+    `beatCost` (roughly how many answers that is), `atomic`, and `family`.
+  - `TIERS` gained `budget`: short 18, medium 36, full 70 questions. `count` kept only so a
+    pre-T3 save still sanitizes.
+  - `buildItinerary` → `buildBeatPlan(tierId, {speechSupported, seed})`. Two-phase: decide how
+    many beats each mode gets by cycling until the budget is spent, then order them by always
+    taking from the mode with the most beats left whose *family* differs from the one just
+    played. Atomic beats are chosen first (they cannot be trimmed to fit), then inserted around
+    the middle, spaced, back to front so precomputed positions stay valid.
+  - `captureActivitySummary` now merges results by mode, returns **true** mid-mission, and
+    chains into the next beat via `startNextBeat()`.
+  - `mergeActivityResult`, `startNextBeat` + `beatChainDepth` guard added.
+  - Hub: progress from `currentIndex` (merged results no longer count beats), rows keyed
+    `data-mission-beat`, repeated modes labelled "· 2/3", completion derived positionally.
+  - `openMissionActivity` → `openMissionBeat(index)`.
+- `tests/character-mission.test.js` — two contract tests rewritten, ten new tests.
+- `index.html` — `?v=` bumped to `20260905c` for `utils.js` and `character.js`.
+
+**Two design decisions worth recording:**
+
+1. **Budget, not beat count.** Beats are not interchangeable: a verbMatch beat is ~18 answers
+   and a shema beat is 3. A raw beat count would let a 5-beat "short" that happened to draw
+   verbMatch run 30+ questions. `MAX_BEAT_SHARE = 0.4` (no beat may exceed 40% of the session)
+   plus `ATOMIC_BUDGET_PER_SLOT = 35` price the long modes out of short missions by arithmetic
+   rather than a hand-kept exclusion list that would drift from the costs.
+2. **Families, not just mode ids.** The first working plan produced `sentenceBank → shema`
+   adjacent in a short mission. That passes "no mode twice in a row" but is exactly the
+   complaint that started this work: both are the same chip-building interaction, read versus
+   heard, so back to back they read as one long block. `family` groups sentenceBank+shema and
+   lessonMatch+abbrMatch; atomic modes each get their own family, which is what lets them be
+   inserted later without a clash check.
+
+**Behavior changed — the visible one:**
+- A mission is now an interleaved list of short beats, reshuffled per day/character/tier.
+  Real short plan: `sentenceBank(4) → advConj(4) → shema(3) → lessonMatch(5)` — 4 beats,
+  ~16 questions, down from ~40. Medium: 7 beats ~36. Full: 11 beats ~68, down from ~150.
+- **No hub visit, no activity-intro modal and no per-beat results screen between beats.** The
+  intro and hub now appear only on a deliberate pause. Verified live: finishing beat 1 through
+  `session.finishSentenceBank()` left `summaryActive: false`, `onHub: false`, `route: "home"`
+  and started advConj immediately.
+- Modes are shortened to their beat: sentenceBank ran 4 rounds, advConj built a 4-question
+  beat (3 queued + 1 loaded) and its header read 4.
+- Hub rows label repeats ("Sentences · 1/2").
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **494 pass / 0 fail** (484 before; +10 net).
+- `node --test tests/character-mission.test.js` → 100/100.
+- New: budget spent but never exceeded; no mode twice in a row; no two same-family beats
+  adjacent; missions open on a cheap win; long modes priced out of short; atomics never open,
+  close or double up; same day+character+tier rebuilds an identical plan; shema is *skipped*
+  rather than dropped without a voice; several beats of one mode fold into one results row;
+  a mission of starved decks falls back to the hub instead of recursing.
+- Manual, in the browser at localhost:3000: full picker → focus → tier → mission; beat 1
+  sized to 4; chained to beat 2 with no interstitial; **reload mid-mission returned the
+  identical plan at the same beat index with the right round target**.
+- The cross-realm trap from the T2 entry bit twice more here. `assert.deepEqual` on anything
+  built inside a VM context fails on prototype identity. Compare field by field, or flatten
+  to a string — `Array.prototype.map` on a VM array returns a VM array, so mapping does not
+  escape the realm.
+
+**Risks / regressions to check:**
+- `captureActivitySummary` returning `true` mid-mission depends on `showSessionSummary`
+  returning early *after* its teardown. If that ordering in `app/session.js:676` ever changes,
+  beats will chain on a half-torn-down session.
+- The chain is synchronous and re-entrant by design (`startNextBeat` → `startCurrentActivity`
+  → `startGame` → possibly straight back). `MAX_BEAT_CHAIN_DEPTH = 30` is the only stop;
+  the fallback is the hub, which is recoverable but not obvious to a learner.
+- The three `finish*` score formulas from T2 now really do run on short beats. Their
+  correctness depends on the beat still being live when the summary is built, which holds
+  only because `captureActivitySummary` clears `currentActivity` after the config is assembled.
+- `mission.results` is per-mode, so the results screen shows summed totals across beats. Per
+  beat scores are no longer recoverable — the hub shows "Done" rather than a score.
+- Tier budgets (18/36/70) and the nine `beatCost` values are guesses calibrated by reading, not
+  by timing real sessions. They are one table in `character.js` and are meant to be tuned.
+- `buildBeatPlan`'s phase-two loop has a 500-iteration guard. It cannot currently be reached,
+  but a future mode with a zero `beatCost` would spin against it.
+
 ### 2026-09-05 EDT — Missions become beats (T2: round parameterization, no behaviour change)
 
 **Requested:** Continue the approved beat plan. T2 threads a per-beat round-count override

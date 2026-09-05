@@ -47,6 +47,46 @@ utils.shuffle = utils.shuffle || function shuffle(items) {
   return arr;
 };
 
+// A stable string hash, so a mission plan can be rebuilt from a seed string
+// rather than stored. FNV-1a.
+utils.hashSeed = utils.hashSeed || function hashSeed(value) {
+  const text = String(value ?? "");
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+};
+
+// mulberry32. Small, fast, and more than good enough to order a nine-item list.
+// Exists so plan building is a pure function that tests can drive without
+// stubbing Math.random.
+utils.seededRandom = utils.seededRandom || function seededRandom(seed) {
+  let state = (Number(seed) >>> 0) || 1;
+  return function next() {
+    state = (state + 0x6D2B79F5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+};
+
+// Accepts either a seed or a live generator, so several draws can share one
+// stream and stay deterministic together.
+utils.seededShuffle = utils.seededShuffle || function seededShuffle(items, seed) {
+  const random = typeof seed === "function" ? seed : utils.seededRandom(seed);
+  const arr = [...items];
+
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+
+  return arr;
+};
+
 utils.normalizeAdaptiveRecord = utils.normalizeAdaptiveRecord || function normalizeAdaptiveRecord(raw) {
   const attempts = Math.max(0, Number(raw?.attempts || 0));
   const correct = Math.max(0, Math.min(attempts, Number(raw?.correct || 0)));
