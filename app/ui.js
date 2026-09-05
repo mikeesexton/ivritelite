@@ -267,7 +267,7 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
           })
         : translate("session.round", {
             current: runtime.state.advConj.currentRound,
-            total: runtime.constants.ADV_CONJ_ROUNDS,
+            total: app.session?.getModeRoundTarget?.("advConj", runtime.constants.ADV_CONJ_ROUNDS),
           });
       timeSeconds = runtime.state.advConj.elapsedSeconds;
     } else if (runtime.state.mode === "prepositions") {
@@ -278,7 +278,7 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
           })
         : translate("session.round", {
             current: runtime.state.prepositions.currentRound,
-            total: runtime.constants.PREPOSITIONS_ROUNDS,
+            total: app.session?.getModeRoundTarget?.("prepositions", runtime.constants.PREPOSITIONS_ROUNDS),
           });
       timeSeconds = runtime.state.prepositions.elapsedSeconds;
     } else if (runtime.state.mode === "binyanBoard") {
@@ -959,6 +959,7 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
 
   if (runtime.state.mode === "advConj") {
     const inReview = Boolean(runtime.state.advConj.inReview);
+    const advConjRounds = app.session?.getModeRoundTarget?.("advConj", runtime.constants.ADV_CONJ_ROUNDS);
     const hasQuestion = runtime.state.advConj.active && Boolean(runtime.state.advConj.currentQuestion);
     runtime.el.modeTitle.textContent = inReview
       ? translate("session.advConjSecondChanceTitle")
@@ -968,8 +969,8 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
         ? (runtime.state.advConj.secondChanceTotal
             ? Math.round((runtime.state.advConj.secondChanceCurrent / runtime.state.advConj.secondChanceTotal) * 100)
             : 0)
-        : runtime.constants.ADV_CONJ_ROUNDS
-          ? Math.round((runtime.state.advConj.currentRound / runtime.constants.ADV_CONJ_ROUNDS) * 100)
+        : advConjRounds
+          ? Math.round((runtime.state.advConj.currentRound / advConjRounds) * 100)
           : 0
     );
     runtime.el.nextBtn.disabled = ui.questionNeedsSelection(runtime.state.advConj.currentQuestion);
@@ -983,6 +984,7 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
 
   if (runtime.state.mode === "prepositions") {
     const inReview = Boolean(runtime.state.prepositions.inReview);
+    const prepositionsRounds = app.session?.getModeRoundTarget?.("prepositions", runtime.constants.PREPOSITIONS_ROUNDS);
     const hasQuestion = runtime.state.prepositions.active && Boolean(runtime.state.prepositions.currentQuestion);
     runtime.el.modeTitle.textContent = inReview
       ? translate("session.prepositionsSecondChanceTitle")
@@ -992,8 +994,8 @@ ui.renderSessionHeader = ui.renderSessionHeader || function renderSessionHeader(
         ? (runtime.state.prepositions.secondChanceTotal
             ? Math.round((runtime.state.prepositions.secondChanceCurrent / runtime.state.prepositions.secondChanceTotal) * 100)
             : 0)
-        : runtime.constants.PREPOSITIONS_ROUNDS
-          ? Math.round((runtime.state.prepositions.currentRound / runtime.constants.PREPOSITIONS_ROUNDS) * 100)
+        : prepositionsRounds
+          ? Math.round((runtime.state.prepositions.currentRound / prepositionsRounds) * 100)
           : 0
     );
     runtime.el.nextBtn.disabled = ui.questionNeedsSelection(runtime.state.prepositions.currentQuestion);

@@ -321,7 +321,8 @@ prepositions.startPrepositions = prepositions.startPrepositions || function star
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "prepositions";
   const deck = prepositions.buildPrepositionsDeck();
-  runtime.state.prepositions.questionQueue = prepositions.pickPrepositionsQuestions(deck, runtime.constants.PREPOSITIONS_ROUNDS);
+  const rounds = s.getModeRoundTarget?.("prepositions", runtime.constants.PREPOSITIONS_ROUNDS) || runtime.constants.PREPOSITIONS_ROUNDS;
+  runtime.state.prepositions.questionQueue = prepositions.pickPrepositionsQuestions(deck, rounds);
   runtime.state.prepositions.active = true;
   runtime.state.prepositions.startMs = Date.now();
   runtime.state.prepositions.timerId = runtime.global.setInterval(() => {

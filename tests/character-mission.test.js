@@ -2779,3 +2779,104 @@ test("every focus group has derived sentence support for at least some rows", ()
     });
   });
 });
+
+// --- T2: beat round parameterization -----------------------------------------
+
+function loadSessionWithMission(mission) {
+  const { character, app, context } = loadCharacterModule();
+  app.runtime.characterState = mission === null ? {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "free",
+    screen: "none",
+    mission: null,
+  } : {
+    dayKey: character.getTodayKey(),
+    gender: "m",
+    dailyChoice: "ido",
+    screen: "none",
+    mission: {
+      active: true,
+      completed: false,
+      skippedActivities: [],
+      results: [],
+      visible: true,
+      ...mission,
+    },
+  };
+  vm.runInContext(
+    fs.readFileSync(path.join(PROJECT_ROOT, "app/session.js"), "utf8"),
+    context,
+    { filename: "app/session.js" },
+  );
+  return { character, app };
+}
+
+test("a running beat sizes the mode it belongs to and no other", () => {
+  const { character, app } = loadSessionWithMission({
+    beats: [{ mode: "advConj", rounds: 3 }],
+    currentIndex: 0,
+    currentActivity: "advConj",
+  });
+
+  // Field by field: getActiveBeat builds its object inside the VM realm, so a
+  // deepStrictEqual against a host-realm literal fails on prototype identity
+  // even when every value matches.
+  const beat = character.getActiveBeat();
+  assert.equal(beat.mode, "advConj");
+  assert.equal(beat.rounds, 3);
+  assert.equal(beat.index, 0);
+  assert.equal(beat.total, 1);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 3);
+  // The beat belongs to advConj, so prepositions keeps its own constant even
+  // though a mission is running.
+  assert.equal(app.session.getModeRoundTarget("prepositions", 10), 10);
+});
+
+test("a beat whose mode is not the running activity does not size anything", () => {
+  const { character, app } = loadSessionWithMission({
+    beats: [{ mode: "advConj", rounds: 3 }],
+    currentIndex: 0,
+    // The mission is between beats: currentActivity is cleared while the hub or
+    // the next start path runs, and a stale beat must not shorten the next mode.
+    currentActivity: "",
+  });
+
+  assert.equal(character.getActiveBeat(), null);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+});
+
+test("a legacy activities mission plays at every mode's default length", () => {
+  const { character, app } = loadSessionWithMission({
+    activities: ["lessonMatch"],
+    currentIndex: 0,
+    currentActivity: "lessonMatch",
+  });
+
+  // sanitizeBeats migrates the pre-beats save to rounds: 0, which means "use the
+  // mode's own constant" — so a save written before T1 plays exactly as it did.
+  const beat = character.getActiveBeat();
+  assert.equal(beat.mode, "lessonMatch");
+  assert.equal(beat.rounds, 0);
+  assert.equal(beat.total, 1);
+  assert.equal(app.session.getModeRoundTarget("lessonMatch", 20), 20);
+});
+
+test("free play keeps every mode at its own default length", () => {
+  const { character, app } = loadSessionWithMission(null);
+
+  assert.equal(character.getActiveBeat(), null);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+  assert.equal(app.session.getModeRoundTarget("lessonMatch", 20), 20);
+});
+
+test("an index past the end of the beat list sizes nothing", () => {
+  const { character, app } = loadSessionWithMission({
+    beats: [{ mode: "advConj", rounds: 3 }],
+    currentIndex: 1,
+    currentActivity: "advConj",
+  });
+
+  assert.equal(character.getActiveBeat(), null);
+  assert.equal(app.session.getModeRoundTarget("advConj", 10), 10);
+});

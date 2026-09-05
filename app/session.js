@@ -673,6 +673,14 @@ session.goHome = session.goHome || function goHome() {
   session.endSessionAndNavigate("home");
 };
 
+// Modes pull their round target through here rather than reading their constant
+// directly, so a mission beat can shorten them. Falls back to the constant in
+// free play, and for any mode the running beat is not for.
+session.getModeRoundTarget = session.getModeRoundTarget || function getModeRoundTarget(modeId, fallback) {
+  const beat = app.character?.getActiveBeat?.();
+  return beat && beat.mode === modeId && beat.rounds > 0 ? beat.rounds : fallback;
+};
+
 session.showSessionSummary = session.showSessionSummary || function showSessionSummary(config = {}) {
   const runtime = getRuntime();
   const h = getHelpers();
@@ -794,7 +802,9 @@ session.finishSentenceBank = session.finishSentenceBank || function finishSenten
     noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: Math.max(
       0,
-      runtime.constants.LESSON_ROUNDS + reviewRounds - runtime.state.sentenceBank.wrongAnswers
+      (app.sentenceBank?.getRoundTarget?.() || runtime.constants.LESSON_ROUNDS)
+        + reviewRounds
+        - runtime.state.sentenceBank.wrongAnswers
     ),
     incorrectCount: runtime.state.sentenceBank.wrongAnswers,
     elapsedSeconds: runtime.state.sentenceBank.elapsedSeconds,
@@ -946,7 +956,7 @@ session.clearPrepositionsIntro = session.clearPrepositionsIntro || function clea
 
 session.finishPrepositions = session.finishPrepositions || function finishPrepositions() {
   const runtime = getRuntime();
-  const rounds = runtime.constants.PREPOSITIONS_ROUNDS || 0;
+  const rounds = session.getModeRoundTarget("prepositions", runtime.constants.PREPOSITIONS_ROUNDS) || 0;
 
   if (runtime.state.prepositions.timerId) {
     runtime.global.clearInterval(runtime.state.prepositions.timerId);
@@ -990,7 +1000,7 @@ session.clearHandwritingIntro = session.clearHandwritingIntro || function clearH
 session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {
   const runtime = getRuntime();
   const h = getHelpers();
-  const rounds = runtime.constants.ADV_CONJ_ROUNDS || 0;
+  const rounds = session.getModeRoundTarget("advConj", runtime.constants.ADV_CONJ_ROUNDS) || 0;
 
   if (runtime.state.advConj.timerId) {
     runtime.global.clearInterval(runtime.state.advConj.timerId);

@@ -438,6 +438,18 @@ character.isBlocking = character.isBlocking || function isBlocking() {
   return ["picker", "focus", "duration", "greeting", "activityIntro", "quitConfirm"].includes(getState()?.screen);
 };
 
+// The beat a mode should size itself to right now, or null when no mission is
+// running (free play) or the running beat is not for the mode that is asking.
+// `rounds: 0` means the mode keeps its own default length.
+character.getActiveBeat = character.getActiveBeat || function getActiveBeat() {
+  const mission = getState()?.mission;
+  if (!mission?.active) return null;
+  const beats = getBeats(mission);
+  const beat = beats[mission.currentIndex];
+  if (!beat || beat.mode !== mission.currentActivity) return null;
+  return { mode: beat.mode, rounds: beat.rounds, index: mission.currentIndex, total: beats.length };
+};
+
 character.isMissionActive = character.isMissionActive || function isMissionActive() {
   return getState()?.mission?.active === true;
 };

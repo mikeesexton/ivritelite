@@ -170,7 +170,8 @@ function buildSentenceRounds() {
   const shuffle = app.utils?.shuffle || ((list) => list);
   const minLetters = runtime.constants?.HANDWRITING_SENTENCE_MIN_LETTERS || 6;
   const maxLetters = runtime.constants?.HANDWRITING_SENTENCE_MAX_LETTERS || 34;
-  const target = runtime.constants?.HANDWRITING_SENTENCE_ROUNDS || 3;
+  const defaultTarget = runtime.constants?.HANDWRITING_SENTENCE_ROUNDS || 3;
+  const target = app.session?.getModeRoundTarget?.("handwriting", defaultTarget) || defaultTarget;
 
   const sentences = global.IvriQuestSentenceBank?.getSentenceBank?.() || [];
   const usable = sentences

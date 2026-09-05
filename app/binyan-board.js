@@ -68,8 +68,9 @@ function getTranslatedText(key, vars = {}) {
 
 function selectBinyanRoundRoots(roots) {
   const utils = app.utils || {};
+  const rootCount = app.session?.getModeRoundTarget?.("binyanBoard", BINYAN_ROUND_ROOT_COUNT) || BINYAN_ROUND_ROOT_COUNT;
   if (typeof utils.pickWeightedSubset !== "function" || typeof utils.getAdaptiveWeight !== "function") {
-    return shuffle(roots.slice()).slice(0, BINYAN_ROUND_ROOT_COUNT);
+    return shuffle(roots.slice()).slice(0, rootCount);
   }
 
   const stats = binyanBoard.getBinyanItemStats();
@@ -77,7 +78,7 @@ function selectBinyanRoundRoots(roots) {
     word: root,
     weight: utils.getAdaptiveWeight(stats[root.id]),
   }));
-  return utils.pickWeightedSubset(weighted, BINYAN_ROUND_ROOT_COUNT);
+  return utils.pickWeightedSubset(weighted, rootCount);
 }
 
 function getBinyanGlossMeaningParts(gloss) {

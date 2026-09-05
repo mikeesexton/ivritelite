@@ -21,6 +21,78 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Missions become beats (T2: round parameterization, no behaviour change)
+
+**Requested:** Continue the approved beat plan. T2 threads a per-beat round-count override
+through every mode's round-decision site, still with zero observable change: all beats are
+written with `rounds: 0`, which means "use the mode's own constant".
+
+**Files changed:**
+- `app/character.js` — added `character.getActiveBeat()`. Returns `{mode, rounds, index, total}`
+  for the beat currently being played, or `null` when no mission is active or when the running
+  beat is not for the mode asking. The `beat.mode !== mission.currentActivity` guard is what
+  stops a stale beat from shortening the next mode between beats.
+- `app/session.js` — added `session.getModeRoundTarget(modeId, fallback)`, the single
+  consumer-facing helper (returns `fallback` unless a beat for that exact mode carries
+  `rounds > 0`). Also switched the three `finish*` correctness formulas to it:
+  `finishSentenceBank`, `finishPrepositions`, `finishAdvConj` each computed
+  `correctCount = rounds + reviewRounds - wrong` off the **raw constant**, which on a
+  shortened beat would clamp to zero and report a silently wrong score.
+- `app/word-match.js` — `pickPairs(game)` pulls the target for `lessonMatch` and `abbrMatch`.
+- `app/sentence-bank.js` — `getRoundTarget()` accepts a beat for `sentenceBank` **or** `shema`,
+  since shema runs on this slice through `shemaMode`.
+- `app/adv-conj.js`, `app/prepositions.js` — queue length pulled at `start*`.
+- `app/binyan-board.js` — `selectBinyanRoundRoots` reads the override in place; the count is a
+  module-private const, deliberately not moved to `constants.js`.
+- `app/handwriting.js` — round target pulled. **See the deviation note below.**
+- `app/ui.js` — the four live denominators (advConj and prepositions, header text and progress
+  percentage). The sentenceBank denominators already call `getRoundTarget()` and were free.
+- `tests/character-mission.test.js` — five new tests.
+- `index.html` — `?v=` bumped to `20260905b` for all nine changed `.js` files.
+
+**Deviation from the plan, deliberate:** the plan had handwriting's beat tighten
+`HANDWRITING_SENTENCE_MAX_LETTERS` to ~14. Not done. That would make `beat.rounds` mean
+*letters* for one mode and *rounds* for the other eight, and a field whose unit changes per
+mode will cause a bug later. Handwriting now pulls its round target like everything else
+(no effect: it is atomic at 1). If a mission beat needs a shorter handwriting sentence, T3
+should add an explicit second field rather than overload `rounds`.
+
+**Deliberately not touched:** the `ABBREVIATION_ROUNDS` denominators (`ui.js:243`, `:918`) and
+the `LESSON_ROUNDS` ones at `ui.js:310`, `:1045`, `:1051`. These belong to the dead `abbreviation`
+and `lesson` modes (roadmap D1) — `startAbbreviation` / `startLesson` are called but never
+defined. `ABBREVIATION_ROUNDS` does **not** govern `abbrMatch`; `abbrMatch` reaches
+`pickPairs` and reads `WORD_MATCH_SESSION_SIZE`. Threading an override into those constants
+would have been dead code.
+
+**Behavior changed:** None. Every beat still carries `rounds: 0`, so every mode plays at its
+own constant. Verified live in the browser: with no mission, `getRoundTarget()` = 10,
+`getModeRoundTarget("advConj", 10)` = 10, `("lessonMatch", 20)` = 20. With a hand-built
+mission `[{sentenceBank, 3}, {advConj, 4}]`, beat 0 gave sentences 3 / advConj 10 / vocab 20,
+and beat 1 gave advConj 4 / sentences 10 — a beat sizes only its own mode.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **484 pass / 0 fail** (479 before + 5 new).
+- `node --test tests/character-mission.test.js` → 90/90.
+- New tests: a running beat sizes only its own mode; a cleared `currentActivity` sizes nothing;
+  a legacy `activities` mission plays at default length; free play falls back for every mode;
+  an index past the end of the beat list sizes nothing.
+- Note for future test authors: `getActiveBeat` builds its return object inside the VM realm,
+  so `assert.deepEqual` against a host-realm literal fails on prototype identity even when
+  every value matches. Compare field by field. This cost two failing tests before it was spotted.
+
+**Risks / regressions to check:**
+- `getActiveBeat` keys on `mission.currentActivity`. Any future path that sets `currentIndex`
+  without also setting `currentActivity` will silently fall back to default lengths rather than
+  erroring. T3 changes exactly this code, so watch it there.
+- `getModeRoundTarget` treats `rounds: 0` as "no override" rather than "zero rounds". A beat
+  genuinely meaning zero questions is unrepresentable, which is intended.
+- The three `finish*` formulas now depend on the beat still being live when the summary is
+  built. That holds today because `captureActivitySummary` clears `currentActivity` only after
+  the config is assembled; T3 must preserve that ordering or scores will be wrong.
+- `ui.js` progress percentages now read through an optional chain. If `app.session` were ever
+  unavailable at render time the total becomes `undefined`; the surrounding ternaries treat
+  that as falsy and render 0 rather than throwing.
+
 ### 2026-09-05 EDT — Missions become beats (T1: data structure, no behaviour change)
 
 **Requested:** Mike asked for a fresh-eyes product review aimed at making the app more addictive

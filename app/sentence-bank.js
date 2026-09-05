@@ -1306,7 +1306,12 @@ sentenceBank.buildSentenceBankMistakeSummary = sentenceBank.buildSentenceBankMis
 sentenceBank.getRoundTarget = sentenceBank.getRoundTarget || function getRoundTarget() {
   const runtime = getRuntime();
   if (!runtime.sentenceBankDeck?.length) return 0;
-  return Math.min(runtime.constants.LESSON_ROUNDS, runtime.sentenceBankDeck.length);
+  // Shema runs on this slice via `shemaMode`, so a beat for either mode sizes it.
+  const beat = app.character?.getActiveBeat?.();
+  const target = beat && (beat.mode === "sentenceBank" || beat.mode === "shema") && beat.rounds > 0
+    ? beat.rounds
+    : runtime.constants.LESSON_ROUNDS;
+  return Math.min(target, runtime.sentenceBankDeck.length);
 };
 
 sentenceBank.resetSentenceBankState = sentenceBank.resetSentenceBankState || function resetSentenceBankState() {

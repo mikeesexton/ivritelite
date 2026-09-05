@@ -424,7 +424,8 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   runtime.state.route = "home";
   runtime.state.lastPlayedMode = "advConj";
   const deck = advConj.buildAdvConjDeck();
-  runtime.state.advConj.questionQueue = advConj.pickAdvConjQuestions(deck, runtime.constants.ADV_CONJ_ROUNDS);
+  const rounds = s.getModeRoundTarget?.("advConj", runtime.constants.ADV_CONJ_ROUNDS) || runtime.constants.ADV_CONJ_ROUNDS;
+  runtime.state.advConj.questionQueue = advConj.pickAdvConjQuestions(deck, rounds);
   runtime.state.advConj.active = true;
   runtime.state.advConj.startMs = Date.now();
   runtime.state.advConj.timerId = runtime.global.setInterval(() => {
