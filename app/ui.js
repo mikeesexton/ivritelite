@@ -155,9 +155,11 @@ ui.pulseAnswerFeedback = ui.pulseAnswerFeedback || function pulseAnswerFeedback(
   void stage.offsetWidth;
   stage.classList.add(next === "correct" ? "is-answer-correct" : "is-answer-wrong");
   runtime.global?.clearTimeout?.(runtime.answerPulseTimer);
+  // Longer than the longest pulse animation (--dur-slow, 650ms). At 420ms the
+  // correct-answer pop was being cancelled a third of the way from the end.
   runtime.answerPulseTimer = runtime.global?.setTimeout?.(() => {
     stage.classList.remove("is-answer-correct", "is-answer-wrong");
-  }, 420);
+  }, 720);
 };
 
 ui.renderBonfireToggle = ui.renderBonfireToggle || function renderBonfireToggle() {
