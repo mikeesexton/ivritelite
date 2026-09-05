@@ -46,6 +46,8 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     langToggle: document.querySelector("#langToggle"),
     themeToggle: document.querySelector("#themeToggle"),
     displayFontToggle: document.querySelector("#displayFontToggle"),
+    streakPill: document.querySelector("#streakPill"),
+    streakPillText: document.querySelector("#streakPillText"),
     bonfireToggle: document.querySelector("#bonfireToggle"),
     soundToggle: document.querySelector("#soundToggle"),
     speechToggle: document.querySelector("#speechToggle"),

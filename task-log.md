@@ -21,6 +21,187 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-05 EDT — Feel, part 3: the daily streak (roadmap B1)
+
+**Requested:** the last third of "motion, sound on, streak" — the daily streak.
+
+**The data did not already exist, contrary to the roadmap.** B1 says to promote the bond
+`days: []`. Reading the code, bond days cannot serve as a record of showing up:
+`addBondXp` is only reached from `awardAnswerBond`, which runs **only on correct answers** and
+**returns early when no character is routing**. A day of free play with no lens, or a day of
+nothing but wrong answers, records nothing. So this adds a learner-global list instead, and
+seeds it once from the union of every character's bond days so existing history is kept.
+
+**Files changed:**
+- `app/constants.js` — `STORAGE_KEYS.learnerDays`.
+- `app/character.js` — `loadLearnerDays` (seeds from the bond union on first read),
+  `saveLearnerDays`, `recordLearnerDay`, `shiftDay`, `character.getDailyStreak()`,
+  `character.renderStreak()`, wired into `character.render()`.
+- `index.html`, `app/bootstrap-runtime.js`, `styles.css` — the pill in the lessons card header.
+- `tests/character-mission.test.js` — four new tests.
+
+**A real bug my own test caught.** `recordLearnerDay()` was first placed at the end of
+`recordAnswer`, after `const context = getReactionContext(); if (!context) return;`. That guard
+returns null in free play with no lens — the *exact* case the streak exists to cover, and the
+case I had written a test to prove. So the feature did not work in the situation I claimed it
+did, and only the test found it. The call now sits before the context guard, after the screen
+guard, since a streak does not depend on which character you practised with.
+
+**Design notes:**
+- **A day counts for any answer, right or wrong, in any mode, with or without a character.**
+  Accuracy is measured everywhere else; this measures showing up.
+- **The current streak counts back from today, or from yesterday if today is untouched**, so
+  opening the app on a new morning does not read as broken before the day has been missed. The
+  pill dims (`.is-pending`) in that state and the aria label says "not practised today yet".
+- Date maths uses local dates via `getTodayKey`, matching the rest of the app. A UTC basis
+  would roll the streak at the wrong hour for anyone outside UTC.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **515 pass / 0 fail** (511 before, +4).
+- New: consecutive days count; a streak survives an unopened today and breaks after a full day
+  missed while still counting toward longest; the seed takes the union of every character's
+  bond days; a wrong answer in lens-less free play records the day.
+- Verified live: seeded a 3-day run ending yesterday → pill read "Day 3", dimmed, "not
+  practised today yet"; one **wrong** answer in **lens-less free play** → "Day 4", undimmed,
+  "practised today", four days stored.
+
+**Risks / regressions to check:**
+- The seed runs on the first read after this ships. If `ivriquest-learner-days-v1` is ever
+  cleared while bond records survive, it re-seeds from bond days and a learner could see a
+  *different* streak than before — bond days are a subset, so it can only shrink.
+- `recordLearnerDay` reads and writes the whole list on every answer. It is one small array,
+  but it is now on the hot path of every question in every mode.
+- The streak is device-local like everything else. Practising on a second machine builds a
+  separate streak, and nothing reconciles them.
+- Nothing yet shows the longest streak or total days; `getDailyStreak` returns both and only
+  `current` is rendered.
+- Travelling across time zones can double-count or skip a day, since the key is local-date
+  based. Acceptable, and the same basis the day-keyed character reset already uses.
+
+### 2026-09-05 EDT — Feel, part 2: sound on by default, and a visible streak
+
+**Requested:** the sound and in-session streak halves of "motion, sound on, streak"
+(roadmap A2 plus the sound default).
+
+**Files changed:**
+- `app/persistence.js` — `loadSoundPreference` returns `enabled: raw?.enabled !== false`.
+  Opt-out, matching the bonfire preference, so no existing save needs migrating and only a
+  deliberate "off" sticks.
+- `styles.css` — the four streak tiers rewritten; `@keyframes streakBreathe`; tiers 3 and 4
+  added to the reduced-motion block.
+- `tests/character-mission.test.js` — two new tests.
+- `tests/app-progress.test.js` — three existing tests updated (see below).
+- `index.html` — `?v=` bumps.
+
+**Why the streak change is CSS only:** the four tiers were already computed by
+`ui.getProgressStreakTier` and already written to the DOM as `data-streak-tier`, and all four
+rules already existed. They just ramped `filter: brightness/saturate` from 1.06 to 1.28, which
+is imperceptible. Same tiers, same zero JS, a ramp a person can see:
+
+| tier | streak | before | after |
+|---|---|---|---|
+| 1 | 2+ | brightness(1.06) | a faint 6px glow |
+| 2 | 4+ | brightness(1.14) | a 10px glow, more saturated |
+| 3 | 6+ | brightness(1.2) | 12px glow that breathes on a 2s loop |
+| 4 | 8+ | brightness(1.28) | 16px glow, gold top edge, faster breathe |
+
+**Three existing tests updated rather than deleted**, each pinning the behaviour this tranche
+deliberately changed. Recorded because updating a test to match new code is exactly how a real
+regression gets waved through, so what each one still guards:
+- `sound preference defaults to disabled…` → `…defaults to enabled`. Still asserts a default
+  and that the toggle persists; only the expected value flipped.
+- `enabling sounds primes all feedback cues` — with sound on by default the cues are already
+  primed at startup, so there is nothing left to enable. Now seeds an explicit
+  `{"enabled": false}` and asserts the identical priming guarantee from there.
+- `gameplay header styling…` — one assertion pinned `brightness(1.28)`, the exact invisible
+  value this work exists to replace. Repointed at tier 4's new signature (the gold inset edge),
+  so it still asserts tier 4 is the top of the ramp. Every other assertion in that test is
+  untouched.
+
+**Behavior changed:**
+- Sound is on for a new learner. A first session is no longer silent *and* motionless.
+- The streak now reads as a growing glow on the progress bar, breathing from six in a row.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **511 pass / 0 fail** (509 before, +2).
+- Verified live: a fresh install reports `state.audio.enabled === true`, and driving
+  `sessionStreak` 0 → 2 → 4 → 6 → 8 produced computed `box-shadow` none → 6px → 10px → 12px →
+  16px-plus-gold, with `animationName` becoming `streakBreathe` at tiers 3 and 4.
+
+**Risks / regressions to check:**
+- **iOS autoplay.** Sound on by default does not mean sound *plays* — Safari blocks audio until
+  a user gesture, so the very first cue of a session may be dropped. Answering is itself a
+  gesture, so in practice this costs at most one cue, and `primeAudioCues` already runs on the
+  language path. Not verified on a real device.
+- Someone who had deliberately left sound off before this change keeps it off; someone who
+  simply never touched it now gets sound. That is the intent, but it is a change they did not
+  ask for.
+- The breathing loop is infinite. It is in the reduced-motion block, but an always-animating
+  element is a battery and repaint cost that the previous static filter did not have.
+- `--selection-glow` is reused for the streak glow. Retuning it for selection states will move
+  the streak ramp with it.
+
+### 2026-09-05 EDT — Feel, part 1: motion foundation and the answer pulse
+
+**Requested:** "Now do the feel work — motion, sound on, streak." This is the motion half
+(roadmap A0 + A1). Sound and the two streaks follow separately.
+
+**Starting position:** `styles.css` had **three `@keyframes` and five `transition` declarations
+in 5,500 lines**, and no motion tokens. Answering a question changed a background colour.
+
+**Files changed:**
+- `app/audio.js` — one line. `playAnswerFeedbackSound` now also calls
+  `app.ui?.pulseAnswerFeedback?.()`. That function is the single call every mode makes on every
+  answer — it is already how the character reaction system got universal coverage — so one line
+  animates all nine modes. Placed *after* `recordAnswer`, which can open the death card: the
+  pulse belongs to the question being answered, not to the card replacing it.
+- `app/ui.js` — `ui.pulseAnswerFeedback(isCorrect)`. Adds a class, clears it on a 420ms timer.
+  The class goes on `#homeLessonStage`, a container in `index.html` that no renderer rebuilds,
+  because a `renderAll()` mid-answer would otherwise replace the node and cut the animation.
+  Remove-reflow-add so a fast streak replays the animation instead of ignoring it.
+- `styles.css` — motion tokens on `:root` (`--dur-fast` 120ms, `--dur` 180ms, `--dur-slow`
+  650ms, `--ease-out`, `--ease-spring`), the two pulse keyframes, and **one** consolidated
+  `prefers-reduced-motion` block.
+- `tests/character-mission.test.js` — one new test; one T4 assertion relaxed.
+
+**Two decisions:**
+
+1. **The tokens are the values the file already used**, not new ones: 120ms on buttons, 180ms on
+   the match cards and feedback tray, the 650ms spring on the second-chance bubble. All six
+   existing declarations were rewired to read them, so the tokens are load-bearing rather than
+   decorative and zeroing them under reduced motion actually does something.
+2. **The two ad-hoc reduced-motion blocks added in T4 and T6 were folded into one.** Three
+   scattered blocks would mean a new animation could ship with no path and nobody would notice.
+   One block is one place to add a selector, and the new test asserts there is exactly one.
+
+**Behavior changed:**
+- Every correct answer in every mode gives the gameplay card a small spring pop with a green
+  ring; every wrong answer shakes it horizontally. Deliberately small — this fires on every
+  question, and anything larger becomes exhausting by the tenth.
+- Under `prefers-reduced-motion: reduce` all of it, plus the beat flash, the death card, the
+  match-card deal, the feedback tray and the sprite, is off.
+
+**Tests run:**
+- `node --test --test-concurrency=1` → **509 pass / 0 fail** (508 before, +1).
+- Verified live: correct and wrong each apply their class, `answerWrongShake` was observed
+  actually running, the class clears, and the tokens resolve (`--dur` 180ms, `--ease-spring`
+  the codified spring).
+- **Checked the reduced-motion block parsed rather than assuming it**: read it back through the
+  CSSOM, one media rule with all three inner rules intact. A malformed block is dropped silently.
+
+**Risks / regressions to check:**
+- The pulse animates `#homeLessonStage`, which contains the prompt and the choices. A `scale`
+  on a container can blur text mid-animation on some displays; it is 1.012 for ~180ms, but it
+  is worth a look on a real device.
+- `prefers-reduced-motion` was verified statically and through the CSSOM, not by emulating the
+  setting in a browser. The rules are present and parsed; that they *suppress* the animation is
+  inferred from `animation: none`.
+- The pulse timer lives on `runtime.answerPulseTimer`, so two rapid answers cancel the first
+  timer rather than stacking. If a mode ever answered twice in one frame the class could be
+  left on until the next answer.
+- `--dur-fast` is now also the second-chance bubble's animation *delay*, which was already
+  120ms. If that token is retuned, that delay moves with it.
+
 ### 2026-09-05 EDT — Missions become beats (T6: the bonfire)
 
 **Requested:** Mike's idea. Four wrong answers in a row shows a Dark Souls-style **אתה מת** and

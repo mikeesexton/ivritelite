@@ -124,6 +124,9 @@ audio.playSoundCue = audio.playSoundCue || function playSoundCue(cueId) {
 audio.playAnswerFeedbackSound = audio.playAnswerFeedbackSound || function playAnswerFeedbackSound(isCorrect) {
   const runtime = getRuntime();
   app.character?.recordAnswer?.(isCorrect === true);
+  // Deliberately after recordAnswer: that can open the death card, and the pulse
+  // belongs to the question being answered, not to the card replacing it.
+  app.ui?.pulseAnswerFeedback?.(isCorrect === true);
   if (!isCorrect) {
     audio.playSoundCue("answerWrong");
     return;

@@ -97,11 +97,14 @@ persistence.saveDisplayFontPreference = persistence.saveDisplayFontPreference ||
   }
 };
 
+// Opt-out, like the bonfire preference. Sound was off by default, which meant a
+// first session was silent *and* motionless — the two things that carry feel.
+// Absent means on, so no save needs migrating and only a deliberate "off" sticks.
 persistence.loadSoundPreference = persistence.loadSoundPreference || function loadSoundPreference() {
   const runtime = getRuntime();
   const raw = runtime.storageApi.loadJson(runtime.constants.STORAGE_KEYS.sound, null);
   return {
-    enabled: raw?.enabled === true,
+    enabled: raw?.enabled !== false,
   };
 };
 

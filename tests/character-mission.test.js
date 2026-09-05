@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260905n/);
+  assert.match(indexHtml, /styles\.css\?v=20260905s/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -3096,7 +3096,10 @@ test("the gameplay pill carries the beat position, and only during a mission", (
   // The flash goes on a node no renderer rebuilds, and has a reduced-motion path:
   // this is the first animation on a gameplay surface.
   assert.match(source, /strip\.classList\.add\("is-beat-change"\)/);
-  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*\.progress-strip\.is-beat-change \{\s*animation: none;/);
+  // Coverage, not position: the reduced-motion rules live in one shared block,
+  // so assert this selector is in it rather than that it comes first.
+  const reducedMotion = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.ok(reducedMotion.includes(".progress-strip.is-beat-change"));
 
   // .app-shell is a grid, so the topbar needs min-width: 0 or it can never
   // shrink and the whole shell overflows 360px instead of the title truncating.
@@ -3330,4 +3333,142 @@ test("a death screen restored without a live mission does not trap the app", () 
   character.initialize();
   assert.notEqual(app.runtime.characterState.screen, "death");
   assert.equal(character.respawnAtBeat(), false);
+});
+
+// --- Feel: motion foundation and the answer pulse ----------------------------
+
+test("one hook pulses every mode, and every animation has a reduced-motion path", () => {
+  const audio = fs.readFileSync(path.join(PROJECT_ROOT, "app/audio.js"), "utf8");
+  const ui = fs.readFileSync(path.join(PROJECT_ROOT, "app/ui.js"), "utf8");
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+
+  // playAnswerFeedbackSound is the single call every mode makes on an answer.
+  assert.match(audio, /app\.ui\?\.pulseAnswerFeedback\?\.\(isCorrect === true\);/);
+  // On a node no renderer rebuilds, or a renderAll mid-answer cuts the animation.
+  assert.match(ui, /const stage = runtime\.el\?\.homeLessonStage;/);
+  assert.match(ui, /void stage\.offsetWidth;/, "a replayed animation needs a reflow between remove and add");
+
+  // Motion tokens exist and are load-bearing, not decorative.
+  ["--dur-fast", "--dur", "--dur-slow", "--ease-out", "--ease-spring"].forEach((token) => {
+    assert.match(css, new RegExp(`\\n\\s+\\${token}:`), `${token} is not defined`);
+  });
+  assert.ok(css.includes("var(--dur-fast) var(--ease-out)"), "tokens must drive real transitions");
+  assert.ok(css.includes("animation: matchCardIn var(--dur)"), "existing animations must read the tokens");
+
+  // Exactly one reduced-motion block, so a new animation has one place to go.
+  const blocks = css.match(/@media \(prefers-reduced-motion: reduce\)/g) || [];
+  assert.equal(blocks.length, 1, "keep reduced-motion in a single block");
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  ["is-answer-correct", "is-answer-wrong", "is-beat-change", "character-death-title"].forEach((name) => {
+    assert.ok(reduced.includes(name), `${name} has no reduced-motion path`);
+  });
+  assert.match(reduced, /--dur-fast: 0ms;/);
+});
+
+// --- Feel: sound on by default, and a visible streak -------------------------
+
+test("sound is on unless the learner turned it off", () => {
+  const persistence = fs.readFileSync(path.join(PROJECT_ROOT, "app/persistence.js"), "utf8");
+  const block = persistence.slice(persistence.indexOf("function loadSoundPreference"));
+  // Opt-out, not opt-in: absent means on, so no existing save needs migrating.
+  assert.match(block.slice(0, 260), /enabled: raw\?\.enabled !== false/);
+});
+
+test("the four streak tiers are actually perceptible", () => {
+  const css = fs.readFileSync(path.join(PROJECT_ROOT, "styles.css"), "utf8");
+  const tier = (n) => {
+    const start = css.indexOf(`.progress-fill[data-streak-tier="${n}"] {`);
+    assert.ok(start > -1, `tier ${n} rule is missing`);
+    return css.slice(start, css.indexOf("}", start));
+  };
+
+  // The tiers were already computed and written to the DOM; they just ramped
+  // brightness/saturate 1.06 -> 1.28, which nobody can see.
+  [1, 2, 3, 4].forEach((n) => {
+    assert.ok(!/^\s*filter: brightness\(1\.0/m.test(tier(n)), `tier ${n} is still an invisible filter ramp`);
+  });
+  // A ramp: each tier must do something the one below it does not.
+  assert.ok(tier(1).includes("box-shadow"));
+  assert.ok(tier(2).includes("box-shadow") && tier(2).includes("saturate"));
+  assert.ok(tier(3).includes("streakBreathe"), "tier 3 should breathe");
+  assert.ok(tier(4).includes("var(--gold)"), "tier 4 should add the gold edge");
+  assert.match(css, /@keyframes streakBreathe \{/);
+
+  // The breathing loop is an infinite animation, so it needs the same path as the rest.
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  assert.ok(reduced.includes('.progress-fill[data-streak-tier="3"]'));
+  assert.ok(reduced.includes('.progress-fill[data-streak-tier="4"]'));
+});
+
+// --- Feel: the daily streak --------------------------------------------------
+
+function streakHarness(savedDays, savedBonds) {
+  const { character, app } = loadCharacterModule({
+    saved: {}, savedBonds: savedBonds || {},
+  });
+  const store = new Map();
+  if (savedDays) store.set("ivriquest-learner-days-v1", { days: savedDays });
+  app.runtime.constants.STORAGE_KEYS.learnerDays = "ivriquest-learner-days-v1";
+  const original = app.runtime.storageApi;
+  app.runtime.storageApi = {
+    loadJson: (key, fallback) => (store.has(key) ? store.get(key) : original.loadJson(key, fallback)),
+    saveJson: (key, value) => store.set(key, value),
+  };
+  return { character, app, store };
+}
+
+function daysBack(n) {
+  const out = [];
+  for (let i = n - 1; i >= 0; i -= 1) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    out.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  }
+  return out;
+}
+
+test("the daily streak counts consecutive days up to today", () => {
+  const { character } = streakHarness(daysBack(5));
+  const streak = character.getDailyStreak();
+  assert.equal(streak.current, 5);
+  assert.equal(streak.longest, 5);
+  assert.equal(streak.practisedToday, true);
+});
+
+test("a streak survives today being unopened, and breaks after a full day missed", () => {
+  const yesterdayRun = daysBack(4).slice(0, 3);
+  const alive = streakHarness(yesterdayRun).character.getDailyStreak();
+  // Counted from yesterday, so opening the app tomorrow morning does not read
+  // as broken before the day has even been missed.
+  assert.equal(alive.current, 3);
+  assert.equal(alive.practisedToday, false);
+
+  const stale = streakHarness(daysBack(6).slice(0, 3)).character.getDailyStreak();
+  assert.equal(stale.current, 0, "three days ago is a broken streak");
+  assert.equal(stale.longest, 3, "but it still counts as the longest run");
+});
+
+test("the streak seeds from bond history so nobody loses days they earned", () => {
+  // Bond days only record correct answers under an active character, so they
+  // cannot be the source of truth going forward — but they are real history.
+  const { character } = streakHarness(null, {
+    ido: { xp: 10, missions: 1, days: daysBack(3).slice(0, 2) },
+    inat: { xp: 5, missions: 0, days: daysBack(3) },
+  });
+  const streak = character.getDailyStreak();
+  assert.equal(streak.totalDays, 3, "the union of every character's days");
+  assert.equal(streak.current, 3);
+});
+
+test("a day is recorded for a wrong answer too", () => {
+  const { character, app, store } = streakHarness([]);
+  app.runtime.characterState = {
+    dayKey: character.getTodayKey(), gender: "m", dailyChoice: "free",
+    screen: "none", mission: null, freePlay: { correctStreak: 0, wrongStreak: 0 },
+  };
+  // The streak measures showing up, not accuracy — and free play with no lens
+  // awards no bond XP at all, so this cannot ride on the bond record.
+  character.recordAnswer(false);
+  // Joined rather than deepEqual: the array is built inside the VM realm.
+  assert.equal([...store.get("ivriquest-learner-days-v1").days].join(","), character.getTodayKey());
 });
