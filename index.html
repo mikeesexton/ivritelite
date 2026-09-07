@@ -33,7 +33,7 @@
       href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@500;700;900&family=Heebo:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260905u" />
+    <link rel="stylesheet" href="./styles.css?v=20260906a" />
   </head>
   <body data-theme="dark" data-display-font="heebo">
     <div class="ambient ambient-a" aria-hidden="true"></div>
@@ -143,15 +143,22 @@
 
                 <section id="characterMissionHub" class="character-mission-hub hidden" aria-live="polite"></section>
 
+                <!-- Outside #homeLessonStage on purpose: the companion is
+                     position: fixed, and a transform on an ancestor — even
+                     scale(1) — makes that ancestor its containing block. The
+                     answer pulse transforms the stage, so while this lived
+                     inside it the sprite jumped into the card on every answer.
+                     Keep it a sibling of the stage. -->
+                <aside id="characterCompanion" class="character-companion hidden" aria-label="Ido">
+                  <div id="characterCompanionBubble" class="character-companion-copy hidden" dir="rtl"></div>
+                  <div id="characterCompanionSprite" class="character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
+                  <div class="character-companion-actions">
+                    <button id="characterQuitMission" type="button" class="quiet character-quit-button hidden" aria-label="Quit mission" title="Quit mission"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.4"/><path d="M6.1 17.9 17.9 6.1"/></svg></button>
+                    <button id="characterVisibilityToggle" type="button" class="quiet character-visibility-toggle" aria-pressed="false">hide</button>
+                  </div>
+                </aside>
+
                 <article id="homeLessonStage" class="lesson-shell home-lesson-stage hidden">
-                  <aside id="characterCompanion" class="character-companion hidden" aria-label="Ido">
-                    <div id="characterCompanionBubble" class="character-companion-copy hidden" dir="rtl"></div>
-                    <div id="characterCompanionSprite" class="character-sprite" data-character="ido" data-reaction="neutral" role="img" aria-label="Ido"></div>
-                    <div class="character-companion-actions">
-                      <button id="characterQuitMission" type="button" class="quiet character-quit-button hidden" aria-label="Quit mission" title="Quit mission"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8.4"/><path d="M6.1 17.9 17.9 6.1"/></svg></button>
-                      <button id="characterVisibilityToggle" type="button" class="quiet character-visibility-toggle" aria-pressed="false">hide</button>
-                    </div>
-                  </aside>
                   <header class="lesson-header">
                     <div class="lesson-header-main">
                       <div id="lessonTitleRow" class="lesson-title-row">

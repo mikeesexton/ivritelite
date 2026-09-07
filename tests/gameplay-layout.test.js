@@ -534,6 +534,60 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
     assertNoGameplayScroll(feedbackGeometry, "Binyanim feedback");
     assertChoicesClearFooter(feedbackGeometry, "Binyanim feedback");
 
+    // #characterCompanion is position: fixed, so it holds still against the
+    // viewport only while nothing above it is transformed. The answer pulse
+    // animates #homeLessonStage, and a transform there — scale(1) counts —
+    // makes the stage the containing block for its fixed descendants. While
+    // the companion was a child of the stage that recomputed `top` and `right`
+    // against the card instead of the viewport, so the sprite teleported down
+    // into the answer options for the length of every pulse and snapped back.
+    // The companion is unhidden by hand rather than by reaching a state that
+    // shows it: what is under test is the geometry of a fixed box against a
+    // transformed ancestor, and a display:none box would report zeroes and pass
+    // the drift assertion for the wrong reason.
+    //
+    // The frame waits are load-bearing. Blink starts a CSS animation on the
+    // next animation frame, so a rect read in the same task as the class still
+    // reports the untransformed ancestor and the drift measures zero however
+    // the DOM is nested.
+    const companionPulse = await evaluate(pageCdp, `(async () => {
+      const frame = () => new Promise((resolve) => {
+        requestAnimationFrame(() => resolve());
+        setTimeout(resolve, 200);
+      });
+      const companion = document.querySelector('#characterCompanion');
+      const stage = document.querySelector('#homeLessonStage');
+      const wasHidden = companion.classList.contains('hidden');
+      companion.classList.remove('hidden');
+      await frame();
+      const before = companion.getBoundingClientRect();
+      IvriQuestApp.ui.pulseAnswerFeedback(true);
+      await frame();
+      await frame();
+      const during = companion.getBoundingClientRect();
+      const pulsing = stage.classList.contains('is-answer-correct');
+      stage.classList.remove('is-answer-correct', 'is-answer-wrong');
+      if (wasHidden) companion.classList.add('hidden');
+      return {
+        rendered: before.width > 0 && before.height > 0,
+        pulsing,
+        insideStage: stage.contains(companion),
+        dx: Math.abs(during.left - before.left),
+        dy: Math.abs(during.top - before.top),
+      };
+    })()`);
+    assert.equal(companionPulse.rendered, true, "the companion must be on screen to be measured");
+    assert.equal(companionPulse.pulsing, true, "pulseAnswerFeedback must have armed the animation");
+    assert.ok(
+      companionPulse.dx <= 0.5 && companionPulse.dy <= 0.5,
+      `the companion moved during the answer pulse: ${JSON.stringify(companionPulse)}`,
+    );
+    assert.equal(
+      companionPulse.insideStage,
+      false,
+      "the fixed companion must stay outside the stage the answer pulse transforms",
+    );
+
     // Conjugation+ used to draw at random from a 22,000-entry deck, so this
     // assertion was a coin flip: it failed intermittently at 496px against a
     // 488px body while every passing run reported a flush 488, because
