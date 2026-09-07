@@ -21,6 +21,60 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-06 EDT — Fix: the companion sprite jumped on every answer
+
+**Requested:** from a screen recording — "the sprite jumps around with every answer, can you fix".
+
+**What was happening.** `#characterCompanion` is `position: fixed`, so it is anchored to the
+viewport — but only while nothing above it in the tree carries a transform. A transformed
+ancestor becomes the containing block for its fixed descendants, and `scale(1)` counts as a
+transform. The answer pulse added in the feel work animates `#homeLessonStage`, and the
+companion was the stage's first child, so `top: clamp(112px, 22vh, 190px)` and `right: 12px`
+were suddenly resolved against the card instead of the viewport. The sprite teleported down
+into the answer options for the length of the animation and snapped back when it ended.
+
+Measured live in the running app at 375x812, one real answer, only the nesting differing:
+
+| nesting | companion `top` during the pulse |
+|---|---|
+| inside the stage | 178.6 -> **425.3** for 677ms, then back |
+| sibling of the stage | 178.6 throughout |
+
+A 247px drop plus an 11px sideways shift, on **every** answer, correct or wrong — the wrong
+answer's `translateX` shake moved it too. Duration is `--dur-slow` (650ms) plus the 720ms
+class-removal timer, which matches the ~300-680ms displacement sampled from the recording.
+
+**Files changed:**
+- `index.html` — moved the `#characterCompanion` `<aside>` out of `#homeLessonStage` to be its
+  sibling inside `.home-primary`, with a comment saying why it must stay there. `?v=` bump for
+  `styles.css`. The move is layout-neutral: a fixed box is out of flow either way, no companion
+  CSS is descendant-scoped on the stage, and `renderCompanion` already owns the `hidden` class
+  on a gate strictly stricter than the stage's, so the stage was never the thing hiding it.
+- `styles.css` — comment only, at the answer-pulse block: the transform there is what makes the
+  stage a containing block, so no fixed overlay may live inside it.
+- `tests/gameplay-layout.test.js` — new regression assertions in the 360x640 Binyanim feedback
+  section: the companion must not be inside the stage, and must not drift more than 0.5px while
+  the pulse runs. Two frame waits before measuring are load-bearing — Blink starts a CSS
+  animation on the next animation frame, so a rect read in the same task reports the
+  untransformed ancestor and measures zero drift however the DOM is nested. Verified failing on
+  the old nesting: `dx 10.5, dy 104.1` at 360x640.
+- `tests/character-mission.test.js` — moved the pinned `styles.css?v=` to `20260906a`.
+
+**Behavior changed:** the companion sprite now holds still through the answer pulse. The pulse
+itself is unchanged; the card still pops and shakes.
+
+**Tests run:** `npm test` before (515 pass / 0 fail) and after (515 pass / 0 fail).
+`node --test tests/gameplay-layout.test.js` run against the old nesting to confirm the new
+assertions actually fail there.
+
+**Risks / regressions to check:** the companion no longer inherits `hidden` from the stage, so
+a state that shows it without going through `character.renderCompanion` would now leave it on
+screen; `renderCompanion` runs inside `character.render`, which `renderAll` always calls, so
+this is a path that does not currently exist rather than one that changed. Drag-position
+clamping is unaffected (it works from `getBoundingClientRect`, which is viewport-relative
+either way). The same trap applies to any future fixed overlay: do not put one inside the
+stage.
+
 ### 2026-09-05 EDT — Fix: the Shema feedback screen had zero vertical margin
 
 **What happened:** two Pages deploys failed on `gameplay-layout` — "Shema structured feedback

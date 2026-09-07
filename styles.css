@@ -5668,6 +5668,10 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
    Driven by ui.pulseAnswerFeedback from the single call every mode makes on an
    answer, so all nine modes get this from one place. Deliberately small: this
    fires on every question, and anything larger becomes exhausting by the tenth.
+
+   The transform below makes the stage the containing block for any
+   position: fixed descendant while it runs, which is why #characterCompanion
+   sits outside the stage in index.html. Do not move a fixed overlay back in.
    --------------------------------------------------------------------------- */
 .home-lesson-stage.is-answer-correct {
   animation: answerCorrectPop var(--dur-slow) var(--ease-spring);
