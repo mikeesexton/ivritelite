@@ -2561,7 +2561,7 @@ test("Continue is dead below the minimum and a mission holds its snapshot", () =
 });
 
 test("a reload mid-flow lands on the focus screen with a live selection", () => {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = loadCharacterModule().character.getTodayKey();
   const mid = loadCharacterModule({
     saved: { dayKey: today, gender: "m", pendingChoice: "ido", pendingFocus: ["food"], screen: "focus", mission: null },
   });
@@ -3327,8 +3327,9 @@ test("respawn returns to the start of the current beat, never an earlier one", (
 });
 
 test("a death screen restored without a live mission does not trap the app", () => {
+  const today = loadCharacterModule().character.getTodayKey();
   const { character, app } = loadCharacterModule({
-    saved: { dayKey: new Date().toISOString().slice(0, 10), gender: "m", dailyChoice: "ido", screen: "death", mission: null },
+    saved: { dayKey: today, gender: "m", dailyChoice: "ido", screen: "death", mission: null },
   });
   character.initialize();
   assert.notEqual(app.runtime.characterState.screen, "death");

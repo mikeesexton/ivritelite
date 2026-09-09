@@ -21,6 +21,54 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-08 EDT — Fix: a wall-clock-dependent test failure on main
+
+**Requested:** fix the evening-only failure of `"a reload mid-flow lands on the focus screen with a live selection"`
+in `tests/character-mission.test.js`, and check the file's other `toISOString().slice(0, 10)` for the
+same defect. Fix the test, not the app.
+
+**What was happening.** Two tests built their saved `dayKey` with `new Date().toISOString().slice(0, 10)`,
+which is **UTC**. The app builds its key from **local** date parts in `getTodayKey()` (`app/character.js:122`)
+and `initialize()` compares `saved?.dayKey === getTodayKey()` (`app/character.js:386`). From 20:00 EDT until
+midnight the two disagree, `sameDay` goes false, the flow rewinds, and the assertion fails. Local-day
+rollover is the intended semantics for a daily-mission app, so the app is right and the tests were wrong.
+
+Both occurrences carried the identical defect, but only one was visible:
+
+| test | old behavior in the mismatch window |
+|---|---|
+| `a reload mid-flow lands on the focus screen…` (line 2563) | **failed** — asserts `screen === "focus"`, and the rewind lands on `picker` |
+| `a death screen restored without a live mission…` (line 3328) | **passed by accident** — `notEqual(screen, "death")` and `respawnAtBeat() === false` also hold on the rewind path, so it silently exercised a stale-day restore instead of the same-day one it names |
+
+Verified by running the old file under `TZ=Pacific/Kiritimati` and `TZ=Pacific/Midway`: the second test
+passes either way. Masked, not benign — it was not testing what its name claims.
+
+**Files changed:**
+- `tests/character-mission.test.js` — both sites now derive the key with `loadCharacterModule().character.getTodayKey()`,
+  calling the app's own function so the two can never drift again. This is already the file's dominant
+  idiom (34 existing uses of `character.getTodayKey()`; these were the only two exceptions). No helper or
+  abstraction added. No app file touched.
+
+**Cache-busting:** not applicable, and confirmed rather than assumed. `index.html` references no `tests/`
+path, and `tests/cache-bust.test.js` only flags changed files that `index.html` actually ships
+(`versions.has(file)`), so a test file needs no `?v=` bump. That guard is green in the run below.
+
+**Behavior changed:** None. Test-only change; `getTodayKey` and all app behavior are untouched.
+
+**Tests run:**
+- Before: `npm test` → 515 tests, **514 pass, 1 fail** (the failure above), at 20:33 EDT.
+- After: `npm test` → 515 tests, **515 pass, 0 fail** (exit 0).
+- After: `TZ=UTC npm test` → 515 tests, **515 pass, 0 fail**.
+- `node --test tests/character-mission.test.js` → 121/121 under local EDT, `UTC`, `Pacific/Kiritimati` (UTC+14),
+  `Pacific/Midway` (UTC-11), and `Asia/Tokyo`. The +14/-11 pair is deliberate: at every UTC instant at
+  least one of them has a local date that differs from UTC, so the mismatch path is genuinely exercised
+  no matter what hour the suite is run.
+
+**Risks / regressions to check:** Minimal. Each fixed site loads one extra throwaway character module
+to read the key — the file already loads ~100, so cost is negligible. A test that still hardcodes a UTC
+day key elsewhere would have the same latent bug; `grep -rn "toISOString" tests/` is the check, and it
+now returns nothing at all — these two were the only UTC-derived day keys in the suite.
+
 ### 2026-09-06 EDT — Fix: the companion sprite jumped on every answer
 
 **Requested:** from a screen recording — "the sprite jumps around with every answer, can you fix".
