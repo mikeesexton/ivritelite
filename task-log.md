@@ -68,6 +68,100 @@ path, and `tests/cache-bust.test.js` only flags changed files that `index.html` 
 to read the key — the file already loads ~100, so cost is negligible. A test that still hardcodes a UTC
 day key elsewhere would have the same latent bug; `grep -rn "toISOString" tests/` is the check, and it
 now returns nothing at all — these two were the only UTC-derived day keys in the suite.
+### 2026-09-08 EDT — Fence Ido's camp/LGBTQ+ slang tranche
+
+**Requested:** from a screenshot of an Idan mission serving "All the bears come to the party
+on Friday." — "remind me, do we block sentences from characters or only weight them? this is a
+very ido sentence... is this a one-off or something more systemic?"
+
+**The answer to the question, since it is the useful part.** Ownership *weights*; only the
+`*Reserve*` fields *fence*. `buildContentWeigher` (`app/character.js:709`) solves a multiplier
+so ~65% of a draw lands in the active character's pool, and the comment at `app/character.js:723`
+says it outright: "Sentences are biased, never filtered." Register banks are pinned as
+never-fenced by `tests/character-mission.test.js:577`, whose comment explains why — a blanket
+rule over them "would leave each character little more than its own bank." Idan owns 131 of
+1,254 sentences against a draw pool of 1,070, so roughly 40% of his sentence draws are other
+characters' rows. That is intended and was not changed.
+
+**So the picker was right and the data was wrong.** `colloquial_dov_01` carries the note
+"דוב ('bear') in gay slang is a large, hairy man" and is one of twelve rows authored as a single
+camp/LGBTQ+ slang tranche into the shared `colloquial` bank (`SENTENCE_EXPANSION_REQUESTED`,
+`sentence-bank-data.js:12354`) with no fence. In English translation they read innocuous, which
+is how they passed review.
+
+**Third instance of one recurring pattern,** which is the honest answer to "systemic": strongly
+coded content authored into a shared register bank and fenced only retroactively, when someone
+notices. Idan's security rows were fixed by the `idan_` prefix; Inat's political tranche by
+`sentenceReserveIds`. That Inat pass reserved `formal_70` (rainbow-flag rights) but skipped
+`colloquial_145` and `everyday_132` — not an oversight, they are not hers — and Ido had **no
+`sentenceReserveIds` at all**, exactly as `docs/project-rules.md:124` records, so there was
+nowhere to put them. He has one now.
+
+**Files changed:**
+
+- `app/character-data.js` — Ido's route gains its first `sentenceReserveIds`, eight ids:
+  `colloquial_vodge_01/02/03`, `_ochtcha_01`, `_dov_01/02`, `_kukitza_01`, `_patutch_01`.
+  Reserving both grants and fences. Each row's own `notes` field decided its side: these eight
+  name the sense as gay or camp. The four left cast-wide are general Israeli slang that happens
+  to sit in the same tranche — `hores_01`/`hores_02` (the note itself says "gay *and general*",
+  and `hores_01`'s vocative אחותי is mainstream, with אחי as its own distractor), `falsh_01`
+  (Yiddish origin), `melarler_01` (onomatopoeic chatter).
+- `index.html` — `character-data.js` cache-bust `?v=20260904c` → `?v=20260908a`.
+
+**Deliberately not done,** and worth stating so a later session does not read the omission as an
+oversight: `colloquial_145` ("we wanted an LGBTQ community") and `everyday_132` (a להט"ב youth
+row) stay cast-wide on the same reasoning that keeps Public Safety shared — קהילה גאה and להט״ב
+are ordinary Israeli civic vocabulary, and a learner who never picks Ido should still meet them.
+`formal_70` stays Inat's. No content file was touched and no `character` field was added. Scope
+was held to the tranche: no guard test, no corpus-wide audit, no change to `TARGET_OWNED_SHARE`.
+
+**Behavior changed:** Eight camp-slang rows stop reaching Inbal, Ivri, Inat and Idan as new
+material, and become Ido's rather than unowned filler. Free play still draws all 1,254 rows,
+and review of an already-met row is exempt under any character. Handwriting is covered by the
+same fence with no extra work — it filters withheld rows at `app/handwriting.js:196`, before
+its own owned-vs-shortlist fallback at `:205`.
+
+**Tests run:**
+
+- `npm test` before **and** after: **514 pass, 1 fail**, identical either side. No new failures.
+- The one failure is **pre-existing and unrelated** — `"a reload mid-flow lands on the focus
+  screen with a live selection"` (`tests/character-mission.test.js:2568`). It is a wall-clock
+  bug in the test, not the app: the test builds its `dayKey` in **UTC** via
+  `toISOString().slice(0, 10)` while `getTodayKey()` (`app/character.js:122`) builds it from
+  **local** date parts. Every evening from 20:00 EDT until midnight the two disagree, `sameDay`
+  goes false, `initialize()` rewinds, and the assertion fails. Proved rather than assumed:
+  `TZ=UTC node --test tests/character-mission.test.js` passes **121/121**. Left alone as out of
+  scope; flagged separately.
+- Direct registry assertion: `getItemAudience("sentence", …)` returns `["ido"]` for all eight
+  and stays `null` for the four shared slang rows plus `colloquial_145`, `everyday_132` and
+  `colloquial_01`; `ownsItem` true for Ido, false for the other four.
+- `npm run report:characters`, as the routing section requires. Reserved sentences **272 → 280**;
+  Ido unchanged at 266 owned / 1,010 drawable, since he already owned these by register; every
+  other character's sentence draw pool down exactly 8 — Inbal 1090→1082, Ivri 998→990,
+  Inat 1078→1070, **Idan 1070→1062**.
+
+**Risks / regressions to check:**
+
+- Checked before editing, because a collision would have been a real conflict rather than
+  something to edit around: none of the eight ids appears in any test outside
+  `sentence-bank-data.test.js`, and every "must stay cast-wide" assertion in
+  `character-mission.test.js` iterates a **numeric** id range (`everyday_266..279` and similar),
+  so a named sub-series id cannot fall inside one. The category-count pin at
+  `tests/sentence-bank-data.test.js:1621` (`colloquial: 266`) is untouched by design — reserving
+  an id does not change its `category`.
+- **The authoring gap is still open.** Nothing at authoring time asks "should this be fenced?",
+  which is why this is the third retroactive pass. A guard test was scoped out: the candidate
+  rule is that an id with a *named* sub-series (`colloquial_dov_01`, not `colloquial_140`) must
+  be reserved or explicitly cast-wide. Today those ids are exactly this tranche, so the rule
+  would be cheap; it will not stay that way if more named series are authored.
+- A sixth character co-owning any of these eight instantly un-fences them, per the standing note
+  on `getItemAudience`.
+- Noticed in passing, not touched: `colloquial_dov_01`'s pointed שישי is `שִׁישִׁי`
+  (`sentence-bank-data.js:12507`) — it keeps the helper yod *and* adds the hiriq, marking the
+  vowel twice, against the pointing rule. The rest of the same row is correct ktiv chaser
+  (הדובים → הַדֻּבִּים, למסיבה → לַמְּסִבָּה). Worth a separate pass over the tranche.
+- Housekeeping carried over from the last session and still open: the "worth revisiting" note on
+  תוכנית is stale — תּוֹכְנִית is settled and kept, despite the doc citing תָּכְנִית.
 
 ### 2026-09-06 EDT — Fix: the companion sprite jumped on every answer
 
