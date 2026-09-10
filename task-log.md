@@ -21,6 +21,86 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-09 EDT — Remove the session timer
+
+**Requested:** "it doesn't seem like the timer in ivritelite is working. i honestly don't
+think we need it. let's get rid of it" — confirmed scope as the HUD pill plus the results
+stat, which also allowed the timing layer itself to go.
+
+**Why it was broken, since that was the premise.** `getGameplayHeaderMeta`
+(`app/ui.js:262`) branched per mode and let anything it did not name fall through to an
+`else` reading `state.lesson.elapsedSeconds`. `lessonMatch` and `abbrMatch` had no branch,
+so both landed in that fallback — and the lesson counter is dead: `state.lesson.startMs` is
+never assigned anywhere in the repo, having gone with the 639 lines `app/lesson.js` lost on
+2026-06-20. An `isWordMatchMode()` helper sat at `app/ui.js:31`, defined and never called
+here. Observed live: `wordMatch.elapsedSeconds` at 8 while the pill read `0s`. The timer
+worked in the specialised modes and was frozen in Vocabulary.
+
+**Four display surfaces, not one,** which is what made the scope worth confirming: the HUD
+pill clock, the results screen's Time metric, the mission debrief's Time tile plus a
+per-activity time on every row, and three summary notes that interpolated
+`Time: {seconds}s`. The last two were found mid-task and removed on the reasoning that
+keeping either would have kept the whole layer alive.
+
+**Files changed:**
+- `index.html` — dropped the pill's time stat; moved `shellGameplayBeatDivider` after the
+  beat stat to replace the always-on divider that had followed the clock, so nothing renders
+  a leading separator; bumped 15 cache keys (`20260909a`, then `b` for the second commit).
+- `app/ui.js` — `getGameplayHeaderMeta` stops tracking time; `renderGameplayPill` and
+  `renderProgressBarState` drop the time clause from their aria labels;
+  `buildSummaryMetrics` drops the Time row; deleted `formatCompactElapsedSeconds` and
+  `formatResultSeconds`.
+- `app/character.js` — mission debrief loses its Time tile and per-row times; deleted
+  `formatTime`, `pauseMissionTimers`, `rebaseMissionTimer` and their call sites; activity
+  results no longer carry or accumulate `elapsedSeconds`.
+- `app/session.js` — deleted the five start/stop timer pairs, the snapshot timing fields,
+  `summary.elapsedSeconds`, and the advConj/prepositions interval clears.
+  `resumeActiveTimers` → `resumeActiveSession`: it also called `restorePendingOverlays()`
+  and `updateUiLockState()`, so it had to survive the timers, under a name that does not
+  promise what it no longer does.
+- `app/bootstrap-runtime.js`, `app/persistence.js` — dropped the
+  `startMs`/`elapsedSeconds`/`timerId` triplet from state init and the persisted snapshot.
+- `app/bootstrap-data.js` — removed `session.timer`, `results.time` and the already-unused
+  `match.timer` in both languages; dropped the `Time: {seconds}s` clause from `matchNote`,
+  `abbreviationNote` and `wordMatchNote`.
+- `app/word-match.js`, `app/verb-match.js`, `app/sentence-bank.js`, `app/abbreviation.js`,
+  `app/adv-conj.js`, `app/prepositions.js`, `app/binyan-board.js`, `app/handwriting.js` —
+  removed each mode's timing fields, its interval, and `elapsedSeconds` from its summary.
+- `styles.css` — `.mission-results-metrics` 2 → 3 columns, so the three remaining tiles fill
+  one row instead of leaving an orphan in a 2x2 grid.
+- `app.js` — unwired the ten timer functions and renamed the resume call.
+- Tests — updated the pill and summary-metric assertions; renamed `resumeActiveTimers` in the
+  `__appTestExports` harness list (this was the single cause of a 126-failure cascade);
+  reworked the mission quit test, which asserted a `"pause"` call that no longer happens;
+  removed the `elapsedSeconds` fixtures and the `vocab.elapsedSeconds === 55` aggregation
+  assertion; replaced three `startMs > 0` proxies in the intro test with assertions that the
+  intro overlay is actually inactive; re-pinned the sprite lock's `styles.css` key.
+
+**Behavior changed:** No elapsed time is shown anywhere — gameplay pill, results screen,
+mission debrief, or summary notes. The pill now carries only combo (plus the beat badge
+during a mission). Nine one-second intervals no longer run during gameplay, so advConj and
+prepositions no longer re-render every second. Nothing else about scoring, rounds, routing or
+persistence changed. Old saved snapshots still load: their extra timing keys are ignored.
+
+**Tests run:** `npm test` before (515 tests, 514 pass, 1 fail) and after (515 tests, 514
+pass, 1 fail). The one failure — "a reload mid-flow lands on the focus screen with a live
+selection", `tests/character-mission.test.js:2563`, on `isBlocking()` for the focus screen —
+is **pre-existing on a clean tree** and unrelated to timers; it was not touched. Also
+verified in the browser: Conjugation+ and Prepositions play and give feedback, a mid-round
+reload restores the board through `resumeActiveSession`, zero intervals start during
+gameplay, all three summary notes render clean in English and Hebrew, and the mission debrief
+fits three metric tiles in one row at 360x640 with no horizontal scroll.
+
+**Risks / regressions to check:**
+- Anything that wanted elapsed time later has to re-add the layer, not just a display.
+- advConj and prepositions lost their per-second `renderAll`. Both were exercised by hand,
+  but any future UI on those screens that quietly relied on a periodic re-render will not get
+  one.
+- `resumeActiveSession` is called on boot and from two mission paths; the rename is mechanical
+  but the function is load-bearing for restoring intro overlays after a reload.
+- The mission debrief's 3-column metric grid was checked at the 360px floor; a longer metric
+  label added later has less room than it did in the old 2-column layout.
+
 ### 2026-09-08 EDT — Fix: a wall-clock-dependent test failure on main
 
 **Requested:** fix the evening-only failure of `"a reload mid-flow lands on the focus screen with a live selection"`
