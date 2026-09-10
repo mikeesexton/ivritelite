@@ -21,6 +21,68 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-09 EDT — Test suite audit: 137s to 12.6s, and split the layout test
+
+**Requested:** "take a larger look/audit at our test suite and gauge which are helpful and if
+any can be scrapped responsibly for efficiency's sake" — then "yes, do both" to the two
+changes the audit recommended.
+
+**The audit's finding: nothing needed scrapping.** Timing each file individually showed one
+file was the entire suite. `tests/content-coverage.test.js` took **136.4s of a 136.8s suite**;
+`gameplay-layout.test.js` took 11.9s; the other seventeen files together came to ~10s, and
+seventeen of nineteen finished in under a second. Because `node --test` runs files in
+parallel, that one file *was* the wall time. Deleting tests could not have bought meaningful
+time — and `.github/workflows/test.yml:45` fails the build under 400 tests, so 515 left only
+115 of deletion headroom anyway. The suite also has no duplicate test names, no `.skip`, no
+`.todo` and no `.only`.
+
+**Files changed:**
+- `tests/content-coverage.test.js` — 24 tests each called
+  `buildCoverageReport(loadProductionContent())`, a pure function over the shipped content
+  that walks 2,206 vocabulary records against 1,254 sentences at ~5.6s a call. Now built
+  lazily once and shared. Checked every reader first: only `filter`, `find`, `map`, `length`
+  and `categories.get`, so nothing mutates it. **136.4s to 5.9s, all 27 tests still passing.**
+- `tests/gameplay-layout.test.js` — was a single `test()` holding 73 assertions, so the first
+  failure aborted the other 72, including the only checks of mission results and settings
+  centering. The fifteen measurement phases are now subtests of the same parent, which still
+  owns the static server, the Chrome launch and its retry budget, and the try/finally
+  teardown — one launch, not fifteen. No assertion added, removed or changed.
+
+**Behavior changed:** None. No app code was touched in this session.
+
+**Tests run:** `npm test` before (515 tests, 514 pass, 1 fail, ~137s) and after (530 tests,
+529 pass, 1 fail, **12.6s**). The extra 15 are the layout subtests; the parent still counts as
+one. The single failure is the same pre-existing one carried into this session — "a reload
+mid-flow lands on the focus screen with a live selection",
+`tests/character-mission.test.js:2563` — untouched, and already flagged for its own session.
+
+**Verification beyond the suite passing:**
+- Confirmed in a throwaway probe that a failing `await t.test(...)` does not abort its parent
+  in `node:test`: all phases run and the failures are named. That is the whole premise of the
+  split, so it was worth proving rather than assuming.
+- Confirmed the layout phases were safe to separate: every measurement variable is declared
+  and used inside its own phase, the widest span being `sentenceFeedback` across 58 lines, so
+  no closure reaches for another phase's value.
+- Injected a failure into phase 2 on a throwaway copy: all fifteen phases ran. **Four failed,
+  not one** — the phases still drive the app in sequence, so skipping phase 2's deck pinning
+  cascaded into three later phases. The first name in the list is still the real one and
+  eleven phases still reported green, which is the improvement; full independence would mean
+  each phase re-establishing its own app state, a much larger rewrite.
+
+**Risks / regressions to check:**
+- The shared coverage report is only safe while every reader stays read-only. A future test
+  that sorts, pushes to, or otherwise mutates `report.records` would silently corrupt the
+  tests that run after it. If one ever needs a private copy, it should build its own report.
+- The layout subtests share sequential app state, so a failure cluster can be wider than its
+  cause. Read the first failing phase, not the count.
+- Test count rose to 530, comfortably over the CI floor of 400. Note the floor is a crude
+  discovery guard: consolidating tests later moves the count *toward* it, so the floor may
+  need lowering rather than treated as a target.
+- The ~12–14 single-row regression pins (`colloquial_72`, `colloquial_130`, the rumor card,
+  and similar) were reviewed and deliberately kept. They are the only genuinely low-yield
+  tier and could fold into one table-driven test, but that is a reviewer-noise win, not a
+  speed one.
+
 ### 2026-09-09 EDT — Remove the session timer
 
 **Requested:** "it doesn't seem like the timer in ivritelite is working. i honestly don't
