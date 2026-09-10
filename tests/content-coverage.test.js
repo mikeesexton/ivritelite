@@ -3,6 +3,19 @@ const assert = require("node:assert/strict");
 
 const coverage = require("../scripts/content-coverage-report.js");
 
+// The production report is a pure function of the shipped content, and building
+// it walks every vocabulary card against every sentence: ~5.6s a time. Twenty-four
+// tests below each used to rebuild it, which was 136s of a 137s suite — and since
+// node runs test files in parallel, that one file *was* the suite's wall time.
+// Every reader here only filters, finds or maps, so one shared report is safe.
+let cachedProductionReport = null;
+function productionReport() {
+  if (!cachedProductionReport) {
+    cachedProductionReport = coverage.buildCoverageReport(coverage.loadProductionContent());
+  }
+  return cachedProductionReport;
+}
+
 test("coverage matching accepts ordinary Hebrew clitics without using stems", () => {
   const sentence = { id: "example", hebrew: "הסיסמה נשמרה במחשב." };
   assert.equal(coverage.sentenceTestsHeadword(sentence, "סיסמה"), true);
@@ -38,7 +51,7 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 });
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   assert.equal(report.records.length, 2206);
   // The four coverage tranches pulled twelve more vocabulary cards from
   // unsupported into exact by giving them a sentence context.
@@ -93,7 +106,7 @@ test("kitchen-action sentences give every selected cooking verb its intended exa
     ["cooking_verbs-024-to-fry", "everyday_240"],
     ["cooking_verbs-030-to-bake", "everyday_241"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   expectedSentenceByCard.forEach((sentenceId, cardId) => {
@@ -111,7 +124,7 @@ test("kitchen-action sentences also contextualize their selected tools and ingre
     "פטרוזיליה", "תפוח אדמה", "לחם", "שום", "גזר", "לימון", "ביצה", "שמנת", "קמח",
     "שמן זית", "תבלין", "שעועית",
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const selected = report.records.filter((record) => anchors.has(record.word.he));
 
   assert.equal(selected.length, anchors.size);
@@ -145,7 +158,7 @@ test("home-care sentences give every selected household card its intended exact 
     ["home_everyday_life-082-broom", "everyday_264"],
     ["home_everyday_life-089-stain-remover", "everyday_265"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   expectedSentenceByCard.forEach((sentenceId, cardId) => {
@@ -156,7 +169,7 @@ test("home-care sentences give every selected household card its intended exact 
 });
 
 test("home-care sentences contextualize the full selected household cluster", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const selected = report.records.filter((record) => (
     record.word.category === "home_everyday_life"
     && record.exactSentenceIds.some((id) => /^everyday_2(?:4[2-9]|5\d|6[0-5])$/.test(id))
@@ -189,7 +202,7 @@ test("Inat formal sentences give every planned intellectual anchor its intended 
     ["philosophy_intellectual_expanded-014-meaning-of-life", "formal_106"],
     ["abstract_philosophy-011-bias", "formal_107"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   expectedSentenceByCard.forEach((sentenceId, cardId) => {
@@ -200,7 +213,7 @@ test("Inat formal sentences give every planned intellectual anchor its intended 
 });
 
 test("Inat formal sentences produce the reviewed target-shelf coverage", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const expectedExact = new Map([
     ["philosophy_intellectual_expanded", 12],
     ["culture_identity_expanded", 10],
@@ -251,7 +264,7 @@ test("relationship sentences give every previously unsupported dating card its i
     ["relationships_dating_expanded-014-extended-family", "colloquial_194"],
     ["relationships_dating_expanded-015-reconciliation", "colloquial_188"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   assert.equal(expectedSentenceByCard.size, 35);
@@ -263,7 +276,7 @@ test("relationship sentences give every previously unsupported dating card its i
 });
 
 test("relationship sentences bring both dating shelves to full exact support", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   assert.deepEqual({ ...report.categories.get("dating_relationships") }, { total: 24, exact: 24, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("relationships_dating_expanded") }, { total: 15, exact: 15, reviewed: 0, unsupported: 0 });
 });
@@ -305,7 +318,7 @@ test("Ivri AI sentences give every previously unsupported AI card its intended e
     ["technology_ai_expanded-017-startup-runway", "professional_172"],
     ["technology_ai_expanded-018-venture-capital", "professional_172"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   assert.equal(expectedSentenceByCard.size, 34);
@@ -317,13 +330,13 @@ test("Ivri AI sentences give every previously unsupported AI card its intended e
 });
 
 test("Ivri AI sentences bring both technology shelves to full exact support", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   assert.deepEqual({ ...report.categories.get("technology_ai") }, { total: 21, exact: 21, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("technology_ai_expanded") }, { total: 18, exact: 18, reviewed: 0, unsupported: 0 });
 });
 
 test("Ivri AI sentences preserve the three projected incidental exact matches", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
   const expectedSentenceByCard = new Map([
     ["work_business-028-roadmap", "professional_171"],
@@ -365,7 +378,7 @@ test("shared grammar sentences give every unsupported meta-language card its int
     ["advanced_grammar_meta_expanded-015-syntax", "everyday_273"],
     ["advanced_grammar_meta_expanded-016-pragmatics", "everyday_273"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   assert.equal(expectedSentenceByCard.size, 24);
@@ -377,13 +390,13 @@ test("shared grammar sentences give every unsupported meta-language card its int
 });
 
 test("shared grammar sentences bring both meta-language shelves to full exact support", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   assert.deepEqual({ ...report.categories.get("meta_language") }, { total: 19, exact: 19, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("advanced_grammar_meta_expanded") }, { total: 16, exact: 16, reviewed: 0, unsupported: 0 });
 });
 
 test("shared grammar sentences preserve the projected impact incidental match", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const record = report.records.find((item) => item.word.id === "scientific_analytical-025-impact");
 
   assert.ok(record, "missing incidental impact card");
@@ -422,7 +435,7 @@ test("Inat legal sentences give every previously unsupported legal card its inte
     ["law_legal_systems_expanded-015-regulatory-compliance", "formal_124"],
     ["law_legal_systems_expanded-016-corporate-bylaw", "formal_124"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   assert.equal(expectedSentenceByCard.size, 29);
@@ -434,7 +447,7 @@ test("Inat legal sentences give every previously unsupported legal card its inte
 });
 
 test("Inat legal sentences bring both legal shelves to full exact support", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   assert.deepEqual({ ...report.categories.get("legal_civic") }, { total: 19, exact: 19, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("law_legal_systems_expanded") }, { total: 16, exact: 16, reviewed: 0, unsupported: 0 });
 });
@@ -448,7 +461,7 @@ test("Inat legal sentences preserve the six incidental exact matches", () => {
     ["bureaucracy-078-immigration", "formal_122"],
     ["emergency_response-006-police-interrogation", "formal_121"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   expectedSentenceByCard.forEach((sentenceId, cardId) => {
@@ -491,7 +504,7 @@ test("Ivri finance sentences give every previously unsupported finance card its 
     ["business_finance_expanded-018-risk-diversification", "professional_178"],
     ["business_finance_expanded-019-financial-leverage", "professional_185"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   assert.equal(expectedSentenceByCard.size, 30);
@@ -503,7 +516,7 @@ test("Ivri finance sentences give every previously unsupported finance card its 
 });
 
 test("Ivri finance sentences bring both finance shelves to full exact support", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   assert.deepEqual({ ...report.categories.get("finance_investing") }, { total: 17, exact: 17, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("business_finance_expanded") }, { total: 23, exact: 23, reviewed: 0, unsupported: 0 });
 });
@@ -518,7 +531,7 @@ test("Ivri finance sentences preserve the seven incidental exact matches", () =>
     ["work_business-073-shareholder", "professional_182"],
     ["bureaucracy-014-tax", "professional_180"],
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const byId = new Map(report.records.map((record) => [record.word.id, record]));
 
   expectedSentenceByCard.forEach((sentenceId, cardId) => {
@@ -541,7 +554,7 @@ test("urban mobility cards and practical backfill anchors have exact sentence su
     "כניסת שבת", "קבלת שבת", "ברכת המזון", "תעודת כשרות", "כתובה", "תפילת הדרך",
     "רעידת אדמה", "שידור חירום", "כיבוי אש", "מחסום דרכים", "בדיקת רישיון", "קנס תנועה",
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const assertSupported = (anchors, label) => {
     const selected = report.records.filter((record) => anchors.has(record.word.he));
     assert.ok(selected.length >= anchors.size, `${label} anchors must all resolve to cards`);
@@ -563,7 +576,7 @@ test("the neutral everyday tranche gives all forty selected shared words exact s
     "אכזבה", "תסכול", "חמלה", "אמון", "געגוע",
     "שורש", "זמן דקדוקי", "ניב", "סלנג", "מילת יחס",
   ]);
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const selected = report.records.filter((record) => anchors.has(record.word.he));
 
   assert.equal(anchors.size, 40);
@@ -573,7 +586,7 @@ test("the neutral everyday tranche gives all forty selected shared words exact s
 });
 
 test("every card in the new cast and smartphone tranches has exact sentence support", () => {
-  const report = coverage.buildCoverageReport(coverage.loadProductionContent());
+  const report = productionReport();
   const starts = new Map([
     ["media_digital_life_expanded", 27],
     ["literature_arts_cultural_history", 31],
