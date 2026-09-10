@@ -1316,17 +1316,12 @@ sentenceBank.getRoundTarget = sentenceBank.getRoundTarget || function getRoundTa
 
 sentenceBank.resetSentenceBankState = sentenceBank.resetSentenceBankState || function resetSentenceBankState() {
   const runtime = getRuntime();
-  const session = getSession();
-  session.stopSentenceBankTimer?.();
   runtime.state.sentenceBank.active = false;
   runtime.state.sentenceBank.introActive = false;
   runtime.state.sentenceBank.inReview = false;
   runtime.state.sentenceBank.currentRound = 0;
   runtime.state.sentenceBank.secondChanceCurrent = 0;
   runtime.state.sentenceBank.secondChanceTotal = 0;
-  runtime.state.sentenceBank.startMs = 0;
-  runtime.state.sentenceBank.elapsedSeconds = 0;
-  runtime.state.sentenceBank.timerId = null;
   runtime.state.sentenceBank.askedSentenceIds = [];
   runtime.state.sentenceBank.reviewQueue = [];
   runtime.state.sentenceBank.currentQuestion = null;
@@ -1416,11 +1411,6 @@ sentenceBank.beginSentenceBankFromIntro = sentenceBank.beginSentenceBankFromIntr
   if (!runtime.state.sentenceBank.introActive && runtime.state.sentenceBank.currentQuestion) return;
   if (runtime.state.sentenceBank.introActive) {
     session.clearSentenceBankIntro?.();
-  }
-  if (!runtime.state.sentenceBank.startMs) {
-    runtime.state.sentenceBank.startMs = Date.now();
-    runtime.state.sentenceBank.elapsedSeconds = 0;
-    session.startSentenceBankTimer?.();
   }
   sentenceBank.nextSentenceBankQuestion();
 };

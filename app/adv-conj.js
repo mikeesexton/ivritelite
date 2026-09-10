@@ -432,11 +432,6 @@ advConj.startAdvConj = advConj.startAdvConj || function startAdvConj() {
   const repair = app.character?.takeRepairQueue?.("advConj") || [];
   if (repair.length) runtime.state.advConj.reviewQueue = repair;
   runtime.state.advConj.active = true;
-  runtime.state.advConj.startMs = Date.now();
-  runtime.state.advConj.timerId = runtime.global.setInterval(() => {
-    runtime.state.advConj.elapsedSeconds = Math.floor((Date.now() - runtime.state.advConj.startMs) / 1000);
-    h.renderAll?.();
-  }, 1000);
   advConj.playAdvConjIntro();
 };
 

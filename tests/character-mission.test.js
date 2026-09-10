@@ -1252,7 +1252,6 @@ test("capturing a completed activity advances the mission without shortening the
   assert.equal(character.captureActivitySummary({
     correctCount: 20,
     incorrectCount: 2,
-    elapsedSeconds: 187,
     mistakes: [{ primary: "test" }],
   }), true);
   assert.equal(app.runtime.characterState.screen, "none");
@@ -1267,7 +1266,6 @@ test("capturing a completed activity advances the mission without shortening the
       nameHe: "אוצר מילים",
       correctCount: 20,
       incorrectCount: 2,
-      elapsedSeconds: 187,
       mistakes: [{ primary: "test" }],
       skipped: false,
     },
@@ -1303,7 +1301,6 @@ test("a flawless mid-mission activity no longer opens a blocking Perfect scene",
   assert.equal(character.captureActivitySummary({
     correctCount: 12,
     incorrectCount: 0,
-    elapsedSeconds: 90,
     mistakes: [],
   }), true);
   assert.equal(app.runtime.characterState.screen, "none");
@@ -1320,7 +1317,6 @@ test("continuing from a per-activity recap hands off to the mission hub", () => 
   character.captureActivitySummary({
     correctCount: 8,
     incorrectCount: 2,
-    elapsedSeconds: 120,
     mistakes: [{ primary: "מילה" }],
   });
   // The game's own summary is on screen at this point, not the mission's.
@@ -1368,11 +1364,6 @@ test("an active mission can pause on its home hub without discarding the current
   const { character, app } = loadCharacterModule();
   app.session = {
     hasActiveLearnSession: () => true,
-    stopVerbMatchTimer: () => {},
-    stopLessonTimer: () => {},
-    stopSentenceBankTimer: () => {},
-    stopAbbreviationTimer: () => {},
-    stopWordMatchTimer: () => {},
   };
   app.runtime.state.mode = "sentenceBank";
   app.runtime.characterState = {
@@ -1474,7 +1465,6 @@ test("the final activity produces one aggregate mission summary and the final sp
   assert.equal(character.captureActivitySummary({
     correctCount: 18,
     incorrectCount: 2,
-    elapsedSeconds: 205,
     mistakes: [{ primary: "מילה" }],
   }), true);
   assert.deepEqual(
@@ -1483,7 +1473,6 @@ test("the final activity produces one aggregate mission summary and the final sp
       game: "characterMission",
       correctCount: 18,
       incorrectCount: 2,
-      elapsedSeconds: 205,
       mistakes: [{ primary: "מילה" }],
     },
   );
@@ -1770,7 +1759,7 @@ test("completing a mission awards the mission bond bonus once", () => {
     mission: { active: true, completed: false, onHub: false, tier: "short",
       activities: ["lessonMatch"], skippedActivities: [], currentIndex: 1,
       currentActivity: "", results: [{ id: "lessonMatch", nameEn: "Vocabulary", nameHe: "אוצר מילים",
-        correctCount: 10, incorrectCount: 0, elapsedSeconds: 60, mistakes: [], skipped: false }],
+        correctCount: 10, incorrectCount: 0, mistakes: [], skipped: false }],
       correctStreak: 0, wrongStreak: 0, sprite: "neutral", dialogueKey: "",
       reactionTransient: false, reactionQuestionKey: "", visible: true,
       companionPosition: null, startedAt: Date.now() },
@@ -2039,25 +2028,19 @@ test("quitting a mission confirms first, resumes on cancel, and frees the day on
   const calls = [];
   app.session = {
     hasActiveLearnSession: () => true,
-    stopVerbMatchTimer: () => {},
-    stopLessonTimer: () => {},
-    stopSentenceBankTimer: () => calls.push("pause"),
-    stopAbbreviationTimer: () => {},
-    stopWordMatchTimer: () => {},
-    resumeActiveTimers: () => calls.push("resume"),
+    resumeActiveSession: () => calls.push("resume"),
     endSessionAndNavigate: (route) => calls.push(`end:${route}`),
   };
-  app.runtime.state.sentenceBank = { active: true, elapsedSeconds: 12 };
+  app.runtime.state.sentenceBank = { active: true };
   app.runtime.characterState = liveMissionState(character);
   const state = app.runtime.characterState;
 
   assert.equal(character.requestQuitMission(), true);
   assert.equal(state.screen, "quitConfirm");
-  // The prompt is a blocking scene, so the running game is paused behind it.
+  // The prompt is a blocking scene, so it sits in front of the running game.
   assert.equal(character.isBlocking(), true);
-  assert.ok(calls.includes("pause"));
 
-  // Backing out puts the learner back into the same activity, timer and all.
+  // Backing out puts the learner back into the same activity.
   assert.equal(character.cancelQuitMission(), true);
   assert.equal(state.screen, "none");
   assert.equal(state.mission.active, true);
@@ -3033,16 +3016,15 @@ test("several beats of one mode fold into a single results row", () => {
     },
   };
 
-  character.captureActivitySummary({ correctCount: 4, incorrectCount: 1, elapsedSeconds: 30, mistakes: [{ primary: "a" }] });
-  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, elapsedSeconds: 40, mistakes: [{ primary: "b" }] });
-  character.captureActivitySummary({ correctCount: 5, incorrectCount: 0, elapsedSeconds: 25, mistakes: [] });
+  character.captureActivitySummary({ correctCount: 4, incorrectCount: 1, mistakes: [{ primary: "a" }] });
+  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, mistakes: [{ primary: "b" }] });
+  character.captureActivitySummary({ correctCount: 5, incorrectCount: 0, mistakes: [] });
 
   const results = app.runtime.characterState.mission.results;
   assert.equal(results.length, 2, "one row per mode, not one per beat");
   const vocab = results.find((row) => row.id === "lessonMatch");
   assert.equal(vocab.correctCount, 9);
   assert.equal(vocab.incorrectCount, 1);
-  assert.equal(vocab.elapsedSeconds, 55);
   assert.equal(vocab.mistakes.length, 1);
 });
 
@@ -3065,7 +3047,7 @@ test("a mission of starved decks falls back to the hub instead of recursing", ()
   // A starved deck finishes the instant it starts, which is what makes the
   // chain recurse: start -> finish -> capture -> start.
   const finishInstantly = () => character.captureActivitySummary({
-    correctCount: 0, incorrectCount: 0, elapsedSeconds: 0, mistakes: [],
+    correctCount: 0, incorrectCount: 0, mistakes: [],
   });
   app.wordMatch = { startLessonMatch: finishInstantly, beginWordMatchFromIntro: () => {} };
   app.sentenceBank = { startSentenceBank: finishInstantly, beginSentenceBankFromIntro: () => {} };
@@ -3167,7 +3149,7 @@ test("a finished mission appends one repair beat per mode that owes something", 
   app.session = { showSessionSummary: () => {} };
 
   // The last ordinary beat ends; repairs are appended rather than finishing.
-  assert.equal(character.captureActivitySummary({ correctCount: 2, incorrectCount: 2, elapsedSeconds: 30, mistakes: [] }), true);
+  assert.equal(character.captureActivitySummary({ correctCount: 2, incorrectCount: 2, mistakes: [] }), true);
   const mission = app.runtime.characterState.mission;
   const appended = mission.beats.slice(1).map((b) => `${b.mode}:${b.rounds}:${b.repair === true}`);
   assert.deepEqual([...appended], ["sentenceBank:1:true", "advConj:2:true"]);
@@ -3184,13 +3166,13 @@ test("repairs are spent exactly once, so the mission cannot loop on them", () =>
   let finished = 0;
   app.session = { showSessionSummary: () => { finished += 1; } };
 
-  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, elapsedSeconds: 20, mistakes: [] });
+  character.captureActivitySummary({ correctCount: 3, incorrectCount: 1, mistakes: [] });
   const mission = app.runtime.characterState.mission;
   assert.equal(mission.beats.length, 2, "one repair beat appended");
 
   // Finishing the repair beat itself must end the mission, not append again.
   mission.currentActivity = "advConj";
-  character.captureActivitySummary({ correctCount: 1, incorrectCount: 0, elapsedSeconds: 10, mistakes: [] });
+  character.captureActivitySummary({ correctCount: 1, incorrectCount: 0, mistakes: [] });
   assert.equal(mission.beats.length, 2, "repairs must not append a second time");
   assert.equal(mission.completed, true);
   assert.equal(finished, 1);
@@ -3308,7 +3290,7 @@ test("respawn returns to the start of the current beat, never an earlier one", (
   const { character, app } = loadCharacterModule();
   const state = missionForDeath(
     [{ mode: "advConj", rounds: 4 }, { mode: "lessonMatch", rounds: 5 }],
-    { currentIndex: 1, currentActivity: "lessonMatch", results: [{ id: "advConj", nameEn: "Conjugation+", nameHe: "נטיות+", correctCount: 3, incorrectCount: 1, elapsedSeconds: 20, mistakes: [], skipped: false }] },
+    { currentIndex: 1, currentActivity: "lessonMatch", results: [{ id: "advConj", nameEn: "Conjugation+", nameHe: "נטיות+", correctCount: 3, incorrectCount: 1, mistakes: [], skipped: false }] },
   );
   state.dayKey = character.getTodayKey();
   app.runtime.characterState = state;

@@ -267,7 +267,7 @@ globalThis.__appTestExports = {
   nextSentenceBankQuestion,
   requestLeaveSession,
   requestGoHome,
-  resumeActiveTimers,
+  resumeActiveSession,
   restoreSessionState,
   startAdvConj,
   startSentenceBank,
@@ -1477,7 +1477,7 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.document.querySelector("#lessonStartIntro").classList.contains("active"), true);
   await waitForTimers();
   assert.equal(harness.state.wordMatch.introActive, false);
-  assert.ok(harness.state.wordMatch.startMs > 0);
+  assert.equal(harness.document.querySelector("#lessonStartIntro").classList.contains("active"), false);
   harness.goHome();
 
   harness.app.wordMatch.startAbbrMatch();
@@ -1485,7 +1485,7 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.document.querySelector("#abbreviationIntro").classList.contains("active"), true);
   await waitForTimers();
   assert.equal(harness.state.wordMatch.introActive, false);
-  assert.ok(harness.state.wordMatch.startMs > 0);
+  assert.equal(harness.document.querySelector("#abbreviationIntro").classList.contains("active"), false);
   harness.goHome();
 
   harness.app.binyanBoard.startBinyanBoard();
@@ -1493,7 +1493,7 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.document.querySelector("#binyanBoardIntro").classList.contains("active"), true);
   await waitForTimers();
   assert.equal(harness.state.binyanBoard.introActive, false);
-  assert.ok(harness.state.binyanBoard.startMs > 0);
+  assert.equal(harness.document.querySelector("#binyanBoardIntro").classList.contains("active"), false);
   harness.goHome();
 });
 
@@ -3702,7 +3702,6 @@ test("abbreviation results separate the acronym, meaning, and full Hebrew into l
     totalPairs: 2,
     bestCombo: 2,
     mismatchCount: 1,
-    elapsedSeconds: 12,
     sessionMistakeIds: ["abbr-1"],
     matchedPairIds: ["abbr-1", "abbr-2"],
   });
@@ -3732,7 +3731,6 @@ test("handwriting summaries arrange per-letter results in three columns", () => 
     game: "handwriting",
     correctCount: 2,
     incorrectCount: 1,
-    elapsedSeconds: 10,
     mistakes: [{ primary: "כ", secondary: "kaf" }],
     corrects: [
       { primary: "ל", secondary: "lamed" },
@@ -3756,7 +3754,6 @@ test("mistake rows isolate each language so Hebrew and English stop colliding", 
     game: "sentenceBank",
     correctCount: 4,
     incorrectCount: 2,
-    elapsedSeconds: 40,
     mistakes: [
       {
         primary: "It was just a fling.",
@@ -3806,7 +3803,6 @@ test("results promote structured mistake notes into a mistake clinic", () => {
     titleKey: "summary.prepositionsTitle",
     correctCount: 8,
     incorrectCount: 2,
-    elapsedSeconds: 33,
     mistakes: [
       {
         primary: "מתגעגע אֲלֵיהֶם",
@@ -4858,7 +4854,7 @@ test("active learn sessions stay pinned to home and restored intros auto-advance
       sessionMistakeIds: [],
     },
   });
-  verbHarness.resumeActiveTimers();
+  verbHarness.resumeActiveSession();
   assert.equal(verbHarness.state.route, "home");
   await waitForTimers();
   assert.equal(verbHarness.state.match.verbIntroActive, false);
@@ -4938,7 +4934,6 @@ test("conjugation summary opens on the results route and home exits without a le
   state.match.sessionMatched = 7;
   state.match.sessionTotalPairs = 10;
   state.match.bestCombo = 4;
-  state.match.elapsedSeconds = 21;
   state.match.mismatchCount = 3;
   state.match.sessionMistakeIds = ["verb-go"];
   state.match.sessionMistakeForms = [
@@ -5139,7 +5134,6 @@ test("binyan board replays missed forms in a second-chance phase", () => {
 
   state.mode = "binyanBoard";
   board.active = true;
-  board.startMs = 1;
   board.deck = [
     {
       id: "root1",

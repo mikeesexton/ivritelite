@@ -135,12 +135,8 @@ abbreviation.renderAbbreviationIdleState = abbreviation.renderAbbreviationIdleSt
 
 abbreviation.resetAbbreviationState = abbreviation.resetAbbreviationState || function resetAbbreviationState() {
   const runtime = getRuntime();
-  getSession().stopAbbreviationTimer?.();
   runtime.state.abbreviation.active = false;
   runtime.state.abbreviation.currentRound = 0;
-  runtime.state.abbreviation.startMs = 0;
-  runtime.state.abbreviation.elapsedSeconds = 0;
-  runtime.state.abbreviation.timerId = null;
   runtime.state.abbreviation.askedEntryIds = [];
   runtime.state.abbreviation.introActive = false;
   runtime.state.abbreviation.currentQuestion = null;

@@ -834,7 +834,6 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         game: 'handwriting',
         correctCount: 6,
         incorrectCount: 3,
-        elapsedSeconds: 42,
         mistakes: [
           { primary: 'כ', secondary: 'kaf' },
           { primary: 'ה', secondary: 'he' },
@@ -875,7 +874,6 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         game: 'abbrMatch',
         correctCount: 17,
         incorrectCount: 3,
-        elapsedSeconds: 95,
         mistakes: [{
           fields: [
             { label: 'קיצור', value: 'מפכ״ל', dir: 'rtl', lang: 'he' },
@@ -924,8 +922,8 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
           currentIndex: 2,
           currentActivity: '',
           results: [
-            { nameEn: 'Vocabulary', nameHe: 'אוצר מילים', correctCount: 20, incorrectCount: 4, elapsedSeconds: 101, mistakes: [] },
-            { nameEn: 'Sentences', nameHe: 'משפטים', correctCount: 10, incorrectCount: 1, elapsedSeconds: 136, mistakes: [] },
+            { nameEn: 'Vocabulary', nameHe: 'אוצר מילים', correctCount: 20, incorrectCount: 4, mistakes: [] },
+            { nameEn: 'Sentences', nameHe: 'משפטים', correctCount: 10, incorrectCount: 1, mistakes: [] },
           ],
           visible: true,
           sprite: 'mission-complete',
@@ -937,7 +935,6 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         game: 'characterMission',
         correctCount: 30,
         incorrectCount: 5,
-        elapsedSeconds: 237,
         mistakes: [],
       });
       IvriQuestApp.runtime.state.route = 'results';

@@ -179,7 +179,6 @@ function sanitizeResult(result) {
     nameHe: String(result?.nameHe || ""),
     correctCount: Math.max(0, Number(result?.correctCount || 0)),
     incorrectCount: Math.max(0, Number(result?.incorrectCount || 0)),
-    elapsedSeconds: Math.max(0, Number(result?.elapsedSeconds || 0)),
     mistakes: Array.isArray(result?.mistakes) ? result.mistakes : [],
     skipped: result?.skipped === true,
   };
@@ -2254,7 +2253,6 @@ function buildBeatPlan(tierId, options = {}) {
         nameHe: activity.nameHe,
         correctCount: 0,
         incorrectCount: 0,
-        elapsedSeconds: 0,
         mistakes: [],
         skipped: true,
       });
@@ -2482,7 +2480,6 @@ function normalizeActivityResult(config, activity) {
     nameHe: activity.nameHe,
     correctCount: Math.max(0, Number(config?.correctCount || 0)),
     incorrectCount: Math.max(0, Number(config?.incorrectCount || 0)),
-    elapsedSeconds: Math.max(0, Number(config?.elapsedSeconds || 0)),
     mistakes: Array.isArray(config?.mistakes) ? config.mistakes : [],
     skipped: false,
   };
@@ -2537,7 +2534,6 @@ function mergeActivityResult(mission, result) {
   }
   existing.correctCount += result.correctCount;
   existing.incorrectCount += result.incorrectCount;
-  existing.elapsedSeconds += result.elapsedSeconds;
   existing.mistakes = [...existing.mistakes, ...result.mistakes];
 }
 
@@ -2633,13 +2629,11 @@ character.finishMission = character.finishMission || function finishMission() {
 
   const correct = mission.results.reduce((sum, result) => sum + result.correctCount, 0);
   const incorrect = mission.results.reduce((sum, result) => sum + result.incorrectCount, 0);
-  const elapsed = mission.results.reduce((sum, result) => sum + result.elapsedSeconds, 0);
   const mistakes = mission.results.flatMap((result) => result.mistakes);
   app.session?.showSessionSummary?.({
     game: "characterMission",
     correctCount: correct,
     incorrectCount: incorrect,
-    elapsedSeconds: elapsed,
     mistakes,
   });
   runtime.state.route = "results";
@@ -2819,45 +2813,6 @@ character.toggleVisibility = character.toggleVisibility || function toggleVisibi
   saveState();
 };
 
-function pauseMissionTimers() {
-  const runtime = getRuntime();
-  app.session?.stopVerbMatchTimer?.();
-  app.session?.stopLessonTimer?.();
-  app.session?.stopSentenceBankTimer?.();
-  app.session?.stopAbbreviationTimer?.();
-  app.session?.stopWordMatchTimer?.();
-  app.binyanBoard?.stopBinyanBoardTimer?.();
-  app.handwriting?.stopHandwritingTimer?.();
-  ["advConj", "prepositions"].forEach((key) => {
-    const mode = runtime.state?.[key];
-    if (!mode?.timerId) return;
-    runtime.global.clearInterval?.(mode.timerId);
-    mode.timerId = null;
-    if (mode.startMs) {
-      mode.elapsedSeconds = Math.max(0, Math.floor((Date.now() - mode.startMs) / 1000));
-    }
-  });
-}
-
-function rebaseMissionTimer(activityId) {
-  const runtime = getRuntime();
-  const stateKey = {
-    lessonMatch: "wordMatch",
-    abbrMatch: "wordMatch",
-    sentenceBank: "sentenceBank",
-    shema: "sentenceBank",
-    verbMatch: "match",
-    advConj: "advConj",
-    prepositions: "prepositions",
-    binyanBoard: "binyanBoard",
-    handwriting: "handwriting",
-  }[activityId];
-  const mode = runtime.state?.[stateKey];
-  if (mode?.active && Number.isFinite(Number(mode.elapsedSeconds))) {
-    mode.startMs = Date.now() - Math.max(0, Number(mode.elapsedSeconds || 0)) * 1000;
-  }
-}
-
 function setRuntimeModeForActivity(activityId) {
   const runtime = getRuntime();
   runtime.state.lastPlayedMode = activityId;
@@ -2870,9 +2825,6 @@ character.showMissionHub = character.showMissionHub || function showMissionHub(t
   const state = getState();
   const mission = state?.mission;
   if (!mission?.active) return false;
-  if (app.session?.hasActiveLearnSession?.()) {
-    pauseMissionTimers();
-  }
   state.screen = "none";
   mission.onHub = true;
   runtime.state.route = ["home", "review", "settings"].includes(targetRoute) ? targetRoute : "home";
@@ -2897,8 +2849,7 @@ character.openMissionBeat = character.openMissionBeat || function openMissionBea
   if (mission.currentActivity === activityId && app.session?.hasActiveLearnSession?.()) {
     state.screen = "none";
     setRuntimeModeForActivity(activityId);
-    rebaseMissionTimer(activityId);
-    app.session?.resumeActiveTimers?.();
+    app.session?.resumeActiveSession?.();
   } else {
     mission.currentActivity = "";
     state.screen = "activityIntro";
@@ -2916,9 +2867,6 @@ character.openMissionBeat = character.openMissionBeat || function openMissionBea
 character.requestQuitMission = character.requestQuitMission || function requestQuitMission() {
   const state = getState();
   if (!state?.mission?.active || state.screen !== "none") return false;
-  if (app.session?.hasActiveLearnSession?.()) {
-    pauseMissionTimers();
-  }
   state.screen = "quitConfirm";
   saveState();
   getRuntime().helpers?.renderAll?.();
@@ -2932,8 +2880,7 @@ character.cancelQuitMission = character.cancelQuitMission || function cancelQuit
   state.screen = "none";
   if (mission?.active && mission.currentActivity && !mission.onHub &&
     app.session?.hasActiveLearnSession?.()) {
-    rebaseMissionTimer(mission.currentActivity);
-    app.session?.resumeActiveTimers?.();
+    app.session?.resumeActiveSession?.();
   }
   saveState();
   getRuntime().helpers?.renderAll?.();
