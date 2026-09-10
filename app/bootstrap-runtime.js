@@ -11,7 +11,6 @@ bootstrapRuntime.createElementRegistry = bootstrapRuntime.createElementRegistry 
     mobileBottomNav: document.querySelector("#mobileBottomNav"),
     shellTopTitle: document.querySelector("#shellTopTitle"),
     shellGameplayPill: document.querySelector("#shellGameplayPill"),
-    shellGameplayTime: document.querySelector("#shellGameplayTime"),
     shellGameplayCombo: document.querySelector("#shellGameplayCombo"),
     shellHomeBtn: document.querySelector("#shellHomeBtn"),
     routeButtons: Array.from(document.querySelectorAll("[data-route]")),

@@ -213,7 +213,6 @@ const getSummaryScoreValue = uiModule.getSummaryScoreValue;
 const getSummaryScoreTotal = uiModule.getSummaryScoreTotal;
 const getSummaryAccuracyPercent = uiModule.getSummaryAccuracyPercent;
 const isPerfectSummary = uiModule.isPerfectSummary;
-const formatResultSeconds = uiModule.formatResultSeconds;
 const buildSummaryMetrics = uiModule.buildSummaryMetrics;
 const createResultsPerformanceGraphic = uiModule.createResultsPerformanceGraphic;
 const renderSettingsState = uiModule.renderSettingsState;
@@ -477,7 +476,6 @@ if (
   !getSummaryScoreTotal ||
   !getSummaryAccuracyPercent ||
   !isPerfectSummary ||
-  !formatResultSeconds ||
   !buildSummaryMetrics ||
   !createResultsPerformanceGraphic ||
   !renderSettingsState ||

@@ -1604,12 +1604,6 @@ character.renderResultsSprite = character.renderResultsSprite || function render
   return true;
 };
 
-function formatTime(seconds) {
-  const safe = Math.max(0, Math.round(Number(seconds || 0)));
-  const minutes = Math.floor(safe / 60);
-  return `${minutes}:${String(safe % 60).padStart(2, "0")}`;
-}
-
 function createMissionMetric(label, value) {
   const metric = global.document.createElement("div");
   metric.className = "mission-result-metric";
@@ -1634,7 +1628,6 @@ character.renderMissionResults = character.renderMissionResults || function rend
   const mistakes = played.reduce((sum, result) => sum + result.incorrectCount, 0);
   const attempts = correct + mistakes;
   const accuracy = attempts ? Math.round((correct / attempts) * 100) : 100;
-  const seconds = played.reduce((sum, result) => sum + result.elapsedSeconds, 0);
 
   runtime.el.resultsTitle.textContent = uiText("Mission complete", "המשימה הושלמה");
   runtime.el.resultsNote.textContent = uiText("Mission complete", "המשימה הושלמה");
@@ -1648,8 +1641,7 @@ character.renderMissionResults = character.renderMissionResults || function rend
   stats.append(
     createMissionMetric(uiText("Accuracy", "דיוק"), `${accuracy}%`),
     createMissionMetric(uiText("Correct", "נכון"), String(correct)),
-    createMissionMetric(uiText("Mistakes", "טעויות"), String(mistakes)),
-    createMissionMetric(uiText("Time", "זמן"), formatTime(seconds))
+    createMissionMetric(uiText("Mistakes", "טעויות"), String(mistakes))
   );
   const portrait = global.document.createElement("div");
   portrait.className = "mission-results-character";
@@ -1670,7 +1662,7 @@ character.renderMissionResults = character.renderMissionResults || function rend
     const score = global.document.createElement("span");
     score.textContent = result.skipped
       ? uiText("Skipped · Hebrew voice unavailable", "דולג · אין קול עברי")
-      : `${result.correctCount}/${result.correctCount + result.incorrectCount} · ${formatTime(result.elapsedSeconds)}`;
+      : `${result.correctCount}/${result.correctCount + result.incorrectCount}`;
     row.append(name, score);
     rows.append(row);
   });
