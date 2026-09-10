@@ -781,6 +781,19 @@ characterData.characters = characterData.characters || Object.freeze({
       ]),
       sentenceCategories: Object.freeze(["colloquial"]),
       sentenceStyles: Object.freeze(["whatsapp"]),
+      // A camp/LGBTQ+ slang tranche authored into the shared `colloquial` bank,
+      // where register grants weight but never fences — so דוב, קוקיצה and אוחצ'ה were
+      // arriving as neutral filler in Idan's and Ivri's missions. Naming a row here
+      // makes it his *and* fences it. The general Israeli slang authored alongside
+      // it (הורס, פאלש, לרלר) stays cast-wide, and so do the LGBTQ *civic* rows
+      // `colloquial_145` and `everyday_132`: קהילה גאה and להט"ב are ordinary Israeli
+      // vocabulary a learner who never picks Ido should still meet, the same
+      // reasoning that keeps the Public Safety topic shared.
+      sentenceReserveIds: Object.freeze([
+        "colloquial_vodge_01", "colloquial_vodge_02", "colloquial_vodge_03",
+        "colloquial_ochtcha_01", "colloquial_dov_01", "colloquial_dov_02",
+        "colloquial_kukitza_01", "colloquial_patutch_01",
+      ]),
       abbrBuckets: Object.freeze(["Daily Life & Home"]),
       abbrIds: CIVIL_DEFENSE_ABBR_IDS,
       // Authored for Ido, then routed from the shared pool. The pool verbs are

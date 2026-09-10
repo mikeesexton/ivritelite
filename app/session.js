@@ -209,7 +209,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       noteVars: snapshot.summary.noteVars || {},
       correctCount: Math.max(0, Number(snapshot.summary.correctCount || 0)),
       incorrectCount: Math.max(0, Number(snapshot.summary.incorrectCount || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.summary.elapsedSeconds || 0)),
       mistakes: Array.isArray(snapshot.summary.mistakes) ? snapshot.summary.mistakes : [],
       corrects: Array.isArray(snapshot.summary.corrects) ? snapshot.summary.corrects : [],
     });
@@ -221,8 +220,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       currentRound: Math.max(0, Number(snapshot.lesson.currentRound || 0)),
       secondChanceCurrent: Math.max(0, Number(snapshot.lesson.secondChanceCurrent || 0)),
       secondChanceTotal: Math.max(0, Number(snapshot.lesson.secondChanceTotal || 0)),
-      startMs: Math.max(0, Number(snapshot.lesson.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.lesson.elapsedSeconds || 0)),
       askedWordIds: Array.isArray(snapshot.lesson.askedWordIds) ? snapshot.lesson.askedWordIds : [],
       domainCounts: snapshot.lesson.domainCounts || {},
       missedWordIds: Array.isArray(snapshot.lesson.missedWordIds) ? snapshot.lesson.missedWordIds : [],
@@ -233,7 +230,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       optionHistory: snapshot.lesson.optionHistory || {},
       wrongAnswers: Math.max(0, Number(snapshot.lesson.wrongAnswers || 0)),
       sessionMistakeIds: Array.isArray(snapshot.lesson.sessionMistakeIds) ? snapshot.lesson.sessionMistakeIds : [],
-      timerId: null,
     });
   }
 
@@ -245,8 +241,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       currentRound: Math.max(0, Number(snapshot.sentenceBank.currentRound || 0)),
       secondChanceCurrent: Math.max(0, Number(snapshot.sentenceBank.secondChanceCurrent || 0)),
       secondChanceTotal: Math.max(0, Number(snapshot.sentenceBank.secondChanceTotal || 0)),
-      startMs: Math.max(0, Number(snapshot.sentenceBank.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.sentenceBank.elapsedSeconds || 0)),
       askedSentenceIds: Array.isArray(snapshot.sentenceBank.askedSentenceIds) ? snapshot.sentenceBank.askedSentenceIds : [],
       reviewQueue: Array.isArray(snapshot.sentenceBank.reviewQueue) ? snapshot.sentenceBank.reviewQueue : [],
       currentQuestion: snapshot.sentenceBank.currentQuestion
@@ -256,7 +250,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       sessionMistakeKeys: Array.isArray(snapshot.sentenceBank.sessionMistakeKeys) ? snapshot.sentenceBank.sessionMistakeKeys : [],
       availableScore: Math.max(0, Number(snapshot.sentenceBank.availableScore || 0)),
       shemaMode: Boolean(snapshot.sentenceBank.shemaMode),
-      timerId: null,
     });
     if (runtime.state.sentenceBank.currentQuestion) {
       runtime.state.sentenceBank.currentQuestion.locked = Boolean(snapshot.sentenceBank.currentQuestion?.locked);
@@ -270,8 +263,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
     Object.assign(runtime.state.abbreviation, {
       active: Boolean(snapshot.abbreviation.active),
       currentRound: Math.max(0, Number(snapshot.abbreviation.currentRound || 0)),
-      startMs: Math.max(0, Number(snapshot.abbreviation.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.abbreviation.elapsedSeconds || 0)),
       askedEntryIds: Array.isArray(snapshot.abbreviation.askedEntryIds) ? snapshot.abbreviation.askedEntryIds : [],
       introActive: Boolean(snapshot.abbreviation.introActive),
       currentQuestion: snapshot.abbreviation.currentQuestion
@@ -279,7 +270,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
         : null,
       wrongAnswers: Math.max(0, Number(snapshot.abbreviation.wrongAnswers || 0)),
       sessionMistakeIds: Array.isArray(snapshot.abbreviation.sessionMistakeIds) ? snapshot.abbreviation.sessionMistakeIds : [],
-      timerId: null,
     });
     if (runtime.state.abbreviation.currentQuestion) {
       runtime.state.abbreviation.currentQuestion.locked = Boolean(snapshot.abbreviation.currentQuestion?.locked);
@@ -309,8 +299,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       bestCombo: Math.max(0, Number(snapshot.match.bestCombo || 0)),
       matchedCount: Math.max(0, Number(snapshot.match.matchedCount || 0)),
       totalPairs: Math.max(0, Number(snapshot.match.totalPairs || 0)),
-      startMs: Math.max(0, Number(snapshot.match.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.match.elapsedSeconds || 0)),
       verbIntroActive: Boolean(snapshot.match.verbIntroActive),
       sessionMatched: Math.max(0, Number(snapshot.match.sessionMatched || 0)),
       sessionTotalPairs: Math.max(0, Number(snapshot.match.sessionTotalPairs || 0)),
@@ -319,7 +307,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       mismatchCount: Math.max(0, Number(snapshot.match.mismatchCount || 0)),
       sessionMistakeIds: Array.isArray(snapshot.match.sessionMistakeIds) ? snapshot.match.sessionMistakeIds : [],
       sessionMistakeForms: Array.isArray(snapshot.match.sessionMistakeForms) ? snapshot.match.sessionMistakeForms : [],
-      timerId: null,
     });
   }
 
@@ -328,8 +315,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       active: Boolean(snapshot.wordMatch.active),
       introActive: Boolean(snapshot.wordMatch.introActive),
       game: String(snapshot.wordMatch.game || ""),
-      startMs: Math.max(0, Number(snapshot.wordMatch.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.wordMatch.elapsedSeconds || 0)),
       pairs: Array.isArray(snapshot.wordMatch.pairs) ? snapshot.wordMatch.pairs : [],
       remainingPairs: Array.isArray(snapshot.wordMatch.remainingPairs) ? snapshot.wordMatch.remainingPairs : [],
       leftCards: Array.isArray(snapshot.wordMatch.leftCards) ? snapshot.wordMatch.leftCards : [],
@@ -347,7 +332,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       bestCombo: Math.max(0, Number(snapshot.wordMatch.bestCombo || 0)),
       mismatchCount: Math.max(0, Number(snapshot.wordMatch.mismatchCount || 0)),
       sessionMistakeIds: Array.isArray(snapshot.wordMatch.sessionMistakeIds) ? snapshot.wordMatch.sessionMistakeIds : [],
-      timerId: null,
     });
   }
 
@@ -356,8 +340,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       active: Boolean(snapshot.advConj.active),
       introActive: Boolean(snapshot.advConj.introActive),
       currentRound: Math.max(0, Number(snapshot.advConj.currentRound || 0)),
-      startMs: Math.max(0, Number(snapshot.advConj.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.advConj.elapsedSeconds || 0)),
       questionQueue: Array.isArray(snapshot.advConj.questionQueue) ? snapshot.advConj.questionQueue : [],
       currentQuestion: snapshot.advConj.currentQuestion || null,
       wrongAnswers: Math.max(0, Number(snapshot.advConj.wrongAnswers || 0)),
@@ -367,7 +349,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       reviewQueue: Array.isArray(snapshot.advConj.reviewQueue) ? snapshot.advConj.reviewQueue : [],
       secondChanceCurrent: Math.max(0, Number(snapshot.advConj.secondChanceCurrent || 0)),
       secondChanceTotal: Math.max(0, Number(snapshot.advConj.secondChanceTotal || 0)),
-      timerId: null,
     });
   }
 
@@ -376,8 +357,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       active: Boolean(snapshot.prepositions.active),
       introActive: Boolean(snapshot.prepositions.introActive),
       currentRound: Math.max(0, Number(snapshot.prepositions.currentRound || 0)),
-      startMs: Math.max(0, Number(snapshot.prepositions.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.prepositions.elapsedSeconds || 0)),
       questionQueue: Array.isArray(snapshot.prepositions.questionQueue) ? snapshot.prepositions.questionQueue : [],
       currentQuestion: snapshot.prepositions.currentQuestion || null,
       wrongAnswers: Math.max(0, Number(snapshot.prepositions.wrongAnswers || 0)),
@@ -386,7 +365,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       reviewQueue: Array.isArray(snapshot.prepositions.reviewQueue) ? snapshot.prepositions.reviewQueue : [],
       secondChanceCurrent: Math.max(0, Number(snapshot.prepositions.secondChanceCurrent || 0)),
       secondChanceTotal: Math.max(0, Number(snapshot.prepositions.secondChanceTotal || 0)),
-      timerId: null,
     });
   }
 
@@ -409,9 +387,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       reviewQueue: Array.isArray(snapshot.binyanBoard.reviewQueue) ? snapshot.binyanBoard.reviewQueue : [],
       secondChanceCurrent: Math.max(0, Number(snapshot.binyanBoard.secondChanceCurrent || 0)),
       secondChanceTotal: Math.max(0, Number(snapshot.binyanBoard.secondChanceTotal || 0)),
-      startMs: Math.max(0, Number(snapshot.binyanBoard.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.binyanBoard.elapsedSeconds || 0)),
-      timerId: null,
     });
   }
 
@@ -419,8 +394,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
     Object.assign(runtime.state.handwriting, {
       active: Boolean(snapshot.handwriting.active),
       introActive: Boolean(snapshot.handwriting.introActive),
-      startMs: Math.max(0, Number(snapshot.handwriting.startMs || 0)),
-      elapsedSeconds: Math.max(0, Number(snapshot.handwriting.elapsedSeconds || 0)),
       rounds: Array.isArray(snapshot.handwriting.rounds) ? snapshot.handwriting.rounds : [],
       roundIndex: Math.max(0, Number(snapshot.handwriting.roundIndex || 0)),
       totalRounds: Math.max(0, Number(snapshot.handwriting.totalRounds || 0)),
@@ -433,7 +406,6 @@ session.restoreSessionState = session.restoreSessionState || function restoreSes
       mismatchCount: Math.max(0, Number(snapshot.handwriting.mismatchCount || 0)),
       sessionMistakeIds: Array.isArray(snapshot.handwriting.sessionMistakeIds) ? snapshot.handwriting.sessionMistakeIds : [],
       isResolving: Boolean(snapshot.handwriting.isResolving),
-      timerId: null,
     });
   }
 
@@ -480,54 +452,10 @@ session.restorePendingOverlays = session.restorePendingOverlays || function rest
   }
 };
 
-session.resumeActiveTimers = session.resumeActiveTimers || function resumeActiveTimers() {
-  const runtime = getRuntime();
+session.resumeActiveSession = session.resumeActiveSession || function resumeActiveSession() {
   const h = getHelpers();
 
   session.restorePendingOverlays();
-
-  if (runtime.state?.lesson?.active && runtime.state.lesson.startMs && !runtime.state.lesson.lessonStartIntroActive && !runtime.state.lesson.secondChanceIntroActive) {
-    runtime.state.lesson.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.lesson.startMs) / 1000));
-    session.startLessonTimer();
-  }
-  if (runtime.state?.sentenceBank?.active && runtime.state.sentenceBank.startMs && !runtime.state.sentenceBank.introActive) {
-    runtime.state.sentenceBank.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.sentenceBank.startMs) / 1000));
-    session.startSentenceBankTimer();
-  }
-  if (runtime.state?.abbreviation?.active && runtime.state.abbreviation.startMs && !runtime.state.abbreviation.introActive) {
-    runtime.state.abbreviation.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.abbreviation.startMs) / 1000));
-    session.startAbbreviationTimer();
-  }
-  if (runtime.state?.match?.active && runtime.state.match.startMs && !runtime.state.match.verbIntroActive) {
-    runtime.state.match.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.match.startMs) / 1000));
-    session.startVerbMatchTimer();
-  }
-  if (runtime.state?.wordMatch?.active && runtime.state.wordMatch.startMs && !runtime.state.wordMatch.introActive) {
-    runtime.state.wordMatch.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.wordMatch.startMs) / 1000));
-    session.startWordMatchTimer();
-  }
-  if (runtime.state?.advConj?.active && runtime.state.advConj.startMs && !runtime.state.advConj.introActive) {
-    runtime.state.advConj.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.advConj.startMs) / 1000));
-    runtime.state.advConj.timerId = runtime.global.setInterval(() => {
-      runtime.state.advConj.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.advConj.startMs) / 1000));
-      h.renderAll?.();
-    }, 1000);
-  }
-  if (runtime.state?.prepositions?.active && runtime.state.prepositions.startMs && !runtime.state.prepositions.introActive) {
-    runtime.state.prepositions.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.prepositions.startMs) / 1000));
-    runtime.state.prepositions.timerId = runtime.global.setInterval(() => {
-      runtime.state.prepositions.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.prepositions.startMs) / 1000));
-      h.renderAll?.();
-    }, 1000);
-  }
-  if (runtime.state?.binyanBoard?.active && runtime.state.binyanBoard.startMs && !runtime.state.binyanBoard.introActive) {
-    runtime.state.binyanBoard.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.binyanBoard.startMs) / 1000));
-    app.binyanBoard?.startBinyanBoardTimer?.();
-  }
-  if (runtime.state?.handwriting?.active && runtime.state.handwriting.startMs && !runtime.state.handwriting.introActive) {
-    runtime.state.handwriting.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.handwriting.startMs) / 1000));
-    app.handwriting?.startHandwritingTimer?.();
-  }
 
   h.updateUiLockState?.();
 };
@@ -562,7 +490,6 @@ session.clearSummaryState = session.clearSummaryState || function clearSummarySt
   runtime.state.summary.noteVars = {};
   runtime.state.summary.correctCount = 0;
   runtime.state.summary.incorrectCount = 0;
-  runtime.state.summary.elapsedSeconds = 0;
   runtime.state.summary.mistakes = [];
   runtime.state.summary.corrects = [];
 };
@@ -624,13 +551,6 @@ session.resetAllModeSessions = session.resetAllModeSessions || function resetAll
   // doubled layout overflows the 360px floor whenever a wide card is drawn.
   runtime.el?.choiceContainer?.classList.remove("sentence-bank-board", "match-grid");
 
-  session.stopVerbMatchTimer();
-  session.stopLessonTimer();
-  session.stopSentenceBankTimer();
-  session.stopAbbreviationTimer();
-  session.stopWordMatchTimer();
-  app.binyanBoard?.stopBinyanBoardTimer?.();
-  app.handwriting?.stopHandwritingTimer?.();
 
   session.closeLeaveSessionConfirm();
   h.closeMasteredModal?.();
@@ -696,11 +616,6 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   const runtime = getRuntime();
   const h = getHelpers();
 
-  session.stopVerbMatchTimer();
-  session.stopLessonTimer();
-  session.stopSentenceBankTimer();
-  session.stopAbbreviationTimer();
-  session.stopWordMatchTimer();
   session.closeLeaveSessionConfirm();
   session.clearLessonStartIntro();
   session.clearSecondChanceIntro();
@@ -725,11 +640,9 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.advConj.currentQuestion = null;
   runtime.state.prepositions.active = false;
   runtime.state.prepositions.currentQuestion = null;
-  app.binyanBoard?.stopBinyanBoardTimer?.();
   runtime.state.binyanBoard.active = false;
   runtime.state.binyanBoard.currentQuestion = null;
   session.clearHandwritingIntro?.();
-  app.handwriting?.stopHandwritingTimer?.();
   runtime.state.handwriting.active = false;
   runtime.state.mode = "home";
   runtime.state.route = "home";
@@ -748,7 +661,6 @@ session.showSessionSummary = session.showSessionSummary || function showSessionS
   runtime.state.summary.noteVars = config.noteVars || {};
   runtime.state.summary.correctCount = Math.max(0, Number(config.correctCount || 0));
   runtime.state.summary.incorrectCount = Math.max(0, Number(config.incorrectCount || 0));
-  runtime.state.summary.elapsedSeconds = Math.max(0, Number(config.elapsedSeconds || 0));
   runtime.state.summary.mistakes = Array.isArray(config.mistakes) ? config.mistakes : [];
   runtime.state.summary.corrects = Array.isArray(config.corrects) ? config.corrects : [];
   runtime.state.route = "results";
@@ -760,7 +672,6 @@ session.finishLesson = session.finishLesson || function finishLesson() {
   const h = getHelpers();
   const lessonRounds = runtime.constants.LESSON_ROUNDS || 0;
 
-  session.stopLessonTimer();
   session.clearLessonStartIntro();
   session.clearSecondChanceIntro();
   session.clearVerbMatchIntro();
@@ -782,7 +693,6 @@ session.finishLesson = session.finishLesson || function finishLesson() {
     noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: Math.max(0, lessonRounds + reviewRounds - runtime.state.lesson.wrongAnswers),
     incorrectCount: runtime.state.lesson.wrongAnswers,
-    elapsedSeconds: runtime.state.lesson.elapsedSeconds,
     mistakes: h.buildLessonMistakeSummary?.() || [],
   });
 };
@@ -791,7 +701,6 @@ session.finishSentenceBank = session.finishSentenceBank || function finishSenten
   const runtime = getRuntime();
   const h = getHelpers();
 
-  session.stopSentenceBankTimer();
   session.clearSentenceBankIntro?.();
   runtime.state.sentenceBank.active = false;
   runtime.state.sentenceBank.currentQuestion = null;
@@ -818,7 +727,6 @@ session.finishSentenceBank = session.finishSentenceBank || function finishSenten
         - runtime.state.sentenceBank.wrongAnswers
     ),
     incorrectCount: runtime.state.sentenceBank.wrongAnswers,
-    elapsedSeconds: runtime.state.sentenceBank.elapsedSeconds,
     mistakes: h.buildSentenceBankMistakeSummary?.() || [],
   });
 };
@@ -828,7 +736,6 @@ session.finishAbbreviation = session.finishAbbreviation || function finishAbbrev
   const h = getHelpers();
   const abbreviationRounds = runtime.constants.ABBREVIATION_ROUNDS || 0;
 
-  session.stopAbbreviationTimer();
   session.clearLessonStartIntro();
   session.clearSecondChanceIntro();
   session.clearVerbMatchIntro();
@@ -836,7 +743,6 @@ session.finishAbbreviation = session.finishAbbreviation || function finishAbbrev
 
   const roundsDone = runtime.state.abbreviation.currentRound;
   const targetRounds = abbreviationRounds;
-  const elapsed = runtime.state.abbreviation.elapsedSeconds;
 
   runtime.state.abbreviation.active = false;
   runtime.state.abbreviation.currentQuestion = null;
@@ -852,11 +758,9 @@ session.finishAbbreviation = session.finishAbbreviation || function finishAbbrev
     noteKey: "summary.abbreviationNote",
     noteVars: {
       rounds: roundsDone || targetRounds,
-      seconds: elapsed,
     },
     correctCount: Math.max(0, (roundsDone || targetRounds) - runtime.state.abbreviation.wrongAnswers),
     incorrectCount: runtime.state.abbreviation.wrongAnswers,
-    elapsedSeconds: elapsed,
     mistakes: h.buildAbbreviationMistakeSummary?.() || [],
   });
 };
@@ -878,38 +782,12 @@ session.clearWordMatchIntro = session.clearWordMatchIntro || function clearWordM
   getHelpers().hideBlockingOverlay?.(overlay);
 };
 
-session.startAbbreviationTimer = session.startAbbreviationTimer || function startAbbreviationTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  session.stopAbbreviationTimer();
-  runtime.state.abbreviation.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.abbreviation.active) return;
-    runtime.state.abbreviation.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.abbreviation.startMs) / 1000));
-    if (runtime.state.mode === "abbreviation") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-session.stopAbbreviationTimer = session.stopAbbreviationTimer || function stopAbbreviationTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.abbreviation.timerId) return;
-  runtime.global.clearInterval(runtime.state.abbreviation.timerId);
-  runtime.state.abbreviation.timerId = null;
-};
-
 session.resetAdvConjState = session.resetAdvConjState || function resetAdvConjState() {
   const runtime = getRuntime();
-  if (runtime.state.advConj.timerId) {
-    runtime.global.clearInterval(runtime.state.advConj.timerId);
-  }
   runtime.state.advConj = {
     active: false,
     introActive: false,
     currentRound: 0,
-    startMs: 0,
-    elapsedSeconds: 0,
-    timerId: null,
     questionQueue: [],
     currentQuestion: null,
     wrongAnswers: 0,
@@ -934,16 +812,10 @@ session.clearAdvConjIntro = session.clearAdvConjIntro || function clearAdvConjIn
 
 session.resetPrepositionsState = session.resetPrepositionsState || function resetPrepositionsState() {
   const runtime = getRuntime();
-  if (runtime.state.prepositions.timerId) {
-    runtime.global.clearInterval(runtime.state.prepositions.timerId);
-  }
   runtime.state.prepositions = {
     active: false,
     introActive: false,
     currentRound: 0,
-    startMs: 0,
-    elapsedSeconds: 0,
-    timerId: null,
     questionQueue: [],
     currentQuestion: null,
     wrongAnswers: 0,
@@ -969,10 +841,6 @@ session.finishPrepositions = session.finishPrepositions || function finishPrepos
   const runtime = getRuntime();
   const rounds = session.getModeRoundTarget("prepositions", runtime.constants.PREPOSITIONS_ROUNDS) || 0;
 
-  if (runtime.state.prepositions.timerId) {
-    runtime.global.clearInterval(runtime.state.prepositions.timerId);
-    runtime.state.prepositions.timerId = null;
-  }
   runtime.state.prepositions.active = false;
   const reviewRounds = runtime.state.prepositions.secondChanceTotal;
   runtime.state.prepositions.inReview = false;
@@ -980,7 +848,6 @@ session.finishPrepositions = session.finishPrepositions || function finishPrepos
   runtime.state.prepositions.secondChanceTotal = 0;
   const wrong = runtime.state.prepositions.wrongAnswers;
   const correct = Math.max(0, rounds + reviewRounds - wrong);
-  const seconds = runtime.state.prepositions.elapsedSeconds;
   const mistakes = app.prepositions?.buildPrepositionsMistakeSummary?.() || [];
   session.showSessionSummary({
     game: "prepositions",
@@ -989,7 +856,6 @@ session.finishPrepositions = session.finishPrepositions || function finishPrepos
     noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: correct,
     incorrectCount: wrong,
-    elapsedSeconds: seconds,
     mistakes,
   });
 };
@@ -1013,10 +879,6 @@ session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {
   const h = getHelpers();
   const rounds = session.getModeRoundTarget("advConj", runtime.constants.ADV_CONJ_ROUNDS) || 0;
 
-  if (runtime.state.advConj.timerId) {
-    runtime.global.clearInterval(runtime.state.advConj.timerId);
-    runtime.state.advConj.timerId = null;
-  }
   runtime.state.advConj.active = false;
   const reviewRounds = runtime.state.advConj.secondChanceTotal;
   runtime.state.advConj.inReview = false;
@@ -1024,7 +886,6 @@ session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {
   runtime.state.advConj.secondChanceTotal = 0;
   const wrong = runtime.state.advConj.wrongAnswers;
   const correct = Math.max(0, rounds + reviewRounds - wrong);
-  const seconds = runtime.state.advConj.elapsedSeconds;
   const mistakes = h.buildAdvConjMistakeSummary?.() || [];
   session.showSessionSummary({
     game: "advConj",
@@ -1033,7 +894,6 @@ session.finishAdvConj = session.finishAdvConj || function finishAdvConj() {
     noteVars: reviewRounds > 0 ? { count: reviewRounds } : {},
     correctCount: correct,
     incorrectCount: wrong,
-    elapsedSeconds: seconds,
     mistakes,
   });
 };
@@ -1066,83 +926,4 @@ session.clearVerbMatchIntro = session.clearVerbMatchIntro || function clearVerbM
   getHelpers().hideBlockingOverlay?.(runtime.el.verbMatchIntro);
 };
 
-session.startVerbMatchTimer = session.startVerbMatchTimer || function startVerbMatchTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  session.stopVerbMatchTimer();
-  runtime.state.match.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.match.active) return;
-    runtime.state.match.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.match.startMs) / 1000));
-    if (runtime.state.mode === "verbMatch") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-session.stopVerbMatchTimer = session.stopVerbMatchTimer || function stopVerbMatchTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.match.timerId) return;
-  runtime.global.clearInterval(runtime.state.match.timerId);
-  runtime.state.match.timerId = null;
-};
-
-session.startWordMatchTimer = session.startWordMatchTimer || function startWordMatchTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  session.stopWordMatchTimer();
-  runtime.state.wordMatch.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.wordMatch.active) return;
-    runtime.state.wordMatch.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.wordMatch.startMs) / 1000));
-    if (runtime.state.mode === "lessonMatch" || runtime.state.mode === "abbrMatch") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-session.stopWordMatchTimer = session.stopWordMatchTimer || function stopWordMatchTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.wordMatch.timerId) return;
-  runtime.global.clearInterval(runtime.state.wordMatch.timerId);
-  runtime.state.wordMatch.timerId = null;
-};
-
-session.startSentenceBankTimer = session.startSentenceBankTimer || function startSentenceBankTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  session.stopSentenceBankTimer();
-  runtime.state.sentenceBank.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.sentenceBank.active) return;
-    runtime.state.sentenceBank.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.sentenceBank.startMs) / 1000));
-    if (runtime.state.mode === "sentenceBank") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-session.stopSentenceBankTimer = session.stopSentenceBankTimer || function stopSentenceBankTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.sentenceBank.timerId) return;
-  runtime.global.clearInterval(runtime.state.sentenceBank.timerId);
-  runtime.state.sentenceBank.timerId = null;
-};
-
-session.startLessonTimer = session.startLessonTimer || function startLessonTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  session.stopLessonTimer();
-  runtime.state.lesson.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.lesson.active) return;
-    runtime.state.lesson.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.lesson.startMs) / 1000));
-    if (runtime.state.mode === "lesson") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-session.stopLessonTimer = session.stopLessonTimer || function stopLessonTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.lesson.timerId) return;
-  runtime.global.clearInterval(runtime.state.lesson.timerId);
-  runtime.state.lesson.timerId = null;
-};
 })(typeof window !== "undefined" ? window : globalThis);

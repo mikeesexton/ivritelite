@@ -43,14 +43,10 @@ wordMatch.shortGloss = wordMatch.shortGloss || function shortGloss(text) {
 wordMatch.resetWordMatchState = wordMatch.resetWordMatchState || function resetWordMatchState() {
   const ctx = getRuntime().state?.wordMatch;
   if (!ctx) return;
-  getSession().stopWordMatchTimer?.();
   app.matchEngine?.resetBoard?.(ctx);
   ctx.active = false;
   ctx.introActive = false;
   ctx.game = "";
-  ctx.startMs = 0;
-  ctx.elapsedSeconds = 0;
-  ctx.timerId = null;
   ctx.sessionMistakeIds = [];
 };
 
@@ -186,8 +182,6 @@ function startGame(game) {
   ctx.introActive = false;
   ctx.game = game;
   ctx.sessionMistakeIds = [];
-  ctx.startMs = 0;
-  ctx.elapsedSeconds = 0;
 
   const config = wordMatch.buildConfig(game);
   config.pairs = pairs;
@@ -220,11 +214,6 @@ wordMatch.beginWordMatchFromIntro = wordMatch.beginWordMatchFromIntro || functio
   if (!runtime.state.wordMatch.active) return;
   if (runtime.state.wordMatch.introActive) {
     session.clearWordMatchIntro?.();
-  }
-  if (!runtime.state.wordMatch.startMs) {
-    runtime.state.wordMatch.startMs = Date.now();
-    runtime.state.wordMatch.elapsedSeconds = 0;
-    session.startWordMatchTimer?.();
   }
   getHelpers().renderAll?.();
 };
@@ -315,14 +304,12 @@ wordMatch.finishWordMatch = wordMatch.finishWordMatch || function finishWordMatc
   const total = ctx.totalPairs || matched;
   const bestCombo = ctx.bestCombo;
   const mismatchCount = ctx.mismatchCount;
-  const elapsed = ctx.elapsedSeconds;
   const mistakeIds = ctx.sessionMistakeIds.slice();
   const mistakeSet = new Set(mistakeIds);
   const correctIds = (ctx.matchedPairIds || []).filter((id) => !mistakeSet.has(id));
   const mistakes = buildMistakes(game, mistakeIds);
   const corrects = buildMistakes(game, correctIds);
 
-  getSession().stopWordMatchTimer?.();
   ctx.active = false;
   wordMatch.resetWordMatchState();
 
@@ -332,10 +319,9 @@ wordMatch.finishWordMatch = wordMatch.finishWordMatch || function finishWordMatc
     scoreKey: "summary.score",
     scoreVars: { score: matched, total },
     noteKey: "summary.wordMatchNote",
-    noteVars: { matched, combo: bestCombo, seconds: elapsed },
+    noteVars: { matched, combo: bestCombo },
     correctCount: matched,
     incorrectCount: mismatchCount,
-    elapsedSeconds: elapsed,
     mistakes,
     corrects,
   });

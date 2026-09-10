@@ -21,6 +21,148 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-09 EDT — Test suite audit: 137s to 12.6s, and split the layout test
+
+**Requested:** "take a larger look/audit at our test suite and gauge which are helpful and if
+any can be scrapped responsibly for efficiency's sake" — then "yes, do both" to the two
+changes the audit recommended.
+
+**The audit's finding: nothing needed scrapping.** Timing each file individually showed one
+file was the entire suite. `tests/content-coverage.test.js` took **136.4s of a 136.8s suite**;
+`gameplay-layout.test.js` took 11.9s; the other seventeen files together came to ~10s, and
+seventeen of nineteen finished in under a second. Because `node --test` runs files in
+parallel, that one file *was* the wall time. Deleting tests could not have bought meaningful
+time — and `.github/workflows/test.yml:45` fails the build under 400 tests, so 515 left only
+115 of deletion headroom anyway. The suite also has no duplicate test names, no `.skip`, no
+`.todo` and no `.only`.
+
+**Files changed:**
+- `tests/content-coverage.test.js` — 24 tests each called
+  `buildCoverageReport(loadProductionContent())`, a pure function over the shipped content
+  that walks 2,206 vocabulary records against 1,254 sentences at ~5.6s a call. Now built
+  lazily once and shared. Checked every reader first: only `filter`, `find`, `map`, `length`
+  and `categories.get`, so nothing mutates it. **136.4s to 5.9s, all 27 tests still passing.**
+- `tests/gameplay-layout.test.js` — was a single `test()` holding 73 assertions, so the first
+  failure aborted the other 72, including the only checks of mission results and settings
+  centering. The fifteen measurement phases are now subtests of the same parent, which still
+  owns the static server, the Chrome launch and its retry budget, and the try/finally
+  teardown — one launch, not fifteen. No assertion added, removed or changed.
+
+**Behavior changed:** None. No app code was touched in this session.
+
+**Tests run:** `npm test` before (515 tests, 514 pass, 1 fail, ~137s) and after (530 tests,
+529 pass, 1 fail, **12.6s**). The extra 15 are the layout subtests; the parent still counts as
+one. The single failure is the same pre-existing one carried into this session — "a reload
+mid-flow lands on the focus screen with a live selection",
+`tests/character-mission.test.js:2563` — untouched, and already flagged for its own session.
+
+**Verification beyond the suite passing:**
+- Confirmed in a throwaway probe that a failing `await t.test(...)` does not abort its parent
+  in `node:test`: all phases run and the failures are named. That is the whole premise of the
+  split, so it was worth proving rather than assuming.
+- Confirmed the layout phases were safe to separate: every measurement variable is declared
+  and used inside its own phase, the widest span being `sentenceFeedback` across 58 lines, so
+  no closure reaches for another phase's value.
+- Injected a failure into phase 2 on a throwaway copy: all fifteen phases ran. **Four failed,
+  not one** — the phases still drive the app in sequence, so skipping phase 2's deck pinning
+  cascaded into three later phases. The first name in the list is still the real one and
+  eleven phases still reported green, which is the improvement; full independence would mean
+  each phase re-establishing its own app state, a much larger rewrite.
+
+**Risks / regressions to check:**
+- The shared coverage report is only safe while every reader stays read-only. A future test
+  that sorts, pushes to, or otherwise mutates `report.records` would silently corrupt the
+  tests that run after it. If one ever needs a private copy, it should build its own report.
+- The layout subtests share sequential app state, so a failure cluster can be wider than its
+  cause. Read the first failing phase, not the count.
+- Test count rose to 530, comfortably over the CI floor of 400. Note the floor is a crude
+  discovery guard: consolidating tests later moves the count *toward* it, so the floor may
+  need lowering rather than treated as a target.
+- The ~12–14 single-row regression pins (`colloquial_72`, `colloquial_130`, the rumor card,
+  and similar) were reviewed and deliberately kept. They are the only genuinely low-yield
+  tier and could fold into one table-driven test, but that is a reviewer-noise win, not a
+  speed one.
+
+### 2026-09-09 EDT — Remove the session timer
+
+**Requested:** "it doesn't seem like the timer in ivritelite is working. i honestly don't
+think we need it. let's get rid of it" — confirmed scope as the HUD pill plus the results
+stat, which also allowed the timing layer itself to go.
+
+**Why it was broken, since that was the premise.** `getGameplayHeaderMeta`
+(`app/ui.js:262`) branched per mode and let anything it did not name fall through to an
+`else` reading `state.lesson.elapsedSeconds`. `lessonMatch` and `abbrMatch` had no branch,
+so both landed in that fallback — and the lesson counter is dead: `state.lesson.startMs` is
+never assigned anywhere in the repo, having gone with the 639 lines `app/lesson.js` lost on
+2026-06-20. An `isWordMatchMode()` helper sat at `app/ui.js:31`, defined and never called
+here. Observed live: `wordMatch.elapsedSeconds` at 8 while the pill read `0s`. The timer
+worked in the specialised modes and was frozen in Vocabulary.
+
+**Four display surfaces, not one,** which is what made the scope worth confirming: the HUD
+pill clock, the results screen's Time metric, the mission debrief's Time tile plus a
+per-activity time on every row, and three summary notes that interpolated
+`Time: {seconds}s`. The last two were found mid-task and removed on the reasoning that
+keeping either would have kept the whole layer alive.
+
+**Files changed:**
+- `index.html` — dropped the pill's time stat; moved `shellGameplayBeatDivider` after the
+  beat stat to replace the always-on divider that had followed the clock, so nothing renders
+  a leading separator; bumped 15 cache keys (`20260909a`, then `b` for the second commit).
+- `app/ui.js` — `getGameplayHeaderMeta` stops tracking time; `renderGameplayPill` and
+  `renderProgressBarState` drop the time clause from their aria labels;
+  `buildSummaryMetrics` drops the Time row; deleted `formatCompactElapsedSeconds` and
+  `formatResultSeconds`.
+- `app/character.js` — mission debrief loses its Time tile and per-row times; deleted
+  `formatTime`, `pauseMissionTimers`, `rebaseMissionTimer` and their call sites; activity
+  results no longer carry or accumulate `elapsedSeconds`.
+- `app/session.js` — deleted the five start/stop timer pairs, the snapshot timing fields,
+  `summary.elapsedSeconds`, and the advConj/prepositions interval clears.
+  `resumeActiveTimers` → `resumeActiveSession`: it also called `restorePendingOverlays()`
+  and `updateUiLockState()`, so it had to survive the timers, under a name that does not
+  promise what it no longer does.
+- `app/bootstrap-runtime.js`, `app/persistence.js` — dropped the
+  `startMs`/`elapsedSeconds`/`timerId` triplet from state init and the persisted snapshot.
+- `app/bootstrap-data.js` — removed `session.timer`, `results.time` and the already-unused
+  `match.timer` in both languages; dropped the `Time: {seconds}s` clause from `matchNote`,
+  `abbreviationNote` and `wordMatchNote`.
+- `app/word-match.js`, `app/verb-match.js`, `app/sentence-bank.js`, `app/abbreviation.js`,
+  `app/adv-conj.js`, `app/prepositions.js`, `app/binyan-board.js`, `app/handwriting.js` —
+  removed each mode's timing fields, its interval, and `elapsedSeconds` from its summary.
+- `styles.css` — `.mission-results-metrics` 2 → 3 columns, so the three remaining tiles fill
+  one row instead of leaving an orphan in a 2x2 grid.
+- `app.js` — unwired the ten timer functions and renamed the resume call.
+- Tests — updated the pill and summary-metric assertions; renamed `resumeActiveTimers` in the
+  `__appTestExports` harness list (this was the single cause of a 126-failure cascade);
+  reworked the mission quit test, which asserted a `"pause"` call that no longer happens;
+  removed the `elapsedSeconds` fixtures and the `vocab.elapsedSeconds === 55` aggregation
+  assertion; replaced three `startMs > 0` proxies in the intro test with assertions that the
+  intro overlay is actually inactive; re-pinned the sprite lock's `styles.css` key.
+
+**Behavior changed:** No elapsed time is shown anywhere — gameplay pill, results screen,
+mission debrief, or summary notes. The pill now carries only combo (plus the beat badge
+during a mission). Nine one-second intervals no longer run during gameplay, so advConj and
+prepositions no longer re-render every second. Nothing else about scoring, rounds, routing or
+persistence changed. Old saved snapshots still load: their extra timing keys are ignored.
+
+**Tests run:** `npm test` before (515 tests, 514 pass, 1 fail) and after (515 tests, 514
+pass, 1 fail). The one failure — "a reload mid-flow lands on the focus screen with a live
+selection", `tests/character-mission.test.js:2563`, on `isBlocking()` for the focus screen —
+is **pre-existing on a clean tree** and unrelated to timers; it was not touched. Also
+verified in the browser: Conjugation+ and Prepositions play and give feedback, a mid-round
+reload restores the board through `resumeActiveSession`, zero intervals start during
+gameplay, all three summary notes render clean in English and Hebrew, and the mission debrief
+fits three metric tiles in one row at 360x640 with no horizontal scroll.
+
+**Risks / regressions to check:**
+- Anything that wanted elapsed time later has to re-add the layer, not just a display.
+- advConj and prepositions lost their per-second `renderAll`. Both were exercised by hand,
+  but any future UI on those screens that quietly relied on a periodic re-render will not get
+  one.
+- `resumeActiveSession` is called on boot and from two mission paths; the rename is mechanical
+  but the function is load-bearing for restoring intro overlays after a reload.
+- The mission debrief's 3-column metric grid was checked at the 360px floor; a longer metric
+  label added later has less room than it did in the old 2-column layout.
+
 ### 2026-09-08 EDT — Fix: a wall-clock-dependent test failure on main
 
 **Requested:** fix the evening-only failure of `"a reload mid-flow lands on the focus screen with a live selection"`
@@ -68,6 +210,100 @@ path, and `tests/cache-bust.test.js` only flags changed files that `index.html` 
 to read the key — the file already loads ~100, so cost is negligible. A test that still hardcodes a UTC
 day key elsewhere would have the same latent bug; `grep -rn "toISOString" tests/` is the check, and it
 now returns nothing at all — these two were the only UTC-derived day keys in the suite.
+### 2026-09-08 EDT — Fence Ido's camp/LGBTQ+ slang tranche
+
+**Requested:** from a screenshot of an Idan mission serving "All the bears come to the party
+on Friday." — "remind me, do we block sentences from characters or only weight them? this is a
+very ido sentence... is this a one-off or something more systemic?"
+
+**The answer to the question, since it is the useful part.** Ownership *weights*; only the
+`*Reserve*` fields *fence*. `buildContentWeigher` (`app/character.js:709`) solves a multiplier
+so ~65% of a draw lands in the active character's pool, and the comment at `app/character.js:723`
+says it outright: "Sentences are biased, never filtered." Register banks are pinned as
+never-fenced by `tests/character-mission.test.js:577`, whose comment explains why — a blanket
+rule over them "would leave each character little more than its own bank." Idan owns 131 of
+1,254 sentences against a draw pool of 1,070, so roughly 40% of his sentence draws are other
+characters' rows. That is intended and was not changed.
+
+**So the picker was right and the data was wrong.** `colloquial_dov_01` carries the note
+"דוב ('bear') in gay slang is a large, hairy man" and is one of twelve rows authored as a single
+camp/LGBTQ+ slang tranche into the shared `colloquial` bank (`SENTENCE_EXPANSION_REQUESTED`,
+`sentence-bank-data.js:12354`) with no fence. In English translation they read innocuous, which
+is how they passed review.
+
+**Third instance of one recurring pattern,** which is the honest answer to "systemic": strongly
+coded content authored into a shared register bank and fenced only retroactively, when someone
+notices. Idan's security rows were fixed by the `idan_` prefix; Inat's political tranche by
+`sentenceReserveIds`. That Inat pass reserved `formal_70` (rainbow-flag rights) but skipped
+`colloquial_145` and `everyday_132` — not an oversight, they are not hers — and Ido had **no
+`sentenceReserveIds` at all**, exactly as `docs/project-rules.md:124` records, so there was
+nowhere to put them. He has one now.
+
+**Files changed:**
+
+- `app/character-data.js` — Ido's route gains its first `sentenceReserveIds`, eight ids:
+  `colloquial_vodge_01/02/03`, `_ochtcha_01`, `_dov_01/02`, `_kukitza_01`, `_patutch_01`.
+  Reserving both grants and fences. Each row's own `notes` field decided its side: these eight
+  name the sense as gay or camp. The four left cast-wide are general Israeli slang that happens
+  to sit in the same tranche — `hores_01`/`hores_02` (the note itself says "gay *and general*",
+  and `hores_01`'s vocative אחותי is mainstream, with אחי as its own distractor), `falsh_01`
+  (Yiddish origin), `melarler_01` (onomatopoeic chatter).
+- `index.html` — `character-data.js` cache-bust `?v=20260904c` → `?v=20260908a`.
+
+**Deliberately not done,** and worth stating so a later session does not read the omission as an
+oversight: `colloquial_145` ("we wanted an LGBTQ community") and `everyday_132` (a להט"ב youth
+row) stay cast-wide on the same reasoning that keeps Public Safety shared — קהילה גאה and להט״ב
+are ordinary Israeli civic vocabulary, and a learner who never picks Ido should still meet them.
+`formal_70` stays Inat's. No content file was touched and no `character` field was added. Scope
+was held to the tranche: no guard test, no corpus-wide audit, no change to `TARGET_OWNED_SHARE`.
+
+**Behavior changed:** Eight camp-slang rows stop reaching Inbal, Ivri, Inat and Idan as new
+material, and become Ido's rather than unowned filler. Free play still draws all 1,254 rows,
+and review of an already-met row is exempt under any character. Handwriting is covered by the
+same fence with no extra work — it filters withheld rows at `app/handwriting.js:196`, before
+its own owned-vs-shortlist fallback at `:205`.
+
+**Tests run:**
+
+- `npm test` before **and** after: **514 pass, 1 fail**, identical either side. No new failures.
+- The one failure is **pre-existing and unrelated** — `"a reload mid-flow lands on the focus
+  screen with a live selection"` (`tests/character-mission.test.js:2568`). It is a wall-clock
+  bug in the test, not the app: the test builds its `dayKey` in **UTC** via
+  `toISOString().slice(0, 10)` while `getTodayKey()` (`app/character.js:122`) builds it from
+  **local** date parts. Every evening from 20:00 EDT until midnight the two disagree, `sameDay`
+  goes false, `initialize()` rewinds, and the assertion fails. Proved rather than assumed:
+  `TZ=UTC node --test tests/character-mission.test.js` passes **121/121**. Left alone as out of
+  scope; flagged separately.
+- Direct registry assertion: `getItemAudience("sentence", …)` returns `["ido"]` for all eight
+  and stays `null` for the four shared slang rows plus `colloquial_145`, `everyday_132` and
+  `colloquial_01`; `ownsItem` true for Ido, false for the other four.
+- `npm run report:characters`, as the routing section requires. Reserved sentences **272 → 280**;
+  Ido unchanged at 266 owned / 1,010 drawable, since he already owned these by register; every
+  other character's sentence draw pool down exactly 8 — Inbal 1090→1082, Ivri 998→990,
+  Inat 1078→1070, **Idan 1070→1062**.
+
+**Risks / regressions to check:**
+
+- Checked before editing, because a collision would have been a real conflict rather than
+  something to edit around: none of the eight ids appears in any test outside
+  `sentence-bank-data.test.js`, and every "must stay cast-wide" assertion in
+  `character-mission.test.js` iterates a **numeric** id range (`everyday_266..279` and similar),
+  so a named sub-series id cannot fall inside one. The category-count pin at
+  `tests/sentence-bank-data.test.js:1621` (`colloquial: 266`) is untouched by design — reserving
+  an id does not change its `category`.
+- **The authoring gap is still open.** Nothing at authoring time asks "should this be fenced?",
+  which is why this is the third retroactive pass. A guard test was scoped out: the candidate
+  rule is that an id with a *named* sub-series (`colloquial_dov_01`, not `colloquial_140`) must
+  be reserved or explicitly cast-wide. Today those ids are exactly this tranche, so the rule
+  would be cheap; it will not stay that way if more named series are authored.
+- A sixth character co-owning any of these eight instantly un-fences them, per the standing note
+  on `getItemAudience`.
+- Noticed in passing, not touched: `colloquial_dov_01`'s pointed שישי is `שִׁישִׁי`
+  (`sentence-bank-data.js:12507`) — it keeps the helper yod *and* adds the hiriq, marking the
+  vowel twice, against the pointing rule. The rest of the same row is correct ktiv chaser
+  (הדובים → הַדֻּבִּים, למסיבה → לַמְּסִבָּה). Worth a separate pass over the tranche.
+- Housekeeping carried over from the last session and still open: the "worth revisiting" note on
+  תוכנית is stale — תּוֹכְנִית is settled and kept, despite the doc citing תָּכְנִית.
 
 ### 2026-09-06 EDT — Fix: the companion sprite jumped on every answer
 

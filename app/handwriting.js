@@ -131,14 +131,10 @@ function destroyStage() {
 
 handwriting.resetHandwritingState = handwriting.resetHandwritingState || function resetHandwritingState() {
   const runtime = getRuntime();
-  handwriting.stopHandwritingTimer();
   destroyStage();
   runtime.state.handwriting = {
     active: false,
     introActive: false,
-    startMs: 0,
-    elapsedSeconds: 0,
-    timerId: null,
     rounds: [],
     roundIndex: 0,
     totalRounds: 0,
@@ -266,32 +262,7 @@ handwriting.beginHandwritingFromIntro = handwriting.beginHandwritingFromIntro ||
   if (runtime.state.handwriting.introActive) {
     session.clearHandwritingIntro?.();
   }
-  if (!runtime.state.handwriting.startMs) {
-    runtime.state.handwriting.startMs = Date.now();
-    runtime.state.handwriting.elapsedSeconds = 0;
-    handwriting.startHandwritingTimer();
-  }
   getHelpers().renderAll?.();
-};
-
-handwriting.startHandwritingTimer = handwriting.startHandwritingTimer || function startHandwritingTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  handwriting.stopHandwritingTimer();
-  runtime.state.handwriting.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.handwriting.active) return;
-    runtime.state.handwriting.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.handwriting.startMs) / 1000));
-    if (runtime.state.mode === "handwriting") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-handwriting.stopHandwritingTimer = handwriting.stopHandwritingTimer || function stopHandwritingTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.handwriting?.timerId) return;
-  runtime.global.clearInterval(runtime.state.handwriting.timerId);
-  runtime.state.handwriting.timerId = null;
 };
 
 function getThemeColor(name, fallback) {
@@ -644,7 +615,6 @@ handwriting.finishHandwriting = handwriting.finishHandwriting || function finish
   const correct = ctx.correctCount;
   const wrong = ctx.mismatchCount;
   const total = correct + wrong;
-  const elapsed = ctx.elapsedSeconds;
   const sentences = ctx.totalRounds;
   const mistakeIds = ctx.sessionMistakeIds.slice();
   const mistakeSet = new Set(mistakeIds);
@@ -653,7 +623,6 @@ handwriting.finishHandwriting = handwriting.finishHandwriting || function finish
   )];
   const correctIds = practicedIds.filter((id) => !mistakeSet.has(id));
 
-  handwriting.stopHandwritingTimer();
   ctx.active = false;
   handwriting.resetHandwritingState();
 
@@ -666,7 +635,6 @@ handwriting.finishHandwriting = handwriting.finishHandwriting || function finish
     noteVars: { sentences },
     correctCount: correct,
     incorrectCount: wrong,
-    elapsedSeconds: elapsed,
     mistakes: buildLetterSummaryEntries(mistakeIds),
     corrects: buildLetterSummaryEntries(correctIds),
   });

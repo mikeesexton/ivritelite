@@ -329,11 +329,6 @@ prepositions.startPrepositions = prepositions.startPrepositions || function star
   const repair = app.character?.takeRepairQueue?.("prepositions") || [];
   if (repair.length) runtime.state.prepositions.reviewQueue = repair;
   runtime.state.prepositions.active = true;
-  runtime.state.prepositions.startMs = Date.now();
-  runtime.state.prepositions.timerId = runtime.global.setInterval(() => {
-    runtime.state.prepositions.elapsedSeconds = Math.floor((Date.now() - runtime.state.prepositions.startMs) / 1000);
-    h.renderAll?.();
-  }, 1000);
   prepositions.playPrepositionsIntro();
 };
 

@@ -255,16 +255,11 @@ ui.isGameplayRouteActive = ui.isGameplayRouteActive || function isGameplayRouteA
     (app.session?.hasActiveLearnSession?.() || false);
 };
 
-ui.formatCompactElapsedSeconds = ui.formatCompactElapsedSeconds || function formatCompactElapsedSeconds(seconds) {
-  return `${Math.max(0, Number(seconds || 0))}s`;
-};
-
 ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeaderMeta() {
   const runtime = getRuntime();
   const gameplayActive = ui.isGameplayRouteActive();
   const comboCount = Math.max(0, Number(runtime.state.sessionStreak || 0));
   let progressText = "";
-  let timeSeconds = 0;
 
   if (gameplayActive) {
     if (isVerbMatchMode()) {
@@ -272,14 +267,12 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
       progressText = hasMatch
         ? translate("match.progress", { current: runtime.state.match.matchedCount, total: runtime.state.match.totalPairs })
         : translate("match.progress", { current: 0, total: 0 });
-      timeSeconds = runtime.state.match.elapsedSeconds;
     } else if (runtime.state.mode === "abbreviation") {
       const targetRounds = runtime.constants.ABBREVIATION_ROUNDS;
       progressText = translate("session.round", {
         current: runtime.state.abbreviation.currentRound,
         total: targetRounds,
       });
-      timeSeconds = runtime.state.abbreviation.elapsedSeconds;
     } else if (runtime.state.mode === "sentenceBank") {
       const inReview = Boolean(runtime.state.sentenceBank.inReview);
       const totalRounds = app.sentenceBank?.getRoundTarget?.() || runtime.constants.LESSON_ROUNDS;
@@ -292,7 +285,6 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
             current: runtime.state.sentenceBank.currentRound,
             total: totalRounds,
           });
-      timeSeconds = runtime.state.sentenceBank.elapsedSeconds;
     } else if (runtime.state.mode === "advConj") {
       progressText = runtime.state.advConj.inReview
         ? translate("session.secondChanceProgress", {
@@ -303,7 +295,6 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
             current: runtime.state.advConj.currentRound,
             total: app.session?.getModeRoundTarget?.("advConj", runtime.constants.ADV_CONJ_ROUNDS),
           });
-      timeSeconds = runtime.state.advConj.elapsedSeconds;
     } else if (runtime.state.mode === "prepositions") {
       progressText = runtime.state.prepositions.inReview
         ? translate("session.secondChanceProgress", {
@@ -314,7 +305,6 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
             current: runtime.state.prepositions.currentRound,
             total: app.session?.getModeRoundTarget?.("prepositions", runtime.constants.PREPOSITIONS_ROUNDS),
           });
-      timeSeconds = runtime.state.prepositions.elapsedSeconds;
     } else if (runtime.state.mode === "binyanBoard") {
       progressText = runtime.state.binyanBoard.inReview
         ? translate("session.secondChanceProgress", {
@@ -325,13 +315,11 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
             current: runtime.state.binyanBoard.clearedCount,
             total: runtime.state.binyanBoard.totalRoots,
           });
-      timeSeconds = runtime.state.binyanBoard.elapsedSeconds;
     } else if (runtime.state.mode === "handwriting") {
       progressText = translate("session.round", {
         current: runtime.state.handwriting.roundIndex,
         total: runtime.state.handwriting.totalRounds,
       });
-      timeSeconds = runtime.state.handwriting.elapsedSeconds;
     } else {
       const inSecondChance = Boolean(runtime.state.lesson.inReview);
       progressText = inSecondChance
@@ -343,18 +331,14 @@ ui.getGameplayHeaderMeta = ui.getGameplayHeaderMeta || function getGameplayHeade
             current: runtime.state.lesson.currentRound,
             total: runtime.constants.LESSON_ROUNDS,
           });
-      timeSeconds = runtime.state.lesson.elapsedSeconds;
     }
   }
 
   return {
     gameplayActive,
     progressText,
-    timeSeconds,
-    timeText: ui.formatCompactElapsedSeconds(timeSeconds),
     comboCount,
     comboText: `x${comboCount}`,
-    timeAriaText: translate("session.timer", { seconds: timeSeconds }),
     comboAriaText: translate("session.combo", { count: comboCount }),
   };
 };
@@ -365,9 +349,6 @@ ui.renderGameplayPill = ui.renderGameplayPill || function renderGameplayPill() {
   if (!runtime.el?.shellGameplayPill) return;
   const shouldShow = meta.gameplayActive;
 
-  if (runtime.el.shellGameplayTime) {
-    runtime.el.shellGameplayTime.textContent = meta.timeText;
-  }
   if (runtime.el.shellGameplayCombo) {
     runtime.el.shellGameplayCombo.textContent = meta.comboText;
   }
@@ -401,7 +382,7 @@ ui.renderGameplayPill = ui.renderGameplayPill || function renderGameplayPill() {
   runtime.el.shellGameplayPill.classList.toggle("hidden", !shouldShow);
   runtime.el.shellGameplayPill.setAttribute("aria-hidden", shouldShow ? "false" : "true");
   const beatAria = showBeat ? ` • activity ${beat.index + 1} of ${beat.total}` : "";
-  runtime.el.shellGameplayPill.setAttribute("aria-label", `${meta.timeAriaText} • ${meta.comboAriaText}${beatAria}`);
+  runtime.el.shellGameplayPill.setAttribute("aria-label", `${meta.comboAriaText}${beatAria}`);
 };
 
 const SUMMARY_GAME_NAME_KEYS = {
@@ -479,7 +460,6 @@ ui.renderProgressBarState = ui.renderProgressBarState || function renderProgress
   const meta = ui.getGameplayHeaderMeta();
   const parts = [
     String(meta.progressText || "").trim(),
-    String(meta.timeAriaText || "").trim(),
     String(meta.comboAriaText || "").trim(),
   ].filter(Boolean);
 
@@ -1542,18 +1522,10 @@ ui.isPerfectSummary = ui.isPerfectSummary || function isPerfectSummary() {
     && ui.getSummaryScoreValue() >= ui.getSummaryScoreTotal();
 };
 
-ui.formatResultSeconds = ui.formatResultSeconds || function formatResultSeconds(seconds) {
-  const runtime = getRuntime();
-  const safeSeconds = Math.max(0, Number(seconds || 0));
-  return runtime.state.language === "he" ? `${safeSeconds}ש׳` : `${safeSeconds}s`;
-};
-
 ui.buildSummaryMetrics = ui.buildSummaryMetrics || function buildSummaryMetrics({ scoreValue, scoreTotal, accuracy }) {
-  const runtime = getRuntime();
   return [
     { label: translate("results.score"), value: `${scoreValue}/${scoreTotal}` },
     { label: translate("results.accuracy"), value: `${accuracy}%` },
-    { label: translate("results.time"), value: ui.formatResultSeconds(runtime.state.summary.elapsedSeconds) },
   ];
 };
 

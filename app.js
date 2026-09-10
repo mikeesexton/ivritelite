@@ -144,7 +144,7 @@ const resolveInitialRoute = sessionModule.resolveInitialRoute;
 const restoreSessionState = sessionModule.restoreSessionState;
 const navigateTo = sessionModule.navigateTo;
 const restorePendingOverlays = sessionModule.restorePendingOverlays;
-const resumeActiveTimers = sessionModule.resumeActiveTimers;
+const resumeActiveSession = sessionModule.resumeActiveSession;
 const clearIntroAutoAdvance = sessionModule.clearIntroAutoAdvance;
 const scheduleIntroAutoAdvance = sessionModule.scheduleIntroAutoAdvance;
 const clearSummaryState = sessionModule.clearSummaryState;
@@ -160,8 +160,6 @@ const finishLesson = sessionModule.finishLesson;
 const finishSentenceBank = sessionModule.finishSentenceBank;
 const finishAbbreviation = sessionModule.finishAbbreviation;
 const clearAbbreviationIntro = sessionModule.clearAbbreviationIntro;
-const startAbbreviationTimer = sessionModule.startAbbreviationTimer;
-const stopAbbreviationTimer = sessionModule.stopAbbreviationTimer;
 const resetAdvConjState = sessionModule.resetAdvConjState;
 const clearAdvConjIntro = sessionModule.clearAdvConjIntro;
 const finishAdvConj = sessionModule.finishAdvConj;
@@ -169,12 +167,6 @@ const clearLessonStartIntro = sessionModule.clearLessonStartIntro;
 const clearSecondChanceIntro = sessionModule.clearSecondChanceIntro;
 const clearSentenceBankIntro = sessionModule.clearSentenceBankIntro;
 const clearVerbMatchIntro = sessionModule.clearVerbMatchIntro;
-const startVerbMatchTimer = sessionModule.startVerbMatchTimer;
-const stopVerbMatchTimer = sessionModule.stopVerbMatchTimer;
-const startSentenceBankTimer = sessionModule.startSentenceBankTimer;
-const stopSentenceBankTimer = sessionModule.stopSentenceBankTimer;
-const startLessonTimer = sessionModule.startLessonTimer;
-const stopLessonTimer = sessionModule.stopLessonTimer;
 
 const isUiLocked = uiModule.isUiLocked;
 const updateUiLockState = uiModule.updateUiLockState;
@@ -213,7 +205,6 @@ const getSummaryScoreValue = uiModule.getSummaryScoreValue;
 const getSummaryScoreTotal = uiModule.getSummaryScoreTotal;
 const getSummaryAccuracyPercent = uiModule.getSummaryAccuracyPercent;
 const isPerfectSummary = uiModule.isPerfectSummary;
-const formatResultSeconds = uiModule.formatResultSeconds;
 const buildSummaryMetrics = uiModule.buildSummaryMetrics;
 const createResultsPerformanceGraphic = uiModule.createResultsPerformanceGraphic;
 const renderSettingsState = uiModule.renderSettingsState;
@@ -409,7 +400,7 @@ if (
   !restoreSessionState ||
   !navigateTo ||
   !restorePendingOverlays ||
-  !resumeActiveTimers ||
+  !resumeActiveSession ||
   !clearIntroAutoAdvance ||
   !scheduleIntroAutoAdvance ||
   !clearSummaryState ||
@@ -425,8 +416,6 @@ if (
   !finishSentenceBank ||
   !finishAbbreviation ||
   !clearAbbreviationIntro ||
-  !startAbbreviationTimer ||
-  !stopAbbreviationTimer ||
   !resetAdvConjState ||
   !clearAdvConjIntro ||
   !finishAdvConj ||
@@ -434,12 +423,6 @@ if (
   !clearSecondChanceIntro ||
   !clearSentenceBankIntro ||
   !clearVerbMatchIntro ||
-  !startVerbMatchTimer ||
-  !stopVerbMatchTimer ||
-  !startSentenceBankTimer ||
-  !stopSentenceBankTimer ||
-  !startLessonTimer ||
-  !stopLessonTimer ||
   !isUiLocked ||
   !updateUiLockState ||
   !showBlockingOverlay ||
@@ -477,7 +460,6 @@ if (
   !getSummaryScoreTotal ||
   !getSummaryAccuracyPercent ||
   !isPerfectSummary ||
-  !formatResultSeconds ||
   !buildSummaryMetrics ||
   !createResultsPerformanceGraphic ||
   !renderSettingsState ||
@@ -750,14 +732,6 @@ appRuntime.helpers = {
   setPromptCardVisibility,
   showBlockingOverlay,
   showSessionSummary,
-  startAbbreviationTimer,
-  startSentenceBankTimer,
-  startLessonTimer,
-  startVerbMatchTimer,
-  stopAbbreviationTimer,
-  stopSentenceBankTimer,
-  stopLessonTimer,
-  stopVerbMatchTimer,
   t,
   updateAdvConjStats,
   updateConjugationProgress,
@@ -776,7 +750,7 @@ applyDisplayFont();
 applyLanguage();
 bindUi();
 bindCharacterUi?.();
-resumeActiveTimers();
+resumeActiveSession();
 renderAll();
 primeVoices();
 primeAudioCues();

@@ -160,8 +160,6 @@ verbMatch.startVerbMatch = verbMatch.startVerbMatch || function startVerbMatch()
   runtime.state.match.verbQueue = verbMatch.pickVerbMatchQueue(runtime.verbFormDeck, runtime.constants.VERB_MATCH_ROUNDS);
   runtime.state.match.totalVerbs = runtime.state.match.verbQueue.length;
   runtime.state.match.currentVerbIndex = 0;
-  runtime.state.match.startMs = 0;
-  runtime.state.match.elapsedSeconds = 0;
   runtime.state.match.sessionMatched = 0;
   runtime.state.match.sessionTotalPairs = runtime.state.match.verbQueue.reduce(
     (sum, item) => sum + verbMatch.selectVerbRoundPairs(item.forms).length,
@@ -197,11 +195,6 @@ verbMatch.beginVerbMatchFromIntro = verbMatch.beginVerbMatchFromIntro || functio
     session.clearVerbMatchIntro?.();
   }
 
-  if (!runtime.state.match.startMs) {
-    runtime.state.match.startMs = Date.now();
-    runtime.state.match.elapsedSeconds = 0;
-    session.startVerbMatchTimer?.();
-  }
   h.clearFeedback?.();
   verbMatch.loadNextVerbRound();
 };
@@ -229,8 +222,6 @@ verbMatch.resetVerbMatchState = verbMatch.resetVerbMatchState || function resetV
   runtime.state.match.bestCombo = 0;
   runtime.state.match.matchedCount = 0;
   runtime.state.match.totalPairs = 0;
-  runtime.state.match.startMs = 0;
-  runtime.state.match.elapsedSeconds = 0;
   runtime.state.match.verbIntroActive = false;
   runtime.state.match.sessionMatched = 0;
   runtime.state.match.sessionTotalPairs = 0;
@@ -248,11 +239,9 @@ verbMatch.finishVerbMatchSession = verbMatch.finishVerbMatchSession || function 
   const sessionMatched = runtime.state.match.sessionMatched;
   const sessionTotal = runtime.state.match.sessionTotalPairs || sessionMatched;
   const bestCombo = runtime.state.match.bestCombo;
-  const elapsed = runtime.state.match.elapsedSeconds;
   const mismatchCount = runtime.state.match.mismatchCount;
   const mistakes = app.data?.buildVerbMatchMistakeSummary?.() || [];
 
-  s.stopVerbMatchTimer?.();
   runtime.state.match.active = false;
   verbMatch.resetVerbMatchState();
   s.showSessionSummary?.({
@@ -261,10 +250,9 @@ verbMatch.finishVerbMatchSession = verbMatch.finishVerbMatchSession || function 
     scoreKey: "summary.score",
     scoreVars: { score: sessionMatched, total: sessionTotal },
     noteKey: "summary.matchNote",
-    noteVars: { verbs: verbsCovered, combo: bestCombo, seconds: elapsed },
+    noteVars: { verbs: verbsCovered, combo: bestCombo },
     correctCount: sessionMatched,
     incorrectCount: mismatchCount,
-    elapsedSeconds: elapsed,
     mistakes,
   });
 };

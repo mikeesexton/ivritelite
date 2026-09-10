@@ -267,7 +267,7 @@ globalThis.__appTestExports = {
   nextSentenceBankQuestion,
   requestLeaveSession,
   requestGoHome,
-  resumeActiveTimers,
+  resumeActiveSession,
   restoreSessionState,
   startAdvConj,
   startSentenceBank,
@@ -1477,7 +1477,7 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.document.querySelector("#lessonStartIntro").classList.contains("active"), true);
   await waitForTimers();
   assert.equal(harness.state.wordMatch.introActive, false);
-  assert.ok(harness.state.wordMatch.startMs > 0);
+  assert.equal(harness.document.querySelector("#lessonStartIntro").classList.contains("active"), false);
   harness.goHome();
 
   harness.app.wordMatch.startAbbrMatch();
@@ -1485,7 +1485,7 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.document.querySelector("#abbreviationIntro").classList.contains("active"), true);
   await waitForTimers();
   assert.equal(harness.state.wordMatch.introActive, false);
-  assert.ok(harness.state.wordMatch.startMs > 0);
+  assert.equal(harness.document.querySelector("#abbreviationIntro").classList.contains("active"), false);
   harness.goHome();
 
   harness.app.binyanBoard.startBinyanBoard();
@@ -1493,7 +1493,7 @@ test("game start intro bubbles use the same yalla message", async () => {
   assert.equal(harness.document.querySelector("#binyanBoardIntro").classList.contains("active"), true);
   await waitForTimers();
   assert.equal(harness.state.binyanBoard.introActive, false);
-  assert.ok(harness.state.binyanBoard.startMs > 0);
+  assert.equal(harness.document.querySelector("#binyanBoardIntro").classList.contains("active"), false);
   harness.goHome();
 });
 
@@ -3495,11 +3495,9 @@ test("gameplay headers collapse stats into the streak-aware progress bar across 
     options: [{ id: "alpha", word: vocabulary[0] }],
     selectedOptionId: null,
   };
-  harness.state.lesson.elapsedSeconds = 166;
   harness.app.ui.renderSessionHeader();
   assert.equal(harness.document.querySelector("#lessonProgressBar").dataset.streakTier, "2");
   assert.match(harness.document.querySelector("#lessonProgressBar").getAttribute("aria-label"), /Combo x4/);
-  assert.equal(harness.document.querySelector("#shellGameplayTime").textContent, "166s");
   assert.equal(harness.document.querySelector("#shellGameplayCombo").textContent, "x4");
 
   harness.state.mode = "verbMatch";
@@ -3508,15 +3506,13 @@ test("gameplay headers collapse stats into the streak-aware progress bar across 
   harness.state.match.matchedCount = 0;
   harness.state.match.totalPairs = 1;
   harness.state.match.bestCombo = 9;
-  harness.state.match.elapsedSeconds = 203;
   harness.app.ui.renderSessionHeader();
   assert.equal(harness.document.querySelector("#lessonProgressBar").dataset.streakTier, "2");
   assert.match(harness.document.querySelector("#lessonProgressBar").getAttribute("aria-label"), /Combo x4/);
-  assert.equal(harness.document.querySelector("#shellGameplayTime").textContent, "203s");
   assert.equal(harness.document.querySelector("#shellGameplayCombo").textContent, "x4");
 });
 
-test("active gameplay shows the top-right time and combo pill and hides it outside gameplay", () => {
+test("active gameplay shows the top-right combo pill and hides it outside gameplay", () => {
   const vocabulary = [
     { id: "alpha", category: "core_advanced", en: "alpha", he: "אלפא", heNiqqud: "אַלְפָא", utility: 80, source: "test" },
   ];
@@ -3525,7 +3521,6 @@ test("active gameplay shows the top-right time and combo pill and hides it outsi
   harness.state.route = "home";
   harness.state.mode = "lesson";
   harness.state.lesson.active = true;
-  harness.state.lesson.elapsedSeconds = 298;
   harness.state.sessionStreak = 3;
   harness.app.ui.renderSessionHeader();
   harness.app.ui.updateLessonShellModeState();
@@ -3536,9 +3531,8 @@ test("active gameplay shows the top-right time and combo pill and hides it outsi
   assert.equal(harness.document.querySelector("#shellTopTitle").textContent, gameplayModeTitle);
   assert.equal(harness.document.querySelector("#shellGameplayPill").classList.contains("hidden"), false);
   assert.equal(harness.document.querySelector("#shellHomeBtn").classList.contains("hidden"), false);
-  assert.equal(harness.document.querySelector("#shellGameplayTime").textContent, "298s");
   assert.equal(harness.document.querySelector("#shellGameplayCombo").textContent, "x3");
-  assert.match(harness.document.querySelector("#shellGameplayPill").getAttribute("aria-label"), /Time: 298s • Combo x3/);
+  assert.match(harness.document.querySelector("#shellGameplayPill").getAttribute("aria-label"), /Combo x3/);
   assert.equal(harness.document.querySelector("#lessonTitleRow").classList.contains("hidden"), true);
 
   harness.state.lesson.active = false;
@@ -3679,19 +3673,18 @@ test("review and settings cards stay expanded at every width", () => {
   });
 });
 
-test("all game summaries now use only score accuracy and time metrics", () => {
+test("all game summaries now use only score and accuracy metrics", () => {
   const harness = loadAppHarness([]);
-  const expectedLabels = ["Score", "Accuracy", "Time"];
+  const expectedLabels = ["Score", "Accuracy"];
 
   ["lesson", "abbreviation", "verbMatch", "advConj"].forEach((game) => {
     harness.state.summary.game = game;
-    harness.state.summary.elapsedSeconds = 42;
     const metrics = harness.app.ui.buildSummaryMetrics({
       scoreValue: 7,
       scoreTotal: 10,
       accuracy: 70,
     });
-    assert.equal(metrics.length, 3);
+    assert.equal(metrics.length, 2);
     assert.deepEqual(Array.from(metrics, (metric) => metric.label), expectedLabels);
   });
 });
@@ -3709,7 +3702,6 @@ test("abbreviation results separate the acronym, meaning, and full Hebrew into l
     totalPairs: 2,
     bestCombo: 2,
     mismatchCount: 1,
-    elapsedSeconds: 12,
     sessionMistakeIds: ["abbr-1"],
     matchedPairIds: ["abbr-1", "abbr-2"],
   });
@@ -3739,7 +3731,6 @@ test("handwriting summaries arrange per-letter results in three columns", () => 
     game: "handwriting",
     correctCount: 2,
     incorrectCount: 1,
-    elapsedSeconds: 10,
     mistakes: [{ primary: "כ", secondary: "kaf" }],
     corrects: [
       { primary: "ל", secondary: "lamed" },
@@ -3763,7 +3754,6 @@ test("mistake rows isolate each language so Hebrew and English stop colliding", 
     game: "sentenceBank",
     correctCount: 4,
     incorrectCount: 2,
-    elapsedSeconds: 40,
     mistakes: [
       {
         primary: "It was just a fling.",
@@ -3813,7 +3803,6 @@ test("results promote structured mistake notes into a mistake clinic", () => {
     titleKey: "summary.prepositionsTitle",
     correctCount: 8,
     incorrectCount: 2,
-    elapsedSeconds: 33,
     mistakes: [
       {
         primary: "מתגעגע אֲלֵיהֶם",
@@ -4865,7 +4854,7 @@ test("active learn sessions stay pinned to home and restored intros auto-advance
       sessionMistakeIds: [],
     },
   });
-  verbHarness.resumeActiveTimers();
+  verbHarness.resumeActiveSession();
   assert.equal(verbHarness.state.route, "home");
   await waitForTimers();
   assert.equal(verbHarness.state.match.verbIntroActive, false);
@@ -4945,7 +4934,6 @@ test("conjugation summary opens on the results route and home exits without a le
   state.match.sessionMatched = 7;
   state.match.sessionTotalPairs = 10;
   state.match.bestCombo = 4;
-  state.match.elapsedSeconds = 21;
   state.match.mismatchCount = 3;
   state.match.sessionMistakeIds = ["verb-go"];
   state.match.sessionMistakeForms = [
@@ -5146,7 +5134,6 @@ test("binyan board replays missed forms in a second-chance phase", () => {
 
   state.mode = "binyanBoard";
   board.active = true;
-  board.startMs = 1;
   board.deck = [
     {
       id: "root1",

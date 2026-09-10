@@ -371,7 +371,6 @@ binyanBoard.startBinyanBoard = binyanBoard.startBinyanBoard || function startBin
   board.introActive = false;
   board.activeRootId = "";
   board.currentQuestion = null;
-  board.startMs = 0;
 
   binyanBoard.playBinyanBoardIntro();
   h.renderAll?.();
@@ -399,11 +398,6 @@ binyanBoard.beginBinyanBoardFromIntro = binyanBoard.beginBinyanBoardFromIntro ||
   if (runtime.state.binyanBoard.introActive) {
     session.clearBinyanBoardIntro?.();
   }
-  if (!runtime.state.binyanBoard.startMs) {
-    runtime.state.binyanBoard.startMs = Date.now();
-    runtime.state.binyanBoard.elapsedSeconds = 0;
-    binyanBoard.startBinyanBoardTimer();
-  }
   if (runtime.state.binyanBoard.inReview && !runtime.state.binyanBoard.currentQuestion) {
     binyanBoard.loadBinyanBoardReviewQuestion();
     return;
@@ -411,29 +405,8 @@ binyanBoard.beginBinyanBoardFromIntro = binyanBoard.beginBinyanBoardFromIntro ||
   getHelpers().renderAll?.();
 };
 
-binyanBoard.startBinyanBoardTimer = binyanBoard.startBinyanBoardTimer || function startBinyanBoardTimer() {
-  const runtime = getRuntime();
-  const h = getHelpers();
-  binyanBoard.stopBinyanBoardTimer();
-  runtime.state.binyanBoard.timerId = runtime.global.setInterval(() => {
-    if (!runtime.state.binyanBoard.active) return;
-    runtime.state.binyanBoard.elapsedSeconds = Math.max(0, Math.floor((Date.now() - runtime.state.binyanBoard.startMs) / 1000));
-    if (runtime.state.mode === "binyanBoard") {
-      h.renderSessionHeader?.();
-    }
-  }, 1000);
-};
-
-binyanBoard.stopBinyanBoardTimer = binyanBoard.stopBinyanBoardTimer || function stopBinyanBoardTimer() {
-  const runtime = getRuntime();
-  if (!runtime.state.binyanBoard.timerId) return;
-  runtime.global.clearInterval(runtime.state.binyanBoard.timerId);
-  runtime.state.binyanBoard.timerId = null;
-};
-
 binyanBoard.resetBinyanBoardState = binyanBoard.resetBinyanBoardState || function resetBinyanBoardState() {
   const runtime = getRuntime();
-  binyanBoard.stopBinyanBoardTimer();
   runtime.state.binyanBoard = {
     active: false,
     introActive: false,
@@ -452,9 +425,6 @@ binyanBoard.resetBinyanBoardState = binyanBoard.resetBinyanBoardState || functio
     reviewQueue: [],
     secondChanceCurrent: 0,
     secondChanceTotal: 0,
-    startMs: 0,
-    elapsedSeconds: 0,
-    timerId: null,
   };
 };
 
@@ -618,7 +588,6 @@ binyanBoard.finishBinyanBoard = binyanBoard.finishBinyanBoard || function finish
   const runtime = getRuntime();
   const s = getSession();
   const board = runtime.state.binyanBoard;
-  binyanBoard.stopBinyanBoardTimer();
   const mistakes = binyanBoard.buildBinyanBoardMistakeSummary();
   const total = board.correctCount + board.wrongAnswers;
   const reviewRounds = board.secondChanceTotal;
@@ -634,7 +603,6 @@ binyanBoard.finishBinyanBoard = binyanBoard.finishBinyanBoard || function finish
     noteVars: reviewRounds > 0 ? { count: reviewRounds } : { roots: board.totalRoots },
     correctCount: board.correctCount,
     incorrectCount: board.wrongAnswers,
-    elapsedSeconds: board.elapsedSeconds,
     mistakes,
   });
 };
