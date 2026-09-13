@@ -197,6 +197,29 @@ test("every suppressed duplicate still resolves and keeps its sentence hints", (
   });
 });
 
+test("מטרה carries both its senses, and only the everyday one is playable", () => {
+  // Sentence feedback glosses a chip off the vocabulary, joining the senses a
+  // Hebrew surface carries. מטרה had only "goal", so idan_131 — "It is forbidden
+  // to eliminate a target without approval" — told the learner the word they had
+  // just missed meant "goal". The operational sense is carried as a second card
+  // rather than a second gloss on the first, because `en` is a single clean
+  // gloss by convention and is what a Translation Match tile shows. It is
+  // hidden from that game: two playable tiles reading מטרה, or two reading
+  // "target" against מטרה and יעד, are exactly the clashes this file forbids.
+  // Array.from, not .map: loadVocabulary runs the data file in a vm context, so
+  // a derived array keeps that realm's Array and deepEqual reports "same
+  // structure but not reference-equal" against a literal written here.
+  const senses = Array.from(
+    loadVocabulary().filter((word) => word.he === "מטרה"),
+    (word) => [word.id, word.en, word.availability.translationQuiz, word.availability.sentenceHints],
+  );
+
+  assert.deepEqual(senses, [
+    ["scientific_analytical-028-goal-purpose", "goal", true, true],
+    ["military_operational-095-target", "target", false, true],
+  ]);
+});
+
 function getPlannedExpansion(vocabulary) {
   const originalCategorySizes = new Map([
     ["core_advanced", 124],
@@ -227,7 +250,11 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
     return counts;
   }, {});
 
-  assert.equal(vocabulary.length, 2206);
+  // The playable count stays put while the total moves: the appended מטרה card
+  // is the operational "target" sense, carried for sentence feedback only, and
+  // is deliberately not playable — two playable tiles reading מטרה would be the
+  // indistinguishable-tile clash the merged-pool test below forbids.
+  assert.equal(vocabulary.length, 2207);
   assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2117);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
@@ -275,7 +302,12 @@ test("planned Translation Match cards have niqqud and no gloss collisions", () =
   const hebrewCounts = new Map();
   const englishCounts = new Map();
 
-  vocabulary.forEach((word) => {
+  // Counted over the playable deck, the way every other collision check in this
+  // file is. The invariant is that the learner never meets two tiles they cannot
+  // tell apart, and a card hidden from Translation Match renders no tile: the
+  // gloss-only מטרה "target" shares its Hebrew with the playable "goal" card and
+  // its English with the playable יעד card, and neither pairing can be seen.
+  vocabulary.filter((word) => word.availability?.translationQuiz).forEach((word) => {
     hebrewCounts.set(word.he, (hebrewCounts.get(word.he) || 0) + 1);
     englishCounts.set(word.en, (englishCounts.get(word.en) || 0) + 1);
   });

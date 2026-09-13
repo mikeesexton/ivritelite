@@ -3311,7 +3311,14 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   position: relative;
 }
 
+/* `--companion-right` mirrors whatever `right` is in force, so the bubble can
+   size itself against the room actually left of the sprite. applyCompanionPosition
+   overwrites it for a dragged companion; this default matches the `right` below.
+   The explicit sprite row is what stops a long line of dialogue from growing the
+   row and pushing the character down the screen — the bubble overflows its row
+   instead of moving the sprite. */
 .character-companion {
+  --companion-right: 12px;
   position: fixed;
   z-index: 24;
   top: clamp(112px, 22vh, 190px);
@@ -3321,6 +3328,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   min-height: 94px;
   display: grid;
   grid-template-columns: max-content 132px;
+  grid-template-rows: 132px max-content;
   grid-template-areas:
     "bubble sprite"
     "toggle toggle";
@@ -3334,7 +3342,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 .character-companion-copy {
   grid-area: bubble;
   width: fit-content;
-  max-width: min(230px, calc(100vw - 156px));
+  max-width: min(230px, calc(100vw - 144px - var(--companion-right)));
   min-width: 0;
   align-self: center;
   justify-self: end;
@@ -3448,6 +3456,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   width: auto;
   min-height: 30px;
   grid-template-columns: max-content;
+  grid-template-rows: max-content;
   grid-template-areas: "toggle";
 }
 
@@ -3910,6 +3919,7 @@ body[data-ui-lang="he"] .character-mission-copy {
     max-width: calc(100vw - 16px);
     min-height: 84px;
     grid-template-columns: max-content 104px;
+    grid-template-rows: 104px max-content;
   }
 
   .character-companion .character-sprite {
@@ -3917,7 +3927,7 @@ body[data-ui-lang="he"] .character-mission-copy {
   }
 
   .character-companion-copy {
-    max-width: min(190px, calc(100vw - 124px));
+    max-width: min(190px, calc(100vw - 112px - var(--companion-right)));
   }
 
   .character-companion-dialogue {
@@ -5254,22 +5264,32 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
 }
 
 
-/* Binyanim paradigm board */
+/* Binyanim paradigm board.
+
+   Flex rather than grid so that a short board centers. A mission beat asks for
+   as few as two roots, and a grid's columns exist whether or not anything is in
+   them, so two tiles on a three-column board sat against one edge with a
+   column-wide hole beside them. The tiles keep the width a full row would give
+   them; only a row that cannot fill itself is centered. */
 .choices.binyan-board-grid {
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: max-content;
+  --binyan-gap: 0.6rem;
+  --binyan-columns: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-self: center;
   align-content: center;
-  gap: 0.6rem;
+  gap: var(--binyan-gap);
 }
 
 @media (min-width: 768px) {
   .choices.binyan-board-grid {
-    grid-template-columns: repeat(3, 1fr);
+    --binyan-columns: 3;
   }
 }
 
 .binyan-root-tile {
+  flex: 0 1 calc((100% - (var(--binyan-columns) - 1) * var(--binyan-gap)) / var(--binyan-columns));
   min-height: 132px;
   display: flex;
   flex-direction: column;
@@ -5562,7 +5582,7 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
   }
 
   .choices.binyan-board-grid {
-    gap: 0.38rem;
+    --binyan-gap: 0.38rem;
   }
 
   .binyan-root-tile {

@@ -489,13 +489,68 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         const gridStyles = getComputedStyle(document.querySelector('.binyan-board-grid'));
         return {
           arrowContent: getComputedStyle(tiles[0], '::after').content,
-          gridAutoRows: gridStyles.gridAutoRows,
           gridAlignSelf: gridStyles.alignSelf,
         };
       })()`);
       assert.ok(["none", "normal", '""'].includes(compactRootTiles.arrowContent));
-      assert.equal(compactRootTiles.gridAutoRows, "max-content");
       assert.equal(compactRootTiles.gridAlignSelf, "center");
+
+      // A mission beat asks for as few as two roots, and a grid's columns exist
+      // whether or not anything is in them, so a board that could not fill its
+      // row sat against one edge with a column-wide hole beside it. The deck is
+      // shortened to one tile fewer than the board has columns — the column
+      // count moves with the viewport, and a full row is meant to stay flush —
+      // then restored, so this measures the same board the assertions above
+      // just checked instead of starting a second one.
+      const shortBoard = await evaluate(pageCdp, `(() => {
+        const grid = document.querySelector('.binyan-board-grid');
+        const board = IvriQuestApp.runtime.state.binyanBoard;
+        const fullDeck = board.deck;
+        const measure = () => {
+          const gridBox = grid.getBoundingClientRect();
+          const boxes = [...document.querySelectorAll('.binyan-root-tile')]
+            .map((tile) => tile.getBoundingClientRect());
+          const perRow = new Map();
+          boxes.forEach((box) => {
+            const key = Math.round(box.top);
+            perRow.set(key, (perRow.get(key) || 0) + 1);
+          });
+          return {
+            count: boxes.length,
+            rows: perRow.size,
+            widestRow: Math.max(...perRow.values()),
+            width: boxes[0].width,
+            leftGap: Math.min(...boxes.map((box) => box.left)) - gridBox.left,
+            rightGap: gridBox.right - Math.max(...boxes.map((box) => box.right)),
+          };
+        };
+
+        // Read the column count off the full board rather than off a stylesheet
+        // name, so this stays an assertion about what the learner sees.
+        const full = measure();
+        board.deck = fullDeck.slice(0, full.widestRow - 1);
+        IvriQuestApp.binyanBoard.renderBoardTiles();
+        const short = measure();
+        board.deck = fullDeck;
+        IvriQuestApp.binyanBoard.renderBoardTiles();
+        return { columns: full.widestRow, short, full };
+      })()`);
+      assert.ok(shortBoard.columns >= 2, "the full board must lay out at least two columns");
+      assert.equal(shortBoard.short.count, shortBoard.columns - 1);
+      assert.equal(shortBoard.short.rows, 1, "a board short of a full row must stay on one row");
+      assert.ok(
+        Math.abs(shortBoard.short.leftGap - shortBoard.short.rightGap) <= 0.5
+        && shortBoard.short.leftGap > 1,
+        `a Binyanim board short of a full row must center: ${JSON.stringify(shortBoard)}`,
+      );
+      assert.ok(
+        Math.abs(shortBoard.short.width - shortBoard.full.width) <= 0.5,
+        `centering a short board must not resize its tiles: ${JSON.stringify(shortBoard)}`,
+      );
+      assert.ok(
+        Math.abs(shortBoard.full.leftGap) <= 0.5 && Math.abs(shortBoard.full.rightGap) <= 0.5,
+        `a full Binyanim row must still span the board: ${JSON.stringify(shortBoard)}`,
+      );
 
       await evaluate(pageCdp, `(() => {
         const board = IvriQuestApp.runtime.state.binyanBoard;
@@ -593,6 +648,85 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         companionPulse.insideStage,
         false,
         "the fixed companion must stay outside the stage the answer pulse transforms",
+      );
+    });
+
+    await t.test("a line of dialogue does not move a parked companion", async () => {
+      // The learner parks the sprite; the bubble is decoration that comes and
+      // goes with every reaction. getCompanionBounds used to measure the whole
+      // companion box, so the allowed area shrank by the bubble's width the
+      // moment the character spoke — and applyCompanionPosition wrote the
+      // clamped value back, making the shrink permanent. A sprite parked at
+      // right: 200 was shoved toward the edge on the first line of dialogue and
+      // never came back. Measured on the old code at this viewport:
+      // dx 144.4, stored right 200 -> 55.6.
+      const parked = await evaluate(pageCdp, `(async () => {
+        const frame = () => new Promise((resolve) => {
+          requestAnimationFrame(() => resolve());
+          setTimeout(resolve, 200);
+        });
+        const previousState = IvriQuestApp.runtime.characterState;
+        const companion = document.querySelector('#characterCompanion');
+        const sprite = document.querySelector('#characterCompanionSprite');
+        const context = {
+          correctStreak: 0, wrongStreak: 0, sprite: 'neutral', dialogueKey: '',
+          reactionTransient: false, reactionQuestionKey: '', visible: true,
+          companionPosition: { right: 200, y: 300 },
+        };
+        IvriQuestApp.runtime.characterState = {
+          dayKey: IvriQuestApp.character.getTodayKey(),
+          gender: 'm', dailyChoice: 'ido', lensCharacter: 'ido',
+          screen: 'none', reviewOpen: false, mission: null, freePlay: context,
+        };
+        IvriQuestApp.character.renderCompanion();
+        await frame();
+        const silent = sprite.getBoundingClientRect();
+        const silentBox = companion.getBoundingClientRect();
+
+        context.dialogueKey = 'fourWrong';
+        IvriQuestApp.character.renderCompanion();
+        await frame();
+        const speaking = sprite.getBoundingClientRect();
+        const speakingBox = companion.getBoundingClientRect();
+        const storedAfterSpeaking = { ...context.companionPosition };
+
+        context.dialogueKey = '';
+        IvriQuestApp.character.renderCompanion();
+        await frame();
+        const silentAgain = sprite.getBoundingClientRect();
+
+        IvriQuestApp.runtime.characterState = previousState;
+        IvriQuestApp.character.renderCompanion();
+        return {
+          rendered: silent.width > 0 && silent.height > 0,
+          spoke: speakingBox.width > silentBox.width,
+          bubbleOnScreen: speakingBox.left >= -0.5,
+          storedAfterSpeaking,
+          dx: Math.abs(speaking.left - silent.left),
+          dy: Math.abs(speaking.top - silent.top),
+          returnDx: Math.abs(silentAgain.left - silent.left),
+          returnDy: Math.abs(silentAgain.top - silent.top),
+        };
+      })()`);
+      assert.equal(parked.rendered, true, "the companion must be on screen to be measured");
+      assert.equal(parked.spoke, true, "the dialogue bubble must actually have rendered");
+      assert.ok(
+        parked.dx <= 0.5 && parked.dy <= 0.5,
+        `the parked sprite moved when the character spoke: ${JSON.stringify(parked)}`,
+      );
+      assert.ok(
+        parked.returnDx <= 0.5 && parked.returnDy <= 0.5,
+        `the parked sprite moved when the bubble cleared: ${JSON.stringify(parked)}`,
+      );
+      assert.deepEqual(
+        parked.storedAfterSpeaking,
+        { right: 200, y: 300 },
+        "the clamp must render the parked position, not overwrite it",
+      );
+      assert.equal(
+        parked.bubbleOnScreen,
+        true,
+        "the bubble must narrow to fit beside a parked sprite rather than run off the edge",
       );
     });
 

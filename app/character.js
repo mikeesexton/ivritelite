@@ -187,11 +187,18 @@ function sanitizeResult(result) {
 // Reaction and companion state, shared by a mission and by free play so the
 // same streak/sprite/drag logic drives both.
 function createReactionContainer(saved) {
+  // Dragging and the hide/show re-anchor both store `{ right, y }`; only the
+  // pre-`right` saves carry `x`. This accepted `x` alone, so every position the
+  // running app actually writes was thrown away on load and the sprite snapped
+  // back to the top-right corner on every reload.
   const savedPosition = saved?.companionPosition;
-  const companionPosition = savedPosition &&
-    Number.isFinite(Number(savedPosition.x)) &&
-    Number.isFinite(Number(savedPosition.y))
-    ? { x: Number(savedPosition.x), y: Number(savedPosition.y) }
+  const savedY = Number(savedPosition?.y);
+  const savedRight = Number(savedPosition?.right);
+  const savedX = Number(savedPosition?.x);
+  const companionPosition = savedPosition && Number.isFinite(savedY)
+    ? (Number.isFinite(savedRight)
+      ? { right: savedRight, y: savedY }
+      : Number.isFinite(savedX) ? { x: savedX, y: savedY } : null)
     : null;
   return {
     correctStreak: Math.max(0, Number(saved?.correctStreak || 0)),
@@ -1478,16 +1485,34 @@ function scheduleTransientReactionCheck(expectedKey) {
   }, 360);
 }
 
+// What the learner parks is the sprite; the speech bubble is decoration that
+// appears and vanishes with every reaction. Measuring the whole companion box
+// made the allowed area shrink by the bubble's width the moment the character
+// spoke — and because applyCompanionPosition wrote the clamped value back, the
+// shrink was permanent. A sprite parked mid-screen was shoved ~119px toward the
+// edge on the first line of dialogue and never came back. Measure the sprite
+// column, which is the same size from turn to turn. With the sprite hidden there
+// is no sprite column and the box is the bare toggle, which is the right anchor.
+function getCompanionAnchorSize(companion) {
+  const rect = companion.getBoundingClientRect();
+  const spriteRect = getRuntime().el?.characterCompanionSprite?.getBoundingClientRect?.();
+  if (!spriteRect?.width) return { width: rect.width, height: rect.height };
+  return {
+    width: spriteRect.width,
+    height: Math.max(spriteRect.height, rect.bottom - spriteRect.top),
+  };
+}
+
 function getCompanionBounds(companion) {
   const runtime = getRuntime();
-  const rect = companion.getBoundingClientRect();
+  const size = getCompanionAnchorSize(companion);
   const margin = 8;
   const topbarBottom = runtime.el?.shellTopbar?.getBoundingClientRect?.().bottom || margin;
   const navTop = runtime.el?.mobileBottomNav?.getBoundingClientRect?.().top || runtime.global.innerHeight;
   const minRight = margin;
-  const maxRight = Math.max(minRight, runtime.global.innerWidth - rect.width - margin);
+  const maxRight = Math.max(minRight, runtime.global.innerWidth - size.width - margin);
   const minY = Math.max(margin, topbarBottom + margin);
-  const maxY = Math.max(minY, navTop - rect.height - margin);
+  const maxY = Math.max(minY, navTop - size.height - margin);
   return { minRight, maxRight, minY, maxY };
 }
 
@@ -1505,14 +1530,20 @@ function clampCompanionPosition(companion, position) {
   };
 }
 
+// The clamp renders the position; it does not replace it. Writing the clamped
+// value back made every temporary constraint permanent — a topbar that is only
+// on screen between activities, or a viewport the learner rotated — so the spot
+// the learner chose was eaten one render at a time and never restored.
+// `--companion-right` tells the bubble how much room is left to the sprite's
+// left, so it narrows instead of running off the edge.
 function applyCompanionPosition(companion, context) {
   if (!companion || !context?.companionPosition) return;
   const clamped = clampCompanionPosition(companion, context.companionPosition);
-  context.companionPosition = clamped;
   companion.style.right = `${clamped.right}px`;
   companion.style.top = `${clamped.y}px`;
   companion.style.left = "auto";
   companion.style.bottom = "auto";
+  companion.style.setProperty("--companion-right", `${clamped.right}px`);
 }
 
 character.renderCompanion = character.renderCompanion || function renderCompanion() {
@@ -1576,6 +1607,7 @@ character.renderCompanion = character.renderCompanion || function renderCompanio
     companion.style.removeProperty("top");
     companion.style.removeProperty("right");
     companion.style.removeProperty("bottom");
+    companion.style.removeProperty("--companion-right");
   } else {
     applyCompanionPosition(companion, context);
   }

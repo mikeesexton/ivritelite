@@ -19468,10 +19468,10 @@ const NUMBER_TIME_SENTENCES = [
   }),
   buildReviewedSentence({
     id: "everyday_324", emoji: "🌡️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
-    hebrew: "מחר יהיו שלושים מעלות בצל.", hebrewNiqqud: "מָחָר יִהְיוּ שְׁלוֹשִׁים מַעֲלוֹת בַּצֵּל.", english: "Tomorrow there will be thirty degrees in the shade.",
-    hebrewTokenPairs: [["מחר", "מָחָר"], ["יהיו", "יִהְיוּ"], ["שלושים", "שְׁלוֹשִׁים"], ["מעלות", "מַעֲלוֹת"], ["בצל", "בַּצֵּל"]], englishTokens: ["Tomorrow", "there will be", "thirty", "degrees", "in the shade"],
-    hebrewDistractorPairs: [["היום", "הַיּוֹם"], ["היו", "הָיוּ"], ["עשרים", "עֶשְׂרִים"], ["מעלות בלבד", "מַעֲלוֹת בִּלְבַד"], ["בשמש", "בַּשֶּׁמֶשׁ"]], englishDistractors: ["Today", "there were", "twenty", "degrees only", "in the sun"],
-    notes: "יהיו is plural because it agrees with מעלות, the degrees themselves."
+    hebrew: "מחר יהיו שלושים מעלות בצל.", hebrewNiqqud: "מָחָר יִהְיוּ שְׁלוֹשִׁים מַעֲלוֹת בַּצֵּל.", english: "Tomorrow it will be thirty degrees in the shade.",
+    hebrewTokenPairs: [["מחר", "מָחָר"], ["יהיו", "יִהְיוּ"], ["שלושים", "שְׁלוֹשִׁים"], ["מעלות", "מַעֲלוֹת"], ["בצל", "בַּצֵּל"]], englishTokens: ["Tomorrow", "it will be", "thirty", "degrees", "in the shade"],
+    hebrewDistractorPairs: [["היום", "הַיּוֹם"], ["היו", "הָיוּ"], ["עשרים", "עֶשְׂרִים"], ["מעלות בלבד", "מַעֲלוֹת בִּלְבַד"], ["בשמש", "בַּשֶּׁמֶשׁ"]], englishDistractors: ["Today", "it was", "twenty", "degrees only", "in the sun"],
+    notes: "יהיו is plural because it agrees with מעלות, the degrees themselves; English has no such subject, so it takes a dummy it."
   }),
   buildReviewedSentence({
     id: "everyday_325", emoji: "💵", category: "everyday", difficulty: 1, wordOrderDecision: "fixed",

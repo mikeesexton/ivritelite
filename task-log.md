@@ -21,6 +21,116 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-13 EDT — Four screenshot fixes: board centering, two glosses, the jumping sprite
+
+**Requested:** from four screenshots — (1) the shortened Binyanim board's tiles are not
+centered, (2) מטרה is used as *target* but the feedback glosses it *goal*, "can we add the
+second meaning", (3) "there will be thirty degrees" is not proper English, (4) "our sprite
+still jumps around the screen from turn to turn... i asked you or codex to fix this a week
+ago or so. doesn't look like it held."
+
+Four commits on `agent/companion-and-content-fixes`, one per item.
+
+**1. The companion sprite (`15b62c7`).** The 2026-09-06 fix was real and still holds — the
+answer pulse no longer moves it — but it was not the only mover. The learner parks the
+sprite; the speech bubble is decoration that appears and vanishes with every reaction.
+`getCompanionBounds` measured the *whole* companion box, so the area the sprite was allowed
+to occupy shrank by the bubble's width the moment the character spoke, and
+`applyCompanionPosition` wrote the clamped value back — making the shrink permanent.
+Measured in the running app: a sprite parked at `right: 200` was shoved 144px toward the
+edge on the first line of dialogue, its stored position rewritten 200 -> 55.6, and it never
+came back. Every later reaction could shove it again from a new starting point.
+
+Fixed by measuring the sprite column, which is the same size from turn to turn, and by
+letting the clamp *render* the position instead of replacing it — so a topbar that is only on
+screen between activities, or a rotated viewport, no longer eats the chosen spot one render
+at a time. With the sprite no longer yielding, the bubble has to: `--companion-right` tells
+it how much room is left to the sprite's left so it narrows instead of running off the edge,
+and an explicit sprite row stops a long line of dialogue from growing the row and pushing the
+character down.
+
+Also found and fixed on the load path: `createReactionContainer` accepted only the
+pre-`right` `{x, y}` shape, while dragging and the hide/show re-anchor both store
+`{ right, y }`. Every position the running app actually writes was discarded on reload and
+the sprite snapped back to the corner — which is its own version of "jumps around".
+
+**2. Binyanim board centering (`22051f9`).** A mission beat asks for as few as two roots, and
+a grid's columns exist whether or not anything is in them, so a two-root board on the
+three-column layout sat against one edge with a column-wide hole beside it. Laid out with
+flex instead: tiles keep the width a full row would give them — the basis is the same
+`(100% - gaps) / columns` the grid tracks worked out to — and only a row that cannot fill
+itself centers. Verified at 820px (2 tiles: 130.3px each side; 3 tiles: flush) and at 390px
+(1 tile centered, 2 flush).
+
+**3. "there will be thirty degrees" (`d849f86`).** יהיו is plural because it agrees with
+מעלות, so a chip-by-chip reading of everyday_324 comes out as a calque. Moved to "it will
+be" on the chip and "it was" on the distractor, with the literal reading in `notes`. Chip
+counts unchanged. The other six "there will be" rows in the bank are ordinary English
+(heavy traffic, rain, a defense drill, an improvement) and were left alone.
+
+**4. מטרה's second sense (`7c0b3f5`).** Sentence feedback glosses a chip off the vocabulary,
+and מטרה carried only "goal", so idan_131 told the learner the word they had just missed
+meant *goal*. Carried the operational sense as a second card at the tail of
+`military_operational` rather than as a second gloss on the first: `en` is a single clean
+gloss by convention, it is what a Translation Match tile shows, and `tests/vocab-data.test.js`
+rejects a slash in it. The lookup already joins the senses a Hebrew surface carries, so the
+feedback line now reads "goal / target" with no code change. The card is hidden from
+Translation Match — two playable tiles reading מטרה, or two reading "target" against מטרה
+and יעד, are exactly the indistinguishable-tile clashes this data is guarded against.
+
+**Files changed:**
+- `app/character.js` — `getCompanionAnchorSize` measures the sprite column for the clamp;
+  `applyCompanionPosition` stops writing the clamp back and publishes `--companion-right`;
+  `renderCompanion` clears that property with the rest; `createReactionContainer` accepts the
+  `{ right, y }` shape the app actually saves.
+- `styles.css` — companion: `--companion-right` default, explicit sprite grid row (and the
+  `--hidden` and narrow-screen overrides that go with it), bubble max-width keyed to the
+  remaining room. Binyanim: flex board with `--binyan-gap` / `--binyan-columns`, tile basis on
+  `.binyan-root-tile`.
+- `vocab-data.js` — appended the gloss-only מטרה "target" card at the `military_operational`
+  tail, `translationQuiz: false`.
+- `sentence-bank-data.js` — everyday_324 English, chips, distractor and notes.
+- `index.html` — `?v=` bumps, one per commit for exactly the files that commit changed:
+  `styles.css` 20260913a then 20260913b, `app/character.js` 20260913a,
+  `sentence-bank-data.js` 20260913a, `vocab-data.js` 20260913a.
+- `tests/gameplay-layout.test.js` — new subtest "a line of dialogue does not move a parked
+  companion"; the Binyanim tile subtest now also shortens the board by one tile and asserts it
+  centers without resizing, reading the column count off what rendered rather than off a
+  stylesheet name.
+- `tests/vocab-data.test.js` — new מטרה two-sense test; total 2206 -> 2207 (playable count
+  unchanged at 2117); the planned-expansion collision check now counts over the playable deck,
+  the way every other collision check in the file does.
+- `tests/sentence-bank-data.test.js` — new everyday_324 pin.
+- `tests/content-coverage.test.js` — records 2206 -> 2207, exact 1073 -> 1074.
+- `tests/character-mission.test.js` — pinned `styles.css?v=` moved to 20260913b.
+- `tests/fixtures/vocab-id-baseline.json` — one id inserted in place. (Note for whoever
+  regenerates it next: the committed file is missing ~56 ids that later tranches added without
+  regenerating. The baseline test only checks that its own ids still exist, so this has been
+  invisible. Inserting by hand here kept the diff to one line; a full regeneration is a
+  separate, additions-only change.)
+
+**Behavior changed:** a parked companion sprite holds still when the character speaks, when
+the bubble clears, and across a reload; the speech bubble narrows instead of shoving it. A
+Binyanim board that cannot fill its row is centered. everyday_324 reads "Tomorrow it will be
+thirty degrees in the shade." Sentence feedback for מטרה reads "goal / target".
+
+**Tests run:** `npm test` before (530 pass / 0 fail) and after (533 pass / 0 fail).
+`node --test tests/gameplay-layout.test.js` run against the old code to confirm both new
+layout assertions actually fail there — companion `dx 144.4`, stored `right` 200 -> 55.6;
+Binyanim `leftGap 163.8` against `rightGap 0`. `npm run report:characters` diffed before and
+after the vocabulary change: Idan +1 owned and +1 reserved, every other character's draw pool
+unchanged. Verified live in Chrome at 390x844 and 820x1024.
+
+**Risks / regressions to check:** the companion clamp no longer keeps the *bubble* inside the
+viewport by moving the sprite — the bubble's own max-width does that instead, so a companion
+parked far into the left half of a narrow screen gets a narrow, tall bubble that can overflow
+its row rather than a sprite that jumps. Worth a look if anyone parks the sprite there. The
+gloss-only מטרה card means `ownsItem` now matches that Hebrew on Idan's reserved
+`military_operational` shelf; the reserve matches a card's own category, so the shared
+"goal" card is not fenced, and the report confirms no other pool moved. The relaxed
+collision check in `vocab-data.test.js` no longer catches a duplicate gloss between two
+*hidden* cards — every playable pairing is still covered, there and in the merged-pool tests.
+
 ### 2026-09-09 EDT — Test suite audit: 137s to 12.6s, and split the layout test
 
 **Requested:** "take a larger look/audit at our test suite and gauge which are helpful and if
