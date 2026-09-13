@@ -3391,7 +3391,7 @@ test("font selector previews both faces and requested Hebrew surfaces use the sh
   assert.match(styles, /\.lesson-shell\.mode-sentence-bank \.prompt-text\.hebrew\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
   assert.match(styles, /\.binyan-root-letters\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
   assert.match(styles, /body\[data-ui-lang="he"\] \.game-tile\.binyan-root-tile::after\s*\{[^}]*content:\s*none;/s);
-  assert.match(styles, /\.choices\.binyan-board-grid\s*\{[^}]*grid-auto-rows:\s*max-content;[^}]*align-self:\s*center;[^}]*align-content:\s*center;/s);
+  assert.match(styles, /\.choices\.binyan-board-grid\s*\{[^}]*flex-wrap:\s*wrap;[^}]*justify-content:\s*center;[^}]*align-self:\s*center;[^}]*align-content:\s*center;/s);
   assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-text\.hebrew\s*\{[^}]*font-family:\s*var\(--display-font\);/s);
   assert.match(styles, /\.lesson-shell\.mode-binyan-board \.prompt-label\s*\{[^}]*font-family:\s*"Assistant",\s*sans-serif;/s);
   assert.match(styles, /\.handwriting-line\s*\{[^}]*font-family:\s*var\(--display-font\);/s);

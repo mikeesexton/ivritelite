@@ -489,13 +489,68 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
         const gridStyles = getComputedStyle(document.querySelector('.binyan-board-grid'));
         return {
           arrowContent: getComputedStyle(tiles[0], '::after').content,
-          gridAutoRows: gridStyles.gridAutoRows,
           gridAlignSelf: gridStyles.alignSelf,
         };
       })()`);
       assert.ok(["none", "normal", '""'].includes(compactRootTiles.arrowContent));
-      assert.equal(compactRootTiles.gridAutoRows, "max-content");
       assert.equal(compactRootTiles.gridAlignSelf, "center");
+
+      // A mission beat asks for as few as two roots, and a grid's columns exist
+      // whether or not anything is in them, so a board that could not fill its
+      // row sat against one edge with a column-wide hole beside it. The deck is
+      // shortened to one tile fewer than the board has columns — the column
+      // count moves with the viewport, and a full row is meant to stay flush —
+      // then restored, so this measures the same board the assertions above
+      // just checked instead of starting a second one.
+      const shortBoard = await evaluate(pageCdp, `(() => {
+        const grid = document.querySelector('.binyan-board-grid');
+        const board = IvriQuestApp.runtime.state.binyanBoard;
+        const fullDeck = board.deck;
+        const measure = () => {
+          const gridBox = grid.getBoundingClientRect();
+          const boxes = [...document.querySelectorAll('.binyan-root-tile')]
+            .map((tile) => tile.getBoundingClientRect());
+          const perRow = new Map();
+          boxes.forEach((box) => {
+            const key = Math.round(box.top);
+            perRow.set(key, (perRow.get(key) || 0) + 1);
+          });
+          return {
+            count: boxes.length,
+            rows: perRow.size,
+            widestRow: Math.max(...perRow.values()),
+            width: boxes[0].width,
+            leftGap: Math.min(...boxes.map((box) => box.left)) - gridBox.left,
+            rightGap: gridBox.right - Math.max(...boxes.map((box) => box.right)),
+          };
+        };
+
+        // Read the column count off the full board rather than off a stylesheet
+        // name, so this stays an assertion about what the learner sees.
+        const full = measure();
+        board.deck = fullDeck.slice(0, full.widestRow - 1);
+        IvriQuestApp.binyanBoard.renderBoardTiles();
+        const short = measure();
+        board.deck = fullDeck;
+        IvriQuestApp.binyanBoard.renderBoardTiles();
+        return { columns: full.widestRow, short, full };
+      })()`);
+      assert.ok(shortBoard.columns >= 2, "the full board must lay out at least two columns");
+      assert.equal(shortBoard.short.count, shortBoard.columns - 1);
+      assert.equal(shortBoard.short.rows, 1, "a board short of a full row must stay on one row");
+      assert.ok(
+        Math.abs(shortBoard.short.leftGap - shortBoard.short.rightGap) <= 0.5
+        && shortBoard.short.leftGap > 1,
+        `a Binyanim board short of a full row must center: ${JSON.stringify(shortBoard)}`,
+      );
+      assert.ok(
+        Math.abs(shortBoard.short.width - shortBoard.full.width) <= 0.5,
+        `centering a short board must not resize its tiles: ${JSON.stringify(shortBoard)}`,
+      );
+      assert.ok(
+        Math.abs(shortBoard.full.leftGap) <= 0.5 && Math.abs(shortBoard.full.rightGap) <= 0.5,
+        `a full Binyanim row must still span the board: ${JSON.stringify(shortBoard)}`,
+      );
 
       await evaluate(pageCdp, `(() => {
         const board = IvriQuestApp.runtime.state.binyanBoard;

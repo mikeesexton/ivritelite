@@ -5264,22 +5264,32 @@ body[data-ui-lang="he"] #reviewView .wordbank-meta {
 }
 
 
-/* Binyanim paradigm board */
+/* Binyanim paradigm board.
+
+   Flex rather than grid so that a short board centers. A mission beat asks for
+   as few as two roots, and a grid's columns exist whether or not anything is in
+   them, so two tiles on a three-column board sat against one edge with a
+   column-wide hole beside them. The tiles keep the width a full row would give
+   them; only a row that cannot fill itself is centered. */
 .choices.binyan-board-grid {
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: max-content;
+  --binyan-gap: 0.6rem;
+  --binyan-columns: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-self: center;
   align-content: center;
-  gap: 0.6rem;
+  gap: var(--binyan-gap);
 }
 
 @media (min-width: 768px) {
   .choices.binyan-board-grid {
-    grid-template-columns: repeat(3, 1fr);
+    --binyan-columns: 3;
   }
 }
 
 .binyan-root-tile {
+  flex: 0 1 calc((100% - (var(--binyan-columns) - 1) * var(--binyan-gap)) / var(--binyan-columns));
   min-height: 132px;
   display: flex;
   flex-direction: column;
@@ -5572,7 +5582,7 @@ body[data-ui-lang="he"] .lesson-shell.mode-binyan-board .prompt-function-hint {
   }
 
   .choices.binyan-board-grid {
-    gap: 0.38rem;
+    --binyan-gap: 0.38rem;
   }
 
   .binyan-root-tile {
