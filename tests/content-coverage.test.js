@@ -52,7 +52,7 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = productionReport();
-  assert.equal(report.records.length, 2206);
+  assert.equal(report.records.length, 2207);
   // The four coverage tranches pulled twelve more vocabulary cards from
   // unsupported into exact by giving them a sentence context.
   //
@@ -74,7 +74,12 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   // cards an exact sentence context. The shared intermediate-practical tranche
   // then gives seven more existing cards an exact context. The appended מוקד
   // טלפוני card remains unsupported because formal_130 teaches מוקד ארצי instead.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1073);
+  //
+  // The gloss-only מטרה card — the operational "target" sense, appended so the
+  // sentence feedback stops offering only "goal" — arrives exact on idan_127 and
+  // idan_131, the same two rows that cover the scientific "goal" card. Coverage
+  // matches on Hebrew, so a second sense of a covered headword always lands exact.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1074);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
   assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1133);
 });

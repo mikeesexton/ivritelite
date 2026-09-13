@@ -2401,6 +2401,12 @@ const RAW = {
     ["field rations", "מנת קרב", "מְנַת קְרָב"],
     ["to eliminate", "לחסל", "לְחַסֵּל"],
     ["to kill", "להרוג", "לַהֲרֹג"],
+    // Gloss-only: the operational sense of מטרה, so sentence feedback reads
+    // "goal / target" rather than offering the learner "goal" for a sentence
+    // that plainly means target. Not playable — scientific_analytical-028
+    // already owns the card, and two playable tiles sharing a Hebrew surface
+    // are the indistinguishable-tile clash vocab-data.test.js forbids.
+    ["target", "מטרה", "מַטָּרָה", { availability: { translationQuiz: false } }],
   ],
   emergency_response: [
   // Police procedure — the terms a member of the public meets or reads.
