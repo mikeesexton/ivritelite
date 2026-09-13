@@ -1524,6 +1524,20 @@ test("colloquial_217 translates אסור לחנות as a direct prohibition", ()
   assert.deepEqual(Array.from(entry?.english_distractors || []), ["You may", "pass", "there", "from nine", "to seven"]);
 });
 
+test("everyday_324 states a temperature the way English actually does", () => {
+  // יהיו is plural because it agrees with מעלות, so the chip-by-chip reading of
+  // the Hebrew is "there will be thirty degrees" — which is a calque, not
+  // English. docs/sentence-bank-authoring.md puts the literal reading in notes
+  // and gives the learner natural standalone English; a weather report says
+  // "it will be thirty degrees".
+  const entry = loadSentenceBankApi().getSentenceBank().find((item) => item.id === "everyday_324");
+
+  assert.equal(entry?.english, "Tomorrow it will be thirty degrees in the shade.");
+  assert.deepEqual(Array.from(entry?.english_tokens || []), ["Tomorrow", "it will be", "thirty", "degrees", "in the shade"]);
+  assert.deepEqual(Array.from(entry?.english_distractors || []), ["Today", "it was", "twenty", "degrees only", "in the sun"]);
+  assert.match(entry?.notes || "", /dummy it/);
+});
+
 // The pointed/plain alignment check above is scoped to POLITICAL_ENTRY_IDS, which
 // is how 90 idan_ rows shipped with nothing stronger than "one mark exists
 // somewhere in the sentence". This runs over every row instead, the way
