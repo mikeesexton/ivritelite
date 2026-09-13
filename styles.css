@@ -3311,7 +3311,14 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   position: relative;
 }
 
+/* `--companion-right` mirrors whatever `right` is in force, so the bubble can
+   size itself against the room actually left of the sprite. applyCompanionPosition
+   overwrites it for a dragged companion; this default matches the `right` below.
+   The explicit sprite row is what stops a long line of dialogue from growing the
+   row and pushing the character down the screen — the bubble overflows its row
+   instead of moving the sprite. */
 .character-companion {
+  --companion-right: 12px;
   position: fixed;
   z-index: 24;
   top: clamp(112px, 22vh, 190px);
@@ -3321,6 +3328,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   min-height: 94px;
   display: grid;
   grid-template-columns: max-content 132px;
+  grid-template-rows: 132px max-content;
   grid-template-areas:
     "bubble sprite"
     "toggle toggle";
@@ -3334,7 +3342,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
 .character-companion-copy {
   grid-area: bubble;
   width: fit-content;
-  max-width: min(230px, calc(100vw - 156px));
+  max-width: min(230px, calc(100vw - 144px - var(--companion-right)));
   min-width: 0;
   align-self: center;
   justify-self: end;
@@ -3448,6 +3456,7 @@ body[data-display-font="frank"] .settings-seg-opt[data-seg="frank"] {
   width: auto;
   min-height: 30px;
   grid-template-columns: max-content;
+  grid-template-rows: max-content;
   grid-template-areas: "toggle";
 }
 
@@ -3910,6 +3919,7 @@ body[data-ui-lang="he"] .character-mission-copy {
     max-width: calc(100vw - 16px);
     min-height: 84px;
     grid-template-columns: max-content 104px;
+    grid-template-rows: 104px max-content;
   }
 
   .character-companion .character-sprite {
@@ -3917,7 +3927,7 @@ body[data-ui-lang="he"] .character-mission-copy {
   }
 
   .character-companion-copy {
-    max-width: min(190px, calc(100vw - 124px));
+    max-width: min(190px, calc(100vw - 112px - var(--companion-right)));
   }
 
   .character-companion-dialogue {

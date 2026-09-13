@@ -596,6 +596,85 @@ test("compact gameplay and safe centering hold in rendered Chrome", { timeout: 1
       );
     });
 
+    await t.test("a line of dialogue does not move a parked companion", async () => {
+      // The learner parks the sprite; the bubble is decoration that comes and
+      // goes with every reaction. getCompanionBounds used to measure the whole
+      // companion box, so the allowed area shrank by the bubble's width the
+      // moment the character spoke — and applyCompanionPosition wrote the
+      // clamped value back, making the shrink permanent. A sprite parked at
+      // right: 200 was shoved toward the edge on the first line of dialogue and
+      // never came back. Measured on the old code at this viewport:
+      // dx 144.4, stored right 200 -> 55.6.
+      const parked = await evaluate(pageCdp, `(async () => {
+        const frame = () => new Promise((resolve) => {
+          requestAnimationFrame(() => resolve());
+          setTimeout(resolve, 200);
+        });
+        const previousState = IvriQuestApp.runtime.characterState;
+        const companion = document.querySelector('#characterCompanion');
+        const sprite = document.querySelector('#characterCompanionSprite');
+        const context = {
+          correctStreak: 0, wrongStreak: 0, sprite: 'neutral', dialogueKey: '',
+          reactionTransient: false, reactionQuestionKey: '', visible: true,
+          companionPosition: { right: 200, y: 300 },
+        };
+        IvriQuestApp.runtime.characterState = {
+          dayKey: IvriQuestApp.character.getTodayKey(),
+          gender: 'm', dailyChoice: 'ido', lensCharacter: 'ido',
+          screen: 'none', reviewOpen: false, mission: null, freePlay: context,
+        };
+        IvriQuestApp.character.renderCompanion();
+        await frame();
+        const silent = sprite.getBoundingClientRect();
+        const silentBox = companion.getBoundingClientRect();
+
+        context.dialogueKey = 'fourWrong';
+        IvriQuestApp.character.renderCompanion();
+        await frame();
+        const speaking = sprite.getBoundingClientRect();
+        const speakingBox = companion.getBoundingClientRect();
+        const storedAfterSpeaking = { ...context.companionPosition };
+
+        context.dialogueKey = '';
+        IvriQuestApp.character.renderCompanion();
+        await frame();
+        const silentAgain = sprite.getBoundingClientRect();
+
+        IvriQuestApp.runtime.characterState = previousState;
+        IvriQuestApp.character.renderCompanion();
+        return {
+          rendered: silent.width > 0 && silent.height > 0,
+          spoke: speakingBox.width > silentBox.width,
+          bubbleOnScreen: speakingBox.left >= -0.5,
+          storedAfterSpeaking,
+          dx: Math.abs(speaking.left - silent.left),
+          dy: Math.abs(speaking.top - silent.top),
+          returnDx: Math.abs(silentAgain.left - silent.left),
+          returnDy: Math.abs(silentAgain.top - silent.top),
+        };
+      })()`);
+      assert.equal(parked.rendered, true, "the companion must be on screen to be measured");
+      assert.equal(parked.spoke, true, "the dialogue bubble must actually have rendered");
+      assert.ok(
+        parked.dx <= 0.5 && parked.dy <= 0.5,
+        `the parked sprite moved when the character spoke: ${JSON.stringify(parked)}`,
+      );
+      assert.ok(
+        parked.returnDx <= 0.5 && parked.returnDy <= 0.5,
+        `the parked sprite moved when the bubble cleared: ${JSON.stringify(parked)}`,
+      );
+      assert.deepEqual(
+        parked.storedAfterSpeaking,
+        { right: 200, y: 300 },
+        "the clamp must render the parked position, not overwrite it",
+      );
+      assert.equal(
+        parked.bubbleOnScreen,
+        true,
+        "the bubble must narrow to fit beside a parked sprite rather than run off the edge",
+      );
+    });
+
     await t.test("Conjugation+ and Prepositions feedback stays clear of the footer", async () => {
       // Conjugation+ used to draw at random from a 22,000-entry deck, so this
       // assertion was a coin flip: it failed intermittently at 496px against a
