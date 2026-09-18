@@ -575,6 +575,8 @@ const RAW = {
     ["education", "השכלה", "הַשְׂכָּלָה"],
     ["systemic failure", "מחדל", "מֶחְדָּל"],
     ["supervision", "השגחה", "הַשְׁגָּחָה"],
+    ["skipping", "דילוג", "דִּלּוּג"],
+    ["variety", "גיוון", "גִּוּוּן", { idEnglish: "variety / diversification" }],
   ],
   cooking_utensils: [
     ["knife", "סכין", "סַכִּין"],
@@ -1094,6 +1096,7 @@ const RAW = {
     ["joint", "מפרק", "מִפְרָק"],
     ["to crack one's joints", "לעשות קנאקים", "לַעֲשׂוֹת קְנָאקִים"],
     ["to turn off", "לכבות", "לְכַבּוֹת", { idEnglish: "to turn off / extinguish" }],
+    ["glass", "זכוכית", "זְכוּכִית"],
   ],
   abstract_philosophy: [
     ["consciousness", "תודעה", "תּוֹדָעָה"],
@@ -1248,6 +1251,8 @@ const RAW = {
     }],
     ["no regrets", "בלי חרטות", "בְּלִי חֲרָטוֹת"],
     ["drag", "שאכטה", "שַׁאכְטָה", { idEnglish: "drag / puff / hit (slang)" }],
+    ["nonsense", "שטויות", "שְׁטֻיּוֹת"],
+    ["tipsy", "שתוי", "שָׁתוּי", { idEnglish: "tipsy / having been drinking" }],
   ],
   legal_civic: [
     ["constitution", "חוקה", "חֻקָּה"],
@@ -1311,6 +1316,7 @@ const RAW = {
     ["pension", "פנסיה", "פֶּנְסְיָה"],
     ["loan", "הלוואה", "הַלְוָאָה"],
     ["exchange rate", "שער חליפין", "שַׁעַר חֲלִיפִין"],
+    ["loan shark", "כריש הלוואות", "כְּרִישׁ הַלְוָאוֹת"],
   ],
   social_cultural: [
     ["secular", "חילוני", "חִילּוֹנִי"],
@@ -2230,6 +2236,7 @@ const RAW = {
     ["hand sanitizer", "ג'ל לחיטוי ידיים", "גֶ'ל לְחִיטּוּי יָדַיִם"],
     ["body lotion", "תחליב גוף", "תַּחְלִיב גּוּף"],
     ["lip balm", "שפתון לחות", "שְׂפָתוֹן לַחוּת"],
+    ["moustache", "שפם", "שָׂפָם"],
   ],
   civil_defense_safety: [
     ["siren", "אזעקה", "אַזְעָקָה"],
