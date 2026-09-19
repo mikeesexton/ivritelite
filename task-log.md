@@ -21,6 +21,49 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-19 07:24 EDT — Pin the vocab id baseline in deck order
+
+**Requested:** Add the assertion left as a follow-up in the previous entry, so the fixture's
+deck order is enforced rather than merely documented.
+
+`tests/vocab-data.test.js` now pins `tests/fixtures/vocab-id-baseline.json` to
+`getBaseVocabulary()` order, closing the two blind spots the existing subset check had. That
+check asks only whether every baseline id still resolves, so it passed both of these silently:
+
+- a **reshuffle** — ids hand-appended to the end of the array, which is how the file drifted
+  out of deck order in the first place;
+- a **stale fixture** — new cards in the deck that the baseline never learned about, because a
+  missing baseline entry is not a missing *deck* entry.
+
+Both now fail with the index and the two ids involved, and the message says what to do.
+
+**Verified the guard actually fires**, rather than only that it is green. Perturbed the fixture
+two ways and ran the test against each, restoring with `git checkout` after both:
+
+- moved `core_advanced-101-to-intercept` to the end → failed at index 100, naming the expected
+  and found ids. The old subset assertion stayed green on that same file, which is the blind
+  spot demonstrated rather than asserted.
+- dropped `bureaucracy-025-stamp` → failed at index 500.
+
+**Files changed:**
+- `tests/vocab-data.test.js` — reuse the already-loaded id list as `ordered` (the test built a
+  `Set` from it and discarded the order), then `findIndex` the first divergence from the
+  baseline and assert it is `-1`. Updated the comment's closing sentence, which claimed the
+  check below could not see a hand-append — true when written, false now.
+
+**Behavior changed:** None. Test-only; `tests/` is not loaded by `index.html`, so no `?v=`
+bump applies.
+
+**Tests run:** `npm test` — 533 pass, 0 fail. Plus the two deliberate-failure runs above.
+
+**Risks / regressions to check:** This makes the fixture a required edit rather than an
+optional one: adding a vocabulary card now fails the suite until the baseline is regenerated
+in the same commit. That is the documented rule being enforced, but it will surprise anyone
+who adds a card and expects green. The failure message names the file and the fix, which is
+the mitigation. Note also that the assertion compares against `loadVocabulary()`, which reads
+`vocab-data.js` alone — the merged deck that `app.js` builds by concatenating
+`hebrew-verbs.js` is a different list, and this baseline deliberately does not cover it.
+
 ### 2026-09-18 22:35 EDT — Normalize the vocab id baseline into deck order
 
 **Requested:** After the previous entry documented the fixture's append-order drift as
