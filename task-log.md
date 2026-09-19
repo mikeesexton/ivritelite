@@ -21,6 +21,59 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-18 22:35 EDT — Normalize the vocab id baseline into deck order
+
+**Requested:** After the previous entry documented the fixture's append-order drift as
+intentional, "can you fix it now" — actually normalize `tests/fixtures/vocab-id-baseline.json`
+into `getBaseVocabulary()` order.
+
+Done as two commits so the reshuffle is reviewable on its own.
+
+**1. The reorder (`f962ace`), fixture only.** 56 ids move; none added, none removed. Verified
+before writing: both sides hold the identical 2207 ids as a multiset, with zero duplicates on
+either side. Afterwards, regenerating the file is a byte-for-byte no-op.
+
+The drifted tranches are **four**, not the two named in the previous entry:
+`media_digital_life_expanded-027..031`, `literature_arts_cultural_history-031..035`,
+`emergency_response-068..072` and `devices_os_apps-076..116`.
+`religious_life_practice-112..116` was appended the same way but needed no move, because that
+category sorts last anyway — so the previous entry, and the docs note it justified, named a
+tranche that was never actually out of place. Corrected here.
+
+Each append was individually reasonable and that is the interesting part: an agent facing a
+~110-line regeneration churn hand-appended to keep its own diff small, which pushed the two
+orderings further apart and made the *next* regeneration churn worse. A ratchet, where every
+local decision was defensible. Normalizing removes the incentive rather than just the symptom
+— the cheap move and the correct move are now the same move.
+
+**2. The notes (this commit).** The guidance merged in PR #102 four hours ago said "append,
+don't regenerate". That was correct for the file as it stood and is wrong for the file as it
+now stands, so both places are flipped back to "regenerate, confirm additions only" — the
+original wording — with the reasoning the original lacked.
+
+**Files changed:**
+- `tests/fixtures/vocab-id-baseline.json` — sorted into `getBaseVocabulary()` order. Pure
+  permutation, 56 lines moved.
+- `docs/project-rules.md` — Content routing vocabulary-ids bullet: regenerate and confirm
+  additions only; never hand-append to keep a diff small, because that is what caused the
+  drift; the diff, not the suite, is the guard.
+- `tests/vocab-data.test.js` — same flip in the baseline test comment.
+
+**Behavior changed:** None. The fixture's only consumer is a set-membership filter in
+`tests/vocab-data.test.js`, which is order-independent. No runtime `.js`/`.css` touched, so no
+`?v=` bump applies.
+
+**Tests run:** `npm test` — 533 pass, 0 fail, before and after each commit.
+
+**Risks / regressions to check:** The invariant is documented, not enforced — nothing asserts
+the fixture is in deck order, so a future hand-append would silently re-drift it and the suite
+would stay green. A one-line `assert.deepEqual(baseline, current)` in the baseline test would
+pin it, and would also convert the subset check into a bidirectional one; it was left out as
+beyond the ask, and is the obvious follow-up. Until then the protection is that regenerating
+is now the path of least resistance. Also note the regenerate instruction assumes the fixture
+is in deck order; if it ever drifts again, re-normalize it in its own commit before following
+the doc, or the churn returns.
+
 ### 2026-09-18 20:53 EDT — Say "append", not "regenerate", for the vocab id baseline
 
 **Requested:** Correct two places that tell an agent to regenerate
