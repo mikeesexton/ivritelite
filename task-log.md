@@ -21,6 +21,49 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-18 20:53 EDT — Say "append", not "regenerate", for the vocab id baseline
+
+**Requested:** Correct two places that tell an agent to regenerate
+`tests/fixtures/vocab-id-baseline.json` when adding vocabulary cards, and say why appending
+is right instead.
+
+The fixture is stored in the order ids were **appended**, not the order
+`getBaseVocabulary()` returns them. Earlier tranches (`devices_os_apps-076`–`-116`,
+`religious_life_practice-112`–`-116`) were added at the end of the array rather than inserted
+in category order, so the two orderings have drifted apart. Verified this session: the
+fixture and the live deck hold the identical 2207 ids with zero additions or deletions
+between them, yet 56 baseline entries sit out of live order — regenerating the file today
+produces a 112-line diff (56 moves) that changes nothing. That is precisely the "additions
+only" outcome the same sentence demanded, made impossible by its own instruction.
+
+The guard at `tests/vocab-data.test.js:712` is a one-directional subset check — it asks only
+whether every baseline id still exists — so the reshuffle passes green. The cost is an
+unreviewable diff, not a failing suite, which is why this survived several tranches.
+
+**Files changed:**
+- `docs/project-rules.md` — in the Content routing vocabulary-ids bullet, added the missing
+  instruction: add new ids to the **end** of the fixture rather than regenerating it, with the
+  append-order reason and a note that the subset check still passes a reshuffle. The bullet
+  previously named the fixture but never said how to update it.
+- `tests/vocab-data.test.js` — replaced "regenerate the fixture in the same commit that adds
+  them" with append wording plus the same one-sentence reason.
+
+`CLAUDE.md` and `AGENTS.md` mention neither the fixture nor this rule, so the parity pair
+needed no edit; `tests/agent-docs-parity.test.js` still passes.
+
+**Behavior changed:** None. Documentation and a test comment only; no runtime `.js`/`.css`
+file was touched, so no `?v=` bump applies.
+
+**Tests run:** `npm test` — 533 pass, 0 fail.
+
+**Risks / regressions to check:** The "56 lines" figure is true as of 2207 ids and will grow
+if a future tranche is again appended out of category order; it is illustrative, not a
+threshold anything asserts. The underlying disorder is untouched — this change documents the
+file as it is rather than normalizing it, because normalizing would itself be the large
+reshuffle being warned about. If the fixture is ever deliberately re-sorted into
+`getBaseVocabulary()` order, both of these notes go stale together and must be updated in
+that same commit.
+
 ### 2026-09-13 EDT — Four screenshot fixes: board centering, two glosses, the jumping sprite
 
 **Requested:** from four screenshots — (1) the shortened Binyanim board's tiles are not
