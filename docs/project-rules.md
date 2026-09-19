@@ -143,10 +143,13 @@ Two traps, both of which have already cost real bugs:
   matches vocabulary on `he` rather than `id` for exactly this reason, and
   `tests/vocab-data.test.js` diffs every id against `tests/fixtures/vocab-id-baseline.json`.
   Append at a category **tail**, and reach an off-shelf word through `route.vocabWords`.
-  Add the new ids to the **end** of that fixture in the same commit rather than regenerating
-  it: the array preserves the historical order ids were appended in, not the order
-  `getBaseVocabulary()` returns, so a regeneration reshuffles 56 existing lines into an
-  unreviewable diff that the fixture's one-directional subset check still passes.
+  Regenerate that fixture from `getBaseVocabulary()` in the same commit and confirm the diff
+  is **additions only**. The file is kept in deck order, so a category-tail append lands as a
+  contiguous block of `+` lines inside its category, while a mid-category insertion renumbers
+  the rows below it and shows as `+`/`-` churn — visible on sight. Never hand-append ids to
+  the end of the array to keep a diff small: that is exactly how the file drifted out of deck
+  order before, and it costs you the signal. The test is a one-directional subset check and
+  stays green either way, so the diff, not the suite, is the real guard here.
   Retiring a card means `availability: { translationQuiz: false }`, never deletion.
 - **An unrouted shelf belongs to nobody, and is reached through the shared topic tier.**
   Since the topic picker landed, all 42 vocabulary categories are named by a topic — a
