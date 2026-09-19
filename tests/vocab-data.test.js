@@ -707,8 +707,12 @@ test("no two playable cards share both their Hebrew and their English", () => {
 // silently re-keyed 64 cards while every test stayed green. This baseline is
 // the guard — it fails on deletion and on insert-position alike.
 //
-// Adding cards at a category tail is expected and safe; regenerate the fixture
-// in the same commit that adds them, and confirm the diff is additions only.
+// Adding cards at a category tail is expected and safe; append the new ids to
+// the end of the fixture in the same commit that adds them, and confirm the
+// diff is additions only. Do not regenerate the file: the array preserves the
+// historical order ids were appended in, not the order `getBaseVocabulary()`
+// returns, so a regeneration reshuffles 56 existing lines into an unreviewable
+// diff that the one-directional subset check below still passes.
 test("vocabulary ids are append-only within each category", () => {
   const baseline = require("./fixtures/vocab-id-baseline.json");
   const current = new Set(loadVocabulary().map((word) => word.id));
