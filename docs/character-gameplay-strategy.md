@@ -44,10 +44,12 @@ What deliberately does **not** fence: `sentenceCategories`, `sentenceStyles`,
 `vocabCategories`, `vocabWords`, `abbrBuckets` and `verbIds`. Those carry register, topic
 and grammar, which every character needs. Two measurements decided this. A blanket rule
 over the four sentence registers would leave each character with only its own bank plus the
-148 unrouted `everyday_` rows. A blanket rule over vocabulary categories would fence 1511
-of 2108 cards — 72% — because nearly every topic shelf has exactly one owner, so Idan would
-never meet `groceries_food` or `dating_relationships`. The named reserve lists fence 341
-cards, 16%, which is precisely the sensitive material.
+368 unrouted `everyday_` rows — Ido would be down to 634 of the 1,254 rows against the 1,010
+he draws today, and Inbal to 476. A blanket rule over vocabulary categories would fence
+1,621 of 2,206 cards — 73% — because nearly every topic shelf has exactly one owner, so Idan
+would never meet `groceries_food` or `dating_relationships`; the cast-wide
+`civil_defense_safety` shelf is the only one that would still reach everybody. The named
+reserve lists fence 348 cards, 16%, which is precisely the sensitive material.
 
 Two policies follow from this rather than needing carve-outs:
 
@@ -88,8 +90,22 @@ Implementation notes for whoever extends this:
   **ownership**, which the fence does not change; the second table is the instrument for
   watching a character being starved. One consequence to read carefully: Ivri still *owns*
   the eleven `professional_` political rows by register while Inat reserves them, so his
-  ownership column reads eleven higher than what he can actually draw — 138 owned against
-  127 drawable.
+  ownership column reads eleven higher than what he can actually draw — 242 owned against
+  231 drawable.
+- **A grant on a shelf someone else reserves is inert.** Rule 2 hands the whole audience to
+  the reserver, and a grant-only owner is not in it, so the item counts in that character's
+  ownership column and can never be drawn under their lens. Nine vocabulary routes sit in
+  that state today, recorded here rather than changed because each one is a routing decision:
+  Inbal's `vocabWords` names חילוניות, חופש דת, חופש מדת, דת ומדינה and כפייה דתית, all five
+  on `politics_society_expanded`, which Inat reserves through `vocabReserveCategories`; Ido
+  owns שירות צבאי, שירות מילואים and פטור מגיוס through the shelves they sit on, and Inat owns
+  ביטחון לאומי through `legal_civic` — all four named in Idan's `vocabReserveWords`. The four
+  fenced to Idan are deliberate, since his route comment states that an explicit reserve is
+  meant to beat a co-owner's grant; Inbal's five read as a collision between her word grant
+  and Inat's category reserve. Fixing one means dropping the grant or un-fencing the card
+  through `SHARED_ITEM_IDS`, which today has only a `sentence` key but is keyed by kind. Check
+  the destination shelf for a reserver before adding a `vocabWords` grant, or the route reads
+  as content a character has and does not.
 
 ## Cast and routing
 
@@ -152,11 +168,11 @@ Composed · disciplined · unsentimental
 Owns security, safety, and the military, in two deliberately separate tiers:
 
 - **Tier 1 — everyday security a civilian needs during wartime.** `civil_defense_safety` (70 cards): sirens, protected spaces, Home Front Command instructions, alerts, first aid, evacuation, fire safety, and general public safety. Six home-front acronyms belong here too. **This tier is routed to every character**, so a learner who never picks Idan still drills it.
-- **Tier 2 — advanced military terminology.** `military_operational` (70 cards): ranks, units, service and reserve life, orders, operations, terrain, logistics, and reporting. Twenty-six military acronyms are his alone, withheld from Ivri and Inat by `abbrExcludeIds`.
+- **Tier 2 — advanced military terminology.** `military_operational` (94 cards): ranks, units, service and reserve life, orders, operations, terrain, logistics, and reporting. Twenty-six military acronyms are his alone, withheld from Ivri and Inat by `abbrExcludeIds`.
 
-He also carries 115 `idan_` sentences across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
+He also carries 131 `idan_` sentences across both tiers, and 28 shared-pool verbs routed by register — the verbs an instruction, a warning, or a report runs on.
 
-His material is the main thing the withholding layer fences. All 115 sentences are reserved
+His material is the main thing the withholding layer fences. All 131 sentences are reserved
 by prefix except the 43 in `CAST_WIDE_SENTENCE_IDS`: the ordinary civilian-safety register
 any resident narrates, with nothing alarming in it — where the fire extinguisher is, the
 shelter being in the yard rather than the building, the crosswalk, the lifeguard, the
@@ -171,7 +187,10 @@ the twenty is anchored on a card that had none — הוראות בטיחות, מ
 תרגיל התגוננות. Six are questions and two are conditionals: the first 90 rows contained not
 one question mark, so a learner never practised the most useful safety utterance a resident
 makes. `idan_111`–`115` stay his, on the alarming tier and still terminology rather than
-tactics — זמן התרעה, הפוגה, כוחות ההצלה, פרמדיק, מפונה.
+tactics — זמן התרעה, הפוגה, כוחות ההצלה, פרמדיק, מפונה. `idan_116`–`131` are his and
+fenced on the same test: the `emergency_response` working register — dispatch, air
+evacuation, fire crews, a licence check, appealing a fine — plus the five rows that give two of the
+reserved violent paradigms — `להרוג` and `לחסל` — a context.
 
 The dividing line is lexical, not grammatical, and that is what makes the register
 teachable: `idan_28` ("during a siren we do not use the elevator") has the same impersonal
@@ -187,7 +206,7 @@ shared as ordinary vocabulary. Three verbs are reserved, the violent paradigms o
 `להרוג`, `לחסל`, `לפוצץ`. The rest of his verb route is shared-pool register no character
 should be denied.
 
-- **A third shelf — `emergency_response` (67 cards):** professional first-responder and police register. Pre-hospital and trauma care (החייאה, מיון נפגעים, דימום, כווייה), fire and rescue (כבאי, מכבי אש, חילוץ מגובה, טיהור), and police procedure (מעצר, חקירה, צו חיפוש, זירת פשע, ניידת). This is the working register of the people doing the job, distinct from the civilian tier 1 above. He also reaches the trauma cards on the unrouted `health` shelf — חובש, חדר מיון, תחבושת, שבר, נקע — through `route.vocabWords` rather than re-shelving them.
+- **A third shelf — `emergency_response` (72 cards):** professional first-responder and police register. Pre-hospital and trauma care (החייאה, מיון נפגעים, דימום, כווייה), fire and rescue (כבאי, מכבי אש, חילוץ מגובה, טיהור), and police procedure (מעצר, חקירה, צו חיפוש, זירת פשע, ניידת). This is the working register of the people doing the job, distinct from the civilian tier 1 above. He also reaches the trauma cards on the unrouted `health` shelf — חובש, חדר מיון, תחבושת, שבר, נקע — through `route.vocabWords` rather than re-shelving them.
 
 Tier 2 is terminology, not tactics: ranks, procedures, and reporting language, never anything operationally instructional. The sprite standard already bars weapons from his art, and the same restraint governs the word lists.
 
@@ -260,7 +279,7 @@ draws from, exactly as `npm run report:characters` prints it.
 
 | pool | floor | Ido | Inbal | Ivri | Inat | Idan |
 |---|---|---|---|---|---|---|
-| vocabulary | **250** | 502 | 342 | 537 | 382 | 266 |
+| vocabulary | **250** | 502 | 342 | 538 | 382 | 266 |
 | sentences | **90** | 266 | 108 | 242 | 224 | 131 |
 | abbreviations | **30** | 69 | 87 | 113 | 85 | 34 |
 | verbs | **20** | 34 | 26 | 37 | 25 | 30 |
@@ -269,7 +288,7 @@ All five characters now clear all four floors.
 
 Read the sentence row against the fence, not only against the floor. Ivri owns 242 and can
 draw 231 of those owned rows, because Inat reserves eleven `professional_` rows that are still
-his by register. Idan owns 131 and can draw all of them; 49 of those are also cast-wide, so the other four
+his by register. Idan owns 131 and can draw all of them; 43 of those are also cast-wide, so the other four
 reach them too. The second table in `npm run report:characters` is the authority on what a
 character may actually be served.
 
@@ -288,7 +307,7 @@ Repetition is what a learner feels, and repetition is a function of the routed p
 what the floor measures.
 
 Own-domain is still worth reporting, because it is the fair way to compare *identity* rather
-than pool size: Ido 402, Ivri 421, Inat 302, Inbal 265, Idan 189. Gate 2 is what actually proves
+than pool size: Ido 432, Ivri 468, Inat 312, Inbal 272, Idan 196. Gate 2 is what actually proves
 a domain is covered.
 
 **Gate 2 — domain checklist.** Gate 1 alone is not enough: it would have passed Ivri on 341
@@ -321,10 +340,12 @@ covered or open.
 This supersedes the earlier note that those modes "can use multi-owner routing when the
 character layer is implemented." The character layer now exists, and the answer is no:
 
-- All 81 idioms in `hebrew-idioms.js` are colloquial interpersonal expressions — "to break
-  someone's heart", "to get on someone's nerves", "to dump someone". Routing them would hand
-  roughly 70 of 81 to Ido and turn Conjugation+ into his mode. That is the redistribute-to-score
-  move this section already forbids.
+- All 105 idioms in `hebrew-idioms.js` are interpersonal expressions in a colloquial register
+  — "to break someone's heart", "to get on someone's nerves", "to dump someone". Routing them
+  would hand roughly 90 of 105 to Ido, everything outside the elevated literary minority
+  (להעמיד מישהו על טעותו, לחזק מישהו בדעתו), and turn Conjugation+ into his mode. That is the
+  redistribute-to-score move this section already forbids. The file carries no topic or
+  register field either, so the cut would have to be hand-authored idiom by idiom.
 - `preposition-data.js` and `verb-game-data.js` carry no topic field of any kind. Binyanim and
   prepositions are structural grammar; a root's seven binyanim are not a subject.
 
@@ -735,7 +756,7 @@ All five characters are built and integrated, so this section is now a record ra
    are **done**.
    1. ~~A shareable civil-defense tranche for Idan.~~ **Done** — `idan_91`–`115`. Twenty are
       cast-wide, taking the allow-list from 21 to 43 and giving the shelf real sentence support;
-      five stay his. His bank went 90 → 115.
+      five stay his. His bank went 90 → 115; later first-responder rows take it to 131.
    2. ~~A `professional` tranche for Ivri.~~ **Done** — `professional_98`–`122`. His bank went
       113 → 138 owned, 127 drawable.
    3. ~~**Neutral `everyday_` rows, ~40.**~~ **Done** — `everyday_150`–`189`. The forty

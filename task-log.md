@@ -21,6 +21,97 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-23 EDT — Preserve uncommitted documentation work for Mac mini migration
+
+**Requested:** Move all project work to the new Mac mini without leaving local-only
+changes behind.
+**Files changed:** No substantive migration edits; committed the pre-existing
+`docs/character-gameplay-strategy.md` and task-log changes on their existing local
+worktree branch so the branch can be pushed and cloned.
+**Behavior changed:** None; documentation-only archival branch.
+**Tests run:** `npm test` reached 437 passes and zero assertion failures; the old
+checkout's `tests/content-coverage.test.js` remained pending for 98 seconds and the
+run was stopped, so one file-level test was reported cancelled.
+**Risks / regressions to check:** This stale documentation branch is preserved for
+recovery only and was not merged into current `main`.
+
+### 2026-09-04 14:20 EDT — Re-measure the drifted figures in the character docs
+
+**Requested:** Re-measure a list of suspected-stale figures in
+`docs/character-gameplay-strategy.md` and `docs/project-rules.md` from the data files rather
+than trusting the reported numbers, correct both docs, and update any sentence that *reasons*
+from a corrected figure rather than only swapping digits. Separately, record — not fix — the
+nine routes that grant vocabulary ownership the fence makes undrawable, and add a note to the
+Content withholding section explaining that trap.
+
+**Files changed:**
+- `docs/character-gameplay-strategy.md` — corrected the drifted figures listed below and added
+  one bullet to Content withholding recording the nine inert grants.
+- `task-log.md` — this entry.
+
+**How the numbers were measured.** `npm run report:characters` for the pool/owned/drawable
+tables, plus a throwaway script loading `vocab-data.js`, `sentence-bank-data.js`,
+`hebrew-idioms.js` and `app/character-data.js` in a `vm` context with `window` aliased to the
+sandbox — the same loader `scripts/character-content-report.js` uses — and reusing the
+registry's own `ownsItem` / `getItemAudience` so ownership and fencing were not re-implemented.
+
+**Corrected (all confirmed against the data):**
+- Idioms `81` → **105**; `emergency_response` `67` → **72** cards; unrouted `everyday_` rows
+  `148` → **368** (all 368 unrouted rows are in fact `everyday_`); `idan_` sentences `115` →
+  **131**; blanket vocabulary fence `1511 of 2108` → **1,621 of 2,206** (73%); named reserve
+  lists `341` → **348** cards (15.8%, still 16%); Gate 1 Ivri vocabulary `537` → **538**;
+  own-domain figures → **Ido 432, Ivri 468, Inat 312, Inbal 272, Idan 196**.
+- Reasoning updated, not just digits: the sentence-register argument now carries the arithmetic
+  it rests on (a blanket rule leaves Ido 634 of 1,254 rows against the 1,010 he draws today),
+  the vocabulary-fence sentence notes that cast-wide `civil_defense_safety` is the one shelf
+  that would still reach everybody, and the idiom bullet gains the durable structural argument
+  — `hebrew-idioms.js` carries no topic or register field, so any cut is hand-authored.
+
+**Three further stale figures fixed, inside sentences already being corrected** (flagged rather
+than silently swept in): `military_operational` `70` → **94** cards, same bullet block as the
+`emergency_response` count; "49 of those are also cast-wide" → **43**, contradicting
+`CAST_WIDE_SENTENCE_IDS` and the correct 43 two paragraphs earlier; and Ivri's
+`138 owned against 127 drawable` → **242 / 231**, which the Gate 1 section already states
+correctly.
+
+**`docs/project-rules.md` needed no change.** The request expected it to repeat the
+148 / 2108 / "341 cards, 16%" figures; it does not contain any of them. Its one content-volume
+claim — "Ten of the 42 vocabulary categories have no owner, `core_advanced` among them" —
+measures as exactly correct. Nothing changed there, so nothing entered the `CLAUDE.md` /
+`AGENTS.md` mirrored region; `tests/agent-docs-parity.test.js` passes and the two files are
+still byte-identical below their title lines.
+
+**The nine inert grants (recorded, not fixed).** A grant on a shelf another character reserves
+is unreachable: `getItemAudience` returns the reservers, and a grant-only owner is not among
+them, so the card counts in that character's ownership column and can never be drawn under
+their lens. Inbal's `vocabWords` names חילוניות, חופש דת, חופש מדת, דת ומדינה and כפייה דתית,
+all five on `politics_society_expanded`, which Inat reserves by category; Ido owns שירות צבאי,
+שירות מילואים and פטור מגיוס through the shelves they sit on and Inat owns ביטחון לאומי through
+`legal_civic`, all four named in Idan's `vocabReserveWords`. The four fenced to Idan are
+deliberate — his route comment says an explicit reserve is meant to beat a co-owner's grant —
+while Inbal's five read as an unintended collision. The same pattern already exists at sentence
+level for 10 of Ido's `colloquial_` rows and 11 of Ivri's `professional_` rows.
+
+**Behavior changed:** None. Documentation only — no `.js`/`.css` touched, so no `?v=` bump is
+required in `index.html`.
+
+**Tests run:** `npm test` before (464 pass / 0 fail) and after (464 pass / 0 fail).
+`npm run report:characters` (read-only) for the measurements.
+
+**Risks / regressions to check:**
+- Figures measured 2026-09-04 against the current data and will drift again with the next
+  content tranche. `npm run report:characters` is the instrument; the Gate 1 table, the
+  own-domain line and the two withholding measurements are what to re-check.
+- Still stale elsewhere, deliberately left as out of scope and worth a follow-up: the Inbal
+  ledger's `138`/`111` shelf counts (now 139/116 — the pinning test counts 138 authored plus
+  השגחה פרטית), Inat's `30`-card literature shelf (35) and `302` total, Ivri's `341`-card
+  ledger sum (346) and `75`-card `devices_os_apps` (116), Ido's `402`-card ledger sum (432),
+  the `247`-item / 48.2%-unrouted verb deck (261 items, 119 unrouted, 45.6%), and two tranche
+  sections citing a `2,205`-card vocabulary pool (2,206). `docs/product-roadmap.md` also still
+  says "77 idioms" in two places.
+- The "roughly 90 of 105" idiom split is a register judgment, as "roughly 70 of 81" was; the
+  105 total and the absence of a topic field are measured facts.
+
 ### 2026-09-04 00:05 EDT — Fix the gameplay-layout flake (unsettled geometry reads)
 
 **Requested:** Investigate and fix `tests/gameplay-layout.test.js`, which failed roughly one
