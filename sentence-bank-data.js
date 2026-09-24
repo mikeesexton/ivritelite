@@ -20469,6 +20469,137 @@ const INTERMEDIATE_PRACTICAL_SENTENCES = [
   }),
 ];
 
+const SEVEN_WORD_SENTENCES = [
+  buildReviewedSentence({
+    id: "everyday_379", emoji: "⏭️", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדילוג על הפרק הזה חסך לנו זמן.", hebrewNiqqud: "הַדִּלּוּג עַל הַפֶּרֶק הַזֶּה חָסַךְ לָנוּ זְמַן.", english: "Skipping over this chapter saved us time.",
+    hebrewTokenPairs: [["הדילוג", "הַדִּלּוּג"], ["על", "עַל"], ["הפרק הזה", "הַפֶּרֶק הַזֶּה"], ["חסך", "חָסַךְ"], ["לנו", "לָנוּ"], ["זמן", "זְמַן"]],
+    englishTokens: ["Skipping", "over", "this chapter", "saved", "us", "time"],
+    hebrewDistractorPairs: [["הקריאה", "הַקְּרִיאָה"], ["של", "שֶׁל"], ["הסיכום", "הַסִּכּוּם"], ["בזבז", "בִּזְבֵּז"], ["להם", "לָהֶם"], ["שעה", "שָׁעָה"]],
+    englishDistractors: ["Reading", "of", "the summary", "wasted", "them", "an hour"],
+    notes: "דילוג is the noun 'skipping'; דילוג על X is skipping over something. The matching verb is לדלג."
+  }),
+  buildReviewedSentence({
+    id: "everyday_380", emoji: "🔀", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הדילוג שלו בין הנושאים בלבל את כולם.", hebrewNiqqud: "הַדִּלּוּג שֶׁלּוֹ בֵּין הַנּוֹשְׂאִים בִּלְבֵּל אֶת כֻּלָּם.", english: "His skipping between topics confused everyone.",
+    hebrewTokenPairs: [["הדילוג שלו", "הַדִּלּוּג שֶׁלּוֹ"], ["בין", "בֵּין"], ["הנושאים", "הַנּוֹשְׂאִים"], ["בלבל", "בִּלְבֵּל"], ["את כולם", "אֶת כֻּלָּם"]],
+    englishTokens: ["His skipping", "between", "topics", "confused", "everyone"],
+    hebrewDistractorPairs: [["ההסבר שלה", "הַהֶסְבֵּר שֶׁלָּהּ"], ["על", "עַל"], ["הפרטים", "הַפְּרָטִים"], ["שכנע", "שִׁכְנֵעַ"], ["את הרוב", "אֶת הָרֹב"]],
+    englishDistractors: ["Her explanation", "about", "the details", "convinced", "most of them"],
+    notes: "דילוג also covers jumping around between subjects rather than omitting one. נושא is a topic; נושאים is its plural."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_227", emoji: "🙄", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "די עם השטויות, בוא נדבר ברצינות.", hebrewNiqqud: "דַּי עִם הַשְּׁטֻיּוֹת, בּוֹא נְדַבֵּר בִּרְצִינוּת.", english: "Enough with the nonsense, let's talk seriously.",
+    hebrewTokenPairs: [["די", "דַּי"], ["עם", "עִם"], ["השטויות", "הַשְּׁטֻיּוֹת"], ["בוא", "בּוֹא"], ["נדבר", "נְדַבֵּר"], ["ברצינות", "בִּרְצִינוּת"]],
+    englishTokens: ["Enough", "with", "the nonsense", "let's", "talk", "seriously"],
+    hebrewDistractorPairs: [["תפסיק", "תַּפְסִיק"], ["בלי", "בְּלִי"], ["התירוצים", "הַתֵּרוּצִים"], ["תתחיל", "תַּתְחִיל"], ["להקשיב", "לְהַקְשִׁיב"], ["בשקט", "בְּשֶׁקֶט"]],
+    englishDistractors: ["Stop", "without", "the excuses", "start", "to listen", "quietly"],
+    notes: "שטויות is the plural of שטות, nonsense, and is spelled with a tet. Do not confuse it with שתויות, the feminine plural of שתוי, 'tipsy' — the two are homophones. די עם is a colloquial 'enough with.'"
+  }),
+  buildReviewedSentence({
+    id: "everyday_381", emoji: "🧾", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "המוכר סיפר לי שטויות על האחריות.", hebrewNiqqud: "הַמּוֹכֵר סִפֵּר לִי שְׁטֻיּוֹת עַל הָאַחֲרָיוּת.", english: "The salesman told me nonsense about the warranty.",
+    hebrewTokenPairs: [["המוכר", "הַמּוֹכֵר"], ["סיפר", "סִפֵּר"], ["לי", "לִי"], ["שטויות", "שְׁטֻיּוֹת"], ["על", "עַל"], ["האחריות", "הָאַחֲרָיוּת"]],
+    englishTokens: ["The salesman", "told", "me", "nonsense", "about", "the warranty"],
+    hebrewDistractorPairs: [["הטכנאי", "הַטֶּכְנַאי"], ["הסביר", "הִסְבִּיר"], ["לנו", "לָנוּ"], ["הכול", "הַכֹּל"], ["לגבי", "לְגַבֵּי"], ["התיקון", "הַתִּקּוּן"]],
+    englishDistractors: ["The technician", "explained", "to us", "everything", "regarding", "the repair"],
+    notes: "סיפר שטויות is to feed someone nonsense. אחריות here is a product warranty, not the abstract 'responsibility.'"
+  }),
+  buildReviewedSentence({
+    id: "colloquial_228", emoji: "🚗", category: "colloquial", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "אתה שתוי, תן לי את המפתחות.", hebrewNiqqud: "אַתָּה שָׁתוּי, תֵּן לִי אֶת הַמַּפְתְּחוֹת.", english: "You are tipsy — give me the keys.",
+    hebrewTokenPairs: [["אתה", "אַתָּה"], ["שתוי", "שָׁתוּי"], ["תן", "תֵּן"], ["לי", "לִי"], ["את המפתחות", "אֶת הַמַּפְתְּחוֹת"]],
+    englishTokens: ["You", "are tipsy", "give", "me", "the keys"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["עייפה", "עֲיֵפָה"], ["קח", "קַח"], ["לה", "לָהּ"], ["את התיק", "אֶת הַתִּיק"]],
+    englishDistractors: ["She", "is tired", "take", "her", "the bag"],
+    notes: "שתוי means having been drinking — milder than שיכור, 'drunk.' נהג שתוי is the standard phrase for a driver under the influence. It is a homophone of שטויות, 'nonsense,' which is spelled with a tet."
+  }),
+  buildReviewedSentence({
+    id: "everyday_382", emoji: "🥛", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הכוס הזאת עשויה מזכוכית ולא מפלסטיק.", hebrewNiqqud: "הַכּוֹס הַזֹּאת עֲשׂוּיָה מִזְּכוּכִית וְלֹא מִפְּלַסְטִיק.", english: "This cup is made of glass and not of plastic.",
+    hebrewTokenPairs: [["הכוס הזאת", "הַכּוֹס הַזֹּאת"], ["עשויה", "עֲשׂוּיָה"], ["מזכוכית", "מִזְּכוּכִית"], ["ולא", "וְלֹא"], ["מפלסטיק", "מִפְּלַסְטִיק"]],
+    englishTokens: ["This cup", "is made", "of glass", "and not", "of plastic"],
+    hebrewDistractorPairs: [["הצלחת הזאת", "הַצַּלַּחַת הַזֹּאת"], ["נראית", "נִרְאֵית"], ["מחרסינה", "מֵחַרְסִינָה"], ["אבל לא", "אֲבָל לֹא"], ["ממתכת", "מִמַּתֶּכֶת"]],
+    englishDistractors: ["This plate", "looks", "of porcelain", "but not", "of metal"],
+    notes: "זכוכית is glass the material, feminine, from the root ז־כ־ך. עשוי מ־ is the ordinary way to say 'made of.'"
+  }),
+  buildReviewedSentence({
+    id: "everyday_383", emoji: "🪟", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "רסיסי זכוכית התפזרו על הרצפה במטבח.", hebrewNiqqud: "רְסִיסֵי זְכוּכִית הִתְפַּזְּרוּ עַל הָרִצְפָּה בַּמִּטְבָּח.", english: "Shards of glass scattered across the floor in the kitchen.",
+    hebrewTokenPairs: [["רסיסי", "רְסִיסֵי"], ["זכוכית", "זְכוּכִית"], ["התפזרו", "הִתְפַּזְּרוּ"], ["על", "עַל"], ["הרצפה", "הָרִצְפָּה"], ["במטבח", "בַּמִּטְבָּח"]],
+    englishTokens: ["Shards of", "glass", "scattered", "across", "the floor", "in the kitchen"],
+    hebrewDistractorPairs: [["פירורי", "פֵּרוּרֵי"], ["לחם", "לֶחֶם"], ["נשארו", "נִשְׁאֲרוּ"], ["מתחת", "מִתַּחַת"], ["לשולחן", "לַשֻּׁלְחָן"], ["בחדר", "בַּחֶדֶר"]],
+    englishDistractors: ["Crumbs of", "bread", "remained", "under", "the table", "in the room"],
+    notes: "רסיסי זכוכית is the construct 'shards of glass.' רסיס is a splinter or fragment."
+  }),
+  buildReviewedSentence({
+    id: "professional_227", emoji: "📊", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "גיוון תיק ההשקעות מקטין את החשיפה לסיכון.", hebrewNiqqud: "גִּוּוּן תִּיק הַהַשְׁקָעוֹת מַקְטִין אֶת הַחֲשִׂיפָה לְסִכּוּן.", english: "Diversifying the portfolio reduces exposure to risk.",
+    hebrewTokenPairs: [["גיוון", "גִּוּוּן"], ["תיק ההשקעות", "תִּיק הַהַשְׁקָעוֹת"], ["מקטין", "מַקְטִין"], ["את החשיפה", "אֶת הַחֲשִׂיפָה"], ["לסיכון", "לְסִכּוּן"]],
+    englishTokens: ["Diversifying", "the portfolio", "reduces", "exposure", "to risk"],
+    hebrewDistractorPairs: [["ריכוז", "רִכּוּז"], ["הנכסים", "הַנְּכָסִים"], ["מגדיל", "מַגְדִּיל"], ["את התנודתיות", "אֶת הַתְּנוּדָתִיּוּת"], ["בקרן", "בַּקֶּרֶן"]],
+    englishDistractors: ["Concentrating", "the assets", "increases", "volatility", "in the fund"],
+    notes: "גיוון is the verbal noun of לגוון. In finance it is diversification; תיק השקעות is an investment portfolio."
+  }),
+  buildReviewedSentence({
+    id: "formal_145", emoji: "⚖️", category: "formal", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "גיוון בהרכב הוועדה מחזק את האמון של הציבור.", hebrewNiqqud: "גִּוּוּן בְּהֶרְכֵּב הַוַּעֲדָה מְחַזֵּק אֶת הָאֵמוּן שֶׁל הַצִּבּוּר.", english: "Diversity in the composition of the committee strengthens the trust of the public.",
+    hebrewTokenPairs: [["גיוון", "גִּוּוּן"], ["בהרכב", "בְּהֶרְכֵּב"], ["הוועדה", "הַוַּעֲדָה"], ["מחזק", "מְחַזֵּק"], ["את האמון", "אֶת הָאֵמוּן"], ["של הציבור", "שֶׁל הַצִּבּוּר"]],
+    englishTokens: ["Diversity", "in the composition", "of the committee", "strengthens", "the trust", "of the public"],
+    hebrewDistractorPairs: [["ריכוזיות", "רִכּוּזִיּוּת"], ["בניהול", "בְּנִהוּל"], ["הארגון", "הָאִרְגּוּן"], ["פוגעת", "פּוֹגַעַת"], ["בשקיפות", "בִּשְׁקִיפוּת"], ["של המערכת", "שֶׁל הַמַּעֲרֶכֶת"]],
+    englishDistractors: ["Centralization", "in the management", "of the organization", "harms", "the transparency", "of the system"],
+    notes: "The same noun גיוון carries 'diversity' in a policy register and 'diversification' in a financial one. הרכב is the composition or make-up of a body; the plain spelling הוועדה has a double vav that collapses to one in the pointed form."
+  }),
+  buildReviewedSentence({
+    id: "professional_228", emoji: "🦈", category: "professional", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "הרגולטור מזהיר מפני כריש הלוואות שפועל ללא רישיון.", hebrewNiqqud: "הָרֶגוּלָטוֹר מַזְהִיר מִפְּנֵי כְּרִישׁ הַלְוָאוֹת שֶׁפּוֹעֵל לְלֹא רִשָּׁיוֹן.", english: "The regulator warns against a loan shark operating without a license.",
+    hebrewTokenPairs: [["הרגולטור", "הָרֶגוּלָטוֹר"], ["מזהיר", "מַזְהִיר"], ["מפני", "מִפְּנֵי"], ["כריש הלוואות", "כְּרִישׁ הַלְוָאוֹת"], ["שפועל", "שֶׁפּוֹעֵל"], ["ללא רישיון", "לְלֹא רִשָּׁיוֹן"]],
+    englishTokens: ["The regulator", "warns", "against", "a loan shark", "operating", "without a license"],
+    hebrewDistractorPairs: [["המפקח", "הַמְּפַקֵּחַ"], ["ממליץ", "מַמְלִיץ"], ["נגד", "נֶגֶד"], ["הסדר", "הֶסְדֵּר"], ["שנחתם", "שֶׁנֶּחְתַּם"], ["בלי אישור", "בְּלִי אִשּׁוּר"]],
+    englishDistractors: ["The supervisor", "recommends", "against", "an arrangement", "signed", "without approval"],
+    notes: "כריש הלוואות is the Hebrew calque for a loan shark — an unlicensed lender charging predatory interest. The informal lending market is called השוק האפור."
+  }),
+  buildReviewedSentence({
+    id: "everyday_384", emoji: "💸", category: "everyday", difficulty: 2, wordOrderDecision: "fixed",
+    hebrew: "הוא לווה כסף מכריש הלוואות ולא הצליח להחזיר.", hebrewNiqqud: "הוּא לָוָה כֶּסֶף מִכְּרִישׁ הַלְוָאוֹת וְלֹא הִצְלִיחַ לְהַחְזִיר.", english: "He borrowed money from a loan shark and could not repay it.",
+    hebrewTokenPairs: [["הוא", "הוּא"], ["לווה", "לָוָה"], ["כסף", "כֶּסֶף"], ["מכריש הלוואות", "מִכְּרִישׁ הַלְוָאוֹת"], ["ולא הצליח", "וְלֹא הִצְלִיחַ"], ["להחזיר", "לְהַחְזִיר"]],
+    englishTokens: ["He", "borrowed", "money", "from a loan shark", "and could not", "repay it"],
+    hebrewDistractorPairs: [["היא", "הִיא"], ["חסכה", "חָסְכָה"], ["סכום", "סְכוּם"], ["מהמשכורת שלה", "מֵהַמַּשְׂכֹּרֶת שֶׁלָּהּ"], ["והספיקה", "וְהִסְפִּיקָה"], ["לתרום", "לִתְרֹם"]],
+    englishDistractors: ["She", "saved", "a sum", "from her salary", "and managed", "to donate"],
+    notes: "ללוות is to borrow and להחזיר is to pay back. The מ־ on מכריש is the ordinary 'from' clitic."
+  }),
+  buildReviewedSentence({
+    id: "inbal_109", emoji: "📜", category: "everyday", difficulty: 3, wordOrderDecision: "fixed",
+    hebrew: "ירד היה בנו של מהללאל ואביו של חנוך.", hebrewNiqqud: "יֶרֶד הָיָה בְּנוֹ שֶׁל מַהֲלַלְאֵל וְאָבִיו שֶׁל חֲנוֹךְ.", english: "Jared was the son of Mahalalel and the father of Enoch.",
+    hebrewTokenPairs: [["ירד", "יֶרֶד"], ["היה", "הָיָה"], ["בנו", "בְּנוֹ"], ["של", "שֶׁל"], ["מהללאל", "מַהֲלַלְאֵל"], ["ואביו", "וְאָבִיו"], ["של", "שֶׁל"], ["חנוך", "חֲנוֹךְ"]],
+    englishTokens: ["Jared", "was", "the son", "of", "Mahalalel", "and the father", "of", "Enoch"],
+    hebrewDistractorPairs: [["נח", "נֹחַ"], ["נולד", "נוֹלַד"], ["אחיו", "אָחִיו"], ["מתושלח", "מְתוּשֶׁלַח"], ["ונכדו", "וְנֶכְדּוֹ"], ["למך", "לֶמֶךְ"]],
+    englishDistractors: ["Noah", "was born", "the brother", "Methuselah", "and the grandson", "Lamech"],
+    notes: "יֶרֶד (Jared) is the sixth generation from Adam in the genealogy of Genesis 5 — son of Mahalalel, father of Enoch. It is written exactly like the verb ירד, 'went down,' but pointed יֶרֶד rather than יָרַד."
+  }),
+  buildReviewedSentence({
+    id: "colloquial_229", emoji: "🧔", category: "colloquial", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "גידלתי שפם בנובמבר וכולם צחקו עליי.", hebrewNiqqud: "גִּדַּלְתִּי שָׂפָם בְּנוֹבֶמְבֶּר וְכֻלָּם צָחֲקוּ עָלַי.", english: "I grew a moustache in November and everyone laughed at me.",
+    hebrewTokenPairs: [["גידלתי", "גִּדַּלְתִּי"], ["שפם", "שָׂפָם"], ["בנובמבר", "בְּנוֹבֶמְבֶּר"], ["וכולם", "וְכֻלָּם"], ["צחקו", "צָחֲקוּ"], ["עליי", "עָלַי"]],
+    englishTokens: ["I grew", "a moustache", "in November", "and everyone", "laughed", "at me"],
+    hebrewDistractorPairs: [["גילחתי", "גִּלַּחְתִּי"], ["זקן", "זָקָן"], ["בקיץ", "בַּקַּיִץ"], ["ואף אחד", "וְאַף אֶחָד"], ["שם לב", "שָׂם לֵב"], ["אליי", "אֵלַי"]],
+    englishDistractors: ["I shaved", "a beard", "in the summer", "and nobody", "noticed", "me"],
+    hebrewOrderAlternates: [{ text: "בנובמבר גידלתי שפם וכולם צחקו עליי.", textNiqqud: "בְּנוֹבֶמְבֶּר גִּדַּלְתִּי שָׂפָם וְכֻלָּם צָחֲקוּ עָלַי.", order: [2, 0, 1, 3, 4, 5] }],
+    notes: "שפם is a moustache, written with sin (שׂ). גידל שפם is the ordinary way to say someone grew one. The time phrase is neutral in either initial or medial position."
+  }),
+  buildReviewedSentence({
+    id: "everyday_385", emoji: "🪒", category: "everyday", difficulty: 2, wordOrderDecision: "alternates",
+    hebrew: "השפם שלו נעשה אפור בזמן האחרון.", hebrewNiqqud: "הַשָּׂפָם שֶׁלּוֹ נַעֲשָׂה אָפֹר בַּזְּמַן הָאַחֲרוֹן.", english: "His moustache turned grey recently.",
+    hebrewTokenPairs: [["השפם שלו", "הַשָּׂפָם שֶׁלּוֹ"], ["נעשה", "נַעֲשָׂה"], ["אפור", "אָפֹר"], ["בזמן האחרון", "בַּזְּמַן הָאַחֲרוֹן"]],
+    englishTokens: ["His moustache", "turned", "grey", "recently"],
+    hebrewDistractorPairs: [["השיער שלו", "הַשֵּׂעָר שֶׁלּוֹ"], ["נשאר", "נִשְׁאַר"], ["שחור", "שָׁחֹר"], ["לגמרי", "לְגַמְרֵי"]],
+    englishDistractors: ["His hair", "stayed", "black", "completely"],
+    hebrewOrderAlternates: [{ text: "בזמן האחרון השפם שלו נעשה אפור.", textNiqqud: "בַּזְּמַן הָאַחֲרוֹן הַשָּׂפָם שֶׁלּוֹ נַעֲשָׂה אָפֹר.", order: [3, 0, 1, 2] }],
+    notes: "נעשה followed by an adjective means 'became' or 'turned.' בזמן האחרון is the everyday 'lately.' The time phrase is neutral at either end of the sentence."
+  }),
+];
+
 SENTENCE_BANK.push(
   ...INBAL_SENTENCES,
   ...INAT_SENTENCES,
@@ -20502,7 +20633,8 @@ SENTENCE_BANK.push(
   ...PROVIDENCE_TRAVEL_SENTENCES,
   ...KILL_VERB_SENTENCES,
   ...PRAGMATICS_SENTENCES,
-  ...INTERMEDIATE_PRACTICAL_SENTENCES
+  ...INTERMEDIATE_PRACTICAL_SENTENCES,
+  ...SEVEN_WORD_SENTENCES
 );
 
 function cloneSentence(item) {

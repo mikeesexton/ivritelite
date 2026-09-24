@@ -655,6 +655,7 @@ const COMPACT_ENGLISH_MULTIWORD_UNITS = new Map([
     local authority
     local government
     local lists
+    loan shark
     longtime resident
     longtime residents
     main entrance
@@ -1489,15 +1490,15 @@ const EXPANSION_GENDER_ALTERNATE_IDS = [
   "everyday_125",
 ];
 
-test("sentence bank data exposes 1,254 complete entries with notes, distractors, and tokens", () => {
+test("sentence bank data exposes 1,268 complete entries with notes, distractors, and tokens", () => {
   const api = loadSentenceBankApi();
   assert.ok(api);
   assert.equal(typeof api.getSentenceBank, "function");
 
   const entries = api.getSentenceBank();
-  assert.equal(entries.length, 1254);
-  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1254);
-  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1254);
+  assert.equal(entries.length, 1268);
+  assert.equal(new Set(entries.map((entry) => entry.id)).size, 1268);
+  assert.equal(entries.filter((entry) => String(entry.notes || "").trim()).length, 1268);
 
   entries.forEach((entry) => {
     assert.ok(entry.id);
@@ -1630,12 +1631,13 @@ test("sentence bank expansion adds the planned category and difficulty mix", () 
   // providence/travel tranche adds 5: 4 everyday (one of them inbal_), 1 colloquial.
   // The kill-verb tranche adds 2, both everyday and both idan_. The pragmatics
   // tranche adds 30: 6 colloquial and 8 in each other register. The intermediate
-  // practical tranche adds 16 shared everyday rows.
+  // practical tranche adds 16 shared everyday rows. The seven-word tranche adds
+  // 14: 8 everyday (one of them inbal_), 3 colloquial, 2 professional, 1 formal.
   assert.deepEqual(categoryCounts, {
-    colloquial: 266,
-    everyday: 566,
-    professional: 242,
-    formal: 180,
+    colloquial: 269,
+    everyday: 574,
+    professional: 244,
+    formal: 181,
   });
 
   const expansion = EXPANSION_ENTRY_IDS.map((id) => byId.get(id));

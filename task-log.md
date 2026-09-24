@@ -21,6 +21,23 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-23 EDT — Publish outstanding content tranche for Mac mini migration
+
+**Requested:** Move the complete project through GitHub to the new Mac mini.
+**Files changed:** Merged current `origin/main` into
+`agent/seven-word-content-tranche`; retained both sides of `task-log.md`; moved
+the tranche's seven new vocabulary ids from the old append-only fixture tail to
+their category-tail positions in the newly enforced deck-order baseline.
+**Behavior changed:** The previously local seven-card/fourteen-sentence tranche
+is ready to merge into the default GitHub branch; no additional learner-facing
+content was authored during migration.
+**Tests run:** `npm test` before reconciliation — 533 pass, 0 fail; focused
+vocabulary, sentence-bank and coverage suite after reconciliation — 117 pass,
+0 fail; final `npm test` after reconciliation — 533 pass, 0 fail.
+**Risks / regressions to check:** None known. The only merge conflict was the
+newest-first task log; the vocabulary fixture required mechanical reordering to
+satisfy the newer main-branch guard.
+
 ### 2026-09-19 07:24 EDT — Pin the vocab id baseline in deck order
 
 **Requested:** Add the assertion left as a follow-up in the previous entry, so the fixture's
@@ -63,6 +80,113 @@ who adds a card and expects green. The failure message names the file and the fi
 the mitigation. Note also that the assertion compares against `loadVocabulary()`, which reads
 `vocab-data.js` alone — the merged deck that `app.js` builds by concatenating
 `hebrew-verbs.js` is a different list, and this baseline deliberately does not cover it.
+
+### 2026-09-18 EDT — Seven words, fourteen sentences: דילוג, שטויות/שתוי, זכוכית, גיוון, כריש הלוואות, ירד, שפם
+
+**Requested:** eight items in one message — sentences using דילוג "skipping"; vocab and
+sentences for שתויות "nonsense" if missing; זכוכית "glass" to vocab and sentences;
+להישאר to Conjugation if not already there; a couple of גיוון sentences coded to Ivri and
+Inat; two כריש הלוואות "loan shark" sentences; a religious sentence about the biblical
+Jared ירד coded to Inbal; שפם to vocab plus a couple of sentences, at least one Ido's.
+
+**Two items were not what they looked like.**
+
+**שתויות does not mean nonsense.** Nonsense is **שטויות** with a tet, plural of שְׁטוּת,
+root שׁ־ט־י/ה. **שתויות** with a tav is the feminine plural of שָׁתוּי, "having drunk,
+tipsy", root שׁ־ת־ה, *to drink*. The two are homophones in Israeli Hebrew, which is how
+they get swapped. Confirmed against Hebrew Wiktionary. Decision was to add **both**: שטויות
+for the intended sense, and שתוי as a genuinely missing word — נהג שתוי is the standard
+drunk-driving phrase. Both cards' notes cross-reference the confusion.
+
+**להישאר was already in Conjugation.** `common-verb-lehishaer` (`hebrew-verbs.js:3998`) —
+nif'al, ש־א־ר, gloss "to stay", `review_status: "approved"`, fully pointed across present,
+past, future *and* imperative. Nothing was added. It is routed to no character, and the
+decision was to leave it that way: a high-frequency verb belongs in the shared pool.
+`hebrew-verbs.js` and `app/character-data.js` were not touched, so neither needed a bump.
+
+**Vocabulary — 7 cards, each appended at a category tail.** Ids embed a positional index,
+so nothing was inserted mid-category and nothing was re-shelved. דילוג "skipping" and גיוון
+"variety" onto `core_advanced`; שטויות "nonsense" and שתוי "tipsy" onto `conversation_glue`
+(Ido's shelf); זכוכית "glass" onto `home_everyday_life`; שפם "moustache" onto
+`pharmacy_personal_care`; כריש הלוואות "loan shark" onto `finance_investing` (Ivri's).
+There is no materials shelf and no body/appearance shelf in the repo, which is why glass
+went to the household-object shelf and the moustache to the grooming shelf.
+
+All seven Hebrew surfaces and all seven English glosses were checked against the built deck
+for collisions before authoring — all free. Pointing was verified against Hebrew Wiktionary
+(זְכוּכִית root ז־כ־ך משקל קְטוּלִית; שָׂפָם root שׂ־פ־ם — **sin**, not shin; שְׁטוּת plural שְׁטֻיּוֹת) and
+against repo precedent for the two shapes most likely to go wrong: גִּוּוּן follows שִׁוּוּק
+(שיווק) and צִוּוּי (ציווי), דִּלּוּג follows דִּיּוּן, and הַלְוָאוֹת follows הַלְוָאָה in collapsing the
+plain double vav to one pointed vav (the צוות exception).
+
+**Sentences — 14 rows**, a new `SEVEN_WORD_SENTENCES` tranche after
+`APPEND_ONLY_REVIEWED_SENTENCES_START`, all built with `buildReviewedSentence`. Register is
+the routing signal, so "coded to X" meant choosing the bank: `professional_227` and
+`professional_228` are Ivri's, `formal_145` is Inat's, `colloquial_227`–`229` are Ido's,
+`inbal_109` carries Inbal's id prefix and is therefore fenced to her automatically, and the
+eight `everyday_` rows are deliberately unowned so the whole cast draws them.
+
+Twelve rows are `fixed`; `colloquial_229` and `everyday_385` are `alternates`, both because
+their time phrase (בנובמבר, בזמן האחרון) is neutral in initial as well as medial or final
+position. The Jared row is pointed יֶרֶד — the contextual form in Genesis 5, against the pausal
+יָרֶד — and its notes say so, because the name is written exactly like the verb ירד "went
+down" that the bank already teaches in nine other rows.
+
+`loan shark` is a two-content-word English chip and needed a `COMPACT_ENGLISH_MULTIWORD_UNITS`
+entry. That registry is for established lexical terms and is checked for staleness, so the
+entry is used by both כריש הלוואות rows.
+
+**Coverage.** The matcher runs over the full sentence string and tolerates clitics but does
+not stem morphology, so every new card has at least one sentence spelling its bare headword.
+All seven arrived `exact` (1074 → 1081) and pulled no existing card across, so `unsupported`
+did not move. This mattered most for כריש הלוואות, whose shelf is pinned at 100% exact —
+`finance_investing` goes 17/17 → 18/18 rather than dropping off.
+
+**Files changed:**
+- `vocab-data.js` — 7 cards appended at five category tails
+- `sentence-bank-data.js` — new `SEVEN_WORD_SENTENCES` tranche (14 rows) plus its spread in
+  the `SENTENCE_BANK.push(...)` list
+- `tests/vocab-data.test.js` — totals 2207→2214, playable 2117→2124
+- `tests/fixtures/vocab-id-baseline.json` — 7 ids appended. Note: the baseline is
+  **append-ordered, not RAW-ordered** — regenerating it from scratch reshuffles 56 lines
+  because earlier tranches were appended at the array's end. Append, don't regenerate.
+- `tests/sentence-bank-data.test.js` — totals 1254→1268 (three assertions and the test
+  title), category mix colloquial 266→269 / everyday 566→574 / professional 242→244 /
+  formal 180→181, and the `loan shark` glossary entry
+- `tests/content-coverage.test.js` — records 2207→2214, exact 1074→1081, `finance_investing`
+  17/17→18/18
+- `index.html` — `?v=` bumped to `20260918a` for `vocab-data.js` and `sentence-bank-data.js`
+
+**Behavior changed:** Translation Match gains seven cards; Sentences gains fourteen rows.
+Ido's owned vocabulary goes 207→209, Ivri's 468→469, Inbal's owned sentences 108→109. No
+character lost pool depth and no existing content moved.
+
+**Tests run:**
+- `npm test` before any edit — 533 pass, 0 fail
+- `node --test tests/vocab-data.test.js` — 30 pass
+- `node --test tests/sentence-bank-data.test.js` — 60 pass
+- `node --test tests/content-coverage.test.js` — 27 pass
+- `npm run report:coverage` — 2214 cards; exact 1081, reviewed 0, unsupported 1133
+- `npm run report:characters` — ownership as above, every draw pool well clear of its floor
+- `npm test` after — 533 pass, 0 fail
+- Served on port 3000 and rendered `inbal_109`, `professional_227` and `everyday_385` in the
+  running Sentences activity under Inbal. Pointed chips display correctly, including the
+  two-dagesh-vav גִּוּוּן. At 360×640 the eight-chip Jared row does not scroll
+  (`scrollHeight === clientHeight === 640`) and the Check button stays reachable.
+
+**Risks / regressions to check:**
+- The companion sprite overlaps the English prompt at 360×640 on long prompts. This is
+  **pre-existing**, not from this tranche: the existing `formal_61` (97-char English) clips
+  identically, and the longest row here, `formal_145`, is 82 characters — rank 48 of 1268.
+  Worth a separate look, but it is a gameplay-layout issue across hundreds of rows.
+- שתוי and שטויות are homophones and now both playable in Ido's `conversation_glue` pool.
+  Their glosses ("tipsy" vs "nonsense") and Hebrew surfaces differ, so the duplicate-tile
+  tests pass, but a learner meeting both in one round may be briefly confused. The notes on
+  `colloquial_227` and `colloquial_228` name the confusion deliberately.
+- `רִשָּׁיוֹן` in `professional_228` follows the ktiv-chaser rule, while the legacy card for the
+  same plain word is pointed `רִישָּׁיוֹן` (helper yod kept *and* marked). Same situation as
+  סיכון, which appears as both סִיכּוּן and סִכּוּן. New content follows the rule; the legacy forms
+  are left alone per `docs/project-rules.md`.
 
 ### 2026-09-18 22:35 EDT — Normalize the vocab id baseline into deck order
 

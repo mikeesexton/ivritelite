@@ -254,8 +254,13 @@ test("planned Translation Match expansion adds 144 append-only cards", () => {
   // is the operational "target" sense, carried for sentence feedback only, and
   // is deliberately not playable — two playable tiles reading מטרה would be the
   // indistinguishable-tile clash the merged-pool test below forbids.
-  assert.equal(vocabulary.length, 2207);
-  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2117);
+  //
+  // The seven-word tranche moves both counts together: דילוג and גיוון onto
+  // core_advanced, שטויות and שתוי onto conversation_glue, זכוכית onto
+  // home_everyday_life, שפם onto pharmacy_personal_care, and כריש הלוואות onto
+  // finance_investing. All seven are ordinary playable tiles.
+  assert.equal(vocabulary.length, 2214);
+  assert.equal(vocabulary.filter((word) => word.availability?.translationQuiz).length, 2124);
   assert.equal(expansion.length, 144);
   assert.deepEqual(countsByCategory, {
     core_advanced: 36,

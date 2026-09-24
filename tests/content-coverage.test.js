@@ -52,7 +52,7 @@ test("reviewed coverage ids must resolve to real sentences", () => {
 
 test("production coverage stays measurable and every reviewed id resolves", () => {
   const report = productionReport();
-  assert.equal(report.records.length, 2207);
+  assert.equal(report.records.length, 2214);
   // The four coverage tranches pulled twelve more vocabulary cards from
   // unsupported into exact by giving them a sentence context.
   //
@@ -79,7 +79,12 @@ test("production coverage stays measurable and every reviewed id resolves", () =
   // sentence feedback stops offering only "goal" — arrives exact on idan_127 and
   // idan_131, the same two rows that cover the scientific "goal" card. Coverage
   // matches on Hebrew, so a second sense of a covered headword always lands exact.
-  assert.equal(report.records.filter((record) => record.status === "exact").length, 1074);
+  //
+  // The seven-word tranche adds seven cards and all seven arrive exact, each
+  // carried by a sentence in the same commit that spells the headword itself:
+  // דילוג, גיוון, שטויות, שתוי, זכוכית, שפם and כריש הלוואות. It pulls no
+  // existing card across, so unsupported does not move.
+  assert.equal(report.records.filter((record) => record.status === "exact").length, 1081);
   assert.equal(report.records.filter((record) => record.status === "reviewed").length, 0);
   assert.equal(report.records.filter((record) => record.status === "unsupported").length, 1133);
 });
@@ -522,7 +527,10 @@ test("Ivri finance sentences give every previously unsupported finance card its 
 
 test("Ivri finance sentences bring both finance shelves to full exact support", () => {
   const report = productionReport();
-  assert.deepEqual({ ...report.categories.get("finance_investing") }, { total: 17, exact: 17, reviewed: 0, unsupported: 0 });
+  // The appended כריש הלוואות card keeps the shelf whole: professional_228 and
+  // everyday_384 both spell the headword, so it arrives exact rather than
+  // dropping the shelf off 100%.
+  assert.deepEqual({ ...report.categories.get("finance_investing") }, { total: 18, exact: 18, reviewed: 0, unsupported: 0 });
   assert.deepEqual({ ...report.categories.get("business_finance_expanded") }, { total: 23, exact: 23, reviewed: 0, unsupported: 0 });
 });
 
