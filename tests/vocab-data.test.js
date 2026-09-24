@@ -712,14 +712,35 @@ test("no two playable cards share both their Hebrew and their English", () => {
 // silently re-keyed 64 cards while every test stayed green. This baseline is
 // the guard — it fails on deletion and on insert-position alike.
 //
-// Adding cards at a category tail is expected and safe; regenerate the fixture
-// in the same commit that adds them, and confirm the diff is additions only.
+// Adding cards at a category tail is expected and safe; regenerate this fixture
+// in the same commit that adds them and confirm the diff is additions only.
+// The file is kept in `getBaseVocabulary()` order, so a tail append lands as a
+// contiguous block of `+` lines inside its category, while a mid-category
+// insertion renumbers the rows below it and shows as `+`/`-` churn. Do not
+// hand-append ids to the end of the array to keep a diff small: four tranches
+// did that, drifted the file out of deck order, and made every later
+// regeneration churn worse. The deck-order assertion below refuses that now, so
+// a hand-appended or stale fixture fails here instead of going quietly green.
 test("vocabulary ids are append-only within each category", () => {
   const baseline = require("./fixtures/vocab-id-baseline.json");
-  const current = new Set(loadVocabulary().map((word) => word.id));
+  const ordered = loadVocabulary().map((word) => word.id);
+  const current = new Set(ordered);
 
   const missing = baseline.filter((id) => !current.has(id));
   assert.deepEqual(missing, [], `${missing.length} vocabulary ids changed or disappeared`);
+
+  // The check above is one-directional — it asks only whether every baseline id
+  // still resolves, so it passes a reshuffle and passes a fixture that never
+  // learned about new cards. Pinning the order closes both, and keeps the diff
+  // itself trustworthy as the guard this file actually relies on.
+  const drift = ordered.findIndex((id, index) => baseline[index] !== id);
+  assert.equal(
+    drift,
+    -1,
+    `tests/fixtures/vocab-id-baseline.json is stale or out of deck order at index ${drift}: ` +
+      `expected ${ordered[drift]}, found ${baseline[drift]}. Regenerate it in this commit and ` +
+      `confirm the diff is additions only.`,
+  );
 });
 
 // The deck the learner actually sees is `vocab-data.js` concatenated with

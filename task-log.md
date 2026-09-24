@@ -21,6 +21,66 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-09-23 EDT — Publish outstanding content tranche for Mac mini migration
+
+**Requested:** Move the complete project through GitHub to the new Mac mini.
+**Files changed:** Merged current `origin/main` into
+`agent/seven-word-content-tranche`; retained both sides of `task-log.md`; moved
+the tranche's seven new vocabulary ids from the old append-only fixture tail to
+their category-tail positions in the newly enforced deck-order baseline.
+**Behavior changed:** The previously local seven-card/fourteen-sentence tranche
+is ready to merge into the default GitHub branch; no additional learner-facing
+content was authored during migration.
+**Tests run:** `npm test` before reconciliation — 533 pass, 0 fail; focused
+vocabulary, sentence-bank and coverage suite after reconciliation — 117 pass,
+0 fail; final `npm test` after reconciliation — 533 pass, 0 fail.
+**Risks / regressions to check:** None known. The only merge conflict was the
+newest-first task log; the vocabulary fixture required mechanical reordering to
+satisfy the newer main-branch guard.
+
+### 2026-09-19 07:24 EDT — Pin the vocab id baseline in deck order
+
+**Requested:** Add the assertion left as a follow-up in the previous entry, so the fixture's
+deck order is enforced rather than merely documented.
+
+`tests/vocab-data.test.js` now pins `tests/fixtures/vocab-id-baseline.json` to
+`getBaseVocabulary()` order, closing the two blind spots the existing subset check had. That
+check asks only whether every baseline id still resolves, so it passed both of these silently:
+
+- a **reshuffle** — ids hand-appended to the end of the array, which is how the file drifted
+  out of deck order in the first place;
+- a **stale fixture** — new cards in the deck that the baseline never learned about, because a
+  missing baseline entry is not a missing *deck* entry.
+
+Both now fail with the index and the two ids involved, and the message says what to do.
+
+**Verified the guard actually fires**, rather than only that it is green. Perturbed the fixture
+two ways and ran the test against each, restoring with `git checkout` after both:
+
+- moved `core_advanced-101-to-intercept` to the end → failed at index 100, naming the expected
+  and found ids. The old subset assertion stayed green on that same file, which is the blind
+  spot demonstrated rather than asserted.
+- dropped `bureaucracy-025-stamp` → failed at index 500.
+
+**Files changed:**
+- `tests/vocab-data.test.js` — reuse the already-loaded id list as `ordered` (the test built a
+  `Set` from it and discarded the order), then `findIndex` the first divergence from the
+  baseline and assert it is `-1`. Updated the comment's closing sentence, which claimed the
+  check below could not see a hand-append — true when written, false now.
+
+**Behavior changed:** None. Test-only; `tests/` is not loaded by `index.html`, so no `?v=`
+bump applies.
+
+**Tests run:** `npm test` — 533 pass, 0 fail. Plus the two deliberate-failure runs above.
+
+**Risks / regressions to check:** This makes the fixture a required edit rather than an
+optional one: adding a vocabulary card now fails the suite until the baseline is regenerated
+in the same commit. That is the documented rule being enforced, but it will surprise anyone
+who adds a card and expects green. The failure message names the file and the fix, which is
+the mitigation. Note also that the assertion compares against `loadVocabulary()`, which reads
+`vocab-data.js` alone — the merged deck that `app.js` builds by concatenating
+`hebrew-verbs.js` is a different list, and this baseline deliberately does not cover it.
+
 ### 2026-09-18 EDT — Seven words, fourteen sentences: דילוג, שטויות/שתוי, זכוכית, גיוון, כריש הלוואות, ירד, שפם
 
 **Requested:** eight items in one message — sentences using דילוג "skipping"; vocab and
@@ -127,6 +187,102 @@ character lost pool depth and no existing content moved.
   same plain word is pointed `רִישָּׁיוֹן` (helper yod kept *and* marked). Same situation as
   סיכון, which appears as both סִיכּוּן and סִכּוּן. New content follows the rule; the legacy forms
   are left alone per `docs/project-rules.md`.
+
+### 2026-09-18 22:35 EDT — Normalize the vocab id baseline into deck order
+
+**Requested:** After the previous entry documented the fixture's append-order drift as
+intentional, "can you fix it now" — actually normalize `tests/fixtures/vocab-id-baseline.json`
+into `getBaseVocabulary()` order.
+
+Done as two commits so the reshuffle is reviewable on its own.
+
+**1. The reorder (`f962ace`), fixture only.** 56 ids move; none added, none removed. Verified
+before writing: both sides hold the identical 2207 ids as a multiset, with zero duplicates on
+either side. Afterwards, regenerating the file is a byte-for-byte no-op.
+
+The drifted tranches are **four**, not the two named in the previous entry:
+`media_digital_life_expanded-027..031`, `literature_arts_cultural_history-031..035`,
+`emergency_response-068..072` and `devices_os_apps-076..116`.
+`religious_life_practice-112..116` was appended the same way but needed no move, because that
+category sorts last anyway — so the previous entry, and the docs note it justified, named a
+tranche that was never actually out of place. Corrected here.
+
+Each append was individually reasonable and that is the interesting part: an agent facing a
+~110-line regeneration churn hand-appended to keep its own diff small, which pushed the two
+orderings further apart and made the *next* regeneration churn worse. A ratchet, where every
+local decision was defensible. Normalizing removes the incentive rather than just the symptom
+— the cheap move and the correct move are now the same move.
+
+**2. The notes (this commit).** The guidance merged in PR #102 four hours ago said "append,
+don't regenerate". That was correct for the file as it stood and is wrong for the file as it
+now stands, so both places are flipped back to "regenerate, confirm additions only" — the
+original wording — with the reasoning the original lacked.
+
+**Files changed:**
+- `tests/fixtures/vocab-id-baseline.json` — sorted into `getBaseVocabulary()` order. Pure
+  permutation, 56 lines moved.
+- `docs/project-rules.md` — Content routing vocabulary-ids bullet: regenerate and confirm
+  additions only; never hand-append to keep a diff small, because that is what caused the
+  drift; the diff, not the suite, is the guard.
+- `tests/vocab-data.test.js` — same flip in the baseline test comment.
+
+**Behavior changed:** None. The fixture's only consumer is a set-membership filter in
+`tests/vocab-data.test.js`, which is order-independent. No runtime `.js`/`.css` touched, so no
+`?v=` bump applies.
+
+**Tests run:** `npm test` — 533 pass, 0 fail, before and after each commit.
+
+**Risks / regressions to check:** The invariant is documented, not enforced — nothing asserts
+the fixture is in deck order, so a future hand-append would silently re-drift it and the suite
+would stay green. A one-line `assert.deepEqual(baseline, current)` in the baseline test would
+pin it, and would also convert the subset check into a bidirectional one; it was left out as
+beyond the ask, and is the obvious follow-up. Until then the protection is that regenerating
+is now the path of least resistance. Also note the regenerate instruction assumes the fixture
+is in deck order; if it ever drifts again, re-normalize it in its own commit before following
+the doc, or the churn returns.
+
+### 2026-09-18 20:53 EDT — Say "append", not "regenerate", for the vocab id baseline
+
+**Requested:** Correct two places that tell an agent to regenerate
+`tests/fixtures/vocab-id-baseline.json` when adding vocabulary cards, and say why appending
+is right instead.
+
+The fixture is stored in the order ids were **appended**, not the order
+`getBaseVocabulary()` returns them. Earlier tranches (`devices_os_apps-076`–`-116`,
+`religious_life_practice-112`–`-116`) were added at the end of the array rather than inserted
+in category order, so the two orderings have drifted apart. Verified this session: the
+fixture and the live deck hold the identical 2207 ids with zero additions or deletions
+between them, yet 56 baseline entries sit out of live order — regenerating the file today
+produces a 112-line diff (56 moves) that changes nothing. That is precisely the "additions
+only" outcome the same sentence demanded, made impossible by its own instruction.
+
+The guard at `tests/vocab-data.test.js:712` is a one-directional subset check — it asks only
+whether every baseline id still exists — so the reshuffle passes green. The cost is an
+unreviewable diff, not a failing suite, which is why this survived several tranches.
+
+**Files changed:**
+- `docs/project-rules.md` — in the Content routing vocabulary-ids bullet, added the missing
+  instruction: add new ids to the **end** of the fixture rather than regenerating it, with the
+  append-order reason and a note that the subset check still passes a reshuffle. The bullet
+  previously named the fixture but never said how to update it.
+- `tests/vocab-data.test.js` — replaced "regenerate the fixture in the same commit that adds
+  them" with append wording plus the same one-sentence reason.
+
+`CLAUDE.md` and `AGENTS.md` mention neither the fixture nor this rule, so the parity pair
+needed no edit; `tests/agent-docs-parity.test.js` still passes.
+
+**Behavior changed:** None. Documentation and a test comment only; no runtime `.js`/`.css`
+file was touched, so no `?v=` bump applies.
+
+**Tests run:** `npm test` — 533 pass, 0 fail.
+
+**Risks / regressions to check:** The "56 lines" figure is true as of 2207 ids and will grow
+if a future tranche is again appended out of category order; it is illustrative, not a
+threshold anything asserts. The underlying disorder is untouched — this change documents the
+file as it is rather than normalizing it, because normalizing would itself be the large
+reshuffle being warned about. If the fixture is ever deliberately re-sorted into
+`getBaseVocabulary()` order, both of these notes go stale together and must be updated in
+that same commit.
 
 ### 2026-09-13 EDT — Four screenshot fixes: board centering, two glosses, the jumping sprite
 
