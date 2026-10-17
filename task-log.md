@@ -21,6 +21,30 @@ split, and it conflicts on every overlapping session.
 **Risks / regressions to check:** <What could break or degrade>
 ```
 
+### 2026-10-17 18:44 EDT — Deploy approved mobile character-page cleanup
+
+**Requested:** Deploy the approved compact character-page changes.
+**Files changed:** `task-log.md` — recorded deployment. The release includes the previously reviewed changes to `app/character.js`, `styles.css`, `index.html`, and the corresponding existing test expectations.
+**Behavior changed:** Publishes the compact character cards and mobile review layout to `ivritelite.app` through the existing `main` → GitHub Pages workflow. Both shipped asset versions are `20261017a`.
+**Tests run:** Latest implementation `npm test` — 533 pass, 0 fail. Deployment preflight `node --test tests/cache-bust.test.js` — 4 pass, 0 fail; `git diff --check` — pass. `git fetch origin` and `git rev-list --left-right --count HEAD...origin/main` confirmed no remote divergence before committing. The deployment workflow also runs the full suite before publishing.
+**Risks / regressions to check:** None identified in local validation; GitHub Pages publishing is gated by its CI test job.
+
+### 2026-10-17 18:43 EDT — Implement approved compact character cards
+
+**Requested:** Implement the approved Compact cards mobile preview.
+**Files changed:** `app/character.js` — grouped name, level, selection, and progress beside each portrait; moved the existing topic editor into a full-width card row; shortened visible selection labels while preserving descriptive accessible labels. `styles.css` — compact card spacing, clear current-companion styling, 44px controls, full-width topic disclosures, and mobile review tabs without the redundant outer frame/heading. `index.html` — bumped stylesheet and character-module cache keys to `20261017a`. `tests/character-mission.test.js` — updated existing markup/label expectations and the stylesheet cache assertion. `task-log.md` — recorded implementation and checks.
+**Behavior changed:** Character cards use the approved compact layout in both languages, with mobile chrome simplified below 768px. Live progress, topic selection/counts, and mission restrictions retain their existing behavior. No artwork or learning content changed. Changes are local and have not been deployed.
+**Tests run:** Baseline `npm test` initially could not bind the browser test server inside the sandbox; rerun with local-server permission — 533 pass, 0 fail. `node --test tests/character-mission.test.js` initially found one stale stylesheet-version assertion; updated it for the required cache bump. Full `npm test` after implementation and again after final mobile spacing adjustments — 533 pass, 0 fail each. `git diff --check` — pass. Browser checks: Hebrew at 320×640, 360×640, and 390×640; English at 320×640 and 390×844; desktop/light theme at 1280×900. No horizontal overflow; selection buttons and topic rows measured 44px high. Verified companion selection, topic edits/count updates, and the last topic row clearing the fixed footer. Saved the final Hebrew 390×844 screenshot outside the repository.
+**Risks / regressions to check:** None identified in tested layouts. Existing tests confirm companion/topic changes stay disabled during an active mission.
+
+### 2026-10-17 18:35 EDT — Preview mobile character-page cleanup
+
+**Requested:** Show a cleaner mobile character page for approval before implementing it.
+**Files changed:** `task-log.md` — recorded this preview session. Created the interactive `character-mobile-cleanup.html` preview and supporting QA files outside the repository in the chat's visualization directory. Compared compact character cards with a portrait grid and a shared selected-character detail panel, using existing artwork and the app's night palette.
+**Behavior changed:** None. App source, artwork, content, and cache versions remain unchanged pending the user's design approval.
+**Tests run:** `node --check /Users/mikesexton/.codex/visualizations/2026/10/17/01a14bfc-5b3d-77d0-b762-5cd40b9c1ad3/preview-syntax-check.js` — pass. Browser inspection at 390px and 320px preview widths; verified character selection, topic disclosure, and switching design variants. `npm test` not run because no application or test code changed.
+**Risks / regressions to check:** This is a presentation preview with illustrative selection/progress for characters beyond the supplied screenshot. Any approved implementation must retain live progress, topic editing, and existing mission-based restrictions on changing the companion or topics.
+
 ### 2026-09-23 EDT — Publish outstanding content tranche for Mac mini migration
 
 **Requested:** Move the complete project through GitHub to the new Mac mini.

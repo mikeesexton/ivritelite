@@ -1774,10 +1774,16 @@ function createTopicEditor(characterId, changeable) {
   wrap.className = "character-topic-editor";
   const summary = global.document.createElement("summary");
   const words = countSelectedCards(characterId, selected);
-  summary.textContent = uiText(
-    `Topics · ${selected.length} chosen · ${words} words`,
-    `נושאים · ${selected.length} נבחרו · ${words} מילים`,
+  const label = global.document.createElement("span");
+  label.className = "character-topic-label";
+  label.textContent = uiText("Topics", "נושאים");
+  const count = global.document.createElement("span");
+  count.className = "character-topic-count";
+  count.textContent = uiText(
+    `${selected.length} chosen · ${words} words`,
+    `${selected.length} נבחרו · ${words} מילים`,
   );
+  summary.append(label, count);
   wrap.append(summary);
 
   const list = global.document.createElement("div");
@@ -1842,6 +1848,7 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
     if (!entry) return;
     const card = global.document.createElement("article");
     card.className = "character-bond-card";
+    card.classList.toggle("is-current", bond.id === lensId);
 
     card.append(createSprite("neutral", "character-bond-sprite", bond.id));
 
@@ -1853,12 +1860,6 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
     const name = global.document.createElement("strong");
     name.textContent = characterName(entry);
     heading.append(name);
-    if (bond.id === lensId) {
-      const badge = global.document.createElement("span");
-      badge.className = "character-bond-badge";
-      badge.textContent = uiText("Companion", "דמות נוכחית");
-      heading.append(badge);
-    }
 
     const level = global.document.createElement("p");
     level.className = "character-bond-level";
@@ -1867,6 +1868,7 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
     const track = global.document.createElement("div");
     track.className = "character-bond-progress";
     track.setAttribute("role", "progressbar");
+    track.setAttribute("aria-label", uiText(`Progress with ${characterName(entry)}`, `התקדמות עם ${characterName(entry)}`));
     track.setAttribute("aria-valuemin", "0");
     track.setAttribute("aria-valuemax", String(bond.xpForNextLevel));
     track.setAttribute("aria-valuenow", String(bond.xpIntoLevel));
@@ -1879,10 +1881,19 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
 
     const stats = global.document.createElement("p");
     stats.className = "character-bond-stats";
-    stats.textContent = uiText(
-      `${bond.xpIntoLevel}/${bond.xpForNextLevel} XP · ${bond.daysInteracted} ${bond.daysInteracted === 1 ? "day" : "days"} together · ${bond.missions} ${bond.missions === 1 ? "mission" : "missions"}`,
-      `${bond.xpIntoLevel}/${bond.xpForNextLevel} נק׳ · ${bond.daysInteracted} ימים יחד · ${bond.missions} משימות`
+    const xp = global.document.createElement("bdi");
+    xp.className = "character-bond-xp";
+    xp.dir = "ltr";
+    xp.textContent = uiText(
+      `${bond.xpIntoLevel}/${bond.xpForNextLevel} XP`,
+      `${bond.xpIntoLevel}/${bond.xpForNextLevel} נק׳`,
     );
+    const together = global.document.createElement("span");
+    together.textContent = uiText(
+      `${bond.daysInteracted} ${bond.daysInteracted === 1 ? "day" : "days"} together · ${bond.missions} ${bond.missions === 1 ? "mission" : "missions"}`,
+      `${bond.daysInteracted} ימים יחד · ${bond.missions} משימות`
+    );
+    stats.append(xp, together);
 
     // The same lens the Settings picker sets, offered where the learner is
     // already reading about the characters.
@@ -1892,13 +1903,16 @@ character.renderBondPanel = character.renderBondPanel || function renderBondPane
     choose.dataset.characterLens = bond.id;
     const selected = bond.id === lensId;
     choose.textContent = selected
-      ? uiText("Current companion", "הדמות הנוכחית")
-      : uiText("Choose as companion", "לבחור כדמות");
+      ? uiText("✓ Current", "✓ נוכחית")
+      : uiText("Choose", "לבחור");
+    choose.setAttribute("aria-label", selected
+      ? uiText(`Current companion: ${characterName(entry)}`, `הדמות הנוכחית: ${characterName(entry)}`)
+      : uiText(`Choose ${characterName(entry)} as companion`, `לבחור ב${characterName(entry)} כדמות`));
     choose.disabled = selected || !changeable;
     choose.setAttribute("aria-pressed", String(selected));
 
-    body.append(heading, level, track, stats, choose, createTopicEditor(bond.id, changeable));
-    card.append(body);
+    body.append(heading, level, choose, stats, track);
+    card.append(body, createTopicEditor(bond.id, changeable));
     target.append(card);
   });
 

@@ -302,7 +302,7 @@ test("sprite CSS and assets exist for every character reaction", () => {
     });
   });
   assert.doesNotMatch(css, /assets\/[^)"']+\/source\//);
-  assert.match(indexHtml, /styles\.css\?v=20260913b/);
+  assert.match(indexHtml, /styles\.css\?v=20261017a/);
   assert.match(css, /\.character-sprite\s*\{[^}]*image-rendering:\s*pixelated/s);
   assert.doesNotMatch(css, /ido-sprite/);
   const idoBuilder = fs.readFileSync(
@@ -2187,8 +2187,6 @@ test("the review character panel picks the free-play companion like Settings doe
   const note = createStubElement("p");
   app.runtime.el = { reviewCharacterBonds: bonds, reviewCharacterLensNote: note };
 
-  // Found rather than indexed: the bond body also carries the topic editor now,
-  // and positional indexing broke the moment it was appended.
   const readChoices = () => bonds.children.map(
     (card) => card.children[1].children.find((node) => node.dataset?.characterLens),
   );
@@ -2199,7 +2197,7 @@ test("the review character panel picks the free-play companion like Settings doe
   );
   assert.deepEqual(
     readChoices().map((button) => button.textContent),
-    ["Choose as companion", "Current companion", "Choose as companion", "Choose as companion", "Choose as companion"],
+    ["Choose", "✓ Current", "Choose", "Choose", "Choose"],
   );
   assert.deepEqual(readChoices().map((button) => button.disabled), [false, true, false, false, false]);
   assert.equal(note.className.includes("hidden"), true);
@@ -2219,7 +2217,7 @@ test("the review character panel picks the free-play companion like Settings doe
   // Topics are editable from the same place the companion is chosen, and a
   // running mission holds them for the same reason it holds the lens.
   const readEditors = () => bonds.children.map(
-    (card) => card.children[1].children.find((node) => node.className === "character-topic-editor"),
+    (card) => card.children.find((node) => node.className === "character-topic-editor"),
   );
   assert.equal(readEditors().every(Boolean), true, "every bond card carries a topic editor");
   const idoRows = () => readEditors()[0].children
